@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Ondersteuning",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support Email",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Door dit formulier in te dienen, stemt u ermee in dat QA - Test Integration Company en / of Network Optix contact met u opneemt. U vindt hier QA - Test Integration Company privacybeleid en Network Optix privacybeleid hier met instructies voor het intrekken van uw toestemming.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Door het indienen van dit formulier gaat u akkoord met contact te worden opgenomen door {{developer}} en/of Netwerk Optix. Hier vindt u het {{developer}} privacybeleid en het Netwerk Optix privacybeleid dat instructies bevat over hoe u uw toestemming kunt intrekken.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Bericht is verzonden.",
     "REGISTER TITLE TEXT": "Maak een account aan in",
     "DOWNLOAD TITLE TEXT": "Download %VMS_NAME%",
@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Updates",
     "BETAS TAB TEXT": "Betas",
-    "SALES INQUIRY TEXT": "Verkoopaanvraag voor vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technische aanvraag voor vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback voor integratie vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Verkoopaanvraag voor {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technische aanvraag voor {{integration}}",
+    "FEEDBACK TEXT": "Feedback voor integratie {{integration}}"
 }

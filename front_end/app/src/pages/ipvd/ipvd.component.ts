@@ -139,6 +139,7 @@ export class NxIpvdComponent implements OnInit {
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             setTimeout(() => {
+                this.params = this.route.snapshot.queryParams;
                 if (!this.params.camera && this.activeCamera) {
                     this.resetActiveCamera(true);
                 }
@@ -338,6 +339,7 @@ export class NxIpvdComponent implements OnInit {
     }
 
     modelChanged(model) {
+        this.filterModel = NxUtilsService.deepCopy(model);
         this.searchVendor();
     }
 
@@ -430,8 +432,7 @@ export class NxIpvdComponent implements OnInit {
 
         if (this.cameras && this.cameras.length) {
             if (this.filterEmpty()) {
-                const cameras = this.cameraSearchService
-                              .ipvdSearch(this.cameras, this.filterModel);
+                const cameras = this.cameraSearchService.ipvdSearch(this.cameras, this.filterModel);
 
                 this.noResult = (cameras.length === 0);
                 if (!this.noResult) {
@@ -455,7 +456,6 @@ export class NxIpvdComponent implements OnInit {
                 this.params = queryParams;
             }
 
-            this.filterModel = {...this.filterModel}; // enforce model update for other components
         }
     }
 
@@ -497,7 +497,7 @@ export class NxIpvdComponent implements OnInit {
         setTimeout(() => {
             this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
             this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
-        });
+        }, 500);
     }
 
 

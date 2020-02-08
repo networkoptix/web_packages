@@ -32,7 +32,7 @@ export class IpvdSearchService {
     ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
         const queryTerms = query.trim()
-                                .split(/[\s,\|]+/)
+                                .split(/[\s\+]+/)
                                 .filter((elm) => {
                                     return elm !== '';
                                 });
@@ -57,7 +57,7 @@ export class IpvdSearchService {
                     lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
             }
 
-            return (query.length === 0 || result || c.maxResolution.indexOf(query) > 0);
+            return (query.length === 0 || result || c.maxResolution.indexOf(query) > -1);
         }
 
         let resolution;

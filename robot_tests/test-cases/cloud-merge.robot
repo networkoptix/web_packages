@@ -585,7 +585,9 @@ From secondary system merge to primary with other systems
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Sleep    1
+    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Disconnect from cloud
+    Sleep    35
     Disconnect from cloud
 
 From primary system

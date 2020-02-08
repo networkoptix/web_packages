@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Podpora",
     "INTEGRATION SUPPORT URL TEXT": "URL podpory",
     "INTEGRATION SUPPORT EMAIL TEXT": "Email podpory",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by QA - Test Integration Company and/or Network Optix. You will find QA - Test Integration Company privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Zpráva byla odeslána.",
     "REGISTER TITLE TEXT": "Vytvořit účet v",
     "DOWNLOAD TITLE TEXT": "Stáhnout %VMS_NAME%",
@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
     "BETAS TAB TEXT": "Betas",
-    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}"
 }

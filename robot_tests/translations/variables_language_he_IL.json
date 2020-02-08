@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "תמיכה",
     "INTEGRATION SUPPORT URL TEXT": "לינק לתמיכה",
     "INTEGRATION SUPPORT EMAIL TEXT": "דוא\"ל של התמיכה",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "על ידי הגשת טופס זה אתה מסכים לחברת QA - Integration Test Test ו\\או Network Optix ליצור איתך קשר. תוכלו למצוא כאן מדיניות פרטיות של חברת QA - Integration Test Test ומדיניות הפרטיות של Network Optix כאן הכוללת הוראות כיצד לבטל את הסכמתכם.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "ההודעה נשלחה.",
     "REGISTER TITLE TEXT": "צור חשבון ב-",
     "DOWNLOAD TITLE TEXT": "הורד %VMS_NAME%",
@@ -207,7 +207,7 @@
     "RELEASES TAB TEXT": "מהדורות",
     "PATCHES TAB TEXT": "תיקונים",
     "BETAS TAB TEXT": "בטא",
-    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "בירור מכירות עבור {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "בירור טכני עבור {{integration}}",
+    "FEEDBACK TEXT": "משוב לאינטגרציה {{integration}}"
 }

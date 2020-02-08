@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from api.helpers.exceptions import handle_exceptions, require_params, api_success
 from notifications.models import Message
-
+from api.models import AccountManager
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))

@@ -20,8 +20,7 @@ Open New Browser On Failure
 
 Register Random User
     ${email}=   Get Random Email    ${BASE EMAIL}
-    Register Account   ${email}    ${password}    mark    hamill
-    Activate Account   ${email}    ${password}
+    Register And Activate Account    mark    hamill    ${email}    ${password}
     [Return]    ${email}
 
 Send "Restore Password" Email
@@ -33,7 +32,7 @@ Send "Restore Password" Email
 
 Get Restore Code and Open the Link
     [Arguments]    ${email}    ${restore}=${False}    ${new password}=${EMPTY}
-    @{auth}=   Create List   ${ALT BASE EMAIL}    ${password}
+    @{auth}=   Create List   ${BASE EMAIL}    ${password}
     ${code}=   Get Code From Email    ${url}    ${auth}    ${email}    restore_password
     Go To    ${url}/restore_password/${code}
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
@@ -166,11 +165,14 @@ Should handle click I forgot my password link at restore password page
 
 Check restore password email links, colors, cloud name, and open link in new tab
     [Tags]    C26260    Threaded
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${email}    subject=${RESET PASSWORD EMAIL SUBJECT}    timeout=120    status=UNSEEN
+    ${user}=   Register Random User
+    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
+    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
+    delete email    ${email}
+    Send "Restore Password" Email    ${user}
+    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
+    Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
@@ -182,3 +184,4 @@ Check restore password email links, colors, cloud name, and open link in new tab
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
+

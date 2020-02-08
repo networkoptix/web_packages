@@ -3,12 +3,13 @@ Resource          resource.robot
 Library           RequestsLibrary
 Library           NoptixLibrary/Encode.py
 
-
-*** variables ***
+*** Variables ***
 ${default name}    API made system
 ${customization}    default
 
 *** Keywords ***
+
+# Keywords which use Cloud and cloud Portal API
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
     &{data}=    Create Dictionary    name=${name}    customization=${customization}
@@ -25,21 +26,13 @@ Unbind System
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
-Setup Cloud System
-    [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
-    &{data}=    Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
-    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Setup System session    /api/setupCloudSystem    json=${data}
+Rename System
+    [Arguments]    ${auth}    ${system id}    ${new name}
+    &{data}=    Create Dictionary    systemId=${system id}    name=${new name}
+    Create Digest Session    Rename System session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
-
-Save User Role
-    [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}
-    &{data}=    Create Dictionary    name=${name}    permissions=${permissions}
-    Create Digest Session    Save User Role session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
-    Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
+    Return From Keyword    ${resp.json()} add
 
 Share
     [Arguments]    ${auth}    ${system id}    ${access role}    ${account email}
@@ -50,6 +43,100 @@ Share
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Get Cloud System Settings
+    [Arguments]    ${auth}    ${system id}
+    Create Digest Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get System Settings session   /cdb/system/get?systemId=${system id}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()['systems'][0]}
+
+Get Cloud System Users
+    [Arguments]    ${auth}    ${system id}
+    &{data}=    Create Dictionary    systemId=${system id}
+    Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}
+    ${resp}=    Post Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()['sharing']}
+
+# Alternative way to reset Account password - via cdb directly.
+# "Change Account Password" keyword is preferred.
+Set Account Password
+    [Arguments]    ${email}    ${old_password}    ${new_password}
+    ${passwordHa1}=   Encode.Get Ha1 Password    ${email}    ${new_password}
+    ${passwordHa1Sha256}=   Encode.Get Ha1 Sha256 Password     ${email}    ${new_password}
+
+    &{params}=   Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
+    @{auth}=   Create List    ${email}    ${old_password}
+    Create Digest Session    Set New Password session   ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Set New Password session    /cdb/account/update    json=${params}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Setup Cloud System
+    [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
+    &{data}=    Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
+    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Setup System session    /api/setupCloudSystem    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Integration Store is Enabled
+    [Arguments]    ${auth}
+    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}
+    ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()['integrationStoreEnabled']}
+
+Register Account
+    [Arguments]    ${first name}    ${last name}    ${email}   ${password}
+    &{data}=    Create Dictionary
+    ...    email=${email}
+    ...    password=${password}
+    ...    first_name=${first name}
+    ...    last_name=${last name}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
+    Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Register Account session    /api/account/register    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
+Activate Account
+    [Arguments]    ${email}    ${password}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
+    @{new user auth}=   Create List    ${email}    ${password}
+    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
+    ${code}=   Convert Code    ${code}
+    &{data}=   Create Dictionary    code=${code}
+    Create Digest Session    Activate Account session    ${ENV}    auth=${new user auth}    disable_warnings=1
+    ${resp}=    Post Request    Activate Account session    /api/account/activate    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+    Return From Keyword    ${resp.json()}
+
+Register New User and Activate the Account
+    [Arguments]    ${email}    ${password}    ${first_name}    ${last_name}
+    @{auth}=   Create List    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+    Register    ${ENV}    ${auth}    ${email}    ${password}    ${first_name}    ${last_name}
+    Create Digest Session    Register Session    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
+    ${resp}=   Post Request    Register Session   /api/systemSettings   timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
+Log Out via API
+    ${cookies}=   Get Cookies    as_dict = True
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    Should Be Equal as Strings    ${status}    200
+    Go To    ${ENV}
+    Validate Log Out
+
+Evaluate Auto System Settings via API
+    [Arguments]    ${setting}    ${selected}
+    Create Digest Session    returnedSetting    ${AUTO SYS IP}    ${AUTO SYS AUTH}     disable_warnings=1
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${selected}
+
+
+# Keywords which use System/Server API
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}
@@ -65,70 +152,11 @@ Save User
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
-Integration Store is Enabled
-    [Arguments]    ${auth}
-    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}
-    ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
-    Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()['integrationStoreEnabled']}
-
-Register Account
-    [Arguments]    ${email}   ${password}    ${first name}    ${last name}
-    &{data}=    Create Dictionary
-    ...    email=${email}
-    ...    password=${password}
-    ...    first_name=${first name}
-    ...    last_name=${last name}
-    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
-    Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Register Account session    /api/account/register    json=${data}
+Save User Role
+    [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}
+    &{data}=    Create Dictionary    name=${name}    permissions=${permissions}
+    Create Digest Session    Save User Role session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
-Activate Account
-    [Arguments]    ${email}    ${password}
-    @{auth}=   Create List    ${ALT BASE EMAIL}    ${BASE PASSWORD}
-    @{new user auth}=   Create List    ${email}    ${password}
-    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
-#    ${code}=   Replace String Using Regexp    ${code}    %3D    ${EMPTY}
-    &{data}=   Create Dictionary    code=${code}
-    Create Digest Session    Activate Account session    ${ENV}    auth=${new user auth}    disable_warnings=1
-    ${resp}=    Post Request    Activate Account session    /api/account/activate    json=${data}
-    Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
-
-# Alternative way to reset Account password - via cdb directly.
-# "Change Account Password" keyword is preferred.
-Set Account Password
-    [Arguments]    ${email}    ${old_password}    ${new_password}
-    ${passwordHa1}=   Encode.Get Ha1 Password    ${email}    ${new_password}
-    ${passwordHa1Sha256}=   Encode.Get Ha1 Sha256 Password     ${email}    ${new_password}
-
-    &{params}=    Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
-    @{auth}=   Create Dictionary    ${email}    ${old_password}
-    Create Digest Session    set_new_password_session   ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    set_new_password_session    /cdb/account/update    json=${params}
-    Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
-
-Log Out via API
-    ${cookies}=   Get Cookies    as_dict = True
-    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
-    Should Be Equal as Strings    ${status}    200
-    Go To    ${ENV}
-    Validate Log Out
-
-Register New User and Activate the Account
-    [Arguments]    ${email}    ${password}    ${first_name}    ${last_name}
-    @{auth}=   Create List    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
-    Register    ${ENV}    ${auth}    ${email}    ${password}    ${first_name}    ${last_name}
-    Create Digest Session    Register Session    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
-    ${resp}=   Post Request    Register Session   /api/systemSettings   timeout=10
-    Should Be Equal As Strings    ${resp.status_code}    200
-
-Evaluate Auto System Settings via API
-    [arguments]    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${AUTO SYS API}    ${AUTO SYS API AUTH}     disable_warnings=1
-    ${systemSettings} =     Get Request    returnedSetting   /api/systemSettings   timeout=10
-    ${string} =    Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${selected}git add

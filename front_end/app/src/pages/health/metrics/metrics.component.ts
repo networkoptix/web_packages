@@ -1,22 +1,22 @@
 import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    OnInit,
-    ViewChild,
+    AfterViewInit, Component,
+    ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-} from '@angular/core';
-import { ActivatedRoute }                      from '@angular/router';
-import { NxAccountService }                    from '../../../services/account.service';
-import { NxConfigService }                     from '../../../services/nx-config';
-import { NxSystem, NxSystemService }           from '../../../services/system.service';
-import { NxMenuService }                       from '../../../components/menu/menu.service';
-import { NxHealthService }                     from '../health.service';
-import { NxUriService }                        from '../../../services/uri.service';
-import { NxLanguageProviderService }           from '../../../services/nx-language-provider';
-import { SubscriptionLike }                    from 'rxjs';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }            from '../../../services/scroll-mechanics.service';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { Location }                  from '@angular/common';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxHealthService }           from '../health.service';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { SubscriptionLike }          from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { throttleTime }              from 'rxjs/operators';
+import { NxHealthLayoutService } from '../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -62,12 +62,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
     tableReadySubscription: SubscriptionLike;
-
-    containerDimensions: any = [];
-
     windowSizeSubscription: SubscriptionLike;
     tableWidthSubscription: SubscriptionLike;
     panelSubscription: SubscriptionLike;
+    locationSubscription: SubscriptionLike;
+
+    containerDimensions: any = [];
 
     fixedLayoutClass: string;
     layoutReady: boolean;
@@ -81,10 +81,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private languageService: NxLanguageProviderService,
                 private systemService: NxSystemService,
                 private route: ActivatedRoute,
+                private location: Location,
                 private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private uri: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG  = this.languageService.getTranslations();
@@ -95,13 +97,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         };
         this.fixedLayoutClass = '';
 
-        this.tableWidthSubscription = this.scrollMechanicsService
-                .elementTableWidthSubject
-                .subscribe(width => {
-                    if (this.elementSearch) {
-                        this.elementSearch.nativeElement.style.width = width + 'px';
-                    }
-                });
+        this.healthLayoutService.searchElement = this.elementSearch;
 
         this.panelSubscription = this.scrollMechanicsService
                                      .panelSubject
@@ -114,10 +110,28 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.initialId = this.route.snapshot.queryParamMap.get('id');
         let searchParam = this.route.snapshot.queryParamMap.get('search');
 
-        this.queryParamSubscription = this.route.queryParamMap.subscribe(params => {
-            if (params.keys.length === 0 && this.route.snapshot.params.metric === this.metricId) {
-                this.selectedValues = {...this.healthService.values[this.metricId] || {}};
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
+            // force view component update without URI update
+            setTimeout(() => {
+                const params = {...this.route.snapshot.queryParams};
+
+                if (params.id) {
+                    this.setActiveEntity(params.id, false);
+                } else {
+                    this.resetActiveEntity(false);
+                }
+            });
+        });
+
+        this.menuService
+            .selectedSectionSubject
+            .pipe(throttleTime(1000))
+            .subscribe(selection => {
+            // when user click same section in the menu - we need to reset table and entity
+            if (this.metricId === selection) {
+                this.filterModel.query = '';
                 this.resetActiveEntity();
+                this.search();
             }
         });
 
@@ -175,13 +189,14 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        this.filterModel.query = model.query;
-        this.search();
+        if (this.filterModel.query !== model.query) {
+            this.filterModel.query = model.query;
+            this.search();
+        }
     }
 
     search() {
-        this.selectedValues = this.healthService
-                                  .itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
+        this.selectedValues = this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
 
         this.handleInitialId();
         if (this.activeEntity && !this.selectedValues[this.activeEntity.id]) {
@@ -189,7 +204,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setActiveEntity(entity) {
+    setActiveEntity(entity, updateURI = true) {
         const queryParams: Params = {};
         this.layoutReady = this.activeEntity ? true : false;
 
@@ -218,14 +233,16 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     resetActiveEntity(updateURI = true) {
-        this.activeEntity = undefined;
-        if (updateURI) {
-            const queryParams: Params = {};
-            queryParams.id = undefined;
-            this.uri.updateURI(undefined, queryParams);
+        if (this.activeEntity) {
+            this.activeEntity = undefined;
+            if (updateURI) {
+                const queryParams: Params = {};
+                queryParams.id            = undefined;
+                this.uri.updateURI(undefined, queryParams);
+                this.setLayout();
+            }
+            this.mobileDetailMode = false;
         }
-        this.mobileDetailMode = false;
-        this.setLayout();
     }
 
     private setLayout() {
@@ -246,10 +263,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
                     if (!this.mobileDetailMode) {
                         this.containerDimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
-                        // }
-                        // area available
                     }
-
+                    // area available
                     const areaWidth = this.area.nativeElement.offsetWidth;
                     // area available to the table (- gutter)
                     const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
