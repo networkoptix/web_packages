@@ -209,5 +209,9 @@
     "BETAS TAB TEXT": "בטא",
     "SALES INQUIRY TEXT": "בירור מכירות עבור {{integration}}",
     "TECHNICAL INQUIRY TEXT": "בירור טכני עבור {{integration}}",
-    "FEEDBACK TEXT": "משוב לאינטגרציה {{integration}}"
+    "FEEDBACK TEXT": "משוב לאינטגרציה {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report"
 }

@@ -209,5 +209,9 @@
     "BETAS TAB TEXT": "Betaversioner",
     "SALES INQUIRY TEXT": "Försäljningsförfrågan för {{integration}}",
     "TECHNICAL INQUIRY TEXT": "Teknisk fråga för {{integration}}",
-    "FEEDBACK TEXT": "Feedback för integration {{integration}}"
+    "FEEDBACK TEXT": "Feedback för integration {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report"
 }
