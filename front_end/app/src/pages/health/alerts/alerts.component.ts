@@ -13,7 +13,8 @@ import { NxUriService }                      from '../../../services/uri.service
 import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
 import { NxUtilsService }                    from '../../../services/utils.service';
-import { throttleTime }                      from 'rxjs/operators';
+import { delay, throttleTime }                      from 'rxjs/operators';
+import { NxHealthLayoutService } from '../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -35,15 +36,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     numFilters: number;
     metricId: any;
 
-    layoutReady = new BehaviorSubject(false);
-
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
-    tableReadySubscription: SubscriptionLike;
     layoutReadySubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
 
-    mobileDetailMode: boolean;
+    layoutReady: boolean;
+    fixedLayoutClass: string;
     desktopDetailMode: boolean;
     breakpoint: string;
 
@@ -53,27 +52,17 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     tableHeaders: any;
     alerts: any;
 
-    activeTableEntity: any;
-    activePanelEntity: any;
     activePanelParams: any;
 
     alertsCount: number;
     alertCards: any;
     alertCardCount: number;
 
-    elementTilesHeight: number;
-    elementSearchHeight: number;
-    elementTableHeight: number;
-    containerDimensions: any = [];
-
     windowSizeSubscription: any;
-
-    fixedLayoutClass: string;
     tableWrapper: number;
 
-    @ViewChild('tiles', { static: false }) elementTiles: ElementRef;
-    @ViewChild('search', { static: false }) elementSearch: ElementRef;
-    @ViewChild('table', { static: false }) elementTable: ElementRef;
+    @ViewChild('tiles', { static: false }) tilesElement: ElementRef;
+    @ViewChild('search', { static: false }) searchElement: ElementRef;
     @ViewChild('area', { static: false }) area: ElementRef;
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
@@ -84,6 +73,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 private healthService: NxHealthService,
                 private uriService: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
@@ -122,46 +112,39 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setActiveEntity(alarm, false);
         }
 
-        this.layoutReadySubscription = this.layoutReady.subscribe(() => {
+        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject.subscribe(() => {
             setTimeout(() => {
-                if (this.elementTable) {
-                    this.tableWrapper = this.elementTable.nativeElement.querySelectorAll('.table-wrapper')[0].offsetWidth;
+                if (this.healthLayoutService.tableElement) {
+                    this.tableWrapper = this.healthLayoutService.tableElement
+                        .nativeElement.querySelectorAll('.table-wrapper')[0].offsetWidth;
                 }
             });
         });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mobileDetailMode = (this.activePanelEntity !== undefined);
+                this.healthLayoutService.mobileDetailMode = (this.healthLayoutService.activeEntity !== undefined);
             } else {
-                this.mobileDetailMode = false;
+                this.healthLayoutService.mobileDetailMode = false;
             }
 
-            this.desktopDetailMode = this.activePanelEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
+            this.desktopDetailMode = this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl);
 
             this.setLayout();
         });
 
-        this.tableReadySubscription = this.healthService.tableReadySubject.subscribe(ready => {
-            if (ready) {
-                this.setLayout();
-            }
-        });
-
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
-            setTimeout(() => {
-                const params = {...this.route.snapshot.queryParams};
+            const params = {...this.route.snapshot.queryParams};
 
-                if (params.id) {
-                    const alarm = this.healthService.alertsValues.find((alert) => {
-                        return (alert.metric === params.metric && alert.entity === params.id);
-                    });
-                    this.setActiveEntity(alarm, false);
-                } else {
-                    this.resetActiveEntity(false);
-                }
-            });
+            if (params.id) {
+                const alarm = this.healthService.alertsValues.find((alert) => {
+                    return (alert.metric === params.metric && alert.entity === params.id);
+                });
+                this.setActiveEntity(alarm, false);
+            } else {
+                this.resetActiveEntity(false);
+            }
         });
 
         this.menuService
@@ -181,6 +164,19 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     ngAfterViewInit() {
+        this.healthLayoutService.dimensions = [];
+        this.healthLayoutService.tilesElement = this.tilesElement;
+        this.healthLayoutService.searchElement = this.searchElement;
+        this.healthLayoutService.searchTableArea = this.area;
+
+        this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className) => {
+            this.fixedLayoutClass = className;
+        });
+
+        this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
+            this.layoutReady = value;
+        });
+
         this.setLayout();
     }
 
@@ -377,9 +373,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     setActiveEntity(alarm, updateURI = true) {
         if (alarm && alarm.entity) {
-            this.layoutReady.next(false);
-            this.activeTableEntity = alarm;
-            this.activePanelEntity = this.values[alarm.metric][alarm.entity];
+            this.healthLayoutService.layoutReady = false;
+            this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
 
             if (updateURI) {
@@ -390,7 +385,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
 
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mobileDetailMode = true;
+                this.healthLayoutService.mobileDetailMode = true;
             }
 
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
@@ -400,62 +395,31 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setLayout();
 
         } else {
-            if (this.activeTableEntity) {
+            if (this.healthLayoutService.activeEntity) {
                 this.resetActiveEntity();
             }
         }
     }
 
     resetActiveEntity(updateURI = true) {
-        if (this.activeTableEntity) {
-            this.activeTableEntity = undefined;
-            this.activePanelEntity = undefined;
-            this.activePanelParams = undefined;
-            this.mobileDetailMode  = false;
-            this.desktopDetailMode = false;
-
+        this.desktopDetailMode = false;
+        if (updateURI) {
+            const queryParams: Params = {};
+            queryParams.id            = undefined;
+            queryParams.metric        = undefined;
+            this.uriService.updateURI(undefined, queryParams);
             this.setLayout();
-
-            if (updateURI) {
-                const queryParams: Params = {};
-                queryParams.id            = undefined;
-                queryParams.metric        = undefined;
-                this.uriService.updateURI(undefined, queryParams);
-            }
         }
+        this.healthLayoutService.resetActiveEntity();
     }
 
     canSeeTable() {
-        return this.tableHeaders && this.healthService.alertsValues && !this.mobileDetailMode;
+        return this.tableHeaders && this.healthService.alertsValues && !this.healthLayoutService.mobileDetailMode;
     }
 
     private setLayout() {
-        setTimeout(() => {
-            this.elementSearchHeight = this.elementSearch ? this.elementSearch.nativeElement.offsetHeight : 0;
-            this.elementTilesHeight = this.elementTiles ? this.elementTiles.nativeElement.offsetHeight : 0;
-            this.containerDimensions = [this.elementTilesHeight, this.elementSearchHeight, 17 /*separator = 1px + padding*/];
-
-            if (this.elementTable && this.healthService.tableReady) {
-                const tableWidth = this.elementTable.nativeElement.querySelectorAll('table')[0].offsetWidth;
-                // area available
-                const areaWidth = this.area.nativeElement.offsetWidth;
-                // area available to the table (- gutter)
-                const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
-
-                const isTableFit = (availAreaWidth > tableWidth) && !this.mobileDetailMode;
-                if (this.activeTableEntity && !this.mobileDetailMode) {
-                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
-                } else {
-                    this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--no-panel';
-                }
-
-                this.layoutReady.next(true);
-            }
-        });
-
-        if (this.mobileDetailMode && this.activePanelEntity) {
-            this.fixedLayoutClass = 'fixedLayout--no-panel';
-            this.layoutReady.next(true);
+        if (this.area) {
+            this.healthLayoutService.setAlertLayout();
         }
     }
 }

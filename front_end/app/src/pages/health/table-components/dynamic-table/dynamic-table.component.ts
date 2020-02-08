@@ -15,6 +15,7 @@ import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.
 import { SubscriptionLike }         from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxHealthLayoutService } from '../../health-layout.service';
+import { delay } from 'rxjs/operators';
 
 interface Params {
     [key: string]: any;
@@ -42,8 +43,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     @Input() tableHeader = '';
     @Input() headers: any = [];
     @Input() elements: any = [];
-    @Input() dimensions;
-    @Input() activeEntity;
     @Input() showGroups = true;
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
@@ -78,6 +77,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     hideTooltip: any;
     mobileDetailMode: boolean;
 
+    pageSubscription: SubscriptionLike;
     resizeSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
     queryParamSubscription: SubscriptionLike;
@@ -106,12 +106,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.pagedItems = [];
         this.currentPage = 1;
-        this.pageSize = this.CONFIG.layout.tableLarge.rows;
         this.healthService.tableReady = false;
         this.showHorizontalTooltip = false;
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
-            this.mobileDetailMode = this.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg);
+            this.mobileDetailMode = this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg);
             if (this.dataTable) {
                 this.healthLayoutService.tableWidth = this.dataTable.nativeElement.offsetWidth;
             }
@@ -149,10 +148,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
         }
 
-        if (this.activeEntity) {
+        if (this.healthLayoutService.activeEntity) {
             this.setPagerSize();
             this.startIndex = this._elements.findIndex(elem => {
-                return this.activeEntity === elem;
+                return this.healthLayoutService.activeEntity === elem;
             });
         }
         if ([undefined, -1].includes(this.startIndex)) {
@@ -165,17 +164,38 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.healthLayoutService.tableTitleElement = this.tableTitleElement;
         this.healthLayoutService.tableElement = this.dataTable;
 
-        this.healthLayoutService.pageSizeSubject.subscribe(pageSize => {
+        this.pageSubscription = this.healthLayoutService.pageSizeSubject.pipe(delay(0)).subscribe(pageSize => {
             this.pageSize = pageSize;
             this.setPage(1);
+        });
+
+        this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
+            this.setActiveEntity(activeEntity);
         });
     }
 
     private setPagerSize() {
-        if (this.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
+        if (this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeSmall;
         } else {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
+        }
+    }
+
+    private setActiveEntity(activeEntity) {
+        this.selectedEntity = activeEntity;
+        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+            this.mobileDetailMode = !!this.selectedEntity;
+        }
+        // TODO: Try to remove timeout in CLOUD-4233
+        setTimeout(() => {
+            if (this.dataTable && !this.mobileDetailMode) {
+                this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
+            }
+        });
+
+        if (!activeEntity && !this.healthService.tableReady) {
+            this.setPage(undefined, this.startIndex || 0);
         }
     }
 
@@ -189,24 +209,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     ngOnChanges(changes: SimpleChanges) {
         let resetURI;
         let setDimensions;
-
-        if (changes.activeEntity && !changes.activeEntity.firstChange) {
-            this.selectedEntity = changes.activeEntity.currentValue;
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.mobileDetailMode = !!this.selectedEntity;
-            }
-            // TODO: Try to remove timeout in CLOUD-4233
-            setTimeout(() => {
-                if (this.dataTable && !this.mobileDetailMode) {
-                    this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
-                }
-            });
-
-            if (!changes.activeEntity.firstChange && !this.healthService.tableReady) {
-                setDimensions = true;
-                this.setPage(undefined, this.startIndex || 0);
-            }
-        }
 
         if (changes.headers) {
             this.selectedHeader = undefined;
@@ -229,22 +231,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             setDimensions = true;
         }
 
-        if (changes.dimensions &&
-            !changes.dimensions.firstChange &&
-            changes.dimensions.currentValue.length > 1 &&
-            JSON.stringify(changes.dimensions.currentValue) !== JSON.stringify(changes.dimensions.previousValue)) { // break circular dep
-
-            setDimensions = true;
-            this.healthLayoutService.dimensions = changes.dimensions.currentValue;
-        }
-
         if (setDimensions) {
-            // TODO: Try to remove timeout in CLOUD-4233
-            setTimeout(() => {
-                if (this.dataTable) {
-                    this.setTableDimensions();
-                }
-            });
+            // TODO: Try to remove timeout in CLOUD-423
+            if (this.dataTable) {
+                this.setTableDimensions();
+            }
         }
 
         if (resetURI) {
@@ -265,13 +256,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setTableDimensions() {
-        return this.healthLayoutService.setTableDimensions();
+        setTimeout(() => this.healthLayoutService.setTableDimensions());
     }
 
     ngAfterViewInit(): void {
         this.initLayoutService();
-        if (this.dimensions && this.dimensions.length) {
-            setTimeout(() => this.setTableDimensions());
+        if (this.healthLayoutService.dimensions) {
+            this.setTableDimensions();
         }
     }
 
