@@ -464,15 +464,25 @@ ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') 
 
 #Health Monitor
 ${HM INFORMATION TAB LINK}               //header/nav//a[text()="${INFORMATION TEXT}"]
+
 ${HM SYSTEM OFFLINE}                     //h2[contains(text(), "${SYSTEM OFFLINE TEXT}")]
 ${HM SYSTEM CANNOT BE ACCESSED}          //div[contains(text(), "${SYSTEM CANNOT BE ACCESSED TEXT}")]
+
+${HM NO ALERTS}                          //h2[contains(text(), "${NO ALERTS TEXT}")]
+${HM SYSTEM DOING WELL}                  //div[contains(text(), "${SYSTEM DOING WELL TEXT}")]
+
 ${HM IMPORTED REPORT RIBBON}             //nx-ribbon//div[@class="message"]/span[contains(text(), "${VIEWING IMPORTED REPORT TEXT}")]
 ${HM FILE DROP INPUT}                    //input[@class="ngx-file-drop__file-input"]
+
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM SYSTEM PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="systems"]
-${HM SERVERS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="servers"]
+${HM SERVERS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="servers"]
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
-${HM CAMERAS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="cameras"]
+${HM CAMERAS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="cameras"]
+${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
+${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
+${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
+
 
 #Footer
 ${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT}")]
