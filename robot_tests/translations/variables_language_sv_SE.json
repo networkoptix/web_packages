@@ -212,6 +212,8 @@
     "FEEDBACK TEXT": "Feedback för integration {{integration}}",
     "INFORMATION TEXT": "Information",
     "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report"
+    "SYSTEM CANNOT BE ACCESSED TEXT": "Det här systemet är offline och kan inte nås just nu.",
+    "VIEWING IMPORTED REPORT TEXT": "Du visar en importerad rapport, uppdatera sidan för att få en ny rapport",
+    "NO ALERTS TEXT": "No Alerts",
+    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
 }

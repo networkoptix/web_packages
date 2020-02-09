@@ -213,5 +213,7 @@
     "INFORMATION TEXT": "Information",
     "SYSTEM OFFLINE TEXT": "System Offline",
     "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report"
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "NO ALERTS TEXT": "No Alerts",
+    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
 }
