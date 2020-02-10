@@ -45,7 +45,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     viewHeader: boolean;
     systemCounter: number;
     loginState: any;
-    currentPath: string;
 
     getUrlSystemId: any;
     untilHaveID: any;
@@ -167,7 +166,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                   }
 
                   if (event instanceof NavigationEnd) {
-                      this.currentPath = this.active.information ? event.urlAfterRedirects : `/systems/${this.activeSystem.id}/health`;
                       // You only receive NavigationEnd events
                       if (this.systemId && !this.systems) {
                           this.systemsService
@@ -223,9 +221,17 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.systemCounter = this.systems.length;
 
             this.updateActiveSystem();
+            this.updateActive();
         });
 
 
+    }
+
+    onClick(event, page: string) {
+        if (this.isActive(page)) {
+            event.stopPropagation();
+            return false;
+        }
     }
 
     login () {
