@@ -44,13 +44,11 @@ Can be closed by clicking on the X
 Allows to log in with existing credentials and to log out
     [tags]    C24212    C24213    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
 
 Redirects to systems after log In
     [Tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Location Should Be    ${url}/systems
 
@@ -58,14 +56,12 @@ After log In, display user's email and menu in top right corner
     [Tags]    Threaded
     Set Window Size    1920    1080
     Log In    ${email}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}/span[text()="${email}"]
 
 Allows log in with existing email in uppercase
     [Tags]    Threaded
     ${email uppercase}    Convert To Uppercase    ${email}
     Log In    ${email uppercase}    ${password}
-    Validate Log In
 
 Allows log in with 'Remember Me checkmark' switched off
     [Tags]    Threaded
@@ -73,7 +69,7 @@ Allows log in with 'Remember Me checkmark' switched off
     Click Link    ${LOG IN NAV BAR}
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...   ${EMAIL INPUT}
+    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN BUTTON}
     Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
@@ -119,7 +115,6 @@ Shows non-activated user message when not activated at login; Resend activation 
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
     Log In    ${random email}    ${password}
-    Validate Log In
 
 Displays password masked
     [tags]    Threaded
@@ -132,7 +127,6 @@ Displays password masked
 Requires log In, if the user has just logged out and pressed back button in browser
     [tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
     Go Back
     Wait Until Element is Visible    ${LOG IN MODAL}
@@ -150,7 +144,6 @@ Handles more than 255 symbols email and password
 Logout refreshes page
     [tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
 
 # We don't actually allow copy of the password field at log in.
@@ -227,7 +220,6 @@ Handles two tabs, updates second tab state if logout is done on first
     # load slowly and doesn't redirect correctly after login.
     Sleep    5
     Log In    ${email}    ${password}
-    Validate Log In
     Select Window    @{tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
@@ -237,7 +229,6 @@ Handles two tabs, updates second tab state if logout is done on first
     Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In
     Log Out
-    Validate Log Out
     ${tabs}    Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${url}/systems
@@ -278,10 +269,8 @@ Log in more than 5 times
 User is logged out of browser after a password change in another browser
     [tags]    C41837
     Log In    ${email}    ${password}
-    Validate Log In
     Open Browser and go to URL    ${url}
     Log In    ${email}    ${password}
-    Validate Log In
     Switch Browser    1
     Go To    ${url}/account/password
     Sleep    1
@@ -326,5 +315,4 @@ Remember Me Checkbox
     Log    Step 4
     Validate Log In
     Persist Current Login State    ${url}
-    Validate Log Out
 

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
-from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS
+from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
 from push_notifications.models import GCMDevice
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
@@ -15,6 +15,7 @@ from api.models import Account
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
 FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns'])
+FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
@@ -187,21 +188,22 @@ class CloudNotification(models.Model):
         return self.subject
 
 
-class PushDevice(GCMDevice):
-    model = models.CharField(max_length=255)
-
-
 class PushSubscription(models.Model):
     SUB_TYPES = Choices((0, 'cloud', 'cloud'), (1, 'local', 'local'))
     type = models.IntegerField(choices=SUB_TYPES, default=SUB_TYPES.cloud)
 
-    system_id = models.UUIDField()
-    active = models.BooleanField(default=True)
-    device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE, related_name='subscriptions')
+    system_id = models.CharField(max_length=255, unique=True)
+    # active = models.BooleanField(default=True)
+    # device = models.ForeignKey(PushDevice, blank=True, null=True, on_delete=models.CASCADE, related_name='subscriptions')
 
-    account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
-    subscription_id = models.UUIDField(blank=True, null=True)
-    username = models.CharField(max_length=255, blank=True, null=True)
+    # account = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)
+    # subscription_id = models.UUIDField(blank=True, null=True)
+    # username = models.CharField(max_length=255, blank=True, null=True)
+
+
+class PushDevice(GCMDevice):
+    model = models.CharField(max_length=255)
+    subscriptions = models.ManyToManyField(PushSubscription)
 
 
 class PushNotification(models.Model):
@@ -213,7 +215,7 @@ class PushNotification(models.Model):
         max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
     )
     options = models.TextField(blank=True, null=True)
-    subscriptions = models.ManyToManyField(PushSubscription)
+    devices = models.ManyToManyField(PushDevice)
 
     raw_system_id = models.CharField(max_length=255, default='')
     raw_targets = models.TextField(null=True)
@@ -232,8 +234,7 @@ class PushNotification(models.Model):
         if device_tokens:
             devices = PushDevice.objects.filter(registration_id__in=device_tokens)
         else:
-            active_subs = self.subscriptions.filter(active=True)
-            devices = PushDevice.objects.filter(subscriptions__in=active_subs).distinct()
+            devices = self.devices.all()
 
         payload = json.loads(self.payload) if self.payload else {}
         options = json.loads(self.options) if self.options else {}

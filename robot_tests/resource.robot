@@ -8,10 +8,10 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
-Variables    getIds.py    ${ENV}
+Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
-*** variables ***
+*** Variables ***
 ${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
@@ -20,6 +20,8 @@ ${headless}    true
 @{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless
 ${speed}    0
 ${selenium_timeout}    30
+
+@{auth}    ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Open Browser and go to URL
@@ -68,7 +70,6 @@ Set Chrome Options Headless
         Call Method    ${options}    add_argument    ${option}
     END
     [Return]    ${options}
-
 
 Check Language Anonymous
     Register Keyword To Run On Failure    NONE
@@ -157,7 +158,10 @@ Validate on Register Page
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
 Register
-    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false
+    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
+    Run Keyword If    '${from}'=='desktop'    Go To    ${ENV}/register
+    Run Keyword If    '${from}'=='mobile'     Go To    ${ENV}/register/?from=mobile
+    Run Keyword If    '${from}'=='client'     Go To    ${ENV}/register/?from=client
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
@@ -167,10 +171,11 @@ Register
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
 
+
 Validate Register Success
     [arguments]    ${location}=${url}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
-    Location Should Be    ${location}
+    Wait Until Location Is    ${location}
     Run keyword and continue on failure    Title should be    ${WELCOME TEXT} ${PRODUCT_NAME}
 
 Validate Register Email Received
@@ -199,11 +204,24 @@ Get Email Link
 
 Activate
     [arguments]    ${email}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
+    ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
+    Go To    ${ENV}/activate/${code}
     Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
-    Element Should Be Visible    ${ACTIVATION SUCCESS}
-    Location Should Be    ${url}/activate/success
+    Location Should Be    ${ENV}/activate/success
+
+Register And Activate Account
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
+    Run Keyword If    '${reg}'=='api'    Register Account    ${first name}    ${last name}    ${email}    ${password}
+    Run Keyword If    '${reg}'=='ui'     Register    ${first name}    ${last name}    ${email}    ${password}
+    Run Keyword If    '${act}'=='api'    Activate Account   ${email}    ${password}
+    Run Keyword If    '${act}'=='ui'     Activate    ${email}
+    Run Keyword If    '${act}'=='ui'     CloudPortalAPI.Log In    ${ENV}    ${email}    ${password}
+
+Register and activate account with random email
+    [Arguments]    ${first name}    ${last name}    ${password}
+    ${email}=    Get Random Email    ${BASE EMAIL}
+    Register And Activate Account    ${first name}    ${last name}    ${email}    ${password}
+    [Return]    ${email}
 
 # Replaced with "Restore password using API"
 Restore password
@@ -232,12 +250,14 @@ Restore password
     Close Browser
 
 Restore Password using API
-    [Arguments]    ${email}
-    CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
-    ${link}=   Get Email Link    ${email}    restore_password
-    ${code}=   Get Code From Email Link    ${link}
-    CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${BASE PASSWORD}
-    CloudPortalAPI.Log In    ${ENV}    ${email}    ${BASE PASSWORD}
+    [Arguments]    ${email}    ${new password}
+    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    None    None
+    Should Be Equal as Strings    ${resp}    200
+    ${code}=   Get Code From Email    ${ENV}    ${auth}    ${email}    restore_password
+    ${code}=   Convert Code    ${code}
+    ${resp}=   CloudPortalAPI.Restore Password    ${ENV}    ${email}    ${code}   ${new password}
+    Should Be Equal As Strings    ${resp}    200
+    CloudPortalAPI.Log In    ${ENV}    ${email}    ${new password}
 
 Go to Users List
     ${location}=   Get Location
@@ -286,22 +306,22 @@ Check User Permissions
     ${s}=   Run Keyword And Return Status    Wait Until Element is Visible    ${ACCESS LEVEL DROPDOWN}    10
     Run Keyword If    ${s} == True    Element Text Should Be    ${ACCESS LEVEL DROPDOWN}    ${permissions}
 
-    Run Keyword If    '${permissions}' == '${OWNER TEXT}'
+    Run Keyword If    '${permissions}'=='${OWNER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
-    Run Keyword If    '${permissions}' == '${ADMIN TEXT}'
+    Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
-    Run Keyword If    '${permissions}' == '${ADV VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
-    Run Keyword If    '${permissions}' == '${VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT VIEWER}
-    Run Keyword If    '${permissions}' == '${LIVE VIEWER TEXT}'
+    Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
-    Run Keyword If    '${permissions}' == '${CUSTOM TEXT}'
+    Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
     ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
@@ -445,23 +465,6 @@ Reset user noperm first/last name
     Sleep    2
     Close Browser
 
-Reset user owner first/last name
-    Register Keyword To Run On Failure    None
-    Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
-
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    newFirstName
-    Run Keyword And Ignore Error    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    newLastName
-    Register Keyword To Run On Failure    Failure Tasks
-    Sleep    1
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Close Browser
-
 Add notowner
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
@@ -497,28 +500,23 @@ Make sure viewer is in the system
     Close Mailbox
     Close Browser
 
-Reset System Names
-    Open Browser and go to URL    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    ${False}    None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    Clear Element Text    ${RENAME INPUT}
-    Input Text    ${RENAME INPUT}    Auto Tests 2
-    Click Button    ${RENAME SAVE}
-    Check For Alert    ${SYSTEM NAME SAVED}
-    Verify In System    Auto Tests 2
+User is in cloud system
+    [Arguments]    ${user email}    ${system id}
+    @{users}=   Get Cloud System Users    ${auth}    ${system id}
+    FOR    ${user}    IN    @{users}
+        ${status}=   Run keyword and return status    Should be equal as strings   '&{user}[accountEmail]'    '${user email}'
+        Run Keyword If   ${status}    Exit For Loop
+    END
+    [Return]    ${status}
 
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
-    Click Button    ${RENAME SYSTEM}
-    Wait Until Elements Are Visible    ${RENAME CANCEL}    ${RENAME SAVE}    ${RENAME INPUT}
-    Clear Element Text    ${RENAME INPUT}
-    Input Text    ${RENAME INPUT}    Auto Tests
-    Click Button    ${RENAME SAVE}
-    Check For Alert    ${SYSTEM NAME SAVED}
-    Verify In System    Auto Tests
-    Close Browser
+Add user to cloud system if not there
+    [Arguments]    ${system id}    ${access role}    ${email}
+    ${is there}=   User is in cloud system    ${email}    ${system id}
+    Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
+
+Reset System Names
+    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
+    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}
@@ -572,18 +570,18 @@ Get All Descendant WebElements
 Wait Until Number Of Tabs Are Open
     [Arguments]    ${number}
     @{tabs}=   Get Window Handles
-    ${current tabs} =    Get length    ${tabs}
+    ${current tabs}=   Get length    ${tabs}
     Wait For Condition       return ${current tabs}==${number}
 
 Save Cookies
     #${saved cookie1} =     Get Cookie    _ga
     #${saved cookie2} =     Get Cookie    _gat_UA-51046510-4
     #${saved cookie3} =     Get Cookie    _gid
-    ${saved cookie4} =     Get Cookie    csrftoken
-    ${saved cookie5} =     Get Cookie    language
-    ${saved cookie6} =     Get Cookie    sessionid
-    ${cookies} =     Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
-    [return]     ${cookies}
+    ${saved cookie4}=   Get Cookie    csrftoken
+    ${saved cookie5}=   Get Cookie    language
+    ${saved cookie6}=   Get Cookie    sessionid
+    ${cookies}=   Create List    ${saved cookie4}    ${saved cookie5}    ${saved cookie6}
+    [return]    ${cookies}
 
 Apply Saved Cookies
     [arguments]   ${cookies}
@@ -624,3 +622,9 @@ Common Restart Logout
     Run Keyword If    ${status}    Log Out via API
     Go To    ${url}
     Sleep    2
+
+Convert Code
+    [Arguments]    ${code}
+    ${code}=   Replace String Using Regexp    ${code}    %3D    =
+    ${code}=   Replace String Using Regexp    ${code}    %2B    +
+    [Return]    ${code}

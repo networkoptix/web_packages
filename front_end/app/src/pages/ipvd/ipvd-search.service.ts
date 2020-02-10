@@ -31,7 +31,11 @@ export class IpvdSearchService {
 
     ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
-        const queryTerms = query.trim().split(' ');
+        const queryTerms = query.trim()
+                                .split(/[\s\+]+/)
+                                .filter((elm) => {
+                                    return elm !== '';
+                                });
         const preferredVendors = '';
 
         function filterCamera(c, query) {
@@ -53,7 +57,7 @@ export class IpvdSearchService {
                     lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
             }
 
-            return (query.length === 0 || result || c.maxResolution.indexOf(query) > 0);
+            return (query.length === 0 || result || c.maxResolution.indexOf(query) > -1);
         }
 
         let resolution;
@@ -117,9 +121,13 @@ export class IpvdSearchService {
             }
 
             // Filter by query
-            return queryTerms.every(term => {
-                return filterCamera(camera, term);
-            });
+            if (!queryTerms.length) {
+                return true;
+            } else {
+                return queryTerms.every(term => {
+                    return filterCamera(camera, term);
+                });
+            }
         }).sort((cameraA: any, cameraB: any) => {
             if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
                 return -1;

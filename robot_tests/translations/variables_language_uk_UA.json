@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Підтримка",
     "INTEGRATION SUPPORT URL TEXT": "URL підтримки",
     "INTEGRATION SUPPORT EMAIL TEXT": "Email підтримки",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Надіславши цю форму, ви погоджуєтесь зв'язатися з компанією QA - Test Integration Company та / або Network Optix. Тут ви знайдете політику конфіденційності QA - Test Integration Company та політику конфіденційності Network Optix, яка містить інструкції щодо відкликання вашої згоди.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Повідомлення відправлено.",
     "REGISTER TITLE TEXT": "Створити обліковий запис",
     "DOWNLOAD TITLE TEXT": "Завантажити %VMS_NAME%",
@@ -207,7 +207,13 @@
     "RELEASES TAB TEXT": "Релізи",
     "PATCHES TAB TEXT": "Патчі",
     "BETAS TAB TEXT": "Бета",
-    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "NO ALERTS TEXT": "No Alerts",
+    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
 }

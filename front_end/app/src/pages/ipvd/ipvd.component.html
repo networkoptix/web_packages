@@ -2,7 +2,7 @@
     <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
         <nx-search
                 name="filterModel"
-                [(ngModel)]="filterModel"
+                [ngModel]="filterModel"
                 (ngModelChange)="modelChanged($event)"
                 [placeholder]="placeholder"
                 ngDefaultControl>
@@ -65,7 +65,7 @@
         <nx-vendor-list
                 [vendors]="vendors"
                 [cameras]="cameras.length"
-                [(ngModel)]="filterModel"
+                [ngModel]="filterModel"
                 (ngModelChange)="modelChanged($event)">
         </nx-vendor-list>
         <div>

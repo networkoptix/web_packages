@@ -6,8 +6,11 @@ import { IntegrationService }           from './integration.service';
 import { NxUriService }                 from '../../services/uri.service';
 import { NxConfigService }              from '../../services/nx-config';
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { Subscription }                 from 'rxjs';
 import { NxAccountService }             from '../../services/account.service';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { NxPageService }                from '../../services/page.service';
+import { NxUtilsService }               from '../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -110,7 +113,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         });
 
         // Ensure model change will be trigger
-        this.filterModel = { ...this.filterModel };
+        this.filterModel = NxUtilsService.deepCopy(this.filterModel);
     }
 
     setFilter() {
@@ -151,7 +154,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     }
 
     modelChanged(searchModel): void {
-        this.filterModel.query = searchModel.query;
+        this.filterModel = NxUtilsService.deepCopy(searchModel);
         this.setFilter();
     }
 

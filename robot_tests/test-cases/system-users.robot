@@ -13,16 +13,15 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Log in to Auto Tests System
-    [arguments]    ${email}
+    [Arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${email}    ${password}    button=None
-    Validate Log In
     Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Check System Text
-    [arguments]    ${user}
+    [Arguments]    ${user}
     Log Out
     Log in to Auto Tests System    ${user}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
@@ -32,14 +31,15 @@ Check System Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    Make sure notowner is in the system
+#    Make sure notowner is in the system
+    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
     Open Browser and go to URL    ${url}
 
 Restart
     Common Restart Logout    ${url}
 
 Share with Adminstrator
-    [arguments]    ${random email}
+    [Arguments]    ${random email}
     Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
     Click Button    ${SHARE BUTTON SYSTEMS}
     Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
@@ -52,7 +52,7 @@ Share with Adminstrator
     Click Button    ${SHARE BUTTON MODAL}
 
 Check Special Hint
-    [arguments]    ${type}
+    [Arguments]    ${type}
     Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
     Click Button    ${SHARE PERMISSIONS DROPDOWN}
     Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
@@ -74,7 +74,7 @@ Check Special Hint
 
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
-    [tags]    C41884
+    [Tags]    C41884
     Log In    ${EMAIL OWNER}    ${password}
 
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
@@ -91,7 +91,6 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
 
     Log Out
     Log In To Auto Tests System    ${EMAIL NOT OWNER}
-    Validate Log In
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL CANCEL}
@@ -110,7 +109,6 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
 
     Log Out
     Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
 
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
@@ -126,7 +124,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Check For Alert    ${NEW PERMISSIONS SAVED}
 
 should display same user data as user provided during registration
-    [tags]    email    Threaded
+    [Tags]    email    Threaded
 #create user
     ${random email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
@@ -136,7 +134,6 @@ should display same user data as user provided during registration
     Log in to Auto Tests System    ${EMAIL OWNER}
     Share To    ${random email}    ${ADMIN TEXT}
     Log Out
-    Validate Log Out
 
 #verify user was added with appropriate name
     Log In    ${random email}    ${password}
@@ -151,15 +148,14 @@ should display same user data as user provided during registration
 
 #remove new user from system
     Log Out
-    Validate Log Out
     Log in to Auto Tests System    ${EMAIL OWNER}
     Remove User Permissions    ${random email}
     # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     # Delete All Emails
     # Close Mailbox
 
-should display same user data as shown in user account
-    [tags]    email    C41573    C41842    Threaded
+Should display same user data as shown in user account
+    [Tags]    email    C41573    C41842    Threaded
 #create user
     ${random email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
@@ -204,7 +200,7 @@ should display same user data as shown in user account
     # Close Mailbox
 
 Share button - opens dialog
-    [tags]    C41888    Threaded
+    [Tags]    C41888    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -215,7 +211,7 @@ Share button - opens dialog
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 Sharing link for anonymous - first ask login, then show share dialog
-    [tags]    Threaded
+    [Tags]    Threaded
     Log in to Auto Tests System    ${email}
     ${location}    Get Location
     Log Out
@@ -226,7 +222,7 @@ Sharing link for anonymous - first ask login, then show share dialog
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 After closing dialog, called by link - clear link
-    [tags]    C41888    Threaded    CLOUD-3733
+    [Tags]    C41888    Threaded    CLOUD-3733
     Log in to Auto Tests System    ${email}
 
 #Check Cancel Button
@@ -245,7 +241,7 @@ After closing dialog, called by link - clear link
     Wait Until Location Contains    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
 
 Sharing roles are ordered: more access is on top of the list with options
-    [tags]    Threaded
+    [Tags]    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -258,7 +254,7 @@ Sharing roles are ordered: more access is on top of the list with options
     Wait Until Page Does Not Contain Element    ${SHARE MODAL}
 
 When user selects role - special hint appears
-    [tags]    C41901    Threaded
+    [Tags]    C41901    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -278,7 +274,7 @@ Sharing works
     Remove User Permissions    ${random email}
 
 Admin cannot delete or edit self
-    [tags]    C41904    Threaded
+    [Tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -286,7 +282,7 @@ Admin cannot delete or edit self
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin cannot edit self via share
-    [tags]    C41904    Threaded
+    [Tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -307,7 +303,7 @@ Admin cannot edit self via share
     Click Button    ${SHARE CANCEL}
 
 Owner cannot edit self via share
-    [tags]    C41904    Threaded
+    [Tags]    C41904    Threaded
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -328,7 +324,7 @@ Owner cannot edit self via share
     Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Admin cannot delete or edit other admins
-    [tags]    C41905
+    [Tags]    C41905
     Go To    ${url}/register
     ${random email}    Get Random Email    ${BASE EMAIL}
     Register    mark    harmill    ${random email}    ${password}
@@ -344,7 +340,7 @@ Admin cannot delete or edit other admins
     Remove User Permissions    ${random email}
 
 Admin cannot invite another admin
-    [tags]    C41905    Threaded
+    [Tags]    C41905    Threaded
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
@@ -361,7 +357,7 @@ Admin cannot invite another admin
     Click Button    ${SHARE CANCEL}
 
 Edit permission works
-    [tags]    C41900
+    [Tags]    C41900
     ${random email}    Get Random Email    ${BASE EMAIL}
     # Maximize Browser Window
     Log in to Auto Tests System    ${email}
@@ -373,7 +369,7 @@ Edit permission works
     Remove User Permissions    ${random email}
 
 Delete user works
-    [tags]    email    C41903
+    [Tags]    email    C41903
     Go To    ${url}/register
     ${random email}    Get Random Email    ${BASE EMAIL}
     Register    mark    harmill    ${random email}    ${password}
@@ -398,11 +394,10 @@ Delete user works
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
 
 Share with registered user works and sends him notification
-    [tags]    email    C41888
+    [Tags]    email    C41888
     #log in as noperm to check language and change its language to the current testing language
     #otherwise it may receive the notification in another language and fail the email subject comparison
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Sleep    1
     Log Out
     Log in to Auto Tests System    ${email}
@@ -439,14 +434,13 @@ Share with registered user works and sends him notification
     Remove User Permissions    ${EMAIL NOPERM}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
-    [tags]    email    C41889
+    [Tags]    email    C41889
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log in to Auto Tests System    ${email}
     Verify In System    Auto Tests
     Share To    ${random email}    ${ADMIN TEXT}
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Log Out
-    Validate Log Out
     ${link}    Get Email Link    ${random email}    register
     Go To    ${link}
     Register
@@ -457,7 +451,7 @@ Share with unregistered user - brings them to registration page with code with c
     Validate Log In
 
 Sharing system with a user who is already in the list updates their permissions
-    [tags]    C41892
+    [Tags]    C41892
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log in to Auto Tests System    ${email}
     Verify In System    Auto Tests
@@ -480,7 +474,7 @@ Sharing system with a user who is already in the list updates their permissions
     Remove User Permissions    ${random email}
 
 Check share email for registered user
-    [tags]    C47297
+    [Tags]    C47297
     #log in as noperm to check language and change its language to the current testing language
     #otherwise it may receive the notification in another language and fail the email subject comparison
     Log In    ${EMAIL NOPERM}    ${password}
@@ -526,7 +520,7 @@ Check share email for registered user
     Remove User Permissions    ${EMAIL NOPERM}
 
 User with client custom settings has access to system
-    [tags]    Threaded
+    [Tags]    Threaded
     Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
     Location Should Be    ${url}/systems/${AUTO_TESTS SYSTEM ID}
     Verify In System    ${AUTO TESTS}
@@ -543,7 +537,7 @@ User can be invited with client custom permissions
     Close Mailbox
 
 Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
-    [tags]    C63390
+    [Tags]    C63390
     # Step 1
     Log    Step 1
     Log in to Auto Tests System    ${email}
@@ -581,7 +575,7 @@ Disable enable User on Cloud Portal correctly affects the User on Cloud Portal
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
 
 Administrator can add, disable and enable Viewer
-    [tags]    C63391
+    [Tags]    C63391
     # Prep - create new user to be added to autotest system
     Log    Prep
     Go To    ${url}/register
@@ -598,7 +592,6 @@ Administrator can add, disable and enable Viewer
     Log Out
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
-    Validate Log In
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
     # Step 4
@@ -617,7 +610,6 @@ Administrator can add, disable and enable Viewer
     Log Out
     Go To    ${ENV}/systems
     Log In   ${random email}    ${BASE PASSWORD}    button=None
-    Validate Log In
     Wait Until Location Is    ${ENV}/systems
     Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
     # Step 6
@@ -636,7 +628,6 @@ Administrator can add, disable and enable Viewer
     Log Out
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
-    Validate Log In
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
 
@@ -684,5 +675,3 @@ Only Admin and Owner can access the share URL
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
     Check For Alert    ${NO PERMISSION TO SHARE TEXT}
     Log Out
-
-

@@ -1,8 +1,7 @@
 <div [ngSwitch]="healthService.ready" class="h-100">
-
     <div *ngSwitchCase="false" class="h-100">
         <nx-page-placeholder *ngIf="canShowOffline()"
-                             [condition]="systemReady && system && !system.isOnline"
+                             [condition]="system && !system.isOnline"
                              type="OFFLINE"
                              preloader="true"
                              class="page-placeholder">

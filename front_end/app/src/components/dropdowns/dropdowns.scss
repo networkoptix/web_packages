@@ -199,10 +199,11 @@ header {
             }
 
             nx-checkbox {
-                position : absolute;
-                left     : 10px;
-                top      : 3px;
-                height   : 20px;
+                position    : absolute;
+                left        : 10px;
+                height      : 20px;
+                display     : flex;
+                align-items : center;
 
                 & + label {
                     position     : absolute;
