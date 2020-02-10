@@ -9,18 +9,19 @@ Force Tags        system
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Log in to Autotests 2 System
-    [arguments]    ${email}
+    [Arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${email}    ${password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${MERGE BUTTON SYSTEM DISABLED}
-    Run Keyword If    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Run Keyword If    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Restart
     Common Restart Logout    ${url}
@@ -166,23 +167,17 @@ Owner is able to rename offline system via Cloud
     Input Text    ${RENAME INPUT}    ${new name}
     Click button    ${RENAME SAVE}
     Log Out
-    Validate Log Out
 
     # Make sure new name is saved
-    Log in to Autotests 2 System    ${EMAIL OWNER}
-    Verify In System   ${new name}
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    &{system info}[name]     ${new name}
 
     # Return to initial name
-    Open Rename System Dialog
-    Input Text    ${RENAME INPUT}    ${current name}
-    Click Button    ${RENAME SAVE}
-    Log Out
-    Validate Log Out
+    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${current name}
 
     # Make sure old name is saved
-    Log in to Autotests 2 System    ${EMAIL VIEWER}
-    Verify In System    ${current name}
-    Log Out
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    &{system info}[name]     ${current name}
 
 Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]    Threaded
@@ -213,3 +208,4 @@ Should show (you) for owner and (owner's name & email) for non-owners
     Log in to Autotests 2 System    ${EMAIL VIEWER}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}
+

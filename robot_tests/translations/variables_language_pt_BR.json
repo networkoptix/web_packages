@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Suporte",
     "INTEGRATION SUPPORT URL TEXT": "URL de suporte",
     "INTEGRATION SUPPORT EMAIL TEXT": "E-mail de suporte",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by QA - Test Integration Company and/or Network Optix. You will find QA - Test Integration Company privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "A mensagem foi enviada.",
     "REGISTER TITLE TEXT": "Criar Conta",
     "DOWNLOAD TITLE TEXT": "Baixar %VMS_NAME%",
@@ -207,7 +207,13 @@
     "RELEASES TAB TEXT": "Releases",
     "PATCHES TAB TEXT": "Patches",
     "BETAS TAB TEXT": "Betas",
-    "SALES INQUIRY TEXT": "Sales inquiry for vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "NO ALERTS TEXT": "No Alerts",
+    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
 }

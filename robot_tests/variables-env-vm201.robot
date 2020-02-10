@@ -13,23 +13,28 @@ ${SCREENSHOTDIRECTORY}                \Screenshots
 ${BROWSER}                            Chrome
 
 #Emails
-${BASE EMAIL}                         noptixautoqa@gmail.com
+${BASE EMAIL}                         noptixautoqat4@gmail.com
 ${BASE EMAIL PASSWORD}                qweasd!@#$%
 ${BASE HOST}                          imap.gmail.com
 ${BASE PORT}                          993
-${EMAIL VIEWER}                       noptixautoqa+viewer@gmail.com
-${EMAIL ADV VIEWER}                   noptixautoqa+advviewer@gmail.com
-${EMAIL LIVE VIEWER}                  noptixautoqa+liveviewer@gmail.com
-${EMAIL OWNER}                        noptixautoqa+owner@gmail.com
-${EMAIL NOT OWNER}                    noptixautoqa+notowner@gmail.com
-${EMAIL ADMIN}                        noptixautoqa+admin@gmail.com
-${EMAIL CUSTOM}                       noptixautoqa+custom@gmail.com
-${EMAIL CLIENT CUSTOM}                noptixautoqa+clientcustom@gmail.com
+${EMAIL VIEWER}                       noptixautoqat4+viewer@gmail.com
+${EMAIL ADV VIEWER}                   noptixautoqat4+advviewer@gmail.com
+${EMAIL LIVE VIEWER}                  noptixautoqat4+liveviewer@gmail.com
+${EMAIL OWNER}                        noptixautoqat4+owner@gmail.com
+${EMAIL NOT OWNER}                    noptixautoqat4+notowner@gmail.com
+${EMAIL ADMIN}                        noptixautoqat4+admin@gmail.com
+${EMAIL CUSTOM}                       noptixautoqat4+custom@gmail.com
+${EMAIL CLIENT CUSTOM}                noptixautoqat4+clientcustom@gmail.com
+${EMAIL AUTO TESTS ANCHOR}            noptixautoqat4+autotestsanchor@gmail.com
+${EMAIL AUTO TESTS 2 ANCHOR}          noptixautoqat4+autotests2anchor@gmail.com
+${EMAIL MERGE OWNER 1}                noptixautoqat4+mergeowner1@gmail.com
+${EMAIL MERGE OWNER 2}                noptixautoqat4+mergeowner2@gmail.com
+${EMAIL MERGE OWNER 3.0}              noptixautoqat4+mergeowner3.0@gmail.com
 @{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}
 ${ADMIN FIRST NAME}                   mark
 ${ADMIN LAST NAME}                    hamil
 ${EMAIL UNREGISTERED}                 noptixautoqa+unregistered@gmail.com
-${EMAIL NOPERM}                       noptixautoqa+noperm@gmail.com
+${EMAIL NOPERM}                       noptixautoqat4+noperm@gmail.com
 ${BASE PASSWORD}                      qweasd 123
 ${ALT PASSWORD}                       qweasd1234
 

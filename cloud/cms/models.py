@@ -101,6 +101,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
                                                                             "%VMS_NAME%": "%VMS_NAME%"})
 
+        public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
+            getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
         data = {
             'version_id': asset.version_id(),
             'languages': customization.languages_list,
@@ -127,6 +130,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
+                'health_monitoring_enabled': asset.read_global_value('%HM_ENABLED%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
@@ -142,7 +146,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
                 'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
-                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC'),
+                'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
             'cloud_capabilities': {
@@ -359,7 +363,7 @@ class Asset(models.Model):
         return self.asset_type.type == asset_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
-        if self.asset_type.single_customization:
+        if self.asset_type and self.asset_type.single_customization:
             actual_customization = self.customizations.first()
             if actual_customization:
                 customization = actual_customization.name
@@ -642,7 +646,8 @@ class DataStructure(models.Model):
                                                                     DataStructure.DATA_TYPES.external_file,
                                                                     DataStructure.DATA_TYPES.external_image,
                                                                     DataStructure.DATA_TYPES.check_box,
-                                                                    DataStructure.DATA_TYPES.multiselect]):
+                                                                    DataStructure.DATA_TYPES.multiselect,
+                                                                    DataStructure.DATA_TYPES.object]):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value

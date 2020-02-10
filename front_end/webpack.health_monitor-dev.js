@@ -61,7 +61,8 @@ module.exports = merge(common, {
             },
             {
                 context: '/static/images/',
-                target: cloudInstance,
+                target: localStatic,
+                pathRewrite : { '^/static': '' },
                 changeOrigin: true,
                 secure: false
             },

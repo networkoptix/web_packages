@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "技术支持",
     "INTEGRATION SUPPORT URL TEXT": "支持 URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "支持电子邮件",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "提交此表格即表示您同意由QA - Test Integration公司和/或Network Optix与您联系。您可在此处浏览QA - Test Integration公司和Network Optix 的隐私权政策，其中包含如何撤回您的同意的说明。",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "訊息已傳送。",
     "REGISTER TITLE TEXT": "创建帐户中",
     "DOWNLOAD TITLE TEXT": "下载 %VMS_NAME%",
@@ -207,7 +207,13 @@
     "RELEASES TAB TEXT": "版本发布",
     "PATCHES TAB TEXT": "补丁",
     "BETAS TAB TEXT": "测试版本",
-    "SALES INQUIRY TEXT": "vis - QA - face_recognition 的產品咨询",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback for integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
+    "FEEDBACK TEXT": "Feedback for integration {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "NO ALERTS TEXT": "No Alerts",
+    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
 }

@@ -1,14 +1,15 @@
 from django.conf.urls import url, include
+from django.urls import path
 from notifications.views.send import send_notification
-from notifications.views.push_notification import push_notification, register_device, Subscribe, \
+from notifications.views.push_notification import push_notification, register_device, Subscriptions, \
     DeviceSubscriptionListView, unregister_device
 
 public_patterns = [
     url(r'^push_notification$', push_notification),
     url(r'^register_device', register_device),
     url(r'^unregister_device', unregister_device),
-    url(r'^subscribe', Subscribe.as_view()),
-    url(r'^subscriptions', DeviceSubscriptionListView.as_view()),
+    path('subscriptions/<str:deviceToken>', Subscriptions.as_view()),
+    path('subscriptions', DeviceSubscriptionListView.as_view())
 ]
 
 urlpatterns = [

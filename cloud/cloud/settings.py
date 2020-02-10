@@ -205,6 +205,12 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "TIMEOUT": None
     },
+    "push_config": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 15 * 60,  # 15 minutes
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION']
+    },
     "deployment": REDIS_CACHE,
     "global": REDIS_CACHE,
     "integrations": REDIS_CACHE,
@@ -542,6 +548,7 @@ DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
 fcm = conf.get('fcm')
 if fcm:
     PUSH_NOTIFICATIONS_SETTINGS = {
+        'CONFIG': 'notifications.conf.PushConfig',
         'FCM_API_KEY': fcm.get('priv_key'),
         'MAX_RETRIES': 3,
         'RETRY_INTERVAL': 20,
