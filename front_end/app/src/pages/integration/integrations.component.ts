@@ -6,9 +6,7 @@ import { IntegrationService }           from './integration.service';
 import { NxUriService }                 from '../../services/uri.service';
 import { NxConfigService }              from '../../services/nx-config';
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { Subscription }                 from 'rxjs';
 import { NxAccountService }             from '../../services/account.service';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { NxPageService }                from '../../services/page.service';
 import { NxUtilsService }               from '../../services/utils.service';
 
