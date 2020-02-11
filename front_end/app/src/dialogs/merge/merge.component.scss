@@ -14,3 +14,17 @@
         }
     }
 }
+
+.svg-icon {
+    svg {
+        height: 24px;
+        pointer-events: none;
+    }
+    &.next-button {
+        svg {
+            .st0 {
+                fill: $light1;
+            }
+        }
+    }
+}

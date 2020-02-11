@@ -68,12 +68,12 @@
             class="error-label">
         </p>
     </div>
-    <div class="modal-footer float-right">
+    <div class="modal-footer float-right next-button">
         <nx-process-button
             [process]="checkMergeabilityProcess"
             [form]="checkMergeForm"
             actionType="primary"
-            svgSrc="user"
+            [svgSrc]="{ src: 'arrow_right', height: '24', color: 'light1' }"
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
     </div>
 </form>
@@ -83,24 +83,26 @@
         <div>
             <div class="radio-group">
                 <nx-radio name="firstSystem" [value]="system"
-                            [label]="system.name || system.info && system.info.name"
-                            componentId="firstSystem" [(ngModel)]="primarySystem"
-                            (ngModelChange)="setSystems()"></nx-radio>
+                    [label]="system.name || system.info && system.info.name"
+                    componentId="firstSystem" [(ngModel)]="primarySystem"
+                    (ngModelChange)="setSystems()"></nx-radio>
             </div>
             <div class="radio-group">
                 <nx-radio name="secondSystem" [value]="targetSystem"
-                            [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
-                            componentId="secondSystem" [(ngModel)]="primarySystem"
-                            (ngModelChange)="setSystems()"></nx-radio>
+                    [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
+                    componentId="secondSystem" [(ngModel)]="primarySystem"
+                    (ngModelChange)="setSystems()"></nx-radio>
             </div>
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between">
-        <button class="btn btn-default" (click)="machine.goBack()">
-            <img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+        <button class="btn btn-default svg-icon" (click)="machine.goBack()">
+            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
-        <button class="btn btn-primary" (click)="machine.transition('confirmMerge')" translate>
-            Next<img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+        <button class="btn btn-primary svg-icon next-button" (click)="machine.transition('confirmMerge')">
+            {{ 'Next' | translate }}
+            <svg-icon [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                class="white-svg ml-2" [applyCss]="true"></svg-icon>
         </button>
     </div>
 </form>
@@ -134,15 +136,15 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer d-flex justify-content-between">
-        <button class="btn btn-default" (click)="machine.goBack()">
-            <img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+    <div class="modal-footer d-flex justify-content-between next-button">
+        <button class="btn btn-default svg-icon" (click)="machine.goBack()">
+            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="mergingProcess"
             [form]="confirmMergeForm"
             actionType="primary"
-            svgSrc="user"
+            [svgSrc]="{ src: 'arrow_right', height: '24', color: 'light1' }"
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
     </div>
 </form>

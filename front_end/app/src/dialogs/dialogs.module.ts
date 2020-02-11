@@ -25,6 +25,7 @@ import { GenericModalContent, NxModalGenericComponent } from './generic/generic.
 import { NxDialogsService }                             from './dialogs.service';
 import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
 import { RouterModule }                                 from '@angular/router';
+import { AngularSvgIconModule }                         from 'angular-svg-icon';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { RouterModule }                                 from '@angular/router';
         ComponentsModule,
         DirectivesModule,
         RouterModule,
+        AngularSvgIconModule,
     ],
     declarations   : [
         LoginModalContent,

@@ -15,7 +15,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() actionType: any;
     @Input() form: any;
     @Input() customClass: any = '';
-    @Input() svgSrc: string;
+    @Input() svgSrc: any;
 
     buttonClass: string;
     CONFIG: any;

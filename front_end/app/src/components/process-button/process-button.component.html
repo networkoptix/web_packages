@@ -10,6 +10,10 @@
             [disabled]="buttonDisabled"
             (click)="clickFn(); checkForm(); $event.stopPropagation();">
         {{buttonText}}
-        <img *ngIf="svgSrc" style="height: 24px" [src]="CONFIG.icons.dir + 'user.svg'" />
+        <svg-icon *ngIf="svgSrc"
+            [src]="CONFIG.icons.dir + svgSrc.src + '.svg'"
+            [ngClass]="{ 'white-svg': svgSrc.color === 'light1', 'ml-2': true }"
+            [svgStyle]="{'height.px': svgSrc.height, 'pointer-events': 'none' }"
+            [applyCss]="true"></svg-icon>
     </button>
 </div>
