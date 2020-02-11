@@ -96,7 +96,7 @@
                             <thead>
                             <tr>
                                 <th>All</th>
-                                <th *ngFor="let system of this.systems" class="ellipsis" style="max-width: 100px;" [title]="system.name">
+                                <th *ngFor="let system of this.systems" class="ellipsis" title="{{system.name}} ({{system.id}})">
                                     {{system.name}} ({{system.id}})
                                 </th>
                             </tr>
@@ -180,7 +180,7 @@
             <nx-block side-element type="gray"
                       class="d-block mt-3"
                       *ngIf="receivedMessages.length> 0">
-                <header>Forground Messages</header>
+                <header>Foreground Messages</header>
                 <div class="foreground-messages-content pre-scrollable">
                     <nx-section *ngFor="let message of receivedMessages">
                         <h5>{{ message.notification.title }}</h5>

@@ -37,4 +37,8 @@
   overflow-x: auto;
   width: 100%;
   white-space: nowrap;
+
+  th, td {
+    max-width: 100px;
+  }
 }
