@@ -48,6 +48,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     outdatedVersion = false;
 
     mediaLayoutClass: string;
+    selectedSubscription: Subscription;
 
     private resizeSubscription: Subscription;
 
@@ -101,7 +102,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuservice.selectedSectionSubject.subscribe(selection => {
+        this.selectedSubscription = this.menuservice.selectedSectionSubject.subscribe(selection => {
             if (this.menu.selectedSection !== selection) {
                 this.menu.selectedSection = selection;
                 this.menu                 = {...this.menu}; // trigger onChang
