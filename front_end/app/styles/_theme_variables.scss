@@ -130,11 +130,11 @@ $modal-backdrop-bg:         $dark15;
 $modal-backdrop-opacity:    0.2;
 $modal-content-bg:          $light1;
 $modal-title-font-weight:   600;
-$modal-title-line-height:   24px;
-$modal-title-padding:       12px;
-$modal-inner-padding:       12px;
+$modal-title-line-height:   rem(24px);
+$modal-title-padding:       rem(12px);
+$modal-inner-padding:       rem(12px);
 
-$form-group-margin-bottom:  12px;
+$form-group-margin-bottom:  rem(12px);
 
 $state-success-text:             $green3;
 $state-success-bg:               $green2;
