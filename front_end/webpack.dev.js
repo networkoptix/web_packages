@@ -79,6 +79,14 @@ module.exports = merge(common, {
                 changeOrigin: true,
                 secure      : false
             },
+            // Use firebase service worker locally
+            {
+                context: ['/firebase-messaging-sw.js'],
+                target: localStatic,
+                pathRewrite: {'^/firebase-messaging-sw.js': 'scripts/vendor/firebase-messaging-sw.js'},
+                changeOrigin: true,
+                secure: false
+            },
         ],
         https             : {
             spdy: {

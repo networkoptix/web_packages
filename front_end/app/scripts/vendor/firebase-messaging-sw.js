@@ -6,17 +6,20 @@ importScripts('/static/scripts/vendor/firebase-messaging.js');
 fetch('/api/utils/settings')
     .then(
         function (response) {
-          if (response.status === 200) {
-            response.json().then(function (data) {
-              // Initialize the Firebase app in the service worker by passing in the messagingSenderId.
-              firebase.initializeApp({
-                'messagingSenderId': data.pushConfig.messagingSenderId
-              });
+            if (response.status === 200) {
+                response.json().then(function (data) {
+                    // Initialize the Firebase app in the service worker by passing in the messagingSenderId.
+                    firebase.initializeApp({
+                        'messagingSenderId': data.pushConfig.messagingSenderId,
+                        'projectId': data.pushConfig.projectId,
+                        'appId': data.pushConfig.appId,
+                        'apiKey': data.pushConfig.apiKey
+                    });
 
-              // Retrieve an instance of Firebase Messaging so that it can handle background messages.
-              const messaging = firebase.messaging();
-            });
-          }
+                    // Retrieve an instance of Firebase Messaging so that it can handle background messages.
+                    const messaging = firebase.messaging();
+                });
+            }
         }
     );
 

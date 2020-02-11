@@ -31,9 +31,10 @@
                                 invalid and removes it from the database.</p>
                         </div>
 
-                        <button *ngIf="deviceToken === null" class="btn btn-success"
+                        <button *ngIf="this.permission === 'default'" class="btn btn-success"
                                 (click)="onAllowNotifications()">Allow Notifications
                         </button>
+                        <span *ngIf="this.permission === 'denied'">Notification permission was denied.</span>
 
                         <div class="mt-2">
                             <h4>Debug Info</h4>
@@ -84,7 +85,7 @@
                         <tbody>
                         <tr *ngFor="let device of this.devices">
                             <td [ngStyle]="{'font-family': this.deviceToken === device.deviceToken ? 'robotobold' : 'robotoregular'}">
-                                {{device.name}}
+                                {{device.deviceInfo.name}}
                             </td>
                         </tr>
                         </tbody>
@@ -94,13 +95,20 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th *ngFor="let system of this.systems">
+                                <th>All</th>
+                                <th *ngFor="let system of this.systems" class="ellipsis" style="max-width: 100px;" [title]="system.name">
                                     {{system.name}} ({{system.id}})
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr *ngFor="let device of this.devices">
+                                <td>
+                                    <nx-checkbox
+                                            [(ngModel)]="deviceSubscriptions[device.deviceToken].all"
+                                            (change)="onToggleSubscribe(device.deviceToken, 'all')">
+                                    </nx-checkbox>
+                                </td>
                                 <td *ngFor="let system of this.systems">
                                     <nx-checkbox
                                             [(ngModel)]="deviceSubscriptions[device.deviceToken][system.id]"
@@ -112,7 +120,6 @@
                         </table>
                     </div>
                         </div>
-                    <p class="footnote float-right">*hyphen indicates a subscription that does not exist yet</p>
                 </nx-section>
                 <nx-section *ngIf="!devices || devices.length === 0">
                     No registered devices found
