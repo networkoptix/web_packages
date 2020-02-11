@@ -8,5 +8,8 @@
     <button class="btn {{buttonClass}}"
             [ngClass]="{'processing' : process && process.processing}"
             [disabled]="buttonDisabled"
-            (click)="clickFn(); checkForm(); $event.stopPropagation();">{{buttonText}}</button>
+            (click)="clickFn(); checkForm(); $event.stopPropagation();">
+        {{buttonText}}
+        <img *ngIf="svgSrc" style="height: 24px" [src]="CONFIG.icons.dir + 'user.svg'" />
+    </button>
 </div>

@@ -134,6 +134,10 @@ a.disabled {
     color: $brand-danger !important;
 }
 
+.error-label {
+    color: $error !important;
+}
+
 .loading .auth-visible,
 .loading .auth-hidden{
     display: none !important;

@@ -1,3 +1,16 @@
+@import '../../styles/typography';
+@import '../../../styles/theme_palette';
+
 .radio-group{
     margin-top: 5px;
+}
+.modal-body {
+    .server-url {
+        .server-url-label {
+            margin-top: 12px;
+        }
+        label:last-child, input:last-child {
+            margin-bottom: 0 !important;
+        }
+    }
 }

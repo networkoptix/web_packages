@@ -150,6 +150,7 @@ export class NxConfigService {
                 minClassesCount   : 2,
                 strongClassesCount: 3
             },
+            urlRegex: '',
             downloads                     : {
                 mobile: [
                     {

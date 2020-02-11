@@ -191,7 +191,7 @@
             }
         }
 
-        p:last-of-type {
+        p:last-of-type:not(:first-of-type) {
             margin-bottom : 0;
         }
     }

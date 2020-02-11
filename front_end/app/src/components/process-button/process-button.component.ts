@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { NxConfigService }                             from '../../services/nx-config';
 
 @Component({
     selector: 'nx-process-button',
@@ -14,10 +15,13 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() actionType: any;
     @Input() form: any;
     @Input() customClass: any = '';
+    @Input() svgSrc: string;
 
     buttonClass: string;
+    CONFIG: any;
 
-    constructor() {
+    constructor(private configService: NxConfigService) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

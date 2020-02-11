@@ -6,151 +6,252 @@
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
 </div>
-
-<div *ngIf="systemError; else showMergeForm">
+<form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
-        <div *ngIf="!multipleSystems">
-            <p class="help-block-no-height" translate>
-                You can only merge Systems where you are the owner.
-            </p>
-            <p class="help-block-no-height"
-               [innerHTML]="'dialogs.merge.connectToCloud' | translate: {
-                    cloudName: CONFIG.cloudName,
-                    vmsName: CONFIG.vmsName
-               }">
-            </p>
-        </div>
-        <div *ngIf="outOfDate">
-            <p class="help-block-no-height" translate>
-                Some of your servers don't support cloud System merge because of outdated software version.
-            </p>
-            <p class="help-block-no-height" translate>
-                Update them to the <a routerLink="/download" target="_blank" translate>latest build</a>
-            </p>
-        </div>
+        <p *ngIf="machine.state.show.outdatedVersionsText" translate>
+            Some of the servers in this System have outdated software versions and can not be merged.
+        </p>
+        <p *ngIf="machine.state.show.updateToText" translate>
+            Update them to the <a routerLink="/download" target="_blank" translate>latest build</a>
+        </p>
     </div>
     <div class="modal-footer">
-        <button type="button"
-                class="btn btn-primary wide-button" (click)="activeModal.close()">
-            {{ 'OK' | translate}}
+        <button *ngIf="machine.state.show.okButton" class="btn btn-primary" (click)="activeModal.close()" translate>
+            OK
         </button>
-        <button *ngIf="CONFIG.allowDebugMode" type="button" class="btn btn-danger"
-                (click)="systemError = false; outOfDate = false;">Go to Merge (Debug)</button>
     </div>
-</div>
-
-<ng-template #showMergeForm>
-    <form #mergeForm="ngForm" name="mergeForm" novalidate>
-        <div *ngIf="state == 'select'">
-            <div class="modal-body">
-                <div class="form-group mb-1">
-                    <label for="system" translate>Merge current System with</label>
-                    <nx-select id="system" [items]="processedSystems" [selected]="targetSystemDropdown" (onSelected)="setTargetSystem($event)"></nx-select>
-                </div>
-                <div *ngIf="checking; else notChecking">
-                    <p class="help-block-no-height mb-2 light-text" translate>Checking...</p>
-                </div>
-                <ng-template #notChecking>
-                    <p *ngIf="systemMergeable == 'unavailable'" class="help-block-no-height warning-label mb-2">
-                        <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: targetSystem.name || targetSystem.info.name }"></span>
-                        <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
-                    </p>
-                    <p *ngIf="systemMergeable == 'primaryUnavailable'" class="help-block-no-height warning-label mb-2">
-                        <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: system.name || system.info.name}"></span>
-                        <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
-                    </p>
-                    <p *ngIf="systemMergeable == 'offline'"
-                       class="help-block-no-height warning-label mb-2"
-                       [innerHTML]="'dialogs.merge.systemOffline' | translate: {
-                            targetSystem: targetSystem.name || targetSystem.info.name
-                            }">
-                    </p>
-                    <p *ngIf="systemMergeable == 'primaryOffline'"
-                       class="help-block-no-height warning-label mb-2"
-                       [innerHTML]="'dialogs.merge.primarySystemOffline' | translate: {
-                            primarySystem: system.info.name, targetSystem: targetSystem.name || targetSystem.info.name
-                            }">
-                    </p>
-                    <p *ngIf="systemMergeable == 'secondaryCannotMerge'" class="help-block-no-height warning-label mb-2"
-                       [innerHTML]="'dialogs.merge.secondaryCannotMerge' | translate: {
-                            targetSystem: targetSystem.name || targetSystem.info.name
-                       }">
-                    </p>
-                    <p *ngIf="systemMergeable == 'primaryCannotMerge'" class="help-block-no-height warning-label mb-2"
-                       [innerHTML]="'dialogs.merge.primaryCannotMerge' | translate: {
-                            targetSystem: targetSystem.name || targetSystem.info.name
-                            }">
-                    </p>
-                    <p *ngIf="systemMergeable == ''" class="help-block-no-height mb-2 light-text" translate>
-                        You can only merge Systems where you are the owner.
-                    </p>
-                </ng-template>
-                <div>
-                    <div class="bold-text" translate>Take the name and settings from</div>
-                    <div>
-                        <div class="radio-group">
-                            <nx-radio name="firstSystem" [value]="system"
-                                      [label]="system.name || system.info && system.info.name"
-                                      componentId="firstSystem" [(ngModel)]="primarySystem"
-                                      (ngModelChange)="setSystems()"></nx-radio>
-                        </div>
-                        <div class="radio-group">
-                            <nx-radio name="secondSystem" [value]="targetSystem"
-                                      [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
-                                      componentId="secondSystem" [(ngModel)]="primarySystem"
-                                      (ngModelChange)="setSystems()"></nx-radio>
-                        </div>
-                    </div>
-                </div>
+</form>
+<form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
+    <div class="modal-body">
+        <p *ngIf="machine.state.show.mergeSystemText" translate>Merge current system with:</p>
+        <nx-select 
+            *ngIf="machine.state.show.systemDropdown"
+            class="mb-2"
+            id="system" 
+            [items]="processedSystems" 
+            [selected]="targetSystemDropdown" 
+            (onSelected)="setTargetSystem($event)"
+            required></nx-select>
+        <p *ngIf="machine.state.show.noSystemText" translate>
+            Enter address of any server in the system you want to merge with this one.
+        </p>
+        <p *ngIf="machine.state.show.ownerCanMergeText" 
+            class="light-text"
+            translate>
+            You can only merge Systems where you are the owner.
+        </p>
+        <p *ngIf="machine.state.show.checkingText" class="light-text help-block-no-height" translate>
+            Checking...
+        </p>
+        <div class="d-flex flex-column server-url add-specificity">
+            <label *ngIf="machine.state.show.serverUrlText" class="server-url-label" for="serverUrl" translate>
+                Server URL
+            </label>
+            <input 
+                *ngIf="machine.state.show.serverUrlInput"
+                class="mb-2 form-control"
+                name="serverUrl"
+                type="text"
+                [(ngModel)]="serverUrlInputValue"
+                placeholder="host:port"
+                pattern="{{CONFIG.urlRegex}}"
+                required/>
+            <label 
+                *ngIf="machine.state.show.serverUrlInputValidationError" 
+                [innerHTML]="serverUlrInputValidationErrorText" 
+                class="error-label" 
+                for="serverUrl">
+            </label>
+        </div>
+        <p *ngIf="machine.state.show.checkingErrorText" 
+            [innerHTML]="checkingErrorText" 
+            class="error-label">
+        </p>
+    </div>
+    <div class="modal-footer float-right">
+        <nx-process-button
+            [process]="checkMergeabilityProcess"
+            [form]="checkMergeForm"
+            actionType="primary"
+            svgSrc="user"
+            buttonText="{{ 'Next' | translate}}"></nx-process-button>
+    </div>
+</form>
+<form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
+    <div class="modal-body">
+        <p translate>Take system name and settings from</p>
+        <div>
+            <div class="radio-group">
+                <nx-radio name="firstSystem" [value]="system"
+                            [label]="system.name || system.info && system.info.name"
+                            componentId="firstSystem" [(ngModel)]="primarySystem"
+                            (ngModelChange)="setSystems()"></nx-radio>
             </div>
-            <div class="modal-footer">
-                <nx-process-button [process]="checkMergeabilityProcess"
-                                   [form]="mergeForm"
-                                   actionType="primary"
-                                   buttonText="{{ 'OK' | translate}}"></nx-process-button>
-                <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+            <div class="radio-group">
+                <nx-radio name="secondSystem" [value]="targetSystem"
+                            [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
+                            componentId="secondSystem" [(ngModel)]="primarySystem"
+                            (ngModelChange)="setSystems()"></nx-radio>
             </div>
         </div>
-        <div *ngIf="state == 'warning'">
-            <div class="modal-body">
-                <p [innerHTML]="'merge.warning'| translate: {maxServers: CONFIG.maxServers}"></p>
-                <p translate>Systems of such size may work but will be unstable and have troubles with updates and synchronisation.</p>
-                <p>{{LANG.dialogs.merge.recommendSupport.a_recommend}} <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> {{LANG.dialogs.merge.recommendSupport.c_proceeding}}</p>
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button class="btn btn-default" (click)="machine.goBack()">
+            <img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+        </button>
+        <button class="btn btn-primary" (click)="machine.transition('confirmMerge')" translate>
+            Next<img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+        </button>
+    </div>
+</form>
+<form *ngIf="machine.currentState === 'confirmMerge'" #confirmMergeForm="ngForm" name="confirmMergeForm">
+    <div class="modal-body">
+        <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
+                primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
+                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+            }"></p>
+        <div *ngIf="machine.state.maxServerWarningText">
+            <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
+            <p translate>Systems of such size can work, but may be unstable and have troubles with updates and synchronization.</p>
+            <p>
+                {{LANG.dialogs.merge.recommendSupport.a_recommend}} 
+                <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> 
+                {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="mergePassword" translate>Enter password for your account to continue</label>
+            <input class="form-control"
+                    [(ngModel)]="password" #mergePassword="ngModel"
+                    id="mergePassword" autocomplete="new-password"
+                    name="mergePassword" type="password"
+                    nxFocusMe>
+            <div *ngIf="canShowRequired(mergePassword)">
+                <label class="input-error" translate>Password is required</label>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" (click)="updateState()" translate>Ok</button>
-                <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+            <div *ngIf="canShowWrong(mergePassword)">
+                <label class="input-error" translate>Wrong password</label>
             </div>
         </div>
-        <div *ngIf="state == 'confirm'">
-            <div class="modal-body">
-                <p class="mb-3" [innerHTML]="'dialogs.merge.mergeConfirmation' | translate: {
-                    primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
-                    secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
-                }">
+    </div>
+    <div class="modal-footer d-flex justify-content-between">
+        <button class="btn btn-default" (click)="machine.goBack()">
+            <img [src]="CONFIG.icons.dir + 'user.svg'" style="height: 24px">
+        </button>
+        <nx-process-button
+            [process]="mergingProcess"
+            [form]="confirmMergeForm"
+            actionType="primary"
+            svgSrc="user"
+            buttonText="{{ 'Next' | translate}}"></nx-process-button>
+    </div>
+</form>
+<!-- <form #mergeForm="ngForm" name="mergeForm" novalidate>
+    <div *ngIf="state == 'select'">
+        <div class="modal-body">
+            <div *ngIf="checking; else notChecking">
+                <label class="help-block-no-height mb-2 light-text" translate>Checking...</p>
+            </div>
+            <ng-template #notChecking>
+                <p *ngIf="systemMergeable == 'unavailable'" class="help-block-no-height warning-label mb-2">
+                    <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: targetSystem.name || targetSystem.info.name }"></span>
+                    <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
                 </p>
-                <div class="form-group">
-                    <label for="mergePassword" translate>Enter password for your account to continue</label>
-                    <input class="form-control"
-                           [(ngModel)]="password" #mergePassword="ngModel"
-                           id="mergePassword" autocomplete="new-password"
-                           name="mergePassword" type="password"
-                           nxFocusMe>
-                    <div *ngIf="canShowRequired(mergePassword)">
-                        <label class="input-error" translate>Password is required</label>
+                <p *ngIf="systemMergeable == 'primaryUnavailable'" class="help-block-no-height warning-label mb-2">
+                    <span [innerHTML]="'dialogs.merge.systemUnavailable' | translate: { targetSystem: system.name || system.info.name}"></span>
+                    <span>&nbsp;<a [href]="CONFIG.supportLink" target="_blank" translate>support</a>.</span>
+                </p>
+                <p *ngIf="systemMergeable == 'offline'"
+                    class="help-block-no-height warning-label mb-2"
+                    [innerHTML]="'dialogs.merge.systemOffline' | translate: {
+                        targetSystem: targetSystem.name || targetSystem.info.name
+                        }">
+                </p>
+                <p *ngIf="systemMergeable == 'primaryOffline'"
+                    class="help-block-no-height warning-label mb-2"
+                    [innerHTML]="'dialogs.merge.primarySystemOffline' | translate: {
+                        primarySystem: system.info.name, targetSystem: targetSystem.name || targetSystem.info.name
+                        }">
+                </p>
+                <p *ngIf="systemMergeable == 'secondaryCannotMerge'" class="help-block-no-height warning-label mb-2"
+                    [innerHTML]="'dialogs.merge.secondaryCannotMerge' | translate: {
+                        targetSystem: targetSystem.name || targetSystem.info.name
+                    }">
+                </p>
+                <p *ngIf="systemMergeable == 'primaryCannotMerge'" class="help-block-no-height warning-label mb-2"
+                    [innerHTML]="'dialogs.merge.primaryCannotMerge' | translate: {
+                        targetSystem: targetSystem.name || targetSystem.info.name
+                        }">
+                </p>
+                <p *ngIf="systemMergeable == ''" class="help-block-no-height mb-2 light-text" translate>
+                    You can only merge Systems where you are the owner.
+                </p>
+            </ng-template>
+            <div>
+                <div class="bold-text" translate>Take the name and settings from</div>
+                <div>
+                    <div class="radio-group">
+                        <nx-radio name="firstSystem" [value]="system"
+                                    [label]="system.name || system.info && system.info.name"
+                                    componentId="firstSystem" [(ngModel)]="primarySystem"
+                                    (ngModelChange)="setSystems()"></nx-radio>
                     </div>
-                    <div *ngIf="canShowWrong(mergePassword)">
-                        <label class="input-error" translate>Wrong password</label>
+                    <div class="radio-group">
+                        <nx-radio name="secondSystem" [value]="targetSystem"
+                                    [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
+                                    componentId="secondSystem" [(ngModel)]="primarySystem"
+                                    (ngModelChange)="setSystems()"></nx-radio>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <nx-process-button [process]="mergingProcess"
-                                   [form]="mergeForm"
-                                   actionType="primary"
-                                   buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
-                <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+        </div>
+        <div class="modal-footer">
+            <nx-process-button [process]="checkMergeabilityProcess"
+                                [form]="mergeForm"
+                                actionType="primary"
+                                buttonText="{{ 'OK' | translate}}"></nx-process-button>
+            <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+        </div>
+    </div>
+    <div *ngIf="state == 'warning'">
+        <div class="modal-body">
+            <p [innerHTML]="'merge.warning'| translate: {maxServers: CONFIG.maxServers}"></p>
+            <p translate>Systems of such size may work but will be unstable and have troubles with updates and synchronisation.</p>
+            <p>{{LANG.dialogs.merge.recommendSupport.a_recommend}} <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> {{LANG.dialogs.merge.recommendSupport.c_proceeding}}</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" (click)="updateState()" translate>Ok</button>
+            <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+        </div>
+    </div>
+    <div *ngIf="state == 'confirm'">
+        <div class="modal-body">
+            <p class="mb-3" [innerHTML]="'dialogs.merge.mergeConfirmation' | translate: {
+                primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
+                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+            }">
+            </p>
+            <div class="form-group">
+                <label for="mergePassword" translate>Enter password for your account to continue</label>
+                <input class="form-control"
+                        [(ngModel)]="password" #mergePassword="ngModel"
+                        id="mergePassword" autocomplete="new-password"
+                        name="mergePassword" type="password"
+                        nxFocusMe>
+                <div *ngIf="canShowRequired(mergePassword)">
+                    <label class="input-error" translate>Password is required</label>
+                </div>
+                <div *ngIf="canShowWrong(mergePassword)">
+                    <label class="input-error" translate>Wrong password</label>
+                </div>
             </div>
         </div>
-    </form>
-</ng-template>
+        <div class="modal-footer">
+            <nx-process-button [process]="mergingProcess"
+                                [form]="mergeForm"
+                                actionType="primary"
+                                buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
+            <button class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
+        </div>
+    </div>
+</form> -->
