@@ -65,14 +65,7 @@ export class MergeModalContent {
 
     stateMachine = {
         thisSystemHasOutdatedServerError: {
-            show: {
-                outdatedVersionsText: true,
-                updateToText: true,
-                okButton: true,
-            },
-            template: {},
-            errorText: {},
-            validationErrorText: {},
+            show: {}, template: {}, errorText: {}, validationErrorText: {},
         },
         checkMerge: {
             show: {
@@ -85,7 +78,6 @@ export class MergeModalContent {
                 serverUrlInput: false,
                 serverUrlInputValidationError: false,
                 checkingErrorText: false,
-                checkMergeNextButton: true,
             },
             showUpdates: {
                 checkMergeDefault: {
@@ -181,7 +173,6 @@ export class MergeModalContent {
         choosePrimary: {
             template: {
                 selectedPrimarySystem: '',
-                nextButtonAction: undefined,
             },
         },
         confirmMerge: {
@@ -255,8 +246,8 @@ export class MergeModalContent {
     }
 
     ngOnInit() {
-        this.primarySystem = this.system;
         if (this.system.canMerge) {
+            this.primarySystem = this.system;
             if (this.systems.length === 0) {
                 this.updateShow('noOtherSystemServerUrl');
                 this.targetSystem = 'Other System';
@@ -270,27 +261,27 @@ export class MergeModalContent {
                 console.log('systemMergeable', this.systemMergeable);
             }
             this.secondarySystem = this.targetSystem; // target Other System?
+            // FUTURE: when switching states, clear error state/messages
+            this.insertErrorMessages();
+            if (this.systemMergeable) {
+                this.updateShow(
+                    'checkMergeError',
+                    { checkingErrorText: this.machine.state.errorText[this.systemMergeable] }
+                );
+            }
+            console.log('this.machine post transition', this.machine);
+            console.log('show in machine state', this.machine.state.show);
+            console.log('systems', this.systems);
+    
+            this.user.get().then((account) => {
+                this.account = account;
+            });
+    
+            this.initProcesses();
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
         }
 
-        // FUTURE: when switching states, clear error state/messages
-        this.insertErrorMessages();
-        if (this.systemMergeable) {
-            this.updateShow(
-                'checkMergeError',
-                { checkingErrorText: this.machine.state.errorText[this.systemMergeable] }
-            );
-        }
-        console.log('this.machine post transition', this.machine);
-        console.log('show in machine state', this.machine.state.show);
-        console.log('systems', this.systems);
-
-        this.user.get().then((account) => {
-            this.account = account;
-        });
-
-        this.initProcesses();
     }
 
     initProcesses() {

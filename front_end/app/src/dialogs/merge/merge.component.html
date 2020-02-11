@@ -8,17 +8,11 @@
 </div>
 <form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
-        <p *ngIf="machine.state.show.outdatedVersionsText" translate>
-            Some of the servers in this System have outdated software versions and can not be merged.
-        </p>
-        <p *ngIf="machine.state.show.updateToText" translate>
-            Update them to the <a routerLink="/download" target="_blank" translate>latest build</a>
-        </p>
+        <p translate>Some of the servers in this System have outdated software versions and can not be merged.</p>
+        <p translate>Update them to the <a routerLink="/download" target="_blank" translate>latest build</a></p>
     </div>
     <div class="modal-footer">
-        <button *ngIf="machine.state.show.okButton" class="btn btn-primary" (click)="activeModal.close()" translate>
-            OK
-        </button>
+        <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
     </div>
 </form>
 <form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
