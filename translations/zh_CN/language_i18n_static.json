@@ -105,12 +105,12 @@
 			"video_source_sdk": "视频源SDK"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
+			"beta": "测试版本",
 			"betas": "测试版本",
-			"rc": "Release Candidate",
-			"release": "Release",
+			"rc": "发布候选版本",
+			"release": "版本发布",
 			"releases": "版本发布",
-			"patch": "Patch",
+			"patch": "补丁",
 			"patches": "补丁"
 		}
 	},

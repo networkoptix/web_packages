@@ -105,12 +105,12 @@
 			"video_source_sdk": "影像來源SDK"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
+			"beta": "測試版本",
 			"betas": "測試版本",
-			"rc": "Release Candidate",
-			"release": "Release",
+			"rc": "發布候選版本",
+			"release": "版本發佈",
 			"releases": "版本發佈",
-			"patch": "Patch",
+			"patch": "補丁",
 			"patches": "補丁"
 		}
 	},
