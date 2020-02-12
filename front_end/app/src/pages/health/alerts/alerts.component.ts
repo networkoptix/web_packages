@@ -418,8 +418,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     private setLayout() {
-        if (this.area) {
-            this.healthLayoutService.setAlertLayout();
-        }
+        this.healthLayoutService.setAlertLayout();
     }
 }
