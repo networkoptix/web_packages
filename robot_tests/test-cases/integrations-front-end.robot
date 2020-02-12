@@ -15,15 +15,52 @@ Force Tags        integrations    Threaded File
 ${url}        ${ENV}/integrations
 ${title}      ${INTEGRATIONS TITLE TEXT} - ${PRODUCT_NAME}
 @{auth}       ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+@{all fields}=
+...    ${INTEGRATION ALL INTEGRATIONS}
+# Removed temporarily as there isn't a good way to target it
+# ...    ${INTEGRATION VERSION}
+...    ${INTEGRATION HOW IT WORKS LINK}
+...    ${INTEGRATION HOW TO SETUP LINK}
+...    ${INTEGRATION TAGS SECTION}
+...    ${INTEGRATION GET IN TOUCH LABEL}
+...    ${INTEGRATION GET IN TOUCH BUTTON}
+...    ${INTEGRATION DEVELOPER LABEL}
+...    ${INTEGRATION DEVELOPER COMPANY LINK}
+...    ${INTEGRATION DEVELOPER TERMS OF USE LINK}
+...    ${INTEGRATION SUPPORT LABEL}
+...    ${INTEGRATION SUPPORT LINK}
+...    ${INTEGRATION SUPPORT EMAIL}
+...    ${INTEGRATION HOW IT WORKS VIDEO}
+...    ${INTEGRATION HOW IT WORKS CAROUSEL}
+...    ${INTEGRATION CAROUSEL RIGHT BUTTON}
+...    ${INTEGRATION CAROUSEL LEFT BUTTON}
+...    ${INTEGRATION CAROUSEL PREVIEW}
+...    ${INTEGRATION DOWNLOADS SECTION}
+...    ${INTEGRATION REQUIREMENTS SECTION}
+...    ${INTEGRATION HOW IT WORKS HEADER}
 
+@{required fields}=
+...    ${INTEGRATION ALL INTEGRATIONS}
+# Removed temporarily as there isn't a good way to target it
+# ...    ${INTEGRATION VERSION}
+...    ${INTEGRATION HOW IT WORKS LINK}
+...    ${INTEGRATION HOW TO SETUP LINK}
+...    ${INTEGRATION TAGS SECTION}
+...    ${INTEGRATION GET IN TOUCH LABEL}
+...    ${INTEGRATION GET IN TOUCH BUTTON}
+...    ${INTEGRATION DEVELOPER LABEL}
+...    ${INTEGRATION DEVELOPER COMPANY LINK}
+...    ${INTEGRATION SUPPORT LABEL}
+...    ${INTEGRATION SUPPORT EMAIL}
+...    ${INTEGRATION HOW IT WORKS HEADER}
 *** Keywords ***
 Open Browser and Go To Integrations Page Anonymous
     ${is enabled}=   Integration Store is Enabled    ${auth}
-    Run keyword If    ${is enabled} == ${True}    Open Browser and go to URL    ${url}
+    Run keyword If    ${is enabled}==${True}    Open Browser and go to URL    ${url}
     ...    ELSE    Fatal Error    Tests cannot be executed. Please enable Integration Store in CMS.
 
 Go To Integrations Page
-    Open Browser and go to URL    ${url}
+    Go To    ${url}
     Validate Integrations Landing Page
 
 Validate Integrations Landing Page
@@ -47,34 +84,14 @@ Validate changes when input text into search field
     Should Be True    ${new number of tiles} < ${initial number of tiles}
 
 Validate Integration Details Page
-    Run keyword and continue on failure    Wait Until Elements Are Visible
-    ...    ${INTEGRATION ALL INTEGRATIONS}
-    # Removed temporarily as there isn't a good way to target it
-    # ...    ${INTEGRATION VERSION}
-    ...    ${INTEGRATION HOW IT WORKS LINK}
-    ...    ${INTEGRATION HOW TO SETUP LINK}
-    ...    ${INTEGRATION TAGS SECTION}
-    ...    ${INTEGRATION GET IN TOUCH LABEL}
-    ...    ${INTEGRATION GET IN TOUCH BUTTON}
-    ...    ${INTEGRATION DEVELOPER LABEL}
-    ...    ${INTEGRATION DEVELOPER COMPANY LINK}
-    ...    ${INTEGRATION DEVELOPER TERMS OF USE LINK}
-    ...    ${INTEGRATION SUPPORT LABEL}
-    ...    ${INTEGRATION SUPPORT LINK}
-    ...    ${INTEGRATION SUPPORT EMAIL}
-    ...    ${INTEGRATION HOW IT WORKS VIDEO}
-    ...    ${INTEGRATION HOW IT WORKS CAROUSEL}
-    ...    ${INTEGRATION CAROUSEL RIGHT BUTTON}
-    ...    ${INTEGRATION CAROUSEL LEFT BUTTON}
-    ...    ${INTEGRATION CAROUSEL PREVIEW}
-    ...    ${INTEGRATION DOWNLOADS SECTION}
-    ...    ${INTEGRATION REQUIREMENTS SECTION}
-    ...    ${INTEGRATION HOW IT WORKS HEADER}
+    [arguments]    ${all}=True
+    Run Keyword if    ${all}==True    Wait Until Elements Are Visible    @{all fields}
+    ...    ELSE    Wait Until Elements Are Visible    @{required fields}
 
 Validate Integration Tile
     [Arguments]    ${tile number}
     FOR    ${tile element}    IN    @{INTEGRATION TILE ELEMENTS}
-        Run keyword and continue on failure    Element Should Be Visible    ${INTEGRATION TILE}/../div\[${tile number}\]${tile element}
+        Run keyword and continue on failure    Wait Until Element is Visible    ${INTEGRATION TILE}/../div\[${tile number}\]${tile element}
     END
 
 # If a number of integrations is too big, it's better to validate couple of random integration tiles.
@@ -176,12 +193,20 @@ Integration Store Search
     Wait Until Location Is    ${url}?search=vis
     Go Forward
     Wait Until Location Is    ${url}?search=vis&tags=faceRecognition
+    Go To Integrations Page
 
 
-Integration Store Integration Details
+Integration Store Integration Details Required Fields
     [Tags]    C54623
     Wait Until Element Is Visible    ${INTEGRATION TILE}
-    CLick Link    ${INTEGRATION TEST INTEGRATION LINK}
+    CLick Link    ${INTEGRATION TEST INTEGRATION LINK}//h3[text()="${INTEGRATION REQUIRED FIELDS}"]/ancestor::a
+    Validate Integration Details Page    all=False
+    Go To Integrations Page
+
+Integration Store Integration Details All Fields
+    [Tags]    C54623
+    Wait Until Element Is Visible    ${INTEGRATION TILE}
+    CLick Link    ${INTEGRATION TILE}//h3[text()="${INTEGRATION ALL FIELDS}"]/ancestor::a
     Validate Integration Details Page
 
 Send messages using Integration Contact "Get in touch" form
@@ -193,7 +218,7 @@ Send messages using Integration Contact "Get in touch" form
     Click Element    ${INTEGRATION GET IN TOUCH CLOSE BUTTON}
     Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
     Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
-    Click Element    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
+    Click Button    ${INTEGRATION GET IN TOUCH CANCEL BUTTON}
     Element Should Not Be Visible    ${INTEGRATION GET IN TOUCH FORM}
     Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
 

@@ -12,7 +12,6 @@ front_end/.sass-cache
 front_end/bower_components
 front_end/app/bower_components
 front_end/test/visual
-front_end/package-lock.json
 front_end/yarn.lock
 front_end/app/images/promo
 front_end/app/images/favicon.ico
@@ -38,6 +37,7 @@ subinclude:robot_tests/.hgignore
 *.pid
 *.log
 *.sql
+package-lock.json
 
 env
 cloud/.idea

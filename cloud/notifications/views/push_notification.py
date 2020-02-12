@@ -4,7 +4,7 @@ from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.exceptions import APIException, ValidationError
-from rest_framework.generics import GenericAPIView, ListAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -41,6 +41,7 @@ class CloudSystemBasicAuthentication(BasicAuthentication):
 
         request.data['username'] = user
         request.data['password'] = password
+        request.data['systemId'] = request.data.get('systemId', user)
 
         return None, None
 
@@ -170,98 +171,76 @@ def unregister_device(request):
         raise ValidationError(error_data)
 
 
-class DeviceSubscriptionListView(UpdateModelMixin, ListAPIView):
+class DeviceSubscriptionListView(RetrieveAPIView):
     serializer_class = DeviceSubscriptionsSerializer
     authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = PushDevice.objects.filter(user=self.request.user)
-        device_token = self.request.query_params.get('deviceToken', None)
-        if device_token is not None:
-            queryset = queryset.filter(registration_id=device_token)
-        return queryset
+        return PushDevice.objects.filter(user=self.request.user)
 
-    def get_object(self):
-        device_token = self.request.query_params.get('deviceToken', None)
-        if device_token:
-            return get_object_or_404(PushDevice, user=self.request.user, registration_id=device_token)
-        else:
-            raise Http404
-
-    def post(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        devices = {}
+        for device in self.get_queryset():
+            serializer = self.get_serializer(device)
+            devices[device.registration_id] = serializer.data
+        return Response(devices)
 
 
-class Subscribe(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
+class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, GenericAPIView):
     authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
     permission_classes = (IsAuthenticated, )
     serializer_class = SubscriptionSerializer
-    lookup_fields = ('deviceToken', 'systemId')
 
     def get_queryset(self):
-        return PushSubscription.objects.filter(account=self.request.user)
+        return PushDevice.objects.filter(user=self.request.user)
 
     def get_object(self):
-        if self.request.method == 'GET':
-            for field in self.lookup_fields:
-                if field in self.request.GET:
-                    self.request.data[field] = self.request.GET[field]
+        device = None
 
-        serializer = self.get_serializer(data=self.request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+        if 'deviceToken' in self.kwargs:
+            self.request.data['deviceToken'] = self.kwargs['deviceToken']
+            device = self.get_queryset().filter(registration_id=self.request.data['deviceToken']).first()
 
-        if data['deviceToken']:
-            return self.get_queryset().filter(
-                system_id=data['systemId'], device__registration_id=data['deviceToken']
-            ).first()
+        return device
 
-        return None
-
-    def get_serializer(self, *args, **kwargs):
-        if 'data' not in kwargs or not kwargs['data'] and kwargs['instance']:
-            instance = kwargs['instance']
-            kwargs['data'] = {
-                'deviceToken': instance.device.registration_id,
-                'systemId': instance.system_id,
-                'isActive': instance.active
-            }
-        return super().get_serializer(*args, **kwargs)
+    def format_response(self, instance):
+        return {
+            'systems': [sub.system_id for sub in instance.subscriptions.all()],
+            'deviceInfo': {'name': instance.name, 'model': instance.model},
+            'isEnabled': instance.active
+        }
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         if not instance:
             raise Http404
-        data = {
-            'systemId': instance.system_id,
-            'deviceToken': instance.device.registration_id,
-            'isActive': instance.active
-        }
-        return Response(data)
+        return Response(DeviceSubscriptionsSerializer(instance).data)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, authenticated=True)
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response({'message': 'created'}, status=status.HTTP_201_CREATED,)
+        instance = serializer.save()
+        return Response(
+            {'status': 'created', **DeviceSubscriptionsSerializer(instance).data},
+            status=status.HTTP_201_CREATED,)
 
     def update(self, request, *args, **kwargs):
         instance = kwargs.pop('object')
-        serializer = self.get_serializer(instance, data=request.data, authenticated=True)
+        serializer = self.get_serializer(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.update(instance, request.data)
+        instance = serializer.save()
 
-        return Response({'message': 'ok'})
+        return Response({'status': 'updated', **DeviceSubscriptionsSerializer(instance).data})
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        sub = self.get_object()
+    def put(self, request, *args, **kwargs):
+        device = self.get_object()
 
-        if sub or 'deviceToken' not in request.data or not request.data['deviceToken']:
-            kwargs['object'] = sub
+        if device:
+            kwargs['object'] = device
             return self.update(request, *args, **kwargs)
         else:
             return self.create(request, *args, **kwargs)

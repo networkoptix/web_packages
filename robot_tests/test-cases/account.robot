@@ -27,7 +27,8 @@ Restart
 
 Reset DB and Open New Browser On Failure
     Close Browser
-    Reset user noperm first/last name
+#    Reset user noperm first/last name
+    Set Account Name    ${url}    ${EMAIL NOPERM}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Open Browser and go to URL    ${url}
 
 *** Test Cases ***
@@ -100,7 +101,7 @@ Changing last name and saving maintains that setting
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 First name is required
-    [tags]    C41573    Threaded    curr
+    [tags]    C41573    Threaded
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -122,6 +123,21 @@ Last name is required
     Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
+
+#First and last names are required
+#    [Tags]    C41573    Threaded
+#    Go To    ${url}/account
+#    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+#    Verify in Account Page
+#    @{names}=   Create List    ${ACCOUNT FIRST NAME}   ${ACCOUNT LAST NAME}
+#    FOR    ${name}    IN    @{names}
+#        ${locator}=   Get WebElement    ${name}
+#        Delete All Text    ${locator}
+#        Click Element    ${name}
+#        Wait Until Element Has Style    ${name}    border-color    ${ERROR COLOR}
+#        Wait Until Element Has Style   ${name}    color    ${ERROR COLOR WITH OPACITY}
+#        Element Should Be Visible    ${LAST NAME IS REQUIRED}
+#    END
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded

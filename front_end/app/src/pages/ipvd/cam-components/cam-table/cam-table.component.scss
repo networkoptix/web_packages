@@ -83,6 +83,8 @@ nx-cam-table {
           }
 
           .caption {
+            @extend #medium13;
+            color : $light16;
             position : relative;
             height   : 2rem;
             overflow-wrap : initial;

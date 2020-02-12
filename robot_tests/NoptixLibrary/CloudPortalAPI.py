@@ -1,91 +1,75 @@
 import requests
-from selenium import webdriver
+from requests.auth import HTTPDigestAuth
 
-
-env = 'https://cloud-test.hdw.mx'
 
 class CloudPortalAPI(object):
 
     def log_in(self, env, email, password):
-        with requests.Session() as login_session:
-            login_data = {
-                'email': email,
-                'password': password
-            }
-            login_session.post(env + '/api/account/login', login_data)
-            return login_session
-
+        s = requests.Session()
+        r = s.post(f'{env}/api/account/login', json={'email': email, 'password': password})
+        assert r.status_code == 200, "Log In Failed"
+        return s
 
     # TODO implement logging out using API where appropriate
     def log_out(self, env, session_id, csrftoken):
-        with requests.Session() as logout_session:
-            logout_session.headers.update({'X-CSRFToken': csrftoken})
-            logout_session.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
-            resp = logout_session.post(env + '/api/account/logout')
-            logout_session.close()
-            return resp.status_code
+        with requests.Session() as s:
+            s.headers.update({'X-CSRFToken': csrftoken})
+            s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
+            r = s.post(f'{env}/api/account/logout')
+            return r.status_code
 
     def change_password(self, env, email, old_password, new_password):
-        change_pass_session = self.log_in(env, email, old_password)
-        with change_pass_session:
-            pass_data = {
-                'old_password': old_password,
-                'new_password': new_password
-            }
-            change_pass_session.headers.update({'X-CSRFToken': change_pass_session.cookies['csrftoken']})
-            change_pass = change_pass_session.post(env + '/api/account/changePassword', pass_data)
-            change_pass_session.close()
-            return change_pass.status_code
+        with self.log_in(env, email, old_password) as s:
+            data = {'old_password': old_password, 'new_password': new_password}
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/account/changePassword', data)
+            return r.status_code
 
     def restore_password(self, env, email, code=None, new_password=None):
-        with requests.Session() as restore_pass_session:
-            data = {
-                'user_email': email
-            }
+        with requests.Session() as s:
+            data = {'user_email': email}
             if code and new_password:
                 data.update({'code': code, 'new_password': new_password})
-            resp = restore_pass_session.post(env + '/api/account/restorePassword', data)
-            restore_pass_session.close()
-            return resp.status_code
+            r = s.post(f'{env}/api/account/restorePassword', data)
+            return r.status_code
 
     def get_language_anonymous(self, env):
-        resp = requests.get(env + '/api/utils/language')
-        return resp.json()['ajs']['language']
+        r = requests.get(env + '/api/utils/language')
+        return r.json()['ajs']['language']
 
     def get_account_language(self, env, email, password):
-        get_acc_lang_session = self.log_in(env, email, password)
-        with get_acc_lang_session:
-            resp = get_acc_lang_session.get(env + '/api/utils/language')
-            get_acc_lang_session.close()
-            return resp.json()['ajs']['language']
+        with self.log_in(env, email, password) as s:
+            r = s.get(f'{env}/api/utils/language')
+            return r.json()['ajs']['language']
+
+    def get_account_data(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            r = s.get(f'{env}/api/account/')
+            return r.json()
 
     def set_account_language(self, env, email, password, new_language='en_US'):
-        set_acc_lang_session = self.log_in(env, email, password)
-        with set_acc_lang_session:
-            lang_data = {
-                'language': new_language,
-            }
-            set_acc_lang_session.headers.update({'X-CSRFToken': set_acc_lang_session.cookies['csrftoken']})
-            change_lang = set_acc_lang_session.post(env + '/api/utils/language', lang_data)
-            set_acc_lang_session.close()
-            return change_lang.status_code
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/utils/language', json={'language': new_language})
+            return r.json()
+
+    def set_account_name(self, env, email, password, first_name, last_name):
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
+            return r.json()
 
     def disconnect(self, env, email, password, system_id):
-        disconnect_session = self.log_in(env, email, password)
-        with disconnect_session:
-            disconnect_data = {
-                'system_id': system_id,
-                'password': password
-            }
-            disconnect_session.headers.update({'X-CSRFToken': disconnect_session.cookies['csrftoken']})
-            resp = disconnect_session.post(env + '/api/systems/disconnect', disconnect_data)
-            disconnect_session.close()
-            return resp.status_code
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
+            return r.status_code
 
-# main() is here only for testing the methods of the class and does not affect keywords usage
-if __name__ == "__main__":
-    cp = CloudPortalAPI()
-    print(cp.get_language_anonymous(env))
-    s = cp.log_in(env, 'qaburbank@gmail.com', 'QWEasd!@#')
-    print(s)
-    print(cp.log_out(env, s.cookies['sessionid']))
+    def get_code_from_email(self, env, auth, email, message_type):
+        with self.log_in(env, auth[0], auth[1]) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
+            return r.json()['code']
+
+
+

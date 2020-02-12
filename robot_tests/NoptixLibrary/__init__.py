@@ -74,12 +74,12 @@ class NoptixLibrary(object):
 
     def get_random_email(self, email):
         index = email.find('@')
-        email = email[:index] + '+' + str(time.time()) + email[index:]
+        email = email[:index] + '+' + str(randint(1, 100)) + str(time.time()) + email[index:]
         return email
 
-    def get_many_random_emails(self, howMany, email):
+    def get_many_random_emails(self, how_many, email):
         emails = []
-        for x in range(0, int(howMany)):
+        for x in range(0, int(how_many)):
             emails.append(self.get_random_email(email))
             time.sleep(.2)
         return emails
@@ -107,7 +107,7 @@ class NoptixLibrary(object):
             print('style: ' + styleAttribute + ', value: ' + value)
             return value
         except:
-            not_found = "No element found with style attribute " + styleAttribute
+            not_found = f"No element found with style attribute {styleAttribute}"
             raise AssertionError(not_found)
 
     def element_style_should_be(self, locator, styleAttribute, expectedValue):
@@ -366,6 +366,8 @@ class NoptixLibrary(object):
             version = "4.1.0.30149"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
+        elif env == "https://test4.cloud.hdw.mx":
+            version = "4.1.0.30298"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mediaserver",
