@@ -208,13 +208,15 @@ export class NxHealthLayoutService {
                     this.dimensions = [elementSearchHeight + 16, 0]; // trick table's onChanges will pick new dimensions
                 }
                 // area available
-                const areaWidth = this.searchTableArea.nativeElement.offsetWidth;
+                const areaWidth = this.searchTableArea ? this.searchTableArea.nativeElement.offsetWidth : 0;
                 // area available to the table (- gutter)
                 const availAreaWidth = areaWidth - NxHealthService.PANEL_WIDTH - 16;
 
                 const isTableFit = (availAreaWidth > this.tableWidth) && !this.mobileDetailMode;
                 if (this.activeEntity && !this.mobileDetailMode) {
-                    this.searchElement.nativeElement.style.width = 'auto';
+                    if (this.searchElement) {
+                        this.searchElement.nativeElement.style.width = 'auto';
+                    }
                     this.fixedLayoutClass = (isTableFit) ? '' : 'fixedLayout--with-panel';
                 } else {
                     this.fixedLayoutClass = 'fixedLayout--no-panel';
