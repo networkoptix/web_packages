@@ -11,12 +11,11 @@ class NotificationSerializer(serializers.Serializer):
     notification = serializers.DictField()
 
     def validate_notification(self, value):
-        if 'title' not in value or 'body' not in value:
-            raise serializers.ValidationError('Title and body are required')
-        elif not isinstance(value['title'], str) or not isinstance(value['body'], str):
+        value['title'] = value.get('title', '')
+        value['body'] = value.get('body', '')
+
+        if not isinstance(value['title'], str) or not isinstance(value['body'], str):
             raise serializers.ValidationError('Title and body must be strings')
-        elif not value['title'] or not value['body']:
-            raise serializers.ValidationError('Title and body cannot be blank')
         return value
 
 

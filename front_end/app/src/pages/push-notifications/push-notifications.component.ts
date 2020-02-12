@@ -100,6 +100,11 @@ export class PushComponent implements OnInit, OnDestroy {
 
         this.afMessaging.messages.subscribe(
             (message: any) => {
+                if (!message.notification) {
+                    message.notification = {};
+                }
+                message.notification.title = message.notification && message.notification.title || '';
+                message.notification.body = message.notification && message.notification.body || '';
                 this.receivedMessages.push(message);
                 const _notify = new Notification(message.notification.title, message.notification);
                 if (message.data) {

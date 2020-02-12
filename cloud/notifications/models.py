@@ -209,8 +209,8 @@ class PushDevice(GCMDevice):
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
 
-    title = models.CharField(max_length=255)
-    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    title = models.CharField(max_length=255, blank=True)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)], blank=True)
     payload = models.TextField(
         max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
     )
@@ -236,7 +236,11 @@ class PushNotification(models.Model):
         else:
             devices = self.devices.all()
 
+        title = self.title or None
+        body = self.body or None
         payload = json.loads(self.payload) if self.payload else {}
+        payload['systemId'] = self.raw_system_id
+        payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
 
-        return devices.send_message(self.body, title=self.title, extra=payload, **options)
+        return devices.send_message(body, title=title, extra=payload, **options)
