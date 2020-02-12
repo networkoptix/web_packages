@@ -502,8 +502,7 @@ ${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Networ
 ${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
 ${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]
 ${HM PREVIOUS PAGE LINK}                 //ngb-pagination//a[@aria-label="Previous"]
-# use and set the variable ${pg_number} in your keyword
-#${HM PAGE NUMBER LINK}                   //ngb-pagination//a[text()="${EMPTY}${pg_number}${EMPTY}"]
+${HM PAGE NUMBER LINK}                   //ngb-pagination//a[text()=
 ${HM CURRENT PAGE NUMBER LINK}           //ngb-pagination//span[text()="(current)"]/parent::a
 ${HM FIRST TABLE PAGE ELEMENT}           //ngb-pagination//a[@aria-label="Previous" and @tabindex="-1"]
 ${HM LAST TABLE PAGE ELEMENT}            //ngb-pagination//a[@aria-label="Next" and @tabindex="-1"]

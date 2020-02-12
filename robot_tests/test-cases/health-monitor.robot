@@ -40,7 +40,7 @@ Validate Uploaded Alerts Page
 
 Click On Page Number
     [Arguments]    ${pg_number}
-    Click Link    ${HM PAGE NUMBER LINK}
+    Click Link    ${HM PAGE NUMBER LINK}"${EMPTY}${pg_number}${EMPTY}"]
     
 *** Test Cases ***
 Onwer Has Access to Health Monitoring
@@ -200,7 +200,9 @@ Errors and Warnings are Counted, and Shown Correctly in the Left Pane and Header
     Should Be Equal As Integers     ${storage warnings}    ${storage card warnings}    
     Should Be Equal As Integers     ${network alerts}    ${network card alerts}    
     Should Be Equal As Integers     ${network warnings}    ${network card warnings}
-    
+    ${alerts counted total} =    Evaluate    ${camera alerts} + ${camera warnings} + ${server alerts} + ${server warnings} + ${storage alerts} + ${storage warnings} + ${network alerts} + ${network warnings}
+    ${alerts page total} =    Get Text    ${HM ALERTS TOTAL}
+    Should Be Equal    ${alerts counted total} alerts    ${alerts page total}
 
 
 #Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
