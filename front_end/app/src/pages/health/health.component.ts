@@ -153,8 +153,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     if (!this.outdatedVersion) {
                         this.system.mediaserver.getAggregateHealthReport().pipe(
                             flatMap((result: any) => this.setupReport(result))
-                        ).subscribe(() => {
-                        }, () => {
+                        ).subscribe(() => {}, () => {
+                            if (!this.system.id) {
+                                this.window.location.reload();
+                            }
                             this.hasServerError = this.system.isOnline;
                         });
                     }
@@ -516,8 +518,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     updateValues() {
         this.healthService.ready = false;
-        this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
-            this.setupReport(data);
+        this.system.mediaserver.getAggregateHealthReport().pipe(
+            flatMap((result: any) => this.setupReport(result))
+        ).subscribe(() => {}, () => {
+            if (!this.system.id) {
+                this.window.location.reload();
+            }
+            this.hasServerError = this.system.isOnline;
         });
     }
 }
