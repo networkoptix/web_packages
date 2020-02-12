@@ -181,7 +181,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     modelChanged(model) {
         if (this.filterModel.query !== model.query) {
             this.filterModel.query = model.query;
-            // this.search();
+            this.search();
         }
     }
 
@@ -231,8 +231,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     private setLayout() {
-        if (this.healthLayoutService.tableElement) {
-            this.healthLayoutService.setMetricsLayout();
-        }
+        this.healthLayoutService.setMetricsLayout();
     }
 }
