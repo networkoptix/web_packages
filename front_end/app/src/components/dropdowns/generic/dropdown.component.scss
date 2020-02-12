@@ -1,4 +1,11 @@
+@import '../../../../styles/theme_palette';
+
 nx-select {
     width: 100%;
     display: block;
+    hr {
+        width: 96%;
+        margin: 6px auto;
+        border-color: $light6;
+    }
 }

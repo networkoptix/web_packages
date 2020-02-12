@@ -60,6 +60,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsWatchersSet: boolean;
     timeUnitTracker: any;
 
+    peerSystems: any[];
+
     settingsWatchers: any = {
         autoDiscoveryEnabled: new Watcher<boolean>(),
         statisticsAllowed: new Watcher<boolean>(),
@@ -253,6 +255,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             .subscribe(() => {
                                 this.settingsService.footerSubject.next(true);
                                 this.updateSettings(this.currentlyMerging);
+                                this.updatePeerSystems();
                                 if (!this.applyService.locked && this.system.permissions.isAdmin) {
                                     if (this.settingsSubscription) {
                                         this.settingsSubscription.unsubscribe();
@@ -353,6 +356,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
+    updatePeerSystems() {
+        this.system.getPeerSystems()
+            .subscribe(res => this.peerSystems = res.reply);
+    }
+
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
@@ -389,7 +397,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.settingsService.system = this.system;
 
         return this.dialogs
-                   .merge(this.system, this.systems, this.accountService)
+                   .merge(this.system, this.systems, this.peerSystems, this.accountService)
                    .then((mergeInfo) => {
                        if (mergeInfo) {
                            this.system.mergeInfo = mergeInfo;

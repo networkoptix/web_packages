@@ -295,7 +295,7 @@ export class NxDialogsService {
         return this.createModal(ChangePasswordModalContent, options, params);
     }
 
-    merge(system, systems, user) {
+    merge(system, systems, peerSystems, user) {
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -305,6 +305,7 @@ export class NxDialogsService {
             user,
             system,
             systems,
+            peerSystems,
             closable   : true,
         };
 

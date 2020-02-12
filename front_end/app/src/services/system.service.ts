@@ -795,6 +795,10 @@ export class NxSystem extends System implements OnDestroy {
         this.currentServerNotBusy = false;
         return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
+
+    getPeerSystems() {
+        return this.mediaserver.getPeerSystems();
+    }
 }
 
 

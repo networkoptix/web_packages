@@ -16,6 +16,7 @@ import StateMachine from './stateMachine';
 export class MergeModalContent {
     @Input() system;
     @Input() systems;
+    @Input() peerSystems;
     @Input() systemName;
     @Input() closable;
     @Input() user;
@@ -28,7 +29,7 @@ export class MergeModalContent {
     multipleSystems: boolean;
     password: string;
     primarySystem: any;
-    processedSystems: any;
+    processedSystems = [];
     secondarySystem: any;
     state: string;
     systemMergeable: string;
@@ -252,7 +253,22 @@ export class MergeModalContent {
                 this.updateShow('noOtherSystemServerUrl');
                 this.targetSystem = 'Other System';
             } else {
-                this.processedSystems = this.makeSelectorList(this.systems);
+                if (this.systems.length) {
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.systems),
+                        { name: 'horizontal' }
+                    );
+                }
+                if (this.peerSystems.length) {
+                    // eventually need to sort the peerSystem
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.peerSystems),
+                        { name: 'horizontal' }
+                    );
+                }
+                this.processedSystems.push({ name: 'Other System...' });
+
+                console.log('prcoessedSystem', this.processedSystems);
                 this.targetSystem = this.selectDefaultSystem();
                 console.log('this.targetSystem on set', this.targetSystem);
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
@@ -403,8 +419,9 @@ export class MergeModalContent {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
         const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
-        const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || '';
-        switch (stateOfHealth) {
+        const stateOfHealth = system.info && 
+            system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || system.status || '';
+        switch (stateOfHealth.toLowerCase()) {
             case 'online':
                 if (!system.canMerge) {
                     status = statusIncompatible;
@@ -424,13 +441,21 @@ export class MergeModalContent {
                 }
         }
 
+        let systemName;
+        if (system.systemName) {
+            systemName = system.systemName.slice(0, -1);
+            status = ` (${system.name}, ${system.remoteAddresses[0]}:${system.port}) ${status}`;
+        } else {
+            systemName = system.name || system.info.name;
+        }
+
         // HTML required for dropdown list
-        return `<span>${system.name || system.info.name}</span><span class="text-muted">${status}</span>`;
+        return `<span>${systemName}</span><span class="text-muted">${status}</span>`;
     }
 
     // Add system can merge where added to systems form api call
     checkMergeability(system) {
-        const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || '';
+        const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || system.status || '';
 
         if (system.hasOwnProperty('isOnline') && !system.isOnline || stateOfHealth.indexOf('offline') > -1) {
             return 'offline';
@@ -488,12 +513,13 @@ export class MergeModalContent {
     }
 
     selectDefaultSystem() {
-        for (const system of this.systems) {
+        const systems = [...this.systems, ...this.peerSystems];
+        for (const system of systems) {
             if (this.checkMergeability(system) === '') {
                 return {...system};
             }
         }
-        return { ...this.systems[0], value: this.systems[0].id };
+        return { ...systems[0], value: systems[0].id };
     }
 
     setSystems() {
@@ -502,9 +528,26 @@ export class MergeModalContent {
     }
 
     setTargetSystem(targetSystem) {
-        this.systemMergeable = '';
-        this.targetSystem = {... this.systems.find(system => system.id === targetSystem.value)};
-        this.targetSystem.value = this.targetSystem.id;
+        console.log('targetSystem', targetSystem);
+        if (targetSystem.name === 'Other System...') {
+            this.targetSystem = {};
+            this.updateShow('serverUrl');
+        } else {
+            this.systemMergeable = '';
+            this.targetSystem = {
+                ...this.systems.find(system => system.id === targetSystem.value),
+                ...this.peerSystems.find(system => system.id === targetSystem.value)
+            };
+            this.targetSystem.value = this.targetSystem.id;
+            if (this.targetSystem.systemName) {
+                this.updateShow(
+                    'serverUrl', 
+                    { serverUrlInputValue: `${this.targetSystem.remoteAddresses[0]}:${this.targetSystem.port}`}
+                );
+            } else {
+                this.updateShow('checkMergeDefault');
+            }
+        }
         this.setSystems();
     }
 
