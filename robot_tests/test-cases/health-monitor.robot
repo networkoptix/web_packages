@@ -42,6 +42,61 @@ Click On Page Number
     [Arguments]    ${pg_number}
     Click Link    ${HM PAGE NUMBER LINK}"${EMPTY}${pg_number}${EMPTY}"]
     
+Count All Alerts and Validate Totals Shown
+    Log    Looping through all table pages to count Alerts 
+    Page Should Contain Element    ${HM FIRST TABLE PAGE ELEMENT}
+    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    ${camera alerts} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
+    ${camera warnings} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
+    ${server alerts} =    Get Element Count    ${HM SERVER TABLE OFFLINE}
+    ${server warnings} =    Get Element Count    ${HM SERVER TABLE WARNINGS} 
+    ${storage alerts} =    Get Element Count    ${HM STORAGE TABLE ERRORS} 
+    ${storage warnings} =    Get Element Count    ${HM STORAGE TABLE WARNINGS} 
+    ${network alerts} =    Get Element Count    ${HM NETWORK INTERFACE TABLE ERRORS}
+    ${network warnings} =    Get Element Count    ${HM NETWORK INTERFACE TABLE WARNINGS} 
+    FOR     ${i}    IN RANGE    ${pages}
+        ${last page} =    Run Keyword And Return Status    Page Should Contain Element    ${HM LAST TABLE PAGE ELEMENT}
+        Exit For Loop If    ${last page}
+        Click Link    ${HM NEXT PAGE LINK}
+        Wait Until Element Is Visible     ${HM CAMERA TABLE ERRORS}
+        ${camera alerts x} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
+        ${camera warnings x} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
+        ${server alerts x} =    Get Element Count    ${HM SERVER TABLE OFFLINE}
+        ${server warnings x} =    Get Element Count    ${HM SERVER TABLE WARNINGS} 
+        ${storage alerts x} =    Get Element Count    ${HM STORAGE TABLE ERRORS} 
+        ${storage warnings x} =    Get Element Count    ${HM STORAGE TABLE WARNINGS} 
+        ${network alerts x} =    Get Element Count    ${HM NETWORK INTERFACE TABLE ERRORS}
+        ${network warnings x} =    Get Element Count    ${HM NETWORK INTERFACE TABLE WARNINGS} 
+        ${camera alerts} =     Evaluate    ${camera alerts} + ${camera alerts x}
+        ${camera warnings} =    Evaluate    ${camera warnings} + ${camera warnings x}
+        ${server alerts} =    Evaluate    ${server alerts} + ${server alerts x}
+        ${server warnings} =    Evaluate    ${server warnings} + ${server warnings x}  
+        ${storage alerts} =    Evaluate     ${storage alerts} + ${storage alerts x}
+        ${storage warnings} =    Evaluate    ${storage warnings} + ${storage warnings x}
+        ${network alerts} =    Evaluate    ${network alerts} + ${network alerts x}
+        ${network warnings} =    Evaluate    ${network warnings} + ${network warnings x}
+    END
+    Log    Comparing counted Alerts to Cards on page 
+    ${camera card errors} =    Get Text    ${HM CAMERA CARD ERRORS}
+    ${camera card warnings} =    Get Text    ${HM CAMERA CARD WARNINGS}
+    ${server card offline} =    Get Text    ${HM SERVER CARD OFFLINE}
+    ${server card warnings} =    Get Text    ${HM SERVER CARD WARNINGS}
+    ${storage card errors} =    Get Text    ${HM STORAGE CARD ERRORS}
+    ${storage card warnings} =    Get Text    ${HM STORAGE CARD WARNINGS}
+    ${network card alerts} =    Get Text    ${HM NETWORK INTERFACE CARD ERRORS} 
+    ${network card warnings} =    Get Text    ${HM NETWORK INTERFACE CARD WARNINGS}
+    Should Be Equal As Integers     ${camera alerts}     ${camera card errors}        
+    Should Be Equal As Integers     ${camera warnings}    ${camera card warnings}    
+    Should Be Equal As Integers     ${server alerts}     ${server card offline}  
+    Should Be Equal As Integers     ${server warnings}    ${server card warnings}    
+    Should Be Equal As Integers     ${storage alerts}    ${storage card errors}    
+    Should Be Equal As Integers     ${storage warnings}    ${storage card warnings}    
+    Should Be Equal As Integers     ${network alerts}    ${network card alerts}    
+    Should Be Equal As Integers     ${network warnings}    ${network card warnings}
+    ${alerts counted total} =    Evaluate    ${camera alerts} + ${camera warnings} + ${server alerts} + ${server warnings} + ${storage alerts} + ${storage warnings} + ${network alerts} + ${network warnings}
+    ${alerts page total} =    Get Text    ${HM ALERTS TOTAL}
+    Should Be Equal    ${alerts counted total} alerts    ${alerts page total}
+    
 *** Test Cases ***
 Onwer Has Access to Health Monitoring
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
@@ -143,69 +198,36 @@ Can Close Out of Json Imported Mode
     Page Should Not Contain    ${HM IMPORTED REPORT RIBBON}
     Element Text Should Not Be     ${HM ALERTS TOTAL}    ${first}
         
-Errors and Warnings are Counted, and Shown Correctly in the Left Pane and Header Tiles
+Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header Tiles
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${EMAIL OWNER}    ${password}    button=None 
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
     Click Link    ${HM INFORMATION TAB LINK}
     Validate Alerts Page
-    Log    Looping through all table pages to count Alerts 
-    Page Should Contain Element    ${HM FIRST TABLE PAGE ELEMENT}
-    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), "${EMPTY}")]
-    ${camera alerts} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
-    ${camera warnings} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
-    ${server alerts} =    Get Element Count    ${HM SERVER TABLE OFFLINE}
-    ${server warnings} =    Get Element Count    ${HM SERVER TABLE WARNINGS} 
-    ${storage alerts} =    Get Element Count    ${HM STORAGE TABLE ERRORS} 
-    ${storage warnings} =    Get Element Count    ${HM STORAGE TABLE WARNINGS} 
-    ${network alerts} =    Get Element Count    ${HM NETWORK INTERFACE TABLE ERRORS}
-    ${network warnings} =    Get Element Count    ${HM NETWORK INTERFACE TABLE WARNINGS} 
-    FOR     ${i}    IN RANGE    ${pages}
-        ${last page} =    Run Keyword And Return Status    Page Should Contain Element    ${HM LAST TABLE PAGE ELEMENT}
-        Exit For Loop If    ${last page}
-        Click Link    ${HM NEXT PAGE LINK}
-        Wait Until Element Is Visible     ${HM CAMERA TABLE ERRORS}
-        ${camera alerts x} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
-        ${camera warnings x} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
-        ${server alerts x} =    Get Element Count    ${HM SERVER TABLE OFFLINE}
-        ${server warnings x} =    Get Element Count    ${HM SERVER TABLE WARNINGS} 
-        ${storage alerts x} =    Get Element Count    ${HM STORAGE TABLE ERRORS} 
-        ${storage warnings x} =    Get Element Count    ${HM STORAGE TABLE WARNINGS} 
-        ${network alerts x} =    Get Element Count    ${HM NETWORK INTERFACE TABLE ERRORS}
-        ${network warnings x} =    Get Element Count    ${HM NETWORK INTERFACE TABLE WARNINGS} 
-        ${camera alerts} =     Evaluate    ${camera alerts} + ${camera alerts x}
-        ${camera warnings} =    Evaluate    ${camera warnings} + ${camera warnings x}
-        ${server alerts} =    Evaluate    ${server alerts} + ${server alerts x}
-        ${server warnings} =    Evaluate    ${server warnings} + ${server warnings x}  
-        ${storage alerts} =    Evaluate     ${storage alerts} + ${storage alerts x}
-        ${storage warnings} =    Evaluate    ${storage warnings} + ${storage warnings x}
-        ${network alerts} =    Evaluate    ${network alerts} + ${network alerts x}
-        ${network warnings} =    Evaluate    ${network warnings} + ${network warnings x}
-    END
-    Log    Comparing counted Alerts to Cards on page 
-    ${camera card errors} =    Get Text    ${HM CAMERA CARD ERRORS}
-    ${camera card warnings} =    Get Text    ${HM CAMERA CARD WARNINGS}
-    ${server card offline} =    Get Text    ${HM SERVER CARD OFFLINE}
-    ${server card warnings} =    Get Text    ${HM SERVER CARD WARNINGS}
-    ${storage card errors} =    Get Text    ${HM STORAGE CARD ERRORS}
-    ${storage card warnings} =    Get Text    ${HM STORAGE CARD WARNINGS}
-    ${network card alerts} =    Get Text    ${HM NETWORK INTERFACE CARD ERRORS} 
-    ${network card warnings} =    Get Text    ${HM NETWORK INTERFACE CARD WARNINGS}
-    Should Be Equal As Integers     ${camera alerts}     ${camera card errors}        
-    Should Be Equal As Integers     ${camera warnings}    ${camera card warnings}    
-    Should Be Equal As Integers     ${server alerts}     ${server card offline}  
-    Should Be Equal As Integers     ${server warnings}    ${server card warnings}    
-    Should Be Equal As Integers     ${storage alerts}    ${storage card errors}    
-    Should Be Equal As Integers     ${storage warnings}    ${storage card warnings}    
-    Should Be Equal As Integers     ${network alerts}    ${network card alerts}    
-    Should Be Equal As Integers     ${network warnings}    ${network card warnings}
-    ${alerts counted total} =    Evaluate    ${camera alerts} + ${camera warnings} + ${server alerts} + ${server warnings} + ${storage alerts} + ${storage warnings} + ${network alerts} + ${network warnings}
-    ${alerts page total} =    Get Text    ${HM ALERTS TOTAL}
-    Should Be Equal    ${alerts counted total} alerts    ${alerts page total}
+    Count All Alerts and Validate Totals Shown
+    Upload Json    one-page
+    Count All Alerts and Validate Totals Shown
 
+Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    button=None 
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Validate Alerts Page
+    Upload Json    one-page
+    Wait Until Element Is Visible    ${HM LAST TABLE PAGE ELEMENT}
+    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    Should Be Equal As Integers    ${pages}    1
+    Set Window Size    1920    600
+    Sleep     0.5
+    Page Should Not Contain    ${HM LAST TABLE PAGE ELEMENT}
+    ${pages} =    Get Element Count    //ngb-pagination//a[contains(text(), " ")]
+    Should Not Be Equal As Integers    ${pages}    1
+    Count All Alerts and Validate Totals Shown
+    
 
-#Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
 #Details Panel Shows Errors
 #Details Panel Shows Alerts
 #Details Panel Shows Errors and Alerts
