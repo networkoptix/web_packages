@@ -596,7 +596,7 @@ Administrator can add, disable and enable Viewer
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
+    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
     # Step 4
     Log     Step 4
     Log Out
@@ -632,7 +632,7 @@ Administrator can add, disable and enable Viewer
     Go To     ${ENV}/systems
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
-    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${VIEWER TEXT}')]
+    Wait Until Element Is Visible    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
 
 Only Admin and Owner can access the share URL
     Log     Owner test

@@ -165,7 +165,7 @@ Register
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
-    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    5
+    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
     Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
