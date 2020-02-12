@@ -142,22 +142,22 @@ export class MergeModalContent {
                 nextButtonAction: undefined,
             },
             errorText: {
-                offline: 'systemOffline',
-                primaryOffline: 'primarySystemOffline',
-                systemVersionOld: 'systemVersionOld',
-                systemVersionNew: 'systemVersionNew',
-                unavailable: 'systemUnavailable',
-                primaryUnavailable: 'systemUnavailable',
-                duplicateServers: 'duplicateServers',
-                unknownError: 'unknownError',
-                noServerFound: 'noServerFound',
-                serverNotYours: 'serverNotYours',
-                serverVersionOld: 'serverVersionOld',
-                serverVersionNew: 'serverVersionNew',
+                systemOffline: '',
+                primarySystemOffline: '',
+                systemVersionOld: '',
+                systemVersionNew: '',
+                primarySystemUnavailable: '',
+                secondarySystemUnavailable: '',
+                duplicateServers: '',
+                unknownError: '',
+                noServerFound: '',
+                serverNotYours: '',
+                serverVersionOld: '',
+                serverVersionNew: '',
             },
             validationErrorText: {
-                urlEmpty: 'urlEmpty',
-                urlNotValid: 'urlNotValid',
+                urlEmpty: '',
+                urlNotValid: '',
             },
         },
         adminPassword: {
@@ -236,13 +236,13 @@ export class MergeModalContent {
         const targetSystemName = this.targetSystem.name || this.targetSystem.info.name;
         const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
         for (const error in errorText) {
-            errorText[error] = this.LANG.dialogs.merge[errorText[error]]
+            errorText[error] = this.LANG.dialogs.merge[error]
                 .replace(/{{primarySystem}}|{{targetSystem}}/g, found => {
                     return found === '{{primarySystem}}' ? primarySystemName : targetSystemName;
                 });
         }
         for (const error in validationErrorText) {
-            validationErrorText[error] = this.LANG.dialogs.merge[validationErrorText[error]];
+            validationErrorText[error] = this.LANG.dialogs.merge[error];
         }
     }
 
@@ -391,7 +391,6 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
             console.log('checkMergeability CALLED');
             this.updateShow('checkMergeChecking');
-            // this.systemMergeable = '';
             return this.precheckSystemMerge().finally(() => {
                 this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
                 console.log('targetSystemDropdown name', this.targetSystemDropdown.name);
@@ -403,14 +402,18 @@ export class MergeModalContent {
                 console.log('res from precheckSystemMerge', res);
                 if (!res.system && this.systemMergeable === '') {
                     this.machine.transition('choosePrimary');
-                    // return this.updateState();
+                } else {
+                    this.updateShow(
+                        'checkMergeError',
+                        { checkingErrorText: this.machine.state.errorText[this.systemMergeable] }
+                    );
                 }
             }, err => {
+                console.error('error in catch', err);
                 this.updateShow(
                     'checkMergeError',
                     { checkingErrorText: this.machine.state.errorText[this.systemMergeable] }
                 );
-                console.error('error in catch', err);
             });
     }
 
@@ -455,13 +458,14 @@ export class MergeModalContent {
 
     // Add system can merge where added to systems form api call
     checkMergeability(system) {
+        // add something for incompatible version?
         const stateOfHealth = system.info && system.info.stateOfHealth || system.stateOfHealth || system.stateMessage || system.status || '';
 
         if (system.hasOwnProperty('isOnline') && !system.isOnline || stateOfHealth.indexOf('offline') > -1) {
-            return 'offline';
+            return 'systemOffline';
         }
         if (system.hasOwnProperty('isAvailable') && !system.isAvailable || stateOfHealth.indexOf('unavailable') > -1) {
-            return 'unavailable';
+            return 'secondarySystemUnavailable';
         }
         if (!system.canMerge) {
             return 'secondaryCannotMerge';
@@ -474,7 +478,7 @@ export class MergeModalContent {
             return 'primaryOffline';
         }
         if (!this.system.isAvailable) {
-            return 'primaryUnavailable';
+            return 'primarySystemUnavailable';
         }
         return '';
     }
@@ -496,7 +500,7 @@ export class MergeModalContent {
                     return Promise.resolve({});
                 });
             })
-                .catch(err => Promise.reject(err))
+                .catch(err => Promise.reject({ fromGetUsers: err }))
                 .finally(() => this.targetSystem.stopPoll());
         });
     }
@@ -528,10 +532,10 @@ export class MergeModalContent {
     }
 
     setTargetSystem(targetSystem) {
-        console.log('targetSystem', targetSystem);
+        console.log('targetSystem to be set', targetSystem);
         if (targetSystem.name === 'Other System...') {
             this.targetSystem = {};
-            this.updateShow('serverUrl');
+            this.updateShow('serverUrl', { serverUrlInputValue: '' });
         } else {
             this.systemMergeable = '';
             this.targetSystem = {
@@ -539,30 +543,43 @@ export class MergeModalContent {
                 ...this.peerSystems.find(system => system.id === targetSystem.value)
             };
             this.targetSystem.value = this.targetSystem.id;
+            this.systemMergeable = this.checkMergeability(this.targetSystem);
+            this.insertErrorMessages();
+
+            let showUpdate = 'checkMergeDefault';
+            const templateUpdates: any = {};
             if (this.targetSystem.systemName) {
-                this.updateShow(
-                    'serverUrl', 
-                    { serverUrlInputValue: `${this.targetSystem.remoteAddresses[0]}:${this.targetSystem.port}`}
-                );
-            } else {
-                this.updateShow('checkMergeDefault');
+                showUpdate = 'serverUrl';
+                templateUpdates.serverUrlInputValue = `${this.targetSystem.remoteAddresses[0]}:${this.targetSystem.port}`;
             }
+            if (this.systemMergeable) {
+                showUpdate = this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError';
+                templateUpdates.checkingErrorText = this.machine.state.errorText[this.systemMergeable];
+            }
+            this.updateShow(showUpdate, templateUpdates);
         }
         this.setSystems();
     }
 
-    updateState() {
-        switch (this.state) {
-            case 'select':
-                this.state = this.tooManyServers ? 'warning' : 'confirm';
-                break;
-            case 'warning':
-                this.state = 'confirm';
-                break;
-            default:
-                break;
+    serverUrlChange() {
+        if (this.targetSystem.systemName) {
+            this.targetSystemDropdown = { name: 'Other System...' };
+            this.targetSystem = {};
         }
     }
+
+    // updateState() {
+    //     switch (this.state) {
+    //         case 'select':
+    //             this.state = this.tooManyServers ? 'warning' : 'confirm';
+    //             break;
+    //         case 'warning':
+    //             this.state = 'confirm';
+    //             break;
+    //         default:
+    //             break;
+    //     }
+    // }
 
     canShowRequired(element) {
         return element.invalid && element.errors.required && !this.wrongPassword;

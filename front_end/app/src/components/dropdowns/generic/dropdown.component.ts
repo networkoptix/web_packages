@@ -35,6 +35,7 @@ export class NxGenericDropdown extends BaseDropdown {
     // items should have at least name ex [{name: 'a', id: 1}, {name: 'b', id:3}]
     @Input() items: any;
     @Input() selected: any;
+    @Input() merge: boolean;
     @Output() onSelected = new EventEmitter<string>();
 
     change(item) {

@@ -21,7 +21,8 @@
         <nx-select 
             *ngIf="machine.state.show.systemDropdown"
             class="mb-2"
-            id="system" 
+            id="system"
+            merge="true"
             [items]="processedSystems" 
             [selected]="targetSystemDropdown" 
             (onSelected)="setTargetSystem($event)"
@@ -46,6 +47,7 @@
                 class="mb-2 form-control"
                 name="serverUrl"
                 type="text"
+                (ngModelChange)="serverUrlChange()"
                 [(ngModel)]="serverUrlInputValue"
                 placeholder="host:port"
                 pattern="{{CONFIG.urlRegex}}"
@@ -57,7 +59,8 @@
                 for="serverUrl">
             </label>
         </div>
-        <p *ngIf="machine.state.show.checkingErrorText" 
+        <p *ngIf="machine.state.show.checkingErrorText"
+            [ngClass]="{ 'mt-2': machine.state.show.serverUrlInput }"
             [innerHTML]="checkingErrorText" 
             class="error-label">
         </p>
