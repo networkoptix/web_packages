@@ -443,11 +443,14 @@ Share with unregistered user - brings them to registration page with code with c
     Log Out
     ${link}    Get Email Link    ${random email}    register
     Go To    ${link}
-    Register
-    ...    ${TEST FIRST NAME}
-    ...    ${TEST LAST NAME}
-    ...    ${random email}
-    ...    ${password}
+    Validate on Register Page
+    Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}
+    Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
+    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
+    Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
+    Input Text    ${REGISTER PASSWORD INPUT}    ${password}
+    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
+    Click Button    ${CREATE ACCOUNT BUTTON}
     Validate Log In
 
 Sharing system with a user who is already in the list updates their permissions
