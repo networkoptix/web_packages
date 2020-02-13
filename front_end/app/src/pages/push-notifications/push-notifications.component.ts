@@ -103,8 +103,8 @@ export class PushComponent implements OnInit, OnDestroy {
                 if (!message.notification) {
                     message.notification = {};
                 }
-                message.notification.title = message.notification && message.notification.title || '';
-                message.notification.body = message.notification && message.notification.body || '';
+                message.notification.title = message.notification.title || '';
+                message.notification.body = message.notification.body || '';
                 this.receivedMessages.push(message);
                 const _notify = new Notification(message.notification.title, message.notification);
                 if (message.data) {
