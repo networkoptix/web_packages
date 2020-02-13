@@ -186,7 +186,7 @@ def set_subscriptions_from_targets(notification_object, request_data):
 
     matching_devices = PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        active=True, user__is_active=True
+        active=True, user__is_active=True, application_id=notification_object.customization.name
     ).distinct()
     notification_object.devices.set(matching_devices)
 

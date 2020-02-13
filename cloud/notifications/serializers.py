@@ -1,5 +1,6 @@
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from django.conf import settings
 from rest_framework import serializers
 
 from .models import PushSubscription, PushDevice
@@ -123,7 +124,7 @@ class SubscriptionSerializer(serializers.Serializer):
         else:
             device = PushDevice(
                 registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
-                user=self.context['request'].user
+                user=self.context['request'].user, application_id=settings.CUSTOMIZATION
             )
             systems = validated_data.get('systems', ['all'])
             is_enabled = validated_data.get('isEnabled', True)
@@ -142,6 +143,7 @@ class SubscriptionSerializer(serializers.Serializer):
         systems = validated_data.get('systems', None)
         is_enabled = validated_data.get('isEnabled', None)
         device_info = validated_data.get('deviceInfo', None)
+        instance.application_id = settings.CUSTOMIZATION
 
         if is_enabled is not None:
             instance.active = is_enabled
