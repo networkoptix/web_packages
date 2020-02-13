@@ -67,7 +67,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     activeEntitySubscription: SubscriptionLike;
 
     @ViewChild('search', { static: false }) searchElement: ElementRef;
-    @ViewChild('area', { static: false }) area: ElementRef;
+    @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -151,7 +151,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.healthLayoutService.dimensions = [];
-        this.healthLayoutService.searchTableArea = this.area;
+        this.healthLayoutService.searchTableArea = this.areaElement;
         this.healthLayoutService.searchElement = this.searchElement;
 
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className: string) => {
