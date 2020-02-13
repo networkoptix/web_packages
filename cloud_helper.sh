@@ -115,6 +115,16 @@ function stop_mediaserver() {
     docker ps | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
 }
 
+function start_https_tunnel() {
+    if ! brew list stunnel > /dev/null ; then
+        echo 'Installing stunnel'
+        brew install stunnel
+    fi
+
+    echo 'Starting tunnel'
+    stunnel 'etc/stunnel_dev.conf'
+}
+
 for command in $@
 do
     case "$command" in
@@ -200,8 +210,11 @@ do
          stop_mediaserver)
             stop_mediaserver
             ;;
+         start_https_tunnel)
+            start_https_tunnel
+            ;;
         *)
-            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver]'
+            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
             echo 'init - Does everything. Only run this once'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
@@ -217,6 +230,8 @@ do
             echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/robot_tests/Docker. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
+            echo ''
             ;;
     esac
 done
