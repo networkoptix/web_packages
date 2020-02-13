@@ -38,30 +38,32 @@
         <p *ngIf="machine.state.show.checkingText" class="light-text help-block-no-height" translate>
             Checking...
         </p>
-        <div class="d-flex flex-column server-url add-specificity">
-            <label *ngIf="machine.state.show.serverUrlText" class="server-url-label" for="serverUrl" translate>
+        <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity">
+            <label class="server-url-label" for="serverUrl" translate>
                 Server URL
             </label>
             <input 
-                *ngIf="machine.state.show.serverUrlInput"
                 class="mb-2 form-control"
+                #serverUrlInput="ngModel"
                 name="serverUrl"
-                type="text"
-                (ngModelChange)="serverUrlChange()"
-                [(ngModel)]="serverUrlInputValue"
+                id="serverUrl"
+                type="url"
                 placeholder="host:port"
-                pattern="{{CONFIG.urlRegex}}"
+                (ngModelChange)="serverUrlChange(serverUrlInput)"
+                [(ngModel)]="machine.state.template.serverUrlInputValue"
+                (blur)="serverUrlChange(serverUrlInput)"
+                nxUrlValidator
                 required/>
             <label 
-                *ngIf="machine.state.show.serverUrlInputValidationError" 
-                [innerHTML]="serverUlrInputValidationErrorText" 
-                class="error-label" 
+                *ngIf="machine.state.show.serverUrlInputValidationErrorText" 
+                [innerHTML]="machine.state.template.serverUrlInputValidationErrorText" 
+                class="error-label"
                 for="serverUrl">
             </label>
         </div>
         <p *ngIf="machine.state.show.checkingErrorText"
             [ngClass]="{ 'mt-2': machine.state.show.serverUrlInput }"
-            [innerHTML]="checkingErrorText" 
+            [innerHTML]="machine.state.template.checkingErrorText" 
             class="error-label">
         </p>
     </div>
@@ -123,7 +125,7 @@
             <input class="form-control"
                     [(ngModel)]="password" #mergePassword="ngModel"
                     id="mergePassword" autocomplete="new-password"
-                    name="mergePassword" type="password"
+                    name="mergePassword" type="password" required
                     nxFocusMe>
             <div *ngIf="canShowRequired(mergePassword)">
                 <label class="input-error" translate>Password is required</label>

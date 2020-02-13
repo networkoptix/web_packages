@@ -1,4 +1,4 @@
-import { Component, Input, Renderer2, ViewChild, forwardRef } from '@angular/core';
+import { Component, Input, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
@@ -47,6 +47,7 @@ export class MergeModalContent {
     serverUrlInputValidationErrorText: string;
 
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
+    @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
 
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
@@ -75,9 +76,8 @@ export class MergeModalContent {
                 noSystemText: false,
                 ownerCanMergeText: true,
                 checkingText: false,
-                serverUrlText: false,
                 serverUrlInput: false,
-                serverUrlInputValidationError: false,
+                serverUrlInputValidationErrorText: false,
                 checkingErrorText: false,
             },
             showUpdates: {
@@ -99,37 +99,31 @@ export class MergeModalContent {
                 serverUrl: {
                     mergeSystemText: true,
                     systemDropdown: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
                 },
                 serverUrlValidationError: {
                     mergeSystemText: true,
                     systemDropdown: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
-                    serverUrlInputValidationError: true,
+                    serverUrlInputValidationErrorText: true,
                 },
                 serverUrlMergeError: {
                     mergeSystemText: true,
                     systemDropdown: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
                     checkingErrorText: true,
                 },
                 noOtherSystemServerUrl: {
                     noSystemText: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
                 },
                 noOtherSystemValidationError: {
                     noSystemText: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
-                    serverUrlInputValidationError: true,
+                    serverUrlInputValidationErrorText: true,
                 },
                 noOtherSystemMergeError: {
                     noSystemText: true,
-                    serverUrlText: true,
                     serverUrlInput: true,
                     checkingErrorText: true,
                 },
@@ -139,7 +133,6 @@ export class MergeModalContent {
                 checkingErrorText: '',
                 serverUrlInputValue: '',
                 serverUrlInputValidationErrorText: '',
-                nextButtonAction: undefined,
             },
             errorText: {
                 systemOffline: '',
@@ -210,9 +203,6 @@ export class MergeModalContent {
     machine = new StateMachine('checkMerge', this.stateMachine);
 
     updateShow(newShow?, templateVariable?) {
-        console.log('machine state in updateShow', this.machine.state);
-        console.log('newShow?', newShow);
-        console.log('templateVariable?', templateVariable);
         const { showUpdates, show, template } = this.machine.state;
         if (newShow) {
             Object.keys(show).forEach(e => {
@@ -222,7 +212,6 @@ export class MergeModalContent {
         if (templateVariable) {
             for (const update in templateVariable) {
                 template[update] = templateVariable[update];
-                this[update] = templateVariable[update];
             }
         } else {
             ['serverUrlInputValidationErrorText', 'checkingErrorText']
@@ -268,13 +257,9 @@ export class MergeModalContent {
                 }
                 this.processedSystems.push({ name: 'Other System...' });
 
-                console.log('prcoessedSystem', this.processedSystems);
                 this.targetSystem = this.selectDefaultSystem();
-                console.log('this.targetSystem on set', this.targetSystem);
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-                console.log('this.targetSystemDropDown on set', this.targetSystemDropdown);
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
-                console.log('systemMergeable', this.systemMergeable);
             }
             this.secondarySystem = this.targetSystem; // target Other System?
             // FUTURE: when switching states, clear error state/messages
@@ -285,9 +270,6 @@ export class MergeModalContent {
                     { checkingErrorText: this.machine.state.errorText[this.systemMergeable] }
                 );
             }
-            console.log('this.machine post transition', this.machine);
-            console.log('show in machine state', this.machine.state.show);
-            console.log('systems', this.systems);
     
             this.user.get().then((account) => {
                 this.account = account;
@@ -389,13 +371,10 @@ export class MergeModalContent {
         });
 
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
-            console.log('checkMergeability CALLED');
             this.updateShow('checkMergeChecking');
             return this.precheckSystemMerge().finally(() => {
                 this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
-                console.log('targetSystemDropdown name', this.targetSystemDropdown.name);
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
-                console.log('systemMergeable', this.systemMergeable);
             });
         })
             .then((res) => {
@@ -538,10 +517,8 @@ export class MergeModalContent {
             this.updateShow('serverUrl', { serverUrlInputValue: '' });
         } else {
             this.systemMergeable = '';
-            this.targetSystem = {
-                ...this.systems.find(system => system.id === targetSystem.value),
-                ...this.peerSystems.find(system => system.id === targetSystem.value)
-            };
+            this.targetSystem = this.systems.find(system => system.id === targetSystem.value)
+                ||this.peerSystems.find(system => system.id === targetSystem.value);
             this.targetSystem.value = this.targetSystem.id;
             this.systemMergeable = this.checkMergeability(this.targetSystem);
             this.insertErrorMessages();
@@ -561,25 +538,25 @@ export class MergeModalContent {
         this.setSystems();
     }
 
-    serverUrlChange() {
-        if (this.targetSystem.systemName) {
+    serverUrlChange(input) {
+        // handles changing auto-discovered to Other System if url changed
+        const { serverUrlInputValue } = this.machine.state.template;
+        if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
             this.targetSystemDropdown = { name: 'Other System...' };
             this.targetSystem = {};
         }
+        // handles validation error message pop-ups
+        let showUpdate = '';
+        const templateUpdates = { serverUrlInputValidationErrorText: '' };
+        if (input.touched && input.errors && input.errors.required) {
+            showUpdate = 'serverUrlValidationError';
+            templateUpdates.serverUrlInputValidationErrorText = this.machine.state.validationErrorText.urlEmpty;
+        } else if (input.touched && input.invalid) {
+            showUpdate = 'serverUrlValidationError';
+            templateUpdates.serverUrlInputValidationErrorText = this.machine.state.validationErrorText.urlNotValid;
+        }
+        this.updateShow(showUpdate, templateUpdates);
     }
-
-    // updateState() {
-    //     switch (this.state) {
-    //         case 'select':
-    //             this.state = this.tooManyServers ? 'warning' : 'confirm';
-    //             break;
-    //         case 'warning':
-    //             this.state = 'confirm';
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
 
     canShowRequired(element) {
         return element.invalid && element.errors.required && !this.wrongPassword;

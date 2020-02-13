@@ -6,6 +6,7 @@ import { NxFocusMeDirective }         from './nx-focus-me';
 import { HighlightPipe }              from './nx-highlight-text';
 import { NxScrollHelperDirective }    from './nx-scroll-helper';
 import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
+import { NxUrlValidatorDirective }    from './nx-url-validator';
 
 @NgModule({
     imports: [],
@@ -16,6 +17,7 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
+        NxUrlValidatorDirective,
     ],
     entryComponents: [],
     exports: [
@@ -25,6 +27,7 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
+        NxUrlValidatorDirective,
     ]
 })
 export class DirectivesModule {
