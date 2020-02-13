@@ -171,7 +171,7 @@ export class NxHealthLayoutService {
     setAlertLayout() {
         const searchElementHeight = this.searchElement ? this.searchElement.nativeElement.offsetHeight : 0;
         const elementTilesHeight = this.tilesElement ? this.tilesElement.nativeElement.offsetHeight : 0;
-        if (!this.mobileDetailModeSubject) {
+        if (!this.mobileDetailMode) {
             this.dimensions = [elementTilesHeight, searchElementHeight, 17 /*separator = 1px + padding*/];
         }
         this.setLayout();
