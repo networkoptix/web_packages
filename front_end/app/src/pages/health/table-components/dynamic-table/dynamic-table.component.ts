@@ -156,14 +156,18 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
         this.healthService.tableReady = true;
     }
+
     initLayoutService() {
         this.healthLayoutService.tableHeaderElement = this.tableHeadElement;
         this.healthLayoutService.tableTitleElement = this.tableTitleElement;
         this.healthLayoutService.tableElement = this.tableElement;
 
-        this.pageSubscription = this.healthLayoutService.pageSizeSubject.pipe(delay(0)).subscribe(pageSize => {
-            this.pageSize = pageSize;
-            this.setPage(1);
+        this.pageSubscription = this.healthLayoutService
+            .pageSizeSubject
+            .pipe(delay(0))
+            .subscribe(pageSize => {
+                this.pageSize = pageSize;
+                this.setPage(1);
         });
 
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
