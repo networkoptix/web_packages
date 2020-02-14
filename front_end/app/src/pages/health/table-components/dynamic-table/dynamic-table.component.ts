@@ -368,7 +368,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     };
                 default:
                     return (elm) => {
-                        if (!(elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId])) {
+                        if (!(elm[groupId] && elm[groupId][paramId])) {
                             return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
                         }
 
