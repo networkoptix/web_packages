@@ -348,13 +348,28 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     return (elm) => {
                         return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                     };
-                case 'totalSpaceB':
+                case 'resolution':
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && parseFloat(elm[groupId][paramId].text) || '';
+                        if (elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value) {
+                            const res = elm[groupId][paramId].value.toLowerCase().split('x');
+
+                            if (res.length === 2) {
+                                return res[0] * res[1];
+                            } else {
+                                return 0; // invalid format
+                            }
+                        } else {
+                            return 0; // no data
+                        }
                     };
                 default:
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                        const format = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].formatClass || undefined;
+
+                        if (['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'].includes(format)) {
+                            return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                        }
+                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value || 0;
                     };
             }
         }
