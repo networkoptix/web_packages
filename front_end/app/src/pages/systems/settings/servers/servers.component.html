@@ -14,13 +14,14 @@
                                 tag: true,
                                 offline: serverOffline,
                                 online: selectedServer.internalStatus === CONFIG.serverStatus.restarting
-                                    || selectedServer.internalStatus === CONFIG.serverStatus.reseting
+                                    || selectedServer.internalStatus === CONFIG.serverStatus.reseting,
+                                checking: checking
                             }"
                         >
                             {{ selectedServer.shownStatus }}
                         </span>
                     </div>
-                    <button class="check-status"
+                    <button class="check-status pr-0"
                         *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">

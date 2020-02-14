@@ -493,6 +493,7 @@
         "restartSuccessful": "Server has successfully restarted.",
         "servers": "Servers",
         "status": {
+            "checking": "checking...",
             "detaching": "detaching...",
             "offline": "offline",
             "reseting": "reseting...",

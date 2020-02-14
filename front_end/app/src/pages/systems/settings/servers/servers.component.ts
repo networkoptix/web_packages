@@ -192,7 +192,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.serverStatus[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
-        this.serverOffline = this.selectedServer.internalStatus === this.CONFIG.serverStatus.offline;
+        this.serverOffline = this.selectedServer.internalStatus === this.CONFIG.serverStatus.offline ||
+            this.selectedServer.internalStatus === this.CONFIG.serverStatus.checking;
     }
 
     checkIfOnline(serverId) {
@@ -203,6 +204,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     checkStatus() {
         this.checking = true;
+        this.setStatus(this.CONFIG.serverStatus.checking);
         const now = new Date().getTime();
         this.system.getModuleInfo(this.selectedServer.id)
             .pipe(
@@ -210,9 +212,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
             )
             .subscribe(res => {
-                if (res !== 'error') {
-                    this.setStatus('');
-                }
+                this.setStatus(res === 'error'? this.CONFIG.serverStatus.offline : '');
                 this.checking = false;
             });
     }

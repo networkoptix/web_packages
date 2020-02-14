@@ -33,18 +33,26 @@
             .offline {
                 background-color: $error;
             }
+            .checking {
+                background-color: $light16;
+            }
         }
         .check-status {
+            &:hover {
+                color: $dark15;
+                fill: $dark15;
+            }
             @extend #regular13;
             background-color: inherit;
             color: $light16;
             display: flex;
             align-items: center;
+            fill: $light16;
             svg-icon {
                 svg {
-                    height: 24px;
+                    height: 18px;
                     g {
-                        fill: $light16;
+                        fill: inherit;
                     }
                 }
             }
