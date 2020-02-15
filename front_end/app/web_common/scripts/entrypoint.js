@@ -1,7 +1,7 @@
 //Vendor
-require('./vendor/cast.js');
-require('./vendor/cast-framework.js');
-require('./vendor/cast-sender.js');
+// require('./vendor/cast.js');
+// require('./vendor/cast-framework.js');
+// require('./vendor/cast-sender.js');
 require('./vendor/client-detection.js');
 require('./vendor/date.js');
 require('./vendor/Impetus.js');

@@ -3,17 +3,17 @@
     'use strict';
     
     angular.module('nxCommon').controller('ViewCtrl',
-        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', 'chromeCast', '$q',
+        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', '$q',
             'camerasProvider', '$sessionStorage', '$localStorage', '$timeout', 'systemAPI', 'voiceControl',
             'nxDialogsService', 'nxConfigService', 'languageService', 'nxHeaderService',
             
-            function ($scope, $rootScope, $location, $routeParams, cameraRecords, chromeCast, $q,
+            function ($scope, $rootScope, $location, $routeParams, cameraRecords, $q,
                       camerasProvider, $sessionStorage, $localStorage, $timeout, systemAPI, voiceControl,
                       nxDialogsService, nxConfigService, languageService, nxHeaderService) {
                 
                 const CONFIG = nxConfigService.getConfig();
                 const LANG = languageService.lang;
-                
+
                 const ROUTE_CAMERA_ID = $routeParams.cameraId ?
                     '{' + $routeParams.cameraId + '}' :
                     undefined;
@@ -65,13 +65,13 @@
     
                 setCameraComponentsVisibility();
                 
-                var castAlert = false;
-                $scope.showWarning = function () {
-                    if (!castAlert) {
-                        alert(LANG.common.chromeCastWarning);
-                        castAlert = true;
-                    }
-                };
+                // var castAlert = false;
+                // $scope.showWarning = function () {
+                //     if (!castAlert) {
+                //         alert(LANG.common.chromeCastWarning);
+                //         castAlert = true;
+                //     }
+                // };
                 
                 $scope.positionProvider = null;
                 $scope.activeVideoRecords = null;
@@ -286,13 +286,13 @@
                             : systemAPI.hlsUrl(cameraId, !live && playingPositionServer, resolutionHls);
                         streamInfo.title = $scope.activeCamera.name;
                         
-                        if (cameraSupports(streamType) || $scope.debugMode) {
-                            $scope.showCastButton = true;
-                            chromeCast.load(streamInfo, streamType);
-                        }
-                        else {
-                            $scope.showCastButton = false;
-                        }
+                        // if (cameraSupports(streamType) || $scope.debugMode) {
+                        //     $scope.showCastButton = true;
+                        //     chromeCast.load(streamInfo, streamType);
+                        // }
+                        // else {
+                        //     $scope.showCastButton = false;
+                        // }
                     }
                 }
                 
