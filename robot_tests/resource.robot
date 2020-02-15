@@ -327,6 +327,20 @@ Check User Permissions
 
     Set Selenium Timeout    ${original timeout}
 
+Get Cloud User Role
+    [Arguments]    ${auth}    ${email}    ${system id}
+    @{users}=   Get Cloud System Users   ${auth}    ${system id}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '&{user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
+    END
+
+Get Cloud User Id By Email
+   [Arguments]    ${auth}    ${email}    ${system id}
+   @{users}=   Get Cloud System Users    ${auth}    ${system id}
+   FOR    ${user}    IN    @{users}
+       Run Keyword If   '&{user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
+   END
+
 Change User Permissions
     [arguments]    ${permissions}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
