@@ -114,7 +114,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
 
 Should display same user data as user provided during registration
-    [Tags]    email    Threaded    tmp_users
+    [Tags]    email    Threaded
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
