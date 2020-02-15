@@ -9,6 +9,18 @@ function build_frontend(){
     ./build_scripts/build.sh
 }
 
+function brew_install() {
+    echo 'Checking for openssl'
+    brew install node n pyenv openssl docker docker-compose mysql mysqlclient
+
+    echo 'Installing node v11.15.0'
+    n 11.15.0
+
+    echo 'Installing python 3.7.6'
+    pyenv install 3.7.6
+    echo 'Brew install complete.'
+}
+
 function modify_bashprofile(){
     if [[ -z ${LOCAL_ENV} ]]; then
         echo 'export LOCAL_ENV=True' >> ~/.bash_profile
@@ -47,11 +59,17 @@ function setup_db(){
     fi
 }
 
-function login_db(){
+function login_db() {
     mysql -h 0.0.0.0 --port=3306 -uroot cloudportal
 }
 
-function setup_env(){
+function setup_env() {
+    if ! brew list openssl > /dev/null ; then
+        echo 'Installing openssl'
+        brew install openssl
+    fi
+    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+    export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
     printf "Setting up cloud portal locally\n\n"
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
 
@@ -128,6 +146,18 @@ function start_https_tunnel() {
 for command in $@
 do
     case "$command" in
+        init_special)
+            # Comment out exit for use. Be careful with this one.
+            exit 0
+            brew_install
+            modify_bashprofile
+            start_docker_containers
+            setup_env
+            setup_db
+            build_frontend
+            setup_cms
+            ;;
+
         init)
             modify_bashprofile
             start_docker_containers
