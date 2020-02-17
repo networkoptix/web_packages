@@ -17,7 +17,7 @@
 </form>
 <form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
     <div class="modal-body">
-        <p *ngIf="machine.state.show.mergeSystemText" translate>Merge current system with:</p>
+        <p>{{machine.state.template.bodyTitle}}</p>
         <nx-select 
             *ngIf="machine.state.show.systemDropdown"
             class="mb-2"
@@ -27,17 +27,7 @@
             [selected]="targetSystemDropdown" 
             (onSelected)="setTargetSystem($event)"
             required></nx-select>
-        <p *ngIf="machine.state.show.noSystemText" translate>
-            Enter address of any server in the system you want to merge with this one.
-        </p>
-        <p *ngIf="machine.state.show.ownerCanMergeText" 
-            class="light-text"
-            translate>
-            You can only merge Systems where you are the owner.
-        </p>
-        <p *ngIf="machine.state.show.checkingText" class="light-text help-block-no-height" translate>
-            Checking...
-        </p>
+        <p class="light-text">{{machine.state.template.helpText}}</p>
         <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity">
             <label class="server-url-label" for="serverUrl" translate>
                 Server URL

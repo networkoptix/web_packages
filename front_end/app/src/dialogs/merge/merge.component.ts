@@ -41,10 +41,10 @@ export class MergeModalContent {
 
     account: any;
 
-    selectedSystemInDropdown: any;
-    checkingErrorText: string;
-    serverUrlInputValue: string;
-    serverUrlInputValidationErrorText: string;
+    // selectedSystemInDropdown: any;
+    // checkingErrorText: string;
+    // serverUrlInputValue: string;
+    // serverUrlInputValidationErrorText: string;
 
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
@@ -71,9 +71,11 @@ export class MergeModalContent {
         },
         checkMerge: {
             show: {
+                bodyTitle: true,
                 mergeSystemText: true,
                 systemDropdown: true,
                 noSystemText: false,
+                helpText: true,
                 ownerCanMergeText: true,
                 checkingText: false,
                 serverUrlInput: false,
@@ -84,11 +86,13 @@ export class MergeModalContent {
                 checkMergeDefault: {
                     mergeSystemText: true,
                     systemDropdown: true,
+                    helpText: true,
                     ownerCanMergeText: true,
                 },
                 checkMergeChecking: {
                     mergeSystemText: true,
                     systemDropdown: true,
+                    helpText: true,
                     checkingText: true,
                 },
                 checkMergeError: {
@@ -129,8 +133,10 @@ export class MergeModalContent {
                 },
             },
             template: {
-                selectedSystemInDropdown: {},
+                bodyTitle: '',
                 checkingErrorText: '',
+                helpText: '',
+                selectedSystemInDropdown: {},
                 serverUrlInputValue: '',
                 serverUrlInputValidationErrorText: '',
             },
@@ -208,6 +214,11 @@ export class MergeModalContent {
             Object.keys(show).forEach(e => {
                 show[e] = showUpdates[newShow][e] ? true : false;
             });
+            if (this.machine.currentState === 'checkMerge') {
+                template.bodyTitle = newShow.includes('noOtherSystem') ?
+                    this.LANG.dialogs.merge.enterSystemAddressTitle :
+                    this.LANG.dialogs.merge.mergeSystemsTitle;
+            }
         }
         if (templateVariable) {
             for (const update in templateVariable) {
@@ -217,6 +228,7 @@ export class MergeModalContent {
             ['serverUrlInputValidationErrorText', 'checkingErrorText']
                 .forEach(errorText => template[errorText] = '');
         }
+        console.log('machine state on update', this.machine.state);
     }
 
     // call this when dropdown changes
@@ -239,8 +251,8 @@ export class MergeModalContent {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
             if (this.systems.length === 0) {
+                this.targetSystem = { name: 'Other System' };
                 this.updateShow('noOtherSystemServerUrl');
-                this.targetSystem = 'Other System';
             } else {
                 if (this.systems.length) {
                     this.processedSystems.push(
@@ -260,6 +272,7 @@ export class MergeModalContent {
                 this.targetSystem = this.selectDefaultSystem();
                 this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
+                this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
             }
             this.secondarySystem = this.targetSystem; // target Other System?
             // FUTURE: when switching states, clear error state/messages
@@ -371,7 +384,7 @@ export class MergeModalContent {
         });
 
         this.checkMergeabilityProcess = this.processService.createProcess(() => {
-            this.updateShow('checkMergeChecking');
+            this.updateShow('checkMergeChecking', { helpText: this.LANG.dialogs.merge.checking });
             return this.precheckSystemMerge().finally(() => {
                 this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
                 this.systemMergeable = this.checkMergeability(this.targetSystem);
@@ -524,14 +537,16 @@ export class MergeModalContent {
             this.insertErrorMessages();
 
             let showUpdate = 'checkMergeDefault';
-            const templateUpdates: any = {};
+            const templateUpdates: any = { helpText: this.LANG.dialogs.merge.ownerCanMergeText };
             if (this.targetSystem.systemName) {
                 showUpdate = 'serverUrl';
                 templateUpdates.serverUrlInputValue = `${this.targetSystem.remoteAddresses[0]}:${this.targetSystem.port}`;
+                delete templateUpdates.helpText;
             }
             if (this.systemMergeable) {
                 showUpdate = this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError';
                 templateUpdates.checkingErrorText = this.machine.state.errorText[this.systemMergeable];
+                delete templateUpdates.helpText;
             }
             this.updateShow(showUpdate, templateUpdates);
         }
