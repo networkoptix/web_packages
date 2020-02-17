@@ -118,7 +118,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         });
 
         this.routeSubscription = this.route
-            .params
+            .params.pipe(delay(0))
             .subscribe((params: any) => {
                 this.metricId = params.metric;
                 this.metricName = this.healthService.manifest[this.metricId].name;

@@ -41,6 +41,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     layoutReadySubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
     selectedSubscription: SubscriptionLike;
+    activeEntitySubscription: SubscriptionLike;
+    fixedLayoutClassSubscription: SubscriptionLike;
 
     layoutReady: boolean;
     fixedLayoutClass: string;
@@ -163,15 +165,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.healthLayoutService.searchElement = this.searchElement;
         this.healthLayoutService.searchTableArea = this.areaElement;
 
-        this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className) => {
+        this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className) => {
             this.fixedLayoutClass = className;
         });
 
-        this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
+        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
             this.layoutReady = value;
         });
 
-        this.healthLayoutService.activeEntitySubject.pipe(delay(0)).subscribe(() => {
+        this.activeEntitySubscription = this.healthLayoutService.activeEntitySubject.pipe(delay(0)).subscribe(() => {
             this.setLayout();
         });
     }
@@ -183,7 +185,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         return item.entity;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.healthLayoutService.resetActiveEntity();
+    }
 
     modelChanged(model) {
         if (JSON.stringify(this.filterModel) !== JSON.stringify(model)) { // avoid unnecessary trips
