@@ -192,6 +192,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (!activeEntity && !this.healthService.tableReady) {
             this.setPage(undefined, this.startIndex || 0);
         }
+
+        this.setPagerSize();
     }
 
     trackItem(index, item) {

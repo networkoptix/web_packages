@@ -113,15 +113,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             this.setActiveEntity(alarm, false);
         }
 
-        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject.subscribe(() => {
-            setTimeout(() => {
-                if (this.healthLayoutService.tableElement) {
-                    this.tableWrapper = this.healthLayoutService.tableElement
-                        .nativeElement.querySelectorAll('.table-wrapper')[0].offsetWidth;
-                }
-            });
-        });
-
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.healthLayoutService.mobileDetailMode = (this.healthLayoutService.activeEntity !== undefined);
