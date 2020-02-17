@@ -366,6 +366,14 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                             return 0; // no data
                         }
                     };
+                case 'displayAddress':
+                    return (elm) => {
+                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                            return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
+                        }
+                        const value = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value;
+                        return parseInt(value.replace(/\./g, '')) || 0;
+                    };
                 default:
                     return (elm) => {
                         if (!(elm[groupId] && elm[groupId][paramId])) {
