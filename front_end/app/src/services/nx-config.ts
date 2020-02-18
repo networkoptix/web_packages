@@ -198,15 +198,16 @@ export class NxConfigService {
                 }
             },
             icons                         : {
-                default  : '/static/icons/integration_tile_preview_plugin.svg',
+                default  : '/static/images/integration/integration_tile_preview_plugin.svg',
                 platforms: [
-                    { name: 'mac', src: '/static/icons/integration_tile_os_mac.svg' },
-                    { name: 'android', src: '/static/icons/integration_tile_os_android.svg' },
-                    { name: 'arm', src: '/static/icons/integration_tile_os_arm.svg' },
-                    { name: 'linux', src: '/static/icons/integration_tile_os_linux.svg' },
-                    { name: 'windows', src: '/static/icons/integration_tile_os_windows.svg' }
+                    { name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg' },
+                    { name: 'android', src: '/static/images/integration/integration_tile_os_android.svg' },
+                    { name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg' },
+                    { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
+                    { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
                 ],
-                dir: '/static/icons/',
+                dir: '/static/images/icons/',
+                dirPagePlaceholder: '/static/images/page-placeholders',
             },
             webclient                     : {
                 useServerTime              : true,

@@ -7,7 +7,7 @@
         "@angular/common": "~9.0.0",
         "@angular/compiler": "~9.0.0",
         "@angular/core": "~9.0.0",
-        "@angular/fire": "^5.2.1",
+        "@angular/fire": "5.4.2",
         "@angular/forms": "~9.0.0",
         "@angular/http": "~7.2.16",
         "@angular/platform-browser": "~9.0.0",

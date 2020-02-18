@@ -8,7 +8,7 @@
                 <div class="header-top-bar d-flex justify-content-between">
                     <div class="header-title">
                         <h2>{{ selectedServer.name }}</h2>
-                        <span 
+                        <span
                             *ngIf="selectedServer.internalStatus"
                             [ngClass]="{
                                 tag: true,
@@ -25,7 +25,7 @@
                         *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
-                            <svg-icon src="static/icons/reload.svg"
+                            <svg-icon src="static/images/icons/reload.svg"
                                 [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>Check Status</span>
@@ -52,14 +52,14 @@
             <nx-section>
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
-                        <button 
+                        <button
                             class="btn btn-default"
                             (click)="renameServer()"
                             [disabled]="renameDisabled || !system.currentServerNotBusy || serverOffline"
                         >
                             <span class="ellipsis" translate>Rename</span>
                         </button>
-                        <button 
+                        <button
                             class="btn btn-default"
                             (click)="restartServer()"
                             [disabled]="restartDisabled || !system.currentServerNotBusy || serverOffline"
@@ -69,7 +69,7 @@
                     </div>
                     <ng-container *ngIf="CONFIG.isWebAdmin || CONFIG.debugMode">
                         <div class="right setting-buttons">
-                            <button 
+                            <button
                                 class="btn btn-default"
                                 (click)="detachServer()"
                                 [disabled]="detachDisabled || !system.currentServerNotBusy || serverOffline"
@@ -77,7 +77,7 @@
                             >
                                 <span class="ellipsis" translate>Detach from the System</span>
                             </button>
-                            <button 
+                            <button
                                 class="btn btn-default"
                                 (click)="resetServer()"
                                 [disabled]="resetDisabled || !system.currentServerNotBusy || serverOffline"
@@ -96,8 +96,8 @@
             <nx-section class="pl-3">
                 <div class="d-flex align-items-center">
                     <span class="ellipsis mr-2" translate>Port</span>
-                    <input 
-                        class="port-input pl-2" 
+                    <input
+                        class="port-input pl-2"
                         type="number"
                         [min]="CONFIG.servers.port.min"
                         [max]="CONFIG.servers.port.max"
