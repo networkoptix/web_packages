@@ -799,6 +799,10 @@ export class NxSystem extends System implements OnDestroy {
     getPeerSystems() {
         return this.mediaserver.getPeerSystems();
     }
+
+    checkLocalAdminPassword(password) {
+        return this.mediaserver.checkLocalAdminPassword(password)
+    }
 }
 
 

@@ -446,6 +446,12 @@ export class NxSystemAPI {
     getPeerSystems() {
         return this.get('/api/discoveredPeers');
     }
+
+    checkLocalAdminPassword(password) {
+        const localPasswordUrl = this.urlBase.replace('\/\/', `//admin:${password}@`)
+        console.log('this.localPasswordUrl', localPasswordUrl);
+        return this.http.get(`${localPasswordUrl}/api/getModuleAuthenticated`);
+    }
 }
 
 
