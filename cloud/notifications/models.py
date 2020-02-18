@@ -14,7 +14,7 @@ from cms.models import Customization, Asset, DataStructure
 from api.models import Account
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
-FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns'])
+FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns', 'subtitle'])
 FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
