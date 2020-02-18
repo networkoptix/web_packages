@@ -142,7 +142,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             level1: [
                 {
                     id: this.CONFIG.systemMenu.admin.id,
-                    icon: this.CONFIG.systemMenu.admin.icon,
+                    svg: this.CONFIG.systemMenu.admin.icon,
                     label: this.LANG.menu.titles.systemAdministration,
                     path: this.CONFIG.systemMenu.admin.path,
                 }
@@ -301,7 +301,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (!usersNode) {
                 usersNode = {
                     id: this.CONFIG.systemMenu.users.id,
-                    icon: this.CONFIG.systemMenu.users.icon,
+                    svg: this.CONFIG.systemMenu.users.icon,
                     label: this.LANG.menu.titles.users,
                     path: this.CONFIG.systemMenu.users.path,
                     level2: [
@@ -365,7 +365,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (!serversNode) {
                 serversNode = {
                     id: this.CONFIG.systemMenu.servers.id,
-                    icon: this.CONFIG.systemMenu.servers.icon,
+                    svg: this.CONFIG.systemMenu.servers.icon,
                     label: this.LANG.servers.servers,
                     path: this.CONFIG.systemMenu.servers.path,
                 };

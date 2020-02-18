@@ -59,7 +59,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private uriService: NxUriService,
-                private menuservice: NxMenuService,
+                private menuService: NxMenuService,
                 private healthService: NxHealthService,
                 private languageService: NxLanguageProviderService,
                 private utilsService: NxUtilsService,
@@ -101,7 +101,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuservice.selectedSectionSubject.subscribe(selection => {
+        this.menuService.selectedSectionSubject.subscribe(selection => {
             if (this.menu.selectedSection !== selection) {
                 this.menu.selectedSection = selection;
                 this.menu                 = {...this.menu}; // trigger onChang

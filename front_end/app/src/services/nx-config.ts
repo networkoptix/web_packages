@@ -301,17 +301,17 @@ export class NxConfigService {
                 baseUrl: '/systems/',
                 admin  : {
                     id  : 'admin',
-                    icon: 'glyphicon-home',
+                    icon: 'systems',
                     path: ''
                 },
                 users: {
                     id  : 'users',
-                    icon: 'glyphicon-users',
+                    icon: 'users',
                     path: 'users'
                 },
                 servers: {
                     id  : 'servers',
-                    icon: 'glyphicon-menu-hamburger',
+                    icon: 'servers',
                     path: 'servers'
                 },
                 buttons: {
