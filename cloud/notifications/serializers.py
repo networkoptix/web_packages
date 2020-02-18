@@ -110,6 +110,8 @@ class SubscriptionSerializer(serializers.Serializer):
                 instance.name = device_info['name']
             if 'model' in device_info:
                 instance.model = device_info['model']
+            if 'os' in device_info:
+                instance.os = getattr(PushDevice.OS, device_info['os'], PushDevice.OS.web)
         return instance
 
     def create(self, validated_data):
@@ -169,7 +171,7 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
         return [sub.system_id for sub in obj.subscriptions.all()]
 
     def get_deviceInfo(self, obj):
-        return {'name': obj.name, 'model': obj.model}
+        return {'name': obj.name, 'model': obj.model, 'os': PushDevice.OS[obj.os]}
 
 
 

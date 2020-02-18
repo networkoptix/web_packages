@@ -220,7 +220,7 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
     def format_response(self, instance):
         return {
             'systems': [sub.system_id for sub in instance.subscriptions.all()],
-            'deviceInfo': {'name': instance.name, 'model': instance.model},
+            'deviceInfo': {'name': instance.name, 'model': instance.model, 'os': PushDevice.OS[instance.os]},
             'isEnabled': instance.active
         }
 
