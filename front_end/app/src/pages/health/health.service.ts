@@ -84,6 +84,7 @@ export class NxHealthService {
     }
 
     getPanelWidth() {
+        // values are set from CSS values in $grid-panel-width and $grid-super-wide-panel-width
         if (this.scrollMechanicsService.mediaQueryMin(NxScrollMechanicsService.MEDIA.xxxxl)) {
             return 450;
         }
