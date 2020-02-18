@@ -1,12 +1,39 @@
 #!/usr/bin/env bash
 
 DOCKER_COMPOSE='etc/docker-compose.yml'
-#SQL='./etc/cloud-dev2.sql'
 SQL='./etc/*.sql'
 
 
 function build_frontend(){
     ./build_scripts/build.sh
+}
+
+function brew_install() {
+    echo 'Checking for openssl'
+    brew install node n pyenv openssl docker docker-compose mysql mysqlclient virtualenv
+
+    echo 'Installing node v11.15.0'
+    n 11.15.0
+
+    echo 'Installing python 3.7.6'
+    pyenv install 3.7.6
+    echo 'Brew install complete.'
+}
+
+function init_backend(){
+    modify_bashprofile
+    start_docker_containers
+    setup_env
+    setup_db
+    build_frontend
+    setup_cms
+}
+
+function init_frontend(){
+    pushd front_end
+    npm install
+    npm run setSkin blue
+    popd
 }
 
 function modify_bashprofile(){
@@ -47,11 +74,17 @@ function setup_db(){
     fi
 }
 
-function login_db(){
+function login_db() {
     mysql -h 0.0.0.0 --port=3306 -uroot cloudportal
 }
 
-function setup_env(){
+function setup_env() {
+    if ! brew list openssl > /dev/null ; then
+        echo 'Installing openssl'
+        brew install openssl
+    fi
+    export LDFLAGS="-L/usr/local/opt/openssl@1.1/lib"
+    export CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
     printf "Setting up cloud portal locally\n\n"
     [[ ! -d "env" ]] && printf "Creating virtualenv named 'env'\n\n" && virtualenv env -p python3.7
 
@@ -115,16 +148,44 @@ function stop_mediaserver() {
     docker ps | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
 }
 
+function start_https_tunnel() {
+    if ! brew list stunnel > /dev/null ; then
+        echo 'Installing stunnel'
+        brew install stunnel
+    fi
+
+    echo 'Starting tunnel'
+    stunnel 'etc/stunnel_dev.conf'
+}
+
 for command in $@
 do
     case "$command" in
-        init)
-            modify_bashprofile
-            start_docker_containers
-            setup_env
-            setup_db
-            build_frontend
-            setup_cms
+        init_all)
+            init_backend
+            init_frontend
+            ;;
+
+        init_backend)
+            init_backend
+            ;;
+
+        init_backend_special)
+            # Comment out exit for use. Be careful with this one.
+            exit 0
+            brew_install
+            init_backend
+            ;;
+
+        init_frontend)
+            init_frontend
+            ;;
+
+        init_frontend_special)
+            # Comment out exit for use. Be careful with this one.
+            exit 0
+            brew_install
+            init_frontend
             ;;
 
         add_env)
@@ -200,9 +261,13 @@ do
          stop_mediaserver)
             stop_mediaserver
             ;;
+         start_https_tunnel)
+            start_https_tunnel
+            ;;
         *)
-            echo Usage: cloud_shortcuts '[init|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver]'
-            echo 'init - Does everything. Only run this once'
+            echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|build_mediaserver|run_mediaserver|stop_mediaserver|start_https_tunnel]'
+            echo 'init_backend - Initializes the backend. Only run this once'
+            echo 'init_frontend - Initializes the frontend.'
             echo 'add_env - Adds LOCAL_ENV to your bash profile'
             echo 'build_frontend - Builds the frontend'
             echo 'generate_cms_docs - Creates an html file for each product in cms/cms_structure.json'
@@ -217,6 +282,8 @@ do
             echo 'build_mediaserver - Creates a mediaserver image. Please add the deb file to cloud_portal/robot_tests/Docker. Usage "./cloud_helper.sh build_mediaserver {deb file} {version}"'
             echo 'run_mediaserver - Creates containers for mediaservers and connects them to cloud. Usage "./cloud_helper.sh run_mediaservers {version} {ports} {email} {password}"'
             echo 'stop_mediaserver - Stops all containers made by this script'
+            echo 'start_https_tunnel - Start a secure tunnel on port 8001 to the local django server on port 8000'
+            echo ''
             ;;
     esac
 done

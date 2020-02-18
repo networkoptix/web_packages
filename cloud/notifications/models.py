@@ -14,7 +14,7 @@ from cms.models import Customization, Asset, DataStructure
 from api.models import Account
 
 # Monkey patch to add extra keys to be used in the "notification" object in the request to fcm
-FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns'])
+FCM_NOTIFICATIONS_PAYLOAD_KEYS.extend(['image', 'apns', 'subtitle'])
 FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
@@ -202,15 +202,19 @@ class PushSubscription(models.Model):
 
 
 class PushDevice(GCMDevice):
+    OS = Choices((0, 'web', 'Web'),
+                 (1, 'android', 'Android'),
+                 (2, 'ios', 'iOS'))
     model = models.CharField(max_length=255)
     subscriptions = models.ManyToManyField(PushSubscription)
+    os = models.IntegerField(choices=OS, default=OS.web)
 
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
 
-    title = models.CharField(max_length=255)
-    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)])
+    title = models.CharField(max_length=255, blank=True)
+    body = models.TextField(max_length=SIZE_LIMIT, validators=[MaxLengthValidator(SIZE_LIMIT)], blank=True)
     payload = models.TextField(
         max_length=SIZE_LIMIT, blank=True, null=True, validators=[MaxLengthValidator(SIZE_LIMIT)]
     )
@@ -220,6 +224,7 @@ class PushNotification(models.Model):
     raw_system_id = models.CharField(max_length=255, default='')
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
+    customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
 
     def clean(self):
         if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
@@ -236,7 +241,18 @@ class PushNotification(models.Model):
         else:
             devices = self.devices.all()
 
+        title = self.title or None
+        body = self.body or None
         payload = json.loads(self.payload) if self.payload else {}
+        payload['systemId'] = self.raw_system_id
+        payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
 
-        return devices.send_message(self.body, title=self.title, extra=payload, **options)
+        android_devices = devices.filter(os=PushDevice.OS.android)
+        other_devices = devices.exclude(os=PushDevice.OS.android)
+
+        other_response = other_devices.send_message(body, title=title, extra=payload, **options)
+        title, body = None, None
+        android_response = android_devices.send_message(body, title=title, extra=payload, **options)
+
+        return android_response, other_response

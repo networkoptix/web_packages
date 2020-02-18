@@ -36,6 +36,19 @@ export class NxPermissionsDropdown extends BaseDropdown {
         this.message = this.LANG.pleaseSelect;
     }
 
+    // TODO: Bind ngModel to the component and eliminate EventEmitter
+
+    ngOnInit(): void {
+        this.processAccessRoles();
+        const role = this.accessRoles.filter(x => x.name === this.selected.name)[ 0 ];
+        this.selection = '';
+
+        if (role) {
+            this.selection = role.optionLabel || this.message;
+            this.changePermission(role);
+        }
+    }
+
     processAccessRoles() {
         if (this.roles) {
             this.accessRoles = this.roles.filter((role) => {
@@ -52,7 +65,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.roles && changes.roles.currentValue) {
+        if (changes.roles && changes.roles.currentValue && !this.system.pauseUpdate) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x => x.name === this.selected.name)[ 0 ];
             this.selection = '';
@@ -63,7 +76,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             }
         }
 
-        if (changes.selected && changes.selected.currentValue) {
+        if (changes.selected && changes.selected.currentValue && !this.system.pauseUpdate) {
             this.selection = this.accessRoles.find(x => x.name === changes.selected.currentValue.name).optionLabel;
         }
     }

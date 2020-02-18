@@ -770,6 +770,14 @@
             "value": {}
           },
           {
+            "label": "Push Customization",
+            "name": "%PUSH_CUSTOMIZATION%",
+            "description": "If there is no unique mobile customization for this portal, enter the name of the customization that notifications should be targeted to.",
+            "type": "text",
+            "optional": true,
+            "advanced": true
+          },
+          {
             "label": "Google Tag Manager ID",
             "name": "%GOOGLE_TAG_MANAGER_ID%",
             "description": "ID used for Google Analytics. If not used, enter <b>N/A</b>",

@@ -7,7 +7,8 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseDropdown }      from '../injDropdown';
 
 /* Usage
-<nx-select name="permissions"
+<nx-select [id]="select.id"
+           [name]="permissions"
            [items]="accessRoles"
            label="optionLabel"          <- which property should be shown
            [(ngModel)]="user.role.name"
@@ -33,6 +34,7 @@ import { BaseDropdown }      from '../injDropdown';
 
 export class NxGenericDropdown extends BaseDropdown {
     // items should have at least name ex [{name: 'a', id: 1}, {name: 'b', id:3}]
+    @Input() id: any;
     @Input() items: any;
     @Input() selected: any;
     @Input() merge: boolean;

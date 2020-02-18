@@ -1,5 +1,6 @@
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
+from django.conf import settings
 from rest_framework import serializers
 
 from .models import PushSubscription, PushDevice
@@ -11,12 +12,11 @@ class NotificationSerializer(serializers.Serializer):
     notification = serializers.DictField()
 
     def validate_notification(self, value):
-        if 'title' not in value or 'body' not in value:
-            raise serializers.ValidationError('Title and body are required')
-        elif not isinstance(value['title'], str) or not isinstance(value['body'], str):
+        value['title'] = value.get('title', '')
+        value['body'] = value.get('body', '')
+
+        if not isinstance(value['title'], str) or not isinstance(value['body'], str):
             raise serializers.ValidationError('Title and body must be strings')
-        elif not value['title'] or not value['body']:
-            raise serializers.ValidationError('Title and body cannot be blank')
         return value
 
 
@@ -110,6 +110,8 @@ class SubscriptionSerializer(serializers.Serializer):
                 instance.name = device_info['name']
             if 'model' in device_info:
                 instance.model = device_info['model']
+            if 'os' in device_info:
+                instance.os = getattr(PushDevice.OS, device_info['os'], PushDevice.OS.web)
         return instance
 
     def create(self, validated_data):
@@ -124,7 +126,7 @@ class SubscriptionSerializer(serializers.Serializer):
         else:
             device = PushDevice(
                 registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
-                user=self.context['request'].user
+                user=self.context['request'].user, application_id=settings.CUSTOMIZATION
             )
             systems = validated_data.get('systems', ['all'])
             is_enabled = validated_data.get('isEnabled', True)
@@ -143,6 +145,7 @@ class SubscriptionSerializer(serializers.Serializer):
         systems = validated_data.get('systems', None)
         is_enabled = validated_data.get('isEnabled', None)
         device_info = validated_data.get('deviceInfo', None)
+        instance.application_id = settings.CUSTOMIZATION
 
         if is_enabled is not None:
             instance.active = is_enabled
@@ -168,7 +171,7 @@ class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
         return [sub.system_id for sub in obj.subscriptions.all()]
 
     def get_deviceInfo(self, obj):
-        return {'name': obj.name, 'model': obj.model}
+        return {'name': obj.name, 'model': obj.model, 'os': PushDevice.OS[obj.os]}
 
 
 

@@ -143,21 +143,23 @@ def get_system_with_users(notification_object, request_data):
     return system
 
 
-def process_push_response(response, notification_object, dry_run=False):
+def process_push_response(responses, notification_object, dry_run=False):
     resend_tokens = []
 
-    for multicast in response:
-        for result in multicast['results']:
-            if 'error' in result:
-                token = result['original_registration_id']
-                if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
-                    log_push_result(
-                        notification_object, f'FCM Error: {result["error"]}. Token no longer valid, disabling device',
-                        device_token=token
-                    )
-                else:
-                    resend_tokens.append(token)
-                    log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
+    for response in responses:
+        if response:
+            for multicast in response:
+                for result in multicast['results']:
+                    if 'error' in result:
+                        token = result['original_registration_id']
+                        if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
+                            log_push_result(
+                                notification_object, f'FCM Error: {result["error"]}. Token no longer valid, disabling device',
+                                device_token=token
+                            )
+                        else:
+                            resend_tokens.append(token)
+                            log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
     if not resend_tokens and not dry_run:
         log_push_result(notification_object, 'Successfully completed')
@@ -186,7 +188,7 @@ def set_subscriptions_from_targets(notification_object, request_data):
 
     matching_devices = PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        active=True, user__is_active=True
+        active=True, user__is_active=True, application_id=notification_object.customization.name
     ).distinct()
     notification_object.devices.set(matching_devices)
 

@@ -98,7 +98,7 @@ ${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail
 ${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
 
-${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]//*[local-name() = 'svg']
+${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
 
 ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
@@ -483,6 +483,31 @@ ${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="netwo
 ${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
 ${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
 
+${HM ALERTS TOTAL}                       //*[@id="nx-table"]/div[1]
+${HM CAMERA TABLE ERRORS}                //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM CAMERA TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM CAMERA CARD ERRORS}                 //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
+${HM CAMERA CARD WARNINGS}               //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
+${HM SERVER TABLE OFFLINE}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER CARD OFFLINE}                //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Offline"]/following-sibling::nx-alert-counter//span
+${HM SERVER CARD WARNINGS}               //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
+${HM STORAGE TABLE ERRORS}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
+${HM STORAGE TABLE WARNINGS}             //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]                    
+${HM STORAGE CARD ERRORS}                //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
+${HM STORAGE CARD WARNINGS}              //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
+${HM NETWORK INTERFACE TABLE ERRORS}     //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interace"]
+${HM NETWORK INTERFACE TABLE WARNINGS}   //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interface"]
+${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
+${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
+${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]
+${HM PREVIOUS PAGE LINK}                 //ngb-pagination//a[@aria-label="Previous"]
+${HM PAGE NUMBER LINK}                   //ngb-pagination//a[text()=
+${HM CURRENT PAGE NUMBER LINK}           //ngb-pagination//span[text()="(current)"]/parent::a
+${HM FIRST TABLE PAGE ELEMENT}           //ngb-pagination//a[@aria-label="Previous" and @tabindex="-1"]
+${HM LAST TABLE PAGE ELEMENT}            //ngb-pagination//a[@aria-label="Next" and @tabindex="-1"]
+${HM ALERTS LINK ERRORS}                 ${HM ALERTS PAGE LINK}/div[2]/div[1]/nx-alert-counter/div/span
+${HM ALERTS LINK WARNINGS}               ${HM ALERTS PAGE LINK}/div[2]/div[2]/nx-alert-counter/div/span
 
 #Footer
 ${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT}")]

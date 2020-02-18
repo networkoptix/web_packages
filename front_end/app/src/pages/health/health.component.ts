@@ -48,6 +48,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     outdatedVersion = false;
 
     mediaLayoutClass: string;
+    selectedSubscription: Subscription;
 
     private resizeSubscription: Subscription;
 
@@ -101,7 +102,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             ]
         };
 
-        this.menuService.selectedSectionSubject.subscribe(selection => {
+        this.selectedSubscription = this.menuService.selectedSectionSubject.subscribe(selection => {
             if (this.menu.selectedSection !== selection) {
                 this.menu.selectedSection = selection;
                 this.menu                 = {...this.menu}; // trigger onChang
@@ -114,6 +115,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         }
 
         this.route.params.subscribe((params: any) => {
+            this.ribbonService.hide();
+            this.importedData = {};
             const systemId = params.systemId;
             // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
             let infoPromise = Promise.resolve();
@@ -152,8 +155,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     if (!this.outdatedVersion) {
                         this.system.mediaserver.getAggregateHealthReport().pipe(
                             flatMap((result: any) => this.setupReport(result))
-                        ).subscribe(() => {
-                        }, () => {
+                        ).subscribe(() => {}, () => {
+                            if (!this.system.id) {
+                                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
+                            }
                             this.hasServerError = this.system.isOnline;
                         });
                     }
@@ -344,8 +349,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                     icon: alarm ? alarm.level : '',
                                 };
 
-                                if (typeof formattedVal.text === 'string' && header.display) { // Should numbers should be searchable?
-                                    this.healthService.values[metric][entity].searchTags += formattedVal.text.toLowerCase() + ' ';
+                                if (header.display) { // Search by displayed fields
+                                    this.healthService.values[metric][entity].searchTags += (formattedVal.text + ' ').toLowerCase();
                                 }
                             }
                         });
@@ -515,8 +520,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     updateValues() {
         this.healthService.ready = false;
-        this.system.mediaserver.getAggregateHealthReport().subscribe((data) => {
-            this.setupReport(data);
+        this.system.mediaserver.getAggregateHealthReport().pipe(
+            flatMap((result: any) => this.setupReport(result))
+        ).subscribe(() => {}, () => {
+            if (!this.system.id) {
+                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
+            }
+            this.hasServerError = this.system.isOnline;
         });
     }
 

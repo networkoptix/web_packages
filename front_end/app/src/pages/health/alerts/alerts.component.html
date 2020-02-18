@@ -28,13 +28,13 @@
                          [hidden]="healthLayoutService.mobileDetailMode"
                          [ngClass]="{'data-wrapper' : !healthLayoutService.activeEntity}">
 
-                        <div class="" *ngIf="!healthLayoutService.mobileDetailMode" #search [ngStyle]="{'width': tableWrapper + 'px'}">
+                        <div class="" *ngIf="!healthLayoutService.mobileDetailMode" #search >
                             <nx-search
                                     name="filterModel"
                                     [ngModel]="filterModel"
                                     (ngModelChange)="modelChanged($event)"
                                     layout="selectors"
-                                    [layoutMod]="desktopDetailMode ? true : false"
+                                    [layoutMod]="smallDesktopMode ? true : false"
                                     ngDefaultControl>
                             </nx-search>
                         </div>

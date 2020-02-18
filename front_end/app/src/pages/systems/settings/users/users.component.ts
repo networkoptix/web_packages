@@ -106,7 +106,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 }
                 this.userSubscription = this.system.infoSubject.subscribe(() => {
                     this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
-                    if (!this.applyService.locked) {
+                    if (!this.applyService.locked && !this.system.pauseUpdate) {
                         this.setUser();
                     }
                 });

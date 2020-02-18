@@ -9,7 +9,8 @@ import { BaseDropdown }              from '../injDropdown';
 
 /* Usage
  <nx-multi-select
-     name="permissions"
+     [id]="select.id"
+     [name]="permissions"
      canSelectAll?
      canSearch?
      description="Roles"
@@ -33,7 +34,8 @@ import { BaseDropdown }              from '../injDropdown';
     ]
 })
 
-export class NxMultiSelectDropdown extends BaseDropdown{
+export class NxMultiSelectDropdown extends BaseDropdown {
+    @Input() id: any;
     @Input('items') itemsOrig: any;
     @Input() canSelectAll: any;
     @Input() canSearch: any;
@@ -53,6 +55,7 @@ export class NxMultiSelectDropdown extends BaseDropdown{
     }
 
     ngOnInit(): void {
+        this.id = this.id || 'multiSelect';
         this.canSelectAll = (this.canSelectAll !== undefined);
         this.canSearch = (this.canSearch !== undefined);
     }

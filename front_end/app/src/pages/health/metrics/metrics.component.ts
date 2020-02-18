@@ -15,8 +15,8 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
-import { delay, throttleTime } from 'rxjs/operators';
-import { NxHealthLayoutService } from '../health-layout.service';
+import { delay, throttleTime }       from 'rxjs/operators';
+import { NxHealthLayoutService }     from '../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -56,15 +56,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     objectValues = Object.values;
 
+    selectedSubscription: SubscriptionLike;
     routeSubscription: SubscriptionLike;
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
     windowSizeSubscription: SubscriptionLike;
-    panelSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
+    layoutReadySubscription: SubscriptionLike;
+    fixedLayoutClassSubscription: SubscriptionLike;
+    activeEntitySubscription: SubscriptionLike;
 
     @ViewChild('search', { static: false }) searchElement: ElementRef;
-    @ViewChild('area', { static: false }) area: ElementRef;
+    @ViewChild('area', { static: false }) areaElement: ElementRef;
 
     constructor(private accountService: NxAccountService,
                 private configService: NxConfigService,
@@ -83,12 +86,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.filterModel = {
             query: ''
         };
-
-        this.panelSubscription = this.scrollMechanicsService
-                                     .panelSubject
-                                     .subscribe(() => {
-                                         this.setLayout();
-                                     });
     }
 
     ngOnInit(): void {
@@ -101,14 +98,14 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 const params = {...this.route.snapshot.queryParams};
 
                 if (params.id) {
-                    this.setActiveEntity(params.id, false);
+                    this.setActiveEntity(params.id);
                 } else {
                     this.resetActiveEntity(false);
                 }
             });
         });
 
-        this.menuService
+        this.selectedSubscription = this.menuService
             .selectedSectionSubject
             .pipe(throttleTime(1000))
             .subscribe(selection => {
@@ -121,7 +118,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         });
 
         this.routeSubscription = this.route
-            .params
+            .params.pipe(delay(0))
             .subscribe((params: any) => {
                 this.metricId = params.metric;
                 this.metricName = this.healthService.manifest[this.metricId].name;
@@ -140,8 +137,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     searchParam = undefined;
                     this.search();
                 }
-
-                this.setLayout();
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
@@ -156,20 +151,25 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
         this.healthLayoutService.dimensions = [];
-        this.healthLayoutService.searchTableArea = this.area;
+        this.healthLayoutService.searchTableArea = this.areaElement;
         this.healthLayoutService.searchElement = this.searchElement;
 
-        this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className: string) => {
+        this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className: string) => {
             this.fixedLayoutClass = className;
         });
 
-        this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
+        this.layoutReadySubscription = this.healthLayoutService.layoutReadySubject.pipe(delay(0)).subscribe((value: boolean) => {
             this.layoutReady = value;
         });
-        this.setLayout();
+
+        this.activeEntitySubscription = this.healthLayoutService.activeEntitySubject.pipe(delay(0)).subscribe(() => {
+            this.setLayout();
+        });
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.healthLayoutService.resetActiveEntity();
+    }
 
     handleInitialId() {
         if (this.initialId) {
@@ -186,7 +186,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     search() {
-        this.selectedValues = this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel) || {};
+        this.selectedValues = this.healthService.itemsSearch(this.healthService.values[this.metricId], this.filterModel);
 
         this.handleInitialId();
         if (this.healthLayoutService.activeEntity && !this.selectedValues[this.healthLayoutService.activeEntity.id]) {
@@ -194,19 +194,23 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
     }
 
-    setActiveEntity(entity, updateURI = true) {
+    setActiveEntity(entity, forceURIUpdate = true) {
+
         const queryParams: Params = {};
-        this.layoutReady = this.healthLayoutService.activeEntity ? true : false;
+        this.layoutReady = !!this.healthLayoutService.activeEntity;
 
         if (entity) {
+            // Happens when we get the entity from the url.
             if (typeof entity === 'string') {
-                setTimeout(() => {
-                    this.healthLayoutService.activeEntity = this.selectedValues[entity];
-                });
-                if (entity) {
+                this.healthLayoutService.activeEntity = this.selectedValues[entity];
+                if (!this.healthLayoutService.activeEntity) {
                     queryParams.id = undefined;
-                    this.uri.updateURI(undefined, queryParams);
+                } else if (forceURIUpdate) {
+                    queryParams.id = entity;
                 }
+
+                this.uri.updateURI(undefined, queryParams);
+
             } else {
                 this.healthLayoutService.activeEntity = entity;
                 queryParams.id = entity.id;
@@ -219,24 +223,21 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         } else {
             this.resetActiveEntity();
         }
-
-        // Layout will be set when panel is rendered
-        // this.setLayout();
     }
 
     resetActiveEntity(updateURI = true) {
+        if (!this.healthLayoutService.activeEntity) {
+            return;
+        }
         if (updateURI) {
             const queryParams: Params = {};
             queryParams.id            = undefined;
             this.uri.updateURI(undefined, queryParams);
-            this.setLayout();
         }
         this.healthLayoutService.resetActiveEntity();
     }
 
     private setLayout() {
-        if (this.healthLayoutService.tableElement) {
-            this.healthLayoutService.setMetricsLayout();
-        }
+        this.healthLayoutService.setMetricsLayout();
     }
 }

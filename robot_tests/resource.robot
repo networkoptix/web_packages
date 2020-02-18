@@ -165,7 +165,7 @@ Register
     Validate on Register Page
     Input Text    ${REGISTER FIRST NAME INPUT}    ${first name}
     Input Text    ${REGISTER LAST NAME INPUT}    ${last name}
-    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    5
+    ${read only}    Run Keyword And Return Status    Wait Until Element Is Visible    ${REGISTER EMAIL INPUT LOCKED}    10
     Run Keyword Unless    ${read only}    Input Text    ${REGISTER EMAIL INPUT}    ${email}
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
@@ -326,6 +326,20 @@ Check User Permissions
     ...    ${SHARE PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
+
+Get Cloud User Role
+    [Arguments]    ${auth}    ${email}    ${system id}
+    @{users}=   Get Cloud System Users   ${auth}    ${system id}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '&{user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
+    END
+
+Get Cloud User Id By Email
+   [Arguments]    ${auth}    ${email}    ${system id}
+   @{users}=   Get Cloud System Users    ${auth}    ${system id}
+   FOR    ${user}    IN    @{users}
+       Run Keyword If   '&{user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
+   END
 
 Change User Permissions
     [arguments]    ${permissions}

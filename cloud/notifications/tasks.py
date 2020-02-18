@@ -108,8 +108,8 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
                 log_push_result(notification_object, 'No matching subscriptions found')
                 return
 
-        response = notification_object.send_notifications()
-        resend_tokens = notifications_api.process_push_response(response, notification_object)
+        responses = notification_object.send_notifications()
+        resend_tokens = notifications_api.process_push_response(responses, notification_object)
 
         if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
             send_push_notification.apply_async(
@@ -119,7 +119,7 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             )
 
     except Exception as exception:
-        if 'response' not in locals() or not response:
+        if 'responses' not in locals() or not responses:
             log_push_result(notification_object, f'Exception: {exception}.', logging.ERROR)
             if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
                 send_push_notification.apply_async(
@@ -129,7 +129,7 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
                 )
         elif 'resend_tokens' not in locals():
             log_push_result(
-                notification_object, f'{type(exception)}: {exception},\nResponse: {response}.', logging.ERROR
+                notification_object, f'{type(exception)}: {exception},\nResponse: {responses}.', logging.ERROR
             )
         else:
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR)

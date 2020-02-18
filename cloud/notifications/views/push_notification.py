@@ -1,5 +1,5 @@
+from django.core.cache import caches
 from django.http import Http404
-from django.shortcuts import get_object_or_404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -13,6 +13,7 @@ from api.controllers.cloud_api import Account as Clouddb_Account, System as Clou
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
     api_success, get_client_ip, APINotAuthorisedException, ErrorCodes, APILogicException
 from api.models import Account
+from cms.models import Asset, AssetType, Customization
 from notifications.tasks import send_push_notification
 from notifications.models import PushNotification, PushDevice, PushSubscription
 from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer, \
@@ -20,6 +21,18 @@ from notifications.serializers import NotificationSerializer, RegisterDeviceSeri
 
 import json
 from django.conf import settings
+
+
+def get_mobile_compatible_customization():
+    mobile_customizations = caches['push_config'].get('mobile_customizations', {})
+    current_customization = settings.CUSTOMIZATION
+    if current_customization not in mobile_customizations:
+        current_portal = Asset.objects.get(
+            asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customizations__name=current_customization
+        )
+        mobile_customizations[current_customization] = current_portal.read_global_value(
+            '%PUSH_CUSTOMIZATION%') or current_customization
+    return Customization.objects.get(name=mobile_customizations[current_customization])
 
 
 class CloudSystemBasicAuthentication(BasicAuthentication):
@@ -97,7 +110,7 @@ def push_notification(request):
     notification_object = PushNotification.objects.create(
         title=data['notification']['title'], body=data['notification']['body'],
         payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
-        raw_system_id=data['systemId']
+        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
     )
 
     send_push_notification.apply_async(
@@ -108,48 +121,48 @@ def push_notification(request):
     return api_success({'notificationId': notification_object.id})
 
 
-@api_view(['GET', 'POST'])
-@permission_classes((IsAuthenticated,))
-@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
-def register_device(request):
-    if request.method == 'GET':
-        serializer = RegisterDeviceSerializer(data=request.GET)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-
-        registered = PushDevice.objects.filter(registration_id=data['deviceToken']).exists()
-        return api_success({'registered': registered})
-
-    elif request.method == 'POST':
-        serializer = RegisterDeviceSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
-
-        error_data = dict()
-        device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
-
-        if not device:
-            device = PushDevice(
-                registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
-                user=request.user
-            )
-            response = device.send_message(message='', dry_run=True)
-            if response['success'] == 1:
-                device.save()
-            else:
-                error_data['deviceToken'] = "Token could not be validated"
-        else:
-            device.model = data['model']
-            device.name = data['name']
-            if device.user != request.user:
-                device.subscriptions.all().delete()
-                device.user = request.user
-            device.save()
-
-        if error_data:
-            raise ValidationError(error_data)
-
-        return api_success()
+# @api_view(['GET', 'POST'])
+# @permission_classes((IsAuthenticated,))
+# @authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
+# def register_device(request):
+#     if request.method == 'GET':
+#         serializer = RegisterDeviceSerializer(data=request.GET)
+#         serializer.is_valid(raise_exception=True)
+#         data = serializer.validated_data
+#
+#         registered = PushDevice.objects.filter(registration_id=data['deviceToken']).exists()
+#         return api_success({'registered': registered})
+#
+#     elif request.method == 'POST':
+#         serializer = RegisterDeviceSerializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         data = serializer.validated_data
+#
+#         error_data = dict()
+#         device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
+#
+#         if not device:
+#             device = PushDevice(
+#                 registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
+#                 user=request.user
+#             )
+#             response = device.send_message(message='', dry_run=True)
+#             if response['success'] == 1:
+#                 device.save()
+#             else:
+#                 error_data['deviceToken'] = "Token could not be validated"
+#         else:
+#             device.model = data['model']
+#             device.name = data['name']
+#             if device.user != request.user:
+#                 device.subscriptions.all().delete()
+#                 device.user = request.user
+#             device.save()
+#
+#         if error_data:
+#             raise ValidationError(error_data)
+#
+#         return api_success()
 
 
 @api_view(['POST'])
@@ -207,7 +220,7 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
     def format_response(self, instance):
         return {
             'systems': [sub.system_id for sub in instance.subscriptions.all()],
-            'deviceInfo': {'name': instance.name, 'model': instance.model},
+            'deviceInfo': {'name': instance.name, 'model': instance.model, 'os': PushDevice.OS[instance.os]},
             'isEnabled': instance.active
         }
 

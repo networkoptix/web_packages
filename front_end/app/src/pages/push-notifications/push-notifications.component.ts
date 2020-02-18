@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
 import { AngularFireMessaging }         from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders }      from '@angular/common/http';
 import { timer }                        from 'rxjs/observable/timer';
@@ -25,12 +24,14 @@ export class PushComponent implements OnInit, OnDestroy {
     private deviceToken: any;
     private deviceName: string;
     private currentDeviceName: any;
+    private permission: string;
     private registered: boolean;
     private sendStatus: string;
     private receivedMessages: any;
     private subChanges: boolean;
     private account: any;
     private timeSubscription: Subscription;
+    private tokenSubscription: Subscription;
 
     private setupDefaults() {
         this.notification = {
@@ -88,17 +89,21 @@ export class PushComponent implements OnInit, OnDestroy {
     }
 
     setFirebase() {
-        this.afMessaging.tokenChanges.subscribe(
-            (token) => {
-                this.deviceToken = token;
-                this.getRegistrationStatus();
-            },
-            (error) => {
-                this.deviceToken = error;
-            }
-        );
+        this.permission = Notification.permission;
+        if (this.permission === 'granted') {
+            this.tokenSubscribe();
+        } else {
+            this.deviceToken = '';
+            this.registered = false;
+        }
+
         this.afMessaging.messages.subscribe(
             (message: any) => {
+                if (!message.notification) {
+                    message.notification = {};
+                }
+                message.notification.title = message.notification.title || '';
+                message.notification.body = message.notification.body || '';
                 this.receivedMessages.push(message);
                 const _notify = new Notification(message.notification.title, message.notification);
                 if (message.data) {
@@ -108,22 +113,30 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
+    writeSubscription(device, token) {
+        device.deviceToken = token;
+        this.deviceSubscriptions[token] = {};
+        this.deviceSubscriptions[token].all = device.systems.includes('all');
+        this.systems.forEach(system => {
+            this.deviceSubscriptions[token][system.id] = !!device.systems.includes(system.id);
+        });
+    }
+
     updateSubStates() {
         this.http.get('/api/notifications/subscriptions').subscribe(
             (response: any) => {
                 if (!this.subChanges) {
                     this.devices = [];
                     this.deviceSubscriptions = {};
-                    response.forEach((device) => {
-                        if (device.deviceToken === this.deviceToken) {
-                            this.deviceName = device.name;
+                    Object.entries(response).forEach(([token, device]: any) => {
+                        if (token === this.deviceToken) {
+                            this.registered = true;
+                            this.deviceName = device.deviceInfo.name;
                         }
+                        this.writeSubscription(device, token);
                         this.devices.push(device);
-                        this.deviceSubscriptions[device.deviceToken] = {};
-                        device.subscriptions.forEach((subscription) => {
-                            this.deviceSubscriptions[device.deviceToken][subscription.system_id] = subscription.active;
-                        });
                     });
+                    this.registered = !!this.registered;
                 } else {
                     this.subChanges = false;
                     this.updateSubStates();
@@ -134,36 +147,51 @@ export class PushComponent implements OnInit, OnDestroy {
             });
     }
 
-    onAllowNotifications() {
-        this.afMessaging.requestToken
+    tokenSubscribe() {
+        if (this.tokenSubscription && !this.tokenSubscription.closed) {
+            this.tokenSubscription.unsubscribe();
+        }
+        this.tokenSubscription = this.afMessaging.tokenChanges
             .subscribe(
                 (token) => {
                     this.deviceToken = token;
                     this.updateSubStates();
                 },
                 (error) => {
-                    this.deviceToken = '';
+                    this.deviceToken = error;
                 },
             );
     }
 
+    onAllowNotifications() {
+        Notification.requestPermission().then(permission => {
+            this.permission = permission;
+            if (permission === 'granted') {
+                this.tokenSubscribe();
+            }
+        });
+    }
+
     onRegisterDevice(form?) {
         let deviceToken = '';
-        let name = '';
-        let model = '';
+        const systems = [];
+        const deviceInfo = {
+            name: '',
+            model: ''
+        };
+        const isEnabled = true;
         if (form === undefined) {
             deviceToken = this.deviceToken;
-            name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
-            model = window.navigator.userAgent;
+            deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
+            deviceInfo.model = window.navigator.userAgent;
         } else {
             deviceToken = this.newDevice.deviceToken;
-            name = this.newDevice.name;
-            model = this.newDevice.model ? this.newDevice.model : 'custom';
+            deviceInfo.name = this.newDevice.name;
+            deviceInfo.model = this.newDevice.model ? this.newDevice.model : 'custom';
         }
-        const headers = new HttpHeaders()
-            .set('Content-Type', 'application/json');
-        this.http.post('/api/notifications/register_device', {
-            deviceToken, name, model
+        const headers = new HttpHeaders().set('Content-Type', 'application/json');
+        this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
+            deviceInfo, isEnabled, systems
         }, {headers}).subscribe(
             () => {
                 if (deviceToken === this.deviceToken) {
@@ -182,18 +210,6 @@ export class PushComponent implements OnInit, OnDestroy {
                     form.controls.newDeviceToken.setErrors({invalid: true});
                 }
             });
-    }
-
-    getRegistrationStatus() {
-        this.http.get('/api/notifications/register_device', {
-            params: {
-                deviceToken: this.deviceToken,
-                name: 'Browser',
-                model: window.navigator.userAgent
-            },
-        }).subscribe((response: any) => {
-            this.registered = response.registered;
-        });
     }
 
     onDeleteToken() {
@@ -250,18 +266,27 @@ export class PushComponent implements OnInit, OnDestroy {
 
     onToggleSubscribe(deviceToken, systemId) {
         this.subChanges = true;
-        const subState = this.deviceSubscriptions[deviceToken][systemId];
+        const systems = [];
+        if (systemId === 'all' && this.deviceSubscriptions[deviceToken].all) {
+            systems.push('all');
+        } else {
+            Object.entries(this.deviceSubscriptions[deviceToken]).forEach(([systemId, active]) => {
+                if (active && systemId !== 'all') {
+                    systems.push(systemId);
+                }
+            });
+        }
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type': 'application/json',
             })
         };
-        this.http.post('/api/notifications/subscribe', {
-            systemId,
-            deviceToken,
-            isActive: subState
+        this.http.put(`/api/notifications/subscriptions/${deviceToken}`, {
+            systems
         }, httpOptions).subscribe(
-            (response: any) => {},
+            (response: any) => {
+                this.writeSubscription(response, deviceToken);
+            },
             (error: any) => {
                 this.updateSubStates();
             });

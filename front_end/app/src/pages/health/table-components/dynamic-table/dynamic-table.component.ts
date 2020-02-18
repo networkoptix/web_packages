@@ -66,6 +66,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
+    pagerEllipses: boolean;
     serviceParams;
     serviceHeaders;
 
@@ -84,11 +85,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     @ViewChild('tableHead', { static: false }) tableHeadElement: ElementRef;
     @ViewChild('tableTitle', { static: false }) tableTitleElement: ElementRef;
-    @ViewChild('nxTable', { static: false }) dataTable: ElementRef;
+    @ViewChild('nxTable', { static: false }) tableElement: ElementRef;
     @ViewChild('tooltip', { static: false }) tableTooltip: ElementRef;
-
-    // CSS does not use CONFIG so this is here to avoid confusion if changing the value
-    private static ROW_HEIGHT = 26;
 
     constructor(private configService: NxConfigService,
                 private uri: NxUriService,
@@ -111,8 +109,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             this.mobileDetailMode = this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg);
-            if (this.dataTable) {
-                this.healthLayoutService.tableWidth = this.dataTable.nativeElement.offsetWidth;
+            if (this.tableElement) {
+                this.healthLayoutService.tableWidth = this.tableElement.nativeElement.offsetWidth;
             }
 
             this.setPagerSize();
@@ -133,7 +131,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     this.selectedHeader = undefined;
                 }
 
-                this.setPage(undefined, this.startIndex);
+                this.selectPage(undefined, this.startIndex);
             });
         });
     }
@@ -159,14 +157,23 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
         this.healthService.tableReady = true;
     }
+
     initLayoutService() {
         this.healthLayoutService.tableHeaderElement = this.tableHeadElement;
         this.healthLayoutService.tableTitleElement = this.tableTitleElement;
-        this.healthLayoutService.tableElement = this.dataTable;
+        this.healthLayoutService.tableElement = this.tableElement;
 
-        this.pageSubscription = this.healthLayoutService.pageSizeSubject.pipe(delay(0)).subscribe(pageSize => {
-            this.pageSize = pageSize;
-            this.setPage(1);
+        this.pageSubscription = this.healthLayoutService
+            .pageSizeSubject
+            .pipe(delay(0))
+            .subscribe(pageSize => {
+                this.pageSize = pageSize;
+                const params = {...this.route.snapshot.queryParams};
+                if (params.index) {
+                    this.setPage(undefined, parseInt(params.index, 10));
+                } else {
+                    this.setPage(1);
+                }
         });
 
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
@@ -177,8 +184,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     private setPagerSize() {
         if (this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeSmall;
+            this.pagerEllipses = false;
         } else {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
+            this.pagerEllipses = true;
         }
     }
 
@@ -187,16 +196,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
             this.mobileDetailMode = !!this.selectedEntity;
         }
-        // TODO: Try to remove timeout in CLOUD-4233
-        setTimeout(() => {
-            if (this.dataTable && !this.mobileDetailMode) {
-                this.scrollMechanicsService.setElementTableWidth(this.dataTable.nativeElement.offsetWidth);
-            }
-        });
 
         if (!activeEntity && !this.healthService.tableReady) {
             this.setPage(undefined, this.startIndex || 0);
         }
+
+        this.setPagerSize();
     }
 
     trackItem(index, item) {
@@ -208,7 +213,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     ngOnChanges(changes: SimpleChanges) {
         let resetURI;
-        let setDimensions;
 
         if (changes.headers) {
             this.selectedHeader = undefined;
@@ -222,20 +226,18 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (changes.elements) {
             this._elements = Object.values(changes.elements.currentValue);
 
-            if (this.dataTable) {
-                const tableWrapper      = this.dataTable.nativeElement.querySelectorAll('.table-wrapper')[0];
-                tableWrapper.scrollLeft = 0;
-            }
+            setTimeout(() => {
+                const params = {...this.route.snapshot.queryParams};
+                if (changes.elements.firstChange && params.index) {
+                    this.setPage(undefined, parseInt(params.index, 10));
+                } else {
+                    this.setPage(1);
+                }
 
-            this.setPage(1);
-            setDimensions = true;
-        }
-
-        if (setDimensions) {
-            // TODO: Try to remove timeout in CLOUD-423
-            if (this.dataTable) {
-                this.setTableDimensions();
-            }
+                if (this.tableElement) {
+                    this.setTableDimensions();
+                }
+            });
         }
 
         if (resetURI) {
@@ -312,21 +314,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    setPage(page: number, startIndex?) {
-        // TODO: possible optimization - we may not need snapshot params here
-        if (this.mobileDetailMode || startIndex === 0 && this.params.index === undefined) {
-            return;
-        }
-
-        this.params = { ...this.route.snapshot.queryParams };
+    selectPage(page: number, startIndex?) {
         if (page) {
-            const numPages = Math.ceil(this._elements.length / this.pageSize);
-            // outsmarting pagination component which fire (pageChange) if currentPage > numPages
-            // which causes panel to be disposed on window resize if table resize and we're on last page -- TT
-            // for more details -> ask me no later than 3 hours after I commit the code
-            if (this.currentPage !== page && this.currentPage <= numPages) {
-                this.setClickedRow(undefined);
-            }
             this.currentPage = page;
             this.startIndex = (page - 1) * this.pageSize;
         } else {
@@ -336,11 +325,27 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         // preserve window offset
         this.uri.pageOffset = window.pageYOffset;
         setTimeout(() => this.setPagedItems(this.startIndex));
-        const index = (this.startIndex === 0) ? undefined : this.startIndex;
+
+    }
+
+    setPage(page: number, startIndex?, fromComponent = false) {
+        // TODO: possible optimization - we may not need snapshot params here
+        if (this.mobileDetailMode || startIndex === 0 && this.params.index === undefined) {
+            return;
+        }
+
+        this.selectPage(page, startIndex);
+
+        this.params = {...this.route.snapshot.queryParams};
+        const index     = (this.startIndex === 0) ? undefined : this.startIndex;
         const pageParam = this.params && parseInt(this.params.index, 10) || undefined;
 
         if (pageParam !== index) {
             const queryParams: Params = {};
+            if (fromComponent) {
+                queryParams.id = undefined;
+                this.healthLayoutService.activeEntity = undefined;
+            }
             queryParams.index = (this.currentPage === 1) ? undefined : this.startIndex;
 
             this.uri.updateURI(this.uri.getURL(), queryParams);
@@ -369,13 +374,41 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     return (elm) => {
                         return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                     };
-                case 'totalSpaceB':
+                case 'resolution':
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && parseFloat(elm[groupId][paramId].text) || '';
+                        if (elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value) {
+                            const res = elm[groupId][paramId].value.toLowerCase().split('x');
+
+                            if (res.length === 2) {
+                                return res[0] * res[1];
+                            } else {
+                                return 0; // invalid format
+                            }
+                        } else {
+                            return 0; // no data
+                        }
+                    };
+                case 'displayAddress':
+                    return (elm) => {
+                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                            return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
+                        }
+                        const value = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value;
+                        return parseInt(value.replace(/\./g, '')) || 0;
                     };
                 default:
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                            return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
+                        }
+
+                        const format = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].formatClass || undefined;
+
+                        if (['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'].includes(format)) {
+                            return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                        }
+
+                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value || 0;
                     };
             }
         }
