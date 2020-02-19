@@ -15,8 +15,8 @@ from api.helpers.exceptions import handle_exceptions, APIRequestException, APISe
 from api.models import Account
 from cms.models import Asset, AssetType, Customization
 from notifications.tasks import send_push_notification
-from notifications.models import PushNotification, PushDevice, PushSubscription
-from notifications.serializers import NotificationSerializer, RegisterDeviceSerializer, SubscriptionSerializer, \
+from notifications.models import PushNotification, PushDevice
+from notifications.serializers import NotificationSerializer, SubscriptionSerializer, \
     DeviceSubscriptionsSerializer, UnregisterDeviceSerializer
 
 import json
@@ -165,25 +165,6 @@ def push_notification(request):
 #         return api_success()
 
 
-@api_view(['POST'])
-@permission_classes((IsAuthenticated,))
-@authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
-def unregister_device(request):
-    serializer = UnregisterDeviceSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    data = serializer.validated_data
-
-    device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
-    error_data = dict()
-
-    if device:
-        device.delete()
-        return api_success()
-    else:
-        error_data['deviceToken'] = 'Device does not exist'
-        raise ValidationError(error_data)
-
-
 class DeviceSubscriptionListView(RetrieveAPIView):
     serializer_class = DeviceSubscriptionsSerializer
     authentication_classes = (CloudAccountBasicAuthentication, CloudSessionAuthentication)
@@ -257,6 +238,15 @@ class Subscriptions(UpdateModelMixin, CreateModelMixin, RetrieveModelMixin, Gene
             return self.update(request, *args, **kwargs)
         else:
             return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        device = self.get_object()
+        if device:
+            device.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise Http404
+
 
 
 
