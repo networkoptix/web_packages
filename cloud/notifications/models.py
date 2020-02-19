@@ -258,8 +258,9 @@ class PushNotification(models.Model):
         title = self.title or None
         body = self.body or None
         payload = json.loads(self.payload) if self.payload else {}
-        if payload['imageUrl']:
-            payload['imageUrl'] = self.sub_traffic_relay(payload['imageUrl'])
+        image_url = payload.get('imageUrl', None)
+        if image_url:
+            payload['imageUrl'] = self.sub_traffic_relay(image_url)
         payload['systemId'] = self.raw_system_id
         payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
