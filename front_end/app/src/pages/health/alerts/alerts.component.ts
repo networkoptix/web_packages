@@ -8,13 +8,13 @@ import { Location }                          from '@angular/common';
 import { NxConfigService }                   from '../../../services/nx-config';
 import { NxMenuService }                     from '../../../components/menu/menu.service';
 import { NxHealthService }                   from '../health.service';
-import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { of, SubscriptionLike }              from 'rxjs';
 import { NxUriService }                      from '../../../services/uri.service';
 import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }          from '../../../services/scroll-mechanics.service';
 import { NxUtilsService }                    from '../../../services/utils.service';
-import { delay, throttleTime }                      from 'rxjs/operators';
-import { NxHealthLayoutService } from '../health-layout.service';
+import { delay, throttleTime }               from 'rxjs/operators';
+import { NxHealthLayoutService }             from '../health-layout.service';
 
 interface Params {
     [key: string]: any;
@@ -43,6 +43,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     selectedSubscription: SubscriptionLike;
     activeEntitySubscription: SubscriptionLike;
     fixedLayoutClassSubscription: SubscriptionLike;
+    elementReadySubscription: SubscriptionLike;
 
     layoutReady: boolean;
     fixedLayoutClass: string;
@@ -164,9 +165,11 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     ngAfterViewInit() {
         this.healthLayoutService.dimensions = [];
-        this.healthLayoutService.tilesElement = this.tilesElement;
-        this.healthLayoutService.searchElement = this.searchElement;
-        this.healthLayoutService.searchTableArea = this.areaElement;
+        this.elementReadySubscription = of('').pipe(delay(0)).subscribe(() => {
+            this.healthLayoutService.tilesElement = this.tilesElement;
+            this.healthLayoutService.searchElement = this.searchElement;
+            this.healthLayoutService.searchTableArea = this.areaElement;
+        });
 
         this.fixedLayoutClassSubscription = this.healthLayoutService.fixedLayoutClassSubject.pipe(delay(0)).subscribe((className) => {
             this.fixedLayoutClass = className;
@@ -376,7 +379,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     setActiveEntity(alarm, updateURI = true) {
         if (alarm && alarm.entity) {
-            this.healthLayoutService.layoutReady = false;
+            this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
 
