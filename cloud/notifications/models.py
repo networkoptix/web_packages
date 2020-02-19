@@ -205,9 +205,12 @@ class PushDevice(GCMDevice):
     OS = Choices((0, 'web', 'Web'),
                  (1, 'android', 'Android'),
                  (2, 'ios', 'iOS'))
+    TYPES = Choices((0, 'notification', 'notification'),
+                    (1, 'data', 'data'))
     model = models.CharField(max_length=255)
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
+    type = models.IntegerField(choices=TYPES, default=TYPES.notification)
 
 
 class PushNotification(models.Model):
@@ -248,11 +251,12 @@ class PushNotification(models.Model):
         payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
 
-        android_devices = devices.filter(os=PushDevice.OS.android)
-        other_devices = devices.exclude(os=PushDevice.OS.android)
+        notification_devices = devices.filter(type=PushDevice.TYPES.notification)
+        data_devices = devices.filter(type=PushDevice.TYPES.data)
 
-        other_response = other_devices.send_message(body, title=title, extra=payload, **options)
-        title, body = None, None
-        android_response = android_devices.send_message(body, title=title, extra=payload, **options)
+        notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+        payload['caption'] = title or ''
+        payload['description'] = body or ''
+        data_response = data_devices.send_message(None, title=None, extra=payload, **options)
 
-        return android_response, other_response
+        return notification_response, data_response
