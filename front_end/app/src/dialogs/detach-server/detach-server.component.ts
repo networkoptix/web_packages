@@ -41,24 +41,25 @@ export class DetachServerModalContent {
                 };
                 return this.system.detachFromSystem(this.serverId, this.password).toPromise()
                     .then(res => {
-                        if (res.error) {
+                        if (Number(res.error)) {
                             this.toastService.show(this.LANG.servers.detachSystemFailed, options);
                             return res;
                         }
-                        this.activeModal.close();
-                        this.system.currentServerNotBusy = true;
-                        // may need to also delete the server using /ec2/removeMediaserver
-                        // need to update system subscribe, so that it looks for servers and finds that this server is no longer there
-                        options.classname = this.CONFIG.toast.success;
-                        this.toastService.show(this.LANG.servers.detachSystemSuccess, options);
+                        return this.system.removeMediaserver(this.serverId).toPromise();
                     })
+                    .then(() => this.system.update()
+                        .subscribe(() => {
+                            this.system.currentServerNotBusy = true;
+                            this.activeModal.close('success');
+                            options.classname = this.CONFIG.toast.success;
+                            this.toastService.show(this.LANG.servers.detachSystemSuccess, options);
+                        })
+                    )
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
                         this.toastService.show(this.LANG.servers.detachSystemFailed, options);
                     });
-            }
-                // , { successMessage: this.LANG.servers.beginDetach } process.service needs to be refactored to handle errors
-            );
+            });
     }
 
     close() {

@@ -433,7 +433,6 @@ export class NxConfigService {
                 restarting: 'restarting',
                 reseting: 'reseting',
                 checking: 'checking',
-                detaching: 'detaching'
             },
             toast: {
                 success: 'success',

@@ -249,8 +249,11 @@ export class NxSystemAPI {
     }
 
     detachFromSystem(currentPassword) {
-        // needs to add the proper owner somehow
         return this.post('/api/detachFromSystem', { currentPassword });
+    }
+
+    removeMediaserver(serverId) {
+        return this.post('/ec2/removeResource', { id: serverId });
     }
 
     restoreFactorySettings(currentPassword) {

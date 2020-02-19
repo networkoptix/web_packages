@@ -232,11 +232,16 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     detachServer() {
         const { id, name } = this.selectedServer;
+        const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
+        const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
+        const nextServerId = this.system.servers[nextServerIndex].id;
         return this.dialogs
             .detachServer(this.system, id, name)
             .then(detach => {
-                this.setStatus('detaching');
-                // make sure that server gets removed from the menu
+                if (detach === 'success') {
+                    this.uriService.updateURI(`systems/${this.system.id}/servers/${nextServerId}`);
+                    this.menuService.setDetailsSection(nextServerId);
+                }
             });
     }
 
