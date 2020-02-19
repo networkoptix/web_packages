@@ -472,7 +472,7 @@ ${HM NO ALERTS}                          //h2[contains(text(), "${NO ALERTS TEXT
 ${HM SYSTEM DOING WELL}                  //div[contains(text(), "${SYSTEM DOING WELL TEXT}")]
 
 ${HM IMPORTED REPORT RIBBON}             //nx-ribbon//div[@class="message"]/span[contains(text(), "${VIEWING IMPORTED REPORT TEXT}")]
-${HM FILE DROP INPUT}                    //input[@class="ngx-file-drop__file-input"]
+${HM FILE DROP INPUT}                    //input[contains(@class,"ngx-file-drop__file-input")]
 
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM SYSTEM PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="systems"]
