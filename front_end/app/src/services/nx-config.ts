@@ -206,8 +206,9 @@ export class NxConfigService {
                     { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
                     { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
                 ],
-                dir: '/static/images/icons/',
-                dirPagePlaceholder: '/static/images/page-placeholders',
+                dir: '/static/images/icons/standard/',
+                dirNonStandard: '/static/images/icons/',
+                dirPagePlaceholder: '/static/images/placeholders/page/',
             },
             webclient                     : {
                 useServerTime              : true,
