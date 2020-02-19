@@ -136,7 +136,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     const alarm = this.healthService.alertsValues.find((alert) => {
                         return (alert.metric === params.metric && alert.entity === params.id);
                     });
-                    this.setActiveEntity(alarm, false);
+
+                    if (alarm) {
+                        this.setActiveEntity(alarm, false);
+                    }
                 } else {
                     this.resetActiveEntity(false);
                 }
@@ -285,14 +288,14 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     isFilterEmpty() {
-        let singleselect = false;
+        let singleSelect = false;
         if (this.filterModel.selects) {
             this.filterModel.selects.forEach(select => {
-                singleselect = singleselect || (select.selected.value > 0) || (select.selected.value !== '0'); // 0 is default choice
+                singleSelect = singleSelect || (select.selected.value > 0) || (select.selected.value !== '0'); // 0 is default choice
             });
         }
 
-        return !singleselect;
+        return !singleSelect;
     }
 
     countAlerts() {
