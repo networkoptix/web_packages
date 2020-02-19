@@ -1,4 +1,5 @@
 import json
+import re
 from django.db import models
 from django.utils import timezone
 from jsonfield import JSONField
@@ -20,6 +21,8 @@ FCM_OPTIONS_KEYS.append('mutable_content')
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
 USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
+
+RELAY_GUID_PATTERN = re.compile('([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(/)')
 
 
 class MessageTypes(object):
@@ -238,6 +241,14 @@ class PushNotification(models.Model):
         self.full_clean()
         super(PushNotification, self).save(*args, **kwargs)
 
+    def sub_traffic_relay(self, url):
+        match = RELAY_GUID_PATTERN.search(url)
+        if match:
+            system_id = match.groups()[0]
+            relay_host = settings.TRAFFIC_RELAY_HOST.replace('{systemId}', system_id)
+            url = url.replace(system_id, relay_host)
+        return url
+
     def send_notifications(self, device_tokens=None):
         if device_tokens:
             devices = PushDevice.objects.filter(registration_id__in=device_tokens)
@@ -247,6 +258,8 @@ class PushNotification(models.Model):
         title = self.title or None
         body = self.body or None
         payload = json.loads(self.payload) if self.payload else {}
+        if payload['imageUrl']:
+            payload['imageUrl'] = self.sub_traffic_relay(payload['imageUrl'])
         payload['systemId'] = self.raw_system_id
         payload['targets'] = self.raw_targets
         options = json.loads(self.options) if self.options else {}
