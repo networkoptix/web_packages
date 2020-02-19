@@ -493,11 +493,11 @@ ${HM SERVER TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/
 ${HM SERVER CARD OFFLINE}                //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Offline"]/following-sibling::nx-alert-counter//span
 ${HM SERVER CARD WARNINGS}               //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
 ${HM STORAGE TABLE ERRORS}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
-${HM STORAGE TABLE WARNINGS}             //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]                    
+${HM STORAGE TABLE WARNINGS}             //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
 ${HM STORAGE CARD ERRORS}                //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM STORAGE CARD WARNINGS}              //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM NETWORK INTERFACE TABLE ERRORS}     //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interace"]
-${HM NETWORK INTERFACE TABLE WARNINGS}   //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interface"]
+${HM NETWORK INTERFACE TABLE ERRORS}     //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
+${HM NETWORK INTERFACE TABLE WARNINGS}   //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
 ${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
 ${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]
