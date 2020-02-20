@@ -10,7 +10,6 @@ ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 ${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
-${AUTO SYS ID}                        014c4810-888f-4c5a-be14-aa2aaff8870b
 @{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                \Screenshots
 
