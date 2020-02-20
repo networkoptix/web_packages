@@ -9,7 +9,7 @@
 <form *ngIf="machine.currentState === 'thisSystemHasOutdatedServerError'">
     <div class="modal-body">
         <p translate>Some of the servers in this System have outdated software versions and can not be merged.</p>
-        <p translate>Update them to the <a routerLink="/download" target="_blank" translate>latest build</a></p>
+        <p translate>Update them to the <a routerLink="/download" target="_blank">latest build</a></p>
     </div>
     <div class="modal-footer">
         <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
