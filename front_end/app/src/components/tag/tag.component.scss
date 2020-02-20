@@ -67,9 +67,12 @@ $nx-theme-colors :
     "brand" $brand_core $light1,
     "default" $light8 $light1,
     "success" $brand-success $light1,
+    "success-bright" $brand-success-bright $light1,
     "info" $brand-info $light1,
     "warning" $brand-warning $light1,
-    "danger" $brand-danger $light1;
+    "warning-bright" $brand-warning-bright $light1,
+    "danger" $brand-danger $light1,
+    "danger-bright" $brand-danger-bright $light1;
 
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {

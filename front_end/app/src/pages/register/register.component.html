@@ -112,11 +112,18 @@
                             [form]="registerForm"
                             #registerPassword="ngModel">
                     </nx-password-input>
+                    <nx-password-input-tag-validation
+                            [forElement]="registerPassword"
+                            [value]="accountInfo.password">
+                    </nx-password-input-tag-validation>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <nx-password-input-validation [forElement]="registerPassword"></nx-password-input-validation>
+                <nx-password-input-validation
+                        [forElement]="registerPassword"
+                        [value]="accountInfo.password">
+                </nx-password-input-validation>
             </div>
         </div>
 

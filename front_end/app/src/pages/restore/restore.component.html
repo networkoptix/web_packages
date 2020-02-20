@@ -71,10 +71,17 @@
                             [form]="restorePasswordWithCode"
                             #newPassword="ngModel">
                     </nx-password-input>
+                    <nx-password-input-tag-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-tag-validation>
                 </div>
 
                 <div class="col-md-4">
-                    <nx-password-input-validation [forElement]="newPassword"></nx-password-input-validation>
+                    <nx-password-input-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-validation>
                 </div>
             </div>
 
