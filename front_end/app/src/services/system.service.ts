@@ -275,15 +275,15 @@ class UserManager {
         // TODO: remove later
         // this.cloudApi.share(this.id, user.email, accessRole);
 
-        return this.mediaserver.saveUser(user).pipe(flatMap((result: any) => {
+        return this.mediaserver.saveUser(user).toPromise().then(result => {
             user.id = result.id;
             user.role = role;
             user.accessRole = role.name || role.label;
             if (userCreated) {
                 this.users.push(user);
             }
-            return of(result);
-        }));
+            return result;
+        });
     }
 
     updateAccessRoles(predefinedRoles: NxSystemRole[], userDefinedRoles: NxSystemRole[]) {
