@@ -1,99 +1,88 @@
 <nx-pre-loader *ngIf="!ready"></nx-pre-loader>
 
 <div class="container" *ngIf="ready">
-    <div class="d-flex justify-content-center" *ngIf="restoringSuccess">
-        <h1 class="d-block process-success">
-            <span translate>Password reset instructions are sent to Email</span>
-            <br>
-            {{data.email}}
+    <div class="reset-section" *ngIf="restoringSuccess">
+        <h1 class="heading large-margin">
+            <span translate>Password reset instructions are sent to the provided email</span>
         </h1>
+        <button class="btn btn-primary" (click)="loginRedirect()" translate>
+            Log In
+        </button>
     </div>
+    <div *ngIf="restoring" class="reset-section">
+        <h1 class="heading small-margin" translate>Reset Password</h1>
+        <form name="restorePassword" #restorePassword="ngForm" class="form" novalidate>
+            <label for="email" class="" translate>Email</label>
+            <nx-email-input
+                class="form-component form-input"
+                name="email"
+                componentId="email"
+                [(ngModel)]="data.email"
+                [form]="restorePassword"
+                #email="ngModel"></nx-email-input>
 
-    <div *ngIf="restoring">
-        <h1>Reset Password</h1>
-        <form name="restorePassword" #restorePassword="ngForm" class="form-horizontal" novalidate>
-            <div class="form-group">
-                <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="email" class="col-sm-4 control-label" translate>Email</label>
-                </div>
-                <div class="col-sm-4">
-                    <nx-email-input
-                            class="form-component"
-                            name="email"
-                            componentId="email"
-                            [(ngModel)]="data.email"
-                            [form]="restorePassword"
-                            #email="ngModel">
-                    </nx-email-input>
-                </div>
-                <div class="col-sm-4">
-                    <span class="help-block input-error"
-                          *ngIf="email.touched && email.errors && email.errors.required" translate>Email is required</span>
-                    <span class="help-block input-error"
-                          *ngIf="email.touched && email.errors && email.errors.pattern" translate>Please enter a valid Email</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="offset-sm-4 col-sm-8">
-                    <nx-process-button
-                            [process]="restore"
-                            [form]="restorePassword"
-                            [buttonText]="LANG.activeActions.resetPassword">
-                    </nx-process-button>
-                </div>
-            </div>
+            <span
+                class="input-error errors"
+                *ngIf="email.touched && email.errors && email.errors.required"
+                translate>
+                Email is required
+            </span>
+            <span
+                class="input-error errors"
+                *ngIf="email.touched && email.errors && email.errors.pattern"
+                translate>
+                Please enter a valid Email</span>
+            <nx-process-button
+                [customButtonClass]="'full-width'"
+                [customClass]="'full-width'"
+                [process]="restore"
+                [form]="restorePassword"
+                [buttonText]="LANG.activeActions.resetPassword"></nx-process-button>
         </form>
     </div>
-    <div *ngIf="data.restoreCode || changeSuccess">
+
+    <div *ngIf="data.restoreCode || changeSuccess" class="reset-section">
         <div *ngIf="change.success || changeSuccess">
-            <h1 class="process-success" translate>
-                Password successfully saved
-            </h1>
+            <h1 class="heading large-margin" translate>New password saved</h1>
             <div class="process-success d-flex justify-content-center">
-                <a class="btn btn-default" href (click)="login(); false;" translate>Log In</a>
+                <a
+                    class="btn btn-primary"
+                    href
+                    (click)="login(); (false)"
+                    translate>
+                    Log In
+                </a>
             </div>
         </div>
 
-        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form-horizontal" *ngIf="!change.success && !changeSuccess"
-              novalidate>
+        <h1 *ngIf="!change.success && !changeSuccess" class="heading small-margin" translate>
+            Set New Password
+        </h1>
+        <form
+            name="restorePasswordWithCode"
+            #restorePasswordWithCode="ngForm"
+            class="form"
+            *ngIf="!change.success && !changeSuccess"
+            novalidate>
+            <label for="newPassword" class="" translate>New Password</label>
+            <nx-password-input
+                class="form-input"
+                name="newPassword"
+                componentId="newPassword"
+                [(ngModel)]="data.newPassword"
+                [form]="restorePasswordWithCode"
+                #newPassword="ngModel"></nx-password-input>
 
-            <h1 translate>Set New Password</h1>
-
-            <div class="form-group row">
-                <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="newPassword" class="text-left text-md-right control-label" translate>New Password</label>
-                </div>
-                <div class="col-md-4">
-                    <nx-password-input
-                            name="newPassword"
-                            componentId="newPassword"
-                            [(ngModel)]="data.newPassword"
-                            [form]="restorePasswordWithCode"
-                            #newPassword="ngModel">
-                    </nx-password-input>
-                    <nx-password-input-tag-validation
-                            [forElement]="newPassword"
-                            [value]="data.newPassword">
-                    </nx-password-input-tag-validation>
-                </div>
-
-                <div class="col-md-4">
-                    <nx-password-input-validation
-                            [forElement]="newPassword"
-                            [value]="data.newPassword">
-                    </nx-password-input-validation>
-                </div>
-            </div>
-
-            <div class="form-group row">
-                <div class="offset-sm-4 col-sm-8">
-                    <nx-process-button
-                            [process]="change"
-                            [form]="restorePasswordWithCode"
-                            [buttonText]="LANG.activeActions.setNewPassword">
-                    </nx-process-button>
-                </div>
-            </div>
+            <nx-password-input-validation
+                class="test"
+                *ngIf="newPassword.errors && !newPassword.errors.required"
+                [forElement]="newPassword"></nx-password-input-validation>
+            <nx-process-button
+                [customButtonClass]="'full-width'"
+                [customClass]="'full-width'"
+                [process]="change"
+                [form]="restorePasswordWithCode"
+                [buttonText]="'OK' | translate"></nx-process-button>
         </form>
     </div>
 

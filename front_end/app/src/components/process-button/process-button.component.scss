@@ -5,6 +5,11 @@
 @import '../../styles/mixins';
 
 nx-process-button {
+    .full-width {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
     @include keyframe(bubblingG) {
         0% {
             opacity:1;
@@ -23,7 +28,8 @@ nx-process-button {
         height : 32px; // IE11 cannot calculate it :(
         display  : inline-block;
         position : relative;
-        
+
+
         .btn + .btn {
             margin-left : 0; /* Overwrite for modal-footer bootstrap style */
         }

@@ -162,13 +162,20 @@ export class NxRestoreComponent implements OnInit {
             return false;
         }
         if (!arr.includes(this.context.process)) {
-            this.accountService.redirectToHome();
+            // this.accountService.redirectToHome();
         }
         return true;
     }
 
     login() {
         this.dialogs.login(this.accountService, false, true);
+    }
+
+    loginRedirect () {
+        const url = this.router.url;
+        const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+        // Handling promise to satisfy the linter.
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 }
 
