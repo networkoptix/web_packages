@@ -158,9 +158,9 @@ class UserManager {
     }
 
     deleteUser(removedUser: NxSystemUser) {
-        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(() => {
+        this.mediaserver.deleteUser(removedUser.id).toPromise().then(() => {
             this.users = this.users.filter((user) => user !== removedUser);
-        });
+        }).catch(() => {});
     }
 
     findAccessRole(user: NxSystemUser) {
@@ -553,9 +553,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     deleteFromCurrentAccount() {
-        if (this.currentUser && this.isAvailable) {
-            // Handling promise to satisfy the linter.
-            this.userManager.deleteUser(this.currentUser).toPromise().then(() => {}); // Try to remove me from the system directly
+        if (this.isAvailable && this.currentUser && !this.currentUser.isAdmin) {
+            // Try to remove me from the system directly
+            this.userManager.deleteUser(this.currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
