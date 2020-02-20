@@ -656,6 +656,7 @@ export class NxSystem extends System implements OnDestroy {
                 return Promise.reject(data);
             }
             data.forEach((user) => {
+                user.isCloud = true;
                 user.permissions = this.userManager.normalizePermissionString(user.customPermissions);
                 user.email = user.accountEmail;
             });
