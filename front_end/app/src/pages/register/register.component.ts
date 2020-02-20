@@ -2,7 +2,7 @@ import {
     Component, Input,
     OnInit, ViewChild
 }                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
+import { ActivatedRoute, Router }            from '@angular/router';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAccountService }          from '../../services/account.service';
@@ -11,6 +11,8 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxProcessService }          from '../../services/process.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxDialogsService } from '../../dialogs/dialogs.service';
+import { NxConfigService } from '../../services/nx-config';
 
 @Component({
     selector   : 'nx-register-component',
@@ -33,6 +35,7 @@ export class NxRegisterComponent implements OnInit {
     lockEmail: boolean;
     fromClient: any;
     location: any;
+    CONFIG: any = {};
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 
@@ -54,14 +57,24 @@ export class NxRegisterComponent implements OnInit {
                 private accountService: NxAccountService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
+                private dialogs: NxDialogsService,
+                private router: Router,
+                private _config: NxConfigService,
     ) {
         this.setupDefaults();
+        this.CONFIG = this._config.getConfig();
+    }
+
+    login () {
+        const url = this.router.url;
+        const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+        // Handling promise to satisfy the linter.
+        this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 
     ngOnInit(): void {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
         this.context.process = this.localStorage.get('regProcess');
-
         this.uriParam = this.route.snapshot.data.uriParam;
 
         if (this.route.snapshot.params.code) {

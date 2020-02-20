@@ -92,6 +92,15 @@
     },
     "clientProtocol": "%CLIENT_PROTOCOL%:",
     "common": {
+        "account":{
+            "created":{
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {{email}}"
+            },
+            "activated": {
+            "title" : "Account successfully activated",
+            "message": ""}
+        },
         "cameraLinks": {
             "copyActiveText": "copied to clipboard",
             "copyDefaultText": "copy",

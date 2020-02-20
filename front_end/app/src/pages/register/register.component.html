@@ -1,3 +1,13 @@
+<div class="status-wrapper" *ngIf="registerSuccess && !activated">
+    <nx-page-placeholder [type]="'ACCOUNT_CREATED'"
+        [message]="'common.account.created.message' | translate: { email: accountInfo.email }">
+    </nx-page-placeholder>
+</div>
+<div class="status-wrapper" *ngIf="registerSuccess && activated">
+    <nx-page-placeholder [type]="'ACCOUNT_ACTIVATED'">
+        <button class="btn btn-primary login-button" (click)="login()">Log In</button>
+    </nx-page-placeholder>
+</div>
 <div class="container auth-hidden">
     <div *ngIf="!registerSuccess && fromClient" style="max-width: 991px;" class="m-auto">
         <div class="jumbotron">
@@ -7,18 +17,6 @@
             <hr style="margin-bottom: 40px;">
         </div>
     </div>
-
-    <h1 class="process-success d-flex align-items-center flex-column mt-5"
-        *ngIf="registerSuccess && !activated">
-        <span translate>Account is created.</span>
-        <span translate>Confirmation message is sent to</span>
-        <span><strong>{{accountInfo.email}}</strong></span>
-    </h1>
-
-    <h1 class="process-success d-flex align-items-center flex-column mt-5"
-        *ngIf="registerSuccess && activated">
-        <span translate>Account is successfully created.</span>
-    </h1>
 
     <form id="registerForm" class="form-horizontal" #registerForm="ngForm"
           *ngIf="!registerSuccess" novalidate autocomplete="off">
@@ -161,5 +159,3 @@
 
     <nx-footer center="true"></nx-footer>
 </div>
-
-

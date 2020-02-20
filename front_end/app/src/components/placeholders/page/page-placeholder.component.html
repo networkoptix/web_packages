@@ -14,5 +14,6 @@
                  [innerHTML]="placeholderTitle"></h2>
             <div *ngIf="message" class="placeholder-message" [innerHTML]="message"></div>
         </div>
+        <ng-content></ng-content>
     </div>
 </div>

@@ -68,6 +68,16 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.message = this.LANG.common.systemNewVersionMessage;
                     this.iconName = 'NewVersion';
                     break;
+                case 'ACCOUNT_CREATED' :
+                    this.placeholderTitle = this.LANG.common.account.created.title;
+                    this.iconName = 'SendEmail';
+                    break;
+                case 'ACCOUNT_ACTIVATED' :
+                    this.placeholderTitle = this.LANG.common.account.activated.title;
+                    this.message = this.LANG.common.account.activated.message;
+                    this.iconName = 'Activated';
+                    break
+
             }
         }
     }
