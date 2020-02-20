@@ -112,12 +112,12 @@ export class NxSystemsService implements OnDestroy {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
-        this.activeSubscription = this.systemsPoll.pipe(
-            tap(systems => this.processSystems(systems)),
-            distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
-        ).subscribe(() => {
-            this.systemsSubject.next(this.systems);
-        });
+        this.activeSubscription = this.systemsPoll
+            .pipe(
+                tap(systems => this.processSystems(systems)),
+                distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+            )
+            .subscribe(() => this.systemsSubject.next(this.systems));
     }
 
     stopPoll() {

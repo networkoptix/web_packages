@@ -80,7 +80,6 @@ export class AddUserModalContent {
         this.user.role = this.selectedPermission;
 
         return this.system.saveUser(this.user, this.user.role).then((user) => {
-            this.system.pauseUpdate = false;
             return this.system.getUsers(true).then(() => {
                 return new Promise(resolve => setTimeout(() => resolve(user)));
             });

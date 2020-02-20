@@ -275,14 +275,15 @@ class UserManager {
         // TODO: remove later
         // this.cloudApi.share(this.id, user.email, accessRole);
 
-        return this.mediaserver.saveUser(user).toPromise().then((result) => {
+        return this.mediaserver.saveUser(user).pipe(flatMap((result: any) => {
+            user.id = result.id;
+            user.role = role;
+            user.accessRole = role.name || role.label;
             if (userCreated) {
                 this.users.push(user);
             }
-            user.role = role;
-            user.accessRole = role.name || role.label;
-            return result;
-        });
+            return of(result);
+        }));
     }
 
     updateAccessRoles(predefinedRoles: NxSystemRole[], userDefinedRoles: NxSystemRole[]) {
@@ -323,8 +324,6 @@ export class NxSystem extends System implements OnDestroy {
     infoPromise: any;
     usersPromise: any;
     systemPoll: any;
-
-    pauseUpdate = false;
 
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
@@ -566,9 +565,8 @@ export class NxSystem extends System implements OnDestroy {
         if (this.subscriberCount === 0) {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
-                this.activeSubscription = this.systemPoll.subscribe(() => {
-                    this.systemInfo = this;
-                });
+                this.activeSubscription = this.systemPoll
+                    .subscribe(() => this.systemInfo = this);
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
