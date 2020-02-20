@@ -207,7 +207,7 @@ ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTO
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
-${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
+${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
 ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
