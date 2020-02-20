@@ -146,20 +146,22 @@ def get_system_with_users(notification_object, request_data):
 def process_push_response(responses, notification_object, dry_run=False):
     resend_tokens = []
 
+    responses = tuple(response for response in responses if response)
+
     for response in responses:
-        if response:
-            for multicast in response:
-                for result in multicast['results']:
-                    if 'error' in result:
-                        token = result['original_registration_id']
-                        if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
-                            log_push_result(
-                                notification_object, f'FCM Error: {result["error"]}. Token no longer valid, disabling device',
-                                device_token=token
-                            )
-                        else:
-                            resend_tokens.append(token)
-                            log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
+        for multicast in response:
+            for result in multicast['results']:
+                if 'error' in result:
+                    token = result['original_registration_id']
+                    if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
+                        log_push_result(
+                            notification_object, f'FCM Error: {result["error"]}. Token no longer valid, deleting device',
+                            device_token=token
+                        )
+                        PushDevice.objects.filter(registration_id=token).delete()
+                    else:
+                        resend_tokens.append(token)
+                        log_push_result(notification_object, f'FCM Error: {result["error"]}', device_token=token)
 
     if not resend_tokens and not dry_run:
         log_push_result(notification_object, 'Successfully completed')
