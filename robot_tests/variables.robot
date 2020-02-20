@@ -479,25 +479,30 @@ ${HM SYSTEM PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="syste
 ${HM SERVERS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="servers"]
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM CAMERAS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="cameras"]
+${HM STORAGES PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="storages"]
 ${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
 ${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
 ${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
 
-${HM ALERTS TOTAL}                       //*[@id="nx-table"]/div[1]
-${HM CAMERA TABLE ERRORS}                //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
-${HM CAMERA TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM TABLE}                              //div[@id="nx-table"]
+${HM SINGLE ENTITY}                      //nx-single-entity
+${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//h4/header
+
+${HM ALERTS TOTAL}                       ${HM TABLE}/div[contains(@class,"table-header")]
+${HM CAMERA TABLE ERRORS}                ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM CAMERA TABLE WARNINGS}              ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
 ${HM CAMERA CARD ERRORS}                 //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM CAMERA CARD WARNINGS}               //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM SERVER TABLE OFFLINE}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
-${HM SERVER TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER TABLE OFFLINE}               ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER TABLE WARNINGS}              ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
 ${HM SERVER CARD OFFLINE}                //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Offline"]/following-sibling::nx-alert-counter//span
 ${HM SERVER CARD WARNINGS}               //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM STORAGE TABLE ERRORS}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
-${HM STORAGE TABLE WARNINGS}             //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
+${HM STORAGE TABLE ERRORS}               ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
+${HM STORAGE TABLE WARNINGS}             ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
 ${HM STORAGE CARD ERRORS}                //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM STORAGE CARD WARNINGS}              //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM NETWORK INTERFACE TABLE ERRORS}     //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
-${HM NETWORK INTERFACE TABLE WARNINGS}   //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
+${HM NETWORK INTERFACE TABLE ERRORS}     ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
+${HM NETWORK INTERFACE TABLE WARNINGS}   ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
 ${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
 ${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]

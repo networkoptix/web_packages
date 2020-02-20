@@ -115,7 +115,7 @@ class NoptixLibrary(object):
         if observedValue == expectedValue:
             pass
         else:
-            raise AssertionError("Expected: " + expectedValue + "\nObserved: " + observedValue)
+            raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
 
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -131,7 +131,7 @@ class NoptixLibrary(object):
             except:
                 pass
             time.sleep(.2)
-        raise Exception("No element found with text " + expected)
+        raise Exception(f"No element found with text {expected}")
 
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
         timeout = timeout + time.time()
@@ -159,7 +159,7 @@ class NoptixLibrary(object):
                 if expected in classAttribute:
                     return
             except:
-                not_found = "No element found with class " + expected
+                not_found = f"No element found with class {expected}"
             time.sleep(.2)
         raise AssertionError(not_found)
 
@@ -175,7 +175,22 @@ class NoptixLibrary(object):
                 if expected not in classAttribute:
                     return
             except:
-                found = "Element found with class '" + expected + "' when it was not expected"
+                found = f"Element found with class '{expected}' when it was not expected"
+            time.sleep(.2)
+        raise AssertionError(found)
+
+    def wait_until_table_cell_does_not_contain_text(self, locator, expected, row, column, timeout=10):
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        timeout = timeout + time.time()
+        found = None
+
+        while time.time() < timeout:
+            try:
+                text = seleniumlib.get_table_cell(locator, row, column)
+                if text != expected:
+                    return
+            except:
+                found = f"Table cell still had '{expected}' in it."
             time.sleep(.2)
         raise AssertionError(found)
 

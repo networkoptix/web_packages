@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Common Restart Logout    ${url}
 Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
 Suite Teardown    Close All Browsers
-
+Force Tags        Threaded File
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
@@ -232,6 +232,82 @@ Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
     Should Not Be Equal As Integers    ${pages}    1
     Count All Alerts and Validate Totals Shown
 
+Hardware Types with Only One Item Should Show Tiles and not Show Tables
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Validate Alerts Page
+    Upload Json    solo-hardware
+    Validate Uploaded Alerts Page
+    Wait Until Elements are Visible
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM SYSTEM PAGE LINK}
+    ...    ${HM SERVERS PAGE LINK}
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM CAMERAS PAGE LINK}
+    ...    ${HM NETWORK INTERFACES PAGE LINK}
+    Click Link    ${HM SYSTEM PAGE LINK}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    ${title}=   Get Text    ${FIRST CARD HEADER}
+    Click Link    ${HM SERVERS PAGE LINK}
+    Wait Until Element Does Not Contain    ${FIRST CARD HEADER}    ${title}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
+    ${title}=   Get Text    ${FIRST CARD HEADER}
+    Click Link    ${HM CAMERAS PAGE LINK}
+    Wait Until Element Does Not Contain    ${FIRST CARD HEADER}    ${title}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
+    ${title}=   Get Text    ${FIRST CARD HEADER}
+    Click Link    ${HM NETWORK INTERFACES PAGE LINK}
+    Wait Until Element Does Not Contain    ${FIRST CARD HEADER}    ${title}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
+    ${title}=   Get Text    ${FIRST CARD HEADER}
+    Click Link    ${HM STORAGES PAGE LINK}
+    Wait Until Element Does Not Contain    ${FIRST CARD HEADER}    ${title}
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
+
+Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Validate Alerts Page
+    Upload Json    one-of-each
+    Validate Uploaded Alerts Page
+    Wait Until Elements are Visible
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM SYSTEM PAGE LINK}
+    ...    ${HM SERVERS PAGE LINK}
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM CAMERAS PAGE LINK}
+    ...    ${HM NETWORK INTERFACES PAGE LINK}
+    Click Link    ${HM SERVERS PAGE LINK}
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
+    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
+
+    Click Link    ${HM CAMERAS PAGE LINK}
+    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
+    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
+
+    Click Link    ${HM NETWORK INTERFACES PAGE LINK}
+    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
+    ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
+
+    Click Link    ${HM STORAGES PAGE LINK}
+    Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
 
 #Details Panel Shows Errors
 #Details Panel Shows Alerts
