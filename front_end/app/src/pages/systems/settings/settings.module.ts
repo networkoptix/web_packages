@@ -36,10 +36,6 @@ const appRoutes: Routes = [
                 canDeactivate: [ApplyGuard]
             },
             {
-                path: 'share',
-                component: NxSystemUsersComponent,
-            },
-            {
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],

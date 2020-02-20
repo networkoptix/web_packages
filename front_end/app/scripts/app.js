@@ -73,7 +73,7 @@ window.L = {};
                 }
 
                 var CONFIG = nxConfigServiceProvider.$get().getConfig();
-                
+
                 if (window.LANG.ajs) {
                     languageServiceProvider.setLanguage(window.LANG.ajs);
                     // set local variables as providers cannot get values in config phase
@@ -100,7 +100,7 @@ window.L = {};
                             languageServiceProvider.setLanguage(response);
                         });
                 }
-                
+
                 var lang = languageServiceProvider.$get().lang;
 
                 // For compatibility with legacy modules *****
@@ -164,9 +164,6 @@ window.L = {};
                         template: ''
                     })
                     .when('/systems/:systemId/health/:metric', {
-                        template: ''
-                    })
-                    .when('/systems/:systemId/share', {
                         template: ''
                     })
                     .when('/systems/:systemId', {
