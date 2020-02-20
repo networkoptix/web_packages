@@ -192,8 +192,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.serverStatus[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
-        this.serverOffline = this.selectedServer.internalStatus === this.CONFIG.serverStatus.offline ||
-            this.selectedServer.internalStatus === this.CONFIG.serverStatus.checking;
+        this.serverOffline = [this.CONFIG.serverStatus.offline, this.CONFIG.serverStatus.checking]
+            .includes(this.selectedServer.internalStatus);
     }
 
     checkIfOnline(serverId) {
