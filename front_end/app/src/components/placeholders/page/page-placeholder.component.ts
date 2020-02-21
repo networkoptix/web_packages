@@ -4,7 +4,7 @@ import { NxConfigService } from '../../../services/nx-config';
 
 /* Usage
 <nx-page-placeholder
-     type?="500 | 404 | NO_ALERTS | OFFLINE | ..."
+     type?="500 | 404 | NO_ALERTS | OFFLINE | NO_CAMS..."
      -- OR ---
      iconClass?='server-offline'
      placeholderTitle?='SERVER OFFLINE'
@@ -48,6 +48,11 @@ export class NxPagePlaceholderComponent implements OnInit {
             }
 
             switch (this.type) {
+                case 'NO_CAMS' :
+                    this.placeholderTitle = this.LANG.common.systemHasNoCameras;
+                    this.message = '';
+                    this.iconName = 'NoCams';
+                    break;
                 case 'OFFLINE' :
                     this.placeholderTitle = this.LANG.common.systemOffline;
                     this.message = this.LANG.common.systemOfflineMessage;

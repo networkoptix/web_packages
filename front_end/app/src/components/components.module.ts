@@ -43,6 +43,7 @@ import { NxPagePlaceholderComponent }       from './placeholders/page/page-place
 import { NxSectionPlaceholderComponent }    from './placeholders/section/section-placeholder.component';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent } from './password-input-tag-validation/password-tag-validation.component';
+import { downgradeComponent }               from '@angular/upgrade/static';
 
 @NgModule({
     imports: [
@@ -202,3 +203,8 @@ import { NxPasswordTagValidationComponent } from './password-input-tag-validatio
 })
 export class ComponentsModule {
 }
+
+declare var angular: angular.IAngularStatic;
+angular
+    .module('cloudApp.directives')
+    .directive('nxPagePlaceholder', downgradeComponent({component: NxPagePlaceholderComponent}) as angular.IDirectiveFactory);
