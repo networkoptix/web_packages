@@ -2,7 +2,6 @@
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
-${CLOUD TEST AUTO SYSTEM}             http://10.1.5.169:7001
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx
 ${CLOUD DEV3}                         https://dev3.cloud.hdw.mx
 ${CLOUD DEV3 AUTO SYSTEM}             http://10.1.5.160:7001
@@ -10,30 +9,30 @@ ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
-${AUTO SYS API}                       ${CLOUD TEST AUTO SYSTEM}
-@{AUTO SYS API AUTH}                  admin    qweasd 123
+@{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                \Screenshots
 
 ${BROWSER}                            Chrome
 
 #Emails
-${BASE EMAIL}                         noptixautoqa@gmail.com
+${BASE EMAIL}                         ${TEST EMAIL}@gmail.com
+${BASE EMAIL DOMAIN}                  @gmail.com
 ${BASE EMAIL PASSWORD}                qweasd!@#$%
 ${BASE HOST}                          imap.gmail.com
 ${BASE PORT}                          993
-${EMAIL VIEWER}                       noptixautoqa+viewer@gmail.com
-${EMAIL ADV VIEWER}                   noptixautoqa+advviewer@gmail.com
-${EMAIL LIVE VIEWER}                  noptixautoqa+liveviewer@gmail.com
-${EMAIL OWNER}                        noptixautoqa+owner@gmail.com
-${EMAIL NOT OWNER}                    noptixautoqa+notowner@gmail.com
-${EMAIL ADMIN}                        noptixautoqa+admin@gmail.com
-${EMAIL CUSTOM}                       noptixautoqa+custom@gmail.com
-${EMAIL CLIENT CUSTOM}                noptixautoqa+clientcustom@gmail.com
-${EMAIL AUTO TESTS ANCHOR}            noptixautoqa+autotestsanchor@gmail.com
-${EMAIL AUTO TESTS 2 ANCHOR}          noptixautoqa+autotests2anchor@gmail.com
-${EMAIL MERGE OWNER 1}                noptixautoqa+mergeowner1@gmail.com
-${EMAIL MERGE OWNER 2}                noptixautoqa+mergeowner2@gmail.com
-${EMAIL MERGE OWNER 3.0}              noptixautoqa+mergeowner3.0@gmail.com
+${EMAIL VIEWER}                       ${TEST EMAIL}+viewer${BASE EMAIL DOMAIN}
+${EMAIL ADV VIEWER}                   ${TEST EMAIL}+advviewer${BASE EMAIL DOMAIN}
+${EMAIL LIVE VIEWER}                  ${TEST EMAIL}+liveviewer${BASE EMAIL DOMAIN}
+${EMAIL OWNER}                        ${TEST EMAIL}+owner${BASE EMAIL DOMAIN}
+${EMAIL NOT OWNER}                    ${TEST EMAIL}+notowner${BASE EMAIL DOMAIN}
+${EMAIL ADMIN}                        ${TEST EMAIL}+admin${BASE EMAIL DOMAIN}
+${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
+${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
+${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
+${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
+${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
+${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
+${EMAIL MERGE OWNER 3.0}              ${TEST EMAIL}+mergeowner3.0${BASE EMAIL DOMAIN}
 @{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}
 ${ALT BASE EMAIL}                     qaburbank@gmail.com
 ${ALT EMAIL VIEWER}                   qaburbank+viewer@gmail.com
@@ -46,8 +45,8 @@ ${ALT EMAIL CUSTOM}                   qaburbank+custom@gmail.com
 ${ALT EMAIL CLIENT CUSTOM}            qaburbank+clientcustom@gmail.com
 ${ADMIN FIRST NAME}                   mark
 ${ADMIN LAST NAME}                    hamil
-${EMAIL UNREGISTERED}                 noptixautoqa+unregistered1@gmail.com
-${EMAIL NOPERM}                       noptixautoqa+noperm@gmail.com
+${EMAIL UNREGISTERED}                 ${TEST EMAIL}+unregistered1${BASE EMAIL DOMAIN}
+${EMAIL NOPERM}                       ${TEST EMAIL}+noperm${BASE EMAIL DOMAIN}
 ${BASE PASSWORD}                      qweasd 123
 ${ALT PASSWORD}                       qweasd1234
 

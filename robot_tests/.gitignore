@@ -5,6 +5,7 @@
 /*.deb
 /*.exe
 /*.pabotsuitenames
+outputs
 syntax: glob
 Docker/Video
 Docker/Data

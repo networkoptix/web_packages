@@ -23,13 +23,13 @@
 
                 <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" href="" translate>Integrations</a>
+                        <a class="inset" href="/integrations" (click)="onClick($event, '/integrations')" translate>Integrations</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" href="" translate>Supported IP Video Devices</a>
+                        <a class="inset" href="/ipvd" (click)="onClick($event, '/ipvd')" translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 
@@ -37,14 +37,14 @@
                     class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/view" translate>View</a>
+                        <a class="inset" href="/systems/{{activeSystem.id}}/view" (click)="onClick($event, '/view')" translate>View</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" href="/systems/{{activeSystem.id}}" translate>Settings</a>
+                        <a class="inset" href="/systems/{{activeSystem.id}}" (click)="onClick($event, '/systems/' + activeSystem.id)" translate>Settings</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.information}"
                         *ngIf="canSeeInfo">
-                        <a class="inset" href="/systems/{{activeSystem.id}}/health" translate>Information</a>
+                        <a class="inset" href="/systems/{{activeSystem.id}}/health/alerts" (click)="onClick($event, '/health')" translate>Information</a>
                     </li>
                 </ul>
             </div>

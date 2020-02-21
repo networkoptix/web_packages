@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Support",
     "INTEGRATION SUPPORT URL TEXT": "Support URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "Support Email",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Genom att skicka detta formulär samtycker du till att kontakta QA - Test Integration Company och / eller Network Optix. Du hittar QA - Test Integration Company sekretesspolicy här och Network Optix sekretesspolicy här som innehåller instruktioner om hur du drar tillbaka ditt samtycke.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Genom att skicka in detta formulär samtycker du till att kontaktas av {{developer}} och/eller Network Optix. Du hittar {{developer}} sekretesspolicy här och Network Optix sekretesspolicy här som innehåller instruktioner om hur du återkallar ditt samtycke.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Meddelandet har skickats.",
     "REGISTER TITLE TEXT": "Skapa konto i",
     "DOWNLOAD TITLE TEXT": "Ladda ner %VMS_NAME%",
@@ -207,7 +207,13 @@
     "RELEASES TAB TEXT": "Releaser",
     "PATCHES TAB TEXT": "Patchar",
     "BETAS TAB TEXT": "Betaversioner",
-    "SALES INQUIRY TEXT": "Försäljningsförfrågan för vis - QA - face_recognition",
-    "TECHNICAL INQUIRY TEXT": "Teknisk förfrågan för vis - QA - face_recognition",
-    "FEEDBACK TEXT": "Feedback för integration vis - QA - face_recognition"
+    "SALES INQUIRY TEXT": "Försäljningsförfrågan för {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Teknisk fråga för {{integration}}",
+    "FEEDBACK TEXT": "Feedback för integration {{integration}}",
+    "INFORMATION TEXT": "Information",
+    "SYSTEM OFFLINE TEXT": "System Offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "Det här systemet är offline och kan inte nås just nu.",
+    "VIEWING IMPORTED REPORT TEXT": "Du visar en importerad rapport, uppdatera sidan för att få en ny rapport",
+    "NO ALERTS TEXT": "Inga varningar",
+    "SYSTEM DOING WELL TEXT": "Ditt system måste klara sig bra!"
 }

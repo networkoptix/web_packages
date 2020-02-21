@@ -1,6 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
 Resource          ../APIresource.robot
+Library           ../NoptixLibrary/
+
 Suite Setup       Startup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    reset state
@@ -116,6 +118,7 @@ Create system and attach to cloud
     ${auth}=    Create List    ${user}    ${password}
     ${default auth}=    Create List    admin    admin
     &{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
+    sleep    5
     &{Setup Cloud System json}=    Setup Cloud System
     ...    ${default auth}
     ...    https://localhost:${port}
@@ -173,6 +176,7 @@ Reset state
     Prune Containers
     Close Browser
     Open Browser and go to URL    ${url}
+    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
     Log In    ${EMAIL MERGE OWNER 1}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
@@ -206,9 +210,9 @@ Reset state
 Wrong and empty password
     [tags]    C54685
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
-    Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
+    @{auth}=    Create List    ${user}    ${password}
+    ${api made system 1 id}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
+    ${api made system 2 id}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
     log in    ${user}    ${password}
     Validate Log in
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
@@ -241,8 +245,11 @@ Wrong and empty password
     Click Button    ${MERGE BUTTON MODAL}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
     Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
-    Disconnect from cloud
-    Disconnect from cloud
+#    Disconnect from cloud
+#    Disconnect from cloud
+    Unbind System    ${auth}   ${url}    ${api made system 1 id}
+    Unbind System    ${auth}   ${url}    ${api made system 2 id}
+
 
 Only one system connected to Cloud Account
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
@@ -276,8 +283,10 @@ Only one system connected to Cloud Account
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
     Delete Email    ${email}
+    Close Mailbox
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
@@ -501,7 +510,6 @@ From secondary system merge to primary with no other systems
     ...    ${image}
     ...    7001
     ...    API made system 1
-    ...    network=host
     Create system and attach to cloud
     ...    ${user}
     ...    ${image}
@@ -524,7 +532,7 @@ From secondary system merge to primary with no other systems
     Validate Merge
 
     Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
-    Sleep    5
+    Sleep    35
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
@@ -569,15 +577,17 @@ From secondary system merge to primary with other systems
     Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
-
+    Sleep    35 
+    Validate system available    API made system 1   
+    Go to    ${url}/systems
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Sleep    1
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
+    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Disconnect from cloud
+    Sleep    35
     Disconnect from cloud
 
 From primary system

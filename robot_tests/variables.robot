@@ -307,7 +307,7 @@ ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-li
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATIONS COMPONENT}//a[contains(@href, "39")]
+${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATION TILE}/a
 ${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
@@ -461,6 +461,28 @@ ${IPVD FEEDBACK CANCEL BUTTON}        ${IPVD FEEDBACK}//button[text()="${CANCEL 
 ${IPVD FEEDBACK CLOSE BUTTON}         ${IPVD FEEDBACK}//button[contains(@class,'close')]
 
 ${NOTHING FOUND PLACEHOLDER}          //div[contains(@class,'text-placeholder') and contains(text(),"${NOTHING FOUND}")]
+
+#Health Monitor
+${HM INFORMATION TAB LINK}               //header/nav//a[text()="${INFORMATION TEXT}"]
+
+${HM SYSTEM OFFLINE}                     //h2[contains(text(), "${SYSTEM OFFLINE TEXT}")]
+${HM SYSTEM CANNOT BE ACCESSED}          //div[contains(text(), "${SYSTEM CANNOT BE ACCESSED TEXT}")]
+
+${HM NO ALERTS}                          //h2[contains(text(), "${NO ALERTS TEXT}")]
+${HM SYSTEM DOING WELL}                  //div[contains(text(), "${SYSTEM DOING WELL TEXT}")]
+
+${HM IMPORTED REPORT RIBBON}             //nx-ribbon//div[@class="message"]/span[contains(text(), "${VIEWING IMPORTED REPORT TEXT}")]
+${HM FILE DROP INPUT}                    //input[@class="ngx-file-drop__file-input"]
+
+${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
+${HM SYSTEM PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="systems"]
+${HM SERVERS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="servers"]
+${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
+${HM CAMERAS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="cameras"]
+${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
+${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
+${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
+
 
 #Footer
 ${FOOTER ABOUT LINK}                  //footer//a[contains(text(),"${ABOUT}")]
