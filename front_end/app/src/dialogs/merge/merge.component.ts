@@ -140,7 +140,7 @@ export class MergeModalContent {
                 passwordCheckError: false,
             },
             showUpdates: {
-                adminPasswordDefault: {
+                default: {
                     passwordError: false,
                     passwordCheckError: false,
                 },
@@ -170,30 +170,33 @@ export class MergeModalContent {
         confirmMerge: {
             show: {
                 maxServerWarningText: false,
-                passwordValidationError: false,
+                passwordError: false,
                 passwordCheckError: false,
             },
             showUpdates: {
                 default: {
                     maxServerWarningText: false,
-                    passwordValidationError: false,
+                    passwordError: false,
                     passwordCheckError: false,
                 },
                 addMaxServerWarningText: {
                     maxServerWarningText: true,
                 },
-                addPasswordValidationError: {
-                    passwordValidationError: true,
+                addPasswordError: {
+                    passwordError: true,
                 },
                 addPasswordCheckError: {
                     passwordCheckError: true,
                 }
             },
             template: {
-                passwordText: '',
-                confirmMergeButtonAction: undefined,
+                passwordErrorText: '',
+                passwordValue: '',
             },
-            errorText: {},
+            errorText: {
+                passwordRequired: '',
+                passwordWrong: '',
+            }
         }
     };
 
@@ -221,9 +224,9 @@ export class MergeModalContent {
                 let toBeUpdated = '';
                 if (newUpdate) {
                     if (update.includes('Error')) {
-                        toBeUpdated = this.machine.state.errorText[templateVariable[update]];
+                        toBeUpdated = this.machine.state.errorText[newUpdate];
                     } else {
-                        toBeUpdated = templateVariable[update];
+                        toBeUpdated = newUpdate;
                     }
                 }
                 template[update] = toBeUpdated;
@@ -415,7 +418,15 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService.createProcess(() => {
             return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
                 .pipe(finalize(() => this.targetSystem.stopPoll()))
-                .subscribe(res => console.log('res from checkLcoalAdminPassword', res));
+                .subscribe(
+                    res => {
+                        console.log('res from checkLcoalAdminPassword', res);
+                        this.machine.transition('confirmMerge');
+                    },
+                    err => {
+                        this.updateShow('addPasswordCheckError', { passwordErrorText: 'passwordWrong' });
+                    }
+                );
         })
     }
 
@@ -572,7 +583,7 @@ export class MergeModalContent {
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
             this.setTargetSystem({ name: 'Other System...' });
         }
-        // handles validation error message pop-ups
+        // handles validation error messages
         let showUpdate = '';
         const templateUpdates: any = {};
         if (input.touched && input.errors && input.errors.required) {
@@ -585,15 +596,15 @@ export class MergeModalContent {
         this.updateShow(showUpdate, templateUpdates);
     }
 
+    // handles password error messages
     passwordChange(input) {
-        // handles validation error message pop-ups
         let showUpdate = '';
-        const templateUpdates = { passwordErrorText: '' };
+        const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
             showUpdate = 'addPasswordError';
             templateUpdates.passwordErrorText = 'passwordRequired';
         } else {
-            showUpdate = 'adminPasswordDefault'
+            showUpdate = 'default';
             delete templateUpdates.passwordErrorText;
         }
         this.updateShow(showUpdate, templateUpdates);
