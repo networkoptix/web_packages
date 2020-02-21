@@ -10,11 +10,11 @@
         </button>
     </div>
     <div *ngIf="restoring" class="reset-section">
-        <h1 class="heading small-margin" translate>Reset Password</h1>
+        <h1 class="heading mb-4" translate>Reset Password</h1>
         <form name="restorePassword" #restorePassword="ngForm" class="form" novalidate>
             <label for="email" class="" translate>Email</label>
             <nx-email-input
-                class="form-component form-input"
+                class="form-component mb-3"
                 name="email"
                 componentId="email"
                 [(ngModel)]="data.email"
@@ -22,13 +22,13 @@
                 #email="ngModel"></nx-email-input>
 
             <span
-                class="input-error errors"
+                class="input-error mb-3"
                 *ngIf="email.touched && email.errors && email.errors.required"
                 translate>
                 Email is required
             </span>
             <span
-                class="input-error errors"
+                class="input-error mb-3"
                 *ngIf="email.touched && email.errors && email.errors.pattern"
                 translate>
                 Please enter a valid Email</span>
@@ -55,7 +55,7 @@
             </div>
         </div>
 
-        <h1 *ngIf="!change.success && !changeSuccess" class="heading small-margin" translate>
+        <h1 *ngIf="!change.success && !changeSuccess" class="heading mb-4" translate>
             Set New Password
         </h1>
         <form
@@ -66,7 +66,7 @@
             novalidate>
             <label for="newPassword" class="" translate>New Password</label>
             <nx-password-input
-                class="form-input"
+                class="mb-3"
                 name="newPassword"
                 componentId="newPassword"
                 [(ngModel)]="data.newPassword"
@@ -74,7 +74,7 @@
                 #newPassword="ngModel"></nx-password-input>
 
             <nx-password-input-validation
-                class="test"
+                class="mb-3"
                 *ngIf="newPassword.errors && !newPassword.errors.required"
                 [forElement]="newPassword"></nx-password-input-validation>
             <nx-process-button
