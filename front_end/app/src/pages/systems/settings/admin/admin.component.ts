@@ -13,7 +13,7 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { Subscription }              from 'rxjs';
+import { Subscription, of }          from 'rxjs';
 import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
@@ -129,7 +129,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.currentlyMerging = false;
         this.settings = {
             disconnectDisabled: false,
-            mergeDisabled: false,
+            mergeDisabled: true,
             renameDisabled: false,
             showMerge: true
         };
@@ -240,10 +240,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject
             .subscribe((system) => {
                 this.system = system;
-                this.updateSettings();
                 if (system) {
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                     this.system.updateOrGetSystemSettings().subscribe((res: any) => {
+                        this.updatePeerSystems();
                         this.cleanUpWatchers(res.reply.settings);
                         this.initApplyService();
 
@@ -254,14 +254,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             .pipe(throttleTime(this.CONFIG.systemThrottleTime))
                             .subscribe(() => {
                                 this.settingsService.footerSubject.next(true);
-                                this.updateSettings(this.currentlyMerging);
-                                this.updatePeerSystems();
                                 if (!this.applyService.locked && this.system.permissions.isAdmin) {
                                     if (this.settingsSubscription) {
                                         this.settingsSubscription.unsubscribe();
                                     }
                                     this.settingsSubscription = this.system.updateOrGetSystemSettings()
                                         .subscribe((res: any) => {
+                                            this.updatePeerSystems();
                                             this.setWatcherValues(res.reply.settings);
                                         });
                                 }
@@ -357,8 +356,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     updatePeerSystems() {
-        this.system.getPeerSystems()
-            .subscribe(res => this.peerSystems = res.reply);
+        return this.system.getPeerSystems().toPromise()
+            .then(res => {
+                this.peerSystems = res.reply;
+                this.updateSettings(this.currentlyMerging);
+            });
     }
 
     delete() {
