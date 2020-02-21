@@ -129,7 +129,6 @@ class SubscriptionSerializer(serializers.Serializer):
         is_enabled = validated_data.get('isEnabled', None)
         device_info = validated_data.get('deviceInfo', None)
         device_type = validated_data.get('type', None)
-        instance.application_id = settings.CUSTOMIZATION
 
         if is_enabled is not None:
             instance.active = is_enabled
