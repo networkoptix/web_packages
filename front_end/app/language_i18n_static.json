@@ -69,7 +69,6 @@
         "activationLinkSent": "Activation Link Sent",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "The account was successfully saved",
         "saveChanges": "Save"
     },
     "activeActions": {
@@ -234,7 +233,6 @@
             "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
             "editShareConfirmButton": "Save",
             "editShareTitle": "Edit Permissions",
-            "permissionsSaved": "New permissions saved",
             "shareConfirmButton": "Add",
             "shareTitle": "Add"
         },
@@ -565,7 +563,6 @@
                 "start": "Systems have started merging",
                 "success": "System merge completed"
             },
-            "permissionsRemoved": "Permissions were removed from {{email}}",
             "rename": {
                 "Success": "System name saved"
             },
