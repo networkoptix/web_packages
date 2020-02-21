@@ -97,8 +97,8 @@
                 "message": "Confirmation message with the activation link is sent to {{email}}"
             },
             "activated": {
-            "title" : "Account successfully activated",
-            "message": ""}
+                "title" : "Account successfully activated"
+            }
         },
         "cameraLinks": {
             "copyActiveText": "copied to clipboard",

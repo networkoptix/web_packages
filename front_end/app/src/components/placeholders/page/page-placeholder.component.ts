@@ -79,7 +79,7 @@ export class NxPagePlaceholderComponent implements OnInit {
                     break;
                 case 'ACCOUNT_ACTIVATED' :
                     this.placeholderTitle = this.LANG.common.account.activated.title;
-                    this.message = this.LANG.common.account.activated.message;
+                    this.message = '';
                     this.iconName = 'Activated';
                     break
 

@@ -66,8 +66,7 @@ export class NxRegisterComponent implements OnInit {
     }
 
     login () {
-        const url = this.router.url;
-        const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+        const redirect = this.CONFIG.redirectPaths.some((path) => this.router.url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
