@@ -18,8 +18,8 @@ class StateMachine {
         if (!nextState) {
             throw new Error(`invalid: ${this.state} -> ${newState}`);
         }
-        this.currentState = newState;
         this.history.push(this.currentState);
+        this.currentState = newState;
         this.state = nextState;
     }
 

@@ -97,7 +97,7 @@
         </p>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
-        <button class="btn btn-default svg-icon" (click)="machine.goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
@@ -127,7 +127,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between">
-        <button class="btn btn-default svg-icon" (click)="machine.goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <button class="btn btn-primary svg-icon next-button" (click)="machine.transition('confirmMerge')">
@@ -170,7 +170,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
-        <button class="btn btn-default svg-icon" (click)="machine.goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
