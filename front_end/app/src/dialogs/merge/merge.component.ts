@@ -113,7 +113,6 @@ export class MergeModalContent {
                 bodyTitle: '',
                 checkingErrorText: '',
                 helpText: '',
-                selectedSystemInDropdown: {},
                 serverUrlInputValue: '',
                 serverUrlInputValidationErrorText: '',
             },
@@ -217,15 +216,20 @@ export class MergeModalContent {
             }
         }
         if (templateVariable) {
-            for (const update in templateVariable) {
-                if (update.includes('Error')) {
-                    template[update] = this.machine.state.errorText[templateVariable[update]];
-                } else {
-                    template[update] = templateVariable[update];
+            for (const update in template) {
+                const newUpdate = templateVariable[update];
+                let toBeUpdated = '';
+                if (newUpdate) {
+                    if (update.includes('Error')) {
+                        toBeUpdated = this.machine.state.errorText[templateVariable[update]];
+                    } else {
+                        toBeUpdated = templateVariable[update];
+                    }
                 }
+                template[update] = toBeUpdated;
             }
         } else {
-            ['serverUrlInputValidationErrorText', 'checkingErrorText', 'helpText', 'serverUrlInputValue']
+            ['serverUrlInputValidationErrorText', 'checkingErrorText', 'helpText']
                 .forEach(clearText => template[clearText] = '');
         }
         console.log('machine state on update', this.machine.state);
@@ -279,11 +283,11 @@ export class MergeModalContent {
                     { checkingErrorText: this.systemMergeable }
                 );
             }
-    
+
             this.user.get().then((account) => {
                 this.account = account;
             });
-    
+
             this.initProcesses();
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
@@ -536,7 +540,7 @@ export class MergeModalContent {
     setTargetSystem(targetSystem) {
         console.log('targetSystem to be set', targetSystem);
         if (targetSystem.name === 'Other System...') {
-            this.targetSystem = {};
+            this.targetSystemDropdown = targetSystem;
             this.updateShow('serverUrl', { serverUrlInputValue: '' });
         } else {
             this.systemMergeable = '';
@@ -566,8 +570,7 @@ export class MergeModalContent {
         // handles changing auto-discovered to Other System if url changed
         const { serverUrlInputValue } = this.machine.state.template;
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
-            this.targetSystemDropdown = { name: 'Other System...' };
-            this.targetSystem = {};
+            this.setTargetSystem({ name: 'Other System...' });
         }
         // handles validation error message pop-ups
         let showUpdate = '';
