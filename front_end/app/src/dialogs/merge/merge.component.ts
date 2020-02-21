@@ -153,7 +153,6 @@ export class MergeModalContent {
                 },
             },
             template: {
-                checkingErrorText: '',
                 passwordErrorText: '',
                 passwordValue: '',
             },
@@ -170,18 +169,13 @@ export class MergeModalContent {
         },
         confirmMerge: {
             show: {
-                maxServerWarningText: false,
                 passwordError: false,
                 passwordCheckError: false,
             },
             showUpdates: {
                 default: {
-                    maxServerWarningText: false,
                     passwordError: false,
                     passwordCheckError: false,
-                },
-                addMaxServerWarningText: {
-                    maxServerWarningText: true,
                 },
                 addPasswordError: {
                     passwordError: true,
@@ -205,6 +199,7 @@ export class MergeModalContent {
     machine = new StateMachine('checkMerge', this.stateMachine);
 
     updateShow(newShow?, templateVariable: any = {}) {
+        console.log('newShow/templateVariable in updateShow', newShow, templateVariable);
         const { showUpdates, show, template } = this.machine.state;
         if (newShow) {
             if (newShow.includes('Error')) {
@@ -310,135 +305,135 @@ export class MergeModalContent {
     }
 
     initProcesses() {
-        this.mergingProcess = this.processService.createProcess(() => {
-            this.wrongPassword = false;
-            this.mergeForm.controls.mergePassword.setErrors(undefined);
+        this.mergingProcess = this.processService
+            .createProcess(() => {
+                this.wrongPassword = false;
+                this.mergeForm.controls.mergePassword.setErrors(undefined);
 
-            if (!this.password) {
-                return Promise.reject({ error: { data: {resultCode : 'missingPassword'}}});
-            }
-            return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
-        }, {
-            errorCodes: {
-                mergedSystemIsOffline: () => {
-                    return this.LANG.toastMessages.system.merge.failed;
-                },
-                vmsRequestFailure: () => {
-                    return this.LANG.toastMessages.system.merge.failed;
-                },
-                missingPassword: () => {
-                    this.mergeForm.controls.mergePassword.setErrors({ required: true });
-                },
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
-                    // Do not reset the value - it will reset errors for this field
-                    // this.password = '';
+                if (!this.password) {
+                    return Promise.reject({ error: { data: {resultCode : 'missingPassword'}}});
+                }
+                return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
+            }, {
+                errorCodes: {
+                    mergedSystemIsOffline: () => {
+                        return this.LANG.toastMessages.system.merge.failed;
+                    },
+                    vmsRequestFailure: () => {
+                        return this.LANG.toastMessages.system.merge.failed;
+                    },
+                    missingPassword: () => {
+                        this.mergeForm.controls.mergePassword.setErrors({ required: true });
+                    },
+                    wrongPassword: () => {
+                        this.wrongPassword = true;
+                        this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
+                        // Do not reset the value - it will reset errors for this field
+                        // this.password = '';
 
-                    this.renderer.selectRootElement('#mergePassword').focus();
+                        this.renderer.selectRootElement('#mergePassword').focus();
+                    },
                 },
-            },
-            successMessage: this.LANG.toastMessage.system.merge.start
-        }).then(res => {
-            console.log('then from cloudapi merge', res);
-            this.systemsService.forceUpdateSystems();
-            this.activeModal.close({
-                anotherSystemId: this.targetSystem.id,
-                role: this.primarySystem.id === this.system.id ?
-                    this.CONFIG.systemStatuses.master :
-                    this.CONFIG.systemStatuses.slave
+                successMessage: this.LANG.toastMessage.system.merge.start
+            })
+            .then(res => {
+                console.log('then from cloudapi merge', res);
+                this.systemsService.forceUpdateSystems();
+                this.activeModal.close({
+                    anotherSystemId: this.targetSystem.id,
+                    role: this.primarySystem.id === this.system.id ?
+                        this.CONFIG.systemStatuses.master :
+                        this.CONFIG.systemStatuses.slave
+                });
+            }, (error) => {
+                console.log('error from cloudapi merge', error);
+                const errorCode = error.resultCode || error.data && error.data.resultCode;
+                if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
+                    return;
+                }
+
+                /* Get the names of the primary and secondary system.
+                Next try to figure out which system caused the problem.
+                If the primary system's stateOfHealth is not online set it as the failedSystem.
+                Otherwise the secondary system is set as the failedSystem no matter what.
+                */
+
+                if (!error.data) {
+                    error.data = {};
+                }
+
+                error.data.resultCode = errorCode;
+                error.data.errorText = error && error.errorText || '';
+                // Set the name of the primary system.
+                error.data.primarySystemName = this.primarySystem.name;
+                // If name is undefined try looking in info for the name.
+                if (error.data.primarySystemName === undefined) {
+                    error.data.primarySystemName = this.primarySystem.info && this.primarySystem.info.name;
+                }
+
+                // Set the name of the secondary system.
+                error.data.secondarySystemName = this.secondarySystem.name;
+
+                // If name is undefined try looking in info for the name.
+                if (error.data.secondarySystemName === undefined) {
+                    error.data.secondarySystemName = this.secondarySystem.info && this.secondarySystem.info.name;
+                }
+
+                // Check the state of health
+                let primaryState = this.primarySystem.stateOfHealth;
+                // If stateOfHealth is undefined check in info for stateOfHealth.
+                if (primaryState === undefined) {
+                    primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
+                }
+
+                // Assume the secondary system is the issue unless the primary system is not online.
+                error.data.failedSystemName = error.data.secondarySystemName;
+                if (primaryState !== 'online') {
+                    error.data.failedSystemName = error.data.primarySystemName;
+                }
+                this.activeModal.dismiss(error.data);
             });
-        }, (error) => {
-            console.log('error from cloudapi merge', error);
-            const errorCode = error.resultCode || error.data && error.data.resultCode;
-            if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
-                return;
-            }
 
-            /* Get the names of the primary and secondary system.
-               Next try to figure out which system caused the problem.
-               If the primary system's stateOfHealth is not online set it as the failedSystem.
-               Otherwise the secondary system is set as the failedSystem no matter what.
-             */
-
-            if (!error.data) {
-                error.data = {};
-            }
-
-            error.data.resultCode = errorCode;
-            error.data.errorText = error && error.errorText || '';
-            // Set the name of the primary system.
-            error.data.primarySystemName = this.primarySystem.name;
-            // If name is undefined try looking in info for the name.
-            if (error.data.primarySystemName === undefined) {
-                error.data.primarySystemName = this.primarySystem.info && this.primarySystem.info.name;
-            }
-
-            // Set the name of the secondary system.
-            error.data.secondarySystemName = this.secondarySystem.name;
-
-            // If name is undefined try looking in info for the name.
-            if (error.data.secondarySystemName === undefined) {
-                error.data.secondarySystemName = this.secondarySystem.info && this.secondarySystem.info.name;
-            }
-
-            // Check the state of health
-            let primaryState = this.primarySystem.stateOfHealth;
-            // If stateOfHealth is undefined check in info for stateOfHealth.
-            if (primaryState === undefined) {
-                primaryState = this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-            }
-
-            // Assume the secondary system is the issue unless the primary system is not online.
-            error.data.failedSystemName = error.data.secondarySystemName;
-            if (primaryState !== 'online') {
-                error.data.failedSystemName = error.data.primarySystemName;
-            }
-            this.activeModal.dismiss(error.data);
-        });
-
-        this.checkMergeabilityProcess = this.processService.createProcess(() => {
-            this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
-            this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
-            return this.precheckSystemMerge().finally(() => {
-                this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
-                this.systemMergeable = this.checkMergeability(this.targetSystem);
-            });
-        })
+        this.checkMergeabilityProcess = this.processService
+            .createProcess(() => {
+                this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
+                this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
+                return this.precheckSystemMerge()
+                    .finally(() => {
+                        this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
+                        this.systemMergeable = this.checkMergeability(this.targetSystem);
+                    });
+            })
             .then((res) => {
                 console.log('res from precheckSystemMerge', res);
                 if (!res.system && this.systemMergeable === '') {
                     this.serverUrlInputExists ?
                         this.machine.transition('adminPassword')
-                        :this.machine.transition('choosePrimary');
+                        : this.machine.transition('choosePrimary');
                 } else {
-                    this.updateShow(
-                        'checkMergeError',
-                        { checkingErrorText: this.systemMergeable }
-                    );
+                    this.targetSystem.value = this.machine.state.template.selectedTarget;
+                    this.setTargetSystem(this.targetSystem);
                 }
             }, err => {
-                console.error('error in catch', err);
-                this.updateShow(
-                    'checkMergeError',
-                    { checkingErrorText: this.systemMergeable }
-                );
+                this.targetSystem.value = this.machine.state.template.selectedTarget;
+                this.setTargetSystem(this.targetSystem);
             });
 
         // not able to check for local admin password right now
-        this.checkPasswordProcess = this.processService.createProcess(() => {
-            return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
-                .pipe(finalize(() => this.targetSystem.stopPoll()))
-                .subscribe(
-                    res => {
-                        console.log('res from checkLcoalAdminPassword', res);
-                        this.machine.transition('confirmMerge');
-                    },
-                    err => {
-                        this.updateShow('addPasswordCheckError', { passwordErrorText: 'passwordWrong' });
-                    }
-                );
-        });
+        this.checkPasswordProcess = this.processService
+            .createProcess(() => {
+                return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
+                    .pipe(finalize(() => this.targetSystem.stopPoll()))
+                    .subscribe(
+                        res => {
+                            console.log('res from checkLcoalAdminPassword', res);
+                            this.machine.transition('confirmMerge');
+                        },
+                        err => {
+                            this.updateShow('addPasswordCheckError', { passwordErrorText: 'passwordWrong' });
+                        }
+                    );
+            });
     }
 
     addStatus(system) {
@@ -526,7 +521,7 @@ export class MergeModalContent {
             })
                 .catch(err => Promise.reject({ fromGetUsers: err }))
                 .finally(() => {
-                    // keeps targetSystem for adminPassword state
+                    // keeps targetSystem poll for adminPassword state
                     if (this.serverUrlInputExists === false) {
                         this.targetSystem.stopPoll();
                     }
