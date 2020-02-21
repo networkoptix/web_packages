@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Aucune alerte",
 		"systemNoAlertsMessage": "Votre système doit bien fonctionner!",
 		"systemServerError": "Erreur Interne du Serveur",
-		"systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "Mettre à jour votre système",
 		"systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
 		"systemHasNoCameras": "AUCUNE CAMÉRA",

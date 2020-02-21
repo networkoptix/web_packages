@@ -35,7 +35,7 @@
     "passwordMismatch": "密碼不正確",
     "cantEditYourself": "不允許變更自己的權限",
     "cantEditAdmin": "此使用者具有管理員權限",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "%VMS_NAME%應用程式未檢測到.<a href=\"/download\"> 下載</a>",
     "lostConnection": "與 {{systemName}} 的連線斷開了",
     "thisSystem": "系統",
     "oldSafariNotSupported": "不支持10歲以上的Safari版本",

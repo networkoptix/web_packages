@@ -210,10 +210,10 @@
     "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
     "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
     "FEEDBACK TEXT": "Feedback for integration {{integration}}",
-    "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "INFORMATION TEXT": "信息",
+    "SYSTEM OFFLINE TEXT": "系统处于离线状态",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "此系统处于离线状态，现在无法登录。",
     "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "NO ALERTS TEXT": "没有警报",
+    "SYSTEM DOING WELL TEXT": "您的系统必须运行良好！"
 }

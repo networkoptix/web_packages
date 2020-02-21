@@ -210,10 +210,10 @@
     "SALES INQUIRY TEXT": "Consulta de ventas para {{integration}}",
     "TECHNICAL INQUIRY TEXT": "Consulta técnica para {{integration}}",
     "FEEDBACK TEXT": "Comentarios para la integración {{integration}}",
-    "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "INFORMATION TEXT": "Información",
+    "SYSTEM OFFLINE TEXT": "Sistema está desconectado",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "Este sistema está fuera de línea y no se puede acceder en este momento.",
+    "VIEWING IMPORTED REPORT TEXT": "Está viendo un informe importado, actualice la página para obtener un informe nuevo",
+    "NO ALERTS TEXT": "No hay Alertas",
+    "SYSTEM DOING WELL TEXT": "¡Su sistema debe estar funcionando bien!"
 }

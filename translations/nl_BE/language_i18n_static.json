@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Geen meldingen",
 		"systemNoAlertsMessage": "Uw systeem moet het goed doen!",
 		"systemServerError": "Interne Server Fout",
-		"systemServerErrorMessage": "Er is een fout opgetreden. Probeer het later opnieuw. Er is een fout opgetreden, probeer het later opnieuw. Neem contact op met uw ondersteuningsteam als het probleem zich blijft voordoen.",
+		"systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
 		"systemNewVersion": "Uw systeem bijwerken",
 		"systemNewVersionMessage": "Uw huidige versie is niet compatibel met deze functie. Werk uw servers bij naar de nieuwste versie om deze functie te gebruiken.",
 		"systemHasNoCameras": "GEEN CAMERA'S",

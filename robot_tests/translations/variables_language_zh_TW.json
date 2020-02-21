@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "您的權限等級",
     "USER DISABLED TEXT": "使用者已被停用",
     "NO UNSAVED CHANGES TEXT": "沒有未保存之變更",
-    "ABOUT": "About %PRODUCT_NAME%",
+    "ABOUT": "了解更多 %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "已知的限制",
     "SUPPORT": "支援",
     "REMOTE CONNECTIVITY": "遠端連線",
@@ -189,7 +189,7 @@
     "SYSTEMS TITLE TEXT": "系統",
     "NO PERMISSION TO SHARE TEXT": "您沒有共享本系統的權限",
     "WELCOME TEXT": "歡迎來到",
-    "YOU ARE ALREADY LOGGED IN TEXT": "You are already logged in as",
+    "YOU ARE ALREADY LOGGED IN TEXT": "您已經登入",
     "DISCONNECT FROM MY ACCOUNT TEXT": "從我的帳號斷線",
     "YOU TEXT": "您",
     "UNRESTRICTED ACCESS CONNECT TEXT": "不受限權限包括共用及從雲端連接/斷開系統的能力",
@@ -210,10 +210,10 @@
     "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
     "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
     "FEEDBACK TEXT": "Feedback for integration {{integration}}",
-    "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "INFORMATION TEXT": "資訊",
+    "SYSTEM OFFLINE TEXT": "系統處於離線狀態",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "該系統處於離線狀態，無法立即登入。",
     "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "NO ALERTS TEXT": "沒有警報",
+    "SYSTEM DOING WELL TEXT": "您的系統必須運作良好！"
 }
