@@ -609,12 +609,4 @@ export class MergeModalContent {
         }
         this.updateShow(showUpdate, templateUpdates);
     }
-
-    canShowRequired(element) {
-        return element.invalid && element.errors.required && !this.wrongPassword;
-    }
-
-    canShowWrong(element) {
-        return element.invalid && element.errors.wrongPassword;
-    }
 }
