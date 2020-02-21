@@ -158,8 +158,10 @@ class UserManager {
     }
 
     deleteUser(removedUser: NxSystemUser) {
-        this.mediaserver.deleteUser(removedUser.id).toPromise().then(() => {
-            this.users = this.users.filter((user) => user !== removedUser);
+        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(data => {
+            this.users = this.users.filter((user) => {
+                return user.id !== data.id;
+            });
         }).catch(() => {});
     }
 
