@@ -162,7 +162,7 @@ export class NxRestoreComponent implements OnInit {
             return false;
         }
         if (!arr.includes(this.context.process)) {
-            // this.accountService.redirectToHome();
+            this.accountService.redirectToHome();
         }
         return true;
     }

@@ -5,7 +5,7 @@
         </div>
     </div>
 
-<button class="btn {{buttonClass}} {{customButtonClass}}"
+    <button class="btn {{buttonClass}} {{customButtonClass}}"
             [ngClass]="{'processing' : process && process.processing}"
             [disabled]="buttonDisabled"
             (click)="clickFn(); checkForm(); $event.stopPropagation();">
