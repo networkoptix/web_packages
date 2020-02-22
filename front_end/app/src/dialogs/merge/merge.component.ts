@@ -399,8 +399,19 @@ export class MergeModalContent {
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
                 this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
                 return this.precheckSystemMerge()
+                    .then(res => {
+                        // attempt to get system info from url
+                        if (this.serverUrlInputExists) {
+
+                        } else {
+                            return res;
+                        }
+                    })
                     .finally(() => {
                         this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
+                        if (this.targetSystem === undefined) {
+
+                        }
                         this.systemMergeable = this.checkMergeability(this.targetSystem);
                     });
             })
@@ -426,11 +437,11 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
                 return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
-                    .pipe(finalize(() => this.targetSystem.stopPoll()))
                     .subscribe(
                         res => {
                             console.log('res from checkLcoalAdminPassword', res);
                             this.machine.transition('confirmMerge');
+                            this.targetSystem.stopPoll();
                         },
                         err => {
                             this.updateShow('addPasswordCheckError', { passwordErrorText: 'passwordWrong' });
@@ -529,7 +540,8 @@ export class MergeModalContent {
                         this.targetSystem.stopPoll();
                     }
                 });
-        });
+        })
+        .catch(err => Promise.reject({ fromGetInfo: err }));
     }
 
     makeSelectorList(systems) {
@@ -563,6 +575,8 @@ export class MergeModalContent {
         if (targetSystem.value === 'otherSystem') {
             // need to figure out how to check for mergeability for serverUrl ones
             this.targetSystemDropdown = targetSystem;
+            // need to figure out what to set targetSystem as here for otherSystem
+            this.targetSystem = targetSystem;
             this.updateShow('serverUrl', { serverUrlInputValue, selectedTarget: 'otherSystem' });
         } else {
             this.targetSystem = this.systems.find(system => system.id === targetSystem.value)
