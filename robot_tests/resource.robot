@@ -264,7 +264,7 @@ Go to Users List
     Go To    ${location}/users
 
 Go to System Administration
-    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
+    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}    timeout=30
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
@@ -398,7 +398,14 @@ Disconnect from cloud
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Sleep    5
+#    Sleep    5
+
+Disconnect from my account
+    Go to System Administration
+    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Click Button    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
 
 Failure Tasks
     [timeout]    5 minutes

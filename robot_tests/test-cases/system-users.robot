@@ -22,14 +22,13 @@ Log in to Auto Tests System
     Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
-# Not used in the test-suite
-#Check System Text
-#    [Arguments]    ${user}
-#    Log Out
-#    Log in to Auto Tests System    ${user}
-#    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-#    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-#    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
+Check System Text
+    [Arguments]    ${user}
+    Log Out
+    Log in to Auto Tests System    ${user}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
 
 Reset DB and Open New Browser On Failure
     Close Browser
@@ -39,26 +38,12 @@ Reset DB and Open New Browser On Failure
 
 Remove Temporary Users
     FOR    ${user}    IN     @{TMP USERS}
-        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO SYS ID}
-        Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
+        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
     END
 
 Restart
     Common Restart Logout    ${url}
-
-# Checked in other tests
-#Share with Adminstrator
-#    [Arguments]    ${random email}
-#    Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
-#    Click Button    ${SHARE BUTTON SYSTEMS}
-#    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-#    Input Text    ${SHARE EMAIL}    ${random email}
-#    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-#    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-#    ${admin selector}=   /following-sibling::div/button/span[text()='${ADMIN TEXT}']
-#    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}${admin selector}
-#    Click Button    ${SHARE PERMISSIONS DROPDOWN}${admin selector}/..
-#    Click Button    ${SHARE BUTTON MODAL}
 
 Check Special Hint
     [Arguments]    ${type}
@@ -328,12 +313,12 @@ Delete user works
 Share with registered user works and sends him notification
     [Tags]    email    C41888
     Set Account Language    ${ENV}    ${EMAIL NOPERM}    ${password}    ${LANGUAGE}
-
+    Append to List    ${TMP USERS}    ${EMAIL NOPERM}
     Log in to Auto Tests System    ${email}
     Verify In System    Auto Tests
     Share To    ${EMAIL NOPERM}    ${ADMIN TEXT}
 
-    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
 
     Open Mailbox
@@ -357,18 +342,15 @@ Share with registered user works and sends him notification
     Delete Email    ${emailID}
     Close Mailbox
 
-    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
-
-    ${user id}=   Get Cloud User Id By Email    ${auth}    ${EMAIL NOPERM}    ${AUTO SYS ID}
-    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
 
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
@@ -391,35 +373,36 @@ Share with unregistered user - brings them to registration page with code with c
 
 Sharing system with a user who is already in the list updates their permissions
     [Tags]    C41892
-    ${random email}=   Get Random Email    ${BASE EMAIL}
+    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
     Append To List    ${TMP USERS}    ${random email}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+#    ${email}=   Wait For Email    recipient=${random email}    timeout=120
+#    Delete Email    ${email}
+#    Close Mailbox
 
-    Open Mailbox
-    ...    host=${BASE HOST}
-    ...    password=${BASE EMAIL PASSWORD}
-    ...    port=${BASE PORT}
-    ...    user=${BASE EMAIL}
-    ...    is_secure=True
-  # TODO Fix the next line intermittently failing.
-    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=30
-
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
 
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
-    ${email}=   Wait For Email    recipient=${random email}    timeout=120
-    Delete Email    ${email}
-    Close Mailbox
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Share To    ${random email}   ${VIEWER TEXT}
+#    Permanently flase-negative
+#    Open Mailbox
+#    ...    host=${BASE HOST}
+#    ...    password=${BASE EMAIL PASSWORD}
+#    ...    port=${BASE PORT}
+#    ...    user=${BASE EMAIL}
+#    ...    is_secure=True
+#  # TODO Fix the next line intermittently failing.
+#    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=60
 
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[viewer]
 
 Check share email for registered user
-    [Tags]    C47297
+    [Tags]    C47297   deb
     Set Account Language    ${ENV}    ${EMAIL NOPERM}    ${password}    ${LANGUAGE}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${EMAIL NOPERM}
-    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO SYS ID}
+    ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
 
     Open Mailbox
@@ -432,9 +415,9 @@ Check share email for registered user
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
     ...    ${AUTO TESTS}
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=60
+    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120
     ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
     Check Email Subject
     ...    ${email}
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
@@ -455,8 +438,22 @@ Check share email for registered user
     Delete Email    ${email}
     Close Mailbox
 
-    ${user id}=   Get Cloud User Id By Email    ${auth}    ${EMAIL NOPERM}    ${AUTO SYS ID}
+    ${user id}=   Get Cloud User Id By Email    ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
     Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+
+Users should be able to disconnect themselves from cloud
+    [Tags]    deb
+    ${roles}=   Get Dictionary Values    ${ACCESS ROLES}
+    FOR    ${role}    IN    @{roles}
+        ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+        Append To List    ${TMP USERS}    ${random email}
+        Share     ${auth}    ${AUTO TESTS SYSTEM ID}    ${role}    ${random email}
+
+        Log In    ${random email}    ${password}
+        Wait until element is visible    ${SYSTEM NAME}
+        Disconnect from my account
+        Log out
+    END
 
 User with client custom settings has access to system
     [Tags]    Threaded

@@ -71,5 +71,10 @@ class CloudPortalAPI(object):
             r = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
             return r.json()['code']
 
-
-
+    def disconnect_from_account(self, env, email, password, system_id):
+        """Doesn't completely remove user from system users, but sets their role to none instead.
+        Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
+            return r.json()

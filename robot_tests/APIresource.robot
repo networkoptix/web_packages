@@ -39,7 +39,6 @@ Share
     &{data}=    Create Dictionary    systemId=${system id}    accessRole=${access role}    accountEmail=${account email}
     Create Digest Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=    Post Request    Share session    /cdb/system/share    json=${data}
-    log    ${resp}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
