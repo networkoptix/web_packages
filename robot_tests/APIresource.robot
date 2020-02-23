@@ -12,48 +12,48 @@ ${customization}    default
 # Keywords which use Cloud and cloud Portal API
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
-    &{data}=    Create Dictionary    name=${name}    customization=${customization}
+    &{data}=   Create Dictionary    name=${name}    customization=${customization}
     Create Digest Session    bind session    ${cloud url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    bind session    /cdb/system/bind    json=${data}
+    ${resp}=   Post Request    bind session    /cdb/system/bind    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Unbind System
     [Arguments]    ${auth}    ${cloud url}    ${system id}
-    &{data}=    Create Dictionary    systemId=${system id}
+    &{data}=   Create Dictionary    systemId=${system id}
     Create Digest Session    unbind session    ${cloud url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    unbind session    /cdb/system/unbind    json=${data}
+    ${resp}=   Post Request    unbind session    /cdb/system/unbind    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Rename System
     [Arguments]    ${auth}    ${system id}    ${new name}
-    &{data}=    Create Dictionary    systemId=${system id}    name=${new name}
+    &{data}=   Create Dictionary    systemId=${system id}    name=${new name}
     Create Digest Session    Rename System session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Rename System session    /cdb/system/rename    json=${data}
+    ${resp}=   Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()} add
 
 Share
     [Arguments]    ${auth}    ${system id}    ${access role}    ${account email}
-    &{data}=    Create Dictionary    systemId=${system id}    accessRole=${access role}    accountEmail=${account email}
+    &{data}=   Create Dictionary    systemId=${system id}    accessRole=${access role}    accountEmail=${account email}
     Create Digest Session    Share session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Share session    /cdb/system/share    json=${data}
+    ${resp}=   Post Request    Share session    /cdb/system/share    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Get Cloud System Settings
     [Arguments]    ${auth}    ${system id}
     Create Digest Session    Get System Settings session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Get Request    Get System Settings session   /cdb/system/get?systemId=${system id}
+    ${resp}=   Get Request    Get System Settings session   /cdb/system/get?systemId=${system id}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['systems'][0]}
 
 Get Cloud System Users
     [Arguments]    ${auth}    ${system id}
-    &{data}=    Create Dictionary    systemId=${system id}
-    Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}
-    ${resp}=    Post Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
+    &{data}=   Create Dictionary    systemId=${system id}
+    Create Digest Session    Get Cloud Users session    ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Get Cloud Users session    /cdb/system/getCloudUsers    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()['sharing']}
 
@@ -67,15 +67,15 @@ Set Account Password
     &{params}=   Create Dictionary    passwordHa1=${passwordHa1}    passwordHa1Sha256=${passwordHa1Sha256}
     @{auth}=   Create List    ${email}    ${old_password}
     Create Digest Session    Set New Password session   ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Set New Password session    /cdb/account/update    json=${params}
+    ${resp}=   Post Request    Set New Password session    /cdb/account/update    json=${params}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Setup Cloud System
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
-    &{data}=    Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
+    &{data}=   Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Setup System session    /api/setupCloudSystem    json=${data}
+    ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
@@ -95,7 +95,7 @@ Register Account
     ...    last_name=${last name}
     @{auth}=   Create List    ${BASE EMAIL}    ${BASE PASSWORD}
     Create Digest Session    Register Account session    ${ENV}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Register Account session    /api/account/register    json=${data}
+    ${resp}=   Post Request    Register Account session    /api/account/register    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
@@ -139,15 +139,15 @@ Evaluate Auto System Settings via API
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}
-    ${resp}=    Get Request    Get Users session    /ec2/getUsers
+    ${resp}=   Get Request    Get Users session    /ec2/getUsers
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Save User
     [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
-    &{data}=    Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
+    &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}
-    ${resp}=    Post Request    Save User session    /ec2/saveUser    json=${data}
+    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
@@ -155,14 +155,14 @@ Save User Role
     [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}
     &{data}=    Create Dictionary    name=${name}    permissions=${permissions}
     Create Digest Session    Save User Role session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
+    ${resp}=   Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Remove User
     [Arguments]    ${auth}    ${server url}    ${user id}
-    &{data}=    Create Dictionary    id=${user id}
+    &{data}=   Create Dictionary    id=${user id}
     Create Digest Session    Remove User session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Remove User session    /ec2/removeUser    json=${data}
+    ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}

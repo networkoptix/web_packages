@@ -268,7 +268,7 @@ Go to System Administration
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
-    [arguments]    ${email}    ${permissions}
+    [arguments]    ${email}    ${permissions}    ${alert}=success
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
@@ -282,7 +282,8 @@ Share To
     Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Run Keyword if    '${alert}'=='success'    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Run Keyword if    '${alert}'=='fail'    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
