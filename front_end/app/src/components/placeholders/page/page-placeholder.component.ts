@@ -86,6 +86,7 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.placeholderTitle = this.LANG.pageTitles.failedToAccessSystem;
                     this.message = this.LANG.errorCodes.failedToAccessSystem;
                     this.iconName = 'NoAccess';
+                    break
             }
         }
     }
