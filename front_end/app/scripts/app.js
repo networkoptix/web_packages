@@ -273,11 +273,7 @@ window.L = {};
                         // controller: 'StartPageCtrl'
                     })
                     .otherwise({
-                        resolve: {
-                            404: function () {
-                                window.location = '/404';
-                            }
-                        }
+                       template: ''
                     });
             }]);
 })();
