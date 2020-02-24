@@ -50,7 +50,7 @@
         "rangeslider.js": "2.3.2",
         "rxjs": "~6.5.4",
         "rxjs-compat": "~6.5.4",
-        "screenfull": "5.0.1",
+        "screenfull": "~5.0.2",
         "underscore": "1.9.1",
         "what-input": "5.2.6",
         "zone.js": "~0.10.2"

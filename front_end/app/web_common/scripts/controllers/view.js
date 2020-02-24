@@ -443,19 +443,30 @@
                 $scope.enableFullScreen = screenfull.isEnabled;
 
                 angular.element(fullElement).on('dblclick', function (event) {
-                    screenfull.toggle(fullElement);
+                    // reset
+                    $scope.playerAPI.pause();
+                    screenfull.toggle(fullElement).then( function () {
+                        $scope.playerAPI.play();
+                    });
                 });
 
                 $scope.fullScreen = function () {
                     $scope.showSettings = false;
                     if (screenfull.isEnabled) {
-                        screenfull.request(fullElement);
+                        $scope.playerAPI.pause();
+                        screenfull.request(fullElement).then( function () {
+                            $scope.playerAPI.play();
+                        });
                     }
                 };
 
                 if ($scope.enableFullScreen) {
                     screenfull.onchange(function () {
                         $scope.isFullscreen = screenfull.isFullscreen;
+
+                        $scope.playerAPI.video.addEventListener = function () {
+
+                        }
                     });
                 }
 
@@ -471,7 +482,10 @@
 
                 $scope.closeFullscreen = function () {
                     $scope.showSettings = false;
-                    screenfull.exit();
+                    $scope.playerAPI.pause();
+                    screenfull.exit().then( function () {
+                        $scope.playerAPI.play();
+                    });
                 };
 
                 $scope.showCamerasPanel = function () {
