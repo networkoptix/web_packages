@@ -131,6 +131,7 @@
     "Other releases, patches and beta versions": "Other releases, patches and beta versions",
     "Owner": "Owner",
     "PTZ": "PTZ",
+    "Page not found": "Page not found",
     "Password": "Password",
     "Password is required": "Password is required",
     "Password reset instructions are sent to the provided email": "Password reset instructions are sent to the provided email",
@@ -181,6 +182,7 @@
     "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.",
     "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.": "Systems of such size may work but will be unstable and have troubles with updates and synchronisation.",
     "Tags": "Tags",
+    "Take me home": "Take me home",
     "Take system name and settings from": "Take system name and settings from",
     "Take the name and settings from": "Take the name and settings from",
     "Terms of Use": "Terms of Use",
@@ -216,10 +218,8 @@
     "Your access level": "Your access level",
     "Your account is successfully activated": "Your account is successfully activated",
     "Your browser is not supported": "Your browser is not supported",
-    "common.account.created.message": "common.account.created.message",
     "devices": "devices",
     "manufacturers": "manufacturers",
     "support": "support",
-    "system.MERGE_FINISHES": "system.MERGE_FINISHES",
     "you": "you"
 }
