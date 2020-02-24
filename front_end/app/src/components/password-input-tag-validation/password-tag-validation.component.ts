@@ -32,9 +32,11 @@ export class NxPasswordTagValidationComponent implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.value) {
-            this.weak = (/*weak*/ this.forElement.errors && this.forElement.errors.weak && !this.forElement.errors.common && !this.forElement.errors.pattern && !this.forElement.errors.minlength) ||
-                (/*common*/this.forElement.errors && this.forElement.errors.common && !this.forElement.errors.pattern && !this.forElement.errors.minlength && !this.forElement.errors.required) ||
-                (/*short*/this.forElement.errors && this.forElement.errors.minlength && !this.forElement.errors.pattern);
+            this.forElement.weak = false;
+            if (this.forElement.errors && !this.forElement.errors.pattern) {
+                const {weak, common, minlength, required} = this.forElement.errors;
+                this.weak = (weak && !common && !minlength) || (common && !minlength && !required) || minlength;
+            }
         }
     }
 }
