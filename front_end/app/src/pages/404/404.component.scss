@@ -1,67 +1,21 @@
 @import '../../../styles/native-theme/_theme_palette';
 @import '../../../styles/_theme_palette';
 @import '../../../styles/custom/_custom_palette';
+@import '../../styles/buttons';
 
-.error-page {
-    color          : $dark10;
-    display        : flex;
-    flex-direction : column;
-    align-items    : center;
-    
-    h1 {
-        font-size   : 40px;
-        line-height : 40px;
-        text-align  : center;
+.page-wrapper {
+    position: relative;
+    margin: $navbar-height auto 0 auto;
+    height: 55vh;
+    @media screen and (max-width: 740px)  {
+        height: 65vh;
     }
-    
-    p {
-        font-size  : 24px;
-        text-align : center;
-    }
-    
+  }
+  
+  .main-button {
+    margin-top: 40px !important;
     a {
-        text-decoration : underline;
-        font-weight     : 200;
+        text-decoration: none;
+        color: inherit;
     }
-    
-    img:hover {
-        animation                 : shake 0.5s;
-        animation-iteration-count : infinite;
-    }
-    
-    @keyframes shake {
-        0% {
-            transform : translate(1px, 1px) rotate(0deg);
-        }
-        10% {
-            transform : translate(-1px, -2px) rotate(-1deg);
-        }
-        20% {
-            transform : translate(-3px, 0px) rotate(1deg);
-        }
-        30% {
-            transform : translate(3px, 2px) rotate(0deg);
-        }
-        40% {
-            transform : translate(1px, -1px) rotate(1deg);
-        }
-        50% {
-            transform : translate(-1px, 2px) rotate(-1deg);
-        }
-        60% {
-            transform : translate(-3px, 1px) rotate(0deg);
-        }
-        70% {
-            transform : translate(3px, 1px) rotate(-1deg);
-        }
-        80% {
-            transform : translate(-1px, -1px) rotate(1deg);
-        }
-        90% {
-            transform : translate(1px, 2px) rotate(0deg);
-        }
-        100% {
-            transform : translate(1px, -2px) rotate(-1deg);
-        }
-    }
-}
+  }

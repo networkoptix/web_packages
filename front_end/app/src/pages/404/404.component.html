@@ -1,8 +1,10 @@
-<div class="container">
-    <div class="jumbotron error-page">
-        <img src="/static/images/404.png" srcset="/static/images/404@2x.png 2x">
-        <h1 set-title translate>Page not found</h1>
-        <p><a routerLink="/" translate>Take me home</a></p>
-    </div>
-    <nx-footer center="true"></nx-footer>
+<div class="page-wrapper">
+    <nx-page-placeholder [type]="'404'">
+        <button class="btn btn-primary main-button">
+            <a routerLink="/" translate>Go to Main Page</a>
+        </button>
+    </nx-page-placeholder>
 </div>
+<nx-footer center="true"></nx-footer>
+
+    
