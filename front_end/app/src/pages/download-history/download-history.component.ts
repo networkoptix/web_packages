@@ -7,7 +7,7 @@ import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/c
 import { isNumeric }                                            from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
 
-import isArray = require('core-js/fn/array/is-array');
+import isArray = require('core-js/features/array/is-array');
 import angular = require('angular');
 import { NxConfigService }                                      from '../../services/nx-config';
 import { NxLanguageProviderService }                            from '../../services/nx-language-provider';

@@ -30,7 +30,7 @@
         "angular-svg-icon": "~8.0.0",
         "angular2-csv": "0.2.9",
         "bootstrap": "4.4.1",
-        "core-js": "~2.6.11",
+        "core-js": "~3.6.4",
         "deep-equal": "~2.0.1",
         "firebase": "7.6.2",
         "hls.js": "0.12.1",

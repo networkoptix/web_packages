@@ -209,6 +209,7 @@ export class NxConfigService {
                 dir: '/static/images/icons/standard/',
                 dirNonStandard: '/static/images/icons/',
                 dirPagePlaceholder: '/static/images/placeholders/page/',
+                dirSectionPlaceholder: '/static/images/placeholders/section/',
             },
             webclient                     : {
                 useServerTime              : true,
