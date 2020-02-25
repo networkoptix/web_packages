@@ -110,7 +110,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                             }
                         }),
                         retryWhen(err => err.pipe(delay(1000))),
-                        auditTime(2000)
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
@@ -190,21 +189,21 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     setStatus(status) {
-        this.selectedServer.internalStatus = status ? this.CONFIG.server.status[status] : '';
+        this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
-        this.serverOffline = [this.CONFIG.server.status.offline, this.CONFIG.server.status.checking]
+        this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
     }
 
     checkIfOnline(serverId) {
         return this.system.getModuleInfo(serverId).toPromise()
             .then(() => this.setStatus(''))
-            .catch(() => this.setStatus(this.CONFIG.server.status.offline));
+            .catch(() => this.setStatus(this.CONFIG.servers.status.offline));
     }
 
     checkStatus() {
         this.checking = true;
-        this.setStatus(this.CONFIG.server.status.checking);
+        this.setStatus(this.CONFIG.servers.status.checking);
         const now = new Date().getTime();
         this.system.getModuleInfo(this.selectedServer.id)
             .pipe(
@@ -212,15 +211,15 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
             )
             .subscribe(res => {
-                this.setStatus(res === 'error'? this.CONFIG.server.status.offline : '');
+                this.setStatus(res === 'error'? this.CONFIG.servers.status.offline : '');
                 this.checking = false;
             });
     }
 
     renameServer() {
         const { id, name } = this.selectedServer;
-        return this.dialogs
-            .renameServer(this.system, id, name);
+        return this.dialogs.renameServer(this.system, id, name)
+            .then(newName => this.selectedServer.name = newName);
     }
 
     restartServer() {

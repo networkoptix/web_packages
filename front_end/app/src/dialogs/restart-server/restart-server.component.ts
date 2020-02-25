@@ -55,7 +55,7 @@ export class RestartServerModalContent {
                     });
             }, { successMessage: this.LANG.servers.beginRestart })
             .then(() => {
-                this.close(this.CONFIG.server.status.restarting);
+                this.close(this.CONFIG.servers.status.restarting);
                 const serverSubscription = this.system.getModuleInfo(this.serverId)
                     .pipe(
                         map((res: any) => {

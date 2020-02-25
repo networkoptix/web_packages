@@ -28,7 +28,7 @@ export class RenameServerModalContent {
         this.renameServer = this.processService
             .createProcess(() => this.system.renameServer(this.serverId, this.serverName),
                 { successMessage: this.LANG.toastMessage.system.rename.success })
-            .then(() => this.activeModal.close());
+            .then(() => this.activeModal.close(this.serverName));
     }
 
     close() {
