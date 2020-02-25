@@ -86,6 +86,9 @@ do
     dir=${dir%*/}
     SKIN=${dir/..\/skins\//}
     ./build_skin.sh $SKIN $VMS_REPOSITORY
+    if [ -n "$LOCAL_ENV" ]; then
+      break
+    fi
 done
 
 cp ../cloud/cloud/cloud_portal.yaml $TARGET_DIR/_source
