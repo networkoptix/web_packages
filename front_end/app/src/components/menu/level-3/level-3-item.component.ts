@@ -30,7 +30,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (!changes.item.isFirstChange() && changes.item.previousValue.isEnabled !== changes.item.currentValue.isEnabled) {
+        if (changes.item && changes.item.previousValue && changes.item.previousValue.isEnabled !== changes.item.currentValue.isEnabled) {
             this.isEnabled = changes.item.currentValue.isEnabled;
         }
     }
