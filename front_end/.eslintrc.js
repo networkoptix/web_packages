@@ -10,24 +10,21 @@ module.exports = {
     ],
     parserOptions: {
         "project": "./tsconfig.json",
-        "ecmaVersion" : 2020,
+        "ecmaVersion" : 2018,
         "ecmaFeatures": {
             "jsx": true
         },
         "sourceType"  : "module"
     },
-
     env: {
         "es6" : true,
         "node": true
     },
-
     globals: {
         "document" : "readonly",
         "navigator": "readonly",
         "window"   : "readonly"
     },
-
     rules: {
         "accessor-pairs"               : "error",
         "array-bracket-spacing"        : ["error", "never"],
@@ -69,7 +66,7 @@ module.exports = {
             "ignoreComments"        : false,
             "ignoredNodes"          : ["TemplateLiteral *"]
         }],
-        "key-spacing"                  : ["error", { "beforeColon": false, "afterColon": true }],
+        "key-spacing"                  : ["error", { "beforeColon": true, "afterColon": true, align: "colon" }],
         "keyword-spacing"              : ["error", { "before": true, "after": true }],
         "lines-between-class-members"  : ["error", "always", { "exceptAfterSingleLine": true }],
         "new-cap"                      : ["error", { "newIsCap": true, "capIsNew": false, "properties": true }],
@@ -121,7 +118,12 @@ module.exports = {
             "allowSamePrecedence": true
         }],
         "no-mixed-spaces-and-tabs"     : "error",
-        "no-multi-spaces"              : "error",
+        "no-multi-spaces"              : ["error", {
+            exceptions: {
+                "VariableDeclarator": true,
+                "ImportDeclaration": true,
+                "Property": true }
+        }],
         "no-multi-str"                 : "error",
         "no-multiple-empty-lines"      : ["error", { "max": 1, "maxEOF": 0 }],
         "no-negated-in-lhs"            : "error",
@@ -150,7 +152,7 @@ module.exports = {
         "no-this-before-super"         : "error",
         "no-throw-literal"             : "error",
         "no-trailing-spaces"           : "error",
-        "no-undef"                     : "error",
+        "no-undef"                     : "off",
         "no-undef-init"                : "error",
         "no-unexpected-multiline"      : "error",
         "no-unmodified-loop-condition" : "error",
@@ -163,11 +165,11 @@ module.exports = {
             "allowTernary"        : true,
             "allowTaggedTemplates": true
         }],
-        "no-unused-vars"               : ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
+        "no-unused-vars"               : "off", // ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": true }],
         "no-use-before-define"         : ["error", { "functions": false, "classes": false, "variables": false }],
         "no-useless-call"              : "error",
         "no-useless-computed-key"      : "error",
-        "no-useless-constructor"       : "error",
+        // "no-useless-constructor"       : "error",
         "no-useless-escape"            : "error",
         "no-useless-rename"            : "error",
         "no-useless-return"            : "error",
