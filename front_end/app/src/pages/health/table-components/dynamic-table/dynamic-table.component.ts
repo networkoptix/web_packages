@@ -149,8 +149,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (this.healthLayoutService.activeEntity) {
             this.setPagerSize();
             this.startIndex = this._elements.findIndex(elem => {
-                return this.healthLayoutService.activeEntity === elem;
+                return this.healthLayoutService.activeEntity === elem || this.healthLayoutService.activeEntity.id === elem.entity;
             });
+            if (this.startIndex !== -1) {
+                this.selectedEntity = this._elements[this.startIndex];
+            }
         }
         if ([undefined, -1].includes(this.startIndex)) {
             this.startIndex = parseInt(this.params.index) || 0;
@@ -192,7 +195,15 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setActiveEntity(activeEntity) {
-        this.selectedEntity = activeEntity;
+        if (activeEntity) {
+            this.selectedEntity = this._elements.find(elem => {
+                return this.healthLayoutService.activeEntity === elem || this.healthLayoutService.activeEntity.id === elem.entity;
+            });
+        } else {
+            this.selectedEntity = activeEntity;
+        }
+
+
         if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
             this.mobileDetailMode = !!this.selectedEntity;
         }
