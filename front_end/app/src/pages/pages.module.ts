@@ -26,6 +26,7 @@ import { Nx404Module }               from './404/404.module';
 import { NxDebugModule }             from './debug/debug.module';
 import { NxGridLayoutModule }        from './layout/layout.module';
 import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
+import { Nx500Module }               from './500/500.module';
 
 @NgModule({
     imports        : [
@@ -53,6 +54,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
         NxAccountModule,
         NxDebugModule,
         NxGridLayoutModule,
+        Nx500Module,
         Nx404Module,  // Must be last module for routing
     ],
     declarations   : [],
@@ -78,6 +80,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
         LandingModule,
         NxDebugModule,
         NxGridLayoutModule,
+        Nx500Module,
         Nx404Module, // Must be last module for routing
     ]
 })

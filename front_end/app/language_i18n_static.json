@@ -139,7 +139,7 @@
         "systemOffline": "System Offline",
         "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
         "systemServerError": "Internal server error",
-        "systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
         "unknown": "Unknown",
         "voiceCommands": {

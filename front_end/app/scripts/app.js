@@ -64,9 +64,11 @@ window.L = {};
 
                 if (!window.SETTINGS) {
                     if (PRODUCTION && error.status >= 500) {
-                        window.location.href = '/static/503.html';
+                        if(window.location.pathname !== '/500') {
+                            window.location.pathname = '/500';
+                        }
                     } else if (PRODUCTION) {
-                        window.location.href = '/';
+                        window.location.pathname = '/';
                     }
 
                     return;
@@ -263,6 +265,9 @@ window.L = {};
                         template: ''
                     })
                     .when('/404', {
+                        template: ''
+                    })
+                    .when('/500', {
                         template: ''
                     })
                     .when('/', {

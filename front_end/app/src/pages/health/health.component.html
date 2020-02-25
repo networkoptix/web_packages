@@ -7,10 +7,16 @@
                              class="page-placeholder">
         </nx-page-placeholder>
 
-        <nx-page-placeholder *ngIf="hasServerError"
-                             type="500"
-                             class="page-placeholder">
-        </nx-page-placeholder>
+        <div *ngIf="hasServerError" class="page-wrapper" >
+            <nx-page-placeholder type="500">
+                <button class="btn btn-primary support-button">
+                    <a [href]="CONFIG.company.links.support" target="_blank" rel="noopener" translate>
+                        Go to Support Page
+                    </a>
+                </button>
+            </nx-page-placeholder>
+        </div>
+        <nx-footer *ngIf="hasServerError" center="true"></nx-footer>
 
         <nx-page-placeholder *ngIf="outdatedVersion"
                              type="NEW_VERSION"
