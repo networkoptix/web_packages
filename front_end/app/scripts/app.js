@@ -95,7 +95,7 @@ window.L = {};
                         if(window.location.pathname !== '/503.html') {
                             window.location.pathname = '/503.html';
                         }
-                    } else if (true || PRODUCTION && error.status >= 500) {
+                    } else if (PRODUCTION && error.status >= 500) {
                         if(window.location.pathname !== '/500') {
                             window.location.pathname = '/500';
                         }
