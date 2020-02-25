@@ -13,10 +13,10 @@ export class Nx500Component {
     CONFIG: any;
 
     constructor(configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
+                languageService: NxLanguageProviderService,
                 private pageService: NxPageService,
     ) {
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = languageService.getTranslations();
         this.pageService.setPageTitle(this.LANG.common.systemServerError);
         this.CONFIG = configService.getConfig();
     }
