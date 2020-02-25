@@ -78,6 +78,15 @@
 
     &.item-disabled {
         color : $light13;
+        svg .st0 {
+            fill: $light13;
+        }
+        .menu-level-3-icon {
+            background-position: -99px -135px;
+        }
+        .menu-level-3-additional {
+            color: $light10;
+        }
     }
 
     .ellipsis {

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
 import { NxConfigService }          from '../../../services/nx-config';
 
 /* Usage
@@ -9,7 +9,7 @@ import { NxConfigService }          from '../../../services/nx-config';
     templateUrl: 'level-3-item.component.html',
     styleUrls: ['level-3-item.component.scss']
 })
-export class NxLevel3ItemComponent implements OnInit {
+export class NxLevel3ItemComponent implements OnInit, OnChanges {
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
@@ -27,5 +27,11 @@ export class NxLevel3ItemComponent implements OnInit {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (!changes.item.isFirstChange() && changes.item.previousValue.isEnabled !== changes.item.currentValue.isEnabled) {
+            this.isEnabled = changes.item.currentValue.isEnabled;
+        }
     }
 }
