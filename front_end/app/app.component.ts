@@ -2,8 +2,7 @@ import { Location }                                               from '@angular
 import { Component, HostListener, Inject }                        from '@angular/core';
 import { CookieService }                                          from 'ngx-cookie-service';
 import { DeviceDetectorService }                                  from 'ngx-device-detector';
-import { Title }                                                  from '@angular/platform-browser';
-import { ActivatedRoute, ActivationStart, Event, Router } from '@angular/router';
+import { ActivationStart, Event, Router } from '@angular/router';
 import { filter, debounceTime, timeout, finalize } from 'rxjs/operators';
 import { WINDOW }                    from './src/services/window-provider';
 import { NxLanguageProviderService } from './src/services/nx-language-provider';
@@ -43,15 +42,12 @@ export class AppComponent {
     LANG: any;
     deviceInfo: any;
     allowedDevices: {};
-    hlsIsSupported: boolean;
     isInIframe: boolean;
 
-    eventSubscription: Subscription;
-
-    constructor(private cookieService: CookieService,
+    constructor(config: NxConfigService,
+                private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
-                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
                 private appStateService: NxAppStateService,
@@ -64,7 +60,7 @@ export class AppComponent {
                 @Inject(WINDOW) private window: Window,
     ) {
 
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = config.getConfig();
 
         // Allows 3 seconds for auth query param to be detected and set appstate.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
@@ -136,50 +132,43 @@ export class AppComponent {
                 option.permissions = option.permissions.split('|').sort().join('|');
             }
         });
+
         // @ts-ignore
-        this.CONFIG.companyLink = window.SETTINGS.companyLink;
+        const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = window.SETTINGS;
+        this.CONFIG.company ={
+            copyrightYear,
+            links: {
+                privacy: privacyLink,
+                support: supportLink,
+                website: companyLink,
+            },
+            name: companyName
+        };
         // @ts-ignore
-        this.CONFIG.companyName = window.SETTINGS.companyName;
+        const {cloudMerge, feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases} = window.SETTINGS;
+        this.CONFIG.capabilities = {
+            cloudMerge,
+            feedbackEnabled,
+            healthMonitor,
+            integrationStore,
+            publicDownloads,
+            publicReleases
+        };
         // @ts-ignore
-        this.CONFIG.copyrightYear = window.SETTINGS.copyrightYear;
+        const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
+        this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
+            searchTags,
+            sortSupportedDevicesByPopularity,
+            supportedHardwareTypes,
+            supportedResolutions,
+            vendorsShown: parseInt(vendorsShown)
+        });
         // @ts-ignore
-        this.CONFIG.feedbackEnabled = window.SETTINGS.feedbackEnabled;
-        // @ts-ignore
-        this.CONFIG.footerItems = window.SETTINGS.footerItems;
-        // @ts-ignore
-        this.CONFIG.integrationFilterItems = window.SETTINGS.integrationFilterItems;
-        // @ts-ignore
-        this.CONFIG.integrationFilterLimitation = window.SETTINGS.integrationFilterLimitation;
-        // @ts-ignore
-        this.CONFIG.integrationStoreEnabled = window.SETTINGS.integrationStoreEnabled;
-        // @ts-ignore
-        this.CONFIG.healthMonitoringEnabled = window.SETTINGS.healthMonitoringEnabled;
-        // @ts-ignore
-        this.CONFIG.publicDownloads = window.SETTINGS.publicDownloads;
-        // @ts-ignore
-        this.CONFIG.publicReleases = window.SETTINGS.publicReleases;
-        // @ts-ignore
-        this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
-        // @ts-ignore
-        this.CONFIG.supportLink = window.SETTINGS.supportLink;
-        // @ts-ignore
-        this.CONFIG.privacyLink = window.SETTINGS.privacyLink;
-        // @ts-ignore
-        this.CONFIG.cloudName = window.SETTINGS.cloudName;
-        // @ts-ignore
-        this.CONFIG.vmsName = window.SETTINGS.vmsName;
-        // @ts-ignore
-        this.CONFIG.ipvd.sortSupportedDevicesByPopularity = window.SETTINGS.sortSupportedDevicesByPopularity;
-        // @ts-ignore
-        this.CONFIG.ipvd.supportedResolutions = window.SETTINGS.supportedResolutions;
-        // @ts-ignore
-        this.CONFIG.ipvd.supportedHardwareTypes = window.SETTINGS.supportedHardwareTypes;
-        // @ts-ignore
-        this.CONFIG.ipvd.searchTags = window.SETTINGS.searchTags;
-        // @ts-ignore
-        this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
-        // @ts-ignore
-        this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
+        const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
+        this.CONFIG.integration.filter = {
+            items: integrationFilterItems,
+            limitation: integrationFilterLimitation
+        };
         // @ts-ignore
         if (window.SETTINGS.appTypesForPlatform) {
             // @ts-ignore
@@ -190,27 +179,28 @@ export class AppComponent {
             });
         }
         // @ts-ignore
-        this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
+        this.CONFIG.cloudName = window.SETTINGS.cloudName;
+        // @ts-ignore
+        this.CONFIG.footerItems = window.SETTINGS.footerItems;
+        // @ts-ignore
+        this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
         // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
-
         // @ts-ignore
-        if (window.SETTINGS.cloudMerge) {
-            // @ts-ignore
-            this.CONFIG.cloudMerge = window.SETTINGS.cloudMerge;
-        }
+        this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+        // @ts-ignore
+        this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
+        // @ts-ignore
+        this.CONFIG.vmsName = window.SETTINGS.vmsName;
         // @ts-ignore
         this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
         // @ts-ignore
         this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
-
         // detect preview mode
         if (window.location.href.indexOf('preview') >= 0) {
             this.CONFIG.previewPath = 'preview';
             this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
         }
-
-        this.CONFIG.showHeaderAndFooter = true; // Default state
 
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);

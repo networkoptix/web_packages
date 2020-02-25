@@ -9,16 +9,19 @@ import { NxConfigService } from '../../services/nx-config';
 })
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
+    CONFIG: any;
     src: any;
 
     constructor(private sanitizer: DomSanitizer,
-                private config: NxConfigService) {}
+                config: NxConfigService) {
+        this.CONFIG = config.getConfig();
+    }
 
     private FormatSrc(link) {
-        for (const videoType in this.config.config.embedInfo) {
-            const videoRegex = link.match(this.config.config.embedInfo[videoType].regex);
+        for (const videoType in this.CONFIG.integration.embedInfo) {
+            const videoRegex = link.match(this.CONFIG.integration.embedInfo[videoType].regex);
             if (videoRegex && videoRegex[1]) {
-                return `${this.config.config.embedInfo[videoType].link}${videoRegex[1]}`;
+                return `${this.CONFIG.integration.embedInfo[videoType].link}${videoRegex[1]}`;
             }
         }
         return undefined;

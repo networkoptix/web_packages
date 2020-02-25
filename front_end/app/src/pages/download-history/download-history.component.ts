@@ -49,18 +49,18 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
         this.tabsVisible = false;
         this.canViewRelease = false;
         this.noteTypes = [];
     }
 
-    constructor(@Inject(DOCUMENT) private document: any,
+    constructor(configService: NxConfigService,
+                @Inject(DOCUMENT) private document: any,
                 private cloudApiService: NxCloudApiService,
                 private accountService: NxAccountService,
-                private configService: NxConfigService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private pageService: NxPageService,
@@ -69,7 +69,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 private location: Location,
                 @Inject(PLATFORM_ID) private platformId: object,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
 
         if (isPlatformBrowser(this.platformId)) {
             this.routerSubscription = this.router.events
@@ -127,7 +127,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     });
 
                 }, () => {
-                    this.router.navigate([this.CONFIG.redirect404]);
+                    this.router.navigate([this.CONFIG.redirect.page404]);
                 }
             )
             .finally(() => {
@@ -152,7 +152,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 this.section = this.routeParam;
             }
 
-            if (!this.CONFIG.publicReleases) {
+            if (!this.CONFIG.cloudCapabilities.publicReleases) {
                 this.accountService
                     .requireLogin()
                     .then(account => {
@@ -161,7 +161,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.router.navigate([this.CONFIG.redirect404]);
+                            this.router.navigate([this.CONFIG.redirect.page404]);
                             return;
                         }
                     });

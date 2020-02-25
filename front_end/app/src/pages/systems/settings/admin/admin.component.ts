@@ -85,11 +85,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
 
-        this.debugMode = this.CONFIG.allowDebugMode;
-        this.betaMode = this.CONFIG.allowBetaMode;
+        this.debugMode = this.CONFIG.clientMode.debug;
+        this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.setSection('admin');
     }
 
@@ -104,12 +104,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
     }
 
-    constructor(@Inject(ViewContainerRef) viewContainerRef,
+    constructor(configService: NxConfigService,
+                @Inject(ViewContainerRef) viewContainerRef,
                 private accountService: NxAccountService,
                 private applyService: NxApplyService,
                 private processService: NxProcessService,
                 private route: ActivatedRoute,
-                private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
@@ -119,7 +119,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 private router: Router,
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
 
@@ -251,7 +251,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             this.systemSubscription.unsubscribe();
                         }
                         this.systemSubscription = system.infoSubject
-                            .pipe(throttleTime(this.CONFIG.systemThrottleTime))
+                            .pipe(throttleTime(this.CONFIG.system.throttleTime))
                             .subscribe(() => {
                                 this.settingsService.footerSubject.next(true);
                                 if (!this.applyService.locked && this.system.permissions.isAdmin) {
@@ -350,7 +350,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .forceUpdateSystems(this.accountService.getEmail())
             .subscribe(() => {
                 setTimeout(() => {
-                    this.router.navigate([this.CONFIG.redirectAuthorised]);
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 });
             });
     }

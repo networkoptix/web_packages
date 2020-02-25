@@ -32,17 +32,17 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     private menuDetailsSubscription: Subscription;
     private routeSubscription: Subscription;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
-    constructor(public sanitizer: DomSanitizer,
+    constructor(configService: NxConfigService,
+                public sanitizer: DomSanitizer,
                 private router: Router,
                 private route: ActivatedRoute,
                 private integrationService: IntegrationService,
                 private ribbonService: NxRibbonService,
-                private configService: NxConfigService,
                 // TODO: Use dialog service when it is not being downgraded
                 private dialogs: NxDialogsService,
                 private language: NxLanguageProviderService,
@@ -50,7 +50,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
@@ -112,7 +112,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                         this.ribbonService.show(
                                                 this.LANG.ribbon.integration.preview,
                                                 this.LANG.ribbon.integration.backToEditText,
-                                                this.CONFIG.links.admin.asset.replace('%ID%', this.plugin.id)
+                                                this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         );
                                     }
 
@@ -120,7 +120,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 }
                             }).add(() => {
                                 if (!this.plugin) {
-                                    this.router.navigate([this.CONFIG.redirect404]);
+                                    this.router.navigate([this.CONFIG.redirect.page404]);
                                 }
                             });
                     }
@@ -145,7 +145,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             asset: this.plugin.information.name,
         };
         this.dialogs
-            .message(this.accountService, this.CONFIG.messageType.integration, data)
+            .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)
             .then(() => {});
     }
 }

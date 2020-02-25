@@ -41,29 +41,29 @@ export class LoginModalContent implements OnInit {
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
-    private setupDefaults() {
+    private setupDefaults(configService) {
         this.auth = { email: this.localStorage.get('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
-    constructor(private processService: NxProcessService,
+    constructor(configService: NxConfigService,
+                location: Location,
+                private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private localStorage: LocalStorageService,
                 private activeModal: NgbActiveModal,
-                private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
                 private router: Router,
-                location: Location,
                 @Inject(DOCUMENT) private document: any,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
 
         this.location = location;
     }
@@ -161,7 +161,7 @@ export class LoginModalContent implements OnInit {
             if (this.keepPage) {
                 if (this.router.url === '/') {
                     this.router
-                        .navigate([this.CONFIG.redirectAuthorised])
+                        .navigate([this.CONFIG.redirect.authorised])
                         .then(() => {
                             // ensure language reload as translations are loaded on page load
                             window.location.reload();
@@ -182,7 +182,7 @@ export class LoginModalContent implements OnInit {
             } else {
                 setTimeout(() => {
                     this.router
-                       .navigate([this.CONFIG.redirectAuthorised])
+                       .navigate([this.CONFIG.redirect.authorised])
                        .then(() => {
                            // ensure language reload as translations are loaded on page load
                            window.location.reload();
@@ -201,7 +201,7 @@ export class LoginModalContent implements OnInit {
         // prevent unnecessary reload
         this.activeModal.close('canceled');
         if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
-            return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+            return this.router.navigate([this.CONFIG.redirect.unauthorised]);
         }
     }
 }

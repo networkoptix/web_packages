@@ -13,8 +13,8 @@
                             [ngClass]="{
                                 tag: true,
                                 offline: serverOffline,
-                                online: selectedServer.internalStatus === CONFIG.serverStatus.restarting
-                                    || selectedServer.internalStatus === CONFIG.serverStatus.reseting,
+                                online: selectedServer.internalStatus === CONFIG.server.status.restarting
+                                    || selectedServer.internalStatus === CONFIG.server.status.reseting,
                                 checking: checking
                             }"
                         >

@@ -114,8 +114,8 @@ export class MergeModalContent {
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
                 role: this.primarySystem.id === this.system.id ?
-                    this.CONFIG.systemStatuses.master :
-                    this.CONFIG.systemStatuses.slave
+                    this.CONFIG.system.status.master :
+                    this.CONFIG.system.status.slave
             });
         }, (error) => {
             const errorCode = error.resultCode || error.data && error.data.resultCode;
@@ -180,7 +180,7 @@ export class MergeModalContent {
             }
         })
         .then((res) => {
-            if (!res.system && this.systemMergeable === '' || this.CONFIG.allowDebugMode) {
+            if (!res.system && this.systemMergeable === '' || this.CONFIG.clientMode.debug) {
                 return this.updateState();
             }
         }, (error) => {

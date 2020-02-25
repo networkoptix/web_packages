@@ -79,7 +79,7 @@
                             [(ngModel)]="email.value"
                             (change)="updateForm($event)"
                             name="email" id="email" #emailInput="ngModel"
-                            pattern="{{ CONFIG.emailRegex }}"
+                            pattern="{{ CONFIG.credentialsValidation.emailRegex }}"
                             [disabled]="!selectedUser.canBeEdited"
                             maxlength="255">
                         <span class="input-error" *ngIf="emailInput.invalid && emailInput.touched"

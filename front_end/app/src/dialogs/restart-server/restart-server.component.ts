@@ -22,13 +22,13 @@ export class RestartServerModalContent {
     CONFIG: any;
     restartServer: any;
 
-    constructor(private activeModal: NgbActiveModal,
+    constructor(configService: NxConfigService,
+                private activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
-                private toastService: NxToastService,
-                private configService: NxConfigService,
+                private toastService: NxToastService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
@@ -55,7 +55,7 @@ export class RestartServerModalContent {
                     });
             }, { successMessage: this.LANG.servers.beginRestart })
             .then(() => {
-                this.close(this.CONFIG.serverStatus.restarting);
+                this.close(this.CONFIG.server.status.restarting);
                 const serverSubscription = this.system.getModuleInfo(this.serverId)
                     .pipe(
                         map((res: any) => {

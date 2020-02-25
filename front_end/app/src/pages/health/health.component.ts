@@ -52,9 +52,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     private resizeSubscription: Subscription;
 
-    constructor(private accountService: NxAccountService,
+    constructor(configService: NxConfigService,
+                private accountService: NxAccountService,
                 private appStateService: NxAppStateService,
-                private configService: NxConfigService,
                 private systemService: NxSystemService,
                 private serverApi: NxSystemAPIService,
                 private route: ActivatedRoute,
@@ -72,7 +72,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 @Inject(DOCUMENT) private document: any
     ) {
         this.LANG = this.languageService.getTranslations();
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {
@@ -91,7 +91,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.importedData = false;
         this.menu = {
             selectedSection   : '',         // updated by selectedSectionSubject
-            base              : '', // `${this.CONFIG.systemMenu.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.systemHealthMenu.baseUrl}`,
+            base              : '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
             level1            : [
                 {
                     id: 'alerts',
@@ -127,7 +127,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 if (typeof account !== 'undefined') {
                     this.account = account;
                     this.system = this.systemService.createSystem(account.email, systemId);
-                    this.menu.base = `${this.CONFIG.systemMenu.baseUrl}${this.system.id}${this.CONFIG.systemHealthMenu.baseUrl}`;
+                    this.menu.base = `${this.CONFIG.menus.systemSettings.baseUrl}${this.system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;
                     infoPromise = this.system.getInfo();
                 } else {
                     // Create a mock system. All we need is the mediaserver.

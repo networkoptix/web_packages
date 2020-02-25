@@ -34,8 +34,8 @@ export class NxRestoreComponent implements OnInit {
     context: any;
     ready: boolean;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.restorePassword);
 
@@ -44,7 +44,7 @@ export class NxRestoreComponent implements OnInit {
         };
     }
 
-    constructor(private configService: NxConfigService,
+    constructor(configService: NxConfigService,
                 private cloudApiService: NxCloudApiService,
                 private accountService: NxAccountService,
                 private processService: NxProcessService,
@@ -56,7 +56,7 @@ export class NxRestoreComponent implements OnInit {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
@@ -170,7 +170,7 @@ export class NxRestoreComponent implements OnInit {
 
     loginRedirect () {
         const url = this.router.url;
-        const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+        const redirect = this.CONFIG.redirect.paths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }

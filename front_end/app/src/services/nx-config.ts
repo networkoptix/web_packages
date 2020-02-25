@@ -16,175 +16,78 @@ export class NxConfigService {
         // ***************************************************************
 
         this.config = {
-            gatewayUrl    : '/gateway',
-            apiBase       : '/api',
-            realm         : 'VMS',
-            cacamerasUrl  : 'https://cameras.networkoptix.com/api/v1/cacameras/',
-
-            cacheTimeout     : 20 * 1000, // Cache lives for 30 seconds
-            updateInterval   : 30 * 1000, // Update content on pages every 30 seconds
-            openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
-            openClientError: 'notVisited',
-
-            openMobileClientTimeout  : 300, // 300ms for mobile browsers
-            timelineMouseEventTimeout: 300, // milliseconds
-
-            alertTimeout       : 3 * 1000,  // Alerts are shown for 3 seconds
-            alertsMaxCount     : 5,
-            minSystemsToSearch : 9, // We need at least 9 system to enable search
-            maxSystemsForHeader: 6, // Dropdown at the top is limited in terms of number of cameras to display
-            maxServers         : 100, // The maximum amount of server that can be in a system
-
-            redirectAuthorised  : '/systems', // Page for redirecting all authorised users
-            redirectUnauthorised: '/', // Page for redirecting all unauthorised users by default
-            redirect404: '/404',
-            redirectPaths: ['/register', '/restore_password', '/activate', '/404'],
-
-            links: {
-                admin: {
-                    asset: '/admin/cms/asset/%ID%/pages/'
+            alertTimeout: 3 * 1000,  // Alerts are shown for 3 seconds
+            animations: {
+                carouselImage: {
+                    enter: '0.25s ease-in',
+                    leave: '0.25s ease-out'
                 }
             },
-
-            layout: {
-                table     : {
-                    rows: 10
+            apiBase: '/api',
+            clientMode: {
+                beta: false,
+                debug: false
+            },
+            credentialsValidation: {
+                emailRegex: '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+                passwordRequirements: {
+                    maxLength: 255,
+                    minClassesCount: 2,
+                    minLength: 8,
+                    requiredRegex: '^[\x21-\x7E]$|^[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$',
+                    strongClassesCount: 3
                 },
-                tableLarge: {
-                    rows: 20
+            },
+            dialogs: {
+                message: {
+                    subjects: {
+                        integration: ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
+                        ipvd_feedback_page: ['ipvd_feedback_page'],
+                        ipvd_feedback_device: ['ipvd_feedback_device']
+                    },
+                    type: {
+                        ipvd_page: 'ipvd_feedback_page',
+                        ipvd_device: 'ipvd_feedback_device',
+                        integration: 'integration',
+                        unknown: 'unknown'
+                    },
                 }
             },
-
-            systemStatuses                : {
-                onlineStatus: 'online',
-                sortOrder   : [
-                    'online',
-                    'offline',
-                    'activated',
-                    'unavailable',
-                    'notActivated'
-                ],
-                default     : {
-                    style: 'default'
-                },
-                notActivated: {
-                    style: 'danger'
-                },
-                activated   : {
-                    style: 'info'
-                },
-                online      : {
-                    style: 'success'
-                },
-                offline     : {
-                    style: 'default'
-                },
-                unavailable : {
-                    style: 'default'
-                },
-                master      : 'master',
-                slave       : 'slave'
-            },
-            accessRoles                   : {
-                adminAccess              : ['cloudadmin', 'owner', 'administrator'],
-                unshare                  : 'none',
-                default                  : 'Viewer',
-                disabled                 : 'disabled',
-                custom                   : 'custom',
-                owner                    : 'Owner',
-                editUserPermissionFlag   : 'GlobalAdminPermission',
-                globalAdminPermissionFlag: 'GlobalAdminPermission',
-                customPermission         : {
-                    name       : 'Custom',
-                    permissions: 'NoPermission'
-                },
-                editUserAccessRoleFlag   : 'Admin',
-                globalAdminAccessRoleFlag: 'Admin',
-                predefinedRoles          : [
-                    {
-                        isOwner    : true,
-                        name       : 'Owner',
-                        permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
-                    },
-                    {
-                        name       : 'Administrator',
-                        permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
-                    },
-                    {
-                        name       : 'Advanced Viewer',
-                        permissions: 'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
-                    },
-                    {
-                        name       : 'Viewer',
-                        permissions: 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
-                    },
-                    {
-                        name       : 'Live Viewer',
-                        permissions: 'GlobalAccessAllMediaPermission'
-                    },
-                    {
-                        name       : 'Custom',
-                        permissions: 'NoPermission'
-                    }
-                ],
-                order                    : [
-                    'Live Viewer',
-                    'liveViewer',
-                    'Viewer',
-                    'viewer',
-                    'Advanced Viewer',
-                    'advancedViewer',
-                    'Cloud Administrator',
-                    'cloudAdmin',
-                    'Administrator',
-                    'admin',
-                    'Owner',
-                    'owner'
-                ]
-            },
-            emailRegex                    : '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
-            passwordRequirements          : {
-                minLength         : 8,
-                maxLength         : 255,
-                requiredRegex     : '^[\x21-\x7E]$|^[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$',
-                minClassesCount   : 2,
-                strongClassesCount: 3
-            },
-            downloads                     : {
+            downloads: {
                 mobile: [
                     {
                         name: 'ios',
-                        os  : 'iOS'
+                        os: 'iOS'
                     },
                     {
                         name: 'android',
-                        os  : 'Android'
+                        os: 'Android'
                     }
                 ],
                 groups: {
                     windows: {
-                        name    : 'windows',
-                        os      : 'windows',
+                        name: 'windows',
+                        os: 'windows',
                         appTypes: ['bundle', 'client', 'server'],
                     },
-                    linux  : {
-                        name    : 'linux',
-                        os      : 'linux',
+                    linux: {
+                        name: 'linux',
+                        os: 'linux',
                         appTypes: ['bundle', 'client', 'server']
                     },
-                    macos  : {
-                        name    : 'macos',
-                        os      : 'MacOS',
+                    macos: {
+                        name: 'macos',
+                        os: 'MacOS',
                         appTypes: ['client']
                     },
-                    arm    : {
-                        name    : 'arm',
-                        os      : '',
+                    arm: {
+                        name: 'arm',
+                        os: '',
                         appTypes: ['client', 'server']
                     },
-                    sdk    : {
-                        name    : 'sdk',
-                        os      : '',
+                    sdk: {
+                        name: 'sdk',
+                        os: '',
                         appTypes: ['universal']
                     }
                 },
@@ -195,148 +98,6 @@ export class NxConfigService {
                     windows: 'Windows',
                     arm: 'ARM',
                     skd: 'SDK'
-                }
-            },
-            icons                         : {
-                default  : '/static/images/integration/integration_tile_preview_plugin.svg',
-                platforms: [
-                    { name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg' },
-                    { name: 'android', src: '/static/images/integration/integration_tile_os_android.svg' },
-                    { name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg' },
-                    { name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg' },
-                    { name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg' }
-                ],
-                dir: '/static/images/icons/standard/',
-                dirNonStandard: '/static/images/icons/',
-                dirPagePlaceholder: '/static/images/placeholders/page/',
-                dirSectionPlaceholder: '/static/images/placeholders/section/',
-            },
-            webclient                     : {
-                useServerTime              : true,
-                useSystemTime              : true,
-                disableVolume              : true,
-                reloadInterval             : 30 * 1000,
-                leftPanelPreviewHeight     : 128,
-                resetDisplayedTextTimer    : 3 * 1000,
-                hlsLoadingTimeout          : 90 * 1000,
-
-                // One minute timeout for manifest:
-                // * 30 seconds for gateway to open connection
-                // * 30 seconds for server to init camera
-                // * 20 seconds for chunks
-                // * 10 seconds extra
-                updateArchiveStateTimeout  : 60 * 1000,
-                updateArchiveRecordsTimeout: 2 * 1000,
-                flashChromelessPath        : 'components/flashlsChromeless.swf',
-                flashChromelessDebugPath   : 'components/flashlsChromeless_debug.swf',
-                staticResources            : 'static/web_common/',
-                maxCrashCount              : 2,
-                nativeTimeout              : 60 * 1000,
-                playerReadyTimeout         : 100,
-                endOfArchiveTime           : 30 * 1000,
-                chunksToCheckFatal         : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
-                skipFramesRenderingTimeline: true
-            },
-            messageSubjects                : {
-                integration         : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
-                ipvd_feedback_page  : ['ipvd_feedback_page'],
-                ipvd_feedback_device: ['ipvd_feedback_device']
-            },
-            messageType                   : {
-                ipvd_page  : 'ipvd_feedback_page',
-                ipvd_device: 'ipvd_feedback_device',
-                integration: 'integration',
-                unknown    : 'unknown'
-            },
-            permissions                   : {
-                canViewRelease: 'can_view_release'
-            },
-            globalEditServersPermissions  : 'GlobalAdminPermission',
-            globalViewArchivePermission   : 'GlobalViewArchivePermission',
-            globalAccessAllMediaPermission: 'GlobalAccessAllMediaPermission',
-            allowBetaMode                 : false,
-            allowDebugMode                : false,
-            debug                         : {
-                chunksOnTimeline: false // timeline.js - draw debug events
-            },
-            responseOk                    : 'ok',
-            embedInfo                     : {
-                vimeo  : {
-                    link : 'https://player.vimeo.com/video/',
-                    regex: '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
-                },
-                youtube: {
-                    link : 'https://www.youtube.com/embed/',
-                    regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
-                }
-            },
-            defaultPlatformNames: {
-                'arm-64-file'             : 'ARM 64bit',
-                'linux-x64-file'          : 'Linux x64',
-                'macos-file'              : 'Mac OS',
-                'arm-32-file'             : 'ARM 32bit',
-                'windows-x64-file'        : 'Windows x64',
-                'downloadableInstructions': 'Instructions / Manual'
-            },
-            animation                     : {
-                carouselImageEnter: '0.25s ease-in',
-                carouselImageLeave: '0.25s ease-out'
-            },
-            ipvd: {
-                pagerMaxSizeSmall               : 3,
-                pagerMaxSize                    : 4,
-                firmwaresToShow                 : 4,
-                analyticsToShow                 : 4,
-                sortSupportedDevicesByPopularity: '',
-                supportedResolutions            : '',
-                supportedHardwareTypes          : '',
-                searchTags                      : '',
-                vendorsShown                    : '',
-            },
-            search: {
-                maxLength   : 200,
-                debounceTime: 500 // ms
-            },
-            systemHealthMenu: {
-                baseUrl: '/health/'
-            },
-            systemMenu  : {
-                baseUrl: '/systems/',
-                admin  : {
-                    id  : 'admin',
-                    icon: 'systems',
-                    path: ''
-                },
-                users: {
-                    id  : 'users',
-                    icon: 'users',
-                    path: 'users'
-                },
-                servers: {
-                    id  : 'servers',
-                    icon: 'servers',
-                    path: 'servers'
-                },
-                buttons: {
-                    id  : 'buttons'
-                }
-            },
-            accountMenu: {
-                baseUrl: '/account',
-                icon : 'glyphicon-user',
-                settings  : {
-                    id  : 'settings',
-                    path: ''
-                },
-                password: {
-                    id: 'password',
-                    path: '/password'
-                },
-            },
-            meta: {
-                viewport: {
-                    default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
-                    desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
                 }
             },
             healthMonitoring: {
@@ -402,39 +163,155 @@ export class NxConfigService {
                     'unset': 'no-max-width'
                 }
             },
-            myIntegrationTagId            : 'mine',
-            companyLink                   : '',
-            companyName                   : '',
-            copyrightYear                 : '',
-            feedbackEnabled               : '',
-            footerItems                   : '',
-            integrationFilterItems        : '',
-            integrationFilterLimitation   : '',
-            integrationStoreEnabled       : '',
-            healthMonitoringEnabled       : '',
-            publicDownloads               : '',
-            publicReleases                : '',
-            trafficRelayHost              : '',
-            supportLink                   : '',
-            privacyLink                   : '',
-            cloudName                     : '',
-            vmsName                       : '',
-            pushConfig                    : '',
-            googleTagManagerId            : '',
-            systemThrottleTime            : 5000,
-            servers : {
+            icons: {
+                default: '/static/images/integration/integration_tile_preview_plugin.svg',
+                platforms: [
+                    {name: 'mac', src: '/static/images/integration/integration_tile_os_mac.svg'},
+                    {name: 'android', src: '/static/images/integration/integration_tile_os_android.svg'},
+                    {name: 'arm', src: '/static/images/integration/integration_tile_os_arm.svg'},
+                    {name: 'linux', src: '/static/images/integration/integration_tile_os_linux.svg'},
+                    {name: 'windows', src: '/static/images/integration/integration_tile_os_windows.svg'}
+                ],
+                dir: '/static/images/icons/standard/',
+                dirNonStandard: '/static/images/icons/',
+                dirPagePlaceholder: '/static/images/placeholders/page/',
+                dirSectionPlaceholder: '/static/images/placeholders/section/',
+            },
+            integration: {
+                adminLink: '/admin/cms/asset/%ID%/pages/',
+                defaultPlatformNames: {
+                    'arm-64-file': 'ARM 64bit',
+                    'linux-x64-file': 'Linux x64',
+                    'macos-file': 'Mac OS',
+                    'arm-32-file': 'ARM 32bit',
+                    'windows-x64-file': 'Windows x64',
+                    'downloadableInstructions': 'Instructions / Manual'
+                },
+                embedInfo: {
+                    vimeo: {
+                        link: 'https://player.vimeo.com/video/',
+                        regex: '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
+                    },
+                    youtube: {
+                        link: 'https://www.youtube.com/embed/',
+                        regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
+                    }
+                },
+                filter: {
+                    items: '',
+                    limitation: ''
+                },
+                myTagId: 'mine',
+            },
+            ipvd: {
+                pagerMaxSizeSmall: 3,
+                pagerMaxSize: 4,
+                firmwaresToShow: 4,
+                analyticsToShow: 4,
+                sortSupportedDevicesByPopularity: '',
+                supportedResolutions: '',
+                supportedHardwareTypes: '',
+                searchTags: '',
+                vendorsShown: '',
+            },
+            layout: {
+                table: {
+                    rows: 10
+                },
+                tableLarge: {
+                    rows: 20
+                }
+            },
+            maxServers: 100, // The maximum amount of server that can be in a system
+            meta: {
+                viewport: {
+                    default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+                    desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
+                }
+            },
+            menus: {
+                account: {
+                    baseUrl: '/account',
+                    icon: 'glyphicon-user',
+                    settings: {
+                        id: 'settings',
+                        path: ''
+                    },
+                    password: {
+                        id: 'password',
+                        path: '/password'
+                    },
+                },
+                systemHealth: {
+                    baseUrl: '/health/'
+                },
+                systemSettings: {
+                    baseUrl: '/systems/',
+                    admin: {
+                        id: 'admin',
+                        icon: 'systems',
+                        path: ''
+                    },
+                    users: {
+                        id: 'users',
+                        icon: 'users',
+                        path: 'users'
+                    },
+                    servers: {
+                        id: 'servers',
+                        icon: 'servers',
+                        path: 'servers'
+                    },
+                    buttons: {
+                        id: 'buttons'
+                    }
+                },
+            },
+            permissions: {
+                canViewRelease: 'can_view_release'
+            },
+            redirect: {
+                authorised: '/systems', // Page for redirecting all authorised users
+                unauthorised: '/', // Page for redirecting all unauthorised users by default
+                page404: '/404',
+                paths: ['/register', '/restore_password', '/activate', '/404']
+            },
+            showHeaderAndFooter: true,
+            search: {
+                debounceTime: 500, // ms
+                maxLength: 200,
+                minSystems: 9, // We need at least 9 system to enable search
+            },
+            servers: {
                 port: {
                     max: 65535,
                     min: 1,
                     restrictedMax: 1024,
                 },
+                status: {
+                    online: 'online',
+                    offline: 'offline',
+                    restarting: 'restarting',
+                    reseting: 'reseting',
+                    checking: 'checking',
+                },
             },
-            serverStatus: {
-                online: 'online',
-                offline: 'offline',
-                restarting: 'restarting',
-                reseting: 'reseting',
-                checking: 'checking',
+            system: {
+                status: {
+                    online: 'online',
+                    default: {
+                        style: 'default'
+                    },
+                    offline: {
+                        style: 'default'
+                    },
+                    unavailable: {
+                        style: 'default'
+                    },
+                    master: 'master',
+                    slave: 'slave'
+                },
+                throttleTime: 5000
             },
             toast: {
                 success: 'success',
@@ -442,6 +319,126 @@ export class NxConfigService {
                 danger: 'danger',
                 info: 'info',
             },
+
+            // Dynamic from cloud_portal
+            cloudCapabilities: {
+                canMerge: '',
+                feedbackEnabled: '',
+                healthMonitor: '',
+                integrationStore: '',
+                publicDownloads: '',
+                publicReleases: ''
+            },
+            cloudName                     : '',
+            company: {
+                copyrightYear: '',
+                links: {
+                    privacy: '',
+                    support: '',
+                    website: ''
+                },
+                name: '',
+            },
+            footerItems                   : '',
+            googleTagManagerId            : '',
+            pushConfig                    : '',
+            trafficRelayHost              : '',
+            vmsName                       : '',
+            // End of dynamic config
+
+            // Legacy webadmin config
+            accessRoles: {
+                adminAccess: ['cloudadmin', 'owner', 'administrator'],
+                unshare: 'none',
+                default: 'Viewer',
+                custom: 'custom',
+                editUserPermissionFlag: 'GlobalAdminPermission',
+                globalAdminPermissionFlag: 'GlobalAdminPermission',
+                customPermission: {
+                    name: 'Custom',
+                    permissions: 'NoPermission'
+                },
+                predefinedRoles: [
+                    {
+                        isOwner    : true,
+                        name       : 'Owner',
+                        permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    },
+                    {
+                        name       : 'Administrator',
+                        permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    },
+                    {
+                        name       : 'Advanced Viewer',
+                        permissions: 'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    },
+                    {
+                        name       : 'Viewer',
+                        permissions: 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
+                    },
+                    {
+                        name       : 'Live Viewer',
+                        permissions: 'GlobalAccessAllMediaPermission'
+                    },
+                    {
+                        name       : 'Custom',
+                        permissions: 'NoPermission'
+                    }
+                ],
+                order: [
+                    'Live Viewer',
+                    'liveViewer',
+                    'Viewer',
+                    'viewer',
+                    'Advanced Viewer',
+                    'advancedViewer',
+                    'Cloud Administrator',
+                    'cloudAdmin',
+                    'Administrator',
+                    'admin',
+                    'Owner',
+                    'owner'
+                ]
+            },
+            allowBetaMode: false,
+            allowDebugMode: false,
+            debug: {
+                chunksOnTimeline: false // timeline.js - draw debug events
+            },
+            gatewayUrl: '/gateway',
+            globalViewArchivePermission: 'GlobalViewArchivePermission',
+            openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
+            openClientError: 'notVisited',
+            openMobileClientTimeout: 300, // 300ms for mobile browsers
+            responseOk: 'ok',
+            timelineMouseEventTimeout: 300, // milliseconds
+            updateInterval: 30 * 1000, // Update content on pages every 30 seconds
+            webclient: {
+                chunksToCheckFatal: 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
+                disableVolume: true,
+                endOfArchiveTime: 30 * 1000,
+                flashChromelessDebugPath: 'components/flashlsChromeless_debug.swf',
+                flashChromelessPath: 'components/flashlsChromeless.swf',
+                hlsLoadingTimeout: 90 * 1000,
+                leftPanelPreviewHeight: 128,
+                maxCrashCount: 2,
+                nativeTimeout: 60 * 1000,
+                playerReadyTimeout: 100,
+                reloadInterval: 30 * 1000,
+                resetDisplayedTextTimer: 3 * 1000,
+                staticResources: 'static/web_common/',
+                skipFramesRenderingTimeline: true,
+                // One minute timeout for manifest:
+                // * 30 seconds for gateway to open connection
+                // * 30 seconds for server to init camera
+                // * 20 seconds for chunks
+                // * 10 seconds extra
+                updateArchiveStateTimeout: 60 * 1000,
+                updateArchiveRecordsTimeout: 2 * 1000,
+                useServerTime: true,
+                useSystemTime: true,
+            }
+            // End
         };
     }
 

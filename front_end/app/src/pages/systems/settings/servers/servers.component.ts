@@ -49,8 +49,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     portChangeDisabled: boolean;
     serverOffline: boolean;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
         this.checking = false;
         this.serverOffline = false;
@@ -59,15 +59,15 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
-        // this.debugMode = this.CONFIG.allowDebugMode;
+        // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
     }
 
-    constructor(@Inject(ViewContainerRef) viewContainerRef,
+    constructor(configService: NxConfigService,
+                @Inject(ViewContainerRef) viewContainerRef,
                 private applyService: NxApplyService,
                 private processService: NxProcessService,
                 private route: ActivatedRoute,
-                private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
@@ -75,7 +75,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 private uriService: NxUriService,
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
@@ -190,21 +190,21 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     setStatus(status) {
-        this.selectedServer.internalStatus = status ? this.CONFIG.serverStatus[status] : '';
+        this.selectedServer.internalStatus = status ? this.CONFIG.server.status[status] : '';
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
-        this.serverOffline = [this.CONFIG.serverStatus.offline, this.CONFIG.serverStatus.checking]
+        this.serverOffline = [this.CONFIG.server.status.offline, this.CONFIG.server.status.checking]
             .includes(this.selectedServer.internalStatus);
     }
 
     checkIfOnline(serverId) {
         return this.system.getModuleInfo(serverId).toPromise()
             .then(() => this.setStatus(''))
-            .catch(() => this.setStatus(this.CONFIG.serverStatus.offline));
+            .catch(() => this.setStatus(this.CONFIG.server.status.offline));
     }
 
     checkStatus() {
         this.checking = true;
-        this.setStatus(this.CONFIG.serverStatus.checking);
+        this.setStatus(this.CONFIG.server.status.checking);
         const now = new Date().getTime();
         this.system.getModuleInfo(this.selectedServer.id)
             .pipe(
@@ -212,7 +212,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
             )
             .subscribe(res => {
-                this.setStatus(res === 'error'? this.CONFIG.serverStatus.offline : '');
+                this.setStatus(res === 'error'? this.CONFIG.server.status.offline : '');
                 this.checking = false;
             });
     }

@@ -1,9 +1,8 @@
 import {
-    Component, ElementRef, Input, OnChanges,
+    Component, Input, OnChanges,
     OnInit, SimpleChanges, ViewEncapsulation
 } from '@angular/core';
 import { NxConfigService } from '../../services/nx-config';
-import { NONE_TYPE }       from '@angular/compiler/src/output/output_ast';
 
 /* Usage
 <nx-menu>
@@ -16,7 +15,7 @@ import { NONE_TYPE }       from '@angular/compiler/src/output/output_ast';
     styleUrls: ['menu.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class NxMenuComponent implements OnInit, OnChanges {
+export class NxMenuComponent implements OnChanges {
     @Input() content: any;
 
     systemId: any;
@@ -27,11 +26,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
     CONFIG: any;
 
 
-    constructor(private configService: NxConfigService) {
-    }
-
-    ngOnInit() {
-        this.CONFIG = this.configService.getConfig();
+    constructor(configService: NxConfigService) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -53,7 +49,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             levelItems = item.level2.filter((subSection) => {
-                if (!this.CONFIG || subSection.id !== this.CONFIG.systemMenu.buttons.id) {
+                if (!this.CONFIG || subSection.id !== this.CONFIG.menus.systemSettings.buttons.id) {
                     return true;
                 }
             });
@@ -69,7 +65,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             buttons = item.level2.filter((subSection) => {
-                if (this.CONFIG && subSection.id === this.CONFIG.systemMenu.buttons.id) {
+                if (this.CONFIG && subSection.id === this.CONFIG.menus.systemSettings.buttons.id) {
                     return true;
                 }
             })[0] || [] ;

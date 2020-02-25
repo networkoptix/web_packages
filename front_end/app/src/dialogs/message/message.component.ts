@@ -3,7 +3,7 @@ import {
     Renderer2, ViewChild
 } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { EmailValidator, NgForm }    from '@angular/forms';
+import { NgForm }    from '@angular/forms';
 import { NxConfigService }           from '../../services/nx-config';
 import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -52,10 +52,10 @@ export class MessageModalContent implements OnInit {
 
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
-    constructor(private activeModal: NgbActiveModal,
+    constructor(configService: NxConfigService,
+                private activeModal: NgbActiveModal,
                 private renderer: Renderer2,
                 private language: NxLanguageProviderService,
-                private configService: NxConfigService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 @Inject(WINDOW) private window: Window,
@@ -88,17 +88,17 @@ export class MessageModalContent implements OnInit {
 
     initForm() {
         this.placeholder = '';
-        if (this.messageType === this.config.messageType.ipvd_page) {
+        if (this.messageType === this.config.dialogs.message.type.ipvd_page) {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
-        if (this.messageType !== this.config.messageType.integration) {
+        if (this.messageType !== this.config.dialogs.message.type.integration) {
             this.title = title.replace('{{asset}}', this.data.asset);
         } else {
             this.title = title.replace('{{companyName}}', this.data.to);
         }
-        this.subjects = this.config.messageSubjects[this.messageType].map((subject) => {
+        this.subjects = this.config.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
                 value: subject,
                 name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)

@@ -27,19 +27,17 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     private footerSubscription: Subscription;
 
     constructor(private sanitizer: DomSanitizer,
-                private _config: NxConfigService,
                 private appState: NxAppStateService,
-                private route: ActivatedRoute,
-                private systemSettingsService: NxSettingsService) {
-        this.config = this._config.getConfig();
+                config: NxConfigService) {
+        this.config = config.getConfig();
     }
 
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.companyLink = this.config.companyLink;
-        this.companyName = this.config.companyName;
-        this.copyrightYear = this.config.copyrightYear;
+        this.companyLink = this.config.company.link;
+        this.companyName = this.config.company.name;
+        this.copyrightYear = this.config.company.copyrightYear;
         this.footerItems = this.config.footerItems;
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {

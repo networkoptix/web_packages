@@ -36,12 +36,12 @@ export class NxContentComponent implements OnInit {
         this.staticHTML = '';
     }
 
-    constructor(@Inject(WINDOW) private window: Window,
+    constructor(config: NxConfigService,
+                @Inject(WINDOW) private window: Window,
                 private route: ActivatedRoute,
                 private http: HttpClient,
                 private router: Router,
                 private language: NxLanguageProviderService,
-                private config: NxConfigService,
                 private pageService: NxPageService,
                 private _compiler: Compiler,
                 private sessionStorage: SessionStorageService,
@@ -125,7 +125,7 @@ export class NxContentComponent implements OnInit {
                 add to staticContent so we don't do an API call each time we switch pages */
             this.staticContent[this.articleParam] = true;
             this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-        }).catch(() => this.router.navigate([this.CONFIG.redirect404]));
+        }).catch(() => this.router.navigate([this.CONFIG.redirect.page404]));
     }
 }
 

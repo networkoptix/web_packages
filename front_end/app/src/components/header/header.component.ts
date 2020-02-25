@@ -1,6 +1,5 @@
 import {
-    Component, Inject, OnDestroy, OnInit,
-    Renderer2
+    Component, OnDestroy, OnInit, Renderer2
 } from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd, Event,
@@ -12,7 +11,6 @@ import { NxAccountService }       from '../../services/account.service';
 import { NxDialogsService }       from '../../dialogs/dialogs.service';
 import { NxSessionService }       from '../../services/session.service';
 import { NxSystemsService }       from '../../services/systems.service';
-import { WINDOW }                 from '../../services/window-provider';
 import { LocalStorageService }    from 'ngx-store';
 import { Subscription, timer }    from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
@@ -56,7 +54,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemIdSubscription: Subscription;
 
     constructor(private renderer: Renderer2,
-                private _config: NxConfigService,
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
@@ -68,8 +65,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 private localStorage: LocalStorageService,
                 private router: Router,
                 private headerService: NxHeaderService,
+                config: NxConfigService
     ) {
-        this.CONFIG = this._config.getConfig();
+        this.CONFIG = config.getConfig();
         this.LANG = this.languageService.getTranslations();
     }
 
@@ -237,7 +235,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     login () {
         const url = this.router.url;
-        const redirect = this.CONFIG.redirectPaths.some((path) => url.indexOf(path) > -1);
+        const redirect = this.CONFIG.redirect.paths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
@@ -283,7 +281,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
 
                             this.system.getInfoAndPermissions(false).catch(_ => {}).then(system => {
-                                this.canSeeInfo = (this.CONFIG.healthMonitoringEnabled || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
                             });
                         }
                     } else {

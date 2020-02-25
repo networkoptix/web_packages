@@ -50,8 +50,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     // TODO: Fix arm supported. It says the same thing as linux
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
 
         this.canViewDownloads = false;
@@ -67,9 +67,9 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.sortedPlatforms = [];
     }
 
-    constructor(private cloudApi: NxCloudApiService,
+    constructor(configService: NxConfigService,
+                private cloudApi: NxCloudApiService,
                 private accountService: NxAccountService,
-                private configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
                 private router: Router,
@@ -79,7 +79,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 private location: Location,
                 @Inject(PLATFORM_ID) private platformId: object,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
 
         if (isPlatformBrowser(this.platformId)) {
             this.routerSubscription = this.router
@@ -200,20 +200,20 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then(account => {
-                this.canSeeHistory = (this.CONFIG.publicReleases ||
+                this.canSeeHistory = (this.CONFIG.cloudCapabilities.publicReleases ||
                         account &&
                         (account.is_superuser ||
                         account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1));
             });
 
-        if (!this.CONFIG.publicDownloads) {
+        if (!this.CONFIG.cloudCapabilities.publicDownloads) {
             this.setTitle(this.paramPlatform);
 
             this.accountService
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                        this.router.navigate([this.CONFIG.redirect.unauthorised]);
                         return;
                     }
 

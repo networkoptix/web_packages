@@ -35,17 +35,17 @@ export class NxDialogsService {
     location: any;
     closeResult: any;
 
-    constructor(@Inject(DOCUMENT) private document: any,
+    constructor(configService: NxConfigService,
+                location: Location,
+                @Inject(DOCUMENT) private document: any,
                 private modalService: NgbModal,
                 private toastService: NxToastService,
                 private language: NxLanguageProviderService,
                 private domSanitizer: DomSanitizer,
-                location: Location,
-                private configService: NxConfigService,
                 private router: Router,
     ) {
         this.LANG = this.language.getTranslations();
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.location = location;
     }
 
@@ -149,7 +149,7 @@ export class NxDialogsService {
                 this.closeResult = `Closed with: ${result}`;
 
                 if (redirectClose && result === 'canceled') {
-                    return this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                    return this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
             }, (reason) => {
                 this.closeResult = 'Dismissed';

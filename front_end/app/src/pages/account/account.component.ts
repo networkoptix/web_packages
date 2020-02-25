@@ -36,8 +36,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     changePassword: any;
     private menuDetailSubscription: Subscription;
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
+    private setupDefaults(config) {
+        this.CONFIG = config.getConfig();
         this.LANG = this.language.getTranslations();
 
         this.pass = {
@@ -46,9 +46,9 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         };
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(config: NxConfigService,
+                private route: ActivatedRoute,
                 private localStorage: LocalStorageService,
-                private config: NxConfigService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private language: NxLanguageProviderService,
@@ -57,9 +57,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private uriService: NxUriService,
                 private menuService: NxMenuService,
-                private pageService: NxPageService,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(config);
     }
 
     ngOnDestroy() {}
@@ -73,7 +72,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     }
 
     init(): void {
-        const accountMenu = this.CONFIG.accountMenu;
+        const accountMenu = this.CONFIG.menus.account;
         if (this.account === undefined) {
             return;
         }

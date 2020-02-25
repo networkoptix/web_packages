@@ -25,11 +25,11 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
     private infoSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    constructor(private _config: NxConfigService,
+    constructor(config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private settingsService: NxSettingsService,
                 private systemsService: NxSystemsService) {
-        this.config = this._config.getConfig();
+        this.config = config.getConfig();
     }
 
     ngOnDestroy() {}
@@ -59,7 +59,7 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
             return;
         }
         this.currentlyMerging = true;
-        this.isMaster = mergeInfo.role ? mergeInfo.role !== this.config.systemStatuses.slave : mergeInfo.masterSystemId === this.system.id;
+        this.isMaster = mergeInfo.role ? mergeInfo.role !== this.config.system.status.slave : mergeInfo.masterSystemId === this.system.id;
         this.mergeTargetSystem = this.getMergeTarget(mergeInfo.anotherSystemId) || this.LANG.system.unknownName;
         if (!this.isMaster) {
             this.settingsService.mergeTarget = this.mergeTargetSystem.id;

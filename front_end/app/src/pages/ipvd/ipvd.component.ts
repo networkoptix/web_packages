@@ -112,7 +112,7 @@ export class NxIpvdComponent implements OnInit {
         this.uriPath = '/' + this.route.snapshot.url.map(e => e.path).join('/');
     }
 
-    constructor(private configService: NxConfigService,
+    constructor(configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private cameraService: CamerasService,
                 private cameraSearchService: IpvdSearchService,
@@ -160,7 +160,7 @@ export class NxIpvdComponent implements OnInit {
                 }
             });
 
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
@@ -180,7 +180,7 @@ export class NxIpvdComponent implements OnInit {
         this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
 
-        this.company = this.CONFIG.companyName;
+        this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
         this.placeholder = this.LANG.search.search_ipvd;
 
@@ -502,7 +502,7 @@ export class NxIpvdComponent implements OnInit {
 
 
     openFeedback(param) {
-        const type = (param === 'device') ? this.CONFIG.messageType.ipvd_device : this.CONFIG.messageType.ipvd_page;
+        const type = (param === 'device') ? this.CONFIG.dialogs.message.type.ipvd_device : this.CONFIG.dialogs.message.type.ipvd_page;
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
             disclaimer: this.LANG.privacyPolicy.ipvd,

@@ -100,7 +100,7 @@ import * as angular from 'angular';
                                 this.info = system;
                             }
 
-                            this.isOnline = this.info.stateOfHealth == CONFIG.systemStatuses.onlineStatus;
+                            this.isOnline = this.info.stateOfHealth == CONFIG.system.status.online;
                             this.isMine = this.info.ownerAccountEmail == this.currentUserEmail;
                             this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                             this.mergeInfo = system.mergeInfo;

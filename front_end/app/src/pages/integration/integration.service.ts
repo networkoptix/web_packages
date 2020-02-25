@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxConfigService }             from '../../services/nx-config';
 import { NxUtilsService }              from '../../services/utils.service';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 
 interface Platform {
     file: string;
@@ -24,11 +23,10 @@ export class IntegrationService implements OnDestroy {
     haveCustomBuild: boolean;
     private integrationSubject: Subscription;
 
-    constructor(private api: NxCloudApiService,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
+    constructor(configService: NxConfigService,
+                private api: NxCloudApiService,
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
 
         this.integrationSubject = this.getIntegrations()
             .subscribe(result => {
@@ -175,14 +173,14 @@ export class IntegrationService implements OnDestroy {
 
         this.CONFIG.icons.platforms.forEach(icon => {
             const platform = plugin.requirementsAndCompatibility
-                                   .platforms
-                                   .find(platform => {
-                                       // 32 or 64 bit? ... it doesn't matter :)
-                                       return platform.toLowerCase().indexOf(icon.name) > -1;
-                                   });
-                                   if (platform) {
-                                       platformIcons.push({ name: platform, src: icon.src });
-                                   }
+                .platforms
+                .find(platform => {
+                    // 32 or 64 bit? ... it doesn't matter :)
+                    return platform.toLowerCase().indexOf(icon.name) > -1;
+                });
+            if (platform) {
+                platformIcons.push({ name: platform, src: icon.src });
+            }
         });
 
         return platformIcons;
@@ -210,7 +208,7 @@ export class IntegrationService implements OnDestroy {
                         platform.noFollow = true;
                     }
                 } else {
-                    platform.name = this.CONFIG.defaultPlatformNames[platformName];
+                    platform.name = this.CONFIG.integration.defaultPlatformNames[platformName];
                 }
 
                 platform.url = downloadPlatforms[platformName];

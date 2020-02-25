@@ -66,14 +66,14 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         }
 
         // check pattern
-        if (!new RegExp(this.CONFIG.passwordRequirements.requiredRegex).test(c.value)) {
+        if (!new RegExp(this.CONFIG.credentialsValidation.passwordRequirements.requiredRegex).test(c.value)) {
             return {
                 pattern: true
             };
         }
 
         // check length
-        if (c.value.length < this.CONFIG.passwordRequirements.minLength) {
+        if (c.value.length < this.CONFIG.credentialsValidation.passwordRequirements.minLength) {
             return {
                 minlength: true
             };
@@ -88,11 +88,11 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         const complexity = this.checkComplexity(c.value);
 
         if (complexity) {
-            if (complexity >= this.CONFIG.passwordRequirements.strongClassesCount) {
+            if (complexity >= this.CONFIG.credentialsValidation.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = false;
                 return null; // valid
 
-            } else if (complexity > 1 && complexity < this.CONFIG.passwordRequirements.strongClassesCount) {
+            } else if (complexity > 1 && complexity < this.CONFIG.credentialsValidation.passwordRequirements.strongClassesCount) {
                 this.form.form.get(this.componentId).fairPassword = true;
                 return null; // valid
 
@@ -106,9 +106,9 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         return null; // valid
     }
 
-    constructor(private config: NxConfigService,
-                private api: NxCloudApiService) {
-        this.CONFIG = this.config.getConfig();
+    constructor(private api: NxCloudApiService,
+                config: NxConfigService) {
+        this.CONFIG = config.getConfig();
     }
 
     private loadCommonPasswords() {
@@ -166,8 +166,6 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     ngOnInit() {
         this.fairPassword = true;
         this.passwordToggle = true;
-
-        this.CONFIG = this.config.getConfig();
 
         this.loadCommonPasswords(); // Load most common passwords
 

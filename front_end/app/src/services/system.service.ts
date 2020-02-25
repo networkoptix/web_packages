@@ -628,7 +628,7 @@ export class NxSystem extends System implements OnDestroy {
                     this.info = response;
                 }
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
-                this.isOnline = this.info.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
+                this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.mergeInfo = response.mergeInfo;
                 this.systemInfo = this;
@@ -825,13 +825,13 @@ export class NxSystemService {
     LANG: any;
     private systemsCache: { [key: string]: System };
 
-    constructor(private config: NxConfigService,
+    constructor(config: NxConfigService,
                 private languageService: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private systemApiService: NxSystemAPIService,
                 private pollService: NxPollService,
                 private systemsService: NxSystemsService) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = config.getConfig();
         this.LANG = this.languageService.getTranslations();
         this.systemsCache = {};
     }

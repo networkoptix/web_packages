@@ -33,9 +33,9 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
-    constructor(@Inject(DOCUMENT) private document: any,
+    constructor(config: NxConfigService,
+                @Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
-                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
@@ -49,7 +49,7 @@ export class NxAccountService implements OnDestroy {
                 private appStateService: NxAppStateService
     ) {
         this.location = this.locationService;
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = config.getConfig();
         this.LANG = this.language.getTranslations();
         this.loggingOut = false;
         this.loginDialogActive = false;
@@ -187,7 +187,7 @@ export class NxAccountService implements OnDestroy {
                             });
                         })
                         .catch(() => {
-                            this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                            this.router.navigate([this.CONFIG.redirect.unauthorised]);
                         }).finally(() => {
                             this.loginDialogActive = false;
                         });
@@ -201,7 +201,7 @@ export class NxAccountService implements OnDestroy {
     redirectAuthorised() {
         this.get().then((account) => {
             if (account) {
-                this.router.navigate([this.CONFIG.redirectAuthorised]);
+                this.router.navigate([this.CONFIG.redirect.authorised]);
             }
         });
     }
@@ -210,12 +210,12 @@ export class NxAccountService implements OnDestroy {
         this.get()
             .then((account) => {
                 if (account) {
-                    this.router.navigate([this.CONFIG.redirectAuthorised]);
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 } else {
-                    this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                    this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
             }).catch(() => {
-            this.router.navigate([this.CONFIG.redirectUnauthorised]);
+            this.router.navigate([this.CONFIG.redirect.unauthorised]);
             });
     }
 
@@ -281,7 +281,7 @@ export class NxAccountService implements OnDestroy {
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
-                        this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                        this.router.navigate([this.CONFIG.redirect.unauthorised]);
                     });
             });
     }
@@ -304,7 +304,7 @@ export class NxAccountService implements OnDestroy {
                         this.sessionService.invalidateSession(); // Clear session
                         if (!doNotRedirect) {
                             return this.router
-                                       .navigate([this.CONFIG.redirectUnauthorised])
+                                       .navigate([this.CONFIG.redirect.unauthorised])
                                        .finally(() => {
                                            setTimeout(() => this.window.location.reload());
                                        });

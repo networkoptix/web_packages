@@ -21,14 +21,14 @@ export class NxSystemsService implements OnDestroy {
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
 
-    constructor(private cloudApi: NxCloudApiService,
-                private config: NxConfigService,
+    constructor(config: NxConfigService,
+                private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
                 private pollService: NxPollService,
                 private toastService: NxToastService
     ) {
         this.LANG = this.language.getTranslations();
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = config.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
         this.mergingSystems = new Set();
     }
@@ -138,8 +138,8 @@ export class NxSystemsService implements OnDestroy {
             system.isMine = system.ownerAccountEmail === this.currentUser;
             system.canMerge = system.isMine && (system.capabilities &&
                 system.capabilities.cloudMerge
-                || this.CONFIG.allowDebugMode
-                || this.CONFIG.allowBetaMode);
+                || this.CONFIG.clientMode.debug
+                || this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {

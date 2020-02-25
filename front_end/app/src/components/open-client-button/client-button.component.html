@@ -3,7 +3,7 @@
         [process]="openClient" *ngIf="system && LANG.system"
         [actionType]="actionType ? actionType : 'default'"
         [title]="system.stateMessage"
-        [buttonDisabled]="!system.isOnline && system.stateOfHealth !== CONFIG.systemStatuses.onlineStatus"
+        [buttonDisabled]="!system.isOnline && system.stateOfHealth !== CONFIG.system.status.online"
         (click)="$event.stopPropagation();"
         [buttonText]="'Open in %VMS_NAME%' | translate"></nx-process-button>
 

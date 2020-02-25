@@ -36,17 +36,16 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     private searchSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
 
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
     }
 
-    constructor(
+    constructor(configService: NxConfigService,
                 private urlProtocol: NxUrlProtocolService,
                 private route: ActivatedRoute,
-                private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
@@ -56,11 +55,10 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private location: Location,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
-        this.CONFIG = this.configService.getConfig();
         this.showSearch = false;
         this.fetchComplete = false;
         this.search = { value: '' };
@@ -84,7 +82,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
                     this.openSystem(this.systems[0]);
                 }
 
-                this.showSearch = this.systems.length >= this.CONFIG.minSystemsToSearch;
+                this.showSearch = this.systems.length >= this.CONFIG.search.minSystems;
 
                 this.searchSystems();
             }
@@ -147,11 +145,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     canShowTag(system) {
-        return system.stateOfHealth !== this.CONFIG.systemStatuses.onlineStatus && this.LANG.systemStatuses;
+        return system.stateOfHealth !== this.CONFIG.system.status.online && this.LANG.systemStatuses;
     }
 
     canShowButton(system) {
-        return this.LANG.system && system.stateOfHealth === this.CONFIG.systemStatuses.onlineStatus;
+        return this.LANG.system && system.stateOfHealth === this.CONFIG.system.status.online;
     }
 
     ngOnDestroy(): void {}

@@ -48,7 +48,8 @@ export class NxRegisterComponent implements OnInit {
         this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
     }
 
-    constructor(private processService: NxProcessService,
+    constructor(config: NxConfigService,
+                private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private uriService: NxUriService,
                 private urlProtocol: NxUrlProtocolService,
@@ -58,15 +59,14 @@ export class NxRegisterComponent implements OnInit {
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
-                private router: Router,
-                private _config: NxConfigService,
+                private router: Router
     ) {
         this.setupDefaults();
-        this.CONFIG = this._config.getConfig();
+        this.CONFIG = config.getConfig();
     }
 
     login () {
-        const redirect = this.CONFIG.redirectPaths.some((path) => this.router.url.indexOf(path) > -1);
+        const redirect = this.CONFIG.redirect.paths.some((path) => this.router.url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }

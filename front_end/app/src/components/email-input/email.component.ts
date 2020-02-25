@@ -33,7 +33,7 @@ import {
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator {
+export class NxEmailComponent implements ControlValueAccessor, Validator {
 
     @Input() form: any;
     @Input() componentId: string;
@@ -60,7 +60,7 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
             };
         }
 
-        const EMAIL_REGEXP = new RegExp(this.CONFIG.emailRegex);
+        const EMAIL_REGEXP = new RegExp(this.CONFIG.credentialsValidation.emailRegex);
         if (!EMAIL_REGEXP.test(c.value)) {
             return {
                 pattern: true
@@ -70,19 +70,17 @@ export class NxEmailComponent implements OnInit, ControlValueAccessor, Validator
         return null; // valid
     }
 
-    constructor(private config: NxConfigService,
+    constructor(config: NxConfigService,
                 private language: NxLanguageProviderService) {
+
+        this.CONFIG = config.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     setValue() {
         // update the form
         this.onChangeCallback(this.value);
         this.form.form.get(this.componentId).markAsUntouched();
-    }
-
-    ngOnInit() {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
     }
 
     /**

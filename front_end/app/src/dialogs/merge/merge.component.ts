@@ -46,16 +46,16 @@ export class MergeModalContent {
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
 
-    constructor(public activeModal: NgbActiveModal,
+    constructor(configService: NxConfigService,
+                public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
-                private configService: NxConfigService,
                 private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
                 private systemService: NxSystemService,
                 private systemsService: NxSystemsService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
         // this.checking = false;
         // this.state = 'select';
@@ -342,8 +342,8 @@ export class MergeModalContent {
                 this.activeModal.close({
                     anotherSystemId: this.targetSystem.id,
                     role: this.primarySystem.id === this.system.id ?
-                        this.CONFIG.systemStatuses.master :
-                        this.CONFIG.systemStatuses.slave
+                        this.CONFIG.system.status.master :
+                        this.CONFIG.system.status.slave
                 });
             }, (error) => {
                 console.log('error from cloudapi merge', error);

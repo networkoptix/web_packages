@@ -67,10 +67,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
-        this.debugMode = this.CONFIG.allowDebugMode;
-        this.betaMode = this.CONFIG.allowBetaMode;
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
+        this.debugMode = this.CONFIG.clientMode.debug;
+        this.betaMode = this.CONFIG.clientMode.beta;
         this.currentlyMerging = false;
         this.configCanMerge = this.CONFIG.cloudMerge || false;
         this.systemNoAccess = false;
@@ -83,9 +83,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuVisible = true;
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(configService: NxConfigService,
+                private route: ActivatedRoute,
                 private accountService: NxAccountService,
-                private configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
@@ -99,7 +99,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private toastService: NxToastService,
                 private scrollMechanicsService: NxScrollMechanicsService,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {
@@ -114,7 +114,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.routerParamsSubscription = this.route.params.subscribe(params => {
             if (params.systemId) {
                 this.systemId = params.systemId;
-                this.content.base = this.CONFIG.systemMenu.baseUrl + this.systemId;
+                this.content.base = this.CONFIG.menus.systemSettings.baseUrl + this.systemId;
                 this.content = {...this.content}; // trigger onChange
                 if (this.system) {
                     this.system.stopPoll();
@@ -138,13 +138,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             selectedSection: '',         // updated by selectedSectionSubject
             selectedSubSection: '',         // updated by selectedSubSectionSubject
             system: {},         // updated by getSystemInfo
-            base: this.CONFIG.systemMenu.baseUrl + this.systemId,
+            base: this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
             level1: [
                 {
-                    id: this.CONFIG.systemMenu.admin.id,
-                    svg: this.CONFIG.systemMenu.admin.icon,
+                    id: this.CONFIG.menus.systemSettings.admin.id,
+                    svg: this.CONFIG.menus.systemSettings.admin.icon,
                     label: this.LANG.menu.titles.systemAdministration,
-                    path: this.CONFIG.systemMenu.admin.path,
+                    path: this.CONFIG.menus.systemSettings.admin.path,
                 }
             ]
         };
@@ -296,17 +296,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.content.system = this.system;
 
         if (this.system.permissions.editUsers) {
-            let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.systemMenu.users.id)[0];
+            let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
 
             if (!usersNode) {
                 usersNode = {
-                    id: this.CONFIG.systemMenu.users.id,
-                    svg: this.CONFIG.systemMenu.users.icon,
+                    id: this.CONFIG.menus.systemSettings.users.id,
+                    svg: this.CONFIG.menus.systemSettings.users.icon,
                     label: this.LANG.menu.titles.users,
-                    path: this.CONFIG.systemMenu.users.path,
+                    path: this.CONFIG.menus.systemSettings.users.path,
                     level2: [
                         {
-                            id: this.CONFIG.systemMenu.buttons.id,
+                            id: this.CONFIG.menus.systemSettings.buttons.id,
                             items: [
                                 {
                                     id: 'addUser',
@@ -357,17 +357,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level3.push(...cloudUsers);
             }
         } else { // remove Users
-            this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.systemMenu.users.id);
+            this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
         }
 
         if (this.system.permissions.isAdmin) {
-            let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.systemMenu.servers.id);
+            let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {
-                    id: this.CONFIG.systemMenu.servers.id,
-                    svg: this.CONFIG.systemMenu.servers.icon,
+                    id: this.CONFIG.menus.systemSettings.servers.id,
+                    svg: this.CONFIG.menus.systemSettings.servers.icon,
                     label: this.LANG.servers.servers,
-                    path: this.CONFIG.systemMenu.servers.path,
+                    path: this.CONFIG.menus.systemSettings.servers.path,
                 };
                 this.content.level1.push(serversNode);
             }
@@ -390,14 +390,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 });
             }
         } else {
-            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.systemMenu.servers.id);
+            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
 
         this.content = {...this.content};
     }
 
     cleanUrl() {
-        return this.router.navigate([this.CONFIG.redirectAuthorised, this.systemId]);
+        return this.router.navigate([this.CONFIG.redirect.authorised, this.systemId]);
     }
 
     connectionLost() {
@@ -405,7 +405,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
         if (this.systemsService.systems.length > 1 || this.settingsService.mergeTarget) {
-            let route = this.CONFIG.redirectAuthorised;
+            let route = this.CONFIG.redirect.authorised;
             if (this.settingsService.mergeTarget) {
                 route = `${route}/${this.settingsService.mergeTarget}`;
                 this.settingsService.mergeTarget = '';

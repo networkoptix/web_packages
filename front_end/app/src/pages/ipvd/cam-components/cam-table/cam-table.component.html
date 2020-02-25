@@ -71,7 +71,7 @@
         <div class=""
              *ngIf="pagedItems.length">
 
-            <p class="m-0" *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
+            <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
                 <span [translate]="'ipvd.disclaimer'"
                       [translateParams]="{companyName: CONFIG.company, vmsName: CONFIG.vmsName}">
                 </span>

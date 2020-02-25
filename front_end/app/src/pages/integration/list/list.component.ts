@@ -21,19 +21,17 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
     CONFIG: any;
     LANG: any;
 
-    haveInReviewOrDraft: boolean;
-
-    private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
-    constructor(private configService: NxConfigService,
+    constructor(configService: NxConfigService,
                 private integrations: IntegrationService,
                 private ribbonService: NxRibbonService,
                 private language: NxLanguageProviderService) {
 
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnDestroy() {
@@ -65,7 +63,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
         this.ribbonService.show(
                 this.LANG.ribbon.integration.preview,
                 this.LANG.ribbon.integration.backToEditText,
-                this.CONFIG.links.admin.asset.replace('%ID%/pages/', '')
+                this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
         );
     }
 }
