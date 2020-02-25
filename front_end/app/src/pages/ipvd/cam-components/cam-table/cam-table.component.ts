@@ -53,6 +53,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
+    pagerEllipses: boolean;
     CONFIG: any = {};
     LANG: any = {};
     showAnalytics: boolean;
@@ -69,6 +70,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     revert: any;
 
     uriSubscription: SubscriptionLike;
+    resizeSubscription: SubscriptionLike;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -89,14 +91,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
     constructor(private router: Router,
-                private language: NxLanguageProviderService,
+                language: NxLanguageProviderService,
+                config: NxConfigService,
                 private uri: NxUriService,
-                private config: NxConfigService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
 
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
         this.CONFIG = config.getConfig();
 
         this.sortOrderASC = true;
@@ -133,6 +135,16 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
 
         this.uriSubscription = new Subscription();
+
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeSmall;
+                this.pagerEllipses = false;
+            } else {
+                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
+                this.pagerEllipses = true;
+            }
+        });
     }
 
     trackPagedItem(index, item) {
@@ -409,7 +421,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
         this.clientHeight = this.camerasTable.nativeElement.clientHeight;
 
-        if (this.clientHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+        if (this.clientHeight - NxScrollMechanicsService.SCROLL_OFFSET < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
             this.tableScrollFixed = true;
         } else {
             this.tableScrollFixed = false;
