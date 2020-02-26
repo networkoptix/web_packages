@@ -457,6 +457,7 @@ export class MergeModalContent {
         const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
         const stateOfHealth = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
+        // need to refactor to handle auto-discovered systems
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
                 if (!system.canMerge) {
@@ -480,7 +481,7 @@ export class MergeModalContent {
         // might not work for auto-discovered servers
         let systemName;
         if (system.systemName) {
-            systemName = system.systemName.slice(0, -1);
+            systemName = system.systemName;
             status = ` (${system.name}, ${system.remoteAddresses[0]}:${system.port}) ${status}`;
         } else {
             systemName = system.name || system.info.name;
