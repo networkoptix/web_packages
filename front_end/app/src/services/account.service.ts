@@ -7,15 +7,15 @@ import { NxCloudApiService }                  from './nx-cloud-api';
 import { NxLanguageProviderService }          from './nx-language-provider';
 import { NxDialogsService }                   from '../dialogs/dialogs.service';
 import { NxSessionService }                   from './session.service';
-import { NxQueryParamService }                from './query-param.service';
 import { NxApplyService }                     from './apply.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
+import { NxUriService }                       from './uri.service';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
     CONFIG: any;
@@ -34,10 +34,11 @@ export class NxAccountService implements OnDestroy {
     constructor(configService: NxConfigService,
                 @Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
-                private language: NxLanguageProviderService,
+                config: NxConfigService,
+                language: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
-                private queryParamService: NxQueryParamService,
+                private uriService: NxUriService,
                 private localStorageService: LocalStorageService,
                 private locationService: Location,
                 private dialogs: NxDialogsService,
@@ -46,9 +47,10 @@ export class NxAccountService implements OnDestroy {
                 private applyService: NxApplyService,
                 private appStateService: NxAppStateService
     ) {
+        this.CONFIG = config.getConfig();
+        this.LANG = language.getTranslations();
+
         this.location = this.locationService;
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
         this.loggingOut = false;
         this.loginDialogActive = false;
 
@@ -72,7 +74,7 @@ export class NxAccountService implements OnDestroy {
             });
 
         // Handles login with auth param everywhere.
-        this.queryParamSubscription = this.queryParamService.queryParamsSubject.pipe(
+        this.queryParamSubscription = this.uriService.queryParamsSubject.pipe(
             distinctUntilChanged()
         ).subscribe((params: any) => {
             if (params.auth) {
@@ -197,11 +199,12 @@ export class NxAccountService implements OnDestroy {
     }
 
     redirectAuthorised() {
-        this.get().then((account) => {
-            if (account) {
-                this.router.navigate([this.CONFIG.redirect.authorised]);
-            }
-        });
+        this.get()
+            .then((account) => {
+                if (account) {
+                    this.router.navigate([this.CONFIG.redirectAuthorised]);
+                }
+            });
     }
 
     redirectToHome() {
@@ -213,7 +216,7 @@ export class NxAccountService implements OnDestroy {
                     this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
             }).catch(() => {
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router.navigate([this.CONFIG.redirectUnauthorised]);
             });
     }
 
@@ -239,7 +242,7 @@ export class NxAccountService implements OnDestroy {
                             this.logoutAuthorised();
                         }
 
-                        return Promise.resolve({ data : { account : result, resultCode : this.CONFIG.responseOk } });
+                        return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                     }
 
                     if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
@@ -247,13 +250,13 @@ export class NxAccountService implements OnDestroy {
                         this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
                     }
 
-                    return Promise.resolve({ data : { account : result, resultCode : this.CONFIG.responseOk } });
+                    return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                 }
-                return Promise.reject({ error : { resultCode : result.resultCode } });
+                return Promise.reject({ error: { resultCode: result.resultCode } });
             })
             .catch((result: any) => {
                 if (this.cloudApi.checkResponseHasError(result.error)) {
-                    return Promise.reject({ resultCode : result.error.resultCode });
+                    return Promise.reject({ resultCode: result.error.resultCode });
                 }
             });
         return this.requestingLogin;
@@ -271,14 +274,14 @@ export class NxAccountService implements OnDestroy {
 
         return this.login(tempLogin, tempPassword, false)
             .then(() => {
-                const queryParams = { auth : undefined, from : undefined };
-                return this.router.navigate([], { queryParams, queryParamsHandling : 'merge' });
+                const queryParams = { auth: undefined, from: undefined };
+                return this.router.navigate([], { queryParams, queryParamsHandling: 'merge' });
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
-                        this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                        this.location.path(this.CONFIG.redirectUnauthorised);
                     });
             });
     }
@@ -288,64 +291,68 @@ export class NxAccountService implements OnDestroy {
             return;
         }
 
-        this.applyService.canMove().then((allowed) => {
-            if (allowed) {
-                this.loggingOut = true;
-                this.cloudApi
-                    .logout()
-                    .finally(() => {
-                        if (this.account && this.account.timer) {
-                            this.account.timer.unsubscribe();
-                        }
-                        this.account = undefined;
-                        this.sessionService.invalidateSession(); // Clear session
-                        if (!doNotRedirect) {
-                            return this.router
-                                .navigate([this.CONFIG.redirect.unauthorised])
-                                .finally(() => {
-                                    setTimeout(() => this.window.location.reload());
-                                });
-                        }
+        this.applyService
+            .canMove()
+            .then((allowed) => {
+                if (allowed) {
+                    this.loggingOut = true;
+                    this.cloudApi
+                        .logout()
+                        .finally(() => {
+                            if (this.account && this.account.timer) {
+                                this.account.timer.unsubscribe();
+                            }
+                            this.account = undefined;
+                            this.sessionService.invalidateSession(); // Clear session
+                            if (!doNotRedirect) {
+                                return this.router
+                                    .navigate([this.CONFIG.redirectUnauthorised])
+                                    .finally(() => {
+                                        setTimeout(() => this.window.location.reload());
+                                    });
+                            }
 
-                        setTimeout(() => {
-                            return this.window.location.reload();
+                            setTimeout(() => {
+                                return this.window.location.reload();
+                            });
                         });
-                    });
-            }
-        });
+                }
+            });
     }
 
     logoutAuthorised() {
-        return this.get().then((account) => {
-            // logoutAuthorisedLogoutButton
-            if (account) {
-                const isRegister = this.router.url.includes('/register');
-                const isRestore = this.router.url.includes('/restore_password');
-                const isActivate = this.router.url.includes('/activate');
+        return this.get()
+            .then((account) => {
+                // logoutAuthorisedLogoutButton
+                if (account) {
+                    const isRegister = this.router.url.includes('/register');
+                    const isRestore = this.router.url.includes('/restore_password');
+                    const isActivate = this.router.url.includes('/activate');
 
-                let cancelLabel = '';
-                if (isRegister) {
-                    cancelLabel = this.LANG.dialogs.buttons.createAccount;
-                } else if (isRestore) {
-                    cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
-                } else {
-                    cancelLabel = this.LANG.dialogs.buttons.cancel;
-                }
-                return this.dialogs.confirm('',
-                    this.LANG.dialogs.titles.changeAccount.replace('{email}', account.email),
-                    this.LANG.dialogs.buttons.stayLoggedIn,
-                    undefined,
-                    cancelLabel,
-                    ''
-                ).then((result) => {
-                    if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
-                        return this.logout(true);
+                    let cancelLabel = '';
+                    if (isRegister) {
+                        cancelLabel = this.LANG.dialogs.createNewAccount;
+                    } else if (isRestore) {
+                        cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
                     } else {
-                        return this.redirectAuthorised();
+                        cancelLabel = this.LANG.dialogs.cancelButton;
                     }
-                });
-            }
-        });
+                    return this.dialogs
+                        .confirm('',
+                            this.LANG.dialogs.changeAccountLogged.replace('{email}', account.email),
+                            this.LANG.dialogs.stayLoggedIn,
+                            undefined,
+                            cancelLabel,
+                            ''
+                        ).then((result) => {
+                            if ((isRestore || isRegister || isActivate) && result === cancelLabel) {
+                                return this.logout(true);
+                            } else {
+                                return this.redirectAuthorised();
+                            }
+                        });
+                }
+            });
     }
 
     checkUnauthorized(data) {
@@ -362,7 +369,9 @@ export class NxAccountService implements OnDestroy {
                 if (!account) {
                     return this.loginWithAuthKey(auth).then(() => {
                         return this.document.location.reload();
-                    }).catch(() => this.appStateService.ready = true);
+                    }).catch(() => {
+                        this.appStateService.ready = true;
+                    });
                 }
 
                 this.appStateService.ready = true;
@@ -394,9 +403,9 @@ export class NxAccountService implements OnDestroy {
                                 });
                             });
                     } else {
-                        const queryParams = { auth : undefined, from : undefined };
+                        const queryParams = { auth: undefined, from: undefined };
                         return this.router
-                            .navigate([], { queryParams, queryParamsHandling : 'merge' })
+                            .navigate([], { queryParams, queryParamsHandling: 'merge' })
                             .then(() => this.document.location.reload());
                     }
                 });

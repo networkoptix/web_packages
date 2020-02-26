@@ -3,13 +3,12 @@ import {
     Component, ElementRef, Inject,
     OnInit, PLATFORM_ID, ViewChild,
     ViewEncapsulation
-} from '@angular/core';
+}                                                from '@angular/core';
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { CamerasService }                         from '../../services/cameras.service';
-import { IpvdSearchService }                      from './ipvd-search.service';
-import { MessageParams }             from '../../dialogs/message/message.component';
+import { IpvdSearchService }                     from './ipvd-search.service';
+import { MessageParams }                         from '../../dialogs/message/message.component';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
@@ -19,8 +18,9 @@ import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxPageService }             from '../../services/page.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 interface Params {
     [key: string]: any;
@@ -115,8 +115,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     constructor(configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private cameraService: CamerasService,
+                languageService: NxLanguageProviderService,
+                private cloudApi: NxCloudApiService,
                 private cameraSearchService: IpvdSearchService,
                 // TODO: Use dialog service when it is not being downgraded
                 private dialogs: NxDialogsService,
@@ -163,6 +163,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
 
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {
@@ -179,7 +180,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.resetFilterModel();
         }
 
-        this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
 
         this.company = this.CONFIG.company.name;
@@ -352,13 +352,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     reset() {
-        this.cameraReloadSubscription = this.cameraService
+        this.cameraReloadSubscription = this.cloudApi
             .reloadIPVD()
             .subscribe();
     }
 
     activate() {
-        this.cameraGetSubscription = this.cameraService
+        this.cameraGetSubscription = this.cloudApi
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;

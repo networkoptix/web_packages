@@ -1,11 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { ActivatedRoute, Router }          from '@angular/router';
-import { Observable }                      from 'rxjs';
+import { BehaviorSubject, Observable }     from 'rxjs';
 import { Location }                        from '@angular/common';
-
-interface Params {
-    [key: string]: any;
-}
 
 @Injectable({
     providedIn : 'root'
@@ -13,10 +9,22 @@ interface Params {
 export class NxUriService {
     private _pageOffset: number;
 
+    queryParamsSubject = new BehaviorSubject({});
+
     constructor(private router: Router,
                 private location: Location,
                 private route: ActivatedRoute,
                 @Inject(PLATFORM_ID) private platformId: object) {
+    }
+
+    get queryParams() {
+        return this.queryParamsSubject.getValue();
+    }
+
+    set queryParams(params) {
+        if (params !== this.queryParams) {
+            this.queryParamsSubject.next(params);
+        }
     }
 
     set pageOffset(val) {

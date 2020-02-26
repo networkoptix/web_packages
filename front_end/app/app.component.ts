@@ -1,32 +1,30 @@
-import { Location }                                               from '@angular/common';
-import { Component, HostListener, Inject }                        from '@angular/core';
-import { CookieService }                                          from 'ngx-cookie-service';
-import { DeviceDetectorService }                                  from 'ngx-device-detector';
-import { ActivationStart, Event, Router } from '@angular/router';
+import { Location }                                from '@angular/common';
+import { Component, HostListener, Inject }         from '@angular/core';
+import { CookieService }                           from 'ngx-cookie-service';
+import { DeviceDetectorService }                   from 'ngx-device-detector';
+import { ActivationStart, Event, Router }          from '@angular/router';
 import { filter, debounceTime, timeout, finalize } from 'rxjs/operators';
-import { WINDOW }                    from './src/services/window-provider';
-import { NxLanguageProviderService } from './src/services/nx-language-provider';
-import { NxConfigService }           from './src/services/nx-config';
-import { NxApplyService }            from './src/services/apply.service';
-import { NxQueryParamService }       from './src/services/query-param.service';
-import { NxRibbonService }           from './src/components/ribbon/ribbon.service';
-import { NxAppStateService }         from './src/services/nx-app-state.service';
-import { fromEvent, Subscription } from 'rxjs';
-import 'rxjs-compat/add/observable/fromEvent';
-import { NxScrollMechanicsService } from './src/services/scroll-mechanics.service';
-import { NxUriService } from './src/services/uri.service';
-import { NxPageService } from './src/services/page.service';
-import { NxSystemRole } from './src/services/system.service';
+import { WINDOW }                                  from './src/services/window-provider';
+import { NxLanguageProviderService }               from './src/services/nx-language-provider';
+import { NxConfigService }                         from './src/services/nx-config';
+import { NxApplyService }                          from './src/services/apply.service';
+import { NxRibbonService }                         from './src/components/ribbon/ribbon.service';
+import { NxAppStateService }                       from './src/services/nx-app-state.service';
+import { fromEvent, Subscription }                 from 'rxjs';
+import { NxScrollMechanicsService }                from './src/services/scroll-mechanics.service';
+import { NxUriService }                            from './src/services/uri.service';
+import { NxPageService }                           from './src/services/page.service';
+import { NxSystemRole }                            from './src/services/system.service';
 
 @Component({
     selector: 'nx-app',
-    template: `        
+    template: `
         <div class="outerContainer" *ngIf="appStateService.ready">
             <div class="headerContainer">
                 <nx-header></nx-header>
                 <nx-ribbon></nx-ribbon>
             </div>
-        
+
             <div class="mainContainer" nxScrollHelper>
                 <router-outlet></router-outlet>
                 <div style="height: 100%" ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
@@ -44,15 +42,16 @@ export class AppComponent {
     allowedDevices: {};
     isInIframe: boolean;
 
+    eventSubscription: Subscription;
+
     constructor(configService: NxConfigService,
+                languageService: NxLanguageProviderService,
                 private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
-                private language: NxLanguageProviderService,
                 private applyService: NxApplyService,
                 private appStateService: NxAppStateService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                private queryParamService: NxQueryParamService,
                 private router: Router,
                 private ribbonService: NxRibbonService,
                 private uriService: NxUriService,
@@ -61,6 +60,17 @@ export class AppComponent {
     ) {
 
         this.CONFIG = configService.getConfig();
+
+        // this language will be used as a fallback when a translation
+        // isn't found in the current language
+        languageService.setDefaultLang('en_US');
+
+        // @ts-ignore
+        languageService.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
+        this.LANG = languageService.getTranslations();
+        this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
+        // @ts-ignore
+        this.pageService.setPageTitle(this.LANG.pageTitles.default);
 
         // Allows 3 seconds for auth query param to be detected and set appstate.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
@@ -84,12 +94,12 @@ export class AppComponent {
                 chrome : 64,
                 firefox: 60
             },
-            mac    : {
+            mac: {
                 safari : 10,
                 chrome : 64,
                 firefox: 60
             },
-            linux  : {
+            linux: {
                 chrome : 64,
                 firefox: 60
             }
@@ -114,17 +124,6 @@ export class AppComponent {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        // this language will be used as a fallback when a translation
-        // isn't found in the current language
-        this.language.setDefaultLang('en_US');
-
-        // @ts-ignore
-        this.language.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
-        this.LANG = this.language.getTranslations();
-        this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
-        // @ts-ignore
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
-
         // extend CONFIG ... arghhh ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
         // This was done every time a system is created. Its only need once
         this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
@@ -134,8 +133,8 @@ export class AppComponent {
         });
 
         // @ts-ignore
-        const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = window.SETTINGS;
-        this.CONFIG.company ={
+        const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = window.SETTINGS;
+        this.CONFIG.company = {
             copyrightYear,
             links: {
                 privacy: privacyLink,
@@ -145,7 +144,7 @@ export class AppComponent {
             name: companyName
         };
         // @ts-ignore
-        const {cloudMerge, feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases} = window.SETTINGS;
+        const { cloudMerge, feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases } = window.SETTINGS;
         this.CONFIG.capabilities = {
             cloudMerge,
             feedbackEnabled,
@@ -155,7 +154,7 @@ export class AppComponent {
             publicReleases
         };
         // @ts-ignore
-        const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
+        const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;
         this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
             searchTags,
             sortSupportedDevicesByPopularity,
@@ -164,9 +163,9 @@ export class AppComponent {
             vendorsShown: parseInt(vendorsShown)
         });
         // @ts-ignore
-        const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
+        const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
         this.CONFIG.integration.filter = {
-            items: integrationFilterItems,
+            items     : integrationFilterItems,
             limitation: integrationFilterLimitation
         };
         // @ts-ignore
@@ -216,7 +215,7 @@ export class AppComponent {
         this.router.events.pipe(
             filter((event: Event) => event instanceof ActivationStart)
         ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
-            this.queryParamService.queryParams = queryParams;
+            this.uriService.queryParams = queryParams;
         });
 
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
