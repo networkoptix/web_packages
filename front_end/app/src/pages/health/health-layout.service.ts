@@ -147,10 +147,10 @@ export class NxHealthLayoutService {
         this.tilesElementSubject.next(element);
     }
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
 
         this.dimensionsSubject.pipe(debounceTime(10)).subscribe(() => {

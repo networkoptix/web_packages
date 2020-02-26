@@ -12,11 +12,11 @@ export class NxUtilsService {
     public static sortASC = true;
     public static sortDESC = false;
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 @Inject(DOCUMENT) private document: any
     ) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     static deepCopy(obj) {

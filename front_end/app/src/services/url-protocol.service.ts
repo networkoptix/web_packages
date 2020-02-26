@@ -12,11 +12,11 @@ export class NxUrlProtocolService {
     LANG: any;
 
     constructor(@Inject(WINDOW) private window: Window,
-                private config: NxConfigService,
+                configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private accountService: NxAccountService
     ) {
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 

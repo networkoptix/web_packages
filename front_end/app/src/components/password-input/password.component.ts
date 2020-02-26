@@ -106,9 +106,9 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
         return null; // valid
     }
 
-    constructor(private api: NxCloudApiService,
-                config: NxConfigService) {
-        this.CONFIG = config.getConfig();
+    constructor(configService: NxConfigService,
+                private api: NxCloudApiService) {
+        this.CONFIG = configService.getConfig();
     }
 
     private loadCommonPasswords() {

@@ -2,8 +2,6 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
 import { NxConfigService }   from '../../services/nx-config';
 import { NxAppStateService } from '../../services/nx-app-state.service';
-import { ActivatedRoute }            from '@angular/router';
-import { NxSettingsService } from '../../pages/systems/settings/settings.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
@@ -14,10 +12,10 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     styleUrls: [ 'footer.component.scss' ]
 })
  export class NxFooterComponent implements OnInit, OnDestroy {
+    CONFIG: any;
     companyLink: string;
     companyName: string;
     copyrightYear: string;
-    config: any;
     footerItems: any;
     viewFooter: boolean;
 
@@ -26,19 +24,19 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     classes: string[] = [];
     private footerSubscription: Subscription;
 
-    constructor(private sanitizer: DomSanitizer,
-                private appState: NxAppStateService,
-                config: NxConfigService) {
-        this.config = config.getConfig();
+    constructor(configService: NxConfigService,
+                private sanitizer: DomSanitizer,
+                private appState: NxAppStateService,) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.companyLink = this.config.company.link;
-        this.companyName = this.config.company.name;
-        this.copyrightYear = this.config.company.copyrightYear;
-        this.footerItems = this.config.footerItems;
+        this.companyLink = this.CONFIG.company.link;
+        this.companyName = this.CONFIG.company.name;
+        this.copyrightYear = this.CONFIG.company.copyrightYear;
+        this.footerItems = this.CONFIG.footerItems;
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;

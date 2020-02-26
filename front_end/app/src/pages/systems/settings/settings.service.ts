@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy }       from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { NxCloudApiService }           from '../../../services/nx-cloud-api';
-import { NxConfigService }             from '../../../services/nx-config';
 import { NxDialogsService }            from '../../../dialogs/dialogs.service';
 import { NxAccountService }            from '../../../services/account.service';
 import { NxUriService }                from '../../../services/uri.service';
@@ -11,7 +10,7 @@ import { NxMenuService }               from '../../../components/menu/menu.servi
     providedIn: 'root'
 })
 export class NxSettingsService implements OnDestroy {
-    config: any = {};
+    CONFIG: any = {};
     footerSubject = new BehaviorSubject(false);
     systemSubject = new BehaviorSubject(undefined);
     selectedSectionSubject = new BehaviorSubject([]);
@@ -21,13 +20,10 @@ export class NxSettingsService implements OnDestroy {
 
     constructor(private api: NxCloudApiService,
                 private accountService: NxAccountService,
-                private configService: NxConfigService,
                 private uriService: NxUriService,
                 private menuService: NxMenuService,
                 private dialogs: NxDialogsService
-    ) {
-        this.config = this.configService.getConfig();
-    }
+    ) {}
 
     get mergeTarget() {
         return this._mergeTarget;

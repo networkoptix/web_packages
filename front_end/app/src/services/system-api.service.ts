@@ -464,11 +464,11 @@ export class NxSystemAPIService {
     location: any;
     systemConnections: { [key: string]: NxSystemAPI };
 
-    constructor(private http: HttpClient,
-                private config: NxConfigService,
-                location: Location) {
+    constructor(configService: NxConfigService,
+                location: Location,
+                private http: HttpClient) {
         this.location = location;
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.systemConnections = {};
     }
 

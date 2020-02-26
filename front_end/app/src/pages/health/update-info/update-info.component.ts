@@ -18,9 +18,9 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     lastUpdate: string;
     timerSubscription: Subscription;
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private healthService: NxHealthService) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnDestroy() {}

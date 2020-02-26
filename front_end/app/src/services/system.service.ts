@@ -815,13 +815,13 @@ export class NxSystemService {
     LANG: any;
     private systemsCache: { [key: string]: System };
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private systemApiService: NxSystemAPIService,
                 private pollService: NxPollService,
                 private systemsService: NxSystemsService) {
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.getTranslations();
         this.systemsCache = {};
     }

@@ -48,7 +48,7 @@ export class NxRegisterComponent implements OnInit {
         this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
     }
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private uriService: NxUriService,
@@ -62,7 +62,7 @@ export class NxRegisterComponent implements OnInit {
                 private router: Router
     ) {
         this.setupDefaults();
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     login () {

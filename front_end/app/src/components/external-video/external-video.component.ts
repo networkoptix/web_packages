@@ -12,9 +12,9 @@ export class NxExternalVideoComponent implements OnInit {
     CONFIG: any;
     src: any;
 
-    constructor(private sanitizer: DomSanitizer,
-                config: NxConfigService) {
-        this.CONFIG = config.getConfig();
+    constructor(configService: NxConfigService,
+                private sanitizer: DomSanitizer) {
+        this.CONFIG = configService.getConfig();
     }
 
     private FormatSrc(link) {

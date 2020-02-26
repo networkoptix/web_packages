@@ -53,7 +53,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemSubscription: Subscription;
     private systemIdSubscription: Subscription;
 
-    constructor(private renderer: Renderer2,
+    constructor(configService: NxConfigService,
+                private renderer: Renderer2,
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
@@ -64,10 +65,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 private sessionService: NxSessionService,
                 private localStorage: LocalStorageService,
                 private router: Router,
-                private headerService: NxHeaderService,
-                config: NxConfigService
+                private headerService: NxHeaderService
     ) {
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.getTranslations();
     }
 

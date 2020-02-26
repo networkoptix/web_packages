@@ -44,7 +44,7 @@ export class AppComponent {
     allowedDevices: {};
     isInIframe: boolean;
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private cookieService: CookieService,
                 private deviceService: DeviceDetectorService,
                 private location: Location,
@@ -60,7 +60,7 @@ export class AppComponent {
                 @Inject(WINDOW) private window: Window,
     ) {
 
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
 
         // Allows 3 seconds for auth query param to be detected and set appstate.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.

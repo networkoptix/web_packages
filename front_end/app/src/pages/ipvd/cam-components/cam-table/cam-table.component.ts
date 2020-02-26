@@ -88,15 +88,15 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @ViewChild('nxScrollWrapper', { static : false }) scrollWrapper: ElementRef;
     @ViewChild('nxTable', { static : false }) camerasTable: ElementRef;
 
-    constructor(private router: Router,
+    constructor(configService: NxConfigService,
+                private router: Router,
                 private language: NxLanguageProviderService,
                 private uri: NxUriService,
-                private config: NxConfigService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
         this.LANG = this.language.getTranslations();
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
 
         this.sortOrderASC = true;
         this._elements = this.elements;

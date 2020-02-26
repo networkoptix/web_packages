@@ -12,8 +12,8 @@ export class NxSystemAlertCardComponent implements OnInit {
     @Input() data: any;
     CONFIG: any;
 
-    constructor(private config: NxConfigService) {
-        this.CONFIG = this.config.getConfig();
+    constructor(configService: NxConfigService) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

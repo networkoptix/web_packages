@@ -9,9 +9,9 @@ import { NxConfigService } from './nx-config';
 export class NxCloudApiService {
     CONFIG: any;
 
-    constructor(private http: HttpClient,
-                private config: NxConfigService) {
-        this.CONFIG = config.getConfig();
+    constructor(configService: NxConfigService,
+                private http: HttpClient) {
+        this.CONFIG = configService.getConfig();
     }
 
     checkResponseHasError(data: any) {

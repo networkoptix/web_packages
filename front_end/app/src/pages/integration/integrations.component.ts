@@ -39,8 +39,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         psim     : false,
     };
 
-    private setupDefaults(config) {
-        this.CONFIG = config.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
 
         this.allElements = [];
 
@@ -51,7 +51,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
         this.filterModel.tags = [];
     }
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private uri: NxUriService,
                 private integrations: IntegrationService,
                 private language: NxLanguageProviderService,
@@ -59,7 +59,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                 private accountService: NxAccountService,
                 private router: Router,
     ) {
-        this.setupDefaults(config);
+        this.setupDefaults(configService);
     }
     ngOnDestroy() {}
 

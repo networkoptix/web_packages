@@ -25,12 +25,12 @@ export class NxLandingComponent implements OnInit, OnDestroy {
 
     loaded: boolean;
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private dialogs: NxDialogsService,
                 private accountService: NxAccountService,
                 private pageService: NxPageService,
@@ -38,7 +38,7 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private localStorage: LocalStorageService,
     ) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {

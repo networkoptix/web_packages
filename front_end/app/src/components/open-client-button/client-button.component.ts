@@ -31,14 +31,16 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     modalActive: boolean;
     openClient: any;
 
-    constructor(private processService: NxProcessService,
+    constructor(configService: NxConfigService,
+                private processService: NxProcessService,
                 private urlProtocol: NxUrlProtocolService,
-                private config: NxConfigService,
                 private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
                 private router: Router) {
 
         this.location = location;
+        this.CONFIG = configService.getConfig();
+        this.LANG = this.language.getTranslations();
     }
 
     ngOnDestroy(): void {
@@ -46,8 +48,6 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.CONFIG = this.config.getConfig();
-        this.LANG = this.language.getTranslations();
         this.modalActive = false;
         this.canceled = false;
 

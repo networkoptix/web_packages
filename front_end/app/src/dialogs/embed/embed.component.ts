@@ -20,7 +20,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() closable;
 
     LANG: any;
-    config: any;
+    CONFIG: any;
     auth: any;
     params: any;
     embedUrl: string;
@@ -47,7 +47,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
             password: ''
         };
 
-        this.config = configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 

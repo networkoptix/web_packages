@@ -50,14 +50,14 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     private DESC = false;
     private uriSubscription: Subscription;
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private language: NxLanguageProviderService,
                 private uri: NxUriService,
                 private _route: ActivatedRoute,
                 private renderer: Renderer2,
     ) {
         this.LANG = this.language.getTranslations();
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.debug = false;
         this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 

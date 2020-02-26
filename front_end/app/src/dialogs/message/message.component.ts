@@ -36,8 +36,8 @@ export class MessageModalContent implements OnInit {
     @Input() closable;
 
     LANG: any;
+    CONFIG: any;
 
-    config: any;
     placeholder: string;
     sendMessage: any;
     userName: string;
@@ -64,7 +64,7 @@ export class MessageModalContent implements OnInit {
         this.subject = '';
         this.subjectMessage = '';
         this.url = this.window.location.href;
-        this.config = configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
@@ -88,17 +88,17 @@ export class MessageModalContent implements OnInit {
 
     initForm() {
         this.placeholder = '';
-        if (this.messageType === this.config.dialogs.message.type.ipvd_page) {
+        if (this.messageType === this.CONFIG.dialogs.message.type.ipvd_page) {
             this.placeholder = this.LANG.dialogs.message.placeholders.feedback;
         }
 
         const title = this.LANG.dialogs.message.title[this.messageType];
-        if (this.messageType !== this.config.dialogs.message.type.integration) {
+        if (this.messageType !== this.CONFIG.dialogs.message.type.integration) {
             this.title = title.replace('{{asset}}', this.data.asset);
         } else {
             this.title = title.replace('{{companyName}}', this.data.to);
         }
-        this.subjects = this.config.dialogs.message.subjects[this.messageType].map((subject) => {
+        this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
                 value: subject,
                 name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)

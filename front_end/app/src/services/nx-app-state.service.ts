@@ -12,8 +12,8 @@ export class NxAppStateService {
     headerVisibleSubject = new BehaviorSubject(true);
     readySubject = new BehaviorSubject(false);
 
-    constructor(private config: NxConfigService) {
-        this.CONFIG = this.config.getConfig();
+    constructor(configService: NxConfigService) {
+        this.CONFIG = configService.getConfig();
     }
 
     setFooterVisibility(visibile) {

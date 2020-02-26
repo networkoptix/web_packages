@@ -29,11 +29,10 @@ export class NxScrollMechanicsService {
     public static SCROLL_OFFSET: number = 48 + 16; // header + padding
     public static MEDIA = GRID_BREAKPOINTS;
 
-    constructor(
-            private config: NxConfigService,
+    constructor(configService: NxConfigService,
             @Inject(WINDOW) private window: Window
     ) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     setOffset(height: number) {

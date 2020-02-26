@@ -36,7 +36,7 @@ export class NxContentComponent implements OnInit {
         this.staticHTML = '';
     }
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 @Inject(WINDOW) private window: Window,
                 private route: ActivatedRoute,
                 private http: HttpClient,
@@ -48,7 +48,7 @@ export class NxContentComponent implements OnInit {
     ) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit(): void {

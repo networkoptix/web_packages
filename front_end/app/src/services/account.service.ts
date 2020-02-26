@@ -31,7 +31,7 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 @Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
                 private language: NxLanguageProviderService,
@@ -47,7 +47,7 @@ export class NxAccountService implements OnDestroy {
                 private appStateService: NxAppStateService
     ) {
         this.location = this.locationService;
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
         this.loggingOut = false;
         this.loginDialogActive = false;

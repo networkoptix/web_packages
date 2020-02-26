@@ -52,16 +52,16 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     private formSubscription: Subscription;
 
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
 
         this.menuService.setDetailsSection('settings');
     }
 
-    constructor(private route: ActivatedRoute,
+    constructor(configService: NxConfigService,
+                private route: ActivatedRoute,
                 private localStorage: LocalStorageService,
-                private config: NxConfigService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private language: NxLanguageProviderService,
@@ -71,7 +71,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 private menuService: NxMenuService,
                 private applyService: NxApplyService,
                 private pageService: NxPageService) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnDestroy() {

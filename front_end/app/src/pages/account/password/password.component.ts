@@ -37,8 +37,8 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         newPassword: new Watcher<string>()
     };
 
-    private setupDefaults() {
-        this.CONFIG = this.config.getConfig();
+    private setupDefaults(configService) {
+        this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
 
         this.pass = {
@@ -48,8 +48,8 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.menuService.setDetailsSection('password');
     }
 
-    constructor(private route: ActivatedRoute,
-                private config: NxConfigService,
+    constructor(configService: NxConfigService,
+                private route: ActivatedRoute,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private language: NxLanguageProviderService,
@@ -59,7 +59,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
                 private menuService: NxMenuService,
                 private applyService: NxApplyService,
                 private pageService: NxPageService) {
-        this.setupDefaults();
+        this.setupDefaults(configService);
     }
 
     ngOnInit(): void {

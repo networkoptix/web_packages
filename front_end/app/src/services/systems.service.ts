@@ -21,14 +21,14 @@ export class NxSystemsService implements OnDestroy {
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
 
-    constructor(config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
                 private pollService: NxPollService,
                 private toastService: NxToastService
     ) {
         this.LANG = this.language.getTranslations();
-        this.CONFIG = config.getConfig();
+        this.CONFIG = configService.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
         this.mergingSystems = new Set();
     }

@@ -10,11 +10,11 @@ export class NxPageService {
     CONFIG: any;
     LANG: any;
 
-    constructor(private config: NxConfigService,
+    constructor(configService: NxConfigService,
                 private title: Title,
                 private language: NxLanguageProviderService,
                 private meta: Meta) {
-        this.CONFIG = this.config.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     // called from app component
