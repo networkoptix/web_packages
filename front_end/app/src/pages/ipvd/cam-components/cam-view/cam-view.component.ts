@@ -7,7 +7,8 @@ import { NxConfigService }          from '../../../../services/nx-config';
 import { NxUriService }             from '../../../../services/uri.service';
 import { Subscription }             from 'rxjs';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { delay }                    from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -104,11 +105,9 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             });
 
         this.searchViewHeightSubscription = this.scrollMechanicsService
-            .searchViewHeightSubject
+            .searchViewHeightSubject.pipe(delay(0))
             .subscribe(() => {
-                setTimeout(() => {
-                    this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
-                });
+                this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
             });
     }
 
