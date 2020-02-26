@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Keine Alarme",
 		"systemNoAlertsMessage": "Ihr System muss gut funktionieren!",
 		"systemServerError": "Interner Serverfehler",
-		"systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
+		"systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
 		"systemNewVersion": "Aktualisieren Sie Ihr System",
 		"systemNewVersionMessage": "Ihre aktuelle Version ist mit dieser Funktion nicht kompatibel. Bitte aktualisieren Sie Ihre Server auf die neueste Version, um diese Funktion nutzen zu können.",
 		"systemHasNoCameras": "KEINE KAMERAS",

@@ -65,7 +65,7 @@ ${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers
 ${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
 
 ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
-&{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin
+&{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin    custom=custom
 
 #AUTO TESTS 2 is an offline system used for testing offline status on the systems page and offline status on the system page
 ${AUTO TESTS 2}                       Auto Tests 2

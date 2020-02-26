@@ -441,7 +441,7 @@
 		"systemNoAlerts": "אין התראות",
 		"systemNoAlertsMessage": "המערכת שלך עובדת טוב!",
 		"systemServerError": "שגיאת שרת פנימית",
-		"systemServerErrorMessage": "אירעה שגיאה, אנא נסה שוב מאוחר יותר. אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "עדכן את המערכת שלך",
 		"systemNewVersionMessage": "הגרסה הנוכחית שלך אינה תואמת לתכונה זו. אנא עדכן את השרתים שלך לגירסה האחרונה כדי להשתמש בתכונה זו.",
 		"systemHasNoCameras": ". אין מצלמות",

@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.asset }}:
+您好, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) 提出了關於{{ message.asset }}的銷售問題 :
 <pre>{{ message.message }}</pre>

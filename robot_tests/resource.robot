@@ -264,11 +264,11 @@ Go to Users List
     Go To    ${location}/users
 
 Go to System Administration
-    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}
+    Wait Until Elements Are Visible    ${SYSTEM ADMINISTRATION LINK}    timeout=30
     Click Link    ${SYSTEM ADMINISTRATION LINK}
 
 Share To
-    [arguments]    ${email}    ${permissions}
+    [arguments]    ${email}    ${permissions}    ${alert}=success
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
@@ -282,7 +282,8 @@ Share To
     Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Run Keyword if    '${alert}'=='success'    Check For Alert    ${NEW PERMISSIONS SAVED}
+    Run Keyword if    '${alert}'=='fail'    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
@@ -398,7 +399,14 @@ Disconnect from cloud
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
-    Sleep    5
+#    Sleep    5
+
+Disconnect from my account
+    Go to System Administration
+    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Click Button    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Element Is Visible    ${DISCONNECT MODAL DISCONNECT BUTTON}
+    Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
 
 Failure Tasks
     [timeout]    5 minutes

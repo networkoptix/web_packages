@@ -9,10 +9,10 @@
     "emailSubject": "{{message.subject}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{message.asset}}的產品諮詢"
+    "emailSubject": "對{{message.asset}}的銷售問題"
   },
   "technical_inquiry": {
-    "emailSubject": "{{message.asset}} 的技術諮詢"
+    "emailSubject": "對{{message.asset}} 的技術問題"
   },
   "integration_feedback": {
     "emailSubject": "{{message.asset}} 的回饋意見"

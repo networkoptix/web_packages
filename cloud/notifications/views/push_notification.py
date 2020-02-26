@@ -32,6 +32,7 @@ def get_mobile_compatible_customization():
         )
         mobile_customizations[current_customization] = current_portal.read_global_value(
             '%PUSH_CUSTOMIZATION%') or current_customization
+        caches['push_config'].set('mobile_customizations', mobile_customizations)
     return Customization.objects.get(name=mobile_customizations[current_customization])
 
 

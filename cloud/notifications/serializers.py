@@ -42,7 +42,10 @@ class SubscriptionSerializer(serializers.Serializer):
         if self.instance:
             return value
         else:
-            device = PushDevice(registration_id=value, cloud_message_type='FCM', user=self.context['request'].user)
+            device = PushDevice(
+                registration_id=value, cloud_message_type='FCM', user=self.context['request'].user,
+                application_id=settings.CUSTOMIZATION
+            )
             response = device.send_message(message='', dry_run=True)
             if response['success'] == 1:
                 return value
@@ -129,7 +132,6 @@ class SubscriptionSerializer(serializers.Serializer):
         is_enabled = validated_data.get('isEnabled', None)
         device_info = validated_data.get('deviceInfo', None)
         device_type = validated_data.get('type', None)
-        instance.application_id = settings.CUSTOMIZATION
 
         if is_enabled is not None:
             instance.active = is_enabled

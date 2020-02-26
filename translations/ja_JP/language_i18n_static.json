@@ -441,7 +441,7 @@
 		"systemNoAlerts": "No Alerts",
 		"systemNoAlertsMessage": "Your system must be doing well!",
 		"systemServerError": "Internal server error",
-		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "Update your system",
 		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
 		"systemHasNoCameras": "カメラなし",

@@ -5,4 +5,4 @@
 {{>body}}
 
 %COMPANY_LINK%
-Support: %SUPPORT_LINK%
+技術支援:%SUPPORT_LINK%

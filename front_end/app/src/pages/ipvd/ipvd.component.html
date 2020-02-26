@@ -1,5 +1,5 @@
 <div class="ipvd" [ngClass]="{'extended': showAnalytics}">
-    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
+    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'" #searchContainer>
         <nx-search
                 name="filterModel"
                 [ngModel]="filterModel"
@@ -71,7 +71,7 @@
         <div>
             <p class="m-0" *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
                 <span [translate]="'ipvd.disclaimer'"
-                      [translateParams]="{companyName: CONFIG.company, vmsName: CONFIG.vmsName}">
+                      [translateParams]="{companyName: CONFIG.companyName, vmsName: CONFIG.vmsName}">
                 </span>
                 <span>
                     {{LANG.ipvd.feedback.a_Please}} <a href (click)="openFeedback('page')"

@@ -5,4 +5,4 @@
 {{>body}}
 
 %COMPANY_LINK%
-Support: %SUPPORT_LINK%
+技术支持:%SUPPORT_LINK%

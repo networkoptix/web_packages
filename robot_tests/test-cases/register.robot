@@ -3,12 +3,13 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Open New Browser and Reset DB On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keywords    Close All Browsers
 Force Tags        Threaded
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+${auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Restart
@@ -16,8 +17,6 @@ Restart
 
 Open New Browser and Reset DB On Failure
     Close Browser
-    Run Keyword If Test Failed    Clean up random emails
-    Run Keyword If Test Failed    Clean up email noperm
     Open Browser and go to URL    ${url}
 
 Clear Register Fields
@@ -132,10 +131,11 @@ Should respond to Tab key
     Press Keys    ${REGISTER PASSWORD INPUT}    TAB
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
-    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"checked")]
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
-    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
+# Press keys ${SPACE} doesn't really hit space -> replaced by ASCII code
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    0x20
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[@class="tick checked"]
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    0x20
+    Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[contains(@class,"unchecked")]
 
     Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
     get locations
@@ -182,7 +182,6 @@ Should open Privacy Policy in a new page
 
 Should suggest user to create new account, if he was logged in and goes to registration link
     Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
@@ -205,14 +204,14 @@ Should not display promo-block, if user goes to registration not from native app
     Element Should Not Be Visible    ${JUMBOTRON}
 
 Should remove promo-block on registration form successful submitting form when from=client
-    [Tags]    qwe
+    [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=client
     Validate Register Success    ${url}/register/success?from=client
     Element Should Not Be Visible    ${JUMBOTRON}
 
 Should remove promo-block on registration form successful submitting form when from=mobile
-    [Tags]    qwe
+    [Tags]
     ${email}    Get Random Email    ${BASE EMAIL}
     Register    mark    hamill    ${email}    ${password}    from=mobile
     Validate Register Success    ${url}/register/success?from=mobile
@@ -230,24 +229,23 @@ Should not allow to access /register/success /activate/success by direct input
 Cannot register email that is already registered
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    hamill    ${email}    ${password}
+    Register Account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}
+    Register and activate account    mark    hamill    ${email}    ${password}
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${random email}    ${password}
+    ${email}    Get Random Email    ${BASE EMAIL}
+    Register Account    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
+    ${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
     ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
 
@@ -268,7 +266,6 @@ Check registration email links, colors, cloud name, and user name
 Check automatic loggout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
-    Validate Log In
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
     Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
