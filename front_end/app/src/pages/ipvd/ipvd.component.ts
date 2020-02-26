@@ -1,4 +1,5 @@
 import {
+    AfterViewInit,
     Component, ElementRef, Inject,
     OnInit, PLATFORM_ID, ViewChild,
     ViewEncapsulation
@@ -33,7 +34,7 @@ interface Params {
     encapsulation: ViewEncapsulation.None
 })
 
-export class NxIpvdComponent implements OnInit {
+export class NxIpvdComponent implements OnInit, AfterViewInit {
     LANG: any = {};
     CONFIG: any = {};
 
@@ -74,6 +75,7 @@ export class NxIpvdComponent implements OnInit {
 
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
+    @ViewChild('searchContainer', { static: false }) searchContainer: ElementRef;
 
     private setupDefaults() {
         this.allowedParameters = [
@@ -149,10 +151,10 @@ export class NxIpvdComponent implements OnInit {
         this.windowSizeSubscription = this.scrollMechanicsService
             .windowSizeSubject
             .subscribe(() => {
-
                 if (this.viewContainer && this.viewContainer.nativeElement) {
                     this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
                 }
+
                 if (this.tableContainer && this.tableContainer.nativeElement) {
                     let width = this.tableContainer.nativeElement.clientWidth;
                     width = (this.activeCamera) ? width - 8 : width; /* -gutter */
@@ -196,6 +198,12 @@ export class NxIpvdComponent implements OnInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
+    }
+
+    ngAfterViewInit() {
+        if (this.searchContainer && this.searchContainer.nativeElement) {
+            this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
+        }
     }
 
     ngOnDestroy() {}

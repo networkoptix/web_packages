@@ -1,5 +1,5 @@
 <div class="ipvd" [ngClass]="{'extended': showAnalytics}">
-    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'">
+    <div class="row p-3 m-0" [style.display]="mobileDetailMode ? 'none' : 'block'" #searchContainer>
         <nx-search
                 name="filterModel"
                 [ngModel]="filterModel"
