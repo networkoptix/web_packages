@@ -4,7 +4,7 @@ from random import *
 import time
 
 env = "https://test3.cloud.hdw.mx/"
-email = "noptixautoqa+loadtester@gmail.com"
+email = "noptixautoqaload@gmail.com"
 password = "qweasd 123"  
 first_name = "Load"
 last_name = "Tester" 
@@ -32,13 +32,14 @@ class UserBehavior(TaskSet):
   
     def on_start(self):
         self.client.get(env)
-
-        self.client.get(env+"static/scripts/commons.e8331067e434e386670c.js")
-        self.client.get(env+"static/scripts/polyfills.76cae54ef19218259a37.js")
-        self.client.get(env+"static/scripts/vendor.2065a96d159f8c3ca2ae.js")
-        self.client.get(env+"static/scripts/app.f25a083277a384fb92a8.js")
+        self.client.get(env+"fonts/fonts.css")
+        self.client.get(env+"static/styles/main.2b1ece9eb55118edf603.css")
+        self.client.get(env+"static/scripts/commons.bfeed7e5f6a674b3dcd9.js")
+        self.client.get(env+"static/scripts/polyfills.78aff2ea4eb48d269877.js")
+        self.client.get(env+"static/scripts/vendor.473bbe2ca6c519bee361.js")
+        self.client.get(env+"static/scripts/app.2b1ece9eb55118edf603.js")
         self.client.get(env+"static/scripts/webcommon.fe29696cfd506e1165fb.js")
-        self.client.get(env+"static/scripts/appnew.b2244c3f92babd721388.js")
+        self.client.get(env+"static/scripts/appnew.41af4c232211de20e20f.js")
         self.client.get(env+"api/utils/language")
         self.client.get(env+"static/lang_en_US/language_compiled.json")
         self.client.get(env+"api/utils/settings")
