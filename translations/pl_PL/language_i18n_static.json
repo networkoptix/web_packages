@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Brak alarmów",
 		"systemNoAlertsMessage": "Wygląda na to, że Twój system działa dobrze!",
 		"systemServerError": "Wewnętrzny błąd serwera",
-		"systemServerErrorMessage": "Wystąpił błąd. Proszę spróbować później. Jeśli problem będzie się powtarzał, skontaktuj się z zespołem pomocy technicznej.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "Zaktualizuj swój system",
 		"systemNewVersionMessage": "Twoja aktualna wersja jest niezgodna z tą funkcją. Zaktualizuj swoje serwery do najnowszej wersji, aby korzystać z tej funkcji.",
 		"systemHasNoCameras": "BRAK KAMER",

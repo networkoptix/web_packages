@@ -53,6 +53,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     pager: any = {};
     pagedItems: any[];
     pagerMaxSize: number;
+    pagerEllipses: boolean;
     CONFIG: any = {};
     LANG: any = {};
     showAnalytics: boolean;
@@ -62,6 +63,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     windowSize: any = {};
     windowScroll: any;
     clientHeight: number;
+    searchHeight: number;
     offsetHeight: number;
     scrollHeight: number;
     tableScrollFixed: boolean;
@@ -69,6 +71,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     revert: any;
 
     uriSubscription: SubscriptionLike;
+    resizeSubscription: SubscriptionLike;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -89,13 +92,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @ViewChild('nxTable', { static : false }) camerasTable: ElementRef;
 
     constructor(configService: NxConfigService,
+                language: NxLanguageProviderService,
                 private router: Router,
-                private language: NxLanguageProviderService,
                 private uri: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
-        this.LANG = this.language.getTranslations();
+
+        this.LANG = language.getTranslations();
         this.CONFIG = configService.getConfig();
 
         this.sortOrderASC = true;
@@ -132,6 +136,119 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
 
         this.uriSubscription = new Subscription();
+
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
+            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
+                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeSmall;
+                this.pagerEllipses = false;
+            } else {
+                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
+                this.pagerEllipses = true;
+            }
+        });
+    }
+
+    ngOnInit() {
+        this.setDebugAndBetaMode();
+
+        this.results       = this._elements.length;
+        this.csvFilename   = Date.now();
+        this.csvCameraData = this.getCsvData();
+
+        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
+        if (!this.showAnalytics) {
+            this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
+        }
+
+        this.uriSubscription = this.uri
+                                   .getURI()
+                                   .subscribe(params => {
+                                       this.params = params;
+                                       this.setDebugAndBetaMode();
+
+                                       if (!this.params.debug && !this.params.beta) {
+                                           this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
+                                       }
+
+                                       this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
+                                       this.showHeaders   = this.cameraHeaders;
+
+                                       if (this.params.sortBy) {
+                                           const sortBy    = this.params.sortBy.split(',');
+                                           const direction = (sortBy[1] === 'ASC');
+                                           const column    = this.cameraHeaders.find(x => {
+                                               return x === this.LANG.ipvd[sortBy[0]];
+                                           });
+
+                                           if (this.sortOrderASC === direction && column === this.selectedHeader) {
+                                               return; // do not sort if sorted
+                                           }
+
+                                           this.sortOrderASC = direction;
+                                           this.toggleSort(sortBy[0], true);
+
+                                       }
+
+                                       this.setPage(this.params.page || 1, true);
+
+                                       if (this.params.camera) {
+                                           const row = this.pagedItems.findIndex((camera) => {
+                                               return camera.model === this.params.camera;
+                                           });
+
+                                           const camera = this.pagedItems.find((camera) => {
+                                               return camera.model === this.params.camera;
+                                           });
+
+                                           this.setClickedRow(camera);
+                                       }
+                                   });
+    }
+
+    ngAfterViewInit(): void {
+        this.calcElementScrollMechanics();
+
+        this.scrollMechanicsService
+            .windowScrollSubject
+            .subscribe(() => {
+                this.calcElementScrollMechanics();
+            });
+
+        this.scrollMechanicsService
+            .elementTableWidthSubject
+            .subscribe(() => {
+                const width       = this.scrollMechanicsService.elementTableWidthSubject.getValue();
+                this.elementWidth = (width > 0) ? width + 'px' : '100%';
+            });
+
+        this.scrollMechanicsService
+            .offsetSubject
+            .subscribe(() => {
+                setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
+            });
+    }
+
+    ngOnDestroy() {}
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.elements) {
+            this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
+            this._elements    = changes.elements.currentValue;
+            this.results      = this._elements.length;
+
+            this.sortElements(true /* keep uri params */);
+            this.csvCameraData = this.getCsvData();
+
+            this.setPage(this.currentPage, true);
+        }
+
+        if (changes.activeCamera) {
+            if (!changes.activeCamera.currentValue) {
+                this.selectedCamera = undefined;
+            } else {
+                this.selectedCamera = changes.activeCamera.currentValue.sortKey;
+            }
+        }
     }
 
     trackPagedItem(index, item) {
@@ -139,11 +256,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             return undefined;
         }
         return item.sortKey;
-    }
-
-    private setDebugAndBetaMode() {
-        this.debug = (this.params.debug !== undefined);
-        this.beta = (this.params.beta !== undefined);
     }
 
     toggleHeaderSort(param) {
@@ -270,138 +382,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         return showParameters;
     }
 
-    private sortElements(keepURI) {
-        let sortByColumn;
-        if (this.params.sortBy) {
-            const sortBy = this.params.sortBy.split(',');
-            this.sortOrderASC = (sortBy[1] === 'ASC');
-            sortByColumn = sortBy[0];
-        } else {
-            // If sort by popularity is set in CMS or default sorting 'Vendor-Model'
-            sortByColumn = (this.CONFIG.ipvd.sortSupportedDevicesByPopularity) ? 'count' : 'sortKey';
-        }
-
-        this.toggleSort(sortByColumn, keepURI);
-
-        let pageNum;
-        if (this.params && this.params.page) {
-            pageNum = +this.params.page;
-        } else {
-            pageNum = 1;
-        }
-
-        this.setPage(pageNum, true);
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.elements) {
-            this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
-            this._elements = changes.elements.currentValue;
-            this.results = this._elements.length;
-
-            this.sortElements(true /* keep uri params */);
-            this.csvCameraData = this.getCsvData();
-
-            this.setPage(this.currentPage, true);
-        }
-
-        if (changes.activeCamera) {
-            if (!changes.activeCamera.currentValue) {
-                this.selectedCamera = undefined;
-            } else {
-                this.selectedCamera = changes.activeCamera.currentValue.sortKey;
-            }
-        }
-    }
-
-    ngOnDestroy() {}
-
-    ngOnInit() {
-        this.setDebugAndBetaMode();
-
-        this.results = this._elements.length;
-        this.csvFilename = Date.now();
-        this.csvCameraData = this.getCsvData();
-
-        this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
-        if (!this.showAnalytics) {
-            this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
-        }
-
-        this.uriSubscription = this.uri
-            .getURI()
-            .subscribe(params => {
-                this.params = params;
-                this.setDebugAndBetaMode();
-
-                if (!this.params.debug && !this.params.beta) {
-                    this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
-                }
-
-                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
-                this.showHeaders = this.cameraHeaders;
-
-                if (this.params.sortBy) {
-                    const sortBy = this.params.sortBy.split(',');
-                    const direction = (sortBy[1] === 'ASC');
-                    const column = this.cameraHeaders.find(x => {
-                        return x === this.LANG.ipvd[sortBy[0]];
-                    });
-
-                    if (this.sortOrderASC === direction && column === this.selectedHeader) {
-                        return; // do not sort if sorted
-                    }
-
-                    this.sortOrderASC = direction;
-                    this.toggleSort(sortBy[0], true);
-                }
-
-                this.setPage(this.params.page || 1, true);
-
-                if (this.params.camera) {
-                    const row = this.pagedItems.findIndex((camera) => {
-                        return camera.model === this.params.camera;
-                    });
-
-                    const camera = this.pagedItems.find((camera) => {
-                        return camera.model === this.params.camera;
-                    });
-
-                    this.setClickedRow(camera);
-                }
-            });
-    }
-
-    ngAfterViewInit(): void {
-        this.calcElementScrollMechanics();
-
-        this.scrollMechanicsService
-            .windowScrollSubject
-            .subscribe(() => {
-                this.calcElementScrollMechanics();
-            });
-
-        this.scrollMechanicsService
-            .elementTableWidthSubject
-            .subscribe(() => {
-                const width = this.scrollMechanicsService.elementTableWidthSubject.getValue();
-                this.elementWidth = (width > 0) ? width + 'px' : '100%';
-            });
-
-        this.scrollMechanicsService
-            .offsetSubject
-            .subscribe(() => {
-                setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
-            });
-    }
-
     calcElementScrollMechanics() {
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
         this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
 
         this.clientHeight = this.camerasTable.nativeElement.clientHeight;
+        this.searchHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue();
 
-        if (this.clientHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+        if (this.clientHeight + this.searchHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
             this.tableScrollFixed = true;
         } else {
             this.tableScrollFixed = false;
@@ -428,8 +416,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this._elements.slice(startIndex, endIndex);
-
-        setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
 
         if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
@@ -479,5 +465,33 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 clearTimeout(this.revert);
             }, 100);
         }
+    }
+
+    private sortElements(keepURI) {
+        let sortByColumn;
+        if (this.params.sortBy) {
+            const sortBy      = this.params.sortBy.split(',');
+            this.sortOrderASC = (sortBy[1] === 'ASC');
+            sortByColumn      = sortBy[0];
+        } else {
+            // If sort by popularity is set in CMS or default sorting 'Vendor-Model'
+            sortByColumn = (this.CONFIG.ipvd.sortSupportedDevicesByPopularity) ? 'count' : 'sortKey';
+        }
+
+        this.toggleSort(sortByColumn, keepURI);
+
+        let pageNum;
+        if (this.params && this.params.page) {
+            pageNum = +this.params.page;
+        } else {
+            pageNum = 1;
+        }
+
+        this.setPage(pageNum, true);
+    }
+
+    private setDebugAndBetaMode() {
+        this.debug = (this.params.debug !== undefined);
+        this.beta  = (this.params.beta !== undefined);
     }
 }

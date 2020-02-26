@@ -98,7 +98,7 @@ ${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail
 ${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
 ${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
 
-${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]/span[contains(@class,"tick")]
+${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]
 ${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
 
 ${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
@@ -207,7 +207,7 @@ ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTO
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
 ${MERGE FORM}                         //form[@name="mergeForm"]
-${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="genericSelect"]
+${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
 ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 ${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
@@ -365,11 +365,9 @@ ${INTEGRATION GET IN TOUCH NAME INPUT}          ${INTEGRATION GET IN TOUCH BODY}
 ${INTEGRATION GET IN TOUCH EMAIL LABEL}         ${INTEGRATION GET IN TOUCH BODY}//label[@for="user_email"]
 ${INTEGRATION GET IN TOUCH EMAIL INPUT}         ${INTEGRATION GET IN TOUCH BODY}//input[@id="user_email"]
 ${INTEGRATION GET IN TOUCH SUBJECT LABEL}       ${INTEGRATION GET IN TOUCH BODY}//label[@for="subject"]
-${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}     ${INTEGRATION GET IN TOUCH BODY}//button[@id="genericSelect"]
+${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}     ${INTEGRATION GET IN TOUCH BODY}//button[@id="subject"]
 ${INTEGRATION GET IN TOUCH DROPDOWN ICON}       ${INTEGRATION GET IN TOUCH BODY}//div[@class="dropdown"]//div[@class="nav-arrow"]
 ${INTEGRATION GET IN TOUCH DROPDOWN LIST}       ${INTEGRATION GET IN TOUCH BODY}//div[@class="dropdown"]
-${INTEGRATION GET IN TOUCH DROPDOWN BUTTON}     ${INTEGRATION GET IN TOUCH BODY}//button[@id="genericSelect"]
-${INTEGRATION GET IN TOUCH DROPDOWN ICON}       ${INTEGRATION GET IN TOUCH BODY}//div[@class="dropdown"]//div[@class="nav-arrow"]
 ${INTEGRATION GET IN TOUCH MESSAGE LABEL}       ${INTEGRATION GET IN TOUCH BODY}//label[@for="message"]
 ${INTEGRATION GET IN TOUCH MESSAGE INPUT}       ${INTEGRATION GET IN TOUCH BODY}//textarea[@id="message"]
 ${INTEGRATION GET IN TOUCH PRIVACY LINKS}       ${INTEGRATION GET IN TOUCH BODY}//div[contains(@class, "form-group")]//a[text()="${PRIVACY POLICY LINK TEXT}"]
@@ -472,32 +470,37 @@ ${HM NO ALERTS}                          //h2[contains(text(), "${NO ALERTS TEXT
 ${HM SYSTEM DOING WELL}                  //div[contains(text(), "${SYSTEM DOING WELL TEXT}")]
 
 ${HM IMPORTED REPORT RIBBON}             //nx-ribbon//div[@class="message"]/span[contains(text(), "${VIEWING IMPORTED REPORT TEXT}")]
-${HM FILE DROP INPUT}                    //input[@class="ngx-file-drop__file-input"]
+${HM FILE DROP INPUT}                    //input[contains(@class,"ngx-file-drop__file-input")]
 
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM SYSTEM PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="systems"]
 ${HM SERVERS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="servers"]
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM CAMERAS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="cameras"]
+${HM STORAGES PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="storages"]
 ${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
 ${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
 ${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
 
-${HM ALERTS TOTAL}                       //*[@id="nx-table"]/div[1]
-${HM CAMERA TABLE ERRORS}                //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
-${HM CAMERA TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM TABLE}                              //div[@id="nx-table"]
+${HM SINGLE ENTITY}                      //nx-single-entity
+${FIRST CARD HEADER}                     ${HM SINGLE ENTITY}//h4/header
+
+${HM ALERTS TOTAL}                       ${HM TABLE}/div[contains(@class,"table-header")]
+${HM CAMERA TABLE ERRORS}                ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
+${HM CAMERA TABLE WARNINGS}              ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Camera"]
 ${HM CAMERA CARD ERRORS}                 //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM CAMERA CARD WARNINGS}               //div[@class="card"]/div[text()="Cameras"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM SERVER TABLE OFFLINE}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
-${HM SERVER TABLE WARNINGS}              //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER TABLE OFFLINE}               ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
+${HM SERVER TABLE WARNINGS}              ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Server"]
 ${HM SERVER CARD OFFLINE}                //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Offline"]/following-sibling::nx-alert-counter//span
 ${HM SERVER CARD WARNINGS}               //div[@class="card"]/div[text()="Servers"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM STORAGE TABLE ERRORS}               //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
-${HM STORAGE TABLE WARNINGS}             //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]                    
+${HM STORAGE TABLE ERRORS}               ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
+${HM STORAGE TABLE WARNINGS}             ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Storage"]
 ${HM STORAGE CARD ERRORS}                //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM STORAGE CARD WARNINGS}              //div[@class="card"]/div[text()="Storage Locations"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
-${HM NETWORK INTERFACE TABLE ERRORS}     //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interace"]
-${HM NETWORK INTERFACE TABLE WARNINGS}   //*[@id="nx-table"]//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Network Interface"]
+${HM NETWORK INTERFACE TABLE ERRORS}     ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
+${HM NETWORK INTERFACE TABLE WARNINGS}   ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Warning")]/parent::*/parent::*/parent::td/following-sibling::td[@title="Interface"]
 ${HM NETWORK INTERFACE CARD ERRORS}      //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Errors"]/following-sibling::nx-alert-counter//span
 ${HM NETWORK INTERFACE CARD WARNINGS}    //div[@class="card"]/div[text()="Network Interfaces"]/following-sibling::div//div[text()="Warnings"]/following-sibling::nx-alert-counter//span
 ${HM NEXT PAGE LINK}                     //ngb-pagination//a[@aria-label="Next"]

@@ -2,9 +2,11 @@
 importScripts('/static/scripts/vendor/firebase-app.js');
 importScripts('/static/scripts/vendor/firebase-messaging.js');
 
-// Get environment config
-fetch('/api/utils/settings')
-    .then(
+const queue = [];
+let messaging;
+
+const getSettings = new Promise((resolve, reject) => {
+    fetch('/api/utils/settings').then(
         function (response) {
             if (response.status === 200) {
                 response.json().then(function (data) {
@@ -17,11 +19,23 @@ fetch('/api/utils/settings')
                     });
 
                     // Retrieve an instance of Firebase Messaging so that it can handle background messages.
-                    const messaging = firebase.messaging();
+                    messaging = firebase.messaging();
+                    while (queue.length) {
+                        messaging.onPush(queue.shift());
+                    }
+
+                    resolve();
                 });
+            } else {
+                reject(response.status);
             }
         }
     );
+});
 
-
-
+self.addEventListener('push', function (event) {
+    if (!messaging) {
+        queue.push(event);
+        event.waitUntil(getSettings);
+    }
+});

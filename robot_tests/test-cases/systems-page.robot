@@ -3,12 +3,14 @@ Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
-Suite Teardown    Close All Browsers
+Suite Teardown    Run Keywords    Remove Temporary Users    Close All Browsers
 Force Tags        system
 
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+@{auth}        ${EMAIL OWNER}    ${password}
+@{TMP USERS}
 
 *** Keywords ***
 Check Systems Text
@@ -23,70 +25,53 @@ Check Systems Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL VIEWER}
-    Clean up email noperm
     Open Browser and go to URL    ${url}
 
 Restart
     Common Restart Logout    ${url}
 
+Remove Temporary Users
+    FOR    ${user}    IN     @{TMP USERS}
+        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
+        Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+    END
+
 *** Test Cases ***
-Should show list of Systems
+System tiles represent actual information
     [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${ACCOUNT DROPDOWN}    ${SYSTEMS TILE}
-
-Has system name, owner and OpenInNx button visible on systems page
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-
-Should show Open in NX client button for online system
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-
-Should not show Open in NX client button for offline system
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTOTESTS OFFLINE}
-
-Should show system's state for systems if they are offline. Otherwise - button Open in Nx
-    [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    ${systems}    Get WebElements    //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']
+    Log in    ${EMAIL OWNER}    ${password}
+    Wait Until Elements Are Visible
+    ...    ${SYSTEMS SEARCH INPUT}
+    ...    ${ACCOUNT DROPDOWN}
+    ...    ${SYSTEMS TILE}
+    ...    ${AUTO TESTS TITLE}
+    ...    ${AUTO TESTS USER}
+    ...    ${AUTO TESTS OPEN NX}
+    ...    ${AUTOTESTS OFFLINE}
+    ${systems}=   Get WebElements    //div[@ng-repeat='system in systems | filter:searchSystems as filtered track by system.id']
     Check Online Or Offline    ${systems}    ${AUTOTESTS OFFLINE TEXT}
 
 Should show the no systems connected message when you have no systems
     [Tags]    C41866    Threaded
-    Log In    ${EMAIL NOPERM}    ${password}
+    Log In    ${EMAIL NOPERM}    ${password}    validate=False
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 Should show system name in header dropdown with "Open in Nx Witness" button if user has only one system
-    [Tags]    C41569    Threaded    123
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
+    [Tags]    C41569    Threaded
+    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
+
+    Log In    ${random email}    ${password}    validate=False
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     Click Button    ${SYSTEMS DROPDOWN}
     Wait Until Element Is Visible    ${OPEN IN NX BUTTON}
     Click Button    ${OPEN IN NX BUTTON}
-    Log Out
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Remove User Permissions    ${EMAIL NOPERM}
 
 User have several systems linked to his account
     [Tags]    C41570    Threaded
     Log    Step 1
-    Log In    ${EMAIL OWNER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}    validate=False
     # Expected Result
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     ${count1}=   Get Text    ${SYSTEMS DROPDOWN}
@@ -163,24 +148,16 @@ User have several systems linked to his account
 
 Should show the system page instead of all systems when user only has one
     [Tags]    C41878
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Share To    ${EMAIL NOPERM}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL NOPERM}    timeout=120    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Log In    ${EMAIL NOPERM}    ${password}
+    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
+    Append To List    ${TMP USERS}    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
+
+    Log In    ${random email}    ${password}    validate=False
     Wait Until Element Is Visible    ${SYSTEM NAME}
-    Log Out
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Remove User Permissions    ${EMAIL NOPERM}
 
 Should open system page when clicked on system
     [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     # Sometimes the name fields refill if you empty them too fast
     sleep    2
@@ -190,14 +167,12 @@ Should open system page when clicked on system
 
 Should show your system for owner and owner name for non-owners
     [Tags]    C41893    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL OWNER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Element Text Should Be    ${AUTO TESTS USER}    ${YOUR SYSTEM TEXT}
     :FOR    ${user}    IN    @{EMAILS LIST}
     \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
 
-# should be removed and updated for what the dropdown should show with other systems
 Should not show systems dropdown with no systems
     [Tags]    C41568    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
@@ -205,22 +180,21 @@ Should not show systems dropdown with no systems
 
 Search should highlight system name
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
+    Log In    ${EMAIL VIEWER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${AUTO TESTS}"]
 
 Search should highlight owner name
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
+    Log In    ${EMAIL VIEWER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${TEST FIRST NAME}
     Wait Until Element Is Visible    //span[@class="highlighted" and text()="${TEST FIRST NAME}"]
 
 Search can be cleared by x button
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL VIEWER}    ${password}
+    Log In    ${EMAIL VIEWER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     ${tiles}    Get WebElements    //div[contains(@class,"card ")]
     ${len}    Get Length    ${tiles}
@@ -238,99 +212,38 @@ Search can be cleared by x button
 
 Searching for owner email should only show systems with that owner
     [Tags]    C41891    Threaded
-    Log In    ${EMAIL OWNER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Input Text    ${SYSTEMS SEARCH INPUT}    ${EMAIL OWNER}
     Wait Until Element Is Not Visible    ${DIFFERENT OWNER TITLE}
 
 Search should only be visible with 9 or more systems
     [Tags]    C41890
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
-    Sleep    15
-   # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-   # Sleep    15
-   # Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-   # ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180   status=UNSEEN
-   # Delete Email    ${email}
-   # Close Mailbox
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Go to Users List
-    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
-    Remove User Permissions    ${EMAIL VIEWER}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
-    Elements Should Not Be Visible    ${SYSTEMS SEARCH INPUT}
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL OWNER}    ${password}
-    Go To    ${url}/systems/${AUTO_TESTS SYSTEM ID}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
-    Share To    ${EMAIL VIEWER}    ${VIEWER TEXT}
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${EMAIL VIEWER}    timeout=180    status=UNSEEN
-    Delete Email    ${email}
-    Close Mailbox
-    Log Out
-    Sleep    1
-    Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    Click Button    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${ALL SYSTEMS}
-    Click Link    ${ALL SYSTEMS}
+    Log In    ${EMAIL VIEWER}    ${password}    validate=False
+    Go To    ${url}/systems
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
-    Log Out
+
+    ${user id}=   Get Cloud User Id By Email    ${auth}    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
+    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+    Wait Until Element Is Not Visible    ${SYSTEMS SEARCH INPUT}
+
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${EMAIL VIEWER}
+    Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
 
 Should open systems page in anonymous state
     [Tags]    anonymous
     Go To    ${url}/systems
-    Location should be    ${url}/systems
+    Wait Until Location Is    ${url}/systems
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
 Should update owner name in systems list, if it's changed
     [Tags]
-    Go To    ${url}/account
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${ACCOUNT EMAIL}    ${ACCOUNT FIRST NAME}    ${ACCOUNT LAST NAME}
-    #Sleep added here because the account page was populating the first/lastname fields again after Selenium changed it.
-    Sleep    1
-    Element Text Should Be    ${ACCOUNT EMAIL}    ${EMAIL OWNER}
-    Textfield Value Should Be    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    newFirstName
-    Clear Element Text    ${ACCOUNT LAST NAME}
-    Input Text    ${ACCOUNT LAST NAME}    newLastName
-    Wait Until Element Is Visible    ${ACCOUNT SAVE}
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Log Out
+    Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    newFirstName    newLastName
+
     Log In    ${EMAIL ADMIN}    ${password}
     Go To    ${url}/systems
     Wait Until Elements Are Visible    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Wait Until Element Contains    ${AUTO TESTS USER}    newFirstName newLastName
+
     Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}

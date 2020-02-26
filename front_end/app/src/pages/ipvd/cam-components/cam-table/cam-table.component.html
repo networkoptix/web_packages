@@ -55,6 +55,8 @@
                 <ngb-pagination
                         [collectionSize]="results"
                         [maxSize]="pagerMaxSize"
+                        [ellipses]="pagerEllipses"
+                        [rotate]="true"
                         [pageSize]="pageSize"
                         [page]="currentPage"
                         (pageChange)="setPage($event, true)"></ngb-pagination>

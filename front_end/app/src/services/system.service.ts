@@ -181,9 +181,11 @@ class UserManager {
     }
 
     deleteUser(removedUser: NxSystemUser) {
-        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(() => {
-            this.users = this.users.filter((user) => user !== removedUser);
-        });
+        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(data => {
+            this.users = this.users.filter((user) => {
+                return user.id !== data.id;
+            });
+        }).catch(() => {});
     }
 
     findAccessRole(user: NxSystemUser) {
@@ -315,12 +317,13 @@ class UserManager {
         // TODO: remove later
         // this.cloudApi.share(this.id, user.email, accessRole);
 
-        return this.mediaserver.saveUser(user).toPromise().then((result) => {
+        return this.mediaserver.saveUser(user).toPromise().then(result => {
+            user.id = result.id;
+            user.role = role;
+            user.accessRole = role.name || role.label;
             if (userCreated) {
                 this.users.push(user);
             }
-            user.role = role;
-            user.accessRole = role.name || role.label;
             return result;
         });
     }
@@ -450,8 +453,6 @@ export class NxSystem extends System implements OnDestroy {
     infoPromise: any;
     usersPromise: any;
     systemPoll: any;
-
-    pauseUpdate = false;
 
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
@@ -695,9 +696,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     deleteFromCurrentAccount() {
-        if (this.currentUser && this.isAvailable) {
-            // Handling promise to satisfy the linter.
-            this.userManager.deleteUser(this.currentUser).toPromise().then(() => {}); // Try to remove me from the system directly
+        if (this.isAvailable && this.currentUser && !this.currentUser.isAdmin) {
+            // Try to remove me from the system directly
+            this.userManager.deleteUser(this.currentUser);
         }
         // Anyway - send another request to cloud_db to remove my this
         return this.cloudApi.unshare(this.id, this.currentUserEmail).toPromise();
@@ -707,9 +708,8 @@ export class NxSystem extends System implements OnDestroy {
         if (this.subscriberCount === 0) {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
-                this.activeSubscription = this.systemPoll.subscribe(() => {
-                    this.systemInfo = this;
-                });
+                this.activeSubscription = this.systemPoll
+                    .subscribe(() => this.systemInfo = this);
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
@@ -741,15 +741,11 @@ export class NxSystem extends System implements OnDestroy {
             return this.getInfo(true, false)
                 .then(() => this.getServers())
                 .then(() => {
-                    if (this.permissions.editUsers) {
-                        return from(this.getUsers(true));
-                    }
-                    return of('');
-                })
-                .catch(() => {
-                    this.isAvailable = false;
-                    this.lostConnection = true;
-                });
+                return from(this.getUsers(true));
+            }).catch(() => {
+                this.isAvailable = false;
+                this.lostConnection = true;
+            });
         }));
     }
 

@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Inga varningar",
 		"systemNoAlertsMessage": "Ditt system måste gå bra!",
 		"systemServerError": "Internt serverfel",
-		"systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Ett fel har inträffat. Vänligen försök igen senare. Om problemet fortsätter, kontakta ditt supportteam.",
+		"systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
 		"systemNewVersion": "Uppdatera ditt system",
 		"systemNewVersionMessage": "Din nuvarande version är inte kompatibel med den här funktionen. Uppdatera dina servrar till den senaste versionen för att använda den här funktionen.",
 		"systemHasNoCameras": "INGA KAMEROR",

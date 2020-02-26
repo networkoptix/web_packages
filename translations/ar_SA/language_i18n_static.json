@@ -441,7 +441,7 @@
 		"systemNoAlerts": "لا تنبيهات",
 		"systemNoAlertsMessage": "يجب أن يكون نظامك جيدًا!",
 		"systemServerError": "خطأ داخلي بالخادم",
-		"systemServerErrorMessage": "لقد حدث خطأ، رجاء أعد المحاولة لاحقا. لقد حدث خطأ، رجاء أعد المحاولة لاحقا. إذا استمرت المشكلة ، يرجى الاتصال بفريق الدعم الخاص بك.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "تحديث النظام الخاص بك",
 		"systemNewVersionMessage": "الإصدار الحالي الخاص بك لا يتوافق مع هذه الميزة. يرجى تحديث الخوادم الخاصة بك إلى أحدث إصدار لاستخدام هذه الميزة.",
 		"systemHasNoCameras": "لا كاميرات",

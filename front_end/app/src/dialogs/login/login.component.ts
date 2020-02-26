@@ -176,8 +176,9 @@ export class LoginModalContent implements OnInit {
                 this.router
                     .navigate([this.next])
                     .then(() => {
-                        // ensure language reload as translations are loaded on page load
-                        window.location.reload();
+                        // *** window.location.reload(); // ensure language reload as translations are loaded on page load
+                        // *** admin section is not a part of Angular project
+                        window.location.href = this.next;
                     });
             } else {
                 setTimeout(() => {

@@ -23,6 +23,7 @@ export class NxScrollMechanicsService {
     windowScrollSubject = new BehaviorSubject(0);
     elementTableWidthSubject = new BehaviorSubject(0);
     elementViewWidthSubject = new BehaviorSubject(0);
+    searchViewHeightSubject = new BehaviorSubject(0);
     offsetSubject = new BehaviorSubject(undefined);
     panelSubject = new BehaviorSubject(false);
 
@@ -45,6 +46,10 @@ export class NxScrollMechanicsService {
 
     setElementViewWidth(width: number) {
         this.elementViewWidthSubject.next(width);
+    }
+
+    setSearchViewHeight(height: number) {
+        this.searchViewHeightSubject.next(height);
     }
 
     setWindowSize(height, width) {

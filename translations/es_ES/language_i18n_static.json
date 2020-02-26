@@ -441,7 +441,7 @@
 		"systemNoAlerts": "No hay Alertas",
 		"systemNoAlertsMessage": "¡Su sistema debe estar funcionando bien!",
 		"systemServerError": "Error de servidor interno",
-		"systemServerErrorMessage": "Se produjo un error, intente nuevamente más tarde. Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
+		"systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
 		"systemNewVersion": "Actualizar tu sistema",
 		"systemNewVersionMessage": "Su versión actual es incompatible con esta función. Actualice sus servidores a la última versión para usar esta función.",
 		"systemHasNoCameras": "NO CÁMARAS",

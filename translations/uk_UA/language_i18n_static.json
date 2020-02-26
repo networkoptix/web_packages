@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Немає попереджень",
 		"systemNoAlertsMessage": "Ваша система має добре працювати!",
 		"systemServerError": "Внутрішня помилка сервера",
-		"systemServerErrorMessage": "Сталася помилка, спробуйте ще раз пізніше. Сталася помилка, повторіть спробу пізніше. Якщо проблема не зникне, будь ласка, зверніться до вашої служби підтримки.",
+		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
 		"systemNewVersion": "Оновіть вашу систему",
 		"systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
 		"systemHasNoCameras": "НЕМАЄ КАМЕР",
