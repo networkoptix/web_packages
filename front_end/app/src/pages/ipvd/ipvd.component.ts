@@ -72,6 +72,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     cameraReloadSubscription: SubscriptionLike;
     cameraGetSubscription: SubscriptionLike;
     windowSizeSubscription: SubscriptionLike;
+    offsetSubscription: SubscriptionLike;
 
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
@@ -199,7 +200,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
 
-        this.scrollMechanicsService
+        this.offsetSubscription = this.scrollMechanicsService
             .offsetSubject
             .subscribe(() => {
                 setTimeout(() => {

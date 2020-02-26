@@ -4,7 +4,7 @@ import {
     OnInit, ViewEncapsulation, Inject,
     PLATFORM_ID, OnDestroy, AfterViewInit,
     ElementRef, ViewChild, HostListener, Renderer2,
-} from '@angular/core';
+}                                         from '@angular/core';
 import { NxConfigService }                from '../../../../services/nx-config';
 import { NxUriService }                   from '../../../../services/uri.service';
 import { NxUtilsService }                 from '../../../../services/utils.service';
@@ -13,6 +13,7 @@ import { NxLanguageProviderService }      from '../../../../services/nx-language
 import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
+import { delay }                          from 'rxjs/operators';
 
 interface Params {
     [key: string]: any;
@@ -213,11 +214,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             });
 
         this.searchViewHeightSubscription = this.scrollMechanicsService
-            .searchViewHeightSubject
+            .searchViewHeightSubject.pipe(delay(0))
             .subscribe(() => {
-                setTimeout(() => {
-                    this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
-                });
+                this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
             });
     }
 
