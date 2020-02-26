@@ -250,8 +250,7 @@ class UserManager {
             const isMe = user.email === this.currentUserEmail;
             if (isMe) {
                 this.currentUser = user;
-                this._accessRole = user.accessRole;
-                this.checkPermissions();
+                this.accessRole = user.accessRole;
             }
             user.isMe = isMe;
             user.isAdmin = isAdmin;
@@ -342,8 +341,10 @@ class UserManager {
             return userRoleA.name < userRoleB.name ? -1 : 1;
         });
 
-        this.accessRoles = Array.from(new Set([...predefinedRoles, ...userRolesList]));
-        this.accessRoles.push(this.CONFIG.accessRoles.customPermission);
+        const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
+        if (JSON.stringify(newRoles) !== JSON.stringify(this.accessRoles)) {
+            this.accessRoles = newRoles;
+        }
         return this.accessRoles;
     }
 }
@@ -626,7 +627,9 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.mergeInfo = response.mergeInfo;
                 this.systemInfo = this;
-                this.userManager.accessRole = this.info.accessRole;
+                if (!this.userManager.accessRole) {
+                    this.userManager.accessRole = this.info.accessRole;
+                }
                 return Promise.resolve(this);
             });
     }
