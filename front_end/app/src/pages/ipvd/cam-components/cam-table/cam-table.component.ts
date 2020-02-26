@@ -3,7 +3,7 @@ import {
     OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation, Inject,
     PLATFORM_ID, OnDestroy, AfterViewInit,
-    ElementRef, ViewChild, HostListener, Renderer2,
+    ElementRef, ViewChild, HostListener, Renderer2
 } from '@angular/core';
 import { NxConfigService }                from '../../../../services/nx-config';
 import { NxUriService }                   from '../../../../services/uri.service';
@@ -20,10 +20,10 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector     : 'nx-cam-table',
-    templateUrl  : './cam-table.component.html',
-    styleUrls    : ['./cam-table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector : 'nx-cam-table',
+    templateUrl : './cam-table.component.html',
+    styleUrls : ['./cam-table.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
@@ -74,19 +74,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public csvFilename: any;
     public csvCameraData: any[];
     public csvOptions = {
-        fieldSeparator  : ',',
-        quoteStrings    : '"',
-        decimalseparator: '.',
-        showLabels      : true,
-        headers         : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
-        showTitle       : true,
-        title           : 'Camera List',
-        useBom          : false,
-        removeNewLines  : true
+        fieldSeparator   : ',',
+        quoteStrings     : '"',
+        decimalseparator : '.',
+        showLabels       : true,
+        headers          : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
+        showTitle        : true,
+        title            : 'Camera List',
+        useBom           : false,
+        removeNewLines   : true
     };
 
-    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
-    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
+    @ViewChild('nxScrollWrapper', { static : false }) scrollWrapper: ElementRef;
+    @ViewChild('nxTable', { static : false }) camerasTable: ElementRef;
 
     constructor(private router: Router,
                 private language: NxLanguageProviderService,
@@ -95,7 +95,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
-
         this.LANG = this.language.getTranslations();
         this.CONFIG = config.getConfig();
 
@@ -142,7 +141,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         return item.sortKey;
     }
 
-    private setDebugAndBetaMode () {
+    private setDebugAndBetaMode() {
         this.debug = (this.params.debug !== undefined);
         this.beta = (this.params.beta !== undefined);
     }
@@ -175,7 +174,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 param === 'maxFps' ||
                 param === 'isAnalyticsSupported' ||
                 param === 'count') {
-
             byParam = NxUtilsService.byParam((elm) => {
                 if (param === 'maxResolution') {
                     return elm.resolutionArea;
@@ -183,11 +181,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     return elm[param];
                 }
             }, !this.sortOrderASC);
-
         } else if (param === 'isFisheye' ||
                 param === 'isMdSupported' ||
                 param === 'isIoSupported') {
-
             byParam = NxUtilsService.byParam((elm) => {
                 if (elm[param]) {
                     return 0;
@@ -199,7 +195,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     return 3;
                 }
             }, this.sortOrderASC);
-
         } else if (param === 'isPtzSupported') {
             byParam = NxUtilsService.byParam((elm) => {
                 if (elm.isAptzSupported) {
@@ -215,7 +210,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     return 3;
                 }
             }, this.sortOrderASC);
-
         } else if (param === 'isAudioSupported') {
             byParam = NxUtilsService.byParam((elm) => {
                 if (elm.isAudioSupported === null) {
@@ -231,7 +225,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     return 1;
                 }
             }, this.sortOrderASC);
-
         } else {
             byParam = NxUtilsService.byParam((elm) => {
                 return (typeof elm[param] === 'string') ? elm[param].toLowerCase() : elm[param];
@@ -361,7 +354,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
                     this.sortOrderASC = direction;
                     this.toggleSort(sortBy[0], true);
-
                 }
 
                 this.setPage(this.params.page || 1, true);
@@ -449,26 +441,26 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     getCsvData() {
         return this._elements.map(camera => ({
-                    'Vendor'        : camera.vendor,
-                    'Model'         : camera.model,
-                    'Type'          : camera.hardwareType,
-                    'Max Resolution': camera.maxResolution,
-                    'Max FPS'       : camera.maxFps,
-                    'Codec'         : camera.primaryCodec,
-                    'Audio'         : NxUtilsService.yesNo(camera.isAudioSupported),
-                    '2-Way Audio'   : NxUtilsService.yesNo(camera.isTwAudioSupported),
-                    'PTZ'           : NxUtilsService.yesNo(camera.isPtzSupported),
-                    'Advanced PTZ'  : NxUtilsService.yesNo(camera.isAptzSupported),
-                    'Fisheye'       : NxUtilsService.yesNo(camera.isFisheye),
-                    'Motion'        : NxUtilsService.yesNo(camera.isMdSupported),
-                    'I/O'           : NxUtilsService.yesNo(camera.isIoSupported)
-                })
+            Vendor           : camera.vendor,
+            Model            : camera.model,
+            Type             : camera.hardwareType,
+            'Max Resolution' : camera.maxResolution,
+            'Max FPS'        : camera.maxFps,
+            Codec            : camera.primaryCodec,
+            Audio            : NxUtilsService.yesNo(camera.isAudioSupported),
+            '2-Way Audio'    : NxUtilsService.yesNo(camera.isTwAudioSupported),
+            PTZ              : NxUtilsService.yesNo(camera.isPtzSupported),
+            'Advanced PTZ'   : NxUtilsService.yesNo(camera.isAptzSupported),
+            Fisheye          : NxUtilsService.yesNo(camera.isFisheye),
+            Motion           : NxUtilsService.yesNo(camera.isMdSupported),
+            'I/O'            : NxUtilsService.yesNo(camera.isIoSupported)
+        })
         );
     }
 
     getCleanTitle(text: string): string {
         return text.replace(/\<br\>/g, ' ')
-                   .replace(/\<\/?span\>/g, '');
+            .replace(/\<\/?span\>/g, '');
     }
 
     isBoolean(x: any): boolean {
@@ -477,7 +469,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
     // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
-    @HostListener("mousewheel", ["$event"])
+    @HostListener('mousewheel', ['$event'])
     onMouseWheel(event) {
         if (this.tableScrollFixed) {
             this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
