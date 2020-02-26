@@ -3,13 +3,21 @@ import json
 from random import *
 import time
 
+# THIS SCRIPT DOES THE FOLLOWING:
+# 1. Registers a new user[n]
+# 2. Logs in as base user
+# 3. Gets activation code for new user[n]
+# 4. Activates new user[n] with that code
+# 5. Visits accounts page (sorta)
+# 6. Logs out
+# it then repeats the entire thing with base user changed to the previously activated new user 
+
+
 env = "https://test3.cloud.hdw.mx/"
 email = "noptixautoqaload@gmail.com"
 password = "qweasd 123"  
 first_name = "Load"
 last_name = "Tester" 
-#n = 0
-
 
 class UserBehavior(TaskSet):
     def n_method(self):
@@ -61,9 +69,11 @@ class UserBehavior(TaskSet):
         self.client.get(env+"static/images/promo/landing_promo_2.png")
         self.client.get(env+"static/images/promo/landing_promo_3.png")
         self.n_method()
+        
+        
     @task()
     def register(self):
-        
+    # Create new random email    
         self.code = ""
         index = email.find('@')
         self.new = email[:index] + '+' + str(randint(1, 1000)) + str(time.time()) + email[index:]
@@ -75,7 +85,7 @@ class UserBehavior(TaskSet):
         print('Get Register page')
         time.sleep(randint(10, 15))
         
-    # Create random email and register with it
+    # Register with new random email
     
         r =self.client.post(env+"api/account/register", json={'email': self.user[self.n], 'password': password, 'first_name': first_name, 'last_name': last_name})
         print("Base email: "+email)
@@ -98,8 +108,7 @@ class UserBehavior(TaskSet):
         print("Activation code for new user: "+self.code)
         time.sleep(randint(5, 10))
         
-    # Activate new user
-    
+    # Activate new user 
         with self.client.post(env+"api/account/activate", json={'code': self.code}, catch_response=True) as r:
             print("New user activated")
             print(r)
@@ -115,43 +124,6 @@ class UserBehavior(TaskSet):
             self.check_cookies()
             self.n += 1
         
-#     # Log out base user
-#         r = self.client.post(env+"api/account/logout")
-#         print("Base user logged out with response:")
-#         print(r)
-# #        self.client.cookies.clear()
-#         time.sleep(randint(5, 10))
-#         self.check_cookies()
-#         print("Waiting 30 seconds")
-#         time.sleep(30)
-#         
-#     # Log in new user
-#         r = self.client.post(env+"api/account/login", json={'email': self.user, 'password': password})
-#         print("New user logged in with response:")
-#         print(r)
-#         time.sleep(10)
-#         self.check_cookies()
-#         cookie2value = self.client.cookies['csrftoken']
-#         print(cookie2value)
-#         self.client.headers.update({'X-CSRFToken': cookie2value})
-#         if cookie1value == cookie2value:
-#             r = self.client.post(env+"api/account/logout")
-#             print("New user logged out due to same cookie with response:")
-#             print(r+r.text)
-#             self.check_cookies()
-#     #        self.client.cookies.clear()
-#             time.sleep(randint(5, 10))
-#             while not 'csrftoken' in self.client.cookies:
-#                 time.sleep(5)
-#                 r = self.client.post(env+"api/account/login", json={'email': self.user, 'password': password})
-#                 print("Don't have cookie late, trying to get one")
-#                 print(r)
-#                 print(self.client.cookies)
-#             cookie3value = self.client.cookies['csrftoken']
-#             self.client.headers.update({'X-CSRFToken': cookie3value})
-#             print(cookie3value)
-#         time.sleep(randint(5, 10))
-
     # Go to activated user account page
         self.client.get(env+"account")
         self.client.get(env+"api/account")
