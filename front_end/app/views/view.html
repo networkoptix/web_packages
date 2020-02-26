@@ -14,9 +14,8 @@
 </nx-page-placeholder>
 
 <nx-page-placeholder
-        type="NO_CAMS"
         ng-if="systemReady && currentSystem.isOnline && !hasCameras"
-        placeholderTitle="$root.L.common.systemHasNoCameras">
+        type="NO_CAMS">
 </nx-page-placeholder>
 
 <div ng-if="systemReady && currentSystem.isOnline && hasCameras"

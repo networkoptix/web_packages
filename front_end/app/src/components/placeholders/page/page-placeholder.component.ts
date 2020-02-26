@@ -50,7 +50,7 @@ export class NxPagePlaceholderComponent implements OnInit {
             switch (this.type) {
                 case 'NO_CAMS' :
                     this.placeholderTitle = this.LANG.common.systemHasNoCameras;
-                    this.message = '';
+                    this.message = this.LANG.common.systemHasNoCamerasMessage;
                     this.iconName = 'NoCams';
                     break;
                 case 'OFFLINE' :

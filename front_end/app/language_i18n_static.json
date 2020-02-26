@@ -131,7 +131,8 @@
             "low": "Low"
         },
         "searchCamPlaceholder": "Search",
-        "systemHasNoCameras": "NO CAMERAS",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no available cameras for you in the system. Plug some cameras into server’s local network to make them discoverable or ask system administrator to update your permissions.",
         "systemNewVersion": "Update your system",
         "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
         "systemNoAlerts": "No Alerts",
