@@ -5,15 +5,15 @@
     margin: $navbar-height auto 0 auto;
     height: 55vh;
     max-width: 550px;
-    @media screen and (max-width: 740px)  {
+    @media screen and (max-width: 740px) {
         height: 65vh;
     }
-  }
-  
+}
+
 .main-button {
-  margin-top: 40px !important;
-  a {
-      text-decoration: none;
-      color: inherit;
-  }
+    margin-top: 40px !important;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
 }
