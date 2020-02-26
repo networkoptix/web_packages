@@ -160,6 +160,7 @@ export class NxRestoreComponent implements OnInit {
     private checkContexts(arr) {
         if (!arr.includes(this.context.process) && this.uriParam) {
             this.accountService.redirectToHome();
+            return;
         }
         return this.uriParam;
     }
