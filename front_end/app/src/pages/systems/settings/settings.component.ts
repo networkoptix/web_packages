@@ -1,4 +1,3 @@
-/* eslint-disable no-multi-spaces */
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NxConfigService }                             from '../../../services/nx-config';
