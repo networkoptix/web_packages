@@ -159,7 +159,7 @@
                     id="cloudOwnerPassword" autocomplete="new-password"
                     name="cloudOwnerPassword" type="password" required
                     (ngModelChange)="passwordChange(cloudOwnerPassword)"
-                    [(ngModel)]="machine.state.template.passwordValue"
+                    [ngModel]="machine.state.template.passwordValue"
                     (blur)="passwordChange(cloudOwnerPassword)"
                     nxFocusMe>
             <label 
