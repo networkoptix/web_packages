@@ -166,9 +166,9 @@ class UserManager {
     checkPermissions() {
         const isMine = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins: isMine,
-            editUsers : isMine,
-            isAdmin   : isMine
+            editAdmins : isMine,
+            editUsers  : isMine,
+            isAdmin    : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
@@ -288,9 +288,9 @@ class UserManager {
         let userCreated = false;
         if (user.email === this.currentUserEmail) {
             if (user.isCloud) {
-                return Promise.reject({ resultCode: 'cantEditYourself' });
+                return Promise.reject({ resultCode : 'cantEditYourself' });
             } else {
-                return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
+                return Promise.reject({ resultCode : 'cantAddYourOwnEmail' });
             }
         }
 
@@ -302,11 +302,11 @@ class UserManager {
                 userCreated = true;
                 existingUser = this.mediaserver.userObject(user.fullName, user.email);
             }
-            user = {...existingUser, ...user};
+            user = { ...existingUser, ...user };
         }
 
         if (!user.canBeEdited && !this.isMine) {
-            return Promise.reject({ resultCode: 'cantEditAdmin' });
+            return Promise.reject({ resultCode : 'cantEditAdmin' });
         }
 
         user.userRoleId = role.id || '';
@@ -368,7 +368,7 @@ class ServerManager {
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
-                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId, 
+                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
                         undefined,
                         () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
                             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
@@ -561,7 +561,7 @@ export class NxSystem extends System implements OnDestroy {
         this.isAvailable = false;
         this.isOnline = false;
         this.currentServerNotBusy = true;
-        this.info = { name: '' };
+        this.info = { name : '' };
         this.mergeInfo = {};
 
         this.currentUserEmail = currentUserEmail;
@@ -803,12 +803,12 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     checkLocalAdminPassword(password) {
-        return this.mediaserver.checkLocalAdminPassword(password)
+        return this.mediaserver.checkLocalAdminPassword(password);
     }
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxSystemService {
     CONFIG: any;

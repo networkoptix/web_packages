@@ -1,10 +1,8 @@
-import { NgModule } from '@angular/core';
-
-import { DirectivesModule }  from '../directives/directives.module';
-import { SandboxModule }     from './sandbox/sandbox.module';
-import { IpvdModule }        from './ipvd/ipvd.module';
-import { Angular2CsvModule } from 'angular2-csv';
-
+import { NgModule }                  from '@angular/core';
+import { DirectivesModule }          from '../directives/directives.module';
+import { SandboxModule }             from './sandbox/sandbox.module';
+import { IpvdModule }                from './ipvd/ipvd.module';
+import { Angular2CsvModule }         from 'angular2-csv';
 import { DownloadModule }            from './download/download.module';
 import { DownloadHistoryModule }     from './download-history/download-history.module';
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
@@ -29,7 +27,7 @@ import { PushNotificationsModule }   from './push-notifications/push-notificatio
 import { Nx500Module }               from './500/500.module';
 
 @NgModule({
-    imports        : [
+    imports         : [
         DirectivesModule,
         SandboxModule,
         DownloadModule,
@@ -40,8 +38,8 @@ import { Nx500Module }               from './500/500.module';
         NxRestoreModule,
         IntegrationsModule,
         IntegrationsListModule,
-        ContentModule,          // TODO: Remove it after test
-        RightMenuModule,        // TODO: Remove it after test
+        ContentModule, // TODO: Remove it after test
+        RightMenuModule, // TODO: Remove it after test
         PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
@@ -55,12 +53,12 @@ import { Nx500Module }               from './500/500.module';
         NxDebugModule,
         NxGridLayoutModule,
         Nx500Module,
-        Nx404Module,  // Must be last module for routing
+        Nx404Module // Must be last module for routing
     ],
-    declarations   : [],
-    entryComponents: [],
-    providers      : [],
-    exports        : [
+    declarations    : [],
+    entryComponents : [],
+    providers       : [],
+    exports         : [
         SandboxModule,
         DownloadModule,
         DownloadHistoryModule,
@@ -72,8 +70,8 @@ import { Nx500Module }               from './500/500.module';
         IntegrationsListModule,
         NxSettingsModule,
         NxHealthModule,
-        ContentModule,          // TODO: Remove it after test
-        RightMenuModule,        // TODO: Remove it after test
+        ContentModule, // TODO: Remove it after test
+        RightMenuModule, // TODO: Remove it after test
         PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
@@ -81,9 +79,8 @@ import { Nx500Module }               from './500/500.module';
         NxDebugModule,
         NxGridLayoutModule,
         Nx500Module,
-        Nx404Module, // Must be last module for routing
+        Nx404Module // Must be last module for routing
     ]
 })
 export class PagesModule {
 }
-

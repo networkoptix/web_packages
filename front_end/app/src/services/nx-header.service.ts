@@ -6,7 +6,7 @@ import { LocalStorageService }    from 'ngx-store';
 import { NxSystemsService }       from './systems.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxHeaderService {
     CONFIG: any;
@@ -14,11 +14,8 @@ export class NxHeaderService {
     // Only to communicate with AJS
     systemIdSubject = new BehaviorSubject(undefined);
 
-    constructor(private config: NxConfigService,
+    constructor(private config: NxConfigService
     ) {
-
         this.CONFIG = this.config.getConfig();
     }
-
-
 }

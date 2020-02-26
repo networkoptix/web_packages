@@ -3,10 +3,9 @@ import { TranslateService }       from '@ngx-translate/core';
 import { ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxLanguageProviderService {
-
     lang: any;
     translations: any;
     // translationsSubject = new ReplaySubject();
@@ -30,7 +29,6 @@ export class NxLanguageProviderService {
     getLang(): string {
         return this.translate.currentLang;
     }
-
 
     ngOnDestroy(): void {
         // this.translationsSubject.unsubscribe();

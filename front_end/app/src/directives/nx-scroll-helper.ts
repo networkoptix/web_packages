@@ -1,9 +1,8 @@
 import { Directive, HostListener }  from '@angular/core';
 import { NxScrollMechanicsService } from '../services/scroll-mechanics.service';
 
-@Directive({selector: '[nxScrollHelper]'})
+@Directive({ selector : '[nxScrollHelper]' })
 export class NxScrollHelperDirective {
-
     constructor(
             private scrollMechanicsService: NxScrollMechanicsService
     ) {}

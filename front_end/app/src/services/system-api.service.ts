@@ -5,7 +5,6 @@ import { from, of, throwError } from 'rxjs';
 import { mergeMap, retryWhen } from 'rxjs/operators';
 import { Location } from '@angular/common';
 
-
 interface User {
     canBeEdited: boolean;
     canBeDeleted: boolean;
@@ -18,7 +17,6 @@ interface User {
     name: string;
     fullName: string;
 }
-
 
 export class NxSystemAPI {
     /*
@@ -111,7 +109,7 @@ export class NxSystemAPI {
             params.auth = this.authGet;
         }
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.get(fullUrl, {params}).pipe(
+        return this.http.get(fullUrl, { params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
@@ -123,7 +121,7 @@ export class NxSystemAPI {
         if (this.authPost) {
             params.auth = this.authPost;
         }
-        return this.http.post(fullUrl, data, {params}).pipe(
+        return this.http.post(fullUrl, data, { params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
@@ -162,7 +160,7 @@ export class NxSystemAPI {
     }
 
     /* Authentication */
-    getCurrentUser (forceReload?: boolean): Promise<any> {
+    getCurrentUser(forceReload?: boolean): Promise<any> {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
@@ -195,7 +193,7 @@ export class NxSystemAPI {
     }
 
     getRolePermissions(roleId) {
-        return this.get('/ec2/getUserRoles', {id: roleId});
+        return this.get('/ec2/getUserRoles', { id : roleId });
     }
 
     checkPermissions(flag) {
@@ -222,7 +220,7 @@ export class NxSystemAPI {
         return this.get('/ec2/getTimeOfServers');
     }
 
-    getSystemTime () {
+    getSystemTime() {
         return this.get('/api/synchronizedTime');
     }
 
@@ -253,7 +251,7 @@ export class NxSystemAPI {
     }
 
     removeMediaserver(serverId) {
-        return this.post('/ec2/removeResource', { id: serverId });
+        return this.post('/ec2/removeResource', { id : serverId });
     }
 
     restoreFactorySettings(currentPassword) {
@@ -261,7 +259,7 @@ export class NxSystemAPI {
     }
     /* End of Server settings */
 
-    /* Working with users*/
+    /* Working with users */
     getAggregatedUsersData() {
         return this.get('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
     }
@@ -271,7 +269,7 @@ export class NxSystemAPI {
     }
 
     deleteUser(userId) {
-        return this.post('/ec2/removeUser', {id: userId});
+        return this.post('/ec2/removeUser', { id : userId });
     }
 
     isEmptyId(id) {
@@ -299,28 +297,28 @@ export class NxSystemAPI {
 
     userObject(fullName, email): User {
         return {
-            canBeEdited : true,
+            canBeEdited  : true,
             canBeDeleted : true,
             email,
-            isCloud: true,
-            isEnabled: true,
-            userRoleId: this.emptyId,
-            permissions: '',
+            isCloud      : true,
+            isEnabled    : true,
+            userRoleId   : this.emptyId,
+            permissions  : '',
             // TODO: Remove the trash below after #VMS-2968
-            name: email,
-            fullName,
+            name         : email,
+            fullName
         };
     }
     /* End of Working with users */
 
     /* Cameras and Servers */
     getCameras(id) {
-        const params = id ? {id: this.cleanId(id)} : {};
+        const params = id ? { id : this.cleanId(id) } : {};
         return this.get('/ec2/getCamerasEx', params);
     }
 
     getMediaServers(id?) {
-        const params = id ? {id: this.cleanId(id)} : {};
+        const params = id ? { id : this.cleanId(id) } : {};
         return this.get('/ec2/getMediaServersEx', params);
     }
 
@@ -336,7 +334,7 @@ export class NxSystemAPI {
     /* Formatting urls */
     previewUrl(cameraId, time?, width?, height?) {
         const data: any = {
-            cameraId: this.cleanId(cameraId)
+            cameraId : this.cleanId(cameraId)
         };
         let endpoint = '/ec2/cameraThumbnail';
 
@@ -362,7 +360,7 @@ export class NxSystemAPI {
 
     hlsUrl(cameraId, position, resolution) {
         const data: any = {
-            auth: this.authGet
+            auth : this.authGet
         };
         if (position) {
             data.pos = position;
@@ -373,7 +371,7 @@ export class NxSystemAPI {
 
     webmUrl(cameraId, position, resolution, force) {
         const data: any = {
-            auth: this.authGet,
+            auth : this.authGet,
             resolution
         };
         if (position) {
@@ -384,24 +382,24 @@ export class NxSystemAPI {
     }
     /* End of formatting urls */
 
-    /* Working with archive*/
+    /* Working with archive */
     getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType) {
         const date = new Date();
-        if (typeof(startTime) === 'undefined') {
+        if (typeof (startTime) === 'undefined') {
             startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
         }
-        if (typeof(endTime) === 'undefined') {
+        if (typeof (endTime) === 'undefined') {
             endTime = date.getTime() + 100 * 1000;
         }
-        if (typeof(detail) === 'undefined') {
+        if (typeof (detail) === 'undefined') {
             detail = (endTime - startTime) / 1000;
         }
 
-        if (typeof(periodsType) === 'undefined') {
+        if (typeof (periodsType) === 'undefined') {
             periodsType = 0;
         }
         const params: any = {
-            cameraId: this.cleanId(cameraId),
+            cameraId : this.cleanId(cameraId),
             detail,
             endTime,
             periodsType,
@@ -413,7 +411,7 @@ export class NxSystemAPI {
         // RecordedTimePeriods
         return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
     }
-    /* End of Working with archive*/
+    /* End of Working with archive */
 
     setCameraPath(cameraId) {
         let systemLink = '';
@@ -452,15 +450,14 @@ export class NxSystemAPI {
     }
 
     checkLocalAdminPassword(password) {
-        const localPasswordUrl = this.urlBase.replace('//', `//admin:${password}@`);
+        const localPasswordUrl = this.urlBase.replace('\/\/', `//admin:${password}@`);
         console.log('this.localPasswordUrl', localPasswordUrl);
         return this.http.get(`${localPasswordUrl}/api/getModuleAuthenticated`);
     }
 }
 
-
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxSystemAPIService {
     CONFIG: any;

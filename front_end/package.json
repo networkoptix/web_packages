@@ -152,6 +152,7 @@
         "setupTestFrameworkScriptFile": "<rootDir>/src/setupJest.ts"
     },
     "scripts": {
+        "lint": "eslint app/src/**/*.ts --fix",
         "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
         "serve": "npm run lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
         "serve-health-monitor": "npm run lang; webpack-dev-server --config webpack.health_monitor-dev.js --open --hot --inline",

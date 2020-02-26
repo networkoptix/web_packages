@@ -28,7 +28,7 @@ import { RouterModule }                                 from '@angular/router';
 import { AngularSvgIconModule }                         from 'angular-svg-icon';
 
 @NgModule({
-    imports: [
+    imports : [
         CommonModule,
         FormsModule,
         TranslateModule,
@@ -36,9 +36,9 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         ComponentsModule,
         DirectivesModule,
         RouterModule,
-        AngularSvgIconModule,
+        AngularSvgIconModule
     ],
-    declarations   : [
+    declarations : [
         LoginModalContent,
         DisconnectModalContent,
         RenameModalContent,
@@ -55,9 +55,9 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
-        NxModalGenericComponent,
+        NxModalGenericComponent
     ],
-    entryComponents: [
+    entryComponents : [
         LoginModalContent,
         DisconnectModalContent,
         RenameModalContent,
@@ -74,14 +74,14 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
-        NxModalGenericComponent,
+        NxModalGenericComponent
     ],
-    providers      : [
+    providers : [
         NxDialogsService,
         NxModalGenericComponent,
-        NxModalApplyComponent,
+        NxModalApplyComponent
     ],
-    exports        : []
+    exports : []
 })
 export class DialogsModule {
 }
@@ -90,4 +90,3 @@ declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.services')
     .service('nxDialogsService', downgradeInjectable(NxDialogsService));
-

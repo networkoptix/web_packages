@@ -4,7 +4,7 @@ import { Observable }      from 'rxjs';
 import { NxConfigService } from './nx-config';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxCloudApiService {
     CONFIG: any;
@@ -23,7 +23,7 @@ export class NxCloudApiService {
 
     disconnect(systemId, password) {
         return this.http.post(this.CONFIG.apiBase + '/systems/disconnect', {
-            system_id: systemId,
+            system_id : systemId,
             password
         });
     }
@@ -38,7 +38,7 @@ export class NxCloudApiService {
 
     getIntegrationBy(id: number, status: string): Observable<any> {
         let uri = this.CONFIG.apiBase + '/integration/' + id;
-        uri += (status) ? '?' + status : '' ;
+        uri += (status) ? '?' + status : '';
 
         return this.http.get(uri);
     }
@@ -53,15 +53,15 @@ export class NxCloudApiService {
 
     merge(masterSystemId, slaveSystemId, password) {
         return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id: masterSystemId,
-            slave_system_id: slaveSystemId,
+            master_system_id : masterSystemId,
+            slave_system_id  : slaveSystemId,
             password
         }).toPromise();
     }
 
-    notification_send(userEmail, type, message) {
+    notificationSend(userEmail, type, message) {
         return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
-            user_email: userEmail,
+            user_email : userEmail,
             type,
             message
         }).toPromise();
@@ -73,24 +73,26 @@ export class NxCloudApiService {
 
     registerUser(email, password, firstName, lastName, subscribe, code) {
         return this.http
-                   .post(this.CONFIG.apiBase + '/account/register',
-                           {
-                               email, password,
-                               first_name: firstName,
-                               last_name : lastName,
-                               subscribe, code
-                           })
-                   .toPromise();
+            .post(this.CONFIG.apiBase + '/account/register',
+                {
+                    email,
+                    password,
+                    first_name : firstName,
+                    last_name  : lastName,
+                    subscribe,
+                    code
+                })
+            .toPromise();
     }
 
     reactivateUser(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/activate',
-                { user_email: userEmail }).toPromise();
+            { user_email : userEmail }).toPromise();
     }
 
     renameSystem(systemId, systemName) {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
-            name: systemName
+            name : systemName
         }).toPromise().then((result) => {
             this.systems('clearCache');
             return result;
@@ -103,7 +105,7 @@ export class NxCloudApiService {
         });
     }
 
-    systems (systemId?: string): Observable<any> {
+    systems(systemId?: string): Observable<any> {
         if (systemId) {
             return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
         }
@@ -116,8 +118,8 @@ export class NxCloudApiService {
 
     unshare(systemId, userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
-            user_email: userEmail,
-            role: this.CONFIG.accessRoles.unshare
+            user_email : userEmail,
+            role       : this.CONFIG.accessRoles.unshare
         });
     }
 
@@ -143,7 +145,7 @@ export class NxCloudApiService {
             email,
             password,
             remember,
-            timezone: Intl && Intl.DateTimeFormat().resolvedOptions().timeZone || ''
+            timezone : (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
     }
 
@@ -177,27 +179,27 @@ export class NxCloudApiService {
     accountPost(account) {
         // strip unnecessary account info
         const accountInfo = {
-            email       : account.email,
-            first_name  : account.first_name,
-            last_name   : account.last_name,
-            is_staff    : account.is_staff,
-            is_superuser: account.is_superuser || false,
-            language    : account.language,
-            permissions : account.permissions
+            email        : account.email,
+            first_name   : account.first_name,
+            last_name    : account.last_name,
+            is_staff     : account.is_staff,
+            is_superuser : account.is_superuser || false,
+            language     : account.language,
+            permissions  : account.permissions
         };
         return this.http.post(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword, oldPassword) {
         return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password: newPassword,
-            old_password: oldPassword
+            new_password : newPassword,
+            old_password : oldPassword
         }).toPromise();
     }
 
     reactivate(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
-            user_email: userEmail
+            user_email : userEmail
         }).toPromise();
     }
 
@@ -209,15 +211,14 @@ export class NxCloudApiService {
 
     restorePasswordRequest(userEmail) {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
-            user_email: userEmail
+            user_email : userEmail
         }).toPromise();
     }
 
     restorePassword(code, newPassword) {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
-            new_password: newPassword
+            new_password : newPassword
         }).toPromise();
     }
-
 }

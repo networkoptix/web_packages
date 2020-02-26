@@ -11,7 +11,6 @@ import { NxAccountService }          from '../services/account.service';
 import { NxConfigService }           from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
 
-
 @Injectable()
 export class HMGuard implements CanActivate {
     CONFIG: any;
@@ -20,15 +19,14 @@ export class HMGuard implements CanActivate {
     constructor(private router: Router,
                 private configService: NxConfigService,
                 private accountService: NxAccountService,
-                private systemService: NxSystemService,
+                private systemService: NxSystemService
     ) {
         this.CONFIG = this.configService.getConfig();
     }
 
     canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot
+        state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
         const systemId = route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
         }).params.systemId;
@@ -49,7 +47,6 @@ export class HMGuard implements CanActivate {
                         }, _ => {
                             return this.router.navigate([`/systems/${systemId}`]);
                         });
-
                 }
             });
     }

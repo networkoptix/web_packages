@@ -19,13 +19,13 @@ export class UserGuard implements CanActivate {
     constructor(private router: Router,
                 private configService: NxConfigService,
                 private accountService: NxAccountService,
-                private systemService: NxSystemService,
+                private systemService: NxSystemService
     ) {
         this.CONFIG = this.configService.getConfig();
     }
 
     canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot
+        state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const systemId = route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;

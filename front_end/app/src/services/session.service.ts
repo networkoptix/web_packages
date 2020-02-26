@@ -4,7 +4,7 @@ import { ReplaySubject } from 'rxjs';
 import { WINDOW } from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxSessionService {
     loginStateSubject = new ReplaySubject(0);

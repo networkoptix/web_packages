@@ -46,7 +46,7 @@ import { NxPasswordTagValidationComponent } from './password-input-tag-validatio
 import { downgradeComponent }               from '@angular/upgrade/static';
 
 @NgModule({
-    imports: [
+    imports : [
         CommonModule,
         DirectivesModule,
         TranslateModule,
@@ -55,9 +55,9 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         MenuModule,
         NgbToastModule,
         NgbModule,
-        AngularSvgIconModule,
+        AngularSvgIconModule
     ],
-    declarations   : [
+    declarations : [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -92,9 +92,9 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer,
+        ToastsContainer
     ],
-    entryComponents: [
+    entryComponents : [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -129,9 +129,9 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer,
+        ToastsContainer
     ],
-    providers      : [
+    providers : [
         NxProcessButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
@@ -159,9 +159,9 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSectionPlaceholderComponent,
         ToastsContainer,
 
-        NxRibbonService,
+        NxRibbonService
     ],
-    exports        : [
+    exports : [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -198,7 +198,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSectionPlaceholderComponent,
         ToastsContainer,
 
-        MenuModule,
+        MenuModule
     ]
 })
 export class ComponentsModule {
@@ -207,4 +207,4 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.directives')
-    .directive('nxPagePlaceholder', downgradeComponent({component: NxPagePlaceholderComponent}) as angular.IDirectiveFactory);
+    .directive('nxPagePlaceholder', downgradeComponent({ component : NxPagePlaceholderComponent }) as angular.IDirectiveFactory);

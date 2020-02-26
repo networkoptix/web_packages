@@ -5,23 +5,21 @@ import { ComponentsModule }      from '../components/components.module';
 import { NxMenuButtonComponent } from './button.component';
 
 @NgModule({
-    imports        : [
-        CommonModule,
+    imports : [
+        CommonModule
     ],
-    declarations   : [
-        NxMenuButtonComponent,
+    declarations : [
+        NxMenuButtonComponent
     ],
-    entryComponents: [
+    entryComponents : [
 
     ],
-    providers      : [
+    providers : [
 
     ],
-    exports: [
+    exports : [
         NxMenuButtonComponent
     ]
 })
 export class NxButtonModule {
 }
-
-

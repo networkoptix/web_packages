@@ -238,7 +238,7 @@ export class NxDebugComponent {
             this.result = 'Message is not a valid JSON object';
             console.warn(`Message is not json ${message}`);
         }
-        this.cloudApiService.notification_send(this.userEmail, this.type, message).
+        this.cloudApiService.notificationSend(this.userEmail, this.type, message).
             then((res: any) => {
                 this.notificationError = false;
                 this.result = this.formatJSON(res.data);

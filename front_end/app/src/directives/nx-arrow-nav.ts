@@ -1,8 +1,7 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
-@Directive({selector: '[nxArrowNav]'})
+@Directive({ selector : '[nxArrowNav]' })
 export class NxArrowNavDirective {
-
     @Input() nxArrowNav: boolean;
 
     // idx: number;
@@ -27,7 +26,6 @@ export class NxArrowNavDirective {
 
     @HostListener('document:keydown', ['$event'])
     onKeydown(e) {
-
         // filter events
         if ([38, 40].indexOf(e.keyCode) === -1) {
             return;
@@ -37,7 +35,6 @@ export class NxArrowNavDirective {
         if (this._elementRef.nativeElement.parentElement.className.indexOf('show') > -1) {
             const elements = this._elementRef.nativeElement.querySelectorAll('.dropdown-item-container');
             let fdElm = this._elementRef.nativeElement.querySelector(':focus');
-            let elm;
             let idx;
 
             if (fdElm) {
@@ -57,7 +54,7 @@ export class NxArrowNavDirective {
                 idx = NxArrowNavDirective.decrease(idx);
             }
 
-            elm = elements[idx];
+            const elm = elements[idx];
 
             if (elm && elm.firstElementChild) {
                 elm.firstElementChild.focus();

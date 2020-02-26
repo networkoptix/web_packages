@@ -15,7 +15,6 @@ interface ProcessSettings {
     successMessage: string;
 }
 
-
 class Process {
     CONFIG: any;
     LANG: any;
@@ -37,7 +36,6 @@ class Process {
     /* process handlers */
     successHandler: any;
     errorHandler: any;
-
 
     constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
         this.CONFIG = CONFIG;
@@ -62,16 +60,16 @@ class Process {
          */
         if (settings) {
             settings.errorPrefix = settings.errorPrefix ? `${settings.errorPrefix}: ` : '';
-            this.settings = {... this.settings, ... settings};
+            this.settings = { ...this.settings, ...settings };
         } else {
             this.settings = {
-                errorCodes: {},
-                errorMessage: '',
-                errorPrefix: '',
-                holdAlerts: false,
-                ignoreUnauthorized: false,
-                logoutForbidden: false,
-                successMessage: '',
+                errorCodes         : {},
+                errorMessage       : '',
+                errorPrefix        : '',
+                holdAlerts         : false,
+                ignoreUnauthorized : false,
+                logoutForbidden    : false,
+                successMessage     : ''
             };
         }
         this.caller = caller;
@@ -103,15 +101,14 @@ class Process {
                     // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
-                        classname: this.CONFIG.toast.success,
-                        autohide: !this.settings.holdAlerts,
-                        delay: this.CONFIG.alertTimeout
+                        classname : this.CONFIG.toast.success,
+                        autohide  : !this.settings.holdAlerts,
+                        delay     : this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
                 this.deferredPromise.resolve(data);
             }
-            return;
         }, (error) => {
             if (error && error.error) {
                 error = error.error;
@@ -140,7 +137,7 @@ class Process {
             });
 
             return {
-                promise: p,
+                promise : p,
                 reject,
                 resolve
             };
@@ -148,12 +145,12 @@ class Process {
     }
 
     private formatError(error, errorCodes) {
-        const errorCode = error && error.data && error.data.resultCode || error && error.resultCode || error;
+        const errorCode = (error && error.data && error.data.resultCode) || (error && error.resultCode) || error;
         if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
         }
         if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
-            if (typeof(errorCodes[errorCode]) === 'function') {
+            if (typeof (errorCodes[errorCode]) === 'function') {
                 const result = (errorCodes[errorCode])(error) || false;
                 if (result !== true) {
                     return result;
@@ -173,8 +170,8 @@ class Process {
                 // detail appears only when django rest framework declines request with
                 // {"detail":"Authentication credentials were not provided."}
                 // we need to handle this like user was not authorised
-                data.resultCode === 'notAuthorized' ||
-                data.resultCode === 'forbidden' && this.settings.logoutForbidden)) {
+                (data.resultCode === 'notAuthorized') ||
+                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
             this.sessionService.invalidateSession();
             this.deferredPromise.reject(data);
             return;
@@ -184,9 +181,9 @@ class Process {
             this.settings.errorMessage = formatted;
             const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options = {
-                autohide: !this.settings.holdAlerts,
-                classname: this.CONFIG.toast.danger,
-                delay: this.CONFIG.alertTimeout
+                autohide  : !this.settings.holdAlerts,
+                classname : this.CONFIG.toast.danger,
+                delay     : this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }
@@ -194,9 +191,8 @@ class Process {
     }
 }
 
-
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxProcessService {
     CONFIG: any;

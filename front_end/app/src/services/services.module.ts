@@ -15,14 +15,14 @@ import { NxHeaderService }               from './nx-header.service';
 import { NxScrollMechanicsService }      from './scroll-mechanics.service';
 
 @NgModule({
-    imports        : [
-        CommonModule,
+    imports : [
+        CommonModule
     ],
-    declarations   : [
+    declarations : [
     ],
-    entryComponents: [
+    entryComponents : [
     ],
-    providers      : [
+    providers : [
         NxAppStateService,
         NxApplyService,
         NxLanguageProviderService,
@@ -33,9 +33,9 @@ import { NxScrollMechanicsService }      from './scroll-mechanics.service';
         NxAccountService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService,
+        NxScrollMechanicsService
     ],
-    exports        : []
+    exports : []
 })
 export class ServiceModule {
 }
@@ -51,4 +51,3 @@ angular
     .service('nxUrlProtocolService', downgradeInjectable(NxUrlProtocolService))
     .service('nxHeaderService', downgradeInjectable(NxHeaderService))
     .service('nxSystemsService', downgradeInjectable(NxSystemsService));
-

@@ -3,7 +3,7 @@ import { NxConfigService }            from './nx-config';
 import { BehaviorSubject }           from 'rxjs';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxAppStateService {
     CONFIG: any;

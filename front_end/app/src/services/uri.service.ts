@@ -8,7 +8,7 @@ interface Params {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxUriService {
     private _pageOffset: number;
@@ -40,15 +40,15 @@ export class NxUriService {
             navigateTo = this.getURL();
         }
 
-        replace = replace ? replace : false;
+        replace = replace || false;
         // changes the route without moving from the current view
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {
                     queryParams,
-                    relativeTo: this.route,
-                    replaceUrl: replace,
-                    queryParamsHandling: 'merge'
+                    relativeTo          : this.route,
+                    replaceUrl          : replace,
+                    queryParamsHandling : 'merge'
                 }).then(success => {
                     resolve(success);
                 }, error => {
@@ -61,8 +61,8 @@ export class NxUriService {
     resetURI(navigateTo: string, queryParams: any = {}) {
         this.router.navigate([navigateTo], {
             queryParams,
-            relativeTo: this.route,
-            replaceUrl: false,
+            relativeTo : this.route,
+            replaceUrl : false
         });
     }
 }

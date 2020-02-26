@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { NxConfigService } from './nx-config';
 import { BehaviorSubject } from 'rxjs';
-import { WINDOW } from "./window-provider";
+import { WINDOW } from './window-provider';
 
 enum GRID_BREAKPOINTS {
     xs = 0,
@@ -15,11 +15,11 @@ enum GRID_BREAKPOINTS {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxScrollMechanicsService {
     CONFIG: any;
-    windowSizeSubject = new BehaviorSubject({height: 0, width: 0});
+    windowSizeSubject = new BehaviorSubject({ height : 0, width : 0 });
     windowScrollSubject = new BehaviorSubject(0);
     elementTableWidthSubject = new BehaviorSubject(0);
     elementViewWidthSubject = new BehaviorSubject(0);
@@ -31,9 +31,8 @@ export class NxScrollMechanicsService {
 
     constructor(
             private config: NxConfigService,
-            @Inject(WINDOW) private window: Window,
+            @Inject(WINDOW) private window: Window
     ) {
-
         this.CONFIG = this.config.getConfig();
     }
 

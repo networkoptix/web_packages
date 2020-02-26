@@ -5,7 +5,7 @@ import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxUrlProtocolService {
     CONFIG: any;
@@ -14,7 +14,7 @@ export class NxUrlProtocolService {
     constructor(@Inject(WINDOW) private window: Window,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,
-                private accountService: NxAccountService,
+                private accountService: NxAccountService
     ) {
         this.CONFIG = config.getConfig();
         this.LANG = this.language.getTranslations();
@@ -41,9 +41,9 @@ export class NxUrlProtocolService {
         }
 
         const source = {
-            from   : fromLocation || 'portal',
-            context: contextParam || 'none',
-            isApp  : false
+            from    : fromLocation || 'portal',
+            context : contextParam || 'none',
+            isApp   : false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
         return source;
@@ -52,27 +52,27 @@ export class NxUrlProtocolService {
     generateLink(linkSettings) {
         linkSettings = linkSettings || {};
         let settings = {
-            native          : true,
-            from            : 'portal',    // client, mobile, portal, webadmin
-            context         : undefined,
-            command         : 'client', // client, cloud, system
-            systemId        : undefined,
-            action          : undefined,
-            actionParameters: {}, // Object with parameters
-            auth            : true // true for request, null for skipping, string for specific value
+            native           : true,
+            from             : 'portal', // client, mobile, portal, webadmin
+            context          : undefined,
+            command          : 'client', // client, cloud, system
+            systemId         : undefined,
+            action           : undefined,
+            actionParameters : {}, // Object with parameters
+            auth             : true // true for request, null for skipping, string for specific value
         };
 
         if (linkSettings.systemId) {
             settings.command = 'client';
         }
 
-        settings = {...settings, ...linkSettings};
+        settings = { ...settings, ...linkSettings };
 
         const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
         const host = this.window.location.host;
 
         let getParams;
-        getParams = {...settings.actionParameters};
+        getParams = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -108,21 +108,21 @@ export class NxUrlProtocolService {
     getLink(linkSettings): Promise<any> {
         return new Promise((resolve, reject) => {
             this.accountService
-                    .authKey()
-                    .then((authKey) => {
-                        linkSettings.auth = authKey;
-                        resolve({
-                            link: this.generateLink(linkSettings),
-                            authKey
-                        });
-                    }).catch(() => {
-                        resolve({
-                            link: this.generateLink(linkSettings),
-                            authKey: undefined
-                        });
+                .authKey()
+                .then((authKey) => {
+                    linkSettings.auth = authKey;
+                    resolve({
+                        link : this.generateLink(linkSettings),
+                        authKey
                     });
-            });
-        }
+                }).catch(() => {
+                    resolve({
+                        link    : this.generateLink(linkSettings),
+                        authKey : undefined
+                    });
+                });
+        });
+    }
 
     open(systemId) {
         return this.getLink({
@@ -150,7 +150,7 @@ export class NxUrlProtocolService {
                 };
                 // Check on before unload
                 // @ts-ignore
-                this.window.protocolCheck(link, (_) => reject({resultCode: this.CONFIG.openClientError}), () => {
+                this.window.protocolCheck(link, (_) => reject({ resultCode : this.CONFIG.openClientError }), () => {
                     setTimeout(() => {
                         this.accountService
                             .checkVisitedKey(authKey)
@@ -163,11 +163,11 @@ export class NxUrlProtocolService {
                                  *      case > 1: The browser opened the app but the code didnt work.
                                  */
                                 if (!visited && blurCount !== 1) {
-                                    return reject({resultCode: this.CONFIG.openClientError});
+                                    return reject({ resultCode : this.CONFIG.openClientError });
                                 }
                                 return resolve(visited);
                             });
-                        }, this.CONFIG.openClientTimeout);
+                    }, this.CONFIG.openClientTimeout);
                 });
             });
         });

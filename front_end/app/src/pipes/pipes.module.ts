@@ -4,17 +4,17 @@ import { NxUrlSafePipe }       from './nx-url-safe';
 import { NxHealthDatePipe } from './health-date';
 
 @NgModule({
-    imports        : [],
-    declarations   : [
-        NxHealthDatePipe,
-        NxUrlSafePipe,
-    ],
-    entryComponents: [],
-    exports        : [
+    imports : [],
+    declarations : [
         NxHealthDatePipe,
         NxUrlSafePipe
     ],
-    providers: [NxHealthDatePipe]
+    entryComponents : [],
+    exports : [
+        NxHealthDatePipe,
+        NxUrlSafePipe
+    ],
+    providers : [NxHealthDatePipe]
 })
 export class PipesModule {
 }

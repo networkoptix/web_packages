@@ -4,7 +4,7 @@ import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxUtilsService {
     CONFIG: any;
@@ -50,7 +50,6 @@ export class NxUtilsService {
                 return (order) ? 1 : -1;
             }
             return 0;
-
         };
     }
 
@@ -92,12 +91,12 @@ export class NxUtilsService {
         data = JSON.stringify(data);
 
         if (this.deviceService.isDesktop()) {
-            blob = new Blob([data], {type});
+            blob = new Blob([data], { type });
             if (navigator.msSaveOrOpenBlob) {
                 navigator.msSaveOrOpenBlob(blob, filename);
                 return false;
             }
-            objectUrl  = URL.createObjectURL(blob);
+            objectUrl = URL.createObjectURL(blob);
             a.href = objectUrl;
         } else {
             a.href = 'data:' + type + ';charset=UTF-8,' + encodeURIComponent(data);

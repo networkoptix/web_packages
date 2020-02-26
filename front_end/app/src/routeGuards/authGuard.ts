@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { NxAccountService } from '../services/account.service';
 import { NxConfigService } from '../services/nx-config';
 
-
 @Injectable()
 export class AuthGuard implements CanActivate {
     CONFIG: any;
@@ -21,7 +20,7 @@ export class AuthGuard implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot
+        state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         // All route to pass account service will handle auth login.
         if (state.root.queryParams.auth) {

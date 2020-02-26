@@ -9,25 +9,25 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxUrlValidatorDirective }    from './nx-url-validator';
 
 @NgModule({
-    imports: [],
-    declarations: [
+    imports      : [],
+    declarations : [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
-        NxUrlValidatorDirective,
+        NxUrlValidatorDirective
     ],
-    entryComponents: [],
-    exports: [
+    entryComponents : [],
+    exports         : [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
-        NxUrlValidatorDirective,
+        NxUrlValidatorDirective
     ]
 })
 export class DirectivesModule {

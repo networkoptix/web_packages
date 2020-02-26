@@ -3,7 +3,7 @@ import { concatMap, delay, skip, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 /*
  * How to use the poll service.
@@ -23,7 +23,7 @@ import { Injectable } from '@angular/core';
  */
 export class NxPollService {
     constructor() {}
-    createPoll (apiCall: Observable<any>, intervalDelay: number) {
+    createPoll(apiCall: Observable<any>, intervalDelay: number) {
         const load$ = new BehaviorSubject('');
         const refresh$ = of('').pipe(
             delay(intervalDelay),

@@ -3,10 +3,9 @@ import { Observable, of }    from 'rxjs';
 import { NxCloudApiService } from './nx-cloud-api';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class CamerasService {
-
     constructor(private api: NxCloudApiService) {
     }
 
@@ -20,7 +19,6 @@ export class CamerasService {
 
     private handleError<T>(operation = 'operation', result?: T) {
         return (error: any): Observable<T> => {
-
             // TODO: send the error to remote logging infrastructure
             // console.error(error); // log to console instead
 

@@ -4,7 +4,7 @@ import { Title, Meta }              from '@angular/platform-browser';
 import { NxLanguageProviderService } from './nx-language-provider';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxPageService {
     CONFIG: any;
@@ -14,7 +14,6 @@ export class NxPageService {
                 private title: Title,
                 private language: NxLanguageProviderService,
                 private meta: Meta) {
-
         this.CONFIG = this.config.getConfig();
     }
 
@@ -35,10 +34,10 @@ export class NxPageService {
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.meta.updateTag({ name : 'viewport', content : this.CONFIG.meta.viewport.default });
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.meta.updateTag({ name : 'viewport', content : this.CONFIG.meta.viewport.desktopLayout });
     }
 }

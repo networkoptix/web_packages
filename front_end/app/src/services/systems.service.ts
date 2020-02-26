@@ -9,7 +9,7 @@ import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 export class NxSystemsService implements OnDestroy {
     CONFIG: any;
@@ -32,6 +32,7 @@ export class NxSystemsService implements OnDestroy {
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
         this.mergingSystems = new Set();
     }
+
     addToMergeList(systemId) {
         this.mergingSystems.add(systemId);
     }
@@ -40,10 +41,10 @@ export class NxSystemsService implements OnDestroy {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {
-                    autoHide: true,
-                    classname: this.CONFIG.toast.success,
-                    delay: this.CONFIG.alertTimeout
-                };
+                autoHide  : true,
+                classname : this.CONFIG.toast.success,
+                delay     : this.CONFIG.alertTimeout
+            };
             this.toastService.show(this.LANG.toastMessage.system.merge.success, options);
         }
     }
@@ -63,7 +64,7 @@ export class NxSystemsService implements OnDestroy {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
-    getSystemOwnerName (system, currentUserEmail, forOrder?) {
+    getSystemOwnerName(system, currentUserEmail, forOrder?) {
         if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {
                 return `!!!!!!!${system.name}`; // Force my systems to be first
@@ -137,9 +138,9 @@ export class NxSystemsService implements OnDestroy {
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
             system.canMerge = system.isMine && (system.capabilities &&
-                system.capabilities.cloudMerge
-                || this.CONFIG.clientMode.debug
-                || this.CONFIG.clientMode.beta);
+                system.capabilities.cloudMerge ||
+                this.CONFIG.clientMode.debug ||
+                this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
@@ -160,5 +161,4 @@ export class NxSystemsService implements OnDestroy {
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }
-
 }

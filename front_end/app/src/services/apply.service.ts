@@ -26,6 +26,7 @@ export class Watcher<T> {
     get value() {
         return this.valueSubject.getValue();
     }
+
     set value(data) {
         if (this.value === undefined) {
             this.originalValue = data;
@@ -42,7 +43,7 @@ export class Watcher<T> {
 }
 
 @Injectable({
-    providedIn: 'root'
+    providedIn : 'root'
 })
 /**
  * Make sure the route has the ApplyGuard in the canDeactivate part. Other wise navigation will
@@ -84,6 +85,7 @@ export class NxApplyService {
     get locked() {
         return this.lockedSubject.getValue();
     }
+
     set locked(value) {
         this.lockedSubject.next(value);
     }
@@ -128,10 +130,10 @@ export class NxApplyService {
      * @param {NgForm=} form Optional form to pass to the process-button
      */
     initPageWatcher(component: ViewContainerRef,
-                    saveFunction: any,
-                    discardFunction: () => void,
-                    watchers: Watcher<any>[],
-                    form?: NgForm
+        saveFunction: any,
+        discardFunction: () => void,
+        watchers: Watcher<any>[],
+        form?: NgForm
     ) {
         this.clearSubscriptions();
         this.component = component;
@@ -144,7 +146,7 @@ export class NxApplyService {
         }
         this.addWatchers(watchers);
         this.lockedSubscription = this.lockedSubject.subscribe((value) => {
-            (<NxApplyComponent>this.applyComponentRef.instance).show = value;
+            (<NxApplyComponent> this.applyComponentRef.instance).show = value;
         });
     }
 
@@ -193,31 +195,31 @@ export class NxApplyService {
         const compFactory = this.factoryResolver.resolveComponentFactory(NxApplyComponent);
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
-        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = false;
+        (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
     }
 
     private setDiscardFunction(func: any) {
         this.discardFunction = func;
-        (<NxApplyComponent>this.applyComponentRef.instance).discard = func;
+        (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
 
     private setSaveFunction(func: any) {
         this.applyFunction = func;
-        (<NxApplyComponent>this.applyComponentRef.instance).save = func;
+        (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
 
     public setForm(form: NgForm) {
         this.form = form;
-        (<NxApplyComponent>this.applyComponentRef.instance).form = form;
+        (<NxApplyComponent> this.applyComponentRef.instance).form = form;
     }
 
     public setVisible(state?) {
         state = (state === undefined) ? true : state;
-        (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = state;
+        (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
     }
 
     public setWarn(message) {
-        (<NxApplyComponent>this.applyComponentRef.instance).warn = message;
+        (<NxApplyComponent> this.applyComponentRef.instance).warn = message;
     }
 
     /**
