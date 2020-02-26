@@ -66,7 +66,7 @@ module.exports = {
             "ignoreComments"        : false,
             "ignoredNodes"          : ["TemplateLiteral *"]
         }],
-        "key-spacing"                  : ["error", { "beforeColon": true, "afterColon": true, align: "colon" }],
+        "key-spacing"                  : ["error", { align: "colon" }],
         "keyword-spacing"              : ["error", { "before": true, "after": true }],
         "lines-between-class-members"  : ["error", "always", { "exceptAfterSingleLine": true }],
         "new-cap"                      : ["error", { "newIsCap": true, "capIsNew": false, "properties": true }],
@@ -120,9 +120,10 @@ module.exports = {
         "no-mixed-spaces-and-tabs"     : "error",
         "no-multi-spaces"              : ["error", {
             exceptions: {
-                "VariableDeclarator": true,
                 "ImportDeclaration": true,
-                "Property": true }
+                "Property": true,
+                "VariableDeclarator": true
+            }
         }],
         "no-multi-str"                 : "error",
         "no-multiple-empty-lines"      : ["error", { "max": 1, "maxEOF": 0 }],
@@ -189,7 +190,7 @@ module.exports = {
         }],
         "padded-blocks"                : ["error", { "blocks": "never", "switches": "never", "classes": "never" }],
         "prefer-const"                 : ["error", { "destructuring": "all" }],
-        "prefer-promise-reject-errors" : "error",
+        "prefer-promise-reject-errors" : ["error", { "allowEmptyReject": true }],
         "quote-props"                  : ["error", "as-needed"],
         "quotes"                       : ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": false }],
         "rest-spread-spacing"          : ["error", "never"],

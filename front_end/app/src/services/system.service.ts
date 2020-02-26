@@ -9,7 +9,6 @@ import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 
-
 export interface NxSystemRole {
     id: string;
     isAdmin: boolean;
@@ -18,7 +17,6 @@ export interface NxSystemRole {
     name: string;
     permissions: string;
 }
-
 
 export interface NxSystemUser {
     accessRole: string;
@@ -72,7 +70,6 @@ export interface NxSystemServer {
     version: string;
 }
 
-
 interface SystemInterface {
     canMerge: boolean;
     id: string;
@@ -83,13 +80,11 @@ interface SystemInterface {
     servers: NxSystemServer[];
 }
 
-
 class SystemPermissions {
     editAdmins = false;
     editUsers = false;
     isAdmin = false;
 }
-
 
 class System implements SystemInterface {
     protected _isAvailable: boolean;
@@ -101,7 +96,7 @@ class System implements SystemInterface {
     stateMessage: string;
     servers: NxSystemServer[];
 
-    constructor () {
+    constructor() {
         this.canMerge = false;
         this.id = '';
         this.info = undefined;
@@ -172,8 +167,8 @@ class UserManager {
         const isMine = this.isMine;
         const permissions: SystemPermissions = {
             editAdmins: isMine,
-            editUsers: isMine,
-            isAdmin: isMine
+            editUsers : isMine,
+            isAdmin   : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
@@ -225,7 +220,7 @@ class UserManager {
                 this.updateAccessRoles(predefinedRoles, userRoles);
                 return resolve(this.processUsers(users));
             });
-        }, (error) => {
+        }, () => {
             return Promise.reject('Media server cloud not be reached.');
         });
     }
@@ -350,7 +345,6 @@ class UserManager {
     }
 }
 
-
 class ServerManager {
     private mediaserver: any;
     private systemApiService: any;
@@ -393,7 +387,7 @@ class ServerManager {
         return this.mediaserver.getMediaServers().toPromise()
             .then((result: any) => {
                 if (!result) {
-                    return Promise.reject(`Request to server has failed ${result}`);
+                    return Promise.reject(new Error(`Request to server has failed ${result}`));
                 }
                 this.servers = result;
                 return this.servers;
@@ -435,7 +429,6 @@ class ServerManager {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
 }
-
 
 export class NxSystem extends System implements OnDestroy {
     private CONFIG: any;
@@ -592,7 +585,7 @@ export class NxSystem extends System implements OnDestroy {
             this.systemApiService,
             this.currentUserEmail,
             this.id,
-            this.cloudApi,
+            this.cloudApi
         );
     }
 
@@ -620,7 +613,7 @@ export class NxSystem extends System implements OnDestroy {
                 }
 
                 if (!response) {
-                    return Promise.reject({ data: { resultCode: 'forbidden' } });
+                    return Promise.reject({ data: { resultCode: 'forbidden' }});
                 }
                 if (this.info) {
                     _.extend(this.info, response); // Update
@@ -688,9 +681,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.checkPermissions();
                 // If system is reported to be online - try to get actual users list
                 this.systemInfo = this;
-                return;
             }); // Handling promise to satisfy the linter.
-
         }
         return this.usersPromise;
     }
@@ -815,7 +806,6 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.checkLocalAdminPassword(password)
     }
 }
-
 
 @Injectable({
     providedIn: 'root'

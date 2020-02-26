@@ -14,8 +14,9 @@ import { NxApplyService, Watcher }     from '../../../../services/apply.service'
 import { NxUriService }                from '../../../../services/uri.service';
 import { Subscription, of, interval }  from 'rxjs';
 import {
-    filter, auditTime, map, delay,
-    retryWhen, delayWhen, catchError } from 'rxjs/operators';
+    filter, map, delay,
+    retryWhen, delayWhen, catchError
+}                                      from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
@@ -142,7 +143,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     return server.id === this.serverIdFromParams;
                 });
             }
-            if (typeof(server) === 'undefined') {
+            if (typeof server === 'undefined') {
                 if (this.system.servers.length > 0) {
                     server = this.system.servers[0];
                     this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
@@ -211,7 +212,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
             )
             .subscribe(res => {
-                this.setStatus(res === 'error'? this.CONFIG.servers.status.offline : '');
+                this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
                 this.checking = false;
             });
     }
@@ -219,14 +220,14 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     renameServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs.renameServer(this.system, id, name)
-            .then(newName => this.selectedServer.name = newName);
+            .then(newName => { this.selectedServer.name = newName; });
     }
 
     restartServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .restartServer(this.system, id, name)
-                .then(res => this.setStatus(res));
+            .then(res => this.setStatus(res));
     }
 
     detachServer() {
@@ -248,8 +249,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         const { id, name } = this.selectedServer;
         return this.dialogs
             .resetServer(this.system, id, name)
-                // will take some time to reset and then restart the server
-                .then(() => this.setStatus('reseting'));
+            // will take some time to reset and then restart the server
+            .then(() => this.setStatus('reseting'));
     }
 
     storePreviousValue(e) {
@@ -264,8 +265,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         // checks if entering a value less than min or greater than max
         // null exception for less than since it gets cast to 0
         if (
-            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null)
-            || this.ipPortWatcher.value > this.CONFIG.servers.port.max
+            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null) ||
+            this.ipPortWatcher.value > this.CONFIG.servers.port.max
         ) {
             this.ipPortWatcher.value = this.previousInputValue;
         }

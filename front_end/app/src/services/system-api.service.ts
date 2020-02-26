@@ -438,6 +438,7 @@ export class NxSystemAPI {
         return this.get('/ec2/metrics/values');
         // return this.http.get('/getdata');
     }
+
     getHealthAlarms() {
         return this.get('/ec2/metrics/alarms');
     }
@@ -447,11 +448,11 @@ export class NxSystemAPI {
     }
 
     getPeerSystems() {
-        return this.get('/api/discoveredPeers');
+        return this.get('/api/discoveredPeers', { showAddresses: true });
     }
 
     checkLocalAdminPassword(password) {
-        const localPasswordUrl = this.urlBase.replace('\/\/', `//admin:${password}@`)
+        const localPasswordUrl = this.urlBase.replace('//', `//admin:${password}@`);
         console.log('this.localPasswordUrl', localPasswordUrl);
         return this.http.get(`${localPasswordUrl}/api/getModuleAuthenticated`);
     }
