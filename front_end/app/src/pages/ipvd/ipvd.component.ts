@@ -198,6 +198,14 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             .subscribe((state: BreakpointState) => {
                 this.mobileDetailMode = (state.matches && this.activeCamera);
             });
+
+        this.scrollMechanicsService
+            .offsetSubject
+            .subscribe(() => {
+                setTimeout(() => {
+                    this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
+                });
+            });
     }
 
     ngAfterViewInit() {

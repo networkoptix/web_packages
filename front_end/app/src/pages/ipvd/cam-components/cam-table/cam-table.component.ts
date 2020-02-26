@@ -70,6 +70,9 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     revert: any;
 
     uriSubscription: SubscriptionLike;
+    searchViewHeightSubscription: SubscriptionLike;
+    windowScrollSubscription: SubscriptionLike;
+    elementTableWidthSubscription: SubscriptionLike;
 
     // Options for the Excel export
     public csvFilename: any;
@@ -149,70 +152,72 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
 
         this.uriSubscription = this.uri
-                                   .getURI()
-                                   .subscribe(params => {
-                                       this.params = params;
-                                       this.setDebugAndBetaMode();
+            .getURI()
+            .subscribe(params => {
+                this.params = params;
+                this.setDebugAndBetaMode();
 
-                                       if (!this.params.debug && !this.params.beta) {
-                                           this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
-                                       }
+                if (!this.params.debug && !this.params.beta) {
+                   this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
+                }
 
-                                       this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
-                                       this.showHeaders   = this.cameraHeaders;
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
+                this.showHeaders   = this.cameraHeaders;
 
-                                       if (this.params.sortBy) {
-                                           const sortBy    = this.params.sortBy.split(',');
-                                           const direction = (sortBy[1] === 'ASC');
-                                           const column    = this.cameraHeaders.find(x => {
-                                               return x === this.LANG.ipvd[sortBy[0]];
-                                           });
+                if (this.params.sortBy) {
+                   const sortBy    = this.params.sortBy.split(',');
+                   const direction = (sortBy[1] === 'ASC');
+                   const column    = this.cameraHeaders.find(x => {
+                       return x === this.LANG.ipvd[sortBy[0]];
+                   });
 
-                                           if (this.sortOrderASC === direction && column === this.selectedHeader) {
-                                               return; // do not sort if sorted
-                                           }
+                   if (this.sortOrderASC === direction && column === this.selectedHeader) {
+                       return; // do not sort if sorted
+                   }
 
-                                           this.sortOrderASC = direction;
-                                           this.toggleSort(sortBy[0], true);
+                   this.sortOrderASC = direction;
+                   this.toggleSort(sortBy[0], true);
 
-                                       }
+                }
 
-                                       this.setPage(this.params.page || 1, true);
+                this.setPage(this.params.page || 1, true);
 
-                                       if (this.params.camera) {
-                                           const row = this.pagedItems.findIndex((camera) => {
-                                               return camera.model === this.params.camera;
-                                           });
+                if (this.params.camera) {
+                    const row = this.pagedItems.findIndex((camera) => {
+                       return camera.model === this.params.camera;
+                    });
 
-                                           const camera = this.pagedItems.find((camera) => {
-                                               return camera.model === this.params.camera;
-                                           });
+                    const camera = this.pagedItems.find((camera) => {
+                       return camera.model === this.params.camera;
+                    });
 
-                                           this.setClickedRow(camera);
-                                       }
-                                   });
+                    this.setClickedRow(camera);
+                }
+            });
     }
 
     ngAfterViewInit(): void {
         this.calcElementScrollMechanics();
 
-        this.scrollMechanicsService
+        this.windowScrollSubscription = this.scrollMechanicsService
             .windowScrollSubject
             .subscribe(() => {
                 this.calcElementScrollMechanics();
             });
 
-        this.scrollMechanicsService
+        this.elementTableWidthSubscription = this.scrollMechanicsService
             .elementTableWidthSubject
             .subscribe(() => {
                 const width       = this.scrollMechanicsService.elementTableWidthSubject.getValue();
                 this.elementWidth = (width > 0) ? width + 'px' : '100%';
             });
 
-        this.scrollMechanicsService
-            .offsetSubject
+        this.searchViewHeightSubscription = this.scrollMechanicsService
+            .searchViewHeightSubject
             .subscribe(() => {
-                setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
+                setTimeout(() => {
+                    this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
+                });
             });
     }
 
