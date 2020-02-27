@@ -98,6 +98,7 @@ $preloader_small_circle_distance : 8px;
     .placeholder-content {
         text-align    : center;
         top           : calc(#{$navbar-height} / 2);
+        max-width     : 550px;
         position      : relative;
         // transform     : translateY(-65%);
         // -ms-transform : translateY(-65%);

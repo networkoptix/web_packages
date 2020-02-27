@@ -20,11 +20,8 @@
     </div>
 </ng-container>
 
-<div *ngIf="systemNoAccess" class="page-wrapper">
-    <nx-page-placeholder [type]="'FAILED_TO_ACCESS_SYSTEM'">
-        <button class="btn btn-primary main-button">
-            <a routerLink="/" translate>Go to Main Page</a>
-        </button>
-    </nx-page-placeholder>
-</div>
-<nx-footer *ngIf="systemNoAccess" center="true"></nx-footer>
+<nx-page-placeholder *ngIf="systemNoAccess" [type]="'FAILED_TO_ACCESS_SYSTEM'" [withFooter]="true">
+    <button class="btn btn-primary main-button">
+        <a routerLink="/" translate>Go to Main Page</a>
+    </button>
+</nx-page-placeholder>
