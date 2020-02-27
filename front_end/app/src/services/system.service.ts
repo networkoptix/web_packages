@@ -8,6 +8,7 @@ import { NxSystemAPIService } from './system-api.service';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
+import { Utils } from '../utils/helpers';
 
 
 export interface NxSystemRole {
@@ -302,7 +303,7 @@ class UserManager {
         });
 
         const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
-        if (JSON.stringify(newRoles) !== JSON.stringify(this.accessRoles)) {
+        if (!Utils.isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }
         return this.accessRoles;
