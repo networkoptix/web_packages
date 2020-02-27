@@ -202,7 +202,7 @@ export class NxAccountService implements OnDestroy {
         this.get()
             .then((account) => {
                 if (account) {
-                    this.router.navigate([this.CONFIG.redirectAuthorised]);
+                    this.router.navigate([this.CONFIG.redirect.authorised]);
                 }
             });
     }
