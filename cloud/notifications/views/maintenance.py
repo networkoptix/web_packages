@@ -1,9 +1,13 @@
-from api.helpers.exceptions import api_success
 import boto3
 import json
 import sys
 from datetime import datetime, timedelta
 from util.config import get_config
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+
+from api.helpers.exceptions import handle_exceptions, api_success
 
 PERIOD = 60  # In seconds
 APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD = 600  # In seconds
@@ -69,6 +73,9 @@ def _get_sqs_metrics():
     return metric_result
 
 
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
 def maintenance_health(request):
     metric_result = _get_sqs_metrics()
 
