@@ -85,6 +85,7 @@
 
                 function systemError() {
                     $scope.unreachable = true;
+                    $location.path('/404');
                 }
 
                 var cancelSubscription = $scope.$on('unauthorized_' + $routeParams.systemId, function () {
