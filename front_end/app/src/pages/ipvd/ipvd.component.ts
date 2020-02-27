@@ -19,8 +19,9 @@ import { NxAccountService }          from '../../services/account.service';
 import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxPageService }             from '../../services/page.service';
+import { delay }                     from 'rxjs/operators';
 
 interface Params {
     [key: string]: any;
@@ -201,11 +202,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
 
         this.offsetSubscription = this.scrollMechanicsService
-            .offsetSubject
+            .offsetSubject.pipe(delay(0))
             .subscribe(() => {
-                setTimeout(() => {
-                    this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
-                });
+                this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
             });
     }
 
