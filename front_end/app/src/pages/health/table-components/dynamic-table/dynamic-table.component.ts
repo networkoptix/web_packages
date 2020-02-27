@@ -296,7 +296,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     sortBy(param) {
-        debugger;
         const sortBy = param.split(',');
         this.sortOrderASC = (sortBy[SORT_DIR] === 'ASC');
         this.selectedGroup = sortBy[GROUP_ID];
