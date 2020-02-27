@@ -10,6 +10,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
      element?="btn" -> default - "badge"
      size?="large"
      name?="tagName" id?="tagId"
+     static?       -> if true the tag is not selectable
      [value]?="tag.selected"
      (click)?="onClick($event)">
      [TEXT]
@@ -30,6 +31,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
     @Input() size: string;
+    @Input() static: any;
 
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
@@ -39,6 +41,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     constructor() {}
 
     ngOnInit() {
+        this.static = (this.static !== undefined);
         this.element = this.element || 'badge';
         this.badgeType = this.type !== undefined ? `badge-${this.type}` : 'badge';
         if (this.selected) {
@@ -58,12 +61,18 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     deselectTag() {
+        if (this.static) {
+            return;
+        }
         this.selected = false;
         this.badgeType = this.type ? `badge-${this.type}` : 'badge';
         this.changeState(false);
     }
 
     selectTag() {
+        if (this.static) {
+            return;
+        }
         this.selected = true;
         this.badgeType = this.type ? `badge-${this.type}-selected` : 'badge-selected';
         this.changeState(true);
