@@ -31,11 +31,10 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                @Inject(DOCUMENT) private document: any,
+    constructor(@Inject(DOCUMENT) private document: any,
                 @Inject(WINDOW) private window: Window,
-                config: NxConfigService,
-                language: NxLanguageProviderService,
+                configService: NxConfigService,
+                languageService: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
                 private uriService: NxUriService,
@@ -47,8 +46,8 @@ export class NxAccountService implements OnDestroy {
                 private applyService: NxApplyService,
                 private appStateService: NxAppStateService
     ) {
-        this.CONFIG = config.getConfig();
-        this.LANG = language.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
 
         this.location = this.locationService;
         this.loggingOut = false;

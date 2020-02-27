@@ -78,7 +78,7 @@
                                                        >{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
                 </span>
             </p>
-            <button *ngIf="debug" >reset</button>
+            <button *ngIf="debug" (click)="reset()" >reset</button>
         </div>
 
         <div class="row p-0 m-0">
