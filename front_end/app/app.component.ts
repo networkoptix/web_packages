@@ -27,7 +27,7 @@ import { NxSystemRole }                            from './src/services/system.s
 
             <div class="mainContainer" nxScrollHelper>
                 <router-outlet></router-outlet>
-                <div style="height: 100%" ng-view="" ng-model-options="{ updateOn: 'blur' }"></div>
+                <div ng-view ng-model-options="{ updateOn: 'blur' }"></div>
             </div>
         </div>
         <nx-pre-loader type="page" *ngIf="!appStateService.ready"></nx-pre-loader>
