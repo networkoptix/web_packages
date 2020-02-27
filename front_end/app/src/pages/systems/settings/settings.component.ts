@@ -183,9 +183,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 autohide : true
             };
             this.systemReady();
-            if (!this.settingsService.share) {
-                return;
-            }
+
             if (!this.system.isOnline) {
                 return this.toastService.show(this.LANG.toastMessage.system.share.offline, toastOptions);
             }

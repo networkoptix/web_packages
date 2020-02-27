@@ -1,13 +1,13 @@
 import {
-    Component, Input, OnInit, Renderer2, ViewEncapsulation
-}                                                from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxModalGenericComponent }               from '../generic/generic.component';
-import { NxToastService }                        from '../toast.service';
-import { NxProcessService }                      from '../../services/process.service';
-import { BehaviorSubject } from 'rxjs';
+    Component, Input, Renderer2
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService }           from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxModalGenericComponent }   from '../generic/generic.component';
+import { NxToastService }            from '../toast.service';
+import { NxProcessService }          from '../../services/process.service';
+import { BehaviorSubject }           from 'rxjs';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -25,12 +25,11 @@ export class AddUserModalContent {
 
     title: string;
     sharing: any;
-    url: string;
     accessRoles: any;
     options: any;
     isNewShare: boolean;
     buttonText: string;
-    selectedPermissionSubject = new BehaviorSubject<any>({name: ''});
+    selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
 
     constructor(public activeModal: NgbActiveModal,
@@ -41,7 +40,6 @@ export class AddUserModalContent {
                 private toastService: NxToastService,
                 private processService: NxProcessService
     ) {
-        this.url = 'share';
         this.accessRoles = [];
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
@@ -63,17 +61,17 @@ export class AddUserModalContent {
         if (this.selectedPermission.userRoleId) {
             return this.LANG.accessRoles.customRole.description;
         }
-        if (this.LANG.accessRoles[ this.selectedPermission.name ]) {
-            return this.LANG.accessRoles[ this.selectedPermission.name ].description;
+        if (this.LANG.accessRoles[this.selectedPermission.name]) {
+            return this.LANG.accessRoles[this.selectedPermission.name].description;
         }
         return this.LANG.accessRoles.customRole.description;
     }
 
     setPermission(role: any) {
         this.selectedPermission = role;
-        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name] ?
-                this.LANG.accessRoles[this.selectedPermission.name].description :
-                this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name]
+            ? this.LANG.accessRoles[this.selectedPermission.name].description
+            : this.LANG.accessRoles.customRole.description;
     }
 
     formatUserName() {
@@ -104,8 +102,8 @@ export class AddUserModalContent {
                 isEnabled: true,
                 role     : {
                     name       : this.CONFIG.accessRoles.default,
-                    permissions: ''     // permissions will be updated within permissions component as it depends
-                                        // on system's accessRoles
+                    permissions: '' // permissions will be updated within permissions component as it depends
+                    // on system's accessRoles
                 }
             };
         }

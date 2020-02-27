@@ -79,8 +79,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
 
-        this.settingsService.share = this.route.snapshot.routeConfig.path === 'share';
-
         this.routeParamsSubscription = this.route
             .params
             .subscribe(params => {

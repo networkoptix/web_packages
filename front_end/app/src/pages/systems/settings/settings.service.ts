@@ -15,7 +15,6 @@ export class NxSettingsService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject([]);
 
     private _mergeTarget = '';
-    share: boolean;
 
     constructor(private api: NxCloudApiService,
                 private accountService: NxAccountService,
@@ -51,18 +50,18 @@ export class NxSettingsService implements OnDestroy {
     addUser() {
         // Call share dialog, run process inside
         return this.dialogs
-                   .addUser(this.accountService, this.system)
-                   .then((userId) => {
-                       if (userId) {
-                           userId = this.system.mediaserver.cleanId(userId);
-                           this.menuService.setDetailsSection(userId);
-                           this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
-                       }
-                   }, (reason) => {
-                       // dialog was dismissed ... this handler is required if dialog is dismissible
-                       // if we don't handle it will raise a JS error
-                       // ERROR Error: Uncaught (in promise): [object Number]
-                   });
+            .addUser(this.accountService, this.system)
+            .then((userId) => {
+                if (userId) {
+                    userId = this.system.mediaserver.cleanId(userId);
+                    this.menuService.setDetailsSection(userId);
+                    this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
+                }
+            }, (reason) => {
+                // dialog was dismissed ... this handler is required if dialog is dismissible
+                // if we don't handle it will raise a JS error
+                // ERROR Error: Uncaught (in promise): [object Number]
+            });
     }
 
     ngOnDestroy() {
