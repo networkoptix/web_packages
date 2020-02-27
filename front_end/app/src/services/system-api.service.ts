@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService } from './nx-config';
 import { from, of, throwError } from 'rxjs';
 import { mergeMap, retryWhen } from 'rxjs/operators';
@@ -450,9 +450,13 @@ export class NxSystemAPI {
     }
 
     checkLocalAdminPassword(password) {
-        const localPasswordUrl = this.urlBase.replace('\/\/', `//admin:${password}@`);
-        console.log('this.localPasswordUrl', localPasswordUrl);
-        return this.http.get(`${localPasswordUrl}/api/getModuleAuthenticated`);
+        const localPasswordUrl = this.urlBase.replace('/web', '');
+        const httpOptions = {
+            headers: new HttpHeaders({
+                Authorization: 'Basic ' + btoa(`admin:${password}`)
+            })
+        };
+        return this.http.get(`${localPasswordUrl}/api/`, httpOptions);
     }
 }
 

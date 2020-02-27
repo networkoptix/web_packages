@@ -366,11 +366,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
-            this.dialogs.confirm(this.LANG.dialogs.removeSystem.message,
-                                 this.LANG.dialogs.removeSystem.title,
-                                 this.LANG.dialogs.removeSystem.action,
-                                 'btn-danger',
-                                 this.LANG.dialogs.buttons.cancel)
+            this.dialogs.confirm(
+                this.LANG.dialogs.removeSystem.message,
+                this.LANG.dialogs.removeSystem.title,
+                this.LANG.dialogs.removeSystem.action,
+                'btn-danger',
+                this.LANG.dialogs.buttons.cancel
+            )
                 .then((result) => {
                     if (result === true) {
                         return this.deletingSystem.run();

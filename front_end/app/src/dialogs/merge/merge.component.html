@@ -28,7 +28,8 @@
             (onSelected)="setTargetSystem($event)"
             required></nx-select>
         <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
-        <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity">
+        <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
+            [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
             <label class="server-url-label" for="serverUrl" translate>
                 Server URL
             </label>
@@ -75,7 +76,8 @@
             <label class="mt-2" for="adminLogin" translate>Login</label>
             <input class="form-control" name="adminLogin" disabled="true" value="admin"/>
         </div>
-        <div class="form-group">
+        <div class="form-group"
+            [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
@@ -91,10 +93,6 @@
                 class="error-label mt-1 mb-0" for="adminPassword">
             </label>
         </div>
-        <p *ngIf="machine.state.show.passwordCheckError"
-            [innerHTML]="machine.state.template.checkingErrorText" 
-            class="error-label mt-2">
-        </p>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()">
@@ -152,7 +150,8 @@
                 {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
             </p>
         </div>
-        <div class="form-group">
+        <div class="form-group"
+            [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
             <label for="cloudOwnerPassword" translate>Password</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"

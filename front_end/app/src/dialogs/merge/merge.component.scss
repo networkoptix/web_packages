@@ -17,6 +17,11 @@
 
 .modal-footer {
     padding: 1rem;
+    &.next-button {
+        nx-process-button {
+            margin-right: 0;
+        }
+    }
 }
 
 .svg-icon {
