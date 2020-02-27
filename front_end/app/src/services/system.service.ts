@@ -530,13 +530,15 @@ export class NxSystem extends System implements OnDestroy {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    this.isAvailable = false;
                     return this.getUsersCachedInCloud();
                 });
-            } else { // or we get old cached data from the cloud
+            } else if (this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
                     return this.userManager.processUsers(users);
                 });
+            } else {
+                this.isAvailable = false;
+                usersPromise = Promise.resolve();
             }
 
             this.usersPromise = usersPromise.then(() => {
