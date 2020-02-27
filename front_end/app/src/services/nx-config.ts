@@ -100,6 +100,7 @@ export class NxConfigService {
                 }
             },
             healthMonitoring : {
+                staleReportTimeout: 5, //Timeout before ribbon alert to refresh HM
                 valueFormats : {
                     '%'              : { multiplier : 100, decimals : 0 },
                     TB               : { multiplier : 1 / 1024 ** 4 },

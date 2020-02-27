@@ -156,7 +156,8 @@
             "search": "find + [text for searchbar]",
             "stop listening": "stop listening",
             "view": "view + [camera name]"
-        }
+        },
+        "viewingOutdatedReport": "You are viewing an outdated report. Refresh the page to get a fresh report. "
     },
     "dialogs": {
         "buttons": {

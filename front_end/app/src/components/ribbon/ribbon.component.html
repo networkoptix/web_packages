@@ -8,7 +8,8 @@
         <span>{{message}}</span>
         <ng-container *ngIf="action">
             <span>&nbsp;</span>
-            <a [routerLink]="actionUrl" target="_blank">{{action}}</a>
+            <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank">{{action}}</a>
+            <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank">{{action}}</a>
         </ng-container>
     </div>
 </div>

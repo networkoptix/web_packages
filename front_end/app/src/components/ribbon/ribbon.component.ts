@@ -16,6 +16,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     actionUrl: string;
     showRibbon: boolean;
     type: string;
+    updateFunction: any;
     private ribbonSubscription: Subscription;
 
     private setupDefaults() {
@@ -24,6 +25,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         this.action = '';
         this.actionUrl = '';
         this.type = '';
+        this.updateFunction = '';
     }
 
     constructor(private ribbonService: NxRibbonService) {
@@ -41,6 +43,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
             this.action = context.text || '';
             this.actionUrl = context.url || '';
             this.type = context.type || '';
+            this.updateFunction = context.updateFunction || '';
         });
     }
 }

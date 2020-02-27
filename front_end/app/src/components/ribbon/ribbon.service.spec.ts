@@ -29,7 +29,8 @@ describe('NxRibbonService', () => {
                     message: 'Alcohol! Because no great story started with someone eating a salad.',
                     text : 'Go back',
                     url    : '/admin/cms/asset',
-                    type: ''
+                    type: '',
+                    updateFunction: ''
                 };
                 service.contextSubject = new BehaviorSubject(context);
 
@@ -47,7 +48,8 @@ describe('NxRibbonService', () => {
                     message   : '',
                     text      : '',
                     url       : '',
-                    type      : ''
+                    type      : '',
+                    updateFunction: ''
                 };
                 service.contextSubject = new BehaviorSubject(context);
 

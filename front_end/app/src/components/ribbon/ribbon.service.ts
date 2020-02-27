@@ -11,20 +11,22 @@ export class NxRibbonService {
         message: '',
         text: '',
         url: '',
-        type: ''
+        type: '',
+        updateFunction: ''
     };
     contextSubject = new BehaviorSubject(this.context);
 
     constructor() {
     }
 
-    show(message, text, url, type?) {
+    show(message, text, url, type?, updateFunction?) {
         this.context = {
             visibility: true,
             message,
             text,
             url,
-            type
+            type,
+            updateFunction
         };
         this.contextSubject.next(this.context);
     }
@@ -35,7 +37,8 @@ export class NxRibbonService {
             message: '',
             text: '',
             url: '',
-            type: ''
+            type: '',
+            updateFunction: ''
         };
         this.contextSubject.next(this.context);
     }
