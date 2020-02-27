@@ -463,10 +463,6 @@
                 if ($scope.enableFullScreen) {
                     screenfull.onchange(function () {
                         $scope.isFullscreen = screenfull.isFullscreen;
-
-                        $scope.playerAPI.video.addEventListener = function () {
-
-                        }
                     });
                 }
 
@@ -489,6 +485,9 @@
                 };
 
                 $scope.showCamerasPanel = function () {
+                    if (screenfull.isFullscreen) {
+                        $scope.closeFullscreen();
+                    }
                     $scope.showSettings = false;
                     $scope.showOnTop = true; // z-index -> show panel on small screen
 
