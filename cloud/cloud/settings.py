@@ -27,8 +27,6 @@ CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
 
-CUSTOMIZATION = 'default'
-
 assert ('trafficRelay' in conf), 'Ivan, please add traffic relay to config for this instance'
 assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instance'
 
@@ -382,8 +380,6 @@ BROKER_URL = os.getenv('QUEUE_BROKER_URL')
 BROKER_CONNECTION_MAX_RETRIES = 1
 if not BROKER_URL:
     BROKER_URL = 'sqs://'
-
-BROKER_URL = 'amqp://guest:guest@localhost:5672/email'
 
 BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
