@@ -166,15 +166,6 @@ nx-system-health-component {
   }
 }
 
-.page-wrapper {
-  position: relative;
-  margin: $navbar-height auto 0 auto;
-  height: 55vh;
-  max-width: 550px;
-  @media screen and (max-width: 740px)  {
-      height: 65vh;
-  }
-}
 
 .support-button {
   margin-top: 40px !important;

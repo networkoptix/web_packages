@@ -1,6 +1,7 @@
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
 @import '../../../styles/typography';
+@import '../../../styles/buttons';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -75,10 +76,13 @@ $preloader_small_circle_distance : 8px;
 .section-placeholder {}
 
 .page-placeholder {
-    width            : 100%;
-    height           : 100%;
-
+    width            : calc(100% - 16px);
+    margin           : 0 auto;
     z-index          : 1;
+    display          : flex;
+    flex-direction   : column;
+    justify-content  : space-around;
+    align-items      : center;
     /*This is used for the preloaders.
                      It should always be higher than the video,
                      but not the top bar of the video player*/
@@ -93,20 +97,21 @@ $preloader_small_circle_distance : 8px;
 
     .placeholder-content {
         text-align    : center;
-
+        top           : calc(#{$navbar-height} / 2);
         position      : relative;
-        top           : 50%;
-        transform     : translateY(-65%);
-        -ms-transform : translateY(-65%);
-
+        // transform     : translateY(-65%);
+        // -ms-transform : translateY(-65%);
+        position      : relative;
+        margin        : 0 auto;
+        // max-width     : 550px;
         font-size     : 130%;
         font-weight   : 300;
         line-height   : 30px;
         color         : $light;
 
-        @include media-breakpoint-down(sm) {
-            top : 50%;
-        }
+        // @include media-breakpoint-down(sm) {
+        //     top : 50%;
+        // }
 
         & > * {
             text-align : center;
@@ -150,4 +155,5 @@ $preloader_small_circle_distance : 8px;
             @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
         }
     }
+
 }
