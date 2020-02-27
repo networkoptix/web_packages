@@ -6,17 +6,12 @@ from cms.models import Asset, AssetType
 from push_notifications.conf.legacy import LegacyConfig
 
 
-class empty(object):
-    pass
-
-
 class PushConfig(LegacyConfig):
-    DEFAULT_SETTINGS = django_settings.PUSH_NOTIFICATIONS_SETTINGS
     PUSH_CONFIG_CACHE = caches['push_config']
 
     def _get_application_settings(self, application_id, settings_key, error_message):
-        value = self._read_from_cache(application_id, settings_key) or self.DEFAULT_SETTINGS.get(settings_key, empty)
-        if value is empty:
+        value = self._read_from_cache(application_id, settings_key)
+        if value is None:
             raise ImproperlyConfigured(error_message)
         return value
 

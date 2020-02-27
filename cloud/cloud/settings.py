@@ -27,6 +27,8 @@ CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
 
+CUSTOMIZATION = 'default'
+
 assert ('trafficRelay' in conf), 'Ivan, please add traffic relay to config for this instance'
 assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instance'
 
@@ -381,6 +383,8 @@ BROKER_CONNECTION_MAX_RETRIES = 1
 if not BROKER_URL:
     BROKER_URL = 'sqs://'
 
+BROKER_URL = 'amqp://guest:guest@localhost:5672/email'
+
 BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
@@ -545,20 +549,8 @@ DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
 
 # Push Notifications
 # Ask Roman Barsegian for config if you need push to work locally
-fcm = conf.get('fcm')
-if fcm:
-    PUSH_NOTIFICATIONS_SETTINGS = {
-        'CONFIG': 'notifications.conf.PushConfig',
-        'FCM_API_KEY': fcm.get('priv_key'),
-        'MAX_RETRIES': 3,
-        'RETRY_INTERVAL': 20,
-        'PUBLIC': {
-            'apiKey': fcm.get('pub_key'),
-            'authDomain': fcm.get('auth_domain'),
-            'databaseURL': fcm.get('db_url'),
-            'projectId': fcm.get('project_id'),
-            'storageBucket': fcm.get('storage_bucket'),
-            'messagingSenderId': fcm.get('messaging_sender_id'),
-            'appId': fcm.get('app_id')
-        }
-    }
+PUSH_NOTIFICATIONS_SETTINGS = {
+    'CONFIG': 'notifications.conf.PushConfig',
+    'MAX_RETRIES': 3,
+    'RETRY_INTERVAL': 20
+}
