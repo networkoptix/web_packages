@@ -21,8 +21,6 @@
   right: 0;
   bottom: 0;
   background-color: $red_l2;
-  -webkit-transition: .4s;
-  transition: .4s;
   
   &:before {
     position           : absolute;
@@ -32,8 +30,6 @@
     left               : 1px;
     bottom             : 1px;
     background-color   : white;
-    -webkit-transition : .4s;
-    transition         : .4s;
     z-index            : 1;
   }
 }
