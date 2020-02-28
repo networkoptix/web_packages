@@ -215,7 +215,7 @@ export class NxAccountService implements OnDestroy {
                     this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
             }).catch(() => {
-                this.router.navigate([this.CONFIG.redirectUnauthorised]);
+                this.router.navigate([this.CONFIG.redirect.unauthorised]);
             });
     }
 
@@ -280,7 +280,7 @@ export class NxAccountService implements OnDestroy {
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
-                        this.location.path(this.CONFIG.redirectUnauthorised);
+                        this.location.path(this.CONFIG.redirect.unauthorised);
                     });
             });
     }
@@ -305,7 +305,7 @@ export class NxAccountService implements OnDestroy {
                             this.sessionService.invalidateSession(); // Clear session
                             if (!doNotRedirect) {
                                 return this.router
-                                    .navigate([this.CONFIG.redirectUnauthorised])
+                                    .navigate([this.CONFIG.redirect.unauthorised])
                                     .finally(() => {
                                         setTimeout(() => this.window.location.reload());
                                     });
@@ -330,16 +330,16 @@ export class NxAccountService implements OnDestroy {
 
                     let cancelLabel = '';
                     if (isRegister) {
-                        cancelLabel = this.LANG.dialogs.createNewAccount;
+                        cancelLabel = this.LANG.dialogs.buttons.createAccount;
                     } else if (isRestore) {
-                        cancelLabel = this.LANG.dialogs.logoutAuthorisedLogoutButton;
+                        cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
                     } else {
-                        cancelLabel = this.LANG.dialogs.cancelButton;
+                        cancelLabel = this.LANG.dialogs.buttons.cancelButton;
                     }
                     return this.dialogs
                         .confirm('',
-                            this.LANG.dialogs.changeAccountLogged.replace('{email}', account.email),
-                            this.LANG.dialogs.stayLoggedIn,
+                            this.LANG.dialogs.titles.changeAccount.replace('{email}', account.email),
+                            this.LANG.dialogs.buttons.stayLoggedIn,
                             undefined,
                             cancelLabel,
                             ''
@@ -382,7 +382,7 @@ export class NxAccountService implements OnDestroy {
 
                     const response = await this.dialogs
                         .confirm('',
-                            this.LANG.dialogs.title.loggedFromOtherAccount,
+                            this.LANG.dialogs.titles.loggedFromOtherAccount,
                             this.LANG.dialogs.buttons.ok,
                             undefined,
                             this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
