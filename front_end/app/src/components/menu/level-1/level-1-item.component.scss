@@ -33,6 +33,9 @@ $item_height : 40px;
         width           : $item_height;
         height          : $item_height;
         line-height     : initial;
+        svg .st0 {
+            fill            : $dark9;
+        }
     }
 
     &.selected {
