@@ -91,6 +91,11 @@ export class LoginModalContent implements OnInit {
     }
 
     resetForm() {
+        const {errors} = this.loginForm.controls.login_email
+        if (errors) {
+            delete errors.not_activated
+            this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
+        }
         if (!this.loginForm.valid) {
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
