@@ -9,7 +9,7 @@ import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
     CONFIG: any;
@@ -41,9 +41,9 @@ export class NxSystemsService implements OnDestroy {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {
-                autoHide  : true,
-                classname : this.CONFIG.toast.success,
-                delay     : this.CONFIG.alertTimeout
+                autoHide : true,
+                classname: this.CONFIG.toast.success,
+                delay    : this.CONFIG.alertTimeout
             };
             this.toastService.show(this.LANG.toastMessage.system.merge.success, options);
         }

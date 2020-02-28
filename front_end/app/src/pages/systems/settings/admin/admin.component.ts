@@ -1,6 +1,6 @@
 import {
     Component, OnDestroy, OnInit, Inject,
-    ViewChild, ElementRef, ViewContainerRef,
+    ViewChild, ElementRef, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { NxConfigService }           from '../../../../services/nx-config';
@@ -63,15 +63,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     peerSystems: any[];
 
     settingsWatchers: any = {
-        autoDiscoveryEnabled: new Watcher<boolean>(),
-        statisticsAllowed: new Watcher<boolean>(),
-        cameraSettingsOptimization: new Watcher<boolean>(),
-        auditTrailEnabled: new Watcher<boolean>(),
-        trafficEncryptionForced: new Watcher<boolean>(),
+        autoDiscoveryEnabled        : new Watcher<boolean>(),
+        statisticsAllowed           : new Watcher<boolean>(),
+        cameraSettingsOptimization  : new Watcher<boolean>(),
+        auditTrailEnabled           : new Watcher<boolean>(),
+        trafficEncryptionForced     : new Watcher<boolean>(),
         videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitToggle: new Watcher<boolean>(),
-        sessionLimitMinutes: new Watcher<number>(),
-        sessionLimitUnit: new Watcher<string>(),
+        sessionLimitToggle          : new Watcher<boolean>(),
+        sessionLimitMinutes         : new Watcher<number>(),
+        sessionLimitUnit            : new Watcher<string>()
     };
 
     readonly watchersToNotSave: string[] = ['sessionLimitToggle', 'sessionLimitUnit'];
@@ -94,13 +94,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
-        const merging = this.system && typeof(this.system.mergeInfo) !== 'undefined' || forceMergeState;
+        const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         const available = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
             disconnectDisabled: merging,
-            mergeDisabled: (merging || available) && !(this.debugMode || this.betaMode),
-            renameDisabled: merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge: this.system && this.system.isMine && this.systemsService.systems.length > 1
+            mergeDisabled     : (merging || available) && !(this.debugMode || this.betaMode),
+            renameDisabled    : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
+            showMerge         : this.system && this.system.isMine && this.systemsService.systems.length > 1
         };
     }
 
@@ -116,12 +116,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                private router: Router,
+                private router: Router
     ) {
         this.viewContainerRef = viewContainerRef;
         this.setupDefaults(configService);
     }
-
 
     ngOnInit(): void {
         this.LANG = this.language.getTranslations();
@@ -129,14 +128,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.currentlyMerging = false;
         this.settings = {
             disconnectDisabled: false,
-            mergeDisabled: true,
-            renameDisabled: false,
-            showMerge: true
+            mergeDisabled     : true,
+            renameDisabled    : false,
+            showMerge         : true
         };
 
         this.limitSessionTimeUnits = [
             { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600, default: 24 },
-            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600 , default: 60},
+            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600, default: 60 }
         ];
 
         this.settingsWatchersSet = false;
@@ -217,8 +216,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 const sw = this.settingsWatchers;
                 if (sw.sessionLimitMinutes && sw.sessionLimitMinutes.value) {
-                    this.timeUnitCount = sw.sessionLimitMinutes.originalValue
-                        || this.limitSessionTimeUnits[0].default;
+                    this.timeUnitCount = sw.sessionLimitMinutes.originalValue ||
+                        this.limitSessionTimeUnits[0].default;
                     if (this.timeUnitCount % 60 === 0) {
                         this.timeUnitCount /= 60;
                     }
@@ -358,7 +357,24 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updatePeerSystems() {
         return this.system.getPeerSystems().toPromise()
             .then(res => {
-                this.peerSystems = res.reply;
+                this.peerSystems = res.reply
+                    .filter(peer => !peer.cloudSystemId)
+                    .map(peer => {
+                        const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                        const system: any = {
+                            url       : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
+                            ip        : peer.remoteAddresses[0],
+                            name      : peer.name,
+                            isNew,
+                            ...peer
+                        };
+                        if (peer.status === 'Incompatible') {
+                            system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
+                        }
+                        return system;
+                    });
+                console.log('peerSystems', this.peerSystems);
                 this.updateSettings(this.currentlyMerging);
             });
     }
@@ -383,15 +399,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     rename() {
         return this.dialogs
-                   .rename(this.system.id, this.system.info.name)
-                   .then((finalName) => {
-                       if (finalName) {
-                           this.system.info.name = finalName;
-                       }
+            .rename(this.system.id, this.system.info.name)
+            .then((finalName) => {
+                if (finalName) {
+                    this.system.info.name = finalName;
+                }
 
-                       this.pageService.setPageTitle(this.system.info.name + ' -');
-                       this.systemsService.forceUpdateSystems(this.accountService.getEmail());
-                   });
+                this.pageService.setPageTitle(this.system.info.name + ' -');
+                this.systemsService.forceUpdateSystems(this.accountService.getEmail());
+            });
     }
 
     mergeSystems() {
@@ -401,42 +417,42 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.settingsService.system = this.system;
 
         return this.dialogs
-                   .merge(this.system, this.systems, this.peerSystems, this.accountService)
-                   .then((mergeInfo) => {
-                       if (mergeInfo) {
-                           this.system.mergeInfo = mergeInfo;
-                           const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
-                           this.systemsService.addToMergeList(systemId);
-                       }
-                   }, (error) => {
-                       if (!error.primarySystemName && !error.secondarySystemName) {
-                           return;
-                       }
-                       const commonErrorMsg = this.LANG.dialogs.merge.commonText
-                                                  .replace('{{primarySystem}}', error.primarySystemName)
-                                                  .replace('{{secondarySystem}}', error.secondarySystemName);
-                       let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
-                       if (!responseError) {
-                           responseError = this.LANG.errorCodes.unknownMergeError;
-                       } else {
-                           responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
-                       }
+            .merge(this.system, this.systems, this.peerSystems, this.accountService)
+            .then((mergeInfo) => {
+                if (mergeInfo) {
+                    this.system.mergeInfo = mergeInfo;
+                    const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
+                    this.systemsService.addToMergeList(systemId);
+                }
+            }, (error) => {
+                if (!error.primarySystemName && !error.secondarySystemName) {
+                    return;
+                }
+                const commonErrorMsg = this.LANG.dialogs.merge.commonText
+                    .replace('{{primarySystem}}', error.primarySystemName)
+                    .replace('{{secondarySystem}}', error.secondarySystemName);
+                let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
+                if (!responseError) {
+                    responseError = this.LANG.errorCodes.unknownMergeError;
+                } else {
+                    responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
+                }
 
-                       // HTML needed for section formatting
-                       const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
+                // HTML needed for section formatting
+                const dialogBody = '<p>' + commonErrorMsg + '</p><p>' + responseError + '</p>';
 
-                       // Handling promise to satisfy the linter.
-                       this.dialogs.confirm(
-                               dialogBody,
-                               this.LANG.dialogs.merge.mergeFailedTitle,
-                               this.LANG.dialogs.buttons.ok,
-                               'btn-primary',
-                               undefined).then(() => {});
-                   }).finally(() => {
-                       this.currentlyMerging = false;
-                       this.updateSettings(this.currentlyMerging);
-                       this.settingsService.system = this.system;
-                   });
+                // Handling promise to satisfy the linter.
+                this.dialogs.confirm(
+                    dialogBody,
+                    this.LANG.dialogs.merge.mergeFailedTitle,
+                    this.LANG.dialogs.buttons.ok,
+                    'btn-primary',
+                    undefined).then(() => {});
+            }).finally(() => {
+                this.currentlyMerging = false;
+                this.updateSettings(this.currentlyMerging);
+                this.settingsService.system = this.system;
+            });
     }
 
     updateUserRole() {
@@ -484,8 +500,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (sw.sessionLimitUnit.value === this.minutes && this.timeUnitCount % 60 === 0) {
             sw.sessionLimitUnit.value = this.hours;
             this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
-                                        return e.value === sw.sessionLimitUnit.value;
-                                    });
+                return e.value === sw.sessionLimitUnit.value;
+            });
             this.timeUnitCount /= 60;
         }
         sw.sessionLimitMinutes.value = this.timeUnitCount;

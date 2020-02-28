@@ -398,7 +398,7 @@ class ServerManager {
             });
     }
 
-    getModuleInfo(serverId) {
+    getModuleInfo(serverId?) {
         if (serverId) {
             return this.mediaserverConnections[serverId].getModuleInfo();
         } else {
@@ -450,6 +450,7 @@ export class NxSystem extends System implements OnDestroy {
     mediaserver: any;
     mediaserverConnections: any;
     currentServerNotBusy: boolean;
+    moduleInfo: any;
 
     infoPromise: any;
     usersPromise: any;
@@ -690,6 +691,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.usersPromise;
     }
 
+    getSystem() {
+        this.serverManager.getModuleInfo().toPromise()
+            .then(moduleInfo => { this.moduleInfo = moduleInfo.reply; });
+    }
+
     saveUser(user: NxSystemUser, role: NxSystemRole) {
         return this.userManager.saveUser(user, role);
     }
@@ -712,7 +718,7 @@ export class NxSystem extends System implements OnDestroy {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll
-                    .subscribe(() => this.systemInfo = this);
+                    .subscribe(() => { this.systemInfo = this; });
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
@@ -742,13 +748,13 @@ export class NxSystem extends System implements OnDestroy {
     update() {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
+                .then(() => this.getSystem())
                 .then(() => this.getServers())
-                .then(() => {
-                return from(this.getUsers(true));
-            }).catch(() => {
-                this.isAvailable = false;
-                this.lostConnection = true;
-            });
+                .then(() => from(this.getUsers(true)))
+                .catch(() => {
+                    this.isAvailable = false;
+                    this.lostConnection = true;
+                });
         }));
     }
 
@@ -807,7 +813,7 @@ export class NxSystem extends System implements OnDestroy {
 }
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxSystemService {
     CONFIG: any;

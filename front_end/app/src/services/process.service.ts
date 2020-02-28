@@ -13,6 +13,7 @@ interface ProcessSettings {
     ignoreUnauthorized: boolean;
     logoutForbidden: boolean;
     successMessage: string;
+    ignoreErrorPopups: boolean;
 }
 
 class Process {
@@ -63,13 +64,14 @@ class Process {
             this.settings = { ...this.settings, ...settings };
         } else {
             this.settings = {
-                errorCodes         : {},
-                errorMessage       : '',
-                errorPrefix        : '',
-                holdAlerts         : false,
-                ignoreUnauthorized : false,
-                logoutForbidden    : false,
-                successMessage     : ''
+                errorCodes        : {},
+                errorMessage      : '',
+                errorPrefix       : '',
+                holdAlerts        : false,
+                ignoreUnauthorized: false,
+                logoutForbidden   : false,
+                successMessage    : '',
+                ignoreErrorPopups : false
             };
         }
         this.caller = caller;
@@ -163,29 +165,31 @@ class Process {
     }
 
     private handleError(data) {
-        this.error = true;
-        this.errorData = data;
-        if (!this.settings.ignoreUnauthorized && data &&
-            (data.detail ||
-                // detail appears only when django rest framework declines request with
-                // {"detail":"Authentication credentials were not provided."}
-                // we need to handle this like user was not authorised
-                (data.resultCode === 'notAuthorized') ||
-                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
-            this.sessionService.invalidateSession();
-            this.deferredPromise.reject(data);
-            return;
-        }
-        const formatted = this.formatError(data, this.settings.errorCodes);
-        if (formatted !== false) {
-            this.settings.errorMessage = formatted;
-            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
-            const options = {
-                autohide  : !this.settings.holdAlerts,
-                classname : this.CONFIG.toast.danger,
-                delay     : this.CONFIG.alertTimeout
-            };
-            this.toastService.show(message, options);
+        if (this.settings.ignoreErrorPopups === false) {
+            this.error = true;
+            this.errorData = data;
+            if (!this.settings.ignoreUnauthorized && data &&
+                (data.detail ||
+                    // detail appears only when django rest framework declines request with
+                    // {"detail":"Authentication credentials were not provided."}
+                    // we need to handle this like user was not authorised
+                    (data.resultCode === 'notAuthorized') ||
+                    (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
+                this.sessionService.invalidateSession();
+                this.deferredPromise.reject(data);
+                return;
+            }
+            const formatted = this.formatError(data, this.settings.errorCodes);
+            if (formatted !== false) {
+                this.settings.errorMessage = formatted;
+                const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+                const options = {
+                    autohide : !this.settings.holdAlerts,
+                    classname: this.CONFIG.toast.danger,
+                    delay    : this.CONFIG.alertTimeout
+                };
+                this.toastService.show(message, options);
+            }
         }
         this.deferredPromise.reject(data);
     }

@@ -127,7 +127,6 @@ export class MergeModalContent {
                 serverNotYours            : '',
                 serverVersionOld          : '',
                 serverVersionNew          : '',
-                systemIncompatible        : '',
                 systemOffline             : '',
                 systemVersionOld          : '',
                 systemVersionNew          : '',
@@ -205,7 +204,7 @@ export class MergeModalContent {
                 if (newBodyTitle !== template.bodyTitle) {
                     templateVariable.bodyTitle = newBodyTitle;
                 }
-                templateVariable.serverUrlInputValue = '';
+                // templateVariable.serverUrlInputValue = '';
             }
         }
 
@@ -388,22 +387,8 @@ export class MergeModalContent {
             .createProcess(() => {
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
                 this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
-                return this.precheckSystemMerge()
-                    .then(res => {
-                        // attempt to get system info from url
-                        if (this.serverUrlInputExists) {
-                        } else {
-                            return res;
-                        }
-                    })
-                    .finally(() => {
-                        this.targetSystemDropdown.name = this.addStatus(this.targetSystem);
-                        if (this.targetSystem === undefined) {
-
-                        }
-                        this.systemMergeable = this.checkMergeability(this.targetSystem);
-                    });
-            })
+                return this.precheckSystemMerge();
+            }, { ignoreErrorPopups: true })
             .then(
                 (res) => {
                     console.log('res from precheckSystemMerge', res);
@@ -416,13 +401,17 @@ export class MergeModalContent {
                         this.setTargetSystem(this.targetSystem);
                     }
                 },
-                () => {
-                    this.targetSystem.value = this.machine.state.template.selectedTarget;
-                    this.setTargetSystem(this.targetSystem);
+                err => {
+                    console.log('catch called from precheck?', err);
+                    console.log('err.message exists?', this.machine.state.errorText[err.message]);
+                    const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
+                    this.updateShow(
+                        this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError',
+                        { checkingErrorText: errorMessageExists ? err.message : 'unknownError' }
+                    );
                 }
             );
 
-        // not able to check for local admin password right now
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
                 return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
@@ -463,6 +452,8 @@ export class MergeModalContent {
             case 'incompatible':
                 status = statusIncompatible;
                 break;
+            case 'unauthorized':
+                break;
             default:
                 if (Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) {
                     status = statusOffline;
@@ -500,10 +491,7 @@ export class MergeModalContent {
         }
 
         if (stateOfHealth === 'Incompatible') {
-            return 'systemIncompatible';
-        }
-        if (stateOfHealth === 'Unauthorized') {
-            return 'serverNotAvailable';
+            return system.olderProtocol === true ? 'serverVersionOld' : 'serverVersionNew';
         }
 
         if (!this.system.canMerge) {
@@ -520,29 +508,47 @@ export class MergeModalContent {
 
     precheckSystemMerge() {
         this.targetSystem = this.systemService.createSystem(this.account.email, this.targetSystem.id);
-        return this.targetSystem.getInfo(true, false).then(() => {
-            return this.targetSystem.getUsersDataFromTheSystem().then(() => {
+        return this.targetSystem.getInfo(true, false).then(system => {
+            console.log('res from getInfo', system);
+            if (system.isOnline === false) {
+                throw Error('systemOffline');
+            } else if (system.isAvailable === false) {
+                throw Error('secondarySystemUnavailable');
+            }
+            return this.targetSystem.getUsersDataFromTheSystem().then(res => {
+                console.log('res from getUsersData', res);
                 return Promise.all([
-                    this.system.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({error: { data: { resultCode: 'current'}, errorResponse: error }});
-                    }),
-                    this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ error: { data: { resultCode: 'target'}, errorResponse: error }});
-                    })
-                ]).then(systems => {
-                    this.tooManyServers = systems[0].length + systems[1].length > this.CONFIG.maxServers;
-                    return Promise.resolve({});
-                });
-            })
-                .catch(err => Promise.reject({ fromGetUsers: err }))
-                .finally(() => {
-                    // keeps targetSystem poll for adminPassword state
-                    if (this.serverUrlInputExists === false) {
-                        this.targetSystem.stopPoll();
-                    }
-                });
+                    this.system.getModuleInfo().toPromise(),
+                    this.targetSystem.getModuleInfo().toPromise()
+                ])
+                    .then(([sys1, sys2]) => {
+                        if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
+                            return Promise.all([
+                                this.system.mediaserver.getMediaServers().toPromise(),
+                                this.targetSystem.mediaserver.getMediaServers().toPromise()
+                            ])
+                                .then(([system, target]) => {
+                                    console.log('getMediaServers return', system, target);
+                                    const systemIds = {};
+                                    system.forEach(sys => { systemIds[sys.id] = true; });
+                                    if (target.some(sys => systemIds[sys.id]) === true) {
+                                        throw Error('duplicateServers');
+                                    }
+                                    this.tooManyServers = system.length + target.length > this.CONFIG.maxServers;
+                                    return Promise.resolve({});
+                                });
+                        } else {
+                            throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
+                        }
+                    });
+            });
         })
-            .catch(err => Promise.reject({ fromGetInfo: err }));
+            .finally(() => {
+                // keeps targetSystem poll for adminPassword state
+                if (this.serverUrlInputExists === false) {
+                    this.targetSystem.stopPoll();
+                }
+            });
     }
 
     makeSelectorList(systems) {
@@ -592,7 +598,7 @@ export class MergeModalContent {
             };
             if (this.targetSystem.systemName) {
                 showUpdate = 'serverUrl';
-                templateUpdates.serverUrlInputValue = `${this.targetSystem.remoteAddresses[0]}:${this.targetSystem.port}`;
+                templateUpdates.serverUrlInputValue = this.targetSystem.url;
                 delete templateUpdates.helpText;
             }
             if (this.systemMergeable) {

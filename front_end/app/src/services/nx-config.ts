@@ -277,40 +277,43 @@ export class NxConfigService {
                 page404      : '/404',
                 paths        : ['/register', '/restore_password', '/activate', '/404']
             },
-            showHeaderAndFooter : true,
-            search              : {
-                debounceTime : 500, // ms
-                maxLength    : 200,
-                minSystems   : 9 // We need at least 9 system to enable search
+            showHeaderAndFooter: true,
+            search             : {
+                debounceTime: 500, // ms
+                maxLength   : 200,
+                minSystems  : 9 // We need at least 9 system to enable search
             },
-            servers : {
-                port : {
-                    max           : 65535,
-                    min           : 1,
-                    restrictedMax : 1024
+            servers: {
+                port: {
+                    max          : 65535,
+                    min          : 1,
+                    restrictedMax: 1024
                 },
-                status : {
-                    online     : 'online',
-                    offline    : 'offline',
-                    restarting : 'restarting',
-                    reseting   : 'reseting',
-                    checking   : 'checking'
+                status: {
+                    online    : 'online',
+                    offline   : 'offline',
+                    restarting: 'restarting',
+                    reseting  : 'reseting',
+                    checking  : 'checking'
                 }
             },
-            system : {
-                status : {
-                    online  : 'online',
-                    default : {
-                        style : 'default'
+            system: {
+                flags: {
+                    newSystem: 'SF_NewSystem'
+                },
+                status: {
+                    online : 'online',
+                    default: {
+                        style: 'default'
                     },
-                    offline : {
-                        style : 'default'
+                    offline: {
+                        style: 'default'
                     },
-                    unavailable : {
-                        style : 'default'
+                    unavailable: {
+                        style: 'default'
                     },
-                    master : 'master',
-                    slave  : 'slave'
+                    master: 'master',
+                    slave : 'slave'
                 },
                 throttleTime : 5000
             },
@@ -401,43 +404,43 @@ export class NxConfigService {
                     'owner'
                 ]
             },
-            allowBetaMode  : false,
-            allowDebugMode : false,
-            debug          : {
-                chunksOnTimeline : false // timeline.js - draw debug events
+            allowBetaMode : false,
+            allowDebugMode: false,
+            debug         : {
+                chunksOnTimeline: false // timeline.js - draw debug events
             },
-            gatewayUrl                  : '/gateway',
-            globalViewArchivePermission : 'GlobalViewArchivePermission',
-            openClientTimeout           : 20 * 1000, // 20 seconds we wait for client to open
-            openClientError             : 'notVisited',
-            openMobileClientTimeout     : 300, // 300ms for mobile browsers
-            responseOk                  : 'ok',
-            timelineMouseEventTimeout   : 300, // milliseconds
-            updateInterval              : 30 * 1000, // Update content on pages every 30 seconds
-            webclient                   : {
-                chunksToCheckFatal          : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
-                disableVolume               : true,
-                endOfArchiveTime            : 30 * 1000,
-                flashChromelessDebugPath    : 'components/flashlsChromeless_debug.swf',
-                flashChromelessPath         : 'components/flashlsChromeless.swf',
-                hlsLoadingTimeout           : 90 * 1000,
-                leftPanelPreviewHeight      : 128,
-                maxCrashCount               : 2,
-                nativeTimeout               : 60 * 1000,
-                playerReadyTimeout          : 100,
-                reloadInterval              : 30 * 1000,
-                resetDisplayedTextTimer     : 3 * 1000,
-                staticResources             : 'static/web_common/',
-                skipFramesRenderingTimeline : true,
+            gatewayUrl                 : '/gateway',
+            globalViewArchivePermission: 'GlobalViewArchivePermission',
+            openClientTimeout          : 20 * 1000, // 20 seconds we wait for client to open
+            openClientError            : 'notVisited',
+            openMobileClientTimeout    : 300, // 300ms for mobile browsers
+            responseOk                 : 'ok',
+            timelineMouseEventTimeout  : 300, // milliseconds
+            updateInterval             : 30 * 1000, // Update content on pages every 30 seconds
+            webclient                  : {
+                chunksToCheckFatal         : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
+                disableVolume              : true,
+                endOfArchiveTime           : 30 * 1000,
+                flashChromelessDebugPath   : 'components/flashlsChromeless_debug.swf',
+                flashChromelessPath        : 'components/flashlsChromeless.swf',
+                hlsLoadingTimeout          : 90 * 1000,
+                leftPanelPreviewHeight     : 128,
+                maxCrashCount              : 2,
+                nativeTimeout              : 60 * 1000,
+                playerReadyTimeout         : 100,
+                reloadInterval             : 30 * 1000,
+                resetDisplayedTextTimer    : 3 * 1000,
+                staticResources            : 'static/web_common/',
+                skipFramesRenderingTimeline: true,
                 // One minute timeout for manifest:
                 // * 30 seconds for gateway to open connection
                 // * 30 seconds for server to init camera
                 // * 20 seconds for chunks
                 // * 10 seconds extra
-                updateArchiveStateTimeout   : 60 * 1000,
-                updateArchiveRecordsTimeout : 2 * 1000,
-                useServerTime               : true,
-                useSystemTime               : true
+                updateArchiveStateTimeout  : 60 * 1000,
+                updateArchiveRecordsTimeout: 2 * 1000,
+                useServerTime              : true,
+                useSystemTime              : true
             }
             // End
         };
