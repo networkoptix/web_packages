@@ -73,7 +73,7 @@
 
             <p class="m-0" *ngIf="CONFIG.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
                 <span [translate]="'ipvd.disclaimer'"
-                      [translateParams]="{companyName: CONFIG.company, vmsName: CONFIG.vmsName}">
+                      [translateParams]="{companyName: CONFIG.companyName, vmsName: CONFIG.vmsName}">
                 </span>
                 <span>
                     {{LANG.ipvd.feedback.a_Please}} <a href="javascript:;" (click)="onFeedbackClick.emit('page')">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
