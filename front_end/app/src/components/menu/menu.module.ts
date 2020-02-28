@@ -24,7 +24,7 @@ import { NxAlertCounter } from './alert-counter/alert-counter.component';
 
         TranslateModule,
         NxButtonModule,
-        AngularSvgIconModule,
+        AngularSvgIconModule.forRoot(),
     ],
     providers: [
         NxMenuComponent,

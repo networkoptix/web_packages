@@ -36,7 +36,7 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         ComponentsModule,
         DirectivesModule,
         RouterModule,
-        AngularSvgIconModule
+        AngularSvgIconModule.forRoot()
     ],
     declarations : [
         LoginModalContent,

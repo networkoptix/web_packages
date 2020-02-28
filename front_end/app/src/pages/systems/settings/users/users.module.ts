@@ -25,7 +25,7 @@ import { AngularSvgIconModule }      from 'angular-svg-icon';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule,
+        AngularSvgIconModule.forRoot(),
     ],
     providers      : [],
     declarations   : [

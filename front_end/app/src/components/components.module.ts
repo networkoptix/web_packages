@@ -55,7 +55,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         MenuModule,
         NgbToastModule,
         NgbModule,
-        AngularSvgIconModule
+        AngularSvgIconModule.forRoot()
     ],
     declarations : [
         NxGenericDropdown,

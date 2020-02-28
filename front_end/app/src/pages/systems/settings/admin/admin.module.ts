@@ -24,7 +24,7 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule,
+        AngularSvgIconModule.forRoot(),
     ],
     providers      : [],
     declarations   : [
