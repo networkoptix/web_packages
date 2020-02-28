@@ -21,7 +21,7 @@
                    name="email"
                    pattern="{{ CONFIG.credentialsValidation.emailRegex }}" maxlength="255"
                    required nxFocusMe>
-            <div class="col-12 col-md-5 d-block d-md-flex ml-md-n2 align-items-center">
+            <div class="col-12 ml-n2 d-flex">
                 <span class="input-error" *ngIf="userExists"
                       translate>This user already exists</span>
             </div>

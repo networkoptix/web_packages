@@ -145,6 +145,7 @@ export class AddUserModalContent {
             if (existingUser) {
                 this.userExists = true;
                 this.form.controls.email.setErrors({ exists: true });
+                this.form.controls.email.markAsTouched();
                 return Promise.reject({ error: { data: { resultCode: 'userExists' } } });
             } else {
                 this.userExists = false;
