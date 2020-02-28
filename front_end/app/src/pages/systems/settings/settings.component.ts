@@ -190,7 +190,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (!this.system.permissions.editUsers) {
                 return this.toastService.show(this.LANG.toastMessage.system.share.unauthorized, toastOptions);
             }
-            this.settingsService.addUser().finally(() => this.cleanUrl());
         });
 
         // Retrieve system info

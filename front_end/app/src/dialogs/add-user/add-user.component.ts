@@ -1,6 +1,6 @@
 import {
-    Component, Input, Renderer2
-}                                    from '@angular/core';
+    Component, Input, Renderer2, ViewChild
+} from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService }           from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -19,6 +19,7 @@ export class AddUserModalContent {
     @Input() system;
     @Input() user;
     @Input() closable;
+    @ViewChild('addUserForm') form;
 
     LANG: any;
     CONFIG: any;
@@ -31,6 +32,7 @@ export class AddUserModalContent {
     buttonText: string;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
+    userExists: boolean;
 
     constructor(public activeModal: NgbActiveModal,
                 private renderer: Renderer2,
@@ -137,23 +139,38 @@ export class AddUserModalContent {
         }
 
         this.sharing = this.processService.createProcess(() => {
-            if (this.user.role.isOwner) {
-                return this.genericModal
-                    .openConfirm(this.LANG.dialogs.sharing.confirmOwner,
-                        this.LANG.dialogs.sharing.shareTitle,
-                        this.LANG.dialogs.sharing.shareConfirmButton,
-                        undefined,
-                        this.LANG.dialogs.buttons.cancel)
-                    .then((result) => {
-                        if (result) {
-                            return this.doShare();
-                        }
-                    });
+            const existingUser = this.system.users.find(item => {
+                return item.email === this.user.email;
+            });
+            if (existingUser) {
+                this.userExists = true;
+                this.form.controls.email.setErrors({ exists: true });
+                return Promise.reject({ error: { data: { resultCode: 'userExists' } } });
             } else {
-                return this.doShare();
+                this.userExists = false;
+                if (this.user.role.isOwner) {
+                    return this.genericModal
+                        .openConfirm(this.LANG.dialogs.sharing.confirmOwner,
+                            this.LANG.dialogs.sharing.shareTitle,
+                            this.LANG.dialogs.sharing.shareConfirmButton,
+                            undefined,
+                            this.LANG.dialogs.buttons.cancel)
+                        .then((result) => {
+                            if (result) {
+                                return this.doShare();
+                            }
+                        });
+                } else {
+                    return this.doShare();
+                }
             }
         }, {
-            errorPrefix: this.LANG.errorCodes.cantSharePrefix
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix,
+            errorCodes: {
+                userExists: () => {
+                    return false;
+                }
+            }
         }).then((user) => {
             this.activeModal.close(user.id);
         });
@@ -161,5 +178,10 @@ export class AddUserModalContent {
 
     close() {
         this.activeModal.close();
+    }
+
+    changeEmail(email) {
+        this.user.email = email;
+        this.userExists = false;
     }
 }
