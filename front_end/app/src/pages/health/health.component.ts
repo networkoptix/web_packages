@@ -26,10 +26,10 @@ import { flatMap }                               from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
-    selector      : 'nx-system-health-component',
-    templateUrl   : 'health.component.html',
-    styleUrls     : ['health.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    selector : 'nx-system-health-component',
+    templateUrl : 'health.component.html',
+    styleUrls : ['health.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: any;
@@ -54,7 +54,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
     private resizeSubscription: Subscription;
 
-    constructor (configService: NxConfigService,
+    constructor(configService: NxConfigService,
                 private accountService: NxAccountService,
                 private appStateService: NxAppStateService,
                 private systemService: NxSystemService,
@@ -77,7 +77,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnInit (): void {
+    ngOnInit(): void {
         this.window.addEventListener('dragenter', event => {
             let types = event.dataTransfer.types;
             // IE returns a DOMStringList instead of an array
@@ -92,14 +92,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.healthService.importedData = false;
         this.menu = {
-            selectedSection : '', // updated by selectedSectionSubject
-            base            : '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
-            level1          : [
+            selectedSection: '', // updated by selectedSectionSubject
+            base           : '', // `${this.CONFIG.menus.systemSettings.baseUrl}${this.system && this.system.id || ''}${this.CONFIG.menus.systemHealth.baseUrl}`,
+            level1         : [
                 {
-                    id    : 'alerts',
-                    label : 'Alerts',
-                    path  : 'alerts',
-                    svg   : 'alerts'
+                    id   : 'alerts',
+                    label: 'Alerts',
+                    path : 'alerts',
+                    svg  : 'alerts'
                 }
             ]
         };
@@ -134,14 +134,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 } else {
                     // Create a mock system. All we need is the mediaserver.
                     this.system = {
-                        id   : '',
-                        info : {
-                            capabilities : {
-                                vms_metrics : true
+                        id  : '',
+                        info: {
+                            capabilities: {
+                                vms_metrics: true
                             }
                         },
-                        isOnline    : true,
-                        mediaserver : undefined
+                        isOnline   : true,
+                        mediaserver: undefined
                     };
                     this.system.mediaserver = this.serverApi.createConnection(
                         undefined, undefined,
@@ -157,7 +157,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     if (!this.outdatedVersion) {
                         this.system.mediaserver.getAggregateHealthReport().pipe(
                             flatMap((result: any) => this.setupReport(result))
-                        ).subscribe(() => {}, () => {
+                        ).subscribe(() => {}, (err) => {
+                            console.log(err);
                             if (!this.system.id) {
                                 !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
                             }
@@ -184,15 +185,15 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    setHeaderHeight () {
+    setHeaderHeight() {
         this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
-    ngOnDestroy (): void {
+    ngOnDestroy(): void {
         this.ribbonService.hide();
     }
 
-    setupReport (data) {
+    setupReport(data) {
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
             return throwError('Error getting manifest');
@@ -216,21 +217,21 @@ export class NxHealthComponent implements OnInit, OnDestroy {
             // Do not show menu item if no values -- @tagir will update spec for 20.1
             if (this.healthService.values[asset] && Object.keys(this.healthService.values[asset]).length) {
                 menu.level1.push({
-                    id    : asset,
-                    label : this.healthService.manifest[asset].name,
-                    path  : asset,
-                    svg   : asset
+                    id   : asset,
+                    label: this.healthService.manifest[asset].name,
+                    path : asset,
+                    svg  : asset
                 });
             }
         });
         menu.level1[0].alerts = [
             {
-                count : this.healthService.alertsCount.error,
-                type  : 'error'
+                count: this.healthService.alertsCount.error,
+                type : 'error'
             },
             {
-                count : this.healthService.alertsCount.warning,
-                type  : 'warning'
+                count: this.healthService.alertsCount.warning,
+                type : 'warning'
             }
         ];
         this.menu = { ...menu };
@@ -241,7 +242,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return of(true);
     }
 
-    colorHeaderGroups (metric) {
+    colorHeaderGroups(metric) {
         let counter = 0;
         metric.values = metric.values.map((group) => {
             if (group.id !== '_') {
@@ -251,7 +252,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    initializeManifest () {
+    initializeManifest() {
         const manifest = {};
         this.healthService.manifest.forEach(metric => {
             this.colorHeaderGroups(metric);
@@ -260,35 +261,35 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.manifest = manifest;
     }
 
-    initializeHeaders () {
+    initializeHeaders() {
         this.healthService.tableHeaders = this.processManifestHeaders('table');
         this.healthService.panelParams = this.processManifestHeaders('panel');
         this.addAlarmToTableHeaders();
     }
 
-    addAlarmToTableHeaders () {
+    addAlarmToTableHeaders() {
         Object.keys(this.healthService.tableHeaders).forEach(metric => {
             if (!this.healthService.tableHeaders[metric].values._) {
                 this.healthService.tableHeaders[metric].values._ = {
-                    id     : '_',
-                    values : {}
+                    id    : '_',
+                    values: {}
                 };
             }
             this.healthService.tableHeaders[metric].values.unshift({
-                id     : '_',
-                name   : '',
-                values : [
+                id    : '_',
+                name  : '',
+                values: [
                     {
-                        display : 'table',
-                        id      : 'alarm',
-                        name    : ''
+                        display: 'table',
+                        id     : 'alarm',
+                        name   : ''
                     }
                 ]
             });
         });
     }
 
-    highestAlarm (alarms) {
+    highestAlarm(alarms) {
         // Return first error alarm, otherwise return first alarm found;
         for (const alarm of alarms) {
             if (alarm.level === 'error') {
@@ -298,7 +299,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return alarms[0];
     }
 
-    createResourceList () {
+    createResourceList() {
         this.healthService.resourceNames = {};
         Object.values(this.healthService.values).forEach(metric => {
             Object.entries(metric).forEach(([resourceId, entity]) => {
@@ -312,12 +313,12 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    processValues () {
+    processValues() {
         Object.entries(this.healthService.values).forEach(([metric, entities]) => {
             Object.entries(entities).forEach(([entity, groups]) => {
                 const alarmCount = {
-                    warning : 0,
-                    error   : 0
+                    warning: 0,
+                    error  : 0
                 };
                 let highestAlarm;
 
@@ -334,7 +335,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                                 let alarm;
                                 if (alarms) {
                                     alarm = this.highestAlarm(alarms);
-                                    if ((!highestAlarm || alarm.level === 'error') && highestAlarm.level === 'warning') {
+                                    if (!highestAlarm || alarm.level === 'error' && highestAlarm.level === 'warning') {
                                         highestAlarm = alarm;
                                     }
                                     alarmCount[alarm.level]++;
@@ -346,9 +347,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
                                 this.healthService.values[metric][entity][group.id][header.id] = {
                                     ...formattedVal,
-                                    class   : alarm ? alarm.level : '',
-                                    tooltip : alarm ? this.getAlertText(metric, entity, alarm.text) : '',
-                                    icon    : alarm ? alarm.level : ''
+                                    class  : alarm ? alarm.level : '',
+                                    tooltip: alarm ? this.getAlertText(metric, entity, alarm.text) : '',
+                                    icon   : alarm ? alarm.level : ''
                                 };
 
                                 if (header.display) { // Search by displayed fields
@@ -363,7 +364,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                     this.healthService.values[metric][entity]._ = {};
                 }
                 this.healthService.values[metric][entity]._.alarm = {
-                    text : ' '
+                    text: ' '
                 };
 
                 if (highestAlarm) {
@@ -395,7 +396,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    getAlertText (metric, entity, message) {
+    getAlertText(metric, entity, message) {
         const resourceName = this.healthService.manifest[metric].resource;
         const entityName = this.healthService.findEntityName(this.healthService.values[metric][entity]);
         if (resourceName && entityName !== '−') {
@@ -405,7 +406,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         }
     }
 
-    initializeAlarms () {
+    initializeAlarms() {
         Object.keys(this.healthService.alertsCount).forEach(type => {
             this.healthService.alertsCount[type] = 0;
         });
@@ -416,22 +417,22 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 Object.entries(groups).forEach(([group, params]) => {
                     Object.entries(params).forEach(([param, alarms]) => {
                         alarms.forEach(alarm => {
-                            const alert: any = { _ : {} };
+                            const alert: any = { _: {} };
                             const server = this.healthService.values[metric][entity].info.server;
                             if (!server && metric === 'servers') {
-                                alert._.server = { text : this.healthService.values.servers[entity]._.name.text, id : entity };
+                                alert._.server = { text: this.healthService.values.servers[entity]._.name.text, id: entity };
                             } else if (server) {
-                                alert._.server = { text : server.text, id : server.value };
+                                alert._.server = { text: server.text, id: server.value };
                             } else {
-                                alert._.server = { text : '', id : '' };
+                                alert._.server = { text: '', id: '' };
                             }
                             alert._.server.formatClass = 'long-text';
                             alert._.type = {
-                                text        : this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
-                                formatClass : 'text'
+                                text       : this.healthService.manifest[metric].resource || this.healthService.manifest[metric].name,
+                                formatClass: 'text'
                             };
-                            alert._.message = { text : alarm.text, formatClass : unset };
-                            alert._.alarm = { icon : alarm.level };
+                            alert._.message = { text: alarm.text, formatClass: unset };
+                            alert._.alarm = { icon: alarm.level };
 
                             alert.metric = metric;
                             alert.entity = entity;
@@ -453,7 +454,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    processManifestHeaders (displayFilter: string) {
+    processManifestHeaders(displayFilter: string) {
         const headers = {};
         Object.values(this.healthService.manifest).forEach((metricValue) => {
             const metric: any = NxUtilsService.deepCopy(metricValue);
@@ -468,14 +469,14 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         return headers;
     }
 
-    createSnapshot (data) {
+    createSnapshot(data) {
         const systems: any = Object.values(this.healthService.values.systems);
         this.reportSnapshot = NxUtilsService.deepCopy(data);
         this.reportSnapshot.time = new Date().toJSON();
         this.reportSnapshot.system = systems[0].info.name;
     }
 
-    exportReport () {
+    exportReport() {
         let filename;
         if (this.reportSnapshot.system) {
             filename = `report-${this.reportSnapshot.system}-${this.reportSnapshot.time}.json`;
@@ -486,7 +487,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.utilsService.saveAs(this.reportSnapshot, filename, 'text/json');
     }
 
-    fileDropped (files: NgxFileDropEntry[]) {
+    fileDropped(files: NgxFileDropEntry[]) {
         this.importShow = false;
         this.healthService.importedData = true;
         const fileEntry = files[0].fileEntry as FileSystemFileEntry;
@@ -500,8 +501,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 time = new Date(data.time).toUTCString();
             }
             this.importedData = {
-                imported : true,
-                system   : data.system || '-',
+                imported: true,
+                system  : data.system || '-',
                 time
             };
             // String is here because it does not need to be translated and probably doesn't belong in CONFIG
@@ -516,15 +517,16 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    fileLeave () {
+    fileLeave() {
         this.importShow = false;
     }
 
-    updateValues () {
+    updateValues() {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport().pipe(
             flatMap((result: any) => this.setupReport(result))
-        ).subscribe(() => {}, () => {
+        ).subscribe(() => {}, (err) => {
+            console.log(err);
             if (!this.system.id) {
                 !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
             }
@@ -532,7 +534,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         });
     }
 
-    canShowOffline () {
+    canShowOffline() {
         return !this.healthService.ready && !this.hasServerError && !this.outdatedVersion;
     }
 }

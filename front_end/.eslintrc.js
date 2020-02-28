@@ -109,14 +109,15 @@ module.exports = {
         "no-misleading-character-class": "error",
         "no-prototype-builtins"        : "error",
         "no-useless-catch"             : "error",
-        "no-mixed-operators"           : ["error", {
-            "groups"             : [
-                ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
-                ["&&", "||"],
-                ["in", "instanceof"]
-            ],
-            "allowSamePrecedence": true
-        }],
+        "no-mixed-operators"           : "off",
+        // "no-mixed-operators"           : ["error", {
+        //     "groups"             : [
+        //         ["==", "!=", "===", "!==", ">", ">=", "<", "<="],
+        //         ["&&", "||"],
+        //         ["in", "instanceof"]
+        //     ],
+        //     "allowSamePrecedence": true
+        // }],
         "no-mixed-spaces-and-tabs"     : "error",
         "no-multi-spaces"              : ["error", {
             exceptions: {
