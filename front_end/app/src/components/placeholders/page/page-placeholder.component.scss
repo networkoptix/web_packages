@@ -94,25 +94,21 @@ $preloader_small_circle_distance : 8px;
         background-color : transparent;
         opacity          : 1;
     }
+    .contrain-width {
+        max-width     : 550px;
+    }
 
     .placeholder-content {
         text-align    : center;
         top           : calc(#{$navbar-height} / 2);
-        max-width     : 550px;
         position      : relative;
-        // transform     : translateY(-65%);
-        // -ms-transform : translateY(-65%);
         position      : relative;
         margin        : 0 auto;
-        // max-width     : 550px;
+        width         : 100%;
         font-size     : 130%;
         font-weight   : 300;
         line-height   : 30px;
         color         : $light;
-
-        // @include media-breakpoint-down(sm) {
-        //     top : 50%;
-        // }
 
         & > * {
             text-align : center;
@@ -156,5 +152,8 @@ $preloader_small_circle_distance : 8px;
             @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
         }
     }
-
+    .footer {
+        margin-top: 100px;
+    }
 }
+

@@ -28,6 +28,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() preloader: boolean;
     @Input() condition: boolean;
     @Input() withFooter: boolean;
+    @Input() constrainWidth: boolean;
 
     CONFIG: any;
     LANG: any;

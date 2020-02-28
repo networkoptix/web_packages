@@ -1,10 +1,5 @@
-<div class="page-wrapper">
-    <nx-page-placeholder [type]="'404'">
-        <button class="btn btn-primary main-button">
-            <a routerLink="/" translate>Go to Main Page</a>
-        </button>
-    </nx-page-placeholder>
-</div>
-<nx-footer center="true"></nx-footer>
-
-    
+<nx-page-placeholder [type]="'404'" [withFooter]="true">
+    <button class="btn btn-primary main-button">
+        <a routerLink="/" translate>Go to Main Page</a>
+    </button>
+</nx-page-placeholder>
