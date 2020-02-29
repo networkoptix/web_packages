@@ -415,7 +415,8 @@ class AssetAdmin(CMSAdmin):
 
     def asset_settings(self, obj):
         if not obj.asset_type or obj.asset_type.type in [AssetType.ASSET_TYPES.integration,
-                                                             AssetType.ASSET_TYPES.article]:
+                                                         AssetType.ASSET_TYPES.article,
+                                                         AssetType.ASSET_TYPES.agreement]:
             return format_html('')
         return format_html('<a class="btn btn-sm" href="{}">Settings</a>',
                            reverse('asset_settings', args=[obj.id]))

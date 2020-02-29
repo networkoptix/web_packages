@@ -256,7 +256,8 @@ class AssetType(models.Model):
                           (1, "vms", "Vms"),
                           (2, "integration", "Integration"),
                           (3, "other", "Other"),
-                          (4, "article", "Article"))
+                          (4, "article", "Article"),
+                          (5, "agreement", "Agreement"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
