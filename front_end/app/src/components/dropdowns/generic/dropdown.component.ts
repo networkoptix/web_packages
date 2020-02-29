@@ -37,7 +37,6 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() id: any;
     @Input() items: any;
     @Input() selected: any;
-    @Input() merge: boolean;
     @Output() onSelected = new EventEmitter<string>();
 
     change(item) {
