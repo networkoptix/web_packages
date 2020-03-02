@@ -779,3 +779,9 @@ class ExternalFileAdmin(CMSAdmin):
 
 
 admin.site.register(ExternalFile, ExternalFileAdmin)
+
+
+@admin.register(ContributerAgreement)
+class ContributerAgreementAdmin(CMSAdmin):
+    form = ContributerAgreementForm
+
