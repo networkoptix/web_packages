@@ -16,9 +16,9 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 
 @Component({
-    selector: 'ngbd-modal-content',
+    selector   : 'ngbd-modal-content',
     templateUrl: 'login.component.html',
-    styleUrls: [],
+    styleUrls  : []
 })
 export class LoginModalContent implements OnInit {
     @Input() account;
@@ -52,7 +52,7 @@ export class LoginModalContent implements OnInit {
     }
 
     constructor(configService: NxConfigService,
-                location: Location,
+        location: Location,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
                 private localStorage: LocalStorageService,
@@ -61,7 +61,7 @@ export class LoginModalContent implements OnInit {
                 private genericModal: NxModalGenericComponent,
                 private renderer: Renderer2,
                 private router: Router,
-                @Inject(DOCUMENT) private document: any,
+                @Inject(DOCUMENT) private document: any
     ) {
         this.setupDefaults(configService);
 
@@ -76,24 +76,24 @@ export class LoginModalContent implements OnInit {
         }, {
             errorCodes: {
                 forbidden: this.LANG.errorCodes.accountAlreadyActivated,
-                notFound: this.LANG.errorCodes.emailNotFound
+                notFound : this.LANG.errorCodes.emailNotFound
             },
-            holdAlerts: true,
+            holdAlerts : true,
             errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
         })
-        .run()
-        .then(() => {
-            this.genericModal.openConfirm(
+            .run()
+            .then(() => {
+                this.genericModal.openConfirm(
                     'Check your inbox and visit provided link to activate account',
                     'Activation email sent',
                     'OK');
-        });
+            });
     }
 
     resetForm() {
-        const {errors} = this.loginForm.controls.login_email
+        const { errors } = this.loginForm.controls.login_email;
         if (errors) {
-            delete errors.not_activated
+            delete errors.not_activated;
             this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
         }
         if (!this.loginForm.valid) {
@@ -125,7 +125,7 @@ export class LoginModalContent implements OnInit {
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
             ignoreUnauthorized: true,
-            errorCodes: {
+            errorCodes        : {
                 accountNotActivated: () => {
                     this.password = '';
                     this.loginForm.controls.login_password.markAsPristine();
@@ -140,7 +140,6 @@ export class LoginModalContent implements OnInit {
                     this.password = '';
 
                     this.renderer.selectRootElement('#login_password').focus();
-
                 },
                 notFound: () => {
                     this.password = '';
@@ -188,11 +187,11 @@ export class LoginModalContent implements OnInit {
             } else {
                 setTimeout(() => {
                     this.router
-                       .navigate([this.CONFIG.redirect.authorised])
-                       .then(() => {
-                           // ensure language reload as translations are loaded on page load
-                           window.location.reload();
-                       });
+                        .navigate([this.CONFIG.redirect.authorised])
+                        .then(() => {
+                            // ensure language reload as translations are loaded on page load
+                            window.location.reload();
+                        });
                 });
             }
         }, (error) => {
