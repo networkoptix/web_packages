@@ -49,6 +49,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     resetDisabled: boolean;
     portChangeDisabled: boolean;
     serverOffline: boolean;
+    canSeeInfo: boolean;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -62,6 +63,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.portChangeDisabled = true;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
+        this.canSeeInfo = false;
     }
 
     constructor(configService: NxConfigService,
@@ -73,7 +75,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 private dialogs: NxDialogsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                private uriService: NxUriService,
+                private uriService: NxUriService
     ) {
         this.viewContainerRef = viewContainerRef;
         this.setupDefaults(configService);
@@ -99,6 +101,11 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService.updateURI('systems/' + this.system.id, {});
                     return;
+                }
+                if (this.system) {
+                    this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
+                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                    });
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();

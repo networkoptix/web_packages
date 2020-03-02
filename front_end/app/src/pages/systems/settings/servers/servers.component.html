@@ -5,7 +5,7 @@
     <div class="col-12 server-info" *ngIf="selectedServer">
         <nx-block header-style="extended">
             <header>
-                <div class="header-top-bar d-flex justify-content-between">
+                <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
                         <h2>{{ selectedServer.name }}</h2>
                         <span
@@ -21,14 +21,24 @@
                             {{ selectedServer.shownStatus }}
                         </span>
                     </div>
-                    <button class="check-status pr-0"
+                    <button class="server-buttons pr-0"
                         *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
-                            <svg-icon src="static/images/icons/reload.svg"
+                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                                 [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>Check Status</span>
+                    </button>
+                    <button *ngIf="canSeeInfo" class="server-buttons pr-0">
+                        <a [routerLink]="CONFIG.menus.systemSettings.baseUrl+system.id+CONFIG.menus.systemHealth.baseUrl+CONFIG.menus.systemSettings.servers.path"
+                            [queryParams]="{id: system.servers.length > 1 ? serverIdFromParams : null}">
+                            <span>
+                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                                    [applyCss]="true"></svg-icon>
+                            </span>
+                            <span class="ml-1" translate>Full Info</span>
+                        </a>
                     </button>
                 </div>
                 <div class="header-table col-7">

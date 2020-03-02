@@ -13,6 +13,7 @@
         .header-title {
             display: flex;
             align-items: center;
+            flex-grow: 1;
             h2 {
                 font-family : $font-family-regular;
                 height: 32px;
@@ -37,7 +38,7 @@
                 background-color: $light16;
             }
         }
-        .check-status {
+        .server-buttons {
             &:hover {
                 color: $dark15;
                 fill: $dark15;
@@ -48,6 +49,7 @@
             display: flex;
             align-items: center;
             fill: $light16;
+            white-space: nowrap;
             svg-icon {
                 svg {
                     height: 18px;
@@ -69,6 +71,10 @@
                 100% {
                     transform: rotate(360deg);
                 }
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
             }
         }
     }
