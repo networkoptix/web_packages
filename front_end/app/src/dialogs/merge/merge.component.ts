@@ -39,6 +39,7 @@ export class MergeModalContent {
     systemMergeable: string;
     targetSystem: any;
     targetSystemDropdown: any;
+    targetSystemService: any;
     tooManyServers: boolean;
     wrongPassword: boolean; // candidate for removal
 
@@ -390,7 +391,7 @@ export class MergeModalContent {
                 return this.precheckSystemMerge();
             }, { ignoreErrorPopups: true })
             .then(
-                (res) => {
+                res => {
                     console.log('res from precheckSystemMerge', res);
                     if (!res.system && this.systemMergeable === '') {
                         this.serverUrlInputExists
@@ -403,7 +404,7 @@ export class MergeModalContent {
                 },
                 err => {
                     console.log('catch called from precheck?', err);
-                    console.log('err.message exists?', this.machine.state.errorText[err.message]);
+                    console.log('this.targetSystem in err', this.targetSystem);
                     const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
                     this.updateShow(
                         this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError',
@@ -414,13 +415,13 @@ export class MergeModalContent {
 
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
-                return this.targetSystem.checkLocalAdminPassword(this.machine.state.template.passwordValue)
+                return this.targetSystemService.checkLocalAdminPassword(this.machine.state.template.passwordValue)
                     .subscribe(
                         () => {},
                         err => {
                             if (err.status === 404) {
                                 this.machine.transition('choosePrimary');
-                                this.targetSystem.stopPoll();
+                                this.targetSystemService.stopPoll();
                             } else if (err.status === 401) {
                                 this.updateShow('addPasswordError', { passwordErrorText: 'passwordWrong' });
                             }
@@ -506,49 +507,71 @@ export class MergeModalContent {
         return '';
     }
 
-    precheckSystemMerge() {
-        this.targetSystem = this.systemService.createSystem(this.account.email, this.targetSystem.id);
-        return this.targetSystem.getInfo(true, false).then(system => {
+    async precheckSystemMerge() {
+        console.log('system in prechecksystemmerge', this.system);
+        console.log('targetSystem', this.targetSystem);
+        this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
+        let url: string;
+        if (!this.targetSystem.id) {
+            url = this.machine.state.template.serverUrlInputValue;
+            if ((/^https?:\/\//).test(url) === false) {
+                url = `${window.location.protocol}//${url}`;
+            }
+            this.targetSystemService = this.system;
+        } else {
+            const system = await this.targetSystemService.getInfo(true, false);
             console.log('res from getInfo', system);
             if (system.isOnline === false) {
                 throw Error('systemOffline');
             } else if (system.isAvailable === false) {
                 throw Error('secondarySystemUnavailable');
             }
-            return this.targetSystem.getUsersDataFromTheSystem().then(res => {
-                console.log('res from getUsersData', res);
-                return Promise.all([
-                    this.system.getModuleInfo().toPromise(),
-                    this.targetSystem.getModuleInfo().toPromise()
-                ])
-                    .then(([sys1, sys2]) => {
-                        if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
-                            return Promise.all([
-                                this.system.mediaserver.getMediaServers().toPromise(),
-                                this.targetSystem.mediaserver.getMediaServers().toPromise()
-                            ])
-                                .then(([system, target]) => {
-                                    console.log('getMediaServers return', system, target);
-                                    const systemIds = {};
-                                    system.forEach(sys => { systemIds[sys.id] = true; });
-                                    if (target.some(sys => systemIds[sys.id]) === true) {
-                                        throw Error('duplicateServers');
-                                    }
-                                    this.tooManyServers = system.length + target.length > this.CONFIG.maxServers;
-                                    return Promise.resolve({});
-                                });
-                        } else {
-                            throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
-                        }
-                    });
-            });
-        })
-            .finally(() => {
-                // keeps targetSystem poll for adminPassword state
-                if (this.serverUrlInputExists === false) {
-                    this.targetSystem.stopPoll();
-                }
-            });
+            const userData = await this.targetSystemService.getUsersDataFromTheSystem();
+            console.log('res from getUsersData', userData);
+            // happens if user inputs url for an existing cloud system
+            if (this.targetSystem.value === 'otherSystem') {
+                // check users for whether the owners are the same or not
+            }
+        }
+        let systems;
+        try {
+            systems = await Promise.all([
+                this.system.mediaserver.getModuleInfo().toPromise(),
+                this.targetSystemService.mediaserver.getModuleInfo(url).toPromise()
+            ]);
+        } catch (err) {
+            if (err.status === 502) {
+                throw Error('systemOffline');
+            }
+        }
+        const [sys1, sys2] = systems;
+        // happens if server offline when user inputs url
+        if (url && sys2.reply.cloudSystemId) {
+            this.targetSystem.id = sys2.reply.id;
+            return this.precheckSystemMerge();
+        }
+        if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
+            const [system, target] = await Promise.all([
+                this.system.mediaserver.getMediaServers().toPromise(),
+                this.targetSystemService.mediaserver.getMediaServers(url).toPromise()
+            ]);
+            console.log('getMediaServers return', system, target);
+            const systemIds = {};
+            system.forEach(sys => { systemIds[sys.id] = true; });
+            if (target.some(sys => systemIds[sys.id]) === true) {
+                throw Error('duplicateServers');
+            }
+            this.tooManyServers = system.length + target.length > this.CONFIG.maxServers;
+        } else {
+            const param1 = this.targetSystem.systemName ? 'server' : 'system';
+            const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';
+            throw Error(`${param1}Version${param2}`);
+        }
+        // keeps targetSystem poll for adminPassword state
+        if (this.serverUrlInputExists === false) {
+            this.targetSystemService.stopPoll();
+        }
+        return Promise.resolve({});
     }
 
     makeSelectorList(systems) {

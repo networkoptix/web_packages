@@ -242,8 +242,12 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
-    getModuleInfo() {
-        return this.get('/api/moduleInformation');
+    getModuleInfo(url) {
+        if (url) {
+            return this.http.get(`${url}/api/moduleInformation`);
+        } else {
+            return this.get('/api/moduleInformation');
+        }
     }
 
     detachFromSystem(currentPassword) {
@@ -251,7 +255,7 @@ export class NxSystemAPI {
     }
 
     removeMediaserver(serverId) {
-        return this.post('/ec2/removeResource', { id : serverId });
+        return this.post('/ec2/removeResource', { id: serverId });
     }
 
     restoreFactorySettings(currentPassword) {
@@ -297,15 +301,15 @@ export class NxSystemAPI {
 
     userObject(fullName, email): User {
         return {
-            canBeEdited  : true,
-            canBeDeleted : true,
+            canBeEdited : true,
+            canBeDeleted: true,
             email,
-            isCloud      : true,
-            isEnabled    : true,
-            userRoleId   : this.emptyId,
-            permissions  : '',
+            isCloud     : true,
+            isEnabled   : true,
+            userRoleId  : this.emptyId,
+            permissions : '',
             // TODO: Remove the trash below after #VMS-2968
-            name         : email,
+            name        : email,
             fullName
         };
     }
@@ -313,13 +317,17 @@ export class NxSystemAPI {
 
     /* Cameras and Servers */
     getCameras(id) {
-        const params = id ? { id : this.cleanId(id) } : {};
+        const params = id ? { id: this.cleanId(id) } : {};
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    getMediaServers(id?) {
-        const params = id ? { id : this.cleanId(id) } : {};
-        return this.get('/ec2/getMediaServersEx', params);
+    getMediaServers(id?, url?) {
+        const params = id ? { id: this.cleanId(id) } : {};
+        if (url) {
+            return this.http.get(`${url}/ec2/getMediaServersEx`, params);
+        } else {
+            return this.get('/ec2/getMediaServersEx', params);
+        }
     }
 
     getMediaServersAndCameras() {
@@ -334,7 +342,7 @@ export class NxSystemAPI {
     /* Formatting urls */
     previewUrl(cameraId, time?, width?, height?) {
         const data: any = {
-            cameraId : this.cleanId(cameraId)
+            cameraId: this.cleanId(cameraId)
         };
         let endpoint = '/ec2/cameraThumbnail';
 
@@ -461,7 +469,7 @@ export class NxSystemAPI {
 }
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxSystemAPIService {
     CONFIG: any;
