@@ -5,7 +5,7 @@ import { NxConfigService }                             from '../../services/nx-c
     selector: 'nx-process-button',
     templateUrl: 'process-button.component.html',
     styleUrls: ['process-button.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: any;
@@ -21,7 +21,7 @@ export class NxProcessButtonComponent implements OnInit {
     buttonClass: string;
     CONFIG: any;
 
-    constructor(private configService: NxConfigService) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 

@@ -44,14 +44,14 @@ export class MergeModalContent {
 
     constructor(public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
-                private configService: NxConfigService,
+                configService: NxConfigService,
                 private cloudApi: NxCloudApiService,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
                 private systemService: NxSystemService,
                 private systemsService: NxSystemsService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.checking = false;
         this.state = 'select';
         this.wrongPassword = false;
