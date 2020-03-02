@@ -253,6 +253,11 @@ export class NxConfigService {
                         icon : 'systems',
                         path : ''
                     },
+                    cloudStorage: {
+                        id   : 'cloudStorage',
+                        icon : 'systems',
+                        path : 'cloud-storage'
+                    },
                     users : {
                         id   : 'users',
                         icon : 'users',
