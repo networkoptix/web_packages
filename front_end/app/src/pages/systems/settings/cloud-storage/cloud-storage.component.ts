@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NxConfigService } from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -6,7 +8,19 @@ import { Component, OnInit } from '@angular/core';
     styleUrls  : ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent implements OnInit {
-    constructor() { }
+    CONFIG: any = {};
+    LANG: any = {};
+
+    private setupDefaults({ configService, languageService }) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+    }
+
+    constructor(configService: NxConfigService,
+        languageService: NxLanguageProviderService
+    ) {
+        this.setupDefaults({ configService, languageService });
+    }
 
     ngOnInit(): void {
     }

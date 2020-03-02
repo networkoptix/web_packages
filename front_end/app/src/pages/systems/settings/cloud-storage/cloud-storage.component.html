@@ -1,1 +1,55 @@
-<p>cloud-storage works!</p>
+<!-- Initial State -->
+<nx-block *ngIf="true" type="mt-3">
+    <header>
+        <h4 translate>Cloud Storage</h4>
+    </header>
+    <div class="initial-state">
+        <svg-icon [src]="CONFIG.icons.dir + 'storages' +'.svg'"
+        [applyCss]="true"
+        [svgStyle]="{'width.px': '80', 'height.px': '80'}"></svg-icon>
+        <h2 translate>Secure your most sensitive data</h2>
+        <p translate>
+            Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats.
+            We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.</p>
+        <button class="btn btn-default">Enable Cloud Storage</button>
+    </div>
+    <!-- <footer>
+        Test
+    </footer> -->
+</nx-block>
+
+<!-- Empty State -->
+<nx-block type="mt-3">
+    <header>
+        <h4 translate>Cloud Storage</h4>
+    </header>
+    <div class="normal-state">
+        <h2>50 GB</h2>
+        <div>
+
+        </div>
+    </div>
+    <div class="normal-state-footer">
+        <p>
+            Cloud storage location is available for all servers in this system.<br/>
+            You can manage it using the desktop Nx Witness client.
+        </p>
+        <div class='pt-3'>
+            <button class="btn btn-default">Move to Another System</button>
+            <button class="btn btn-default">Delete Cloud Storage</button>
+        </div>
+    </div>
+</nx-block>
+
+<!-- Normal State -->
+<nx-block *ngIf="false" type="mt-3">
+    <header>
+        <h4 translate>Cloud Storage</h4>
+    </header>
+    <div class="normal-state">
+
+    </div>
+    <!-- <footer>
+        Test
+    </footer> -->
+</nx-block>

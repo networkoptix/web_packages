@@ -1,0 +1,47 @@
+@import '../../../../styles/theme/variables';
+@import '../../../../styles/typography';
+
+.initial-state {
+    padding: 40px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+    h2 {
+        @extend #medium24;
+        margin: 16px;
+    }
+
+    p {
+        @extend #regular13;
+        max-width: 400px;
+    }
+
+    button {
+        margin-top: 24px;
+    }
+}
+
+.normal-state {
+    padding: 16px;
+    background-color: $additional_light1;
+    border-bottom: 1px dotted $light3;
+    
+    h2 {
+        @extend #medium24;
+        text-align: left;
+    }
+
+    &-details {
+        display: flex;
+        justify-content: flex-start;
+    }
+    
+    &-footer {
+        padding: 16px;
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
