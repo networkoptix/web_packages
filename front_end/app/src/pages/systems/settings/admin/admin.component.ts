@@ -369,7 +369,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             isNew,
                             ...peer
                         };
-                        if (peer.status === 'Incompatible') {
+                        if (peer.status === 'Incompatible' && this.system.moduleInfo) {
                             system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
                         }
                         return system;
