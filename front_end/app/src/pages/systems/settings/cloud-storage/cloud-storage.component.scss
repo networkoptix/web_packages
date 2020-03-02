@@ -32,9 +32,10 @@
         text-align: left;
     }
 
-    &-details {
+    &-header {
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
+        align-items: center;
     }
     
     &-footer {
@@ -43,5 +44,54 @@
             display: flex;
             justify-content: space-between;
         }
+    }
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+    margin: 8px 0 16px 0;
+
+    &-section {
+        margin-right: 40px;
+        display: flex;
+        div {
+           display: flex;
+           flex-direction: column;
+        }
+        &-keys {
+            padding-right: 20px;
+        }
+        &-values {
+
+        }
+    }
+}
+
+.server-buttons {
+    height: 18px;
+    padding: -1px inherit; // This is kind of hacky, need to figure out what's going on
+    &:hover {
+        color: $dark15;
+        fill: $dark15;
+    }
+    @extend #regular13;
+    background-color: inherit;
+    color: $light16;
+    display: flex;
+    align-items: center;
+    fill: $light16;
+    white-space: nowrap;
+    svg-icon {
+        svg {
+            height: 20px;
+            g {
+                fill: inherit;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
     }
 }

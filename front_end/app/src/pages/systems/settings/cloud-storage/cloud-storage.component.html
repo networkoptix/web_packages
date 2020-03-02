@@ -20,13 +20,45 @@
 
 <!-- Empty State -->
 <nx-block type="mt-3">
-    <header>
+    <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
+        <button class="server-buttons">
+            <a [routerLink]="''">
+                <span>
+                    <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                        [applyCss]="true"></svg-icon>
+                </span>
+                <span class="ml-1" translate>Detailed Statistics</span>
+            </a>
+        </button>
     </header>
     <div class="normal-state">
         <h2>50 GB</h2>
-        <div>
-
+        <div class="details">
+            <div class="details-section">
+                <div class="details-section-keys">
+                    <p>Current recordings</p>
+                    <p>When fully uses</p>
+                    <p>Amount used</p>
+                </div>
+                <div class="details-section-values">
+                    <p>_</p>
+                    <p>_</p>
+                    <p>_</p>
+                </div>
+            </div>
+            <div class="details-section">
+                <div class="details-section-keys">
+                    <p>Archive from</p>
+                    <p>Recording Bitrate</p>
+                    <p>Delay from live</p>
+                </div>
+                <div class="details-section-values">
+                    <p>_</p>
+                    <p>_</p>
+                    <p>_</p>
+                </div>
+            </div>
         </div>
     </div>
     <div class="normal-state-footer">
@@ -35,21 +67,79 @@
             You can manage it using the desktop Nx Witness client.
         </p>
         <div class='pt-3'>
-            <button class="btn btn-default">Move to Another System</button>
-            <button class="btn btn-default">Delete Cloud Storage</button>
+            <button class="btn btn-default">
+                Move to Another System
+            </button>
+            <button class="btn btn-default">
+                <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
+                [applyCss]="true"
+                [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
+                class="ml-n2 mr-1"></svg-icon>
+                Delete Cloud Storage
+            </button>
         </div>
     </div>
 </nx-block>
 
 <!-- Normal State -->
-<nx-block *ngIf="false" type="mt-3">
-    <header>
+<nx-block type="mt-3">
+    <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
+        <button class="server-buttons">
+            <a [routerLink]="''">
+                <span>
+                    <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                        [applyCss]="true"></svg-icon>
+                </span>
+                <span class="ml-1" translate>Detailed Statistics</span>
+            </a>
+        </button>
     </header>
     <div class="normal-state">
-
+        <h2>50 GB</h2>
+        <div class="details">
+            <div class="details-section">
+                <div class="details-section-keys">
+                    <p>Current recordings</p>
+                    <p>When fully uses</p>
+                    <p>Amount used</p>
+                </div>
+                <div class="details-section-values">
+                    <p>1 week</p>
+                    <p>2 weeks</p>
+                    <p>36% (16 GB)</p>
+                </div>
+            </div>
+            <div class="details-section">
+                <div class="details-section-keys">
+                    <p>Archive from</p>
+                    <p>Recording Bitrate</p>
+                    <p>Delay from live</p>
+                </div>
+                <div class="details-section-values">
+                    <p>11 Cameras</p>
+                    <p>1.5 Mbps</p>
+                    <p>12 s</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- <footer>
-        Test
-    </footer> -->
+    <div class="normal-state-footer">
+        <p>
+            Cloud storage location is available for all servers in this system.<br/>
+            You can manage it using the desktop Nx Witness client.
+        </p>
+        <div class='pt-3'>
+            <button class="btn btn-default">
+                Move to Another System
+            </button>
+            <button class="btn btn-default">
+                <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
+                [applyCss]="true"
+                [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
+                class="ml-n2 mr-1"></svg-icon>
+                Delete Cloud Storage
+            </button>
+        </div>
+    </div>
 </nx-block>
