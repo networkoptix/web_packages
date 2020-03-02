@@ -15,10 +15,14 @@ import { NxSystemAdminModule }       from './admin/admin.module';
 import { NxSystemUsersModule }       from './users/users.module';
 import { NxSystemServersModule }     from './servers/servers.module';
 import { NxSystemMergeStatusModule } from './merge-status/merge-status.module';
+import { NxCloudStorageModule } from './cloud-storage/cloud-storage.module';
+
 import { NxSystemAdminComponent }    from './admin/admin.component';
 import { NxSystemUsersComponent }    from './users/users.component';
 import { NxSystemServersComponent }  from './servers/servers.component';
+import { NxCloudStorageComponent } from './cloud-storage/cloud-storage.component';
 import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
+
 import { ApplyGuard }                from '../../../routeGuards/applyGuard';
 import { AuthGuard }                 from '../../../routeGuards/authGuard';
 import { UserGuard }                 from '../../../routeGuards/userGuard';
@@ -56,6 +60,11 @@ const appRoutes: Routes = [
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
+            },
+            {
+                path: 'cloud-storage',
+                component    : NxCloudStorageComponent,
+                canDeactivate: [ApplyGuard],
             }
         ]
     }
@@ -74,7 +83,7 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-
+        NxCloudStorageModule,
         RouterModule.forChild(appRoutes)
     ],
     providers      : [
@@ -82,7 +91,7 @@ const appRoutes: Routes = [
     ],
     declarations   : [
         NxSystemSettingsComponent,
-        NxNoSystemsComponent,
+        NxNoSystemsComponent
     ],
     bootstrap      : [],
     entryComponents: [
