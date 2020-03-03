@@ -48,3 +48,21 @@
         opacity: .8;
     }
 }
+
+.action-link {
+    color: $blue10;
+    text-decoration: underline;
+    margin-left: 2rem;
+    cursor: pointer;
+
+    &:hover {
+        color: $blue9;
+        svg * {
+            fill: $blue9;
+        }
+    }
+
+    svg * {
+        fill: $blue10;
+    }
+}

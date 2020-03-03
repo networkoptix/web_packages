@@ -3,6 +3,7 @@ import { NxRibbonService } from './ribbon.service';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxConfigService } from '../../services/nx-config';
 
 @AutoUnsubscribe()
 @Component({
@@ -11,6 +12,7 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     styleUrls: ['ribbon.component.scss'],
 })
 export class NxRibbonComponent implements OnInit, OnDestroy {
+    CONFIG: any;
     message: string;
     action: string;
     actionUrl: string;
@@ -28,7 +30,9 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         this.updateFunction = '';
     }
 
-    constructor(private ribbonService: NxRibbonService) {
+    constructor(configService: NxConfigService,
+        private ribbonService: NxRibbonService) {
+        this.CONFIG = configService.getConfig();
         this.setupDefaults();
     }
 
