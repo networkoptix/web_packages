@@ -389,7 +389,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
-
+        // Need to replace hardcoded 'true' once services for cloud storage are setup
         // eslint-disable-next-line no-constant-condition
         if (true) {
             let cloudStorageNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cloudStorage.id);
