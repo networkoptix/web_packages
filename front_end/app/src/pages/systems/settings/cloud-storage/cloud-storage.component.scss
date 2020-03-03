@@ -50,6 +50,7 @@
 .details {
     display: flex;
     justify-content: flex-start;
+    flex-wrap: wrap;
     margin: 8px 0 16px 0;
 
     &-section {
@@ -58,9 +59,26 @@
         div {
            display: flex;
            flex-direction: column;
+           white-space: nowrap;
         }
         &-keys {
-            padding-right: 20px;
+
+            // WIP need to fix, border is overlapping text
+            padding-right: 8px;
+            p {
+                position: relative;
+                padding-right: 16px;
+                &:after {
+                content: "";
+                position: absolute;
+                bottom: 4px;
+                left: 0;
+                right: 0;
+                border-bottom: 1px solid $light3;
+                z-index: 1;
+                min-width: 16px;
+            }
+        }
         }
         &-values {
 
