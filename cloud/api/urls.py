@@ -41,6 +41,7 @@ urlpatterns = [
     url(r'^systems/?$',                              systems.list_systems),
 
     url(r'^ping$',                                   common.ping),
+    url(r'^maintenance/health$',                     common.maintenance_health),
 
     url(r'feedback/?$',                              send.send_event),
 ]

@@ -749,7 +749,9 @@
             "advanced": true,
             "optional": true,
             "type": "object",
-            "value": {}
+            "value": {
+              "FCM_API_KEY": "AAAAkheYdWQ:APA91bEGYOZ_evrmTB2kc_6jRTVrLRdlXIE2vzjvFD1bb-mHLt80BMUIRfGhxJ3w442DvO1GKkJaI-P3PWTnwylQo2DZi236gGPLL0MFQImkxUJ-p6fEbVxKDHydELUWadhMemJETz1e"
+            }
           },
           {
             "label": "Push Notifications Web Configuration",
@@ -758,7 +760,15 @@
             "advanced": true,
             "optional": true,
             "type": "object",
-            "value": {}
+            "value": {
+              "apiKey": "AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI",
+              "authDomain": "nx-push-test.firebaseapp.com",
+              "databaseURL": "https://nx-push-test.firebaseio.com",
+              "projectId": "nx-push-test",
+              "storageBucket": "nx-push-test.appspot.com",
+              "messagingSenderId": "627461092708",
+              "appId": "1:627461092708:web:1b140238961b4213"
+            }
           },
           {
             "label": "Push Customization",
@@ -2258,6 +2268,46 @@
             "label": "Body",
             "value": "",
             "description": "HTML that will be used on the article's page",
+            "type": "html",
+            "optional": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "agreement",
+    "can_preview": true,
+    "single_customization": false,
+    "contexts": [
+      {
+        "name": "content",
+        "label": "Content",
+        "description": "Agreement content",
+        "values": [
+          {
+            "name": "title",
+            "label": "Title",
+            "value": "",
+            "description": "This will be used as the title of the agreement",
+            "type": "text",
+            "optional": false
+          },
+          {
+            "name": "comment",
+            "label": "Comment",
+            "value": "",
+            "description": "Internal comments",
+            "type": "long_text",
+            "optional": true,
+            "advanced": true,
+            "public": false
+          },
+          {
+            "name": "text",
+            "label": "Text",
+            "value": "",
+            "description": "HTML that will be used on the agreement's page",
             "type": "html",
             "optional": false
           }

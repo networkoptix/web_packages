@@ -105,6 +105,7 @@ class UserBehavior(TaskSet):
         print(cookie1value)
         c = self.client.post(env+"api/robot/get_code", json={'email': self.user[self.n], 'type': 'activate_account'})
         self.code = c.json()['code']
+        self.code = self.code.replace("%3D", "=")
         print("Activation code for new user: "+self.code)
         time.sleep(randint(5, 10))
         

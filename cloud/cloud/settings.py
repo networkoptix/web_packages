@@ -125,6 +125,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
+                   'cms.models.ContributerAgreement',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -545,20 +546,8 @@ DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
 
 # Push Notifications
 # Ask Roman Barsegian for config if you need push to work locally
-fcm = conf.get('fcm')
-if fcm:
-    PUSH_NOTIFICATIONS_SETTINGS = {
-        'CONFIG': 'notifications.conf.PushConfig',
-        'FCM_API_KEY': fcm.get('priv_key'),
-        'MAX_RETRIES': 3,
-        'RETRY_INTERVAL': 20,
-        'PUBLIC': {
-            'apiKey': fcm.get('pub_key'),
-            'authDomain': fcm.get('auth_domain'),
-            'databaseURL': fcm.get('db_url'),
-            'projectId': fcm.get('project_id'),
-            'storageBucket': fcm.get('storage_bucket'),
-            'messagingSenderId': fcm.get('messaging_sender_id'),
-            'appId': fcm.get('app_id')
-        }
-    }
+PUSH_NOTIFICATIONS_SETTINGS = {
+    'CONFIG': 'notifications.conf.PushConfig',
+    'MAX_RETRIES': 3,
+    'RETRY_INTERVAL': 20
+}

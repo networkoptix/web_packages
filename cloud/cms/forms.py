@@ -334,3 +334,18 @@ class CustomizationForm(forms.ModelForm):
                 exclude(id=self.instance.id).filter(id=data.id).exists():
             raise ValueError('Invalid customization was selected')
         return data
+
+
+class ContributerAgreementForm(forms.ModelForm):
+    class Meta:
+        model = ContributerAgreement
+        exclude = []
+        widgets = {
+            'user': autocomplete.ModelSelect2(url='account-autocomplete',
+                                              attrs={
+                                                  # Set some placeholder
+                                                  'data-placeholder': 'Email ...',
+                                                  # Only trigger autocomplete after 2 characters have been typed
+                                                  'data-minimum-input-length': 2
+                                              })
+        }

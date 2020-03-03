@@ -7,7 +7,11 @@ export class Utils {
     constructor(private array: Array) {
     }
 
-    static move(arr, oldIndex, newIndex): Array {
+    static isEqual(obj1, obj2) {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    }
+
+    static move (arr, oldIndex, newIndex): Array {
         while (oldIndex < 0) {
             oldIndex += arr.length;
         }
