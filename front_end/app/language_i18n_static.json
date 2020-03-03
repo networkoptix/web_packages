@@ -205,7 +205,7 @@
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
             "urlEmpty": "Enter server address.",
             "urlNotValid": "Enter valid URL.",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <support>.",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
         "message": {
