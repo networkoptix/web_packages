@@ -784,4 +784,23 @@ admin.site.register(ExternalFile, ExternalFileAdmin)
 @admin.register(ContributerAgreement)
 class ContributerAgreementAdmin(CMSAdmin):
     form = ContributerAgreementForm
+    list_display = ('user', 'customization', 'version', 'valid', 'accepted_review')
+    readonly_fields = ('customization', 'version', 'valid')
+
+    def customization(self, obj):
+        if obj.accepted_agreement:
+            return obj.accepted_agreement.customization
+
+    def version(self, obj):
+        if obj.accepted_agreement:
+            return obj.accepted_agreement.version
+
+    def valid(self, obj):
+        if obj.accepted_agreement:
+            return obj.accepted_agreement.version.id == obj.accepted_agreement.version.asset.version_id()
+
+    def accepted_review(self, obj):
+        if obj.accepted_agreement:
+            link = reverse('admin:cms_assetcustomizationreview_change', args=[obj.accepted_agreement.id])
+            return format_html('<a href="{}">Review</a>', link)
 
