@@ -256,7 +256,8 @@ class AssetType(models.Model):
                           (1, "vms", "Vms"),
                           (2, "integration", "Integration"),
                           (3, "other", "Other"),
-                          (4, "article", "Article"))
+                          (4, "article", "Article"),
+                          (5, "agreement", "Agreement"))
     name = models.CharField(max_length=255, default="", blank=True)
     can_preview = models.BooleanField(default=False)
     single_customization = models.BooleanField(default=False)
@@ -983,3 +984,20 @@ class DataRecord(models.Model):
             self.value = self.data_structure.to_string(self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)
+
+
+class ContributerAgreement(models.Model):
+    accepted_date = models.DateTimeField(auto_now_add=True)
+    accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def clean(self):
+        if self.accepted_agreement and \
+                self.accepted_agreement.version.asset.asset_type.type != AssetType.ASSET_TYPES.agreement:
+            raise ValidationError({
+                'accepted_agreement': 'Accepted agreement must be a review of an agreement-type asset'
+            })
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)

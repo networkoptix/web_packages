@@ -309,6 +309,53 @@ Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
 
-#Details Panel Shows Errors
+Details Panel Shows Errors
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    button=None
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Validate Alerts Page
+    Upload Json    one-of-each
+    Validate Uploaded Alerts Page
+    Wait Until Elements are Visible
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM SYSTEM PAGE LINK}
+    ...    ${HM SERVERS PAGE LINK}
+    ...    ${HM ALERTS PAGE LINK}
+    ...    ${HM CAMERAS PAGE LINK}
+    ...    ${HM NETWORK INTERFACES PAGE LINK}
+    Click Link    ${HM SERVERS PAGE LINK}
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
+    Wait Until Element is Visible    ${HM TABLE}//tr//td/span[contains(text(), "testserver error")]
+
+    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver error")]
+    Wait Until Elements are Visible
+    ...    ${HM DETAILS PANEL}
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//div[@title="Server testserver error is broken"]
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..${HM ALERT ICON}
+
+    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver both")]
+    Wait Until Elements are Visible
+    ...    ${HM DETAILS PANEL}
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//span[contains(text(), "Active plugins list")]/../../..//div[@title="Server testserver 2 errors is broken"]
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//span[contains(text(), "Active plugins list")]/../../..${HM ALERT ICON}
+
+    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver 2 errors")]
+    Wait Until Elements are Visible
+    ...    ${HM DETAILS PANEL}
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Server threads")]/../../..//div[@title="Server testserver 2 errors is broken"]
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Server threads")]/../../..${HM ALERT ICON}
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Decoding speed")]/../../..//div[@title="Server testserver 2 errors is broken"]
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Decoding speed")]/../../..${HM ALERT ICON}
+
+
+
+
+
+
+
+
 #Details Panel Shows Alerts
 #Details Panel Shows Errors and Alerts

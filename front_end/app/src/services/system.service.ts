@@ -8,6 +8,7 @@ import { NxSystemAPIService } from './system-api.service';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
+import { Utils } from '../utils/helpers';
 
 export interface NxSystemRole {
     id: string;
@@ -342,7 +343,7 @@ class UserManager {
         });
 
         const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
-        if (JSON.stringify(newRoles) !== JSON.stringify(this.accessRoles)) {
+        if (!Utils.isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }
         return this.accessRoles;
@@ -673,13 +674,15 @@ export class NxSystem extends System implements OnDestroy {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    this.isAvailable = false;
                     return this.getUsersCachedInCloud();
                 });
-            } else { // or we get old cached data from the cloud
+            } else if (this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
                     return this.userManager.processUsers(users);
                 });
+            } else {
+                this.isAvailable = false;
+                usersPromise = Promise.resolve();
             }
 
             this.usersPromise = usersPromise.then(() => {

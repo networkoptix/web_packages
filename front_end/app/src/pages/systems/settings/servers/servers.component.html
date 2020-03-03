@@ -31,7 +31,7 @@
                         <span class="ml-1" translate>Check Status</span>
                     </button>
                     <button *ngIf="canSeeInfo" class="server-buttons pr-0">
-                        <a [routerLink]="CONFIG.menus.systemSettings.baseUrl+system.id+CONFIG.menus.systemHealth.baseUrl+CONFIG.menus.systemSettings.servers.path"
+                        <a [routerLink]="fullInfoPath"
                             [queryParams]="{id: system.servers.length > 1 ? serverIdFromParams : null}">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
