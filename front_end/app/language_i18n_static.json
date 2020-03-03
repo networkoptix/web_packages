@@ -177,14 +177,14 @@
                 "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from {{cloudName}}",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from {{cloudName}}."
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
             },
             "moveCloudStorage": {
                 "title": "Move Cloud Storage"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to {{cloudName}} using your cloud account to be able to move cloud storage to it."
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
             }
         },
         "merge": {

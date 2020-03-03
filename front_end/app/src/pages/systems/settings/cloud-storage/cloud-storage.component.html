@@ -140,10 +140,14 @@
             You can manage it using the desktop Nx Witness client.
         </p>
         <div class='pt-3'>
-            <button class="btn btn-default">
+            <button class="btn btn-default"
+                (click)="moveToDialog()">
+                <!-- WIP just here to test dialogs -->
                 Move to Another System
             </button>
-            <button class="btn btn-default">
+            <button class="btn btn-default"
+                (click)="deleteCloudStorageDialog()">
+                <!-- WIP just here to test dialogs -->
                 <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
                 [applyCss]="true"
                 [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"

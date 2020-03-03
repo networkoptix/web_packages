@@ -27,6 +27,18 @@ export class NxCloudStorageComponent implements OnInit {
     ngOnInit(): void {
     }
 
+    // Dialog Methods
+
+    public moveToDialog() {
+        this.dialogService.confirm('move dialog message', 'move dialog title', 'WIP');
+    }
+
+    public deleteCloudStorageDialog() {
+        this.dialogService.confirm('delete cloud storage dialog message', 'delete cloud storage title', 'WIP');
+    }
+
+    // Error Dialog Methods
+
     public activationErrorDialog() {
         const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
         this.dialogService.confirm(message, title, ok);
