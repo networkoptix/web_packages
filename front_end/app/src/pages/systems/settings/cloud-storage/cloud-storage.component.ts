@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -11,6 +13,8 @@ import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 export class NxCloudStorageComponent implements OnInit {
     CONFIG: any = {};
     LANG: any = {};
+    routerParamsSubscription: Subscription;
+    systemId: string;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -19,12 +23,18 @@ export class NxCloudStorageComponent implements OnInit {
 
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private dialogService: NxDialogsService
+        private dialogService: NxDialogsService,
+        private route: ActivatedRoute
     ) {
         this.setupDefaults({ configService, languageService });
     }
 
     ngOnInit(): void {
+        this.routerParamsSubscription = this.route.params.subscribe(params => {
+            if (params.systemId) {
+                this.systemId = params.systemId;
+            }
+        });
     }
 
     // Dialog Methods
@@ -34,7 +44,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public deleteCloudStorageDialog() {
-        this.dialogService.confirm('delete cloud storage dialog message', 'delete cloud storage title', 'WIP');
+        this.dialogService.cloudStorageDelete(this.systemId);
     }
 
     // Error Dialog Methods

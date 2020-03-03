@@ -26,6 +26,7 @@ import { RestartServerModalContent }  from './restart-server/restart-server.comp
 import { DetachServerModalContent }   from './detach-server/detach-server.component';
 import { ResetServerModalContent }    from './reset-server/reset-server.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
+import { CloudStorageDeleteModalContent } from './cloud-storage-delete/cloud-storage-delete.component';
 
 @Injectable({ providedIn : 'root' })
 export class NxDialogsService {
@@ -169,6 +170,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddUserModalContent, options, params);
+    }
+
+    cloudStorageDelete(systemId) {
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            systemId,
+            closable: true
+        };
+
+        return this.createModal(CloudStorageDeleteModalContent, options, params);
     }
 
     disconnect(systemId) {
