@@ -11,3 +11,9 @@ def ping(request):
     data = cloud_api.ping()
     return api_success(data)
 
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def maintenance_health(request):
+    return api_success({})
