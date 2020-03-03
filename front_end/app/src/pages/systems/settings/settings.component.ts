@@ -328,7 +328,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = user.id.replace(/{|}/g, '');
                     const node: any = {
-                        additionalLabel: this.LANG.accessRoles[user.role.name] && (this.LANG.accessRoles[user.role.name].label || user.role.name),
+                        additionalLabel: (this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label) || user.role.name,
                         id,
                         isEnabled      : user.isEnabled,
                         label          : user.name || user.email,
