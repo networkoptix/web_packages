@@ -51,7 +51,7 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    margin: 8px 0 16px 0;
+    margin: 8px 0 0 0;
 
     &-section {
         margin-right: 40px;
@@ -68,7 +68,7 @@
             p {
                 position: relative;
                 padding-right: 16px;
-                &:after {
+                &:before {
                 content: "";
                 position: absolute;
                 bottom: 4px;
