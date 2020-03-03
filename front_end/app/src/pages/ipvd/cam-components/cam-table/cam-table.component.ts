@@ -145,10 +145,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeSmall;
-                // this.pagerEllipses = false;
             } else {
                 this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
-                // this.pagerEllipses = true;
             }
         });
     }
