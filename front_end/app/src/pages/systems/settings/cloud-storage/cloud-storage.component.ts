@@ -38,7 +38,7 @@ export class NxCloudStorageComponent implements OnInit {
                 this.systemId = params.systemId;
             }
         });
-        this.cloudStorageService.currentState.subscribe(value => { this.currentState = value });
+        this.cloudStorageService.currentState.subscribe(currentState => { this.currentState = currentState; });
     }
     // Update State Methods
 
@@ -48,6 +48,10 @@ export class NxCloudStorageComponent implements OnInit {
 
     public disableCloudStorage() {
         this.cloudStorageService.disable();
+    }
+
+    public toggleCloudState() {
+        this.cloudStorageService.toggleUsageState();
     }
 
     // Dialog Methods

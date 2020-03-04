@@ -26,20 +26,58 @@ export class NxCloudStorageService {
     }
 
     enable() {
-        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true });
+        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true, usageStats: emptyUsage });
     }
 
     disable() {
-        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false });
+        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false, usageStats: emptyUsage });
+    }
+
+    toggleUsageState() {
+        const showRegular = this.mockState.value.usageStats.currentRecordings === '_';
+        this.mockState.next({ ...this.mockState.value, usageStats: showRegular ? regularUsage : emptyUsage });
     }
 }
 
+const emptyUsage: IUsageStats = {
+    currentRecordings: '_',
+    whenFullyUsed    : '_',
+    amountUsed       : '_',
+    archiveFrom      : '_',
+    recordingBitrate : '_',
+    delayFromLive    : '_'
+};
+
+const regularUsage: IUsageStats = {
+    currentRecordings: 10100, // minutes, rounded to the hour
+    whenFullyUsed    : 20160, // minutes, rounded to the hour
+    amountUsed       : 20.1, // rounded to 0.1 Gb, percent calculated and rounded to 1%
+    archiveFrom      : 11, // number of cameras represented by integer
+    recordingBitrate : 1500, // rounded to 0.1 Mbps
+    delayFromLive    : 1200 // ms, rounded to 0.1s
+};
+
 const initialMockState: IMockState = {
+    cloudCapacity     : 50000,
     systemCloudEnabled: false,
-    userCloudEnabled  : true
+    userCloudEnabled  : true,
+    usageStats        : emptyUsage
 };
 
 export interface IMockState {
+  cloudCapacity: number
   systemCloudEnabled: boolean
   userCloudEnabled: boolean
+  usageStats: IUsageStats
 }
+
+export interface IUsageStats {
+    currentRecordings: UsageTypes
+    whenFullyUsed: UsageTypes
+    amountUsed: UsageTypes
+    archiveFrom: UsageTypes
+    recordingBitrate: UsageTypes
+    delayFromLive: UsageTypes
+}
+
+type UsageTypes = '_' | number
