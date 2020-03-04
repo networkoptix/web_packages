@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
+import { NxCloudStorageService } from './cloud-storage/cloud-storage.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -55,6 +56,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     mergeTargetSystem: any;
     gettingSystemUsers: any;
     selectedUser: any;
+    userCloudEnabled: boolean;
 
     headerHeight: number;
 
@@ -76,6 +78,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
         this.userDisconnectSystem = false;
         this.selectedUser = { email: '' };
+        this.userCloudEnabled = false;
     }
 
     private systemReady() {
@@ -98,6 +101,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private toastService: NxToastService,
                 private scrollMechanicsService: NxScrollMechanicsService,
+                private cloudStorageService: NxCloudStorageService
     ) {
         this.setupDefaults(configService);
     }
@@ -392,7 +396,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (true && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
+        if (this.cloudStorageService.currentState.userCloudEnabled && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
             const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
             const generalNode = {
                 id   : this.CONFIG.menus.systemSettings.admin.id,

@@ -1,5 +1,5 @@
 <!-- Initial State -->
-<nx-block *ngIf="true" type="mt-3 mb-3">
+<nx-block *ngIf="!currentState.systemCloudEnabled" type="mt-3 mb-3">
     <header>
         <h4 translate>Cloud Storage</h4>
     </header>
@@ -13,7 +13,7 @@
             We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.</p>
         <button class="btn btn-default" 
         
-            (click)="activationErrorDialog()">
+            (click)="enableCloudStorage()">
             <!-- WIP just here to test dialogs -->
             Enable Cloud Storage
         </button>
@@ -24,7 +24,7 @@
 </nx-block>
 
 <!-- Empty State -->
-<nx-block type="mt-3 mb-3">
+<nx-block *ngIf="currentState.systemCloudEnabled" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
         <button class="server-buttons">
@@ -73,12 +73,12 @@
         </p>
         <div class='pt-3'>
             <button class="btn btn-default"
-                (click)="noOtherSystemsErrorDialog()">
+                (click)="moveToDialog()">
                 <!-- WIP just here to test dialogs -->
                 Move to Another System
             </button>
             <button class="btn btn-default"
-                (click)="systemDisconnectErrorDialog()"
+                (click)="deleteCloudStorageDialog()"
                 >
                 <!-- WIP just here to test dialogs -->
                 <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
@@ -92,7 +92,7 @@
 </nx-block>
 
 <!-- Normal State -->
-<nx-block type="mt-3 mb-3">
+<!-- <nx-block *ngIf="false" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
         <button class="server-buttons">
@@ -142,12 +142,10 @@
         <div class='pt-3'>
             <button class="btn btn-default"
                 (click)="moveToDialog()">
-                <!-- WIP just here to test dialogs -->
                 Move to Another System
             </button>
             <button class="btn btn-default"
                 (click)="deleteCloudStorageDialog()">
-                <!-- WIP just here to test dialogs -->
                 <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
                 [applyCss]="true"
                 [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
@@ -156,4 +154,4 @@
             </button>
         </div>
     </div>
-</nx-block>
+</nx-block> -->

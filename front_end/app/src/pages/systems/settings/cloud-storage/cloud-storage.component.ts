@@ -4,6 +4,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { NxCloudStorageService, IMockState } from './cloud-storage.service';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -15,6 +16,7 @@ export class NxCloudStorageComponent implements OnInit {
     LANG: any = {};
     routerParamsSubscription: Subscription;
     systemId: string;
+    currentState: IMockState;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -24,7 +26,8 @@ export class NxCloudStorageComponent implements OnInit {
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private dialogService: NxDialogsService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private cloudStorageService: NxCloudStorageService
     ) {
         this.setupDefaults({ configService, languageService });
     }
@@ -35,6 +38,18 @@ export class NxCloudStorageComponent implements OnInit {
                 this.systemId = params.systemId;
             }
         });
+        this.currentState = this.cloudStorageService.currentState;
+    }
+    // Update State Methods
+
+    public enableCloudStorage() {
+        this.cloudStorageService.enable();
+        this.currentState = this.cloudStorageService.currentState;
+    }
+
+    public disableCloudStorage() {
+        this.cloudStorageService.disable();
+        this.currentState = this.cloudStorageService.currentState;
     }
 
     // Dialog Methods
