@@ -138,7 +138,6 @@ export class NxContentComponent implements OnInit {
                     this.agreementDetails.accepted = data.accepted;
                     this.agreementDetails.preview = data.preview;
                     this.showAgree = !this.state && this.account && !this.agreementDetails.accepted;
-                    this.showAgree = true;
                 }
             },
             () => {
