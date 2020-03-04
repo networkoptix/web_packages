@@ -8,6 +8,7 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxCloudStorageService } from '../../pages/systems/settings/cloud-storage/cloud-storage.service';
 
 @Component({
     selector: 'nx-modal-cloud-storage-delete-content',
@@ -32,7 +33,8 @@ export class CloudStorageDeleteModalContent {
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
                 private cloudApiService: NxCloudApiService,
-                private renderer: Renderer2
+                private renderer: Renderer2,
+                public cloudStorageService: NxCloudStorageService
     ) {
         this.LANG = this.language.getTranslations();
     }
@@ -64,5 +66,10 @@ export class CloudStorageDeleteModalContent {
 
     close() {
         this.activeModal.close();
+    }
+
+    disableCloudStorage() {
+        this.cloudStorageService.disable();
+        this.close();
     }
 }

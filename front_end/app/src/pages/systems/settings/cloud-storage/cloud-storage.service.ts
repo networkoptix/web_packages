@@ -4,37 +4,33 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxAccountService } from '../../../../services/account.service';
 import { NxSystemsService } from '../../../../services/systems.service';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxCloudStorageService {
-    mockState: IMockState;
+    mockState: BehaviorSubject<IMockState>;
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-      private accountService: NxAccountService,
+      // private accountService: NxAccountService,
       private systemsService: NxSystemsService,
       private route: ActivatedRoute
     ) {
-        this.mockState = initialMockState;
+        this.mockState = new BehaviorSubject(initialMockState);
     }
 
     get currentState() {
         return this.mockState;
     }
 
-    set currentState(updatedState) {
-        this.mockState = { ...this.mockState, ...updatedState };
-    }
-
     enable() {
-        this.currentState = { ...this.mockState, systemCloudEnabled: true };
+        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true });
     }
 
     disable() {
-        this.currentState = { ...this.mockState, systemCloudEnabled: false };
+        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false });
     }
 }
 

@@ -104,6 +104,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private cloudStorageService: NxCloudStorageService
     ) {
         this.setupDefaults(configService);
+        this.cloudStorageService.currentState.subscribe(({ userCloudEnabled }) => { this.userCloudEnabled = userCloudEnabled; });
     }
 
     ngOnInit(): void {
@@ -211,7 +212,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;
-                },
+                }
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
         }).then(() => {
@@ -225,7 +226,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (width >= 768) {
                 this.setHeaderHeight();
             }
@@ -369,7 +370,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id   : this.CONFIG.menus.systemSettings.servers.id,
                     svg  : this.CONFIG.menus.systemSettings.servers.icon,
                     label: this.LANG.servers.servers,
-                    path : this.CONFIG.menus.systemSettings.servers.path,
+                    path : this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
             }
@@ -396,7 +397,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (this.cloudStorageService.currentState.userCloudEnabled && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
+        if (this.userCloudEnabled && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
             const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
             const generalNode = {
                 id   : this.CONFIG.menus.systemSettings.admin.id,
