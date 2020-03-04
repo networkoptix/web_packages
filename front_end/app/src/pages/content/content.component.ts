@@ -1,4 +1,4 @@
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -8,6 +8,9 @@ import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inj
 import { ComponentsModule } from '../../components/components.module';
 import { SessionStorageService } from 'ngx-store';
 import { WINDOW } from '../../services/window-provider';
+import { NxAccountService } from '../../services/account.service';
+import { NxProcessService } from '../../services/process.service';
+import { NxCloudApiService } from '../../services/nx-cloud-api';
 
 @Component({
     selector : 'content-component',
@@ -24,8 +27,15 @@ export class NxContentComponent implements OnInit {
     private id: string;
     private langCode: string;
     private CONFIG: any;
-    private loaded: boolean;
+    private LANG: any;
+    private loaded = false;
     private staticContent: any;
+
+    private agreement: boolean;
+    private agreementDetails: any = {};
+    private account: any;
+    private showAgree = false;
+    private agreeProcess: any;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
@@ -38,16 +48,22 @@ export class NxContentComponent implements OnInit {
 
     constructor(@Inject(WINDOW) private window: Window,
                 private route: ActivatedRoute,
+                private router: Router,
                 private http: HttpClient,
                 private location: Location,
                 private language: NxLanguageProviderService,
                 private config: NxConfigService,
                 private pageService: NxPageService,
                 private _compiler: Compiler,
-                private sessionStorage: SessionStorageService) {
+                private sessionStorage: SessionStorageService,
+                private accountService: NxAccountService,
+                private processService: NxProcessService,
+                private cloudApiService: NxCloudApiService,
+                languageService: NxLanguageProviderService) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
         this.CONFIG = config.getConfig();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit(): void {
@@ -57,29 +73,54 @@ export class NxContentComponent implements OnInit {
         window.onbeforeunload = (event) => {
             this.sessionStorage.remove('staticContent');
         };
-    }
+        this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
 
-    ngAfterViewInit(): void {
-        this.route.paramMap.subscribe((paramMap) => {
-            this.articleParam = paramMap.get('article_param');
-            this.state = this.route.snapshot.queryParamMap.get('state');
-            this.id = this.route.snapshot.queryParamMap.get('id');
+        this.accountService.get().then(account => {
+            this.account = account;
+        });
 
-            this.dynamicTemplate.clear();
-            this.title = '';
-            this.body = '';
-            this.loaded = false;
-
-            if (!this.staticContent[this.articleParam]) {
-                this.getArticle();
-            } else {
-                this.loadStaticArticle();
+        this.agreeProcess = this.processService.createProcess(() => {
+            return this.cloudApiService.acceptAgreement(this.agreementDetails.review_id);
+        }, {
+            successMessage: this.LANG.account.agreementAccepted
+        }).then(() => {
+            this.showAgree = false;
+            if (this.account.is_staff) {
+                window.location.href = '/admin/';
             }
         });
     }
 
-    getArticle() {
-        const uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/?`;
+    ngAfterViewInit(): void {
+        this.route.paramMap.subscribe((paramMap) => {
+            this.state = this.route.snapshot.queryParamMap.get('state');
+            this.id = this.route.snapshot.queryParamMap.get('id');
+            this.dynamicTemplate.clear();
+            this.title = '';
+            this.body = '';
+            this.loaded = false;
+            this.showAgree = false;
+            if (this.agreement) {
+                this.getContent();
+            } else {
+                this.articleParam = paramMap.get('article_param');
+
+                if (!this.staticContent[this.articleParam]) {
+                    this.getContent();
+                } else {
+                    this.loadStaticContent();
+                }
+            }
+        });
+    }
+
+    getContent() {
+        let uri;
+        if (this.agreement) {
+            uri = `${this.CONFIG.apiBase}/agreement?`;
+        } else {
+            uri = `${this.CONFIG.apiBase}/article/${this.articleParam}/?`;
+        }
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
@@ -89,13 +130,25 @@ export class NxContentComponent implements OnInit {
                 this.body = data.body;
                 this.pageService.setPageTitle(this.title);
                 this.loaded = true;
+                if (data.id) {
+                    this.id = data.id;
+                }
+                if (this.agreement) {
+                    this.agreementDetails.review_id = data.review_id;
+                    this.agreementDetails.accepted = data.accepted;
+                    this.agreementDetails.preview = data.preview;
+                    this.showAgree = !this.state && this.account && !this.agreementDetails.accepted;
+                    this.showAgree = true;
+                }
             },
             () => {
-                this.loadStaticArticle();
+                if (!this.agreement) {
+                    this.loadStaticContent();
+                }
             });
     }
 
-    loadStaticArticle() {
+    loadStaticContent() {
         const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
         this.compileStaticArticle(templateUrl);
     }

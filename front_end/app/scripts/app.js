@@ -205,6 +205,9 @@ window.L = {};
                     .when('/content/:page', {
                         template: '',
                     })
+                    .when('/agreement', {
+                        template: '',
+                    })
                     .when('/debug', {
                         template: ''
                     })
