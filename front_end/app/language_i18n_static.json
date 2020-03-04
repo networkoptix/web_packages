@@ -130,6 +130,7 @@
             "high": "High",
             "low": "Low"
         },
+        "general": "General",
         "searchCamPlaceholder": "Search",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
@@ -172,6 +173,7 @@
             "stayLoggedIn": "Stay Logged In"
         },
         "cloudStorage": {
+            "title": "Cloud Storage",
             "activationError": {
                 "title": "Cannot Enable Cloud Storage",
                 "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "

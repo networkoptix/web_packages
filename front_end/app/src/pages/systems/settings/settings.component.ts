@@ -141,10 +141,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             base              : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
             level1            : [
                 {
-                    id   : this.CONFIG.menus.systemSettings.admin.id,
-                    svg  : this.CONFIG.menus.systemSettings.admin.icon,
-                    label: this.LANG.menu.titles.systemAdministration,
-                    path : this.CONFIG.menus.systemSettings.admin.path
+                    id    : this.CONFIG.menus.systemSettings.admin.id,
+                    svg   : this.CONFIG.menus.systemSettings.admin.icon,
+                    label : this.LANG.menu.titles.systemAdministration,
+                    path  : this.CONFIG.menus.systemSettings.admin.path,
+                    level2: []
                 }
             ]
         };
@@ -389,22 +390,21 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
-        // Need to replace hardcoded 'true' once services for cloud storage are setup
+        // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (true) {
-            let cloudStorageNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cloudStorage.id);
-            if (!cloudStorageNode) {
-                cloudStorageNode = {
-                    id   : this.CONFIG.menus.systemSettings.cloudStorage.id,
-                    svg  : this.CONFIG.menus.systemSettings.cloudStorage.icon,
-                    label: 'Cloud Storage', // Need to add to translate
-                    path : this.CONFIG.menus.systemSettings.cloudStorage.path
-                };
-                this.content.level1.push(cloudStorageNode);
-            }
-
-        } else {
-            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
+        if (true && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
+            const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
+            const generalNode = {
+                id   : this.CONFIG.menus.systemSettings.admin.id,
+                label: this.LANG.common.general,
+                path : this.CONFIG.menus.systemSettings.admin.path
+            };
+            const cloudStorageNode = {
+                id   : this.CONFIG.menus.systemSettings.cloudStorage.id,
+                label: this.LANG.dialogs.cloudStorage.title,
+                path : this.CONFIG.menus.systemSettings.cloudStorage.path
+            };
+            adminNode.level2 = [generalNode, cloudStorageNode];
         }
 
         this.content = { ...this.content };
