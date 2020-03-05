@@ -331,12 +331,13 @@ export class NxConfigService {
 
             // Dynamic from cloud_portal
             cloudCapabilities : {
-                canMerge         : '',
-                feedbackEnabled  : '',
-                healthMonitor    : '',
-                integrationStore : '',
-                publicDownloads  : '',
-                publicReleases   : ''
+                canMerge            : '',
+                cloudStorageEnabled : '',
+                feedbackEnabled     : '',
+                healthMonitor       : '',
+                integrationStore    : '',
+                publicDownloads     : '',
+                publicReleases      : ''
             },
             cloudName : '',
             company   : {
