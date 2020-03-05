@@ -5,6 +5,7 @@ import { NxAccountService } from '../../../../services/account.service';
 import { NxSystemsService } from '../../../../services/systems.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, BehaviorSubject } from 'rxjs';
+import { NxSystemService } from '../../../../services/system.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,15 +15,20 @@ export class NxCloudStorageService {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-      // private accountService: NxAccountService,
+      private systemService: NxSystemService,
       private systemsService: NxSystemsService,
-      private route: ActivatedRoute
+      private route: ActivatedRoute,
+    //   private accountService: NxAccountService
     ) {
         this.mockState = new BehaviorSubject(initialMockState);
     }
 
     get currentState() {
         return this.mockState;
+    }
+
+    getMoveParams() {
+        return ['this.system', 'this.systems', 'this.peerSystems', 'this.accountService'];
     }
 
     enable() {
@@ -51,7 +57,7 @@ const emptyUsage: IUsageStats = {
 const regularUsage: IUsageStats = {
     currentRecordings: 10100, // minutes, rounded to the hour
     whenFullyUsed    : 20160, // minutes, rounded to the hour
-    amountUsed       : 20.1, // rounded to 0.1 Gb, percent calculated and rounded to 1%
+    amountUsed       : 16000, // rounded to 0.1 Gb, percent calculated and rounded to 1%
     archiveFrom      : 11, // number of cameras represented by integer
     recordingBitrate : 1500, // rounded to 0.1 Mbps
     delayFromLive    : 1200 // ms, rounded to 0.1s

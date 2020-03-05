@@ -57,7 +57,8 @@ export class NxCloudStorageComponent implements OnInit {
     // Dialog Methods
 
     public moveToDialog() {
-        this.dialogService.confirm('move dialog message', 'move dialog title', 'WIP');
+        const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();
+        this.dialogService.cloudStorageMove(system, systems, peerSystems, user);
     }
 
     public deleteCloudStorageDialog() {

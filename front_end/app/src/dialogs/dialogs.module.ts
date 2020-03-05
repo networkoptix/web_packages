@@ -27,6 +27,7 @@ import { NxDialogsService }                             from './dialogs.service'
 import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
 import { RouterModule }                                 from '@angular/router';
 import { AngularSvgIconModule }                         from 'angular-svg-icon';
+import { CloudStorageMoveModalContent } from './cloud-storage-move/cloud-storage-move.component';
 
 @NgModule({
     imports : [
@@ -57,7 +58,8 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         ResetServerModalContent,
         ChangePasswordModalContent,
         NxModalGenericComponent,
-        CloudStorageDeleteModalContent
+        CloudStorageDeleteModalContent,
+        CloudStorageMoveModalContent
     ],
     entryComponents : [
         LoginModalContent,
@@ -77,7 +79,8 @@ import { AngularSvgIconModule }                         from 'angular-svg-icon';
         ResetServerModalContent,
         ChangePasswordModalContent,
         NxModalGenericComponent,
-        CloudStorageDeleteModalContent
+        CloudStorageDeleteModalContent,
+        CloudStorageMoveModalContent
     ],
     providers : [
         NxDialogsService,

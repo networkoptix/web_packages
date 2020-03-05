@@ -13,7 +13,6 @@ import { NxUrlProtocolService }          from './url-protocol.service';
 import { NxApplyService }                from './apply.service';
 import { NxHeaderService }               from './nx-header.service';
 import { NxScrollMechanicsService }      from './scroll-mechanics.service';
-
 @NgModule({
     imports : [
         CommonModule
@@ -33,7 +32,7 @@ import { NxScrollMechanicsService }      from './scroll-mechanics.service';
         NxAccountService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService
+        NxScrollMechanicsService,
     ],
     exports : []
 })
