@@ -15,6 +15,9 @@ cloud_db:
 cloud_portal:
     url: 'https://$CLOUD_PORTAL_HOST'
 
+cloud_storage:
+    url: ''
+
 trafficRelay:
     host: 'relay-bur.vmsproxy.hdw.mx'
 
