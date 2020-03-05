@@ -722,6 +722,15 @@
             "advanced": true
           },
           {
+            "label": "Enable cloud storage",
+            "name": "%CLOUD_STORAGE_ENABLED%",
+            "description": "Allows users to see the cloud storage tab on the system page. If disabled, it will only be shown if the system supports it.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true
+          },
+          {
             "name": "supportEmail",
             "label": "Support E-mail",
             "value": "support@networkoptix.zendesk.com",
