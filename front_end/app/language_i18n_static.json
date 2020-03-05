@@ -183,7 +183,11 @@
                 "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage"
+                "title": "Move Cloud Storage",
+                "status": {
+                    "initial": "If selected system already has cloud storage, it will be merged with this one",
+                    "offline": "Cloud storage cannot be moved to offline systems.",
+                }
             },
             "noOtherSystemsError": {
                 "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
