@@ -18,17 +18,20 @@ export class CloudStorageMoveModalContent {
     LANG: any;
     CONFIG: any;
 
-    items: DropdownItem[]
+    items: DropdownItem[];
+    errorText: string;
 
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
                 public activeModal: NgbActiveModal,
-                public renderer: Renderer2
+                public renderer: Renderer2,
+                private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
         this.items = mockItems;
+        this.errorText = '';
     }
 
     move() {
@@ -40,8 +43,18 @@ export class CloudStorageMoveModalContent {
         this.activeModal.close();
     }
 
-    setTargetSystem(event) {
-        console.log(event);
+    setTargetSystem({ value }) {
+        if (value === 'otherSystem') {
+            this.errorText = "this isn't implemented, not sure if it should be";
+        }
+
+        this.systemsService.getSystem(value).toPromise().then(({ stateOfHealth }) => {
+            if (stateOfHealth === 'offline') {
+                this.errorText = 'Cloud storage cannot be moved to offline systems.';
+            } else {
+                this.errorText = '';
+            }
+        });
     }
 }
 

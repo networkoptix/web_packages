@@ -27,7 +27,7 @@
 <nx-block *ngIf="currentState.systemCloudEnabled" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
-        <button class="server-buttons">
+        <!-- <button class="server-buttons">
             <a [routerLink]="''">
                 <span>
                     <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
@@ -35,7 +35,7 @@
                 </span>
                 <span class="ml-1" translate>Detailed Statistics</span>
             </a>
-        </button>
+        </button> -->
     </header>
     <div class="normal-state">
         <h2>{{currentState.cloudCapacity}}</h2>

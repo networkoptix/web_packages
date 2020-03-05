@@ -17,7 +17,11 @@
             [selected]="items[0]" 
             (onSelected)="setTargetSystem($event)"
             required></nx-select>
-
+        <p *ngIf="!errorText" class="light-text">If selected system already has cloud storage, it will be merged with this one.</p>
+        <p *ngIf="errorText"
+        class="mt-2 error-label">
+        {{errorText}}
+        </p>
     </div>
     <div class="modal-footer" (click)="move()">
         <nx-process-button [process]="delete"
