@@ -14,7 +14,7 @@ from util.helpers import detect_language_by_request
 @handle_exceptions
 def get_article(request, url_param, **kwargs):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'review'
+    review = request.query_params.get('state') == 'pending'
     article_id = request.query_params.get('id')
     article = None
 

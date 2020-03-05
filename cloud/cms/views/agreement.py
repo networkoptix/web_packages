@@ -13,7 +13,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 @handle_exceptions
 def get_agreement(request):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'review'
+    review = request.query_params.get('state') == 'pending'
     agreement_id = request.query_params.get('id')
     agreement = None
     agreement_review = None

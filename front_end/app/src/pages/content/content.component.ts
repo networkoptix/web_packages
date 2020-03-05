@@ -143,6 +143,8 @@ export class NxContentComponent implements OnInit {
             () => {
                 if (!this.agreement) {
                     this.loadStaticContent();
+                } else {
+                    this.location.go('404');
                 }
             });
     }

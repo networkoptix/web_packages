@@ -8,26 +8,15 @@ from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-import os
-import json
-from cloud import settings
-from api.helpers.exceptions import APIRequestException, APINotFoundException, api_success, handle_exceptions, require_params
+
+from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
 from cms.controllers import filldata, generate_structure, modify_db, structure, structure_to_html
 from cms.forms import *
 from cms.permissions import IsSuperuser
 
-from django.contrib.admin import AdminSite
-
 
 DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
-
-
-class MyAdminSite(AdminSite):
-    pass
-
-
-mysite = MyAdminSite()
 
 
 # Used to get the context and language models
@@ -328,8 +317,8 @@ def asset_settings(request, asset_id):
                    'form': form,
 
                    'user': request.user,
-                   'has_permission': mysite.has_permission(request),
-                   'site_url': mysite.site_url,
+                   'has_permission': admin.site.has_permission(request),
+                   'site_url': admin.site.site_url,
                    'site_header': admin.site.site_header,
                    'site_title': admin.site.site_title,
                    'title': 'Settings for %s' % asset.name})
