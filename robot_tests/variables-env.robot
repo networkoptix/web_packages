@@ -11,7 +11,7 @@ ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 ${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
 @{AUTO SYS AUTH}                      admin    qweasd 123
-${SCREENSHOTDIRECTORY}                \Screenshots
+${SCREENSHOTDIRECTORY}                Screenshots
 
 ${BROWSER}                            Chrome
 

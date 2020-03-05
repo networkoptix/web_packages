@@ -331,7 +331,6 @@ export class NxConfigService {
 
             // Dynamic from cloud_portal
             cloudCapabilities : {
-                canMerge         : '',
                 feedbackEnabled  : '',
                 healthMonitor    : '',
                 integrationStore : '',

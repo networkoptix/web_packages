@@ -524,8 +524,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.system.mediaserver.getAggregateHealthReport().pipe(
             flatMap((result: any) => this.setupReport(result))
-        ).subscribe(() => {}, (err) => {
-            console.log(err);
+        ).subscribe(() => {}, () => {
             if (!this.system.id) {
                 !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
             }

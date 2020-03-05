@@ -144,9 +144,8 @@ export class AppComponent {
             name: companyName
         };
         // @ts-ignore
-        const { cloudMerge, feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases } = window.SETTINGS;
+        const { feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases } = window.SETTINGS;
         this.CONFIG.capabilities = {
-            cloudMerge,
             feedbackEnabled,
             healthMonitor,
             integrationStore,

@@ -5,7 +5,7 @@ import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxUrlProtocolService {
     CONFIG: any;
@@ -41,9 +41,9 @@ export class NxUrlProtocolService {
         }
 
         const source = {
-            from    : fromLocation || 'portal',
-            context : contextParam || 'none',
-            isApp   : false
+            from   : fromLocation || 'portal',
+            context: contextParam || 'none',
+            isApp  : false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
         return source;
@@ -52,14 +52,14 @@ export class NxUrlProtocolService {
     generateLink(linkSettings) {
         linkSettings = linkSettings || {};
         let settings = {
-            native           : true,
-            from             : 'portal', // client, mobile, portal, webadmin
-            context          : undefined,
-            command          : 'client', // client, cloud, system
-            systemId         : undefined,
-            action           : undefined,
-            actionParameters : {}, // Object with parameters
-            auth             : true // true for request, null for skipping, string for specific value
+            native          : true,
+            from            : 'portal', // client, mobile, portal, webadmin
+            context         : undefined,
+            command         : 'client', // client, cloud, system
+            systemId        : undefined,
+            action          : undefined,
+            actionParameters: {}, // Object with parameters
+            auth            : true // true for request, null for skipping, string for specific value
         };
 
         if (linkSettings.systemId) {
@@ -68,11 +68,11 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
+        // const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
+        const protocol = 'nx-vms:';
         const host = this.window.location.host;
 
-        let getParams;
-        getParams = { ...settings.actionParameters };
+        const getParams: any = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -112,13 +112,13 @@ export class NxUrlProtocolService {
                 .then((authKey) => {
                     linkSettings.auth = authKey;
                     resolve({
-                        link : this.generateLink(linkSettings),
+                        link: this.generateLink(linkSettings),
                         authKey
                     });
                 }).catch(() => {
                     resolve({
-                        link    : this.generateLink(linkSettings),
-                        authKey : undefined
+                        link   : this.generateLink(linkSettings),
+                        authKey: undefined
                     });
                 });
         });
@@ -145,8 +145,14 @@ export class NxUrlProtocolService {
                  * If the page blurs more than once the vms client probably opened.
                  */
                 let blurCount = 0;
-                this.window.onblur = (event) => {
+                this.window.onblur = () => {
                     blurCount += 1;
+                };
+
+                this.window.document.onvisibilitychange = () => {
+                    if (this.window.document.hidden === true) {
+                        blurCount--;
+                    }
                 };
                 // Check on before unload
                 // @ts-ignore

@@ -61,12 +61,6 @@ export class IpvdComponent {
         this.CONFIG.ipvd.vendorsShown = parseInt(window.SETTINGS.vendorsShown);
         // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
-
-        // @ts-ignore
-        if (window.SETTINGS.cloudMerge) {
-            // @ts-ignore
-            this.CONFIG.cloudMerge = window.SETTINGS.cloudMerge;
-        }
         // @ts-ignore
         this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
         // @ts-ignore
