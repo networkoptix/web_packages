@@ -121,6 +121,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'config': {
                 'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
+                'cloud_merge': asset.read_global_value("%CLOUD_MERGE%"),
+                'cloud_storage_enabled': asset.read_global_value("%CLOUD_STORAGE_ENABLED%"),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
@@ -244,17 +246,6 @@ class Customization(models.Model):
             if child.children_customizations.exists():
                 children_list.extend(self.get_children_ids(child))
         return children_list
-
-    def save(self, *args, **kwargs):
-        create_cloud_portal_asset = self.pk is None
-        super(Customization, self).save(*args, **kwargs)
-        if create_cloud_portal_asset:
-            # Default cloud portal asset type
-            asset_type = AssetType.objects.get(name="", single_customization=True,
-                                               type=AssetType.ASSET_TYPES.cloud_portal)
-            cloud_portal = Asset.objects.create(name=f"Cloud portal - {self.name}",
-                                                asset_type=asset_type)
-            cloud_portal.customizations.set([self])
 
 
 class AssetType(models.Model):
