@@ -49,7 +49,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     currentlyMerging: boolean;
     debugMode: boolean;
     betaMode: boolean;
-    configCanMerge: boolean;
     isMaster: boolean;
     userDisconnectSystem: boolean;
     mergeTargetSystem: any;
@@ -72,7 +71,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.currentlyMerging = false;
-        this.configCanMerge = this.CONFIG.cloudMerge || false;
         this.systemNoAccess = false;
         this.userDisconnectSystem = false;
         this.selectedUser = { email: '' };
