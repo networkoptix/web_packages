@@ -217,11 +217,11 @@
                             </ng-container>
                             <div class="d-flex checkbox-block align-items-center mt-1" 
                                 *ngIf="settingsWatchers.sessionLimitMinutes !== undefined"
-                                (click)="setDefaultIfNotInitialized()">
+                                (click)="handleSessionLimitToggle()">
                                 <nx-checkbox
                                     name="sessionLimitMinutes"
                                     componentId="sessionLimitMinutes"
-                                    [(ngModel)]="settingsWatchers.sessionLimitToggle.value"
+                                    [(ngModel)]="sessionLimitToggle"
                                     #sessionLimitMinutes="ngModel">
                                 </nx-checkbox>
 
@@ -229,19 +229,20 @@
                                     <span translate>Limit session duration to</span>
                                 </label>
                             </div>
-                            <div *ngIf="settingsWatchers.sessionLimitToggle && settingsWatchers.sessionLimitToggle.value" 
+                            <div *ngIf="sessionLimitToggle" 
                                 class="row ml-4 mt-2">
                                 <input #timeUnitTracker
-                                        [(ngModel)]="timeUnitCount"
-                                        (change)="updateTimeUnitWatcher()"
+                                        [ngModel]="timeValue"
+                                        (ngModelChange)="updateLimitSessionValue($event)"
                                         [ngModelOptions]="{standalone: true}"
                                         (keydown)="storePreviousValue($event)"
                                         (keyup)="validationCheckForInput()"
                                         type="number"
                                         min="1"
                                         class="form-control time-unit-input">
-                                <nx-select class="time-unit-select"
-                                        [items]="limitSessionTimeUnits"
+                                <nx-select #selectorTracker
+                                        class="time-unit-select"
+                                        [items]="limitSessionTimeItems"
                                         [selected]="selectedTimeUnit"
                                         (onSelected)="updateTimeUnitInput($event)"></nx-select>
                             </div>
