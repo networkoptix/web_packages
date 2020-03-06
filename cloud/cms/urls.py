@@ -1,10 +1,12 @@
 from django.conf.urls import url
 from django.urls import path
-from cms.views import integration, article
+from cms.views import integration, article, agreement
 
 
 urlpatterns = [
     url(r'^integration/(?P<asset_id>.+?)/?$', integration.get_integration, name="get_integration"),
     url(r'^integrations$', integration.get_integrations, name="get_integrations"),
-    path('article/<url_param>/', article.get_article, name='get_article')
+    path('article/<url_param>/', article.get_article, name='get_article'),
+    path('agreement', agreement.get_agreement, name='get_agreement'),
+    path('accept_agreement', agreement.accept_agreement, name='accept_agreement')
 ]

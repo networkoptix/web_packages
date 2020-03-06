@@ -59,7 +59,7 @@ INSTALLED_APPS = (
     'admin_tools.theming',
     'admin_tools.dashboard',
 
-    'django.contrib.admin',
+    'cloud.apps.CmsAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

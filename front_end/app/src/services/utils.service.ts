@@ -116,4 +116,12 @@ export class NxUtilsService {
         // revokeObjectURL breaks download on MSEdge and Firefox
         // URL.revokeObjectURL(objectUrl);
     }
+
+    public isTablet() {
+        return this.deviceService.isTablet();
+    }
+
+    public isMobile() {
+        return this.deviceService.isMobile();
+    }
 }

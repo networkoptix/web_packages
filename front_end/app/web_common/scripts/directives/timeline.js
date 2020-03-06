@@ -1,13 +1,13 @@
 (function () {
-    
+
     'use strict';
-    
+
     angular.module('nxCommon')
         .directive('timeline', ['$interval', '$timeout', 'animateScope', '$q', 'nxConfigService',
             function ($interval, $timeout, animateScope, $q, nxConfigService) {
-            
+
                 const CONFIG = nxConfigService.getConfig();
-                
+
                 return {
                     restrict: 'E',
                     scope: {
@@ -56,25 +56,25 @@
                          *
                          * timelineRender (timelineCanvasRender) - GUI module which draws timeline and detects mouse position over elements
                          */
-                        
+
                         var debugEventsMode = CONFIG.debug.chunksOnTimeline && CONFIG.allowDebugMode;
-                        
+
                         scope.disableVolume = CONFIG.webclient.disableVolume;
-                        
+
                         // !!! Read basic parameters, DOM elements and global objects for module
                         var viewport = element.find('.viewport');
                         var $canvas = element.find('canvas');
                         var canvas = $canvas.get(0);
-                        
+
                         scope.toggleActive = function () {
                             scope.activeVolume = !scope.activeVolume;
                         };
-                        
+
                         var pixelAspectRatio = (function () {
                             if (window.devicePixelRatio > 1) {
                                 return window.devicePixelRatio;
                             }
-                            
+
                             var mediaQuery = '(-webkit-min-device-pixel-ratio: 1.5),' +
                                 '(min--moz-device-pixel-ratio: 1.5),' +
                                 '(-o-min-device-pixel-ratio: 3/2),' +
@@ -84,9 +84,9 @@
                             }
                             return 1;
                         })();
-                        
+
                         var timelineConfig = window.TimelineConfig;
-                        
+
                         scope.scaleManager = new window.ScaleManager(timelineConfig.minMsPerPixel,
                             timelineConfig.maxMsPerPixel,
                             timelineConfig.initialInterval,
@@ -98,7 +98,7 @@
                             timelineConfig.minScrollBarWidth,
                             pixelAspectRatio,
                             $q); //Init boundariesProvider
-                        
+
                         var animationState = {
                             targetLevels: scope.scaleManager.levels,
                             currentLevels: {
@@ -113,7 +113,7 @@
                             small: 1,
                             marks: 1
                         };
-                        
+
                         var timelineRender = new window.TimelineCanvasRender(canvas,
                             timelineConfig,
                             scope.recordsProvider,
@@ -124,7 +124,7 @@
                                 allowDebug: CONFIG.allowDebugMode
                             },
                             pixelAspectRatio);
-                        
+
                         var timelineActions = new window.TimelineActions(
                             timelineConfig,
                             scope.positionProvider,
@@ -132,15 +132,15 @@
                             animationState,
                             animateScope,
                             scope);
-                        
+
                         var mouseXOverTimeline = 0;
                         var mouseYOverTimeline = 0;
-                        
+
                         // !!! Initialization functions
                         function updateTimelineHeight() {
                             canvas.height = element.find('.viewport').height() * pixelAspectRatio;
                         }
-                        
+
                         function updateTimelineWidth() {
                             scope.viewportWidth = element.find('.viewport').width();
                             canvas.width = scope.viewportWidth * pixelAspectRatio;
@@ -150,32 +150,32 @@
                                 scope.disableZoomOut = scope.scaleManager.disableZoomOut;
                             });
                         }
-                        
+
                         function initTimeline() {
                             var now = window.timeManager.nowToDisplay();
                             scope.scaleManager.setStart(scope.recordsProvider && scope.recordsProvider.chunksTree ? scope.recordsProvider.chunksTree.start : (now - timelineConfig.initialInterval));
                             scope.scaleManager.setEnd();
-                            
+
                             $timeout(() => {
                                 timelineActions.fullZoomOut(); // Animate full zoom out
                             });
                         }
-                        
+
                         // !!! Render everything: updating function
                         function render() {
                             if (scope.recordsProvider) {
                                 scope.recordsProvider.updateLastMinute(timelineConfig.lastMinuteDuration,
                                     scope.scaleManager.levels.events.index);
                             }
-                            
+
                             timelineActions.updateState(mouseXOverTimeline);
                             timelineRender.Draw(mouseXOverTimeline,
                                 mouseYOverTimeline,
                                 timelineActions.scrollingNow,
                                 timelineActions.catchScrollBar);
                         }
-                        
-                        
+
+
                         /**
                          * Events model for timeline:
                          *
@@ -204,7 +204,7 @@
                          *      + DblClick on zoomout - full zoom out
                          *      + Hold - Constant zooming
                          */
-                        
+
                         function goToLive(force) {
                             if (!scope.positionProvider.playing) {
                                 scope.playHandler(true);
@@ -217,7 +217,7 @@
                                 scope.positionHandler(false);
                             }
                         }
-                        
+
                         function jumpToPosition(date) {
                             var lastMinute = scope.scaleManager.lastMinute();
                             if (date > lastMinute) {
@@ -226,7 +226,7 @@
                                 scope.positionHandler(date);
                             }
                         }
-                        
+
                         function playPause() {
                             if (scope.positionProvider.playing) {
                                 scope.playHandler(false);
@@ -238,10 +238,10 @@
                                 }
                                 scope.playHandler(true);
                             }
-                            
+
                             timelineActions.playPause();
                         }
-                        
+
                         function moveTimeToVisiblePosition(position) {
                             var sM = scope.scaleManager;
                             var date = sM.playedPosition;
@@ -249,38 +249,38 @@
                             var relativeSizeOfTimeLine = sM.end - sM.start - (sM.visibleEnd - sM.visibleStart);
                             timelineActions.animateScroll(relativePositionOfDate / relativeSizeOfTimeLine, false);
                         }
-                        
+
                         function timelineClick(mouseX) {
                             var date = timelineActions.setClickedCoordinate(mouseX);
                             var bufferZone = timelineConfig.edgeBufferZone * pixelAspectRatio;
                             jumpToPosition(date);
                             mouseX *= pixelAspectRatio;
-                            
+
                             if (scope.scaleManager.zoom() < scope.scaleManager.fullZoomOutValue() &&
                                 (mouseX < bufferZone || mouseX > canvas.width - bufferZone)) {
-                                
+
                                 var left = (bufferZone + timelineConfig.markerWidth) / canvas.width;
                                 var right = (canvas.width - (bufferZone + timelineConfig.markerWidth)) / canvas.width;
                                 moveTimeToVisiblePosition(mouseX < bufferZone ? left : right);
                             }
                         }
-                        
+
                         /**
                          * Scrolling functions
                          */
-                        
+
                         var dragged = false,
                             dragStarted = 0,
                             impetusInit = null,
                             preventClick = false;
-                        
+
                         function scrollbarSliderDragStart() { // Activate Impetus forcibly
                             impetusInit = null;
                             dragStarted = mouseXOverTimeline;
                             dragged = false;
                             timelineActions.scrollbarSliderDragStart(mouseXOverTimeline);
                         }
-                        
+
                         // High-level Handlers
                         function scrollbarClickOrHold() {
                             timelineActions.scrollingToCursorStart().then(function (result) {
@@ -289,24 +289,24 @@
                                 }
                             });
                         }
-                        
+
                         function scrollButtonClickOrHold(left) {
                             timelineActions.scrollingStart(left, timelineConfig.scrollButtonSpeed * scope.viewportWidth);
                         }
-                        
+
                         function scrollButtonDblClick(left) {
                             timelineActions.animateScroll(left ? 0 : 1);
                         }
-                        
-                        
+
+
                         /**
                          * Actual browser events handling
                          */
-                            
+
                             // !!! Mouse events
                         var mouseOverElements = null;
                         var onReleaseCenter = false;
-                        
+
                         function updateMouseCoordinate(event) {
                             if (!event) {
                                 mouseYOverTimeline = 0;
@@ -314,7 +314,7 @@
                                 mouseOverElements = null;
                                 return;
                             }
-                            
+
                             if (event.touches) {
                                 try {
                                     event.pageX = event.touches[0].pageX;
@@ -324,27 +324,27 @@
                                     // X and Y have correct values though
                                 }
                             }
-                            
+
                             if ($(event.target).is('canvas') && event.offsetX) {
                                 mouseXOverTimeline = event.offsetX;
                             } else {
                                 mouseXOverTimeline = event.pageX - $(canvas).offset().left;
                             }
                             mouseYOverTimeline = event.offsetY || (event.pageY - $(canvas).offset().top);
-                            
+
                             mouseOverElements = timelineRender.checkElementsUnderCursor(mouseXOverTimeline, mouseYOverTimeline);
                             scope.isPointer = mouseOverElements.leftButton ||
                                 mouseOverElements.rightButton ||
                                 mouseOverElements.leftMarker ||
                                 mouseOverElements.rightMarker;
-                            
+
                         }
-                        
+
                         function viewportMouseWheel(event) {
                             updateMouseCoordinate(event);
                             event.preventDefault();
                             var vertical = Math.abs(event.deltaY) >= Math.abs(event.deltaX);
-                            
+
                             if (vertical) { // Zoom or scroll - not both
                                 timelineActions.zoomByWheel(event.deltaY, mouseOverElements, mouseXOverTimeline);
                             } else {
@@ -352,40 +352,40 @@
                             }
                             scope.$apply();
                         }
-                        
+
                         function viewportMouseDown(event) {
                             updateMouseCoordinate(event);
-                            
+
                             if (mouseOverElements.leftButton) {
                                 scrollButtonClickOrHold(true);
                                 return;
                             }
-                            
+
                             if (mouseOverElements.rightButton) {
                                 scrollButtonClickOrHold(false);
                                 return;
                             }
-                            
+
                             if (mouseOverElements.scrollbar && !mouseOverElements.scrollbarSlider) {
                                 scrollbarClickOrHold();
                                 return;
                             }
-                            
+
                             //scrolls timeline to current time
                             onReleaseCenter = mouseOverElements.leftMarker || mouseOverElements.rightMarker;
                         }
-                        
+
                         // Impetus is inertia drag library
                         new Impetus({
                             source: $canvas.get(0),
                             friction: timelineConfig.intertiaFriction,
                             start: function (x, y, event) {
                                 viewportMouseDown(event);
-                                
+
                                 updateMouseCoordinate(event);
                                 dragStarted = mouseXOverTimeline;
                                 impetusInit = x;
-                                
+
                                 dragged = false;
                                 if (mouseOverElements.scrollbarSlider) {
                                     timelineActions.scrollbarSliderDragStart(mouseXOverTimeline);
@@ -402,7 +402,7 @@
                                 dragged = timelineActions.scrollbarSliderDrag(virtualMouseX) ||
                                     timelineActions.timelineDrag(virtualMouseX) || dragged;
                             },
-                            
+
                             release: function (x, y) {
                                 if (dragged) {
                                     preventClick = true;
@@ -417,21 +417,21 @@
                                 timelineActions.timelineDragEnd();
                             }
                         });
-                        
-                        
+
+
                         function viewportDblClick(event) {
                             updateMouseCoordinate(event);
-                            
+
                             if (mouseOverElements.leftButton) {
                                 scrollButtonDblClick(true);
                                 return;
                             }
-                            
+
                             if (mouseOverElements.rightButton) {
                                 scrollButtonDblClick(false);
                                 return;
                             }
-                            
+
                             if (mouseOverElements.scrollbarSlider) {
                                 timelineActions.fullZoomOut();
                                 return;
@@ -440,26 +440,26 @@
                                 timelineActions.animateScroll(scope.scaleManager.getScrollTarget(mouseXOverTimeline));
                             }
                         }
-    
+
                         const tapInterval = CONFIG.timelineMouseEventTimeout;
                         var waitingSecondTap = false;
                         var initialTap;
-                        
+
                         function viewportClick(event) {
                             updateMouseCoordinate(event);
-                            
+
                             if (preventClick) {
                                 return;
                             }
                             if (mouseOverElements.timeline) {
                                 timelineClick(mouseXOverTimeline);
                             }
-                            
+
                             // out own "dblclick" acing as dbltouch on iOS devices
                             if (window.jscd.os === window.jscd.supportedOS.ios) {
                                 if (!waitingSecondTap) {
                                     waitingSecondTap = true;
-        
+
                                     initialTap = $timeout(function() {
                                         waitingSecondTap = false;
                                     }, tapInterval);
@@ -470,78 +470,84 @@
                                 }
                             }
                         }
-                        
+
                         function viewportMouseUp() {
                             updateMouseCoordinate(null);
                             timelineActions.scrollingStop();
                             timelineActions.scrollingToCursorStop();
-                            
+
                             if (onReleaseCenter) {
                                 onReleaseCenter = false;
                                 moveTimeToVisiblePosition(0.5);
                             }
                         }
-                        
+
                         function viewportMouseMove(event) {
                             updateMouseCoordinate(event);
                         }
-                        
+
                         function viewportMouseLeave(event) {
                             updateMouseCoordinate(event);
                         }
-                        
+
+                        function isDesktop() {
+                            return !window.jscd.mobile && !(window.jscd.browser === 'Safari' && window.jscd.browserMajorVersion === 13 && window.jscd.touch);
+                        }
+
                         /**
                          * Bind events to html
                          */
-                        
+
                         // 0. Angular handlers for GUI
                         scope.goToLive = goToLive;
                         scope.playPause = playPause;
-                        
+
                         // 1. Visual buttons
                         const interval = CONFIG.timelineMouseEventTimeout;
                         var waitingSecondClick = false;
                         var initialClick;
-                        
+
                         function onMouseUp(delay) {
-                            if (!window.jscd.mobile) {
+                            if (isDesktop()) {
                                 timelineActions.zoomingStop();
                                 return;
                             }
-                            
+
                             if (waitingSecondClick) {
                                 return;
                             }
-                            
+
                             if (!delay) {
                                 timelineActions.zoomingStop();
                                 return;
                             }
-                            
+
                             $timeout(() => {
                                 timelineActions.zoomingStop();
                             }, interval);
                         }
-                        
+
+                        //*****************************************************************************
+
                         element.on('mouseup', '.zoomOutButton', function () {
                             onMouseUp(true);
                         });
-                        
+
                         element.on('mouseleave', '.zoomOutButton', function () {
                             timelineActions.zoomingStop();
                         });
-                        
+
                         element.on('mousedown', '.zoomOutButton', function () {
-                            if (!window.jscd.mobile) {
+                            if (isDesktop()) {
                                 timelineActions.zoomingStart(false);
                                 return;
                             }
-                            
+
                             // out own "dblclick" acing as dbltouch on touch devices
                             if (!waitingSecondClick) {
                                 waitingSecondClick = true;
                                 timelineActions.zoomingStart(false);
-                                
+
                                 initialClick = $timeout(function () {
                                     waitingSecondClick = false;
                                     onMouseUp(false);
@@ -554,13 +560,15 @@
                                 }, interval);
                             }
                         });
-                        
+
                         element.on('dblclick', '.zoomOutButton', function () {
                             timelineActions.fullZoomOut();
                         });
-                        
+
+                        //*****************************************************************************
+
                         element.on('mouseup', '.zoomInButton', function () {
-                            if (!window.jscd.mobile) {
+                            if (isDesktop()) {
                                 timelineActions.zoomingStop();
                                 return;
                             }
@@ -574,13 +582,15 @@
                         element.on('mousedown', '.zoomInButton', function () {
                             timelineActions.zoomingStart(true);
                         });
-                        
+
+                        //*****************************************************************************
+
                         //2. Canvas events
                         $(window).resize(updateTimelineWidth);    // Adjust width after window was resized
                         $canvas.bind('contextmenu', function (e) {
                             e.preventDefault();
                         }); //Disable context menu on timeline
-                        
+
                         viewport.mouseup(viewportMouseUp);
                         viewport.mousemove(viewportMouseMove);
                         viewport.mouseleave(viewportMouseLeave);
@@ -588,14 +598,14 @@
                         viewport.dblclick(viewportDblClick);
                         viewport.click(viewportClick);
                         viewport.mousewheel(viewportMouseWheel);
-                        
+
                         //For touch screens
                         viewport.on('touchstart', viewportMouseDown);
                         viewport.on('touchmove', viewportMouseMove);
                         viewport.on('touchstop', viewportMouseLeave);
-                        
+
                         // Actual browser events handling
-                        
+
                         /*
                             We use updateTimelineWidth here because the width of the timeline
                             changes from when the page loads. When the page loads the volume button
@@ -607,18 +617,18 @@
                             timelineActions.setPositionProvider(scope.positionProvider);
                             $timeout(updateTimelineWidth);
                         });
-                        
+
                         // !!! Subscribe for different events which affect timeline
                         scope.$watch('positionProvider.liveMode', function () {
                             if (scope.positionProvider && scope.positionProvider.liveMode) {
                                 goToLive(true);
                             }
                         });
-                        
+
                         if (scope.positionProvider) {
                             scope.playingTime = dateFormat(scope.positionProvider.playedPosition, timelineConfig.dateFormat + ' ' + timelineConfig.timeFormat);
                         }
-                        
+
                         function initRecordsProvider() {
                             scope.recordsProvider
                                 .init()
@@ -633,7 +643,7 @@
                                     }
                                 });
                         }
-                        
+
                         scope.$watch('recordsProvider', function () { // RecordsProvider was changed - means new camera was selected
                             scope.emptyArchive = true;
                             if (scope.recordsProvider) {
@@ -643,7 +653,7 @@
                                 }, CONFIG.webclient.updateArchiveRecordsTimeout);
                             }
                         });
-                        
+
                         // !!! Finally run required functions to initialize timeline
                         updateTimelineHeight();
                         /*
@@ -653,12 +663,12 @@
                             the timeline's width should not change after that.
                         */
                         $timeout(updateTimelineWidth); // Adjust width.
-                        
+
                         // !!! Start drawing
                         animateScope.setDuration(timelineConfig.animationDuration);
                         animateScope.setScope(scope);
                         animateScope.start(render);
-                        
+
                         //scope.scaleManager is set to null so that the garbage collecter cleans the object
                         scope.$on('$destroy', function () {
                             $(window).unbind('resize', updateTimelineWidth);
@@ -669,5 +679,5 @@
                     }
                 };
             }]);
-    
+
 })();

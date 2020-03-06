@@ -389,7 +389,7 @@ export class MergeModalContent {
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
                 this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
                 return this.precheckSystemMerge();
-            }, { ignoreErrorPopups: true })
+            })
             .then(
                 res => {
                     console.log('res from precheckSystemMerge', res);
