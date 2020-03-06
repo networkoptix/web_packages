@@ -59,9 +59,9 @@
                     <p>Delay from live</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{stats.archiveFrom}}</p>
+                    <p>{{numberOfCameras()}}</p>
                     <p>{{bitrate()}}</p>
-                    <p>{{msFriendlyTime(stats.delayFromLive)}}</p>
+                    <p>{{msFriendlyTime(stats.delayFromLive, true)}}</p>
                 </div>
             </div>
         </div>

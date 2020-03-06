@@ -51,8 +51,15 @@ const toLocaleString = (number: number, locale): string | number => (
 // Need to add logic to figure out rounding
 
 export const fromBits = (number: number, options?: IFromBytesOptions): string => {
-    const defaultOptions: IFromBytesOptions = { unitType: 'byte' };
+    const defaultOptions: IFromBytesOptions = { unitType: 'byte' }; // round to GB / 10 bits
     options = { ...defaultOptions, ...options };
+
+    if (typeof options.roundTo === 'number') {
+        number = Math.round(number / options.roundTo) * options.roundTo;
+    } else if (options.roundTo) {
+        // TODO: Need to figure out how to take object {unit: 'GB', toDecimal: 1} and make it work
+        throw new Error('I haven\'t implemented this feature yet...');
+    };
 
     const unitList = {
         bit : BIT_UNITS,
@@ -95,7 +102,7 @@ export interface IFromBytesOptions {
     signed?: boolean
     locale?: string | boolean
     percentFrom?: number
-    roundTo?: {
+    roundTo?: number | {
         unit: Byte | Bit
         toDecimal: number
     }

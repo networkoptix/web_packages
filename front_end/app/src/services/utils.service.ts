@@ -3,9 +3,10 @@ import { NxConfigService }       from './nx-config';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import * as moment from 'moment';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn : 'root',
 })
 export class NxUtilsService {
     CONFIG: any;
@@ -17,7 +18,7 @@ export class NxUtilsService {
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
                 @Inject(DOCUMENT) private document: any,
-                @Inject(LOCALE_ID) private locale: string
+                @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
         this.momentWithLocale(locale);
@@ -122,7 +123,14 @@ export class NxUtilsService {
     }
 
     // static timestamp methods
-    public msToString(input: number, format?): string {
-        return this.momentWithLocale().subtract(input).fromNow();
+    public msFromNowToString(input: number, suffix = false): string {
+        return this.momentWithLocale().subtract(input).fromNow(!suffix);
     }
+
+    // static string methods
+    public pluralize(qty: number, single, plural, zero = plural) {
+        return `${qty} ${qty === 0 ? zero : qty === single ? single : plural}`;
+    }
+
+    public translate = (str: string) => str // TODO: Need to figure out how to do translate pipe within function
 }

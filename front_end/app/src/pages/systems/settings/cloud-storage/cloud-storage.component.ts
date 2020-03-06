@@ -52,40 +52,51 @@ export class NxCloudStorageComponent implements OnInit {
     }
     // Helper Methods
 
-    public fromBytes = (val: number | '_', options?: IFromBytesOptions) => (
-        val === '_'
-            ? val
-            : fromBits(val, { locale: this.locale, ...options })
-    )
-
     public cloudCapacity() {
-        return fromBits(this.currentState.cloudCapacity);
+        const { locale } = this;
+        return fromBits(this.currentState.cloudCapacity, { locale, roundTo: 1073741824 / 10 });
     }
 
     public bitrate() {
+        const { locale } = this;
         return (
             this.stats.recordingBitrate === '_'
                 ? this.stats.recordingBitrate
-                : fromBits(this.stats.recordingBitrate, { unitType: 'bps' })
+                : fromBits(this.stats.recordingBitrate, { unitType: 'bps', locale })
         );
     }
 
-    public msFriendlyTime(ms: number | '_') {
+    public msFriendlyTime(ms: number | '_', suffix = false) {
         return (
             ms === '_'
                 ? ms
-                : this.utilsService.msToString(ms));
+                : this.utilsService.msFromNowToString(ms, suffix));
     }
 
     public cloudStorageUsed() {
+        const { locale } = this;
         return (
             this.stats.amountUsed === '_'
                 ? this.stats.amountUsed
                 : wrapWithPercent(
-                    this.stats.amountUsed, this.currentState.cloudCapacity, fromBits(this.stats.amountUsed), 2
+                    this.stats.amountUsed,
+                    this.currentState.cloudCapacity,
+                    fromBits(
+                        this.stats.amountUsed,
+                        { locale, roundTo: 1073741824 / 10 }),
+                    2
                 )
         );
     }
+
+    public numberOfCameras() {
+        if (this.stats.archiveFrom === '_') return this.stats.archiveFrom;
+        return this.pluralize(this.stats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
+    }
+
+    public pluralize = this.utilsService.pluralize
+
+    public translate = this.utilsService.translate
 
     // Update State Methods
 

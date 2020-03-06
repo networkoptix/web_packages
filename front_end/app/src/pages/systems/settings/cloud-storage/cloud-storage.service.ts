@@ -55,7 +55,7 @@ const emptyUsage: IUsageStats = {
 };
 
 const regularUsage: IUsageStats = {
-    currentRecordings: 604800000, // ms, rounded to the hour
+    currentRecordings: 7457136000, // ms, rounded to the hour
     whenFullyUsed    : 1209600000, // ms, rounded to the hour
     amountUsed       : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
     archiveFrom      : 11, // number of cameras represented by integer
