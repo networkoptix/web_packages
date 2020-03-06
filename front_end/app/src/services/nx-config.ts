@@ -205,7 +205,8 @@ export class NxConfigService {
                 myTagId : 'mine'
             },
             ipvd : {
-                pagerMaxSizeSmall                : 3,
+                pagerMaxSizeSmall               : 2,
+                pagerMaxSizeMedium              : 3,
                 pagerMaxSize                     : 4,
                 firmwaresToShow                  : 4,
                 analyticsToShow                  : 4,

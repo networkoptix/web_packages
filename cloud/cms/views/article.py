@@ -14,7 +14,7 @@ from util.helpers import detect_language_by_request
 @handle_exceptions
 def get_article(request, url_param, **kwargs):
     draft = request.query_params.get('state') == 'draft'
-    review = request.query_params.get('state') == 'review'
+    review = request.query_params.get('state') == 'pending'
     article_id = request.query_params.get('id')
     article = None
 
@@ -57,16 +57,15 @@ def get_article(request, url_param, **kwargs):
         # If version is 0, then article has no acceptable version and the request isn't for a draft
         if version != 0:
             language = Language.by_code(detect_language_by_request(request))
+            article_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.article)
 
             # Get values for title and body of article for this version
-            title = DataStructure.objects.filter(name='title').first().find_actual_value(asset=article,
-                                                                                         language=language,
-                                                                                         version_id=version,
-                                                                                         draft=draft or review)
-            body = DataStructure.objects.filter(name='body').first().find_actual_value(asset=article,
-                                                                                       language=language,
-                                                                                       version_id=version,
-                                                                                       draft=draft or review)
+            title = article_structures.filter(name='title').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review
+            )
+            body = article_structures.filter(name='body').first().find_actual_value(
+                asset=article, language=language, version_id=version, draft=draft or review
+            )
             article_dict = {
                 "title": title,
                 "body": body
