@@ -85,7 +85,8 @@
 
                 function systemError() {
                     $scope.unreachable = true;
-                    $location.path('/404');
+                    // do not redirect ... stay here and show "Unreachable" placeholder
+                    // $location.path('/404');
                 }
 
                 var cancelSubscription = $scope.$on('unauthorized_' + $routeParams.systemId, function () {
