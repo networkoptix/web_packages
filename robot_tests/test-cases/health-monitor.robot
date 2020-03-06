@@ -15,29 +15,6 @@ Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
 
-Upload Json
-    [arguments]    ${json_name}
-    Wait Until Page Contains Element    ${HM FILE DROP INPUT}
-    Choose File    ${HM FILE DROP INPUT}    ${EXECDIR}${/}${json_name}.json
-    Validate Uploaded Alerts Page
-    Sleep    0.2
-
-Validate Alerts Page
-    Wait Until Elements Are Visible
-    ...    ${HM ALERTS PAGE LINK}
-    ...    ${HM SYSTEM PAGE LINK}
-    ...    ${HM SERVERS PAGE LINK}
-    ...    ${HM CAMERAS PAGE LINK}
-    ...    ${HM NETWORK INTERFACES PAGE LINK}
-    ...    ${HM REFRESH REPORT}
-    ...    ${HM DOWNLOAD FULL REPORT}
-
-Validate Uploaded Alerts Page
-    Wait Until Elements Are Visible
-    ...    ${HM ALERTS PAGE LINK}
-    ...    ${HM DOWNLOAD FULL REPORT}
-    ...    ${HM IMPORTED REPORT RIBBON}
-
 Click On Page Number
     [Arguments]    ${pg_number}
     Click Link    ${HM PAGE NUMBER LINK}"${EMPTY}${pg_number}${EMPTY}"]
@@ -96,6 +73,15 @@ Count All Alerts and Validate Totals Shown
     ${alerts counted total} =    Evaluate    ${camera alerts} + ${camera warnings} + ${server alerts} + ${server warnings} + ${storage alerts} + ${storage warnings} + ${network alerts} + ${network warnings}
     ${alerts page total} =    Get Text    ${HM ALERTS TOTAL}
     Should Be Equal    ${alerts counted total} alerts    ${alerts page total}
+
+Check Details Panel Alerts
+    [Arguments]    ${type}    ${hardware}    ${name}    ${category}    ${metric}
+    Wait Until Element is Visible    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
+    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
+    Wait Until Elements are Visible
+    ...    ${HM DETAILS PANEL}
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..//div[@title="${hardware} ${name} is broken"]
+    ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..${HM ALERT ICON}
 
 *** Test Cases ***
 Onwer Has Access to Health Monitoring
@@ -247,7 +233,7 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     ...    ${HM SERVERS PAGE LINK}
     ...    ${HM ALERTS PAGE LINK}
     ...    ${HM CAMERAS PAGE LINK}
-    ...    ${HM NETWORK INTERFACES PAGE LINK}
+    ...    ${HM INTERFACES PAGE LINK}
     Click Link    ${HM SYSTEM PAGE LINK}
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     ${title}=   Get Text    ${FIRST CARD HEADER}
@@ -261,7 +247,7 @@ Hardware Types with Only One Item Should Show Tiles and not Show Tables
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
     ${title}=   Get Text    ${FIRST CARD HEADER}
-    Click Link    ${HM NETWORK INTERFACES PAGE LINK}
+    Click Link    ${HM INTERFACES PAGE LINK}
     Wait Until Element Does Not Contain    ${FIRST CARD HEADER}    ${title}
     Wait Until Page Contains Element    ${HM SINGLE ENTITY}
     Page Should Not Contain Element    ${HM TABLE}
@@ -286,7 +272,7 @@ Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     ...    ${HM SERVERS PAGE LINK}
     ...    ${HM ALERTS PAGE LINK}
     ...    ${HM CAMERAS PAGE LINK}
-    ...    ${HM NETWORK INTERFACES PAGE LINK}
+    ...    ${HM INTERFACES PAGE LINK}
     Click Link    ${HM SERVERS PAGE LINK}
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
@@ -298,7 +284,7 @@ Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
     ${title}=   Get Table Cell    ${HM TABLE}//table    4    2
 
-    Click Link    ${HM NETWORK INTERFACES PAGE LINK}
+    Click Link    ${HM INTERFACES PAGE LINK}
     Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
@@ -308,54 +294,3 @@ Hardware Types with Multiple Items Should Show Tables and Not Show Tiles
     Wait Until Table Cell Does Not Contain Text    ${HM TABLE}//table    ${title}    4    2
     Wait Until Page Contains Element    ${HM TABLE}
     Page Should Not Contain Element    ${HM SINGLE ENTITY}
-
-Details Panel Shows Errors
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${password}    button=None
-    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Wait Until Page Contains Element    ${HM INFORMATION TAB LINK}
-    Click Link    ${HM INFORMATION TAB LINK}
-    Validate Alerts Page
-    Upload Json    one-of-each
-    Validate Uploaded Alerts Page
-    Wait Until Elements are Visible
-    ...    ${HM ALERTS PAGE LINK}
-    ...    ${HM SYSTEM PAGE LINK}
-    ...    ${HM SERVERS PAGE LINK}
-    ...    ${HM ALERTS PAGE LINK}
-    ...    ${HM CAMERAS PAGE LINK}
-    ...    ${HM NETWORK INTERFACES PAGE LINK}
-    Click Link    ${HM SERVERS PAGE LINK}
-    Wait Until Page Contains Element    ${HM TABLE}
-    Page Should Not Contain Element    ${HM SINGLE ENTITY}
-    Wait Until Element is Visible    ${HM TABLE}//tr//td/span[contains(text(), "testserver error")]
-
-    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver error")]
-    Wait Until Elements are Visible
-    ...    ${HM DETAILS PANEL}
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//div[@title="Server testserver error is broken"]
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..${HM ALERT ICON}
-
-    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver both")]
-    Wait Until Elements are Visible
-    ...    ${HM DETAILS PANEL}
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//span[contains(text(), "Active plugins list")]/../../..//div[@title="Server testserver 2 errors is broken"]
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Activity")]/..//span[contains(text(), "Active plugins list")]/../../..${HM ALERT ICON}
-
-    Click Element    ${HM TABLE}//tr//td/span[contains(text(), "testserver 2 errors")]
-    Wait Until Elements are Visible
-    ...    ${HM DETAILS PANEL}
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Server threads")]/../../..//div[@title="Server testserver 2 errors is broken"]
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Server threads")]/../../..${HM ALERT ICON}
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Decoding speed")]/../../..//div[@title="Server testserver 2 errors is broken"]
-    ...    ${HM DETAILS PANEL}//h4[contains(text(),"Load")]/..//span[contains(text(), "Decoding speed")]/../../..${HM ALERT ICON}
-
-
-
-
-
-
-
-
-#Details Panel Shows Alerts
-#Details Panel Shows Errors and Alerts

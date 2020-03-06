@@ -478,11 +478,12 @@ ${HM SERVERS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="serve
 ${HM ALERTS PAGE LINK}                   //nx-menu//nx-level-1-item/a[@id="alerts"]
 ${HM CAMERAS PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="cameras"]
 ${HM STORAGES PAGE LINK}                  //nx-menu//nx-level-1-item/a[@id="storages"]
-${HM NETWORK INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
+${HM INTERFACES PAGE LINK}       //nx-menu//nx-level-1-item/a[@id="networkInterfaces"]
 ${HM REFRESH REPORT}                     //div[contains(@class,"menuLinks")]/nx-health-update
 ${HM DOWNLOAD FULL REPORT}               //div[contains(@class,"menuLinks")]/div
 
-${HM ALERT ICON}                         //*[@d="m8.7654 0.19789 0.13845 0.086751c0.17761 0.12482 0.32636 0.28537 0.43572 0.47141l6.4568 10.984c0.4228 0.71928 0.16574 1.6356-0.57416 2.0466-0.23315 0.12951-0.49703 0.19764-0.76555 0.19764h-12.914c-0.85219 0-1.543-0.67157-1.543-1.5 0-0.26104 0.070077-0.51756 0.2033-0.74421l6.4568-10.984c0.39793-0.67697 1.2563-0.93815 1.9727-0.62387l0.13253 0.06571z"]
+${HM ERROR ICON}                         //*[@d="m8.7654 0.19789 0.13845 0.086751c0.17761 0.12482 0.32636 0.28537 0.43572 0.47141l6.4568 10.984c0.4228 0.71928 0.16574 1.6356-0.57416 2.0466-0.23315 0.12951-0.49703 0.19764-0.76555 0.19764h-12.914c-0.85219 0-1.543-0.67157-1.543-1.5 0-0.26104 0.070077-0.51756 0.2033-0.74421l6.4568-10.984c0.39793-0.67697 1.2563-0.93815 1.9727-0.62387l0.13253 0.06571z"]
+${HM WARNING ICON}                       //*[@d="m12 16c0 0.55228-0.44772 1-1 1h-2c-0.55228 0-1-0.44772-1-1h4zm-8-1v-1h1v-5.5c0-3.0376 2.2386-5.5 5-5.5 2.7614 0 5 2.4624 5 5.5v5.5h1v1h-12z"]
 
 ${HM TABLE}                              //div[@id="nx-table"]
 ${HM SINGLE ENTITY}                      //nx-single-entity
