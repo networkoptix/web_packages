@@ -15,7 +15,7 @@ import { NxCloudApiService } from '../../services/nx-cloud-api';
 @Component({
     selector : 'content-component',
     templateUrl: 'content.component.html',
-    styleUrls: ['content.component.scss']
+    styleUrls : ['content.component.scss']
 })
 
 export class NxContentComponent implements OnInit {
@@ -125,7 +125,7 @@ export class NxContentComponent implements OnInit {
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
-        this.http.get(uri, {params}).subscribe(
+        this.http.get(uri, { params }).subscribe(
             (data: any) => {
                 this.title = data.title;
                 this.body = data.body;
@@ -156,12 +156,12 @@ export class NxContentComponent implements OnInit {
     }
 
     compileStaticArticle(templateUrl) {
-        @Component({templateUrl})
+        @Component({ templateUrl })
         class TemplateComponent {
             @ViewChild('title', { static: true }) title;
         }
 
-        @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
+        @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
         class TemplateModule {}
 
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
@@ -182,4 +182,3 @@ export class NxContentComponent implements OnInit {
         }).catch(() => this.router.navigate([this.CONFIG.redirect.page404]));
     }
 }
-
