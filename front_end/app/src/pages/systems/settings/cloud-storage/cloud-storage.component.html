@@ -38,7 +38,7 @@
         </button> -->
     </header>
     <div class="normal-state">
-        <h2>{{currentState.cloudCapacity}}</h2>
+        <h2>{{fromBytes(currentState.cloudCapacity)}}</h2>
         <div class="details" (click)="toggleCloudState()">
             <div class="details-section">
                 <div class="details-section-keys">
@@ -47,9 +47,9 @@
                     <p>Amount used</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{currentState.usageStats.currentRecordings}}</p>
-                    <p>{{currentState.usageStats.whenFullyUsed}}</p>
-                    <p>{{currentState.usageStats.amountUsed}}</p>
+                    <p>{{stats.currentRecordings}}</p>
+                    <p>{{stats.whenFullyUsed}}</p>
+                    <p>{{fromBytes(stats.amountUsed)}}</p>
                 </div>
             </div>
             <div class="details-section">
@@ -59,9 +59,9 @@
                     <p>Delay from live</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{currentState.usageStats.archiveFrom}}</p>
-                    <p>{{currentState.usageStats.recordingBitrate}}</p>
-                    <p>{{currentState.usageStats.delayFromLive}}</p>
+                    <p>{{stats.archiveFrom}}</p>
+                    <p>{{stats.recordingBitrate}}</p>
+                    <p>{{stats.delayFromLive}}</p>
                 </div>
             </div>
         </div>

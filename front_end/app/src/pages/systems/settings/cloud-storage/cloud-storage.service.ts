@@ -55,16 +55,16 @@ const emptyUsage: IUsageStats = {
 };
 
 const regularUsage: IUsageStats = {
-    currentRecordings: 10100, // minutes, rounded to the hour
-    whenFullyUsed    : 20160, // minutes, rounded to the hour
-    amountUsed       : 16000, // rounded to 0.1 Gb, percent calculated and rounded to 1%
+    currentRecordings: 604800000, // ms, rounded to the hour
+    whenFullyUsed    : 1209600000, // ms, rounded to the hour
+    amountUsed       : 17179869184, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
     archiveFrom      : 11, // number of cameras represented by integer
-    recordingBitrate : 1500, // rounded to 0.1 Mbps
+    recordingBitrate : 1500000, // bps rounded to 0.1 Mbps
     delayFromLive    : 1200 // ms, rounded to 0.1s
 };
 
 const initialMockState: IMockState = {
-    cloudCapacity     : 50000,
+    cloudCapacity     : 53687091200, // bytes
     systemCloudEnabled: false,
     userCloudEnabled  : true,
     usageStats        : emptyUsage

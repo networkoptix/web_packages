@@ -4,7 +4,8 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
-import { NxCloudStorageService, IMockState } from './cloud-storage.service';
+import { NxCloudStorageService, IMockState, IUsageStats } from './cloud-storage.service';
+import { fromBytes, IFromBytesOptions } from '../../../../utils/transform-tools/from-bytes';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -17,6 +18,7 @@ export class NxCloudStorageComponent implements OnInit {
     routerParamsSubscription: Subscription;
     systemId: string;
     currentState: IMockState;
+    stats: IUsageStats;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -38,8 +40,15 @@ export class NxCloudStorageComponent implements OnInit {
                 this.systemId = params.systemId;
             }
         });
-        this.cloudStorageService.currentState.subscribe(currentState => { this.currentState = currentState; });
+        this.cloudStorageService.currentState.subscribe(currentState => {
+            this.currentState = currentState;
+            this.stats = this.currentState.usageStats;
+        });
     }
+    // Helper Methods
+
+    public fromBytes = (val: number | '_', options?: IFromBytesOptions) => val === '_' ? val : fromBytes(val, options)
+
     // Update State Methods
 
     public enableCloudStorage() {
