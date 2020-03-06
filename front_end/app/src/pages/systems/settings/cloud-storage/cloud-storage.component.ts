@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
 import { NxConfigService } from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { NxCloudStorageService, IMockState, IUsageStats } from './cloud-storage.service';
-import { fromBytes, IFromBytesOptions } from '../../../../utils/transform-tools/from-bytes';
+import { fromBits, IFromBytesOptions } from '../../../../utils/transform-tools/from-bits';
+import { wrapWithPercent } from '../../../../utils/transform-tools/wrap-with-percent';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -16,6 +17,7 @@ export class NxCloudStorageComponent implements OnInit {
     CONFIG: any = {};
     LANG: any = {};
     routerParamsSubscription: Subscription;
+    cloudStateSubscription: Subscription;
     systemId: string;
     currentState: IMockState;
     stats: IUsageStats;
@@ -27,6 +29,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        @Inject(LOCALE_ID) private locale: string,
         private dialogService: NxDialogsService,
         private route: ActivatedRoute,
         private cloudStorageService: NxCloudStorageService
@@ -40,14 +43,40 @@ export class NxCloudStorageComponent implements OnInit {
                 this.systemId = params.systemId;
             }
         });
-        this.cloudStorageService.currentState.subscribe(currentState => {
+        this.cloudStateSubscription = this.cloudStorageService.currentState.subscribe(currentState => {
             this.currentState = currentState;
             this.stats = this.currentState.usageStats;
         });
     }
     // Helper Methods
 
-    public fromBytes = (val: number | '_', options?: IFromBytesOptions) => val === '_' ? val : fromBytes(val, options)
+    public fromBytes = (val: number | '_', options?: IFromBytesOptions) => (
+        val === '_'
+            ? val
+            : fromBits(val, { locale: this.locale, ...options })
+    )
+
+    public cloudCapacity() {
+        return fromBits(this.currentState.cloudCapacity);
+    }
+
+    public bitrate() {
+        return (
+            this.stats.recordingBitrate === '_'
+                ? this.stats.recordingBitrate
+                : fromBits(this.stats.recordingBitrate, { unitType: 'bps' })
+        );
+    }
+
+    public cloudStorageUsed() {
+        return (
+            this.stats.amountUsed === '_'
+                ? this.stats.amountUsed
+                : wrapWithPercent(
+                    this.stats.amountUsed, this.currentState.cloudCapacity, fromBits(this.stats.amountUsed), 2
+                )
+        );
+    }
 
     // Update State Methods
 

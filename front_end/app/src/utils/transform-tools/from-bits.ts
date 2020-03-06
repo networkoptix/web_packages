@@ -1,4 +1,4 @@
-const BYTE_UNITS = [
+const BYTE_UNITS: Byte[] = [
     'B',
     'kB',
     'MB',
@@ -10,7 +10,7 @@ const BYTE_UNITS = [
     'YB'
 ];
 
-const BIT_UNITS = [
+const BIT_UNITS: Bit[] = [
     'b',
     'kbit',
     'Mbit',
@@ -20,6 +20,18 @@ const BIT_UNITS = [
     'Ebit',
     'Zbit',
     'Ybit'
+];
+
+const BPS_UNITS: Bps[] = [
+    'bps',
+    'kbps',
+    'Mbps',
+    'Gbps',
+    'Tbps',
+    'Pbps',
+    'Ebps',
+    'Zbps',
+    'Ybps'
 ];
 
 /*
@@ -36,9 +48,20 @@ const toLocaleString = (number: number, locale): string | number => (
             ? number.toLocaleString()
             : number);
 
-export const fromBytes = (number: number, options: IFromBytesOptions = { bits: false, base: 1024 }): string => {
-    const UNITS = options.bits ? BIT_UNITS : BYTE_UNITS;
-    const is1024 = options.base === 1024;
+// Need to add logic to figure out rounding
+
+export const fromBits = (number: number, options?: IFromBytesOptions): string => {
+    const defaultOptions: IFromBytesOptions = { unitType: 'byte' };
+    options = { ...defaultOptions, ...options };
+
+    const unitList = {
+        bit : BIT_UNITS,
+        byte: BYTE_UNITS,
+        bps : BPS_UNITS
+    };
+    const UNITS = unitList[options.unitType];
+    const base = options.unitType === 'byte' ? 1024 : 1000;
+    const is1024 = base === 1024;
 
     if (options.signed && number === 0) {
         return ' 0 ' + UNITS[0];
@@ -59,17 +82,29 @@ export const fromBytes = (number: number, options: IFromBytesOptions = { bits: f
     const getLog = (num: number): number => is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
     const exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
 
-    number = Number((number / Math.pow(options.base, exponent)).toPrecision(3));
+    number = Number((number / Math.pow(base, exponent))); // add toPrecision or something???
     const numberString = toLocaleString(number, options.locale);
 
     const unit = UNITS[exponent];
 
-    return prefix + numberString + ' ' + unit;
+    return `${prefix}${numberString} ${unit}`;
 };
 
 export interface IFromBytesOptions {
-    bits: boolean
-    base: 1000 | 1024
+    unitType?: UnitTypeOptions
     signed?: boolean
     locale?: string | boolean
+    percentFrom?: number
+    roundTo?: {
+        unit: Byte | Bit
+        toDecimal: number
+    }
 }
+
+type UnitTypeOptions = 'bit' | 'byte' | 'bps'
+
+type Byte = 'B' | 'kB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB';
+
+type Bit = 'b' | 'kbit' | 'Mbit' | 'Gbit' | 'Tbit' | 'Pbit' | 'Ebit' | 'Zbit' | 'Ybit';
+
+type Bps = 'bps' | 'kbps' | 'Mbps' | 'Gbps' | 'Tbps' | 'Pbps' | 'Ebps' | 'Zbps' | 'Ybps';
