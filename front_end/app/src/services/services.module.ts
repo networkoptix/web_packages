@@ -50,4 +50,5 @@ angular
     .service('nxAccountService', downgradeInjectable(NxAccountService))
     .service('nxUrlProtocolService', downgradeInjectable(NxUrlProtocolService))
     .service('nxHeaderService', downgradeInjectable(NxHeaderService))
+    .service('nxUtilsService', downgradeInjectable(NxUtilsService))
     .service('nxSystemsService', downgradeInjectable(NxSystemsService));
