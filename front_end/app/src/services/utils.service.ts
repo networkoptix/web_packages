@@ -1,7 +1,8 @@
-import { Inject, Injectable }    from '@angular/core';
+import { Inject, Injectable, LOCALE_ID }    from '@angular/core';
 import { NxConfigService }       from './nx-config';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import * as moment from 'moment';
 
 @Injectable({
     providedIn : 'root'
@@ -11,12 +12,15 @@ export class NxUtilsService {
 
     public static sortASC = true;
     public static sortDESC = false;
+    public momentWithLocale = moment
 
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
-                @Inject(DOCUMENT) private document: any
+                @Inject(DOCUMENT) private document: any,
+                @Inject(LOCALE_ID) private locale: string
     ) {
         this.CONFIG = configService.getConfig();
+        this.momentWithLocale(locale);
     }
 
     static deepCopy(obj) {
@@ -115,5 +119,10 @@ export class NxUtilsService {
 
         // revokeObjectURL breaks download on MSEdge and Firefox
         // URL.revokeObjectURL(objectUrl);
+    }
+
+    // static timestamp methods
+    public msToString(input: number, format?): string {
+        return this.momentWithLocale().subtract(input).fromNow();
     }
 }

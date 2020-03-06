@@ -47,8 +47,8 @@
                     <p>Amount used</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{stats.currentRecordings}}</p>
-                    <p>{{stats.whenFullyUsed}}</p>
+                    <p>{{msFriendlyTime(stats.currentRecordings)}}</p>
+                    <p>{{msFriendlyTime(stats.whenFullyUsed)}}</p>
                     <p>{{cloudStorageUsed()}}</p>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                 <div class="details-section-values">
                     <p>{{stats.archiveFrom}}</p>
                     <p>{{bitrate()}}</p>
-                    <p>{{stats.delayFromLive}}</p>
+                    <p>{{msFriendlyTime(stats.delayFromLive)}}</p>
                 </div>
             </div>
         </div>

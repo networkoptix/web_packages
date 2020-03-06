@@ -60,7 +60,7 @@ const regularUsage: IUsageStats = {
     amountUsed       : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
     archiveFrom      : 11, // number of cameras represented by integer
     recordingBitrate : 1500000, // bps rounded to 0.1 Mbps
-    delayFromLive    : 1200 // ms, rounded to 0.1s
+    delayFromLive    : 1200000 // ms, rounded to 0.1s
 };
 
 const initialMockState: IMockState = {

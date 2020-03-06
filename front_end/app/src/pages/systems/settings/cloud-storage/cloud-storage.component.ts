@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NxCloudStorageService, IMockState, IUsageStats } from './cloud-storage.service';
 import { fromBits, IFromBytesOptions } from '../../../../utils/transform-tools/from-bits';
 import { wrapWithPercent } from '../../../../utils/transform-tools/wrap-with-percent';
+import { NxUtilsService } from '../../../../services/utils.service';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -32,7 +33,8 @@ export class NxCloudStorageComponent implements OnInit {
         @Inject(LOCALE_ID) private locale: string,
         private dialogService: NxDialogsService,
         private route: ActivatedRoute,
-        private cloudStorageService: NxCloudStorageService
+        private cloudStorageService: NxCloudStorageService,
+        private utilsService: NxUtilsService
     ) {
         this.setupDefaults({ configService, languageService });
     }
@@ -66,6 +68,13 @@ export class NxCloudStorageComponent implements OnInit {
                 ? this.stats.recordingBitrate
                 : fromBits(this.stats.recordingBitrate, { unitType: 'bps' })
         );
+    }
+
+    public msFriendlyTime(ms: number | '_') {
+        return (
+            ms === '_'
+                ? ms
+                : this.utilsService.msToString(ms));
     }
 
     public cloudStorageUsed() {
