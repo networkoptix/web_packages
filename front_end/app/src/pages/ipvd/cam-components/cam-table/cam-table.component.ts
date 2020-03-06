@@ -142,16 +142,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.uriSubscription = new Subscription();
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md)) {
-                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeMedium;
-                this.pagerEllipses = false;
-            } else if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
-                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeSmall;
-                this.pagerEllipses = true;
-            } else {
-                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
-                this.pagerEllipses = true;
-            }
+            this.setPagerSize();
         });
     }
 
@@ -255,6 +246,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             } else {
                 this.selectedCamera = changes.activeCamera.currentValue.sortKey;
             }
+
+            this.setPagerSize();
+        }
+    }
+
+    private setPagerSize() {
+        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md) ||
+            (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl) && this.selectedCamera)) {
+            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeMedium;
+            this.pagerEllipses = false;
+        } else {
+            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
+            this.pagerEllipses = true;
         }
     }
 
@@ -417,6 +421,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         } else {
             this.selectedCamera = undefined;
         }
+
+        this.setPagerSize();
     }
 
     setPage(page: number, keep?: boolean) {
