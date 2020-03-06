@@ -43,7 +43,7 @@ export class NxLandingComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setPageTitle(this.LANG.pageTitles.default);
-        if (this.router.url === '/content/about') {
+        if (this.router.url.includes('/content/about')) {
             this.loaded = true;
             this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
         } else {
