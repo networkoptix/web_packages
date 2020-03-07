@@ -8,10 +8,10 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface BaseConfig {
-    commonPasswordsList: string[];
-    capabilities: Capabilities;
-    viewsDir: string;
-    previewPath: string;
+    commonPasswordsList?: string[];
+    capabilities?: Capabilities;
+    viewsDir?: string;
+    previewPath?: string;
     alertTimeout: number;
     animations: Animations;
     apiBase: string;
