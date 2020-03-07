@@ -1,6 +1,7 @@
 import { Component, Input, OnInit }    from '@angular/core';
 import { NxLanguageProviderService }   from '../../../services/nx-language-provider';
-import { NxConfigService }             from '../../../services/nx-config';
+import { NxConfigService }             from '../../../services/nx-config/nx-config.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 /* Usage
 <nx-section-placeholder
@@ -23,7 +24,7 @@ export class NxSectionPlaceholderComponent implements OnInit {
     @Input() translatedMessage: string;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
 
     constructor(
         private languageService: NxLanguageProviderService,

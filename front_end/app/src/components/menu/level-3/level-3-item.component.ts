@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
-import { NxConfigService }          from '../../../services/nx-config';
+import { NxConfigService }          from '../../../services/nx-config/nx-config.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 /* Usage
 */
@@ -17,7 +18,7 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
 
     itemPath: string;
     isEnabled: boolean;
-    CONFIG: any;
+    CONFIG: IConfig;
 
     constructor(private configService: NxConfigService) {
         this.CONFIG = this.configService.getConfig();

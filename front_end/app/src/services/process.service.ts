@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
+import { IConfig } from './nx-config/config-types';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -16,7 +17,7 @@ interface ProcessSettings {
 }
 
 class Process {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     cloudApiService: any;
     sessionService: any;
@@ -195,7 +196,7 @@ class Process {
     providedIn : 'root'
 })
 export class NxProcessService {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,

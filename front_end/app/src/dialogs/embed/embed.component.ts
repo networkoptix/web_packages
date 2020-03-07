@@ -3,10 +3,11 @@ import {
 } from '@angular/core';
 import { Location }                              from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config';
+import { NxConfigService }                       from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,7 +21,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() closable;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
     auth: any;
     params: any;
     embedUrl: string;

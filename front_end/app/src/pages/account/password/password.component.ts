@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
@@ -12,6 +12,7 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-account-password-component',
@@ -23,7 +24,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
     @ViewChildren('passwordForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     form: NgForm;
 

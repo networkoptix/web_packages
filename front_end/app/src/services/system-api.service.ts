@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { from, of, throwError } from 'rxjs';
 import { mergeMap, retryWhen } from 'rxjs/operators';
 import { Location } from '@angular/common';
+import { IConfig } from './nx-config/config-types';
 
 interface User {
     canBeEdited: boolean;
@@ -53,7 +54,7 @@ export class NxSystemAPI {
 
     readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
 
-    CONFIG: any;
+    CONFIG: IConfig;
     http: any;
     location: any;
 
@@ -472,7 +473,7 @@ export class NxSystemAPI {
     providedIn: 'root'
 })
 export class NxSystemAPIService {
-    CONFIG: any;
+    CONFIG: IConfig;
     location: any;
     systemConnections: { [key: string]: NxSystemAPI };
 

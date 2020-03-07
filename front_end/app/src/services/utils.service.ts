@@ -1,13 +1,14 @@
 import { Inject, Injectable }    from '@angular/core';
-import { NxConfigService }       from './nx-config';
+import { NxConfigService }       from './nx-config/nx-config.service';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxUtilsService {
-    CONFIG: any;
+    CONFIG: IConfig;
 
     public static sortASC = true;
     public static sortDESC = false;

@@ -6,7 +6,7 @@ import {
 import { ActivatedRoute }            from '@angular/router';
 import { Location }                  from '@angular/common';
 import { NxAccountService }          from '../../../services/account.service';
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxHealthService }           from '../health.service';
@@ -17,6 +17,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { delay, throttleTime }       from 'rxjs/operators';
 import { NxHealthLayoutService }     from '../health-layout.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 interface Params {
     [key: string]: any;
@@ -30,7 +31,7 @@ interface Params {
     encapsulation: ViewEncapsulation.None,
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     account: any;
 

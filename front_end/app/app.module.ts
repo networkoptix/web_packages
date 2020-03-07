@@ -22,7 +22,7 @@ import { DialogsModule }     from './src/dialogs/dialogs.module';
 import { PagesModule }       from './src/pages/pages.module';
 import { DirectivesModule }  from './src/directives/directives.module';
 import { PipesModule }       from './src/pipes/pipes.module';
-import { NxConfigService }   from './src/services/nx-config';
+import { NxConfigService }   from './src/services/nx-config/nx-config.service';
 import { ServiceModule }     from './src/services/services.module';
 import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';

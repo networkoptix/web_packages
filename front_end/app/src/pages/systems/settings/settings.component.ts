@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxConfigService }                             from '../../../services/nx-config';
+import { NxConfigService }                             from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 
 import { NxPageService }     from '../../../services/page.service';
@@ -18,6 +18,7 @@ import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,7 +31,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     plugin: any;
     content: any = {};

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NxPageService } from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-500',
@@ -10,7 +11,7 @@ import { NxConfigService } from '../../services/nx-config';
 })
 export class Nx500Component {
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
 
     constructor(configService: NxConfigService,
                 languageService: NxLanguageProviderService,

@@ -2,8 +2,9 @@ import {
     Component, forwardRef, Input,
     OnChanges, SimpleChanges, ViewEncapsulation
 } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-password-input-tag-validation',
@@ -16,7 +17,7 @@ export class NxPasswordTagValidationComponent implements OnChanges {
     @Input() forElement: any;
     @Input() value: any;
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     fairPassword: boolean;
     passwordToggle: boolean;

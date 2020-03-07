@@ -3,9 +3,10 @@ import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
 import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService }             from '../../services/nx-config';
+import { NxConfigService }             from '../../services/nx-config/nx-config.service';
 import { timer }                       from 'rxjs';
 import { delayWhen, retryWhen, map }   from 'rxjs/operators';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector: 'nx-modal-restart-server-content',
@@ -19,7 +20,7 @@ export class RestartServerModalContent {
     @Input() closable;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
     restartServer: any;
 
     constructor(configService: NxConfigService,

@@ -5,7 +5,7 @@ import {
     forwardRef,
     ViewEncapsulation, OnDestroy
 } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import {
     ControlValueAccessor,
@@ -16,6 +16,7 @@ import {
 }                                    from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -41,7 +42,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() form: any;
     @Input() componentId: string;
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     fairPassword: boolean;
     passwordToggle: boolean;

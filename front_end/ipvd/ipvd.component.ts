@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
-import { NxConfigService } from '../app/src/services/nx-config';
+import { NxConfigService } from '../app/src/services/nx-config/nx-config.service';
 import '../app/styles/main.scss';
 import 'bootstrap';
+import { IConfig } from '../app/src/services/nx-config/config-types';
 @Component({
     selector: 'ipvd-app',
     template: '<router-outlet></router-outlet>'
 })
 export class IpvdComponent {
-    CONFIG: any
+    CONFIG: IConfig;
     constructor(private config: NxConfigService,
                 private language: NxLanguageProviderService
     ) {

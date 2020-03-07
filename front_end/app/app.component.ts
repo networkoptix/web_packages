@@ -6,7 +6,7 @@ import { ActivationStart, Event, Router }          from '@angular/router';
 import { filter, debounceTime, timeout, finalize } from 'rxjs/operators';
 import { WINDOW }                                  from './src/services/window-provider';
 import { NxLanguageProviderService }               from './src/services/nx-language-provider';
-import { NxConfigService }                         from './src/services/nx-config';
+import { NxConfigService }                         from './src/services/nx-config/nx-config.service';
 import { NxApplyService }                          from './src/services/apply.service';
 import { NxRibbonService }                         from './src/components/ribbon/ribbon.service';
 import { NxAppStateService }                       from './src/services/nx-app-state.service';
@@ -15,6 +15,7 @@ import { NxScrollMechanicsService }                from './src/services/scroll-m
 import { NxUriService }                            from './src/services/uri.service';
 import { NxPageService }                           from './src/services/page.service';
 import { NxSystemRole }                            from './src/services/system.service';
+import { IConfig } from './src/services/nx-config/config-types';
 
 @Component({
     selector: 'nx-app',
@@ -36,7 +37,7 @@ import { NxSystemRole }                            from './src/services/system.s
 })
 
 export class AppComponent {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     deviceInfo: any;
     allowedDevices: {};

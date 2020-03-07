@@ -3,10 +3,11 @@ import {
     Input, SimpleChanges, OnChanges, OnInit
 } from '@angular/core';
 
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @Component({
     selector   : 'integrations-list-component',
@@ -18,7 +19,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     @Input() list;
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     private setupDefaults(configService) {

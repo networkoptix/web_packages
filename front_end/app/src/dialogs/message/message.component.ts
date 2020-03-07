@@ -4,11 +4,12 @@ import {
 } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }    from '@angular/forms';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { IConfig } from '../../services/nx-config/config-types';
 
 
 export interface MessageParams {
@@ -36,7 +37,7 @@ export class MessageModalContent implements OnInit {
     @Input() closable;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
 
     placeholder: string;
     sendMessage: any;

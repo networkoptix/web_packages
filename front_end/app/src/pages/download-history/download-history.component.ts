@@ -9,7 +9,7 @@ import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootst
 
 import isArray = require('core-js/features/array/is-array');
 import angular = require('angular');
-import { NxConfigService }                                      from '../../services/nx-config';
+import { NxConfigService }                                      from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }                            from '../../services/nx-language-provider';
 import { NxAccountService }                                     from '../../services/account.service';
 import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
@@ -18,6 +18,7 @@ import { filter }                                               from 'rxjs/opera
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxPageService } from '../../services/page.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -32,7 +33,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private canViewRelease: boolean;
     readonly releases = 'releases';
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     tabsVisible: boolean;

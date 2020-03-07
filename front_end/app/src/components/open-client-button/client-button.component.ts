@@ -5,11 +5,12 @@ import {
     ViewEncapsulation, Inject, OnDestroy
 } from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector     : 'nx-client-button',
@@ -23,7 +24,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() customClass: any;
     @Input() actionType: any;
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
 
     location: any;

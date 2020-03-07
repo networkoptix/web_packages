@@ -5,7 +5,7 @@ import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
 }                              from '@angular/router';
-import { NxConfigService }        from '../../services/nx-config';
+import { NxConfigService }        from '../../services/nx-config/nx-config.service';
 import { NxAppStateService }      from '../../services/nx-app-state.service';
 import { NxAccountService }       from '../../services/account.service';
 import { NxDialogsService }       from '../../dialogs/dialogs.service';
@@ -17,6 +17,7 @@ import { NxHeaderService }        from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -26,7 +27,7 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
 
     user: any = {};

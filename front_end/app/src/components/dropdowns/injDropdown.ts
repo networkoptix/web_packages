@@ -4,13 +4,14 @@ import {
 }                                    from '@angular/core';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { ControlValueAccessor }      from '@angular/forms';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 const noop = () => {};
 
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     message: string;
     show: boolean;

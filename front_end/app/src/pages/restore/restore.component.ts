@@ -7,9 +7,10 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { LocalStorageService }       from 'ngx-store';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxAccountService }          from '../../services/account.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-restore-component',
@@ -23,7 +24,7 @@ export class NxRestoreComponent implements OnInit {
     @Input() uriParamCode;
 
     LANG: any = {};
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     change: any;
     restore: any;

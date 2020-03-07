@@ -3,7 +3,7 @@ import { CommonModule }              from '@angular/common';
 import { downgradeInjectable }       from '@angular/upgrade/static';
 
 import { NxLanguageProviderService }     from './nx-language-provider';
-import { NxConfigService }               from './nx-config';
+import { NxConfigService }               from './nx-config/nx-config.service';
 import { NxAppStateService }             from './nx-app-state.service';
 import { NxUtilsService }                from './utils.service';
 import { NxPageService }                 from './page.service';

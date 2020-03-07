@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxSystemsService } from './systems.service';
@@ -9,6 +9,7 @@ import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
+import { IConfig } from './nx-config/config-types';
 
 export interface NxSystemRole {
     id: string;
@@ -110,7 +111,7 @@ class System implements SystemInterface {
 }
 
 class UserManager {
-    private CONFIG: any;
+    private CONFIG: IConfig;
     private LANG: any;
     private mediaserver: any;
     private _ownerEmail: string;
@@ -437,7 +438,7 @@ class ServerManager {
 }
 
 export class NxSystem extends System implements OnDestroy {
-    private CONFIG: any;
+    private CONFIG: IConfig;
     private LANG: any;
     private cloudApi: any;
     private systemApiService: any;
@@ -820,7 +821,7 @@ export class NxSystem extends System implements OnDestroy {
     providedIn: 'root'
 })
 export class NxSystemService {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     private systemsCache: { [key: string]: System };
 

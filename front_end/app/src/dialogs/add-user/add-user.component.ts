@@ -2,12 +2,13 @@ import {
     Component, Input, Renderer2, ViewChild
 } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxToastService }            from '../toast.service';
 import { NxProcessService }          from '../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -22,7 +23,7 @@ export class AddUserModalContent {
     @ViewChild('addUserForm') form;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
 
     title: string;
     sharing: any;

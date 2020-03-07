@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute, Router }               from '@angular/router';
-import { NxConfigService }                      from '../../../services/nx-config';
+import { NxConfigService }                      from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 
 import { NxPageService }        from '../../../services/page.service';
@@ -13,6 +13,7 @@ import { NxProcessService }     from '../../../services/process.service';
 import { debounceTime }         from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -22,7 +23,7 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     showSearch: any;
     fetchComplete: any;

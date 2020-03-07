@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router }                       from '@angular/router';
 
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LocalStorageService }       from 'ngx-store';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'landing-component',
@@ -16,7 +17,7 @@ import { LocalStorageService }       from 'ngx-store';
 
 export class NxLandingComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
 
     params: any;

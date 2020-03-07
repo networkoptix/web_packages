@@ -3,10 +3,11 @@ import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
 import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService }             from '../../services/nx-config';
+import { NxConfigService }             from '../../services/nx-config/nx-config.service';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { timer }                       from 'rxjs';
 import { delayWhen, retryWhen, map }   from 'rxjs/operators';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -20,7 +21,7 @@ export class ResetServerModalContent {
     @Input() closable;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
     resetServer: any;
     password: string;
 

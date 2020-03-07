@@ -2,7 +2,8 @@ import { Component, Input }            from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
-import { NxConfigService }             from '../../services/nx-config';
+import { NxConfigService }             from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector: 'nx-modal-change-password',
@@ -15,7 +16,7 @@ export class ChangePasswordModalContent {
     @Input() closable;
 
     LANG: any;
-    CONFIG: any;
+    CONFIG: IConfig;
     changePassword: any;
     newPasswordForUser: string;
 

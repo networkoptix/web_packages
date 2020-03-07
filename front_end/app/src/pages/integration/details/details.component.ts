@@ -6,13 +6,14 @@ import { DomSanitizer }                 from '@angular/platform-browser';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { IntegrationService }           from '../integration.service';
 import { NxRibbonService }              from '../../../components/ribbon/ribbon.service';
-import { NxConfigService }              from '../../../services/nx-config';
+import { NxConfigService }              from '../../../services/nx-config/nx-config.service';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
 import { NxMenuService }                from '../../../components/menu/menu.service';
 import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { NxAccountService }             from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,7 +24,7 @@ import { NxPageService }                from '../../../services/page.service';
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     plugin: any;
     content: any = {};

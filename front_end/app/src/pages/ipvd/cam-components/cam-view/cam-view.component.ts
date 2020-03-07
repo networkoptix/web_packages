@@ -3,12 +3,13 @@ import {
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
 }                                   from '@angular/core';
-import { NxConfigService }          from '../../../../services/nx-config';
+import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { Subscription }             from 'rxjs';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { delay }                    from 'rxjs/operators';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -22,7 +23,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     firmwares: any = [];
     firmwaresToShow: number;
     analyticsToShow: number;

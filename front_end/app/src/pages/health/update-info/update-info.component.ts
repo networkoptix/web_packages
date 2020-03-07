@@ -1,11 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { NxUtilsService } from '../../../services/utils.service';
-import { NxConfigService } from '../../../services/nx-config';
+import { NxConfigService } from '../../../services/nx-config/nx-config.service';
 import { NxHealthService } from '../health.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -16,7 +17,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     lastUpdate: string;

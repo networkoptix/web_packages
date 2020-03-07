@@ -1,14 +1,15 @@
 import { Inject, Injectable }        from '@angular/core';
-import { NxConfigService }           from './nx-config';
+import { NxConfigService }           from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUrlProtocolService {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     constructor(@Inject(WINDOW) private window: Window,

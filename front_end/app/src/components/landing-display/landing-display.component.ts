@@ -5,7 +5,8 @@ import {
     ViewChild,
     ViewContainerRef
 }                           from '@angular/core';
-import { NxConfigService }  from '../../services/nx-config';
+import { NxConfigService }  from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector : 'landing-display-component',
@@ -15,7 +16,7 @@ import { NxConfigService }  from '../../services/nx-config';
 })
 
 export class NxLandingDisplayComponent implements AfterViewInit {
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;

@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
 import { NxPageService } from '../../services/page.service';
 import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
 import { ComponentsModule } from '../../components/components.module';
@@ -11,6 +11,7 @@ import { WINDOW } from '../../services/window-provider';
 import { NxAccountService } from '../../services/account.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxCloudApiService } from '../../services/nx-cloud-api';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector : 'content-component',
@@ -26,7 +27,7 @@ export class NxContentComponent implements OnInit {
     private state: string;
     private id: string;
     private langCode: string;
-    private CONFIG: any;
+    private CONFIG: IConfig;
     private LANG: any;
     private loaded = false;
     private staticContent: any;

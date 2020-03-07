@@ -2,18 +2,19 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 import { Utils } from '../utils/helpers';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     activeSubscription: any;
     currentUser: string;

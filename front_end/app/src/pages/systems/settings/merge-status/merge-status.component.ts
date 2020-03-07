@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxSettingsService } from '../settings.service';
-import { NxConfigService } from '../../../../services/nx-config';
+import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxSystemsService } from '../../../../services/systems.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { filter } from 'rxjs/operators';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -15,7 +16,7 @@ import { filter } from 'rxjs/operators';
 })
 
 export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
-    CONFIG: any;
+    CONFIG: IConfig;
     currentlyMerging: boolean;
     isMaster: boolean;
     LANG: any;

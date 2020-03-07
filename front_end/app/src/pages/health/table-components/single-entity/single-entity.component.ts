@@ -1,7 +1,8 @@
 import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
-import { NxConfigService }                                from '../../../../services/nx-config';
+import { NxConfigService }                                from '../../../../services/nx-config/nx-config.service';
 import { NxUtilsService }                                 from '../../../../services/utils.service';
 import { NxHealthService } from '../../health.service';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 @Component({
     selector     : 'nx-single-entity',
@@ -13,7 +14,7 @@ export class NxSingleEntityComponent implements OnChanges {
     @Input() params: any;
     @Input() entity: any;
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     copyParams: any;
     entityName: string;
 

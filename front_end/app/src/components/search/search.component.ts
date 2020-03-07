@@ -7,7 +7,7 @@ import { ActivatedRoute, Router }         from '@angular/router';
 import { Location }                       from '@angular/common';
 import { Subject }                        from 'rxjs/Subject';
 import { isArray }                        from 'rxjs/internal-compatibility';
-import { NxConfigService }                from '../../services/nx-config';
+import { NxConfigService }                from '../../services/nx-config/nx-config.service';
 import { NxUriService }                   from '../../services/uri.service';
 import { NxLanguageProviderService }      from '../../services/nx-language-provider';
 import { Subscription, SubscriptionLike } from 'rxjs';
@@ -16,6 +16,7 @@ import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { debounceTime }                   from 'rxjs/operators';
 import { NxUtilsService }                 from '../../services/utils.service';
 import { Utils } from '../../utils/helpers';
+import { IConfig } from '../../services/nx-config/config-types';
 /* Usage
  <nx-search
      name="NAME"
@@ -67,7 +68,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public filterSelected: any;
     public localFilter: any = {};
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any = {};
 
     private searchSubscription: Subscription;

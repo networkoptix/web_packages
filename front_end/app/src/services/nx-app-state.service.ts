@@ -1,12 +1,13 @@
 import { Injectable }                from '@angular/core';
-import { NxConfigService }            from './nx-config';
+import { NxConfigService }            from './nx-config/nx-config.service';
 import { BehaviorSubject }           from 'rxjs';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxAppStateService {
-    CONFIG: any;
+    CONFIG: IConfig;
 
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);

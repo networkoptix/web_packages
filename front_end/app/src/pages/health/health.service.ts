@@ -1,7 +1,8 @@
 import { Injectable }                      from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NxConfigService }                 from '../../services/nx-config';
+import { NxConfigService }                 from '../../services/nx-config/nx-config.service';
 import { NxScrollMechanicsService }        from '../../services/scroll-mechanics.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'
@@ -33,7 +34,7 @@ export class NxHealthService {
 
     ready: boolean;
 
-    CONFIG: any;
+    CONFIG: IConfig;
 
     constructor(
         private configService: NxConfigService,

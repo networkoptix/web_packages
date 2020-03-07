@@ -11,7 +11,8 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { SessionStorageService }     from 'ngx-store';
 import { NxAccountService }          from '../../services/account.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-activate-component',
@@ -25,7 +26,7 @@ export class NxActivateComponent implements OnInit {
     @Input() uriParamCode;
 
     location: any;
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any = {};
     accountInfo: any = {};
     activate: any;

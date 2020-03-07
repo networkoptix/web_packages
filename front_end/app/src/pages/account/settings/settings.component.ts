@@ -8,7 +8,7 @@ import {
     QueryList,
     OnDestroy
 } from '@angular/core';
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
@@ -24,6 +24,7 @@ import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -36,7 +37,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
     @ViewChildren('accountForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     account: any = {};

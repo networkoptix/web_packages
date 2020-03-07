@@ -3,7 +3,7 @@ import {
     ViewChild, ElementRef, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService }           from '../../../../services/nx-config';
+import { NxConfigService }           from '../../../../services/nx-config/nx-config.service';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
@@ -17,6 +17,7 @@ import { Subscription }              from 'rxjs';
 import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -33,7 +34,7 @@ interface Settings {
 })
 
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     system: NxSystem;
     systems: any;

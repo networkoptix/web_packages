@@ -9,7 +9,7 @@ import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IpvdSearchService }                     from './ipvd-search.service';
 import { MessageParams }                         from '../../dialogs/message/message.component';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -22,6 +22,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxPageService }             from '../../services/page.service';
 import { delay }                     from 'rxjs/operators';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { IConfig } from '../../services/nx-config/config-types';
 
 interface Params {
     [key: string]: any;
@@ -37,7 +38,7 @@ interface Params {
 
 export class NxIpvdComponent implements OnInit, AfterViewInit {
     LANG: any = {};
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     placeholder: string;
     data: any;

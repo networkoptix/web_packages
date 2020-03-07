@@ -2,7 +2,7 @@ import { Inject, Injectable, OnDestroy }      from '@angular/core';
 import { DOCUMENT, Location }                 from '@angular/common';
 import { LocalStorageService }                from 'ngx-store';
 import { ActivatedRoute, Router }             from '@angular/router';
-import { NxConfigService }                    from './nx-config';
+import { NxConfigService }                    from './nx-config/nx-config.service';
 import { NxCloudApiService }                  from './nx-cloud-api';
 import { NxLanguageProviderService }          from './nx-language-provider';
 import { NxDialogsService }                   from '../dialogs/dialogs.service';
@@ -13,12 +13,13 @@ import { ReplaySubject, Subscription, timer } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
 import { NxUriService }                       from './uri.service';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
     location: any;
     loggingOut: boolean;

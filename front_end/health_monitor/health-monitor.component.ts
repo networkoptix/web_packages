@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
-import { NxConfigService } from '../app/src/services/nx-config';
+import { NxConfigService } from '../app/src/services/nx-config/nx-config.service';
 import '../app/styles/main.scss';
 import 'bootstrap';
 import { fromEvent } from 'rxjs';
@@ -8,6 +8,7 @@ import { debounceTime } from 'rxjs/operators';
 import { NxScrollMechanicsService } from '../app/src/services/scroll-mechanics.service';
 import { NxAppStateService } from '../app/src/services/nx-app-state.service';
 import { WINDOW } from '../app/src/services/window-provider';
+import { IConfig } from '../app/src/services/nx-config/config-types';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { WINDOW } from '../app/src/services/window-provider';
     template: '<router-outlet></router-outlet>'
 })
 export class HealthMonitorComponent {
-    CONFIG: any;
+    CONFIG: IConfig;
     constructor(private appStateService: NxAppStateService,
                 private config: NxConfigService,
                 private language: NxLanguageProviderService,

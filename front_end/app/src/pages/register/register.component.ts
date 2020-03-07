@@ -12,7 +12,8 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxDialogsService } from '../../dialogs/dialogs.service';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-register-component',
@@ -35,7 +36,7 @@ export class NxRegisterComponent implements OnInit {
     lockEmail: boolean;
     fromClient: any;
     location: any;
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 

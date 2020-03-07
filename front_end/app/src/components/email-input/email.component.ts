@@ -5,7 +5,7 @@ import {
     forwardRef,
     ViewEncapsulation
 } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import {
     ControlValueAccessor,
@@ -14,6 +14,7 @@ import {
     Validator,
     FormControl
 }                                    from '@angular/forms';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-email-input',
@@ -40,7 +41,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() lockEmail: boolean;
 
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
 
     private value: string;

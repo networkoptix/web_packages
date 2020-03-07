@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer }      from '@angular/platform-browser';
-import { NxConfigService }   from '../../services/nx-config';
+import { NxConfigService }   from '../../services/nx-config/nx-config.service';
 import { NxAppStateService } from '../../services/nx-app-state.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -12,7 +13,7 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
     styleUrls: [ 'footer.component.scss' ]
 })
  export class NxFooterComponent implements OnInit, OnDestroy {
-    CONFIG: any;
+    CONFIG: IConfig;
     companyLink: string;
     companyName: string;
     copyrightYear: string;

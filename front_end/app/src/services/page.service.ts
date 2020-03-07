@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { NxConfigService }    from './nx-config';
+import { NxConfigService }    from './nx-config/nx-config.service';
 import { Title, Meta }              from '@angular/platform-browser';
 import { NxLanguageProviderService } from './nx-language-provider';
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxPageService {
-    CONFIG: any;
+    CONFIG: IConfig;
     LANG: any;
 
     constructor(configService: NxConfigService,

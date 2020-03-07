@@ -3,7 +3,7 @@ import {
     ViewContainerRef, OnDestroy
 }                                      from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
-import { NxConfigService }             from '../../../../services/nx-config';
+import { NxConfigService }             from '../../../../services/nx-config/nx-config.service';
 import { NxDialogsService }            from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }           from '../settings.service';
 import { NxLanguageProviderService }   from '../../../../services/nx-language-provider';
@@ -18,6 +18,7 @@ import {
     retryWhen, delayWhen, catchError
 }                                      from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -27,7 +28,7 @@ import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
-    CONFIG: any = {};
+    CONFIG: IConfig;
     LANG: any = {};
     system: NxSystem;
     viewContainerRef: ViewContainerRef;

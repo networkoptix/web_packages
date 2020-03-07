@@ -1,14 +1,15 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { Observable }      from 'rxjs';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import {toPromise} from "rxjs-compat/operator/toPromise";
+import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxCloudApiService {
-    CONFIG: any;
+    CONFIG: IConfig;
 
     constructor(configService: NxConfigService,
                 private http: HttpClient) {

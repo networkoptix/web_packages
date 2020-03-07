@@ -4,11 +4,12 @@ import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { IntegrationService }           from './integration.service';
 import { NxUriService }                 from '../../services/uri.service';
-import { NxConfigService }              from '../../services/nx-config';
+import { NxConfigService }              from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxAccountService }             from '../../services/account.service';
 import { NxPageService }                from '../../services/page.service';
 import { NxUtilsService }               from '../../services/utils.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -18,7 +19,7 @@ import { NxUtilsService }               from '../../services/utils.service';
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
-    private CONFIG: any = {};
+    private CONFIG: IConfig;
     private LANG: any = {};
 
     private allElements: any;
