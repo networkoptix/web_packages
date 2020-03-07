@@ -214,6 +214,9 @@ window.L = {};
                     .when('/login', {
                         template: ''
                     })
+                    .when('/logout', {
+                        template: ''
+                    })
                     .when('/admin', {
                         resolve: {
                             test: function(){
