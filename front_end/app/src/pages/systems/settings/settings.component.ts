@@ -95,7 +95,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private router: Router,
                 private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService,
+                private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.setupDefaults(configService);
     }
@@ -204,7 +204,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     // Special handling for not having an access to the system
                     this.systemNoAccess = true;
                     return false;
-                },
+                }
             },
             errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
         }).then(() => {
@@ -218,7 +218,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 
         // We listen to window resize and measure header height to know how much to offset the fixed menu by
-        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({width}) => {
+        this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {
             if (width >= 768) {
                 this.setHeaderHeight();
             }
@@ -362,7 +362,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id   : this.CONFIG.menus.systemSettings.servers.id,
                     svg  : this.CONFIG.menus.systemSettings.servers.icon,
                     label: this.LANG.servers.servers,
-                    path : this.CONFIG.menus.systemSettings.servers.path,
+                    path : this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
             }
@@ -374,13 +374,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.servers.sort(byParam);
 
                 serversNode.level3 = [];
-                this.system.servers.forEach(server => {
+                this.system.servers.forEach(systemServer => {
+                    const server = this.parseUrl(systemServer);
                     serversNode.level3.push({
                         id             : server.id,
                         icon           : '',
                         label          : server.name,
                         path           : `servers/${server.id}`,
-                        additionalLabel: server.url.split(':')[1].slice(2)
+                        additionalLabel: server.ip
                     });
                 });
             }
@@ -389,6 +390,34 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         this.content = { ...this.content };
+    }
+
+    /**
+     * If url is ipv6, then looks for a ipv4 from within networkAddresses
+     * If no ipv4 address found, formats ipv6 address
+     */
+    parseUrl(server) {
+        const splitUrl = server.url.split(':');
+        if (splitUrl.length > 3) {
+            const networkAddresses = server.networkAddresses.split(';');
+            for (const address of networkAddresses) {
+                const addressSplit = address.split(':');
+                if (addressSplit.length === 2) {
+                    server.url = address;
+                    server.ip = addressSplit[0];
+                    server.port = addressSplit[1];
+                    return server;
+                }
+            }
+            const firstColonIndex = server.url.indexOf(':');
+            const lastColonIndex = server.url.lastIndexOf(':');
+            server.ip = server.url.slice(firstColonIndex + 4, lastColonIndex - 1);
+            server.port = splitUrl[splitUrl.length - 1];
+        } else {
+            server.ip = splitUrl[1].slice(2);
+            server.port = splitUrl[2];
+        }
+        return server;
     }
 
     cleanUrl() {

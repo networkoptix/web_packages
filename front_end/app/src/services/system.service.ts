@@ -57,6 +57,7 @@ export interface NxSystemServer {
     backupType: string;
     flags: string;
     id: string;
+    ip: string;
     maxCameras: number;
     metadataStorageId: string;
     name: string;
@@ -167,9 +168,9 @@ class UserManager {
     checkPermissions() {
         const isMine = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins : isMine,
-            editUsers  : isMine,
-            isAdmin    : isMine
+            editAdmins: isMine,
+            editUsers : isMine,
+            isAdmin   : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
@@ -565,7 +566,7 @@ export class NxSystem extends System implements OnDestroy {
         this.isAvailable = false;
         this.isOnline = false;
         this.currentServerNotBusy = true;
-        this.info = { name : '' };
+        this.info = { name: '' };
         this.mergeInfo = {};
 
         this.currentUserEmail = currentUserEmail;

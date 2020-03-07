@@ -122,7 +122,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 throw system;
                             }
                         }),
-                        retryWhen(err => err.pipe(delay(1000))),
+                        retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
@@ -165,8 +165,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             }
 
             this.applyService.hardReset();
-            const { url } = server;
-            const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
+            const { ip, port } = server;
             this.ipPortWatcher.value = port;
             server.ip = ip;
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
@@ -221,7 +220,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.system.getModuleInfo(this.selectedServer.id)
             .pipe(
                 catchError(() => of('error')),
-                delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
+                delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
             )
             .subscribe(res => {
                 this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
