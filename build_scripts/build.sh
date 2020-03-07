@@ -109,4 +109,12 @@ else
     exit 1
 fi
 
+echo "Checking mustache templates"
+if ! python check_mustache_templates.py; then
+    echo "There were template translation errors. Please notify Boris"
+    exit 1
+else
+    echo "No template errors"
+fi
+
 echo "Cloud portal build is finished"
