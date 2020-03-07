@@ -12,6 +12,7 @@ import { NxAccountService } from '../../services/account.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxCloudApiService } from '../../services/nx-cloud-api';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector : 'content-component',
@@ -28,7 +29,7 @@ export class NxContentComponent implements OnInit {
     private id: string;
     private langCode: string;
     private CONFIG: IConfig;
-    private LANG: any;
+    private LANG: LanguageI18NStaticTypes;
     private loaded = false;
     private staticContent: any;
 

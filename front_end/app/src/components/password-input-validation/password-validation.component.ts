@@ -5,6 +5,7 @@ import {
 import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-password-input-validation',
@@ -17,7 +18,7 @@ export class NxPasswordValidationComponent implements OnChanges {
     @Input() value: any;
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     fairPassword: boolean;
     passwordToggle: boolean;
 

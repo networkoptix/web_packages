@@ -9,6 +9,7 @@ import { NxToastService }            from '../toast.service';
 import { NxProcessService }          from '../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -22,7 +23,7 @@ export class AddUserModalContent {
     @Input() closable;
     @ViewChild('addUserForm') form;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     title: string;

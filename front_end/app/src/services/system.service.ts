@@ -11,6 +11,7 @@ import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
 import { IConfig } from './nx-config/config-types';
 import { PredefinedRole } from './nx-config/base-config';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 export interface NxSystemRole extends PredefinedRole{
     id?: string;
@@ -110,7 +111,7 @@ class System implements SystemInterface {
 
 class UserManager {
     private CONFIG: IConfig;
-    private LANG: any;
+    private LANG: LanguageI18NStaticTypes;
     private mediaserver: any;
     private _ownerEmail: string;
     private _accessRole: string;
@@ -438,7 +439,7 @@ class ServerManager {
 
 export class NxSystem extends System implements OnDestroy {
     private CONFIG: IConfig;
-    private LANG: any;
+    private LANG: LanguageI18NStaticTypes;
     private cloudApi: any;
     private systemApiService: any;
     private pollService: any;
@@ -821,7 +822,7 @@ export class NxSystem extends System implements OnDestroy {
 })
 export class NxSystemService {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     private systemsCache: { [key: string]: System };
 
     constructor(configService: NxConfigService,

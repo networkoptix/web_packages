@@ -4,6 +4,7 @@ import {
     Input,
     Inject
 } from '@angular/core';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-release',
@@ -12,7 +13,7 @@ import {
 })
 export class ReleaseComponent implements OnInit {
     @Input() release: any;
-    @Input() lang: any;
+    @Input() LANG: LanguageI18NStaticTypes;
     @Input() linkbase: any;
 
     constructor() {

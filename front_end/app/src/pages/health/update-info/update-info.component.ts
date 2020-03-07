@@ -7,6 +7,7 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -18,7 +19,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     lastUpdate: string;
     timerSubscription: Subscription;

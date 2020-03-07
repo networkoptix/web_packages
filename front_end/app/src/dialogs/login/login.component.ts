@@ -15,6 +15,7 @@ import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'ngbd-modal-content',
@@ -28,7 +29,7 @@ export class LoginModalContent implements OnInit {
     @Input() closable;
     @Input() keepPage;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     auth: any;

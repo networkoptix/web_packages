@@ -8,6 +8,7 @@ import { NxRibbonService }           from '../../../components/ribbon/ribbon.ser
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
     selector   : 'integrations-list-component',
@@ -20,7 +21,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
     @Input() list;
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();

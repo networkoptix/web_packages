@@ -5,6 +5,7 @@ import { NxProcessService }            from '../../services/process.service';
 import { NxToastService }              from '../../dialogs/toast.service';
 import { NxConfigService }             from '../../services/nx-config/nx-config.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-detach-server-content',
@@ -17,7 +18,7 @@ export class DetachServerModalContent {
     @Input() serverId;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     detachServer: any;
     password: string;

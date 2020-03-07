@@ -5,6 +5,7 @@ import { NxCloudApiService } from './nx-cloud-api';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
 import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 interface ProcessSettings {
     errorCodes: any;
@@ -18,7 +19,7 @@ interface ProcessSettings {
 
 class Process {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     cloudApiService: any;
     sessionService: any;
     toastService: any;
@@ -197,7 +198,7 @@ class Process {
 })
 export class NxProcessService {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
                 private cloudApiService: NxCloudApiService,

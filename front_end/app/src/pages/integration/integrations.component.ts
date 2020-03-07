@@ -10,6 +10,7 @@ import { NxAccountService }             from '../../services/account.service';
 import { NxPageService }                from '../../services/page.service';
 import { NxUtilsService }               from '../../services/utils.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,7 +21,7 @@ import { IConfig } from '../../services/nx-config/config-types';
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
     private CONFIG: IConfig;
-    private LANG: any = {};
+    private LANG: LanguageI18NStaticTypes;
 
     private allElements: any;
     private elements: any;

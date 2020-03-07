@@ -11,6 +11,7 @@ import { NxConfigService }           from '../../services/nx-config/nx-config.se
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxAccountService }          from '../../services/account.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-restore-component',
@@ -23,7 +24,7 @@ export class NxRestoreComponent implements OnInit {
     @Input() uriParam;
     @Input() uriParamCode;
 
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     change: any;

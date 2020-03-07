@@ -16,6 +16,7 @@ import { NxUriService }                            from './src/services/uri.serv
 import { NxPageService }                           from './src/services/page.service';
 import { NxSystemRole }                            from './src/services/system.service';
 import { IConfig } from './src/services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from './language_i18n_static_types';
 
 @Component({
     selector: 'nx-app',
@@ -38,7 +39,7 @@ import { IConfig } from './src/services/nx-config/config-types';
 
 export class AppComponent {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     deviceInfo: any;
     allowedDevices: {};
     isInIframe: boolean;

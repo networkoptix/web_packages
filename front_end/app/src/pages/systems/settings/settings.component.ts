@@ -19,6 +19,7 @@ import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -32,7 +33,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() callShare;
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     plugin: any;
     content: any = {};
 

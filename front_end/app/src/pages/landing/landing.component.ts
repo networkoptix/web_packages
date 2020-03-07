@@ -8,6 +8,7 @@ import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LocalStorageService }       from 'ngx-store';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'landing-component',
@@ -18,7 +19,7 @@ import { IConfig } from '../../services/nx-config/config-types';
 export class NxLandingComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     params: any;
     userEmail: any;

@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxPageService } from '../../services/page.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -34,7 +35,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     readonly releases = 'releases';
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     tabsVisible: boolean;
     routeParam: any;

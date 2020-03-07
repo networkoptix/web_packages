@@ -27,10 +27,11 @@ import { DetachServerModalContent }   from './detach-server/detach-server.compon
 import { ResetServerModalContent }    from './reset-server/reset-server.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { IConfig } from '../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({ providedIn : 'root' })
 export class NxDialogsService {
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     location: any;
     closeResult: any;

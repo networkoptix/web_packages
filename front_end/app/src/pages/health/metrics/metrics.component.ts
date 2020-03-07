@@ -18,6 +18,7 @@ import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.se
 import { delay, throttleTime }       from 'rxjs/operators';
 import { NxHealthLayoutService }     from '../health-layout.service';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -32,7 +33,7 @@ interface Params {
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     account: any;
 
     filterModel: any;

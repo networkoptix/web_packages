@@ -119,6 +119,7 @@
         "optimize-js-plugin": "0.0.4",
         "postcss-loader": "2.1.6",
         "prettier": "1.15.3",
+        "quicktype": "^15.0.214",
         "raw-loader": "0.5.1",
         "sass-loader": "7.1.0",
         "sass-rem": "2.0.1",
@@ -152,7 +153,7 @@
     "scripts": {
         "lint": "eslint app/src/**/*.ts --fix",
         "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
-        "serve": "npm run lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
+        "serve": "npm run update-lang-types; npm run lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
         "serve-health-monitor": "npm run lang; webpack-dev-server --config webpack.health_monitor-dev.js --open --hot --inline",
         "serve-ipvd": "npm run lang; webpack-dev-server --config webpack.ipvd-dev.js --open --hot --inline",
         "build": "npm run lang; webpack --config webpack.prod.js --progress --profile --bail",
@@ -162,6 +163,7 @@
         "compile-lang": "python compile-lang.py",
         "fill-lang": "python fill-lang.py",
         "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
+        "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:coverage": "karma start karma.conf.js --single-run"

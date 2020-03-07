@@ -4,6 +4,7 @@ import { NxLanguageProviderService }   from '../../services/nx-language-provider
 import { NxProcessService }            from '../../services/process.service';
 import { NxConfigService }             from '../../services/nx-config/nx-config.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-change-password',
@@ -15,7 +16,7 @@ export class ChangePasswordModalContent {
     @Input() user: any;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     changePassword: any;
     newPasswordForUser: string;

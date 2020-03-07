@@ -14,6 +14,7 @@ import { debounceTime }         from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -24,7 +25,7 @@ import { IConfig } from '../../../services/nx-config/config-types';
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     showSearch: any;
     fetchComplete: any;
     search: any;

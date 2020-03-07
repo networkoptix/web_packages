@@ -16,6 +16,7 @@ import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxPageService } from '../../services/page.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -34,7 +35,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private paramPlatform: string;
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     downloadButton: any;
     downloads: any;

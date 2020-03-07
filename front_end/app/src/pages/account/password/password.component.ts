@@ -13,6 +13,7 @@ import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-account-password-component',
@@ -25,7 +26,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     @ViewChildren('passwordForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     form: NgForm;
 
     account: any = {};

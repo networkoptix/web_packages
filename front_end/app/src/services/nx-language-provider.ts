@@ -1,12 +1,13 @@
 import { Injectable }             from '@angular/core';
 import { TranslateService }       from '@ngx-translate/core';
 import { ReplaySubject, Subject } from 'rxjs';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxLanguageProviderService {
-    lang: any;
+    LANG: LanguageI18NStaticTypes;
     translations: any;
     // translationsSubject = new ReplaySubject();
 
@@ -22,7 +23,7 @@ export class NxLanguageProviderService {
         this.translate.currentLang = lang;
     }
 
-    getTranslations(): any {
+    getTranslations(): LanguageI18NStaticTypes {
         return this.translate.translations[this.translate.currentLang];
     }
 

@@ -12,6 +12,7 @@ import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 /* USAGE
  <nx-vendor-list
@@ -37,7 +38,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() vendors: any;
     @Input() cameras: any;
 
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     public debug: boolean;

@@ -23,6 +23,7 @@ import { NxPageService }             from '../../services/page.service';
 import { delay }                     from 'rxjs/operators';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -37,7 +38,7 @@ interface Params {
 })
 
 export class NxIpvdComponent implements OnInit, AfterViewInit {
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     placeholder: string;

@@ -8,6 +8,7 @@ import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import StateMachine from './stateMachine';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -22,7 +23,7 @@ export class MergeModalContent {
     @Input() closable;
     @Input() user;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: any;
     // checking: boolean;
@@ -308,10 +309,10 @@ export class MergeModalContent {
             }, {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
-                        return this.LANG.toastMessages.system.merge.failed;
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     vmsRequestFailure: () => {
-                        return this.LANG.toastMessages.system.merge.failed;
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
                         this.mergeForm.controls.mergePassword.setErrors({ required: true });

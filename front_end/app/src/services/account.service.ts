@@ -14,13 +14,14 @@ import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
 import { NxUriService }                       from './uri.service';
 import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     location: any;
     loggingOut: boolean;
     requestingLogin: any;
@@ -334,7 +335,7 @@ export class NxAccountService implements OnDestroy {
                     } else if (isRestore) {
                         cancelLabel = this.LANG.dialogs.buttons.logoutAuthorised;
                     } else {
-                        cancelLabel = this.LANG.dialogs.buttons.cancelButton;
+                        cancelLabel = this.LANG.dialogs.buttons.cancel;
                     }
                     return this.dialogs
                         .confirm('',

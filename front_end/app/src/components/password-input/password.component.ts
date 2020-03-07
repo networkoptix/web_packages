@@ -17,6 +17,7 @@ import {
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -43,7 +44,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     @Input() componentId: string;
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     fairPassword: boolean;
     passwordToggle: boolean;
     clicked: boolean = false;

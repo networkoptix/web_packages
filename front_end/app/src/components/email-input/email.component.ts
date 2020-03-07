@@ -15,6 +15,7 @@ import {
     FormControl
 }                                    from '@angular/forms';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-email-input',
@@ -42,7 +43,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
 
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     private value: string;
 

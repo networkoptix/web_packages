@@ -24,6 +24,7 @@ import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
 import { flatMap }                               from 'rxjs/operators';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -33,7 +34,7 @@ import { IConfig } from '../../services/nx-config/config-types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: any;
     system: NxSystem|any;

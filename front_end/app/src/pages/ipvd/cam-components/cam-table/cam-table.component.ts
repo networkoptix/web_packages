@@ -15,6 +15,7 @@ import { NxScrollMechanicsService }       from '../../../../services/scroll-mech
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { delay }                          from 'rxjs/operators';
 import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -57,7 +58,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     pagerMaxSize: number;
     pagerEllipses: boolean;
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     showAnalytics: boolean;
     serviceParams;
     serviceHeaders;

@@ -8,6 +8,7 @@ import { NxLanguageProviderService }             from '../../services/nx-languag
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,7 +21,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     @Input() disconnect;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     auth: any;
     params: any;

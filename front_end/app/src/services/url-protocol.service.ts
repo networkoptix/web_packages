@@ -4,13 +4,14 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
 import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUrlProtocolService {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(@Inject(WINDOW) private window: Window,
                 configService: NxConfigService,

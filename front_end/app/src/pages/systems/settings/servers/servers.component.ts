@@ -19,6 +19,7 @@ import {
 }                                      from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -29,7 +30,7 @@ import { IConfig } from '../../../../services/nx-config/config-types';
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;

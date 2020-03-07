@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { filter } from 'rxjs/operators';
 import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -19,7 +20,7 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     currentlyMerging: boolean;
     isMaster: boolean;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     mergeTargetSystem: any;
     system: any;
 

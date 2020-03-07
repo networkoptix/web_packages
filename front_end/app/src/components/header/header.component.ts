@@ -18,6 +18,7 @@ import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -28,7 +29,7 @@ import { IConfig } from '../../services/nx-config/config-types';
 export class NxHeaderComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     user: any = {};
     canSeeInfo: boolean;

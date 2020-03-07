@@ -25,6 +25,7 @@ import { first }                     from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -38,7 +39,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     @ViewChildren('accountForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
 
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     account: any = {};
     save: any;

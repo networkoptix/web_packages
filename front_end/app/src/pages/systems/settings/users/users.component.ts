@@ -20,6 +20,7 @@ import { NxUriService }                         from '../../../../services/uri.s
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,7 +31,7 @@ import { IConfig } from '../../../../services/nx-config/config-types';
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     location: any;
     paramUser: any;
     accessDescription: string;

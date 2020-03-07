@@ -6,6 +6,7 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-disconnect-content',
@@ -17,7 +18,7 @@ export class DisconnectModalContent {
     @Input() disconnect;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     password: string;
     wrongPassword: boolean;
     auth = {
@@ -53,7 +54,7 @@ export class DisconnectModalContent {
                     this.renderer.selectRootElement('#password').focus();
                 },
             },
-            successMessage: this.LANG.toastMessage.system.disconnected.success,
+            successMessage: this.LANG.toastMessage.system.disconnected.Success,
             errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
         }).then(() => {
             this.activeModal.close(true);

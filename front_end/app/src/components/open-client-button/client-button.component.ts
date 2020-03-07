@@ -11,6 +11,7 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector     : 'nx-client-button',
@@ -25,7 +26,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     @Input() actionType: any;
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     location: any;
     canceled: boolean;

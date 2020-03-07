@@ -14,6 +14,7 @@ import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { NxAccountService }             from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
 import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -25,7 +26,7 @@ import { IConfig } from '../../../services/nx-config/config-types';
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     plugin: any;
     content: any = {};
 

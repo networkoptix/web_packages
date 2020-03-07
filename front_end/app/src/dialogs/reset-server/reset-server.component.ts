@@ -8,6 +8,7 @@ import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { timer }                       from 'rxjs';
 import { delayWhen, retryWhen, map }   from 'rxjs/operators';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -20,7 +21,7 @@ export class ResetServerModalContent {
     @Input() serverId;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     resetServer: any;
     password: string;

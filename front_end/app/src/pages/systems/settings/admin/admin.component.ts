@@ -18,6 +18,7 @@ import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -35,7 +36,7 @@ interface Settings {
 
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systems: any;
     peerSystems: any[];

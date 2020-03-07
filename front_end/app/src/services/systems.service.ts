@@ -9,13 +9,14 @@ import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 import { Utils } from '../utils/helpers';
 import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
     CONFIG: IConfig;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     activeSubscription: any;
     currentUser: string;
     mergingSystems: any;

@@ -14,6 +14,7 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxDialogsService } from '../../dialogs/dialogs.service';
 import { NxConfigService } from '../../services/nx-config/nx-config.service';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-register-component',
@@ -23,7 +24,7 @@ import { IConfig } from '../../services/nx-config/config-types';
 
 export class NxRegisterComponent implements OnInit {
 
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     uriParam: string;
     accountInfo: any = {};

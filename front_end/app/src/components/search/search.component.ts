@@ -17,6 +17,7 @@ import { debounceTime }                   from 'rxjs/operators';
 import { NxUtilsService }                 from '../../services/utils.service';
 import { Utils } from '../../utils/helpers';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 /* Usage
  <nx-search
      name="NAME"
@@ -69,7 +70,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     public localFilter: any = {};
 
     CONFIG: IConfig;
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     private searchSubscription: Subscription;
     private locationSubscription: SubscriptionLike;

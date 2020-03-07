@@ -15,13 +15,14 @@ import { Watcher } from '../../services/apply.service';
 import { NxSystem } from '../../services/system.service';
 import { WINDOW } from '../../services/window-provider';
 import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-debug',
     templateUrl: 'debug.component.html'
 })
 export class NxDebugComponent {
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
