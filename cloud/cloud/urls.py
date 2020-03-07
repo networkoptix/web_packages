@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.shortcuts import redirect
-from django.views.generic.base import TemplateView
+from django.views.generic.base import TemplateView, RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
@@ -43,6 +43,7 @@ def health_check(request):
 urlpatterns = [
     url(r'^health/', health_check),
     url(r'^admin/login/', redirect_login),
+    url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),
     url(r'^admin/cms/', include('cms.admin_urls')),
     url(r'^admin/notifications/', include('notifications.admin_urls')),
     url(r'^admin/', admin.site.urls),

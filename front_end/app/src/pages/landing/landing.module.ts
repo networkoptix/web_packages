@@ -11,7 +11,8 @@ import { ComponentsModule }  from '../../components/components.module';
 
 const appRoutes: Routes = [
     { path    : '', component: NxLandingComponent },
-    { path    : 'login', component: NxLandingComponent }
+    { path    : 'login', component: NxLandingComponent },
+    { path    : 'logout', component: NxLandingComponent }
 ];
 
 @NgModule({

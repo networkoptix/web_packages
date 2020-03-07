@@ -74,7 +74,6 @@ export class NxContentComponent implements OnInit {
         window.onbeforeunload = (event) => {
             this.sessionStorage.remove('staticContent');
         };
-        this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
 
         this.accountService.get().then(account => {
             this.account = account;
@@ -94,6 +93,7 @@ export class NxContentComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.route.paramMap.subscribe((paramMap) => {
+            this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
             this.dynamicTemplate.clear();

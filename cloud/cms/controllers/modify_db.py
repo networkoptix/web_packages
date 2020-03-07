@@ -383,7 +383,7 @@ def generate_preview_link(context=None, asset=None, state=""):
         elif asset.is_asset_type(AssetType.ASSET_TYPES.agreement):
             return '/agreement?' + urlencode({'state': state, 'id': asset.id})
 
-    return f"{context.url}?preview" if context else "/content/about?preview"
+    return f"{context.url}?preview=true" if context else "/content/about?preview=true"
 
 
 def generate_preview(asset, context=None, version_id=None, send_to_review=False):
