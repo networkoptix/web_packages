@@ -42,6 +42,7 @@ export class ChangePasswordModalContent {
                     notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
                     wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
                 },
+                // @ts-ignore: TODO passwordChangedSuccess is not on language json
                 successMessage      : this.LANG.account.passwordChangedSuccess,
                 errorPrefix         : this.LANG.errorCodes.cantChangePasswordPrefix,
                 ignoreUnauthorized  : true

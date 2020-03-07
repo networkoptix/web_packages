@@ -130,14 +130,14 @@ export class AddUserModalContent {
                                 delay    : this.CONFIG.alertTimeout
                             };
 
-                            return this.toastService.show(this.LANG.share.cantEditYourself, options);
+                            return this.toastService.show(this.LANG.errorCodes.cantEditYourself, options);
                         }
 
                         this.accessDescription = this.getRoleDescription();
                     }
                 });
 
-            this.buttonText = this.LANG.sharing.editShareConfirmButton;
+            this.buttonText = this.LANG.dialogs.sharing.editShareConfirmButton;
         }
 
         this.sharing = this.processService.createProcess(() => {

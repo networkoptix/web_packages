@@ -135,7 +135,7 @@ export class NxRestoreComponent implements OnInit {
             holdAlerts        : true,
             errorPrefix       : this.LANG.errorCodes.cantSendActivationPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restoringSuccess);
+            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');

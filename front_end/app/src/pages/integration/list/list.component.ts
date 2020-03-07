@@ -63,7 +63,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     private showRibbon(): void {
         this.ribbonService.show(
-                this.LANG.ribbon.integration.preview,
+                this.LANG.ribbon.integration.previewRibbon,
                 this.LANG.ribbon.integration.backToEditText,
                 this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
         );
