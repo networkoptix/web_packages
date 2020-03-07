@@ -197,9 +197,9 @@ export const nxConfig: IConfig = {
         analyticsToShow                 : 4,
         sortSupportedDevicesByPopularity: '',
         supportedResolutions            : '',
-        supportedHardwareTypes          : '',
+        supportedHardwareTypes          : [''],
         searchTags                      : '',
-        vendorsShown                    : ''
+        vendorsShown                    : 0
     },
     layout: {
         table: {

@@ -10,14 +10,12 @@ import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
 import { IConfig } from './nx-config/config-types';
+import { PredefinedRole } from './nx-config/base-config';
 
-export interface NxSystemRole {
-    id: string;
-    isAdmin: boolean;
-    isOwner: boolean;
-    label: string;
-    name: string;
-    permissions: string;
+export interface NxSystemRole extends PredefinedRole{
+    id?: string;
+    isAdmin?: boolean;
+    label?: string;
 }
 
 export interface NxSystemUser {
@@ -193,7 +191,8 @@ class UserManager {
 
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
-        const role = roles.find((role) => {
+        // TODO Need to figure out role type here
+        const role = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
