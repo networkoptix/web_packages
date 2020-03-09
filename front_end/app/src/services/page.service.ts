@@ -14,13 +14,12 @@ export class NxPageService {
 
     constructor(configService: NxConfigService,
                 private title: Title,
-                private language: NxLanguageProviderService,
                 private meta: Meta) {
         this.CONFIG = configService.getConfig();
     }
 
     // called from app component
-    setLanguage(lang) {
+    setLanguage(lang: LanguageI18NStaticTypes) {
         this.LANG = lang;
     }
 

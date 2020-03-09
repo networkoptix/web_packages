@@ -178,7 +178,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                   }
               });
 
-        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState) => {
+        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState: string) => {
             this.accountService
                 .get()
                 .then(account => {

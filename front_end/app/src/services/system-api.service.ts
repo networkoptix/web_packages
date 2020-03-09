@@ -55,8 +55,8 @@ export class NxSystemAPI {
     readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
 
     CONFIG: IConfig;
-    http: any;
-    location: any;
+    http: HttpClient;
+    location: Location;
 
     abortReason: string;
     serverId: string;
@@ -67,7 +67,14 @@ export class NxSystemAPI {
     urlBase: string;
     unauthorizedCallback: any;
 
-    constructor(http, config, location, userEmail, systemId, serverId, unauthorizedCallback) {
+    constructor(http: HttpClient,
+        config: IConfig,
+        location: Location,
+        userEmail: string,
+        systemId: string,
+        serverId: string,
+        unauthorizedCallback: (any) => any
+    ) {
         this.http = http;
         this.CONFIG = config;
         this.location = location;
@@ -325,9 +332,9 @@ export class NxSystemAPI {
     getMediaServers(id?, url?) {
         const params = id ? { id: this.cleanId(id) } : {};
         if (url) {
-            return this.http.get(`${url}/ec2/getMediaServersEx`, params);
+            return this.http.get(`${url}/ec2/getMediaServersEx`, { params });
         } else {
-            return this.get('/ec2/getMediaServersEx', params);
+            return this.get('/ec2/getMediaServersEx', { params });
         }
     }
 
@@ -433,6 +440,7 @@ export class NxSystemAPI {
                 systemLink = `/systems/${this.systemId}`;
             }
         }
+        // @ts-ignore: TODO Expected 0-1 arguments, but got 2
         this.location.path(`${systemLink}/view/${this.cleanId(cameraId)}`, false);
     }
 
@@ -478,14 +486,19 @@ export class NxSystemAPIService {
     systemConnections: { [key: string]: NxSystemAPI };
 
     constructor(configService: NxConfigService,
-                location: Location,
-                private http: HttpClient) {
+        location: Location,
+        private http: HttpClient
+    ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
     }
 
-    createConnection(user, systemId, serverId, unauthorizedCallback) {
+    createConnection(user: string,
+        systemId: string,
+        serverId: string,
+        unauthorizedCallback: (any) => any
+    ) {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {
         //     return this.systemConnections[sysServe];

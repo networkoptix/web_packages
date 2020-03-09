@@ -1,5 +1,5 @@
-import { ComponentFactoryResolver, Injectable, ViewContainerRef } from '@angular/core';
-import { BehaviorSubject, merge } from 'rxjs';
+import { ComponentFactoryResolver, Injectable, ViewContainerRef, ComponentRef } from '@angular/core';
+import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, skip } from 'rxjs/operators';
 import { NxDialogsService } from '../dialogs/dialogs.service';
 import { NxApplyComponent } from '../components/apply/apply.component';
@@ -68,15 +68,15 @@ export class Watcher<T> {
  * @class
  */
 export class NxApplyService {
-    applyComponentRef: any;
-    applyFunction: any;
+    applyComponentRef: ComponentRef<NxApplyComponent>;
+    applyFunction: (any) => any;
     component: ViewContainerRef;
     discardFunction: () => void;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
-    private lockedSubscription: any;
+    private lockedSubscription: Subscription;
     popupActive = false;
-    private watchers: any;
-    private watchersSubscription: any;
+    private watchers: Watcher<any>[];
+    private watchersSubscription: Subscription;
     form: NgForm;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
@@ -203,7 +203,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
 
-    private setSaveFunction(func: any) {
+    private setSaveFunction(func: (any) => any) {
         this.applyFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
@@ -213,12 +213,12 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).form = form;
     }
 
-    public setVisible(state?) {
+    public setVisible(state?: boolean) {
         state = (state === undefined) ? true : state;
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
     }
 
-    public setWarn(message) {
+    public setWarn(message: string) {
         (<NxApplyComponent> this.applyComponentRef.instance).warn = message;
     }
 

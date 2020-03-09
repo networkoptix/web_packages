@@ -1,7 +1,6 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, Router }          from '@angular/router';
+import { ActivatedRoute, Router, Params }          from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
-import { Location }                        from '@angular/common';
 
 @Injectable({
     providedIn : 'root'
@@ -9,10 +8,9 @@ import { Location }                        from '@angular/common';
 export class NxUriService {
     private _pageOffset: number;
 
-    queryParamsSubject = new BehaviorSubject({});
+    queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
     constructor(private router: Router,
-                private location: Location,
                 private route: ActivatedRoute,
                 @Inject(PLATFORM_ID) private platformId: object) {
     }
@@ -21,13 +19,13 @@ export class NxUriService {
         return this.queryParamsSubject.getValue();
     }
 
-    set queryParams(params) {
+    set queryParams(params: Params) {
         if (params !== this.queryParams) {
             this.queryParamsSubject.next(params);
         }
     }
 
-    set pageOffset(val) {
+    set pageOffset(val: number) {
         this._pageOffset = val;
     }
 
@@ -39,11 +37,11 @@ export class NxUriService {
         return this.router.url.split('?')[0];
     }
 
-    getURI(): Observable<any> {
+    getURI(): Observable<Params> {
         return this.route.queryParams;
     }
 
-    updateURI(navigateTo?: string, queryParams: any = {}, replace?) {
+    updateURI(navigateTo?: string, queryParams: Params = {}, replace?: boolean) {
         if (!navigateTo) {
             navigateTo = this.getURL();
         }
@@ -66,7 +64,7 @@ export class NxUriService {
         });
     }
 
-    resetURI(navigateTo: string, queryParams: any = {}) {
+    resetURI(navigateTo: string, queryParams: Params = {}) {
         this.router.navigate([navigateTo], {
             queryParams,
             relativeTo : this.route,

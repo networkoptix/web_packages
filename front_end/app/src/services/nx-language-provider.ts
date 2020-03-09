@@ -18,7 +18,7 @@ export class NxLanguageProviderService {
         this.translate.setDefaultLang(lang);
     }
 
-    setTranslations(lang, json): void {
+    setTranslations(lang: string, json: JSON): void {
         this.translate.setTranslation(lang, json);
         this.translate.currentLang = lang;
     }

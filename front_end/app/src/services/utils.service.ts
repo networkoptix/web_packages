@@ -15,17 +15,17 @@ export class NxUtilsService {
 
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
-                @Inject(DOCUMENT) private document: any
+                @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
     }
 
-    static deepCopy(obj) {
+    static deepCopy(obj = {}) {
         return JSON.parse(JSON.stringify(obj));
     }
 
     // Sort array of objects
-    static byParam(fn, order) {
+    static byParam(fn: (string) => number, order: boolean) {
         return (a, b) => {
             if (fn(a) < fn(b)) {
                 return (order) ? -1 : 1;
@@ -39,7 +39,7 @@ export class NxUtilsService {
 
     public keepOriginalOrder = (a, b) => a.key;
 
-    static byResolution(fn, order) {
+    static byResolution(fn: (any) => any, order: boolean) {
         return (a, b) => {
             const x = fn(a).map(Number);
             const y = fn(b).map(Number);
@@ -54,7 +54,7 @@ export class NxUtilsService {
         };
     }
 
-    static yesNo(bVal) {
+    static yesNo(bVal: boolean | undefined | null): string {
         if (bVal === undefined || bVal === null) {
             return 'Unknown';
         }
@@ -62,7 +62,7 @@ export class NxUtilsService {
         return bVal ? 'Yes' : 'No';
     }
 
-    static getRelativeLocation(href) {
+    static getRelativeLocation(href: string): string {
         /*
          * Parse url string to:
          *   href,
@@ -84,7 +84,7 @@ export class NxUtilsService {
         }
     }
 
-    public saveAs(data, filename, type) {
+    public saveAs(data: BlobPart, filename: string, type: string) {
         const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
         let objectUrl;
         let blob: Blob;

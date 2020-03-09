@@ -52,24 +52,24 @@ export class NxScrollMechanicsService {
         this.searchViewHeightSubject.next(height);
     }
 
-    setWindowSize(height, width) {
+    setWindowSize(height: number, width: number) {
         this.windowSizeSubject.next({ height, width });
         // this.setMediaSize(width);
     }
 
-    setWindowScroll(value) {
+    setWindowScroll(value: number) {
         this.windowScrollSubject.next(value);
     }
 
-    panelVisible(value) {
+    panelVisible(value: boolean) {
         this.panelSubject.next(value);
     }
 
-    mediaQueryMax(media) {
+    mediaQueryMax(media: number) {
         return this.window.matchMedia('(max-width: ' + media + 'px)').matches;
     }
 
-    mediaQueryMin(media) {
+    mediaQueryMin(media: number) {
         return this.window.matchMedia('(min-width: ' + media + 'px)').matches;
     }
 }

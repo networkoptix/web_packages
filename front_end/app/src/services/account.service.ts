@@ -9,12 +9,19 @@ import { NxDialogsService }                   from '../dialogs/dialogs.service';
 import { NxSessionService }                   from './session.service';
 import { NxApplyService }                     from './apply.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReplaySubject, Subscription, timer } from 'rxjs';
+import { ReplaySubject, Subscription, timer, Subscribable, Observable } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
 import { NxUriService }                       from './uri.service';
 import { IConfig } from './nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+
+// TODO Need to refine this types
+export type account = undefined | any
+
+export type accountResolvedPromise = any
+
+export type accountRejectedPromise = any
 
 @Injectable({
     providedIn: 'root'
@@ -22,10 +29,11 @@ import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 export class NxAccountService implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    location: any;
+    // Use Location type?
+    location: Location;
     loggingOut: boolean;
-    requestingLogin: any;
-    account: any;
+    requestingLogin: Promise<any>;
+    account: account;
     loginStateSubject = new ReplaySubject(1);
     loginDialogActive: boolean;
     reloading: boolean;
@@ -33,7 +41,7 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
-    constructor(@Inject(DOCUMENT) private document: any,
+    constructor(@Inject(DOCUMENT) private document: Document,
                 @Inject(WINDOW) private window: Window,
                 configService: NxConfigService,
                 languageService: NxLanguageProviderService,
@@ -92,7 +100,7 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    setupAccount(account) {
+    setupAccount(account: account) {
         // cleanup
         if (this.account && this.account.timer) {
             this.account.timer.unsubscribe();
@@ -124,7 +132,7 @@ export class NxAccountService implements OnDestroy {
         });
     }
 
-    get(forceUpdate = false) {
+    get(forceUpdate = false): undefined | Promise<account> {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -159,7 +167,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    checkVisitedKey(key) {
+    checkVisitedKey(key: string) {
         return this.cloudApi
             .visitedKey(key)
             .then((result: any) => {
@@ -167,7 +175,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    checkCode(code) {
+    checkCode(code: string) {
         return this.cloudApi
             .checkCode(code)
             .then((result: any) => {
@@ -220,7 +228,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    setEmail(email) {
+    setEmail(email: string) {
         this.sessionService.email = email;
     }
 
@@ -228,7 +236,7 @@ export class NxAccountService implements OnDestroy {
         return this.sessionService.email;
     }
 
-    login(email, password, remember) {
+    login(email: string, password: string, remember: boolean): Promise<accountResolvedPromise | accountRejectedPromise> {
         this.sessionService.email = email;
 
         this.requestingLogin = this.cloudApi
@@ -281,12 +289,13 @@ export class NxAccountService implements OnDestroy {
                 return this.dialogs
                     .login(this, true, true)
                     .catch(() => {
+                        // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
                     });
             });
     }
 
-    logout(doNotRedirect?) {
+    logout(doNotRedirect?: boolean) {
         if (this.loggingOut) {
             return;
         }
@@ -355,7 +364,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    checkUnauthorized(data) {
+    checkUnauthorized(data: accountResolvedPromise) {
         if (data && data.resultCode === 'notAuthorized') {
             this.logout(true);
             return false;
@@ -363,7 +372,7 @@ export class NxAccountService implements OnDestroy {
         return true;
     }
 
-    private handleAuthKeyLogin(auth) {
+    private handleAuthKeyLogin(auth: string) {
         this.get()
             .then((account) => {
                 if (!account) {

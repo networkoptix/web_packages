@@ -8,7 +8,7 @@ import { WINDOW } from './window-provider';
 })
 export class NxSessionService {
     loginStateSubject = new ReplaySubject(0);
-    session: any;
+    session: LocalStorageService;
 
     constructor(private localStorageService: LocalStorageService,
                 @Inject(WINDOW) private window: Window) {

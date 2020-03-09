@@ -17,15 +17,15 @@ export class NxAppStateService {
         this.CONFIG = configService.getConfig();
     }
 
-    setFooterVisibility(visibile) {
-        this.footerVisibleSubject.next(visibile);
+    setFooterVisibility(visible: boolean) {
+        this.footerVisibleSubject.next(visible);
     }
 
-    setHeaderVisibility(visibile) {
-        this.headerVisibleSubject.next(visibile);
+    setHeaderVisibility(visible: boolean) {
+        this.headerVisibleSubject.next(visible);
     }
 
-    set ready(ready) {
+    set ready(ready: boolean) {
         this.readySubject.next(ready);
     }
 

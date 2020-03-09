@@ -23,7 +23,7 @@ import { Injectable } from '@angular/core';
  */
 export class NxPollService {
     constructor() {}
-    createPoll(apiCall: Observable<any>, intervalDelay: number) {
+    createPoll(apiCall: Observable<any>, intervalDelay: number): Observable<any> {
         const load$ = new BehaviorSubject('');
         const refresh$ = of('').pipe(
             delay(intervalDelay),

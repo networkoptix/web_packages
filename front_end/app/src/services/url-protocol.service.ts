@@ -14,12 +14,12 @@ export class NxUrlProtocolService {
     LANG: LanguageI18NStaticTypes;
 
     constructor(@Inject(WINDOW) private window: Window,
-                configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private accountService: NxAccountService
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
     }
 
     private parseSource() {
@@ -51,8 +51,7 @@ export class NxUrlProtocolService {
         return source;
     }
 
-    generateLink(linkSettings) {
-        linkSettings = linkSettings || {};
+    generateLink(linkSettings: linkSettings = {}) {
         let settings = {
             native          : true,
             from            : 'portal', // client, mobile, portal, webadmin
@@ -106,7 +105,7 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings): Promise<any> {
+    getLink(linkSettings: linkSettings): Promise<any> {
         return new Promise((resolve, reject) => {
             this.accountService
                 .authKey()
@@ -125,7 +124,7 @@ export class NxUrlProtocolService {
         });
     }
 
-    open(systemId) {
+    open(systemId: string) {
         return this.getLink({
             systemId
         }).then((data: any) => {
@@ -183,4 +182,15 @@ export class NxUrlProtocolService {
     getSource() {
         return this.parseSource();
     }
+}
+
+export type linkSettings = {
+    native?: boolean,
+    from?: string,
+    context? : any,
+    command? : string,
+    systemId? : string,
+    action? : any,
+    actionParameters?: any,
+    auth?: boolean
 }

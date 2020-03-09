@@ -5,11 +5,11 @@ import { NxCloudApiService } from './nx-cloud-api';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
 import { IConfig } from './nx-config/config-types';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes, ErrorCodes } from '../../language_i18n_static_types';
 
 interface ProcessSettings {
-    errorCodes: any;
-    errorMessage: string;
+    errorCodes: Partial<ErrorCodes> | string;
+    errorMessage?: string;
     errorPrefix: string;
     holdAlerts: boolean;
     ignoreUnauthorized: boolean;
@@ -20,13 +20,17 @@ interface ProcessSettings {
 class Process {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    cloudApiService: any;
-    sessionService: any;
-    toastService: any;
+    cloudApiService: NxCloudApiService;
+    sessionService: NxSessionService;
+    toastService: NxToastService;
 
-    caller: any;
+    caller: () => void;
     settings: ProcessSettings;
-    deferredPromise: any;
+    deferredPromise: {
+        promise: Promise<unknown>;
+        reject: any;
+        resolve: any;
+    };
 
     /* process info */
     success: boolean;
@@ -36,10 +40,17 @@ class Process {
     errorData: any;
 
     /* process handlers */
-    successHandler: any;
-    errorHandler: any;
+    successHandler: (any) => any;
+    errorHandler: (any) => any;
 
-    constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
+    constructor(CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes,
+        sessionService: NxSessionService,
+        cloudApiService: NxCloudApiService,
+        toastService: NxToastService,
+        caller,
+        settings
+    ) {
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.cloudApiService = cloudApiService;
@@ -122,7 +133,7 @@ class Process {
         });
     }
 
-    then(successHandler, errorHandler?) {
+    then(successHandler: (any) => any, errorHandler?: (any) => any) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler || (() => {});
         return this;
@@ -146,7 +157,8 @@ class Process {
         })();
     }
 
-    private formatError(error, errorCodes) {
+    // TODO refine error types
+    private formatError(error: any, errorCodes: any): string | false {
         const errorCode = (error && error.data && error.data.resultCode) || (error && error.resultCode) || error;
         if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
