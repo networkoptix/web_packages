@@ -30,15 +30,14 @@
                         </span>
                         <span class="ml-1" translate>Check Status</span>
                     </button>
-                    <button *ngIf="canSeeInfo" class="server-buttons pr-0">
-                        <a [routerLink]="fullInfoPath"
-                            [queryParams]="{id: system.servers.length > 1 ? serverIdFromParams : null}">
+                    <button *ngIf="canSeeInfo" class="server-buttons pr-0"
+                        [routerLink]="fullInfoPath"
+                        [queryParams]="{id: system.servers.length > 1 ? serverIdFromParams : null}">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                     [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Full Info</span>
-                        </a>
                     </button>
                 </div>
                 <div class="header-table col-7">
