@@ -10,9 +10,9 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'nx-health-update',
+    selector : 'nx-health-update',
     templateUrl: './update-info.component.html',
-    styleUrls: ['update-info.component.scss'],
+    styleUrls : ['update-info.component.scss']
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     @Output() updateHealth = new EventEmitter();
@@ -26,7 +26,8 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     constructor(configService: NxConfigService,
                 languageService: NxLanguageProviderService,
                 private healthService: NxHealthService,
-                private ribbonService: NxRibbonService) {
+                private ribbonService: NxRibbonService
+    ) {
         this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
     }
@@ -42,8 +43,8 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
 
     refreshHealth = () => {
         // arrow function because "this"
-        this.updateHealth.emit()
-        this.ribbonService.hide()
+        this.updateHealth.emit();
+        this.ribbonService.hide();
     }
 
     initUpdateTime() {
@@ -55,8 +56,8 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
 
         const minute = 60 * 1000;
         this.timerSubscription = timer(0, minute).subscribe((minutes) => {
-            if(minutes >= this.CONFIG.healthMonitoring.staleReportTimeout){
-                this.ribbonService.show(this.LANG.common.viewingOutdatedReport,'Refresh','','alert',this.refreshHealth)
+            if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
+                this.ribbonService.show(this.LANG.common.viewingOutdatedReport, 'Refresh', '', 'alert', this.refreshHealth);
             }
             if (minutes) {
                 const time = this.healthService.secondsToTime(minutes * 60, 'updateTime');

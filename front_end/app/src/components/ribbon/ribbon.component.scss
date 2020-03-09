@@ -8,7 +8,7 @@
     color            : $light1;
     background-color : $brand_d1;
     line-height      : 1rem;
-    border-top       : 1px solid $brand_d2;
+    //border-top       : 1px solid $brand_d2;
     border-bottom    : 1px solid $brand_d2;
     padding          : .5rem 1rem;
     display          : flex;
@@ -38,7 +38,7 @@
 }
 
 .alert-ribbon {
-    border-top: 1px solid #EEDC9E;
+    //border-top: 1px solid #EEDC9E;
     border-bottom: 1px solid #EEDC9E;
     background-color: #FFEEB5 !important;
 

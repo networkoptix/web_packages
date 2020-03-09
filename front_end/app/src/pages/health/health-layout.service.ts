@@ -1,9 +1,10 @@
-import { ElementRef, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ElementRef, Injectable }   from '@angular/core';
+import { BehaviorSubject }          from 'rxjs';
 import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { NxHealthService } from './health.service';
+import { NxHealthService }          from './health.service';
 import { NxConfigService, IConfig } from '../../services/nx-config';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime }             from 'rxjs/operators';
+import { NxRibbonService }          from '../../components/ribbon/ribbon.service';
 
 @Injectable({
     providedIn: 'root'
@@ -148,6 +149,7 @@ export class NxHealthLayoutService {
     }
 
     constructor(configService: NxConfigService,
+                private ribbonService: NxRibbonService,
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService) {
         this.CONFIG = configService.getConfig();
@@ -165,14 +167,14 @@ export class NxHealthLayoutService {
 
     resetActiveEntity() {
         this.activeEntity = undefined;
-        this.mobileDetailMode  = false;
+        this.mobileDetailMode = false;
     }
 
     setAlertLayout() {
         const searchElementHeight = this.searchElement ? this.searchElement.nativeElement.offsetHeight : 0;
         const elementTilesHeight = this.tilesElement ? this.tilesElement.nativeElement.offsetHeight : 0;
         if (!this.mobileDetailMode) {
-            this.dimensions = [elementTilesHeight, searchElementHeight, 17 /*separator = 1px + padding*/];
+            this.dimensions = [elementTilesHeight, searchElementHeight, 17/* separator = 1px + padding */];
         }
         const cannotSetSearch = this.previousActiveEntity === undefined;
         this.setLayout(cannotSetSearch);
@@ -197,9 +199,15 @@ export class NxHealthLayoutService {
         const THEAD_HEIGHT = this.tableHeaderElement ? this.tableHeaderElement.nativeElement.offsetHeight : 0;
         const PADDING = 16;
         const PAGINATION_HEIGHT = 64;
-        const ROW_HEIGHT = 26 ;
+        const RIBBON_HEIGHT = 34;
+        const ROW_HEIGHT = 26;
 
         let availSpace = windowSize.height - 4 * PADDING - ELEMENTS_HEIGHT - THEAD_HEIGHT - 48 - PAGINATION_HEIGHT;
+
+        const isRibbon = this.ribbonService.contextSubject.getValue();
+        if (isRibbon.visibility) {
+            availSpace -= RIBBON_HEIGHT;
+        }
 
         if (this.tableTitleElement) {
             availSpace -= this.tableTitleElement.nativeElement.offsetHeight;
