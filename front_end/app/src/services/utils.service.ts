@@ -1,4 +1,4 @@
-import { Inject, Injectable }    from '@angular/core';
+import { Inject, Injectable, LOCALE_ID }    from '@angular/core';
 import { NxConfigService }       from './nx-config/nx-config.service';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';

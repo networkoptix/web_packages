@@ -1,5 +1,5 @@
 import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config';
+import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxDialogsService } from '../../../../dialogs/dialogs.service';
 import { Subscription } from 'rxjs';

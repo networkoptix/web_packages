@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config';
+import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxAccountService } from '../../../../services/account.service';
 import { NxSystemsService } from '../../../../services/systems.service';

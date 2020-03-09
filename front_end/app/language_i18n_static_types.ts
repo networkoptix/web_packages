@@ -80,6 +80,7 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     resolution:                Resolution;
+    general:                   string;
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;
@@ -160,6 +161,7 @@ export interface VoiceCommands {
 
 export interface Dialogs {
     buttons:      Buttons;
+    cloudStorage: CloudStorage;
     merge:        DialogsMerge;
     message:      Message;
     removeSystem: RemoveSystem;
@@ -177,6 +179,28 @@ export interface Buttons {
     remove:           string;
     stayAs:           string;
     stayLoggedIn:     string;
+}
+
+export interface CloudStorage {
+    title:                 string;
+    activationError:       Created;
+    systemDisconnectError: Created;
+    moveCloudStorage:      MoveCloudStorage;
+    noOtherSystemsError:   NoOtherSystemsError;
+}
+
+export interface MoveCloudStorage {
+    title:  string;
+    status: MoveCloudStorageStatus;
+}
+
+export interface MoveCloudStorageStatus {
+    initial: string;
+    offline: string;
+}
+
+export interface NoOtherSystemsError {
+    message: string;
 }
 
 export interface DialogsMerge {
@@ -845,6 +869,7 @@ const typeMap: any = {
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
+        { json: "general", js: "general", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "" },
@@ -917,6 +942,7 @@ const typeMap: any = {
     ], false),
     "Dialogs": o([
         { json: "buttons", js: "buttons", typ: r("Buttons") },
+        { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("Message") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
@@ -933,6 +959,24 @@ const typeMap: any = {
         { json: "remove", js: "remove", typ: "" },
         { json: "stayAs", js: "stayAs", typ: "" },
         { json: "stayLoggedIn", js: "stayLoggedIn", typ: "" },
+    ], false),
+    "CloudStorage": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "activationError", js: "activationError", typ: r("Created") },
+        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },
+        { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
+        { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
+    ], false),
+    "MoveCloudStorage": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "status", js: "status", typ: r("MoveCloudStorageStatus") },
+    ], false),
+    "MoveCloudStorageStatus": o([
+        { json: "initial", js: "initial", typ: "" },
+        { json: "offline", js: "offline", typ: "" },
+    ], false),
+    "NoOtherSystemsError": o([
+        { json: "message", js: "message", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },

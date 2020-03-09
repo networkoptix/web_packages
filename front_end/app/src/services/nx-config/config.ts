@@ -239,6 +239,10 @@ export const nxConfig: IConfig = {
                 icon: 'systems',
                 path: ''
             },
+            cloudStorage: {
+                id  : 'cloudStorage',
+                path: 'cloud-storage'
+            },
             users: {
                 id  : 'users',
                 icon: 'users',
