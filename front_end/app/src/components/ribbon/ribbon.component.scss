@@ -16,6 +16,9 @@
 
     .message {
         flex : 70%;
+        &-span {
+            position: relative
+        }
     }
 
     .action {
@@ -50,6 +53,9 @@
 }
 
 .action-link {
+    position: absolute;
+    right: 0;
+    transform: translateX(100%);
     color: $blue10;
     text-decoration: underline;
     margin-left: 2rem;
@@ -57,6 +63,8 @@
 
     &:hover {
         color: $blue9;
+        text-decoration: underline;
+        cursor: pointer;
         svg * {
             fill: $blue9;
         }
