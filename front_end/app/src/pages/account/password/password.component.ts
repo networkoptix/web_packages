@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
@@ -12,7 +12,6 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
-import { IConfig } from '../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({

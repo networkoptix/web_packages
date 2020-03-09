@@ -1,5 +1,5 @@
 import * as _ from 'underscore';
-import { NxConfigService } from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxSystemsService } from './systems.service';
@@ -9,7 +9,6 @@ import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
-import { IConfig } from './nx-config/config-types';
 import { PredefinedRole } from './nx-config/base-config';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 

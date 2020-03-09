@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { NxConfigService } from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { from, of, throwError } from 'rxjs';
 import { mergeMap, retryWhen } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { IConfig } from './nx-config/config-types';
 
 interface User {
     canBeEdited: boolean;

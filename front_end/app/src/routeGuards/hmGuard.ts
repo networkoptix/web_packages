@@ -8,9 +8,8 @@ import {
 }                                    from '@angular/router';
 import { Observable }                from 'rxjs';
 import { NxAccountService }          from '../services/account.service';
-import { NxConfigService }           from '../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
-import { IConfig } from '../services/nx-config/config-types';
 
 @Injectable()
 export class HMGuard implements CanActivate {

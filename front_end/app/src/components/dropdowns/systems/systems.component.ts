@@ -1,10 +1,10 @@
 import {
     Component,
     Input, SimpleChanges
-}                                    from '@angular/core';
+}                                   from '@angular/core';
 import { BaseDropdown }              from '../injDropdown';
 import { NxUriService }              from '../../../services/uri.service';
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({

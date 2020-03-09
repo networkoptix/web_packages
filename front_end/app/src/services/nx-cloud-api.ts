@@ -1,9 +1,8 @@
 import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { Observable }      from 'rxjs';
-import { NxConfigService } from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import {toPromise} from "rxjs-compat/operator/toPromise";
-import { IConfig } from './nx-config/config-types';
 import { account } from './account.service';
 
 @Injectable({

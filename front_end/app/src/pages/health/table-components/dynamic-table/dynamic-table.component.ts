@@ -7,7 +7,7 @@ import {
 import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
-import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }          from '../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
@@ -17,7 +17,6 @@ import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxHealthLayoutService } from '../../health-layout.service';
 import { delay } from 'rxjs/operators';
 import { Utils } from '../../../../utils/helpers';
-import { IConfig } from '../../../../services/nx-config/config-types';
 
 interface Params {
     [key: string]: any;

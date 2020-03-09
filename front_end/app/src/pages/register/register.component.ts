@@ -12,8 +12,7 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxDialogsService } from '../../dialogs/dialogs.service';
-import { NxConfigService } from '../../services/nx-config/nx-config.service';
-import { IConfig } from '../../services/nx-config/config-types';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

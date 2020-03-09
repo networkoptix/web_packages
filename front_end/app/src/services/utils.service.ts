@@ -1,8 +1,7 @@
 import { Inject, Injectable }    from '@angular/core';
-import { NxConfigService }       from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'

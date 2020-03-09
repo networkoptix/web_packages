@@ -2,7 +2,7 @@ import { Component }                 from '@angular/core';
 import { Router }                    from '@angular/router';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService }           from '../../../services/nx-config';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxSessionService }          from '../../../services/session.service';
 import { BaseDropdown }              from '../injDropdown';

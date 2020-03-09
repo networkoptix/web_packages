@@ -5,7 +5,7 @@ import {
     PLATFORM_ID, OnDestroy, AfterViewInit,
     ElementRef, ViewChild, HostListener, Renderer2
 }                                         from '@angular/core';
-import { NxConfigService }                from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }       from '../../../../services/nx-config';
 import { NxUriService }                   from '../../../../services/uri.service';
 import { NxUtilsService }                 from '../../../../services/utils.service';
 import { Router }                         from '@angular/router';
@@ -14,7 +14,6 @@ import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { delay }                          from 'rxjs/operators';
-import { IConfig } from '../../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 interface Params {

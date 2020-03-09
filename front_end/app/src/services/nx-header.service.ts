@@ -1,7 +1,6 @@
 import { Injectable }             from '@angular/core';
-import { NxConfigService }        from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { BehaviorSubject, timer } from 'rxjs';
-import { IConfig } from './nx-config/config-types';
 
 @Injectable({
     providedIn : 'root'

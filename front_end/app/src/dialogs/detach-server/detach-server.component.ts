@@ -3,8 +3,7 @@ import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
 import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService }             from '../../services/nx-config/nx-config.service';
-import { IConfig } from '../../services/nx-config/config-types';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

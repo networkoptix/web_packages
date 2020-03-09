@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location }                             from '@angular/common';
 import { ActivatedRoute, Router }               from '@angular/router';
-import { NxConfigService }                      from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }                      from '../../../services/nx-config';
 import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
 
 import { NxPageService }        from '../../../services/page.service';
@@ -13,7 +13,6 @@ import { NxProcessService }     from '../../../services/process.service';
 import { debounceTime }         from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { IConfig } from '../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()

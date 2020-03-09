@@ -7,7 +7,7 @@ import { Router }             from '@angular/router';
 import './../dialogs/dialogs.scss';
 
 import { NxToastService }             from './toast.service';
-import { NxConfigService }            from '../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }   from '../services/nx-config';
 import { NxLanguageProviderService }  from '../services/nx-language-provider';
 import { NxAccountService }           from '../services/account.service';
 
@@ -26,7 +26,6 @@ import { RestartServerModalContent }  from './restart-server/restart-server.comp
 import { DetachServerModalContent }   from './detach-server/detach-server.component';
 import { ResetServerModalContent }    from './reset-server/reset-server.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
-import { IConfig } from '../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({ providedIn : 'root' })
