@@ -2,12 +2,14 @@ import {
     Component, Input, Renderer2, ViewChild
 } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxToastService }            from '../toast.service';
 import { NxProcessService }          from '../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -21,8 +23,8 @@ export class AddUserModalContent {
     @Input() closable;
     @ViewChild('addUserForm') form;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     title: string;
     sharing: any;
@@ -128,14 +130,14 @@ export class AddUserModalContent {
                                 delay    : this.CONFIG.alertTimeout
                             };
 
-                            return this.toastService.show(this.LANG.share.cantEditYourself, options);
+                            return this.toastService.show(this.LANG.errorCodes.cantEditYourself, options);
                         }
 
                         this.accessDescription = this.getRoleDescription();
                     }
                 });
 
-            this.buttonText = this.LANG.sharing.editShareConfirmButton;
+            this.buttonText = this.LANG.dialogs.sharing.editShareConfirmButton;
         }
 
         this.sharing = this.processService.createProcess(() => {

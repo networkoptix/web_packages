@@ -1,11 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxSettingsService } from '../settings.service';
-import { NxConfigService } from '../../../../services/nx-config';
+import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxSystemsService } from '../../../../services/systems.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { filter } from 'rxjs/operators';
+import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -15,10 +17,10 @@ import { filter } from 'rxjs/operators';
 })
 
 export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
-    CONFIG: any;
+    CONFIG: IConfig;
     currentlyMerging: boolean;
     isMaster: boolean;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     mergeTargetSystem: any;
     system: any;
 
@@ -60,7 +62,7 @@ export class NxSystemMergeStatusComponent implements OnInit, OnDestroy {
         }
         this.currentlyMerging = true;
         this.isMaster = mergeInfo.role ? mergeInfo.role !== this.CONFIG.system.status.slave : mergeInfo.masterSystemId === this.system.id;
-        this.mergeTargetSystem = this.getMergeTarget(mergeInfo.anotherSystemId) || this.LANG.system.unknownName;
+        this.mergeTargetSystem = this.getMergeTarget(mergeInfo.anotherSystemId) || this.LANG.system.mergeUnknownName;
         if (!this.isMaster) {
             this.settingsService.mergeTarget = this.mergeTargetSystem.id;
         }

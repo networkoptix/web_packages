@@ -7,9 +7,11 @@ import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { LocalStorageService }       from 'ngx-store';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxAccountService }          from '../../services/account.service';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-restore-component',
@@ -22,8 +24,8 @@ export class NxRestoreComponent implements OnInit {
     @Input() uriParam;
     @Input() uriParamCode;
 
-    LANG: any = {};
-    CONFIG: any = {};
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     change: any;
     restore: any;
@@ -133,7 +135,7 @@ export class NxRestoreComponent implements OnInit {
             holdAlerts        : true,
             errorPrefix       : this.LANG.errorCodes.cantSendActivationPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restoringSuccess);
+            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');

@@ -8,12 +8,13 @@ import {
 }                                    from '@angular/router';
 import { Observable }                from 'rxjs';
 import { NxAccountService }          from '../services/account.service';
-import { NxConfigService }           from '../services/nx-config';
+import { NxConfigService }           from '../services/nx-config/nx-config.service';
 import { NxSystem, NxSystemService } from '../services/system.service';
+import { IConfig } from '../services/nx-config/config-types';
 
 @Injectable()
 export class UserGuard implements CanActivate {
-    CONFIG: any;
+    CONFIG: IConfig;
     system: NxSystem;
 
     constructor(private router: Router,

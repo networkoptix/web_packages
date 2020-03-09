@@ -12,7 +12,9 @@ import { NxProcessService }          from '../../services/process.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxDialogsService } from '../../dialogs/dialogs.service';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-register-component',
@@ -22,7 +24,7 @@ import { NxConfigService } from '../../services/nx-config';
 
 export class NxRegisterComponent implements OnInit {
 
-    LANG: any = {};
+    LANG: LanguageI18NStaticTypes;
 
     uriParam: string;
     accountInfo: any = {};
@@ -35,7 +37,7 @@ export class NxRegisterComponent implements OnInit {
     lockEmail: boolean;
     fromClient: any;
     location: any;
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
 

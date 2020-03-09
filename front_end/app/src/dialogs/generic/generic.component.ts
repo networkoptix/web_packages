@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer }                                from '@angular/platform-browser';
 import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-generic-content',
@@ -46,7 +47,7 @@ export class GenericModalContent implements OnInit {
 })
 export class NxModalGenericComponent implements OnInit {
     modalRef: NgbModalRef;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(private domSanitizer: DomSanitizer,
                 private modalService: NgbModal,

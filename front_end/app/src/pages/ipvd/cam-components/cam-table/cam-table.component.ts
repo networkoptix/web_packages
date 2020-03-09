@@ -3,9 +3,9 @@ import {
     OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation, Inject,
     PLATFORM_ID, OnDestroy, AfterViewInit,
-    ElementRef, ViewChild, HostListener, Renderer2,
+    ElementRef, ViewChild, HostListener, Renderer2
 }                                         from '@angular/core';
-import { NxConfigService }                from '../../../../services/nx-config';
+import { NxConfigService }                from '../../../../services/nx-config/nx-config.service';
 import { NxUriService }                   from '../../../../services/uri.service';
 import { NxUtilsService }                 from '../../../../services/utils.service';
 import { Router }                         from '@angular/router';
@@ -14,6 +14,8 @@ import { Subscription, SubscriptionLike } from 'rxjs';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { delay }                          from 'rxjs/operators';
+import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -24,7 +26,7 @@ interface Params {
     selector : 'nx-cam-table',
     templateUrl : './cam-table.component.html',
     styleUrls : ['./cam-table.component.scss'],
-    encapsulation : ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None
 })
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
@@ -55,8 +57,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     pagedItems: any[];
     pagerMaxSize: number;
     pagerEllipses: boolean;
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     showAnalytics: boolean;
     serviceParams;
     serviceHeaders;
@@ -81,28 +83,27 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     public csvFilename: any;
     public csvCameraData: any[];
     public csvOptions = {
-        fieldSeparator   : ',',
-        quoteStrings     : '"',
-        decimalseparator : '.',
-        showLabels       : true,
-        headers          : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
-        showTitle        : true,
-        title            : 'Camera List',
-        useBom           : false,
-        removeNewLines   : true
+        fieldSeparator  : ',',
+        quoteStrings    : '"',
+        decimalseparator: '.',
+        showLabels      : true,
+        headers         : ['Vendor', 'Model', 'Type', 'Max Resolution', 'Max FPS', 'Codec', 'Audio', '2-Way Audio', 'PTZ', 'Advanced PTZ', 'Fisheye', 'Motion', 'I/O'],
+        showTitle       : true,
+        title           : 'Camera List',
+        useBom          : false,
+        removeNewLines  : true
     };
 
-    @ViewChild('nxScrollWrapper', { static : false }) scrollWrapper: ElementRef;
-    @ViewChild('nxTable', { static : false }) camerasTable: ElementRef;
+    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
+    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
     constructor(configService: NxConfigService,
-                language: NxLanguageProviderService,
+        language: NxLanguageProviderService,
                 private router: Router,
                 private uri: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
-
         this.LANG = language.getTranslations();
         this.CONFIG = configService.getConfig();
 
@@ -138,24 +139,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
-        this.pagerEllipses = true;
 
         this.uriSubscription = new Subscription();
 
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
-            if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
-                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeSmall;
-            } else {
-                this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
-            }
+            this.setPagerSize();
         });
     }
 
     ngOnInit() {
         this.setDebugAndBetaMode();
 
-        this.results       = this._elements.length;
-        this.csvFilename   = Date.now();
+        this.results = this._elements.length;
+        this.csvFilename = Date.now();
         this.csvCameraData = this.getCsvData();
 
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
@@ -170,37 +166,36 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 this.setDebugAndBetaMode();
 
                 if (!this.params.debug && !this.params.beta) {
-                   this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
+                    this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
                 }
 
                 this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
-                this.showHeaders   = this.cameraHeaders;
+                this.showHeaders = this.cameraHeaders;
 
                 if (this.params.sortBy) {
-                   const sortBy    = this.params.sortBy.split(',');
-                   const direction = (sortBy[1] === 'ASC');
-                   const column    = this.cameraHeaders.find(x => {
-                       return x === this.LANG.ipvd[sortBy[0]];
-                   });
+                    const sortBy    = this.params.sortBy.split(',');
+                    const direction = (sortBy[1] === 'ASC');
+                    const column    = this.cameraHeaders.find(x => {
+                        return x === this.LANG.ipvd[sortBy[0]];
+                    });
 
-                   if (this.sortOrderASC === direction && column === this.selectedHeader) {
-                       return; // do not sort if sorted
-                   }
+                    if (this.sortOrderASC === direction && column === this.selectedHeader) {
+                        return; // do not sort if sorted
+                    }
 
-                   this.sortOrderASC = direction;
-                   this.toggleSort(sortBy[0], true);
-
+                    this.sortOrderASC = direction;
+                    this.toggleSort(sortBy[0], true);
                 }
 
                 this.setPage(this.params.page || 1, true);
 
                 if (this.params.camera) {
                     const row = this.pagedItems.findIndex((camera) => {
-                       return camera.model === this.params.camera;
+                        return camera.model === this.params.camera;
                     });
 
                     const camera = this.pagedItems.find((camera) => {
-                       return camera.model === this.params.camera;
+                        return camera.model === this.params.camera;
                     });
 
                     this.setClickedRow(camera);
@@ -236,8 +231,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     ngOnChanges(changes: SimpleChanges) {
         if (changes.elements) {
             this.sortOrderASC = !this.CONFIG.ipvd.sortSupportedDevicesByPopularity;
-            this._elements    = changes.elements.currentValue;
-            this.results      = this._elements.length;
+            this._elements = changes.elements.currentValue;
+            this.results = this._elements.length;
 
             this.sortElements(true /* keep uri params */);
             this.csvCameraData = this.getCsvData();
@@ -251,6 +246,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             } else {
                 this.selectedCamera = changes.activeCamera.currentValue.sortKey;
             }
+
+            this.setPagerSize();
+        }
+    }
+
+    private setPagerSize() {
+        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md) ||
+            (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl) && this.selectedCamera)) {
+            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSizeMedium;
+            this.pagerEllipses = false;
+        } else {
+            this.pagerMaxSize  = this.CONFIG.ipvd.pagerMaxSize;
+            this.pagerEllipses = true;
         }
     }
 
@@ -407,6 +415,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         } else {
             this.selectedCamera = undefined;
         }
+
+        this.setPagerSize();
     }
 
     setPage(page: number, keep?: boolean) {
@@ -430,19 +440,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     getCsvData() {
         return this._elements.map(camera => ({
-            Vendor           : camera.vendor,
-            Model            : camera.model,
-            Type             : camera.hardwareType,
-            'Max Resolution' : camera.maxResolution,
-            'Max FPS'        : camera.maxFps,
-            Codec            : camera.primaryCodec,
-            Audio            : NxUtilsService.yesNo(camera.isAudioSupported),
-            '2-Way Audio'    : NxUtilsService.yesNo(camera.isTwAudioSupported),
-            PTZ              : NxUtilsService.yesNo(camera.isPtzSupported),
-            'Advanced PTZ'   : NxUtilsService.yesNo(camera.isAptzSupported),
-            Fisheye          : NxUtilsService.yesNo(camera.isFisheye),
-            Motion           : NxUtilsService.yesNo(camera.isMdSupported),
-            'I/O'            : NxUtilsService.yesNo(camera.isIoSupported)
+            Vendor          : camera.vendor,
+            Model           : camera.model,
+            Type            : camera.hardwareType,
+            'Max Resolution': camera.maxResolution,
+            'Max FPS'       : camera.maxFps,
+            Codec           : camera.primaryCodec,
+            Audio           : NxUtilsService.yesNo(camera.isAudioSupported),
+            '2-Way Audio'   : NxUtilsService.yesNo(camera.isTwAudioSupported),
+            PTZ             : NxUtilsService.yesNo(camera.isPtzSupported),
+            'Advanced PTZ'  : NxUtilsService.yesNo(camera.isAptzSupported),
+            Fisheye         : NxUtilsService.yesNo(camera.isFisheye),
+            Motion          : NxUtilsService.yesNo(camera.isMdSupported),
+            'I/O'           : NxUtilsService.yesNo(camera.isIoSupported)
         })
         );
     }
@@ -475,7 +485,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         if (this.params.sortBy) {
             const sortBy      = this.params.sortBy.split(',');
             this.sortOrderASC = (sortBy[1] === 'ASC');
-            sortByColumn      = sortBy[0];
+            sortByColumn = sortBy[0];
         } else {
             // If sort by popularity is set in CMS or default sorting 'Vendor-Model'
             sortByColumn = (this.CONFIG.ipvd.sortSupportedDevicesByPopularity) ? 'count' : 'sortKey';
@@ -495,6 +505,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     private setDebugAndBetaMode() {
         this.debug = (this.params.debug !== undefined);
-        this.beta  = (this.params.beta !== undefined);
+        this.beta = (this.params.beta !== undefined);
     }
 }

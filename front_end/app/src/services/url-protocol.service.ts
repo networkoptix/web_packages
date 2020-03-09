@@ -1,23 +1,25 @@
 import { Inject, Injectable }        from '@angular/core';
-import { NxConfigService }           from './nx-config';
+import { NxConfigService }           from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
+import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxUrlProtocolService {
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(@Inject(WINDOW) private window: Window,
-                configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private accountService: NxAccountService
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
     }
 
     private parseSource() {
@@ -49,8 +51,7 @@ export class NxUrlProtocolService {
         return source;
     }
 
-    generateLink(linkSettings) {
-        linkSettings = linkSettings || {};
+    generateLink(linkSettings: linkSettings = {}) {
         let settings = {
             native          : true,
             from            : 'portal', // client, mobile, portal, webadmin
@@ -68,8 +69,7 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        // const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
-        const protocol = 'nx-vms:';
+        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
         const host = this.window.location.host;
 
         const getParams: any = { ...settings.actionParameters };
@@ -105,7 +105,7 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings): Promise<any> {
+    getLink(linkSettings: linkSettings): Promise<any> {
         return new Promise((resolve, reject) => {
             this.accountService
                 .authKey()
@@ -124,7 +124,7 @@ export class NxUrlProtocolService {
         });
     }
 
-    open(systemId) {
+    open(systemId: string) {
         return this.getLink({
             systemId
         }).then((data: any) => {
@@ -182,4 +182,15 @@ export class NxUrlProtocolService {
     getSource() {
         return this.parseSource();
     }
+}
+
+export type linkSettings = {
+    native?: boolean,
+    from?: string,
+    context? : any,
+    command? : string,
+    systemId? : string,
+    action? : any,
+    actionParameters?: any,
+    auth?: boolean
 }

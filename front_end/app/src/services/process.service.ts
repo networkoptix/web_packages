@@ -2,30 +2,35 @@ import { Injectable } from '@angular/core';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxToastService } from '../dialogs/toast.service';
 import { NxCloudApiService } from './nx-cloud-api';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxSessionService } from './session.service';
+import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes, ErrorCodes } from '../../language_i18n_static_types';
 
 interface ProcessSettings {
-    errorCodes: any;
-    errorMessage: string;
+    errorCodes: Partial<ErrorCodes> | string;
+    errorMessage?: string;
     errorPrefix: string;
     holdAlerts: boolean;
     ignoreUnauthorized: boolean;
     logoutForbidden: boolean;
     successMessage: string;
-    ignoreErrorPopups: boolean;
 }
 
 class Process {
-    CONFIG: any;
-    LANG: any;
-    cloudApiService: any;
-    sessionService: any;
-    toastService: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+    cloudApiService: NxCloudApiService;
+    sessionService: NxSessionService;
+    toastService: NxToastService;
 
-    caller: any;
+    caller: () => void;
     settings: ProcessSettings;
-    deferredPromise: any;
+    deferredPromise: {
+        promise: Promise<unknown>;
+        reject: any;
+        resolve: any;
+    };
 
     /* process info */
     success: boolean;
@@ -35,10 +40,17 @@ class Process {
     errorData: any;
 
     /* process handlers */
-    successHandler: any;
-    errorHandler: any;
+    successHandler: (any) => any;
+    errorHandler: (any) => any;
 
-    constructor(CONFIG, LANG, sessionService, cloudApiService, toastService, caller, settings) {
+    constructor(CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes,
+        sessionService: NxSessionService,
+        cloudApiService: NxCloudApiService,
+        toastService: NxToastService,
+        caller,
+        settings
+    ) {
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.cloudApiService = cloudApiService;
@@ -70,8 +82,7 @@ class Process {
                 holdAlerts        : false,
                 ignoreUnauthorized: false,
                 logoutForbidden   : false,
-                successMessage    : '',
-                ignoreErrorPopups : false
+                successMessage    : ''
             };
         }
         this.caller = caller;
@@ -122,7 +133,7 @@ class Process {
         });
     }
 
-    then(successHandler, errorHandler?) {
+    then(successHandler: (any) => any, errorHandler?: (any) => any) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler || (() => {});
         return this;
@@ -146,7 +157,8 @@ class Process {
         })();
     }
 
-    private formatError(error, errorCodes) {
+    // TODO refine error types
+    private formatError(error: any, errorCodes: any): string | false {
         const errorCode = (error && error.data && error.data.resultCode) || (error && error.resultCode) || error;
         if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
@@ -165,31 +177,29 @@ class Process {
     }
 
     private handleError(data) {
-        if (this.settings.ignoreErrorPopups === false) {
-            this.error = true;
-            this.errorData = data;
-            if (!this.settings.ignoreUnauthorized && data &&
-                (data.detail ||
-                    // detail appears only when django rest framework declines request with
-                    // {"detail":"Authentication credentials were not provided."}
-                    // we need to handle this like user was not authorised
-                    (data.resultCode === 'notAuthorized') ||
-                    (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
-                this.sessionService.invalidateSession();
-                this.deferredPromise.reject(data);
-                return;
-            }
-            const formatted = this.formatError(data, this.settings.errorCodes);
-            if (formatted !== false) {
-                this.settings.errorMessage = formatted;
-                const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
-                const options = {
-                    autohide : !this.settings.holdAlerts,
-                    classname: this.CONFIG.toast.danger,
-                    delay    : this.CONFIG.alertTimeout
-                };
-                this.toastService.show(message, options);
-            }
+        this.error = true;
+        this.errorData = data;
+        if (!this.settings.ignoreUnauthorized && data &&
+            (data.detail ||
+                // detail appears only when django rest framework declines request with
+                // {"detail":"Authentication credentials were not provided."}
+                // we need to handle this like user was not authorised
+                (data.resultCode === 'notAuthorized') ||
+                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
+            this.sessionService.invalidateSession();
+            this.deferredPromise.reject(data);
+            return;
+        }
+        const formatted = this.formatError(data, this.settings.errorCodes);
+        if (formatted !== false) {
+            this.settings.errorMessage = formatted;
+            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+            const options = {
+                autohide : !this.settings.holdAlerts,
+                classname: this.CONFIG.toast.danger,
+                delay    : this.CONFIG.alertTimeout
+            };
+            this.toastService.show(message, options);
         }
         this.deferredPromise.reject(data);
     }
@@ -199,8 +209,8 @@ class Process {
     providedIn : 'root'
 })
 export class NxProcessService {
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
                 private cloudApiService: NxCloudApiService,

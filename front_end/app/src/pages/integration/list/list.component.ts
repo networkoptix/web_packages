@@ -3,10 +3,12 @@ import {
     Input, SimpleChanges, OnChanges, OnInit
 } from '@angular/core';
 
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
+import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
     selector   : 'integrations-list-component',
@@ -18,8 +20,8 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     @Input() list;
 
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -61,7 +63,7 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     private showRibbon(): void {
         this.ribbonService.show(
-                this.LANG.ribbon.integration.preview,
+                this.LANG.ribbon.integration.previewRibbon,
                 this.LANG.ribbon.integration.backToEditText,
                 this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
         );

@@ -5,7 +5,7 @@ import {
 }                                    from '@angular/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
 
 @Component({
     selector     : 'nx-permissions-select',

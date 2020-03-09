@@ -1002,3 +1002,14 @@ class ContributerAgreement(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+
+    @staticmethod
+    def get_current(customization=settings.CUSTOMIZATION):
+        return AssetCustomizationReview.objects.filter(
+            version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
+            state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
+        ).order_by('-reviewed_date').first()
+
+    def is_valid(self):
+        review = self.get_current()
+        return review and self.accepted_agreement == review

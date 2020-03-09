@@ -220,10 +220,16 @@ window.L = {};
                     .when('/content/:page', {
                         template: '',
                     })
+                    .when('/agreement', {
+                        template: '',
+                    })
                     .when('/debug', {
                         template: ''
                     })
                     .when('/login', {
+                        template: ''
+                    })
+                    .when('/logout', {
                         template: ''
                     })
                     .when('/admin', {

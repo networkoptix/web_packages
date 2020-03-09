@@ -6,13 +6,15 @@ import { DomSanitizer }                 from '@angular/platform-browser';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { IntegrationService }           from '../integration.service';
 import { NxRibbonService }              from '../../../components/ribbon/ribbon.service';
-import { NxConfigService }              from '../../../services/nx-config';
+import { NxConfigService }              from '../../../services/nx-config/nx-config.service';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
 import { NxMenuService }                from '../../../components/menu/menu.service';
 import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { NxAccountService }             from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
+import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,8 +25,8 @@ import { NxPageService }                from '../../../services/page.service';
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     plugin: any;
     content: any = {};
 
@@ -110,7 +112,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
                                     if (this.plugin.pending || this.plugin.draft) {
                                         this.ribbonService.show(
-                                                this.LANG.ribbon.integration.preview,
+                                                this.LANG.ribbon.integration.previewRibbon,
                                                 this.LANG.ribbon.integration.backToEditText,
                                                 this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
                                         );

@@ -2,7 +2,8 @@ import {
     Component, Input, OnChanges,
     OnInit, SimpleChanges, ViewEncapsulation
 } from '@angular/core';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 /* Usage
 <nx-menu>
@@ -23,7 +24,7 @@ export class NxMenuComponent implements OnChanges {
     selectedLevel2: string;
     selectedLevel3: string;
 
-    CONFIG: any;
+    CONFIG: IConfig;
 
 
     constructor(configService: NxConfigService) {

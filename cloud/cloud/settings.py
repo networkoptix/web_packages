@@ -59,7 +59,7 @@ INSTALLED_APPS = (
     'admin_tools.theming',
     'admin_tools.dashboard',
 
-    'django.contrib.admin',
+    'cloud.apps.CmsAdminConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -444,7 +444,7 @@ AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
 USE_ASYNC_QUEUE = True
 
 ADMINS = conf['admins']
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/logout"
 
 EMAIL_SUBJECT_PREFIX = ''
 EMAIL_HOST = conf['smtp']['host']

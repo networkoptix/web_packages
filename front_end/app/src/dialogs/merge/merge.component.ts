@@ -1,12 +1,14 @@
 import { Component, Input, Renderer2, ViewChild, ElementRef } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import StateMachine from './stateMachine';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -21,8 +23,8 @@ export class MergeModalContent {
     @Input() closable;
     @Input() user;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     account: any;
     // checking: boolean;
     checkMergeabilityProcess: any;
@@ -307,10 +309,10 @@ export class MergeModalContent {
             }, {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
-                        return this.LANG.toastMessages.system.merge.failed;
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     vmsRequestFailure: () => {
-                        return this.LANG.toastMessages.system.merge.failed;
+                        return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
                         this.mergeForm.controls.mergePassword.setErrors({ required: true });
@@ -389,7 +391,7 @@ export class MergeModalContent {
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
                 this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
                 return this.precheckSystemMerge();
-            }, { ignoreErrorPopups: true })
+            })
             .then(
                 res => {
                     console.log('res from precheckSystemMerge', res);

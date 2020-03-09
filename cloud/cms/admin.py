@@ -1,6 +1,5 @@
 from django.contrib import admin, messages
-from django.contrib.admin import SimpleListFilter
-from django.contrib.auth.models import Permission
+from django.contrib.admin import SimpleListFilter, AdminSite
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
@@ -8,7 +7,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.html import format_html
 
-from cloud import settings
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version
 from cms.views.asset import page_editor, review

@@ -4,7 +4,7 @@ import {
 }                                                from '@angular/core';
 import { ActivatedRoute, Router }                from '@angular/router';
 import { NxAccountService }                      from '../../services/account.service';
-import { NxConfigService }                       from '../../services/nx-config';
+import { NxConfigService }                       from '../../services/nx-config/nx-config.service';
 import { NxSystem, NxSystemService }             from '../../services/system.service';
 import { NxMenuService }                         from '../../components/menu/menu.service';
 import { NxHealthService }                       from './health.service';
@@ -23,6 +23,8 @@ import { DOCUMENT }                              from '@angular/common';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
 import { flatMap }                               from 'rxjs/operators';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -32,8 +34,8 @@ import { flatMap }                               from 'rxjs/operators';
     encapsulation: ViewEncapsulation.None
 })
 export class NxHealthComponent implements OnInit, OnDestroy {
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     account: any;
     system: NxSystem|any;
     server: NxSystemAPI;

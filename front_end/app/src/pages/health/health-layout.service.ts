@@ -2,14 +2,15 @@ import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
 import { NxHealthService } from './health.service';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
 import { debounceTime } from 'rxjs/operators';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxHealthLayoutService {
-    CONFIG: any;
+    CONFIG: IConfig;
     previousActiveEntity = undefined;
     activeEntitySubject = new BehaviorSubject(undefined);
     fixedLayoutClassSubject = new BehaviorSubject('');

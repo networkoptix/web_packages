@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router }                       from '@angular/router';
 
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LocalStorageService }       from 'ngx-store';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'landing-component',
@@ -16,8 +18,8 @@ import { LocalStorageService }       from 'ngx-store';
 
 export class NxLandingComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     params: any;
     userEmail: any;
@@ -43,7 +45,9 @@ export class NxLandingComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setPageTitle(this.LANG.pageTitles.default);
-        if (this.router.url === '/content/about') {
+        if (this.router.url === '/logout') {
+            this.accountService.logout();
+        } else if (this.router.url.includes('/content/about')) {
             this.loaded = true;
             this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
         } else {

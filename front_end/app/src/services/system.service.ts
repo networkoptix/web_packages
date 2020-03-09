@@ -1,22 +1,22 @@
 import * as _ from 'underscore';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxSystemsService } from './systems.service';
 import { Injectable, OnDestroy } from '@angular/core';
-import { NxSystemAPIService } from './system-api.service';
+import { NxSystemAPIService, NxSystemAPI } from './system-api.service';
 import { BehaviorSubject, from, of } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
+import { IConfig } from './nx-config/config-types';
+import { PredefinedRole } from './nx-config/base-config';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
-export interface NxSystemRole {
-    id: string;
-    isAdmin: boolean;
-    isOwner: boolean;
-    label: string;
-    name: string;
-    permissions: string;
+export interface NxSystemRole extends PredefinedRole{
+    id?: string;
+    isAdmin?: boolean;
+    label?: string;
 }
 
 export interface NxSystemUser {
@@ -47,7 +47,7 @@ export interface NxSystemUser {
 }
 
 export interface NxSystemServer {
-    addParams: any[];
+    addParams: string[];
     allowAutoRedundancy: boolean;
     authKey: string;
     backupBitrate: number;
@@ -57,6 +57,7 @@ export interface NxSystemServer {
     backupType: string;
     flags: string;
     id: string;
+    ip: string;
     maxCameras: number;
     metadataStorageId: string;
     name: string;
@@ -109,8 +110,8 @@ class System implements SystemInterface {
 }
 
 class UserManager {
-    private CONFIG: any;
-    private LANG: any;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
     private mediaserver: any;
     private _ownerEmail: string;
     private _accessRole: string;
@@ -121,7 +122,7 @@ class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config, lang, mediaserver, currentUserEmail) {
+    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver, currentUserEmail: string) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;
@@ -143,16 +144,16 @@ class UserManager {
         this.checkPermissions();
     }
 
-    set ownerEmail(email) {
+    set ownerEmail(email: string) {
         this._ownerEmail = email;
         this.isMine = this.currentUserEmail === email;
     }
 
-    isAdmin(user) {
+    isAdmin(user: NxSystemRole) {
         return user.permissions && user.permissions.indexOf(this.CONFIG.accessRoles.globalAdminPermissionFlag) >= 0;
     }
 
-    isEmptyGuid(guid) {
+    isEmptyGuid(guid?: string) {
         if (!guid) {
             return true;
         }
@@ -160,16 +161,16 @@ class UserManager {
         return guid === '';
     }
 
-    isOwner(user) {
+    isOwner(user: NxSystemUser) {
         return user.email === this._ownerEmail;
     }
 
     checkPermissions() {
         const isMine = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins : isMine,
-            editUsers  : isMine,
-            isAdmin    : isMine
+            editAdmins: isMine,
+            editUsers : isMine,
+            isAdmin   : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
@@ -181,7 +182,7 @@ class UserManager {
         this.permissions = permissions;
     }
 
-    deleteUser(removedUser: NxSystemUser) {
+    deleteUser(removedUser: NxSystemUser): string {
         return this.mediaserver.deleteUser(removedUser.id).toPromise().then(data => {
             this.users = this.users.filter((user) => {
                 return user.id !== data.id;
@@ -191,7 +192,8 @@ class UserManager {
 
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
-        const role = roles.find((role) => {
+        // TODO Need to figure out role type here
+        const role = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
@@ -210,7 +212,7 @@ class UserManager {
         return role || roles[roles.length - 1];
     }
 
-    getUsersDataFromTheSystem() {
+    getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string> {
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
@@ -228,22 +230,25 @@ class UserManager {
         });
     }
 
-    normalizePermissionString(permissions) {
+    normalizePermissionString(permissions: string): string {
         return permissions.split('|').sort().join('|');
     }
 
-    processUsers(users) {
+    processUsers(users: NxSystemUser[]) {
         if (!Array.isArray(users)) {
             return false;
         }
         // const accessRightsAssoc = _.indexBy(accessRights,'userId'); // Leave commented out
         this.users = users.map((user) => {
+            // @ts-ignore: TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
             if (user.accountFullName && !user.fullName) {
+                // @ts-ignore TODO Can't resolve accountFullName, NxSystemUser interface might be missing properties
                 user.fullName = user.accountFullName;
             }
             user.permissions = this.normalizePermissionString(user.permissions);
             user.role = this.findAccessRole(user);
             user.accessRole = user.role.name;
+            // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
 
             const isAdmin = this.isAdmin(user);
@@ -255,6 +260,7 @@ class UserManager {
             }
             user.isMe = isMe;
             user.isAdmin = isAdmin;
+            // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
 
             /**
@@ -266,6 +272,7 @@ class UserManager {
              * Furthermore, if the system is not mine and the user is an admin,
              *   they also can not be edited
              */
+            // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             const isNotMeOrOwner = !(isMe || user.isLocalOwner || isCloudOwner);
             user.canBeEdited = isNotMeOrOwner && (this.isMine || !isAdmin);
 
@@ -351,21 +358,19 @@ class UserManager {
 }
 
 class ServerManager {
-    private mediaserver: any;
-    private systemApiService: any;
-    private currentUserEmail: string;
-    private systemId: string;
-    private cloudApi: any;
-    mediaserverConnections: any;
+    mediaserverConnections: {
+        // Need to fine proper type for connection
+        [key: string]: any
+    };
+
     servers: NxSystemServer[];
 
-    constructor(mediaserver, systemApiService, currentUserEmail, systemId, cloudApi) {
-        this.mediaserver = mediaserver;
-        this.systemApiService = systemApiService;
-        this.currentUserEmail = currentUserEmail;
-        this.systemId = systemId;
-        this.cloudApi = cloudApi;
-    }
+    constructor(private mediaserver,
+        private systemApiService: NxSystemAPIService,
+        private currentUserEmail: string,
+        private systemId: string,
+        private cloudApi: NxCloudApiService
+    ) {}
 
     initSystemMediaServers() {
         if (this.servers.length) {
@@ -436,8 +441,8 @@ class ServerManager {
 }
 
 export class NxSystem extends System implements OnDestroy {
-    private CONFIG: any;
-    private LANG: any;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
     private cloudApi: any;
     private systemApiService: any;
     private pollService: any;
@@ -529,7 +534,16 @@ export class NxSystem extends System implements OnDestroy {
     }
     // End of serverManager functions
 
-    constructor(CONFIG, LANG, cloudApi, systemApiService, pollService, systemsService, currentUserEmail, systemId?, serverId?) {
+    constructor(CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes,
+        cloudApi: NxCloudApiService,
+        systemApiService: NxSystemAPIService,
+        pollService: NxPollService,
+        systemsService: NxSystemsService,
+        currentUserEmail: string,
+        systemId?: string,
+        serverId?: string
+    ) {
         super();
         this.CONFIG = CONFIG;
         this.LANG = LANG;
@@ -565,7 +579,7 @@ export class NxSystem extends System implements OnDestroy {
         this.isAvailable = false;
         this.isOnline = false;
         this.currentServerNotBusy = true;
-        this.info = { name : '' };
+        this.info = { name: '' };
         this.mergeInfo = {};
 
         this.currentUserEmail = currentUserEmail;
@@ -819,8 +833,8 @@ export class NxSystem extends System implements OnDestroy {
     providedIn: 'root'
 })
 export class NxSystemService {
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     private systemsCache: { [key: string]: System };
 
     constructor(configService: NxConfigService,

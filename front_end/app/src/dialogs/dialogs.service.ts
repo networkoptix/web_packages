@@ -7,7 +7,7 @@ import { Router }             from '@angular/router';
 import './../dialogs/dialogs.scss';
 
 import { NxToastService }             from './toast.service';
-import { NxConfigService }            from '../services/nx-config';
+import { NxConfigService }            from '../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }  from '../services/nx-language-provider';
 import { NxAccountService }           from '../services/account.service';
 
@@ -28,12 +28,14 @@ import { ResetServerModalContent }    from './reset-server/reset-server.componen
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage-delete/cloud-storage-delete.component';
 import { CloudStorageMoveModalContent } from './cloud-storage-move/cloud-storage-move.component';
+import { IConfig } from '../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({ providedIn : 'root' })
 export class NxDialogsService {
-    LANG: any = {};
-    CONFIG: any = {};
-    location: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    location: Location;
     closeResult: any;
 
     constructor(configService: NxConfigService,

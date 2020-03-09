@@ -2,12 +2,12 @@ import {
     Component, Input, Output,
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
-    ViewChild, ElementRef, AfterViewInit,
+    ViewChild, ElementRef, AfterViewInit
 }                                   from '@angular/core';
 import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
-import { NxConfigService }          from '../../../../services/nx-config';
+import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
@@ -17,15 +17,16 @@ import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxHealthLayoutService } from '../../health-layout.service';
 import { delay } from 'rxjs/operators';
 import { Utils } from '../../../../utils/helpers';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 interface Params {
     [key: string]: any;
 }
 
 const ALARM_ORDER = {
-    'error': 2,
-    'warning': 1,
-    '': 0
+    error  : 2,
+    warning: 1,
+    ''     : 0
 };
 
 const TEXT_FORMATS = ['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'];
@@ -48,7 +49,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
 
-    CONFIG: any;
+    CONFIG: IConfig;
 
     _elements: any = [];
     params: any = {};
@@ -98,7 +99,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
-                private healthLayoutService: NxHealthLayoutService,
+                private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.elements = this.elements || [];
@@ -120,15 +121,15 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             setTimeout(() => {
-                this.params = {...this.route.snapshot.queryParams};
+                this.params = { ...this.route.snapshot.queryParams };
 
                 this.startIndex = this.params.index || 0;
 
                 if (this.params.sortBy) {
                     this.sortBy(this.params.sortBy);
                 } else {
-                    this.sortOrderASC   = true;
-                    this.selectedGroup  = undefined;
+                    this.sortOrderASC = true;
+                    this.selectedGroup = undefined;
                     this.selectedHeader = undefined;
                 }
 
@@ -138,7 +139,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     ngOnInit() {
-        this.params = {...this.route.snapshot.queryParams};
+        this.params = { ...this.route.snapshot.queryParams };
         if (this.params.sortBy) {
             this.sortBy(this.params.sortBy);
         } else {
@@ -172,13 +173,13 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             .pipe(delay(0))
             .subscribe(pageSize => {
                 this.pageSize = pageSize;
-                const params = {...this.route.snapshot.queryParams};
+                const params = { ...this.route.snapshot.queryParams };
                 if (params.index) {
                     this.setPage(undefined, parseInt(params.index, 10));
                 } else {
                     this.setPage(1);
                 }
-        });
+            });
 
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.setActiveEntity(activeEntity);
@@ -186,8 +187,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     private setPagerSize() {
-        if (this.healthLayoutService.activeEntity && this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl)) {
-            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeSmall;
+        if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.md) ||
+            (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.xl) && this.selectedEntity)) {
+            this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSizeMedium;
             this.pagerEllipses = false;
         } else {
             this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
@@ -203,7 +205,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         } else {
             this.selectedEntity = activeEntity;
         }
-
 
         if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
             this.mobileDetailMode = !!this.selectedEntity;
@@ -239,7 +240,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this._elements = Object.values(changes.elements.currentValue);
 
             setTimeout(() => {
-                const params = {...this.route.snapshot.queryParams};
+                const params = { ...this.route.snapshot.queryParams };
                 if (changes.elements.firstChange && params.index) {
                     this.setPage(undefined, parseInt(params.index, 10));
                 } else {
@@ -283,7 +284,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     ngOnDestroy() {
     }
 
-    showTooltip (event) {
+    showTooltip(event) {
         if (this.deviceDetectorService.browser.toLowerCase() !== 'ie') {
             this.showHorizontalTooltip = true;
             if (this.hideTooltip) {
@@ -291,7 +292,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             }
             this.hideTooltip = setTimeout(() => {
                 this.showHorizontalTooltip = false;
-                this.hideTooltip           = undefined;
+                this.hideTooltip = undefined;
             }, 1000);
         }
     }
@@ -302,7 +303,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         this.selectedGroup = sortBy[GROUP_ID];
         this.selectedHeader = sortBy[PARAM_ID];
 
-        this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false , undefined, true);
+        this.toggleSort(sortBy[GROUP_ID], sortBy[PARAM_ID], false, undefined, true);
     }
 
     setClickedRow(element) {
@@ -337,7 +338,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         // preserve window offset
         this.uri.pageOffset = window.pageYOffset;
         setTimeout(() => this.setPagedItems(this.startIndex));
-
     }
 
     setPage(page: number, startIndex?, fromComponent = false) {
@@ -348,7 +348,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
         this.selectPage(page, startIndex);
 
-        this.params = {...this.route.snapshot.queryParams};
+        this.params = { ...this.route.snapshot.queryParams };
         const index     = (this.startIndex === 0) ? undefined : this.startIndex;
         const pageParam = this.params && parseInt(this.params.index, 10) || undefined;
 
@@ -366,7 +366,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
 
     getCleanTitle(text: string): string {
         return text.replace(/\<br\>/g, ' ')
-                   .replace(/\<\/?span\>/g, '');
+            .replace(/\<\/?span\>/g, '');
     }
 
     isBoolean(x: any): boolean {
@@ -431,7 +431,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         if (updateURI || updateURI === undefined) {
             const queryParams: Params = {};
 
-            queryParams.page   = undefined;
+            queryParams.page = undefined;
             queryParams.sortBy = groupId + ',' + paramId;
             queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
             this.params.sortBy = queryParams.sortBy;

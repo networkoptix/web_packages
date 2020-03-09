@@ -1,32 +1,37 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { of, ReplaySubject } from 'rxjs';
+import { of, ReplaySubject, Observable, Subscribable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 import { Utils } from '../utils/helpers';
+import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { NxSystem } from './system.service';
+import { NxSystemAPI } from './system-api.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    CONFIG: any;
-    LANG: any;
-    activeSubscription: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+    activeSubscription: Subscription;
     currentUser: string;
-    mergingSystems: any;
+    mergingSystems: Set<string>;
+    // TODO: Having trouble creating type for systems and systemPoll
     systems: any;
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
 
     constructor(configService: NxConfigService,
-                private cloudApi: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private pollService: NxPollService,
-                private toastService: NxToastService
+        pollService: NxPollService,
+        private cloudApi: NxCloudApiService,
+        private language: NxLanguageProviderService,
+        private toastService: NxToastService
     ) {
         this.LANG = this.language.getTranslations();
         this.CONFIG = configService.getConfig();
@@ -34,11 +39,11 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
-    addToMergeList(systemId) {
+    addToMergeList(systemId: string) {
         this.mergingSystems.add(systemId);
     }
 
-    removeFromMergeList(systemId) {
+    removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {
@@ -50,7 +55,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    forceUpdateSystems(userEmail?) {
+    forceUpdateSystems(userEmail?: string): Observable<any> {
         if (userEmail) {
             this.currentUser = userEmail;
         }
@@ -61,26 +66,29 @@ export class NxSystemsService implements OnDestroy {
         }));
     }
 
-    forceUpdateSystemsAsPromise(userEmail?) {
+    forceUpdateSystemsAsPromise(userEmail?: string): Promise<any> {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
-    getSystemOwnerName(system, currentUserEmail, forOrder?) {
-        if (system.ownerAccountEmail === currentUserEmail) {
+    getSystemOwnerName(system: NxSystem, currentUserEmail: string, forOrder?: boolean) {
+        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
+        if (system.ç === currentUserEmail) {
             if (forOrder) {
+                // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
             return this.LANG.system.yourSystem;
         }
-
+        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
+            // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
             return system.ownerFullName;
         }
-
+        // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail, currentSystemId) {
+    getMySystems(currentUserEmail: string, currentSystemId: string) {
         return this.systems.filter((system) => {
             return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
         }).sort((a, b) => {
@@ -88,7 +96,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId, useCache = true) {
+    getSystem(systemId: string, useCache = true) {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -105,18 +113,18 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    getSystemAsPromise(systemId, useCache = true) {
+    getSystemAsPromise(systemId: string, useCache = true) {
         return this.getSystem(systemId, useCache).toPromise();
     }
 
-    getSystems(userEmail) {
+    getSystems(userEmail: string) {
         this.currentUser = userEmail;
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap(systems => this.processSystems(systems)),
+                tap((systems: NxSystem[]) => this.processSystems(systems)),
                 distinctUntilChanged((a, b) => Utils.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
@@ -134,7 +142,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    private processSystems(systems) {
+    private processSystems(systems: NxSystem[]) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
@@ -150,7 +158,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    private sortSystems(systems, currentUserEmail) {
+    private sortSystems(systems: NxSystem[], currentUserEmail: string): NxSystem[] {
         // Alphabet sorting
         const preSort = systems.sort((systemA, systemB) => {
             const systemAName = this.getSystemOwnerName(systemA, currentUserEmail, true);
@@ -159,6 +167,7 @@ export class NxSystemsService implements OnDestroy {
         });
         // Sort by usage frequency is more important than Alphabet
         return preSort.sort((systemA, systemB) => {
+            // @ts-ignore: TODO can't find usageFrequency property declared anywhere
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }

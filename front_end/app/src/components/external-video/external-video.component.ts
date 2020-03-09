@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 @Component({
     selector: 'nx-external-video',
@@ -9,7 +10,7 @@ import { NxConfigService } from '../../services/nx-config';
 })
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
-    CONFIG: any;
+    CONFIG: IConfig;
     src: any;
 
     constructor(configService: NxConfigService,

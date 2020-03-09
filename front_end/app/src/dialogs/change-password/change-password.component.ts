@@ -2,7 +2,9 @@ import { Component, Input }            from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
-import { NxConfigService }             from '../../services/nx-config';
+import { NxConfigService }             from '../../services/nx-config/nx-config.service';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-change-password',
@@ -14,8 +16,8 @@ export class ChangePasswordModalContent {
     @Input() user: any;
     @Input() closable;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     changePassword: any;
     newPasswordForUser: string;
 
@@ -40,6 +42,7 @@ export class ChangePasswordModalContent {
                     notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
                     wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
                 },
+                // @ts-ignore: TODO passwordChangedSuccess is not on language json
                 successMessage      : this.LANG.account.passwordChangedSuccess,
                 errorPrefix         : this.LANG.errorCodes.cantChangePasswordPrefix,
                 ignoreUnauthorized  : true

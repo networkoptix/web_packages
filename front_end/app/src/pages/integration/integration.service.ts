@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy }       from '@angular/core';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { NxConfigService }             from '../../services/nx-config';
+import { NxConfigService }             from '../../services/nx-config/nx-config.service';
 import { NxUtilsService }              from '../../services/utils.service';
+import { IConfig } from '../../services/nx-config/config-types';
 
 interface Platform {
     file: string;
@@ -16,7 +17,7 @@ interface Platform {
     providedIn: 'root'
 })
 export class IntegrationService implements OnDestroy {
-    CONFIG: any = {};
+    CONFIG: IConfig;
 
     pluginsSubject = new BehaviorSubject(undefined);
     plugin: any = {};

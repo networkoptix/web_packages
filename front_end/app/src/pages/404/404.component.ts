@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NxPageService } from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-404',
@@ -8,7 +9,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
     templateUrl: '404.component.html'
 })
 export class Nx404Component {
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     constructor(languageService: NxLanguageProviderService,
                 pageService: NxPageService,
     ) {

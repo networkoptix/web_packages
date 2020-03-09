@@ -10,18 +10,20 @@ import { NxPageService } from '../../services/page.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxSystemsService } from '../../services/systems.service';
 import { NxUrlProtocolService } from '../../services/url-protocol.service';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService } from '../../services/nx-config/nx-config.service';
 import { Watcher } from '../../services/apply.service';
 import { NxSystem } from '../../services/system.service';
 import { WINDOW } from '../../services/window-provider';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-debug',
     templateUrl: 'debug.component.html'
 })
 export class NxDebugComponent {
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
     debugProcess: any;

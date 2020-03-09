@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxConfigService }                             from '../../../services/nx-config';
+import { NxConfigService }                             from '../../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 
 import { NxPageService }     from '../../../services/page.service';
@@ -19,6 +19,8 @@ import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 import { NxCloudStorageService } from './cloud-storage/cloud-storage.service';
+import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -31,8 +33,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
 
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     plugin: any;
     content: any = {};
 
@@ -380,13 +382,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.servers.sort(byParam);
 
                 serversNode.level3 = [];
-                this.system.servers.forEach(server => {
+                this.system.servers.forEach(systemServer => {
+                    const server = this.parseUrl(systemServer);
                     serversNode.level3.push({
                         id             : server.id,
                         icon           : '',
                         label          : server.name,
                         path           : `servers/${server.id}`,
-                        additionalLabel: server.url.split(':')[1].slice(2)
+                        additionalLabel: server.ip
                     });
                 });
             }
@@ -411,6 +414,34 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
 
         this.content = { ...this.content };
+    }
+
+    /**
+     * If url is ipv6, then looks for a ipv4 from within networkAddresses
+     * If no ipv4 address found, formats ipv6 address
+     */
+    parseUrl(server) {
+        const splitUrl = server.url.split(':');
+        if (splitUrl.length > 3) {
+            const networkAddresses = server.networkAddresses.split(';');
+            for (const address of networkAddresses) {
+                const addressSplit = address.split(':');
+                if (addressSplit.length === 2) {
+                    server.url = address;
+                    server.ip = addressSplit[0];
+                    server.port = addressSplit[1];
+                    return server;
+                }
+            }
+            const firstColonIndex = server.url.indexOf(':');
+            const lastColonIndex = server.url.lastIndexOf(':');
+            server.ip = server.url.slice(firstColonIndex + 4, lastColonIndex - 1);
+            server.port = splitUrl[splitUrl.length - 1];
+        } else {
+            server.ip = splitUrl[1].slice(2);
+            server.port = splitUrl[2];
+        }
+        return server;
     }
 
     cleanUrl() {

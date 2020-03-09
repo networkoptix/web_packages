@@ -4,6 +4,7 @@ import { NgbActiveModal, NgbModal, NgbModalRef }       from '@ng-bootstrap/ng-bo
 import { NxLanguageProviderService }                   from '../../services/nx-language-provider';
 import { DomSanitizer }                                from '@angular/platform-browser';
 import { NgForm }                                      from '@angular/forms';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector: 'nx-modal-apply-content',
@@ -49,7 +50,7 @@ export class ApplyModalContent {
 
 export class NxModalApplyComponent {
     modalRef: NgbModalRef;
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(private domSanitizer: DomSanitizer,
                 private location: Location,

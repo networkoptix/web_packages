@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
-import { NxConfigService } from './nx-config';
+import { NxConfigService } from './nx-config/nx-config.service';
 import { BehaviorSubject } from 'rxjs';
 import { WINDOW } from './window-provider';
+import { IConfig } from './nx-config/config-types';
 
 enum GRID_BREAKPOINTS {
     xs = 0,
@@ -18,7 +19,7 @@ enum GRID_BREAKPOINTS {
     providedIn : 'root'
 })
 export class NxScrollMechanicsService {
-    CONFIG: any;
+    CONFIG: IConfig;
     windowSizeSubject = new BehaviorSubject({ height : 0, width : 0 });
     windowScrollSubject = new BehaviorSubject(0);
     elementTableWidthSubject = new BehaviorSubject(0);
@@ -51,24 +52,24 @@ export class NxScrollMechanicsService {
         this.searchViewHeightSubject.next(height);
     }
 
-    setWindowSize(height, width) {
+    setWindowSize(height: number, width: number) {
         this.windowSizeSubject.next({ height, width });
         // this.setMediaSize(width);
     }
 
-    setWindowScroll(value) {
+    setWindowScroll(value: number) {
         this.windowScrollSubject.next(value);
     }
 
-    panelVisible(value) {
+    panelVisible(value: boolean) {
         this.panelSubject.next(value);
     }
 
-    mediaQueryMax(media) {
+    mediaQueryMax(media: number) {
         return this.window.matchMedia('(max-width: ' + media + 'px)').matches;
     }
 
-    mediaQueryMin(media) {
+    mediaQueryMin(media: number) {
         return this.window.matchMedia('(min-width: ' + media + 'px)').matches;
     }
 }

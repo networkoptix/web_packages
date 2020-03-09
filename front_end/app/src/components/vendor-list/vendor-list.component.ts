@@ -6,11 +6,13 @@ import {
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { ActivatedRoute }            from '@angular/router';
 import { Subscription }              from 'rxjs';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 /* USAGE
  <nx-vendor-list
@@ -36,8 +38,8 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() vendors: any;
     @Input() cameras: any;
 
-    LANG: any = {};
-    CONFIG: any = {};
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     public debug: boolean;
     public filters: any = [];

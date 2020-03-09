@@ -3,10 +3,11 @@ import {
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
 }                                   from '@angular/core';
-import { NxConfigService }          from '../../../../services/nx-config';
+import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { NxHealthLayoutService } from '../../health-layout.service';
+import { IConfig } from '../../../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',
@@ -18,7 +19,7 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
     @Input() panelParams: any;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
-    CONFIG: any = {};
+    CONFIG: IConfig;
     name: string;
 
     windowSize: any = {};

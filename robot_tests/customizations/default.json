@@ -26,7 +26,8 @@
     "PLAY STORE LINK"            :    "https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness",
     "IPVD VENDORS SHOWN"         :    "30",
     "SYSTEMS DROPDOWN SHOWN"     :    "12",
-    "ERROR COLOR"                :    "rgb(240, 44, 44)",
+    "ERROR COLOR"                :    "rgba(240, 44, 44, 1)",
+    "WARNING COLOR"              :    "rgba(225, 167, 0, 1)",
     "ERROR COLOR WITH OPACITY"   :    "rgba(240, 44, 44, 1)",
     "INTEGRATION REQUIRED FIELDS":    "Ya Basic",
     "INTEGRATION ALL FIELDS"     :    "vis - QA - face_recognition"

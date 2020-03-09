@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config';
+import { NxConfigService }           from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAccountService }          from '../../services/account.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
@@ -13,6 +13,8 @@ import { NxMenuService }             from '../../components/menu/menu.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import {NxPageService} from "../../services/page.service";
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,8 +25,8 @@ import {NxPageService} from "../../services/page.service";
 
 export class NxAccountComponent implements OnInit, OnDestroy {
 
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     content: any = {};
     menuReady = false;

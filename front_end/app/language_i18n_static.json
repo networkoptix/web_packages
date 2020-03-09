@@ -67,6 +67,7 @@
         "accountSavedSuccess": "Your account is successfully saved",
         "accountSettings": "Account Settings",
         "activationLinkSent": "Activation Link Sent",
+		"agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
         "saveChanges": "Save"

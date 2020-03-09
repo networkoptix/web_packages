@@ -1,24 +1,25 @@
 import { Injectable } from '@angular/core';
-import { NxConfigService }    from './nx-config';
+import { NxConfigService }    from './nx-config/nx-config.service';
 import { Title, Meta }              from '@angular/platform-browser';
 import { NxLanguageProviderService } from './nx-language-provider';
+import { IConfig } from './nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn : 'root'
 })
 export class NxPageService {
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(configService: NxConfigService,
                 private title: Title,
-                private language: NxLanguageProviderService,
                 private meta: Meta) {
         this.CONFIG = configService.getConfig();
     }
 
     // called from app component
-    setLanguage(lang) {
+    setLanguage(lang: LanguageI18NStaticTypes) {
         this.LANG = lang;
     }
 

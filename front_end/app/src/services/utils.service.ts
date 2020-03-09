@@ -1,7 +1,8 @@
-import { Inject, Injectable, LOCALE_ID }    from '@angular/core';
-import { NxConfigService }       from './nx-config';
+import { Inject, Injectable }    from '@angular/core';
+import { NxConfigService }       from './nx-config/nx-config.service';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { IConfig } from './nx-config/config-types';
 import * as moment from 'moment';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -9,7 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     providedIn : 'root',
 })
 export class NxUtilsService {
-    CONFIG: any;
+    CONFIG: IConfig;
 
     public static sortASC = true;
     public static sortDESC = false;
@@ -17,19 +18,19 @@ export class NxUtilsService {
 
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
-                @Inject(DOCUMENT) private document: any,
                 @Inject(LOCALE_ID) private locale: string,
+                @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
         this.momentWithLocale(locale);
     }
 
-    static deepCopy(obj) {
+    static deepCopy(obj = {}) {
         return JSON.parse(JSON.stringify(obj));
     }
 
     // Sort array of objects
-    static byParam(fn, order) {
+    static byParam(fn: (string) => number, order: boolean) {
         return (a, b) => {
             if (fn(a) < fn(b)) {
                 return (order) ? -1 : 1;
@@ -43,7 +44,7 @@ export class NxUtilsService {
 
     public keepOriginalOrder = (a, b) => a.key;
 
-    static byResolution(fn, order) {
+    static byResolution(fn: (any) => any, order: boolean) {
         return (a, b) => {
             const x = fn(a).map(Number);
             const y = fn(b).map(Number);
@@ -58,7 +59,7 @@ export class NxUtilsService {
         };
     }
 
-    static yesNo(bVal) {
+    static yesNo(bVal: boolean | undefined | null): string {
         if (bVal === undefined || bVal === null) {
             return 'Unknown';
         }
@@ -66,7 +67,7 @@ export class NxUtilsService {
         return bVal ? 'Yes' : 'No';
     }
 
-    static getRelativeLocation(href) {
+    static getRelativeLocation(href: string): string {
         /*
          * Parse url string to:
          *   href,
@@ -88,7 +89,7 @@ export class NxUtilsService {
         }
     }
 
-    public saveAs(data, filename, type) {
+    public saveAs(data: BlobPart, filename: string, type: string) {
         const a: HTMLAnchorElement = this.document.createElement('a') as HTMLAnchorElement;
         let objectUrl;
         let blob: Blob;
@@ -133,4 +134,11 @@ export class NxUtilsService {
     }
 
     public translate = (str: string) => str // TODO: Need to figure out how to do translate pipe within function
+    public isTablet() {
+        return this.deviceService.isTablet();
+    }
+
+    public isMobile() {
+        return this.deviceService.isMobile();
+    }
 }

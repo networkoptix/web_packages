@@ -3,7 +3,7 @@ import {
     ViewChild, ElementRef, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService }           from '../../../../services/nx-config';
+import { NxConfigService }           from '../../../../services/nx-config/nx-config.service';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
@@ -13,10 +13,12 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { Subscription, of }          from 'rxjs';
+import { Subscription }              from 'rxjs';
 import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
+import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -33,14 +35,15 @@ interface Settings {
 })
 
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systems: any;
+    peerSystems: any[];
 
     userDisconnectSystem: any;
     deletingSystem: any;
-    currentlyMerging: boolean;
+    currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
@@ -48,20 +51,21 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsServiceSubscription: Subscription;
     systemSubscription: Subscription;
     viewContainerRef: ViewContainerRef;
-    limitSessionTimeUnits: any;
+
     selectedTimeUnit: any;
-    timeUnitCount: number;
+    sessionLimitToggle: boolean;
+    timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-
+    limitSessionTimeUnits: any;
+    limitSessionTimeItems: any;
     saveSettings: any;
     resetVideoEncryptionIfDisabled: any;
     setWarningMessageThroughApplyService: any;
-    settingsWatchersSet: boolean;
     timeUnitTracker: any;
+    selectElement: any;
 
-    peerSystems: any[];
-
+    settingsWatchersSet = false;
     settingsWatchers: any = {
         autoDiscoveryEnabled        : new Watcher<boolean>(),
         statisticsAllowed           : new Watcher<boolean>(),
@@ -69,12 +73,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         auditTrailEnabled           : new Watcher<boolean>(),
         trafficEncryptionForced     : new Watcher<boolean>(),
         videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitToggle          : new Watcher<boolean>(),
-        sessionLimitMinutes         : new Watcher<number>(),
-        sessionLimitUnit            : new Watcher<string>()
+        sessionLimitMinutes         : new Watcher<number>()
     };
 
-    readonly watchersToNotSave: string[] = ['sessionLimitToggle', 'sessionLimitUnit'];
     readonly minutes: string = 'minutes';
     readonly hours: string = 'hours';
 
@@ -85,8 +86,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
+    @ViewChild('selectorTracker') set selectEle(el: ElementRef) {
+        if (el) {
+            this.selectElement = el;
+        }
+    }
+
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
+        this.LANG = this.language.getTranslations();
 
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
@@ -123,9 +131,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
-
-        this.currentlyMerging = false;
         this.settings = {
             disconnectDisabled: false,
             mergeDisabled     : true,
@@ -133,105 +138,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             showMerge         : true
         };
 
-        this.limitSessionTimeUnits = [
-            { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 2, max: 600, default: 24 },
-            { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 1, max: 600, default: 60 }
-        ];
-
-        this.settingsWatchersSet = false;
-
-        this.init();
-    }
-
-    initApplyService(): void {
-        this.resetVideoEncryptionIfDisabled = () => {
-            const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
-            const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
-            if (encryptVideo === true) {
-                this.applyService.setWarn('');
-            }
-            if (!encryptTraffic && encryptVideo) {
-                this.settingsWatchers.videoTrafficEncryptionForced.value = false;
-            }
+        this.limitSessionTimeUnits = {
+            hours  : { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 1, max: 600, default: 24 },
+            minutes: { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 2, max: 600 }
         };
+        this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
 
-        this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers.videoTrafficEncryptionForced.value === true) {
-                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
-            } else {
-                this.applyService.setWarn('');
-            }
-        };
-
-        this.saveSettings = this.processService.createProcess(() => {
-            // handle toggle for sessionLimit, if saving an empty value
-            if (this.timeUnitCount === null) {
-                this.settingsWatchers.sessionLimitToggle.originalValue = false;
-                this.settingsWatchers.sessionLimitToggle.value = false;
-            }
-            const changes = {};
-            const sw = this.settingsWatchers;
-            const settings = Object.keys(sw);
-            for (const setting of settings) {
-                if (this.watchersToNotSave.includes(setting)) {
-                    continue;
-                }
-
-                // handles save for sessionLimitMinutes differently; only one that isn't a boolean
-                const obj = sw[setting];
-                if (setting !== 'sessionLimitMinutes') {
-                    if (obj.value !== obj.originalValue) {
-                        changes[setting] = obj.value;
-                        obj.originalValue = obj.value;
-                    }
-                } else if (sw.sessionLimitToggle.value === true && sw.sessionLimitMinutes.value) {
-                    this.updateTimeUnitWatcher();
-                    const minutesMatch = (obj.value === obj.originalValue);
-                    const unitMatch = (sw.sessionLimitUnit.value === sw.sessionLimitUnit.originalValue);
-                    if (!minutesMatch || !unitMatch) {
-                        const hourMultiplier = (sw.sessionLimitUnit.value === this.hours) ? 60 : 1;
-                        changes[setting] = this.timeUnitCount * hourMultiplier;
-                        obj.originalValue = obj.value;
-                        if (!unitMatch) {
-                            sw.sessionLimitUnit.originalValue = sw.sessionLimitUnit.value;
-                        }
-
-                        sw.sessionLimitToggle.originalValue = true;
-                    }
-                } else if (obj.originalValue !== 0) {
-                    changes[setting] = 0;
-                    obj.originalValue = 0;
-                    obj.value = 0;
-                    sw.sessionLimitToggle.originalValue = false;
-                }
-            }
-            return this.system.updateOrGetSystemSettings(changes).toPromise()
-                .then(() => this.applyService.reset());
-        });
-
-        this.applyService.initPageWatcher(
-            this.viewContainerRef,
-            this.saveSettings,
-            () => {
-                this.applyService.reset();
-                const sw = this.settingsWatchers;
-                if (sw.sessionLimitMinutes && sw.sessionLimitMinutes.value) {
-                    this.timeUnitCount = sw.sessionLimitMinutes.originalValue ||
-                        this.limitSessionTimeUnits[0].default;
-                    if (this.timeUnitCount % 60 === 0) {
-                        this.timeUnitCount /= 60;
-                    }
-                    this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
-                        return e.value === sw.sessionLimitUnit.value;
-                    });
-                }
-            },
-            Object.values(this.settingsWatchers));
-
-        this.applyService.setVisible(false);
-    }
-
-    init(): void {
         if (this.settingsServiceSubscription) {
             this.settingsServiceSubscription.unsubscribe();
         }
@@ -284,15 +196,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     // removes watcher(s) if setting does not exist
     cleanUpWatchers(settings) {
         Object.keys(this.settingsWatchers).forEach(sw => {
-            if (!(sw in settings) && !this.watchersToNotSave.includes(sw)) {
+            if (!(sw in settings)) {
                 delete this.settingsWatchers[sw];
             }
         });
-
-        if (!this.settingsWatchers.sessionLimitMinutes) {
-            delete this.settingsWatchers.sessionLimitToggle;
-            delete this.settingsWatchers.sessionLimitUnit;
-        }
     }
 
     setWatcherValues(settings) {
@@ -311,24 +218,85 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     sw[setting].value = curr === 'true';
                 } else {
                     curr = parseInt(curr);
-                    sw.sessionLimitToggle.value = Boolean(curr);
-                    this.timeUnitCount = curr;
-                    sw[setting].value = this.timeUnitCount;
-                    if (this.timeUnitCount % 60 === 0) {
-                        this.timeUnitCount /= 60;
-                        sw.sessionLimitUnit.value = this.hours;
-                    } else {
-                        sw.sessionLimitUnit.value = this.minutes;
+                    this.sessionLimitToggle = Boolean(curr);
+                    this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+
+                    sw[setting].value = curr;
+                    this.timeValue = curr;
+                    if (this.timeValue % 60 === 0) {
+                        this.timeValue /= 60;
+                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
                     }
-                    this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
-                        return e.value === sw.sessionLimitUnit.value;
-                    });
                 }
             }
         });
         this.settingsWatchersSet = true;
         this.applyService.reset();
         this.applyService.setVisible(true);
+    }
+
+    initApplyService(): void {
+        this.resetVideoEncryptionIfDisabled = () => {
+            const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
+            const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
+            if (encryptVideo === true) {
+                this.applyService.setWarn('');
+            }
+            if (!encryptTraffic && encryptVideo) {
+                this.settingsWatchers.videoTrafficEncryptionForced.value = false;
+            }
+        };
+
+        this.setWarningMessageThroughApplyService = () => {
+            if (this.settingsWatchers.videoTrafficEncryptionForced.value === true) {
+                this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
+            } else {
+                this.applyService.setWarn('');
+            }
+        };
+
+        this.saveSettings = this.processService.createProcess(() => {
+            const sw = this.settingsWatchers;
+            // handle sessionLimitMinutes when saving an empty value
+            if (this.timeValue === null || this.timeValue === 0) {
+                this.sessionLimitToggle = false;
+                sw.sessionLimitMinutes.value = 0;
+            }
+            const changes = {};
+            const settings = Object.keys(sw);
+            for (const setting of settings) {
+                const obj = sw[setting];
+                if (obj.value !== obj.originalValue) {
+                    changes[setting] = obj.value;
+                    obj.originalValue = obj.value;
+                }
+            }
+            return this.system.updateOrGetSystemSettings(changes).toPromise()
+                .then(() => this.applyService.reset());
+        });
+
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.saveSettings,
+            // handles the cancel button
+            () => {
+                this.applyService.reset();
+                const { sessionLimitMinutes } = this.settingsWatchers;
+                if (sessionLimitMinutes && sessionLimitMinutes.originalValue) {
+                    this.sessionLimitToggle = true;
+                    this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
+                    this.timeValue = sessionLimitMinutes.originalValue;
+                    if (this.timeValue % 60 === 0) {
+                        this.timeValue /= 60;
+                        this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
+                    }
+                } else if (sessionLimitMinutes && sessionLimitMinutes.originalValue === 0) {
+                    this.sessionLimitToggle = false;
+                }
+            },
+            Object.values(this.settingsWatchers));
+
+        this.applyService.setVisible(false);
     }
 
     disconnect() {
@@ -464,6 +432,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         return userRole;
     }
 
+    // sets input max value and updates hour/minutes
     updateTimeUnitInput(timeUnit) {
         this.currentMaxTimeUnit = timeUnit.max;
         const el = this.timeUnitTracker;
@@ -474,44 +443,52 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             el.nativeElement.setAttribute('max', this.currentMaxTimeUnit);
 
             if (this.selectedTimeUnit.value !== timeUnit.value) {
-                this.settingsWatchers.sessionLimitUnit.value = timeUnit.value;
                 this.selectedTimeUnit = timeUnit;
+                this.updateLimitSessionValue(this.timeValue);
             }
         }
     }
 
-    storePreviousValue(e) {
+    storePreviousValue(ev) {
         // prevents [.+-e] from being inputed
-        if (['.', '+', '-', 'e'].indexOf(e.key) > -1) {
-            e.preventDefault();
+        if (['.', '+', '-', 'e'].includes(ev.key)) {
+            ev.preventDefault();
         }
-        this.previousInputValue = this.timeUnitCount;
+        this.previousInputValue = this.timeValue;
     }
 
     validationCheckForInput() {
-        if (this.timeUnitCount > this.currentMaxTimeUnit) {
-            this.timeUnitCount = this.previousInputValue;
+        if (this.timeValue > this.currentMaxTimeUnit) {
+            this.timeValue = this.previousInputValue;
+            this.updateLimitSessionValue(this.timeValue);
         }
-
-        this.updateTimeUnitWatcher();
     }
 
-    updateTimeUnitWatcher() {
+    updateLimitSessionValue(newTimeValue) {
         const sw = this.settingsWatchers;
-        if (sw.sessionLimitUnit.value === this.minutes && this.timeUnitCount % 60 === 0) {
-            sw.sessionLimitUnit.value = this.hours;
-            this.selectedTimeUnit = this.limitSessionTimeUnits.find(e => {
-                return e.value === sw.sessionLimitUnit.value;
-            });
-            this.timeUnitCount /= 60;
+        if (this.selectedTimeUnit.value === this.hours) {
+            sw.sessionLimitMinutes.value = newTimeValue * 60;
+        } else if (newTimeValue % 60 === 0) {
+            sw.sessionLimitMinutes.value = newTimeValue;
+            newTimeValue /= 60;
+            // handler for when minutes gets changed to hours in the same change
+            // 120 hours --> 120 minutes --> 2 hours
+            this.selectElement.change(this.limitSessionTimeUnits.hours);
+        } else {
+            sw.sessionLimitMinutes.value = newTimeValue;
         }
-        sw.sessionLimitMinutes.value = this.timeUnitCount;
+        this.timeValue = newTimeValue;
     }
 
-    setDefaultIfNotInitialized() {
-        if (this.timeUnitCount === 0 || this.timeUnitCount === null) {
-            this.timeUnitCount = this.selectedTimeUnit.default;
-            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default;
+    // handles showing default value on open and clearing to 0 on close
+    handleSessionLimitToggle() {
+        if (this.sessionLimitToggle === true) {
+            this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
+            this.timeValue = this.selectedTimeUnit.default;
+            this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;
+        } else {
+            this.timeValue = 0;
+            this.settingsWatchers.sessionLimitMinutes.value = 0;
         }
     }
 

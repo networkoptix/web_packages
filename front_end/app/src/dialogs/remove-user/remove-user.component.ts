@@ -2,9 +2,11 @@ import {
     Component, Input, OnInit, Renderer2, ViewEncapsulation
 }                                                from '@angular/core';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config';
+import { NxConfigService }                       from '../../services/nx-config/nx-config.service';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxProcessService }                      from '../../services/process.service';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-remove-user-content',
@@ -16,8 +18,8 @@ export class RemoveUserModalContent {
     @Input() user;
     @Input() closable;
 
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     removeUserProcess: any;
     dialogTitle: string;

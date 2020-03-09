@@ -3,7 +3,7 @@ import {
     ViewContainerRef, OnDestroy
 }                                      from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
-import { NxConfigService }             from '../../../../services/nx-config';
+import { NxConfigService }             from '../../../../services/nx-config/nx-config.service';
 import { NxDialogsService }            from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }           from '../settings.service';
 import { NxLanguageProviderService }   from '../../../../services/nx-language-provider';
@@ -18,6 +18,8 @@ import {
     retryWhen, delayWhen, catchError
 }                                      from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -27,8 +29,8 @@ import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
@@ -122,7 +124,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                 throw system;
                             }
                         }),
-                        retryWhen(err => err.pipe(delay(1000))),
+                        retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
@@ -165,8 +167,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             }
 
             this.applyService.hardReset();
-            const { url } = server;
-            const [ip, port] = url.slice(url.indexOf('//') + 2).split(':');
+            const { ip, port } = server;
             this.ipPortWatcher.value = port;
             server.ip = ip;
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
@@ -221,7 +222,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.system.getModuleInfo(this.selectedServer.id)
             .pipe(
                 catchError(() => of('error')),
-                delayWhen(() => interval(3400 - ((new Date().getTime()) - now))),
+                delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
             )
             .subscribe(res => {
                 this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');

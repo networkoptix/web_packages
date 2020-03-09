@@ -5,7 +5,7 @@ import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
 }                              from '@angular/router';
-import { NxConfigService }        from '../../services/nx-config';
+import { NxConfigService }        from '../../services/nx-config/nx-config.service';
 import { NxAppStateService }      from '../../services/nx-app-state.service';
 import { NxAccountService }       from '../../services/account.service';
 import { NxDialogsService }       from '../../dialogs/dialogs.service';
@@ -17,6 +17,8 @@ import { NxHeaderService }        from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { IConfig } from '../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -26,8 +28,8 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
 
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     user: any = {};
     canSeeInfo: boolean;
@@ -176,7 +178,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                   }
               });
 
-        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState) => {
+        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState: string) => {
             this.accountService
                 .get()
                 .then(account => {

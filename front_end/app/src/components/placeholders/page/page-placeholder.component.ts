@@ -1,6 +1,8 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
-import { NxConfigService } from '../../../services/nx-config';
+import { NxConfigService } from '../../../services/nx-config/nx-config.service';
+import { IConfig } from '../../../services/nx-config/config-types';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 /* Usage
 <nx-page-placeholder
@@ -30,8 +32,8 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() withFooter: boolean;
     @Input() constrainWidth: boolean;
 
-    CONFIG: any;
-    LANG: any;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     iconName: string;
 
