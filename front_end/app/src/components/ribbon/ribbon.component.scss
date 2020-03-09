@@ -53,12 +53,9 @@
 }
 
 .action-link {
-    position: absolute;
-    right: 0;
-    transform: translateX(100%);
+    float : right;
     color: $blue10;
     text-decoration: underline;
-    margin-left: 2rem;
     cursor: pointer;
 
     &:hover {
