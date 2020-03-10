@@ -78,21 +78,21 @@ input.selected + .slider:before {
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
+    height: 9px;
+    bottom: 12px;
 }
 
 .bar {
     @extend .slider-icon;
-    color: $green_l2;
-    font-size: 9px;
-    bottom: 11px;
-    left: 4px;
+    background: $green_l2;
+    width: 2px;
+    left: 8px;
 }
 
 .circle {
     @extend .slider-icon;
-    color: $red_d1;
-    font-size: 19px;
-    font-weight: bold;
-    bottom: 7px;
-    right: 3px;
+    border: 2px solid $red_d1;
+    border-radius: 50%;
+    width: 9px;
+    right: 4px;
 }
