@@ -126,7 +126,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         if (search) {
             this.filteredSystems = this.systems.filter((system) => {
                 return !search ||
-                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.accountService.getEmail()) ||
+                        this.hasMatch(this.LANG.system.mySystemSearch, search) && (system.ownerAccountEmail === this.accountService.email) ||
                         this.hasMatch(system.name, search) ||
                         this.hasMatch(system.ownerFullName, search) ||
                         this.hasMatch(system.ownerAccountEmail, search);

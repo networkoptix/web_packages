@@ -6,7 +6,7 @@ import { NxSystemsService } from './systems.service';
 import { Injectable, OnDestroy } from '@angular/core';
 import { NxSystemAPIService, NxSystemAPI } from './system-api.service';
 import { BehaviorSubject, from, of } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
+import { flatMap, tap } from 'rxjs/operators';
 import { NxPollService } from './poll.service';
 import { Utils } from '../utils/helpers';
 import { PredefinedRole } from './nx-config/base-config';
@@ -156,7 +156,7 @@ class UserManager {
         if (!guid) {
             return true;
         }
-        guid = guid.replace(/[{}0\-]/gi, '');
+        guid = guid.replace(/[{}0-]/gi, '');
         return guid === '';
     }
 
@@ -214,6 +214,7 @@ class UserManager {
     getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string> {
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject(`Aggregated request to server has failed ${result}`);
             }
             const data = result.reply;
@@ -296,9 +297,9 @@ class UserManager {
         let userCreated = false;
         if (user.email === this.currentUserEmail) {
             if (user.isCloud) {
-                return Promise.reject({ resultCode : 'cantEditYourself' });
+                return Promise.reject({ resultCode: 'cantEditYourself' });
             } else {
-                return Promise.reject({ resultCode : 'cantAddYourOwnEmail' });
+                return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
             }
         }
 
@@ -314,7 +315,7 @@ class UserManager {
         }
 
         if (!user.canBeEdited && !this.isMine) {
-            return Promise.reject({ resultCode : 'cantEditAdmin' });
+            return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 
         user.userRoleId = role.id || '';
@@ -364,7 +365,7 @@ class ServerManager {
 
     servers: NxSystemServer[];
 
-    constructor(private mediaserver,
+    constructor(private mediaserver: NxSystemAPI,
         private systemApiService: NxSystemAPIService,
         private currentUserEmail: string,
         private systemId: string,
@@ -383,7 +384,7 @@ class ServerManager {
                             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                             return Promise.resolve(true);
                         }));
-                const { authGet, authPost, authPlay } = this.mediaserver;
+                const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
             }, {});
@@ -453,7 +454,6 @@ export class NxSystem extends System implements OnDestroy {
     activeSubscription: any;
     currentUserEmail: string;
     mediaserver: any;
-    mediaserverConnections: any;
     currentServerNotBusy: boolean;
     moduleInfo: any;
 
@@ -630,7 +630,7 @@ export class NxSystem extends System implements OnDestroy {
                 }
 
                 if (!response) {
-                    return Promise.reject({ data: { resultCode: 'forbidden' }});
+                    return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
                 if (this.info) {
                     _.extend(this.info, response); // Update
@@ -708,8 +708,10 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getSystem() {
-        this.serverManager.getModuleInfo().toPromise()
-            .then(moduleInfo => { this.moduleInfo = moduleInfo.reply; });
+        return this.serverManager.getModuleInfo()
+            .pipe(tap((moduleInfo: any) => {
+                this.moduleInfo = moduleInfo.reply;
+            })).toPromise();
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {

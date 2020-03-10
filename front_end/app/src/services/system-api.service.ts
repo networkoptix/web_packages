@@ -167,6 +167,11 @@ export class NxSystemAPI {
     }
 
     /* Authentication */
+    getAuthKeys() {
+        const { authGet, authPost, authPlay } = this;
+        return { authGet, authPost, authPlay };
+    }
+
     getCurrentUser(forceReload?: boolean): Promise<any> {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
@@ -249,7 +254,7 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
-    getModuleInfo(url) {
+    getModuleInfo(url?) {
         if (url) {
             return this.http.get(`${url}/api/moduleInformation`);
         } else {

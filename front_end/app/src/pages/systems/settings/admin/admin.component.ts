@@ -314,7 +314,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateAndGoToSystems() {
         this.userDisconnectSystem = true;
         this.systemsService
-            .forceUpdateSystems(this.accountService.getEmail())
+            .forceUpdateSystems(this.accountService.email)
             .subscribe(() => {
                 setTimeout(() => {
                     this.router.navigate([this.CONFIG.redirect.authorised]);
@@ -374,12 +374,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 }
 
                 this.pageService.setPageTitle(this.system.info.name + ' -');
-                this.systemsService.forceUpdateSystems(this.accountService.getEmail());
+                this.systemsService.forceUpdateSystems(this.accountService.email);
             });
     }
 
     mergeSystems() {
-        this.systems = this.systemsService.getMySystems(this.accountService.getEmail(), this.system.id);
+        this.systems = this.systemsService.getMySystems(this.accountService.email, this.system.id);
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;

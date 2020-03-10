@@ -176,19 +176,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }, {
             errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
         }).then(() => {
-            const toastOptions = {
-                classname: this.CONFIG.toast.danger,
-                delay    : this.CONFIG.alertTimeout,
-                autohide : true
-            };
             this.systemReady();
-
-            if (!this.system.isOnline) {
-                return this.toastService.show(this.LANG.toastMessage.system.share.offline, toastOptions);
-            }
-            if (!this.system.permissions.editUsers) {
-                return this.toastService.show(this.LANG.toastMessage.system.share.unauthorized, toastOptions);
-            }
         });
 
         // Retrieve system info

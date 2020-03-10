@@ -57,7 +57,7 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                     // downgraded component cause this page to load twice and we end up with two login dialogs
                     if (account) {
                         this.accountService.redirectAuthorised();
-                        this.userEmail = this.accountService.getEmail();
+                        this.userEmail = this.accountService.email;
                     } else {
                         if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
                             this.localStorage.set('login', true);

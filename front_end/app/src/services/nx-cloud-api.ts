@@ -2,11 +2,10 @@ import { Injectable }      from '@angular/core';
 import { HttpClient }      from '@angular/common/http';
 import { Observable }      from 'rxjs';
 import { NxConfigService, IConfig } from './nx-config';
-import {toPromise} from "rxjs-compat/operator/toPromise";
-import { account } from './account.service';
+import { Account } from './account.service';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxCloudApiService {
     CONFIG: IConfig;
@@ -25,7 +24,7 @@ export class NxCloudApiService {
 
     disconnect(systemId: string, password: string) {
         return this.http.post(this.CONFIG.apiBase + '/systems/disconnect', {
-            system_id : systemId,
+            system_id: systemId,
             password
         });
     }
@@ -55,15 +54,15 @@ export class NxCloudApiService {
 
     merge(masterSystemId: string, slaveSystemId: string, password: string): Promise<any> {
         return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id : masterSystemId,
-            slave_system_id  : slaveSystemId,
+            master_system_id: masterSystemId,
+            slave_system_id : slaveSystemId,
             password
         }).toPromise();
     }
 
     notificationSend(userEmail: string, type: string, message: string): Promise<any> {
         return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
-            user_email : userEmail,
+            user_email: userEmail,
             type,
             message
         }).toPromise();
@@ -86,8 +85,8 @@ export class NxCloudApiService {
                 {
                     email,
                     password,
-                    first_name : firstName,
-                    last_name  : lastName,
+                    first_name: firstName,
+                    last_name : lastName,
                     subscribe,
                     code
                 })
@@ -96,12 +95,12 @@ export class NxCloudApiService {
 
     reactivateUser(userEmail: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/activate',
-            { user_email : userEmail }).toPromise();
+            { user_email: userEmail }).toPromise();
     }
 
     renameSystem(systemId: string, systemName: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
-            name : systemName
+            name: systemName
         }).toPromise().then((result) => {
             this.systems('clearCache');
             return result;
@@ -133,8 +132,8 @@ export class NxCloudApiService {
 
     unshare(systemId: string, userEmail: string): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
-            user_email : userEmail,
-            role       : this.CONFIG.accessRoles.unshare
+            user_email: userEmail,
+            role      : this.CONFIG.accessRoles.unshare
         });
     }
 
@@ -160,7 +159,7 @@ export class NxCloudApiService {
             email,
             password,
             remember,
-            timezone : (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
+            timezone: (Intl && Intl.DateTimeFormat().resolvedOptions().timeZone) || ''
         }).toPromise();
     }
 
@@ -169,8 +168,8 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
-    account(): Promise<any> {
-        return this.http.get(this.CONFIG.apiBase + '/account').toPromise();
+    account() {
+        return this.http.get(this.CONFIG.apiBase + '/account');
     }
 
     getLanguages(): Promise<any> {
@@ -191,31 +190,30 @@ export class NxCloudApiService {
         return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
     }
 
-    // 
-    accountPost(account: account): Promise<any> {
+    accountPost(account: Account): Promise<any> {
         // strip unnecessary account info
         const accountInfo = {
-            email        : account.email,
-            first_name   : account.first_name,
-            last_name    : account.last_name,
-            is_staff     : account.is_staff,
-            is_superuser : account.is_superuser || false,
-            language     : account.language,
-            permissions  : account.permissions
+            email       : account.email,
+            first_name  : account.first_name,
+            last_name   : account.last_name,
+            is_staff    : account.is_staff,
+            is_superuser: account.is_superuser || false,
+            language    : account.language,
+            permissions : account.permissions
         };
         return this.http.post(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password : newPassword,
-            old_password : oldPassword
+            new_password: newPassword,
+            old_password: oldPassword
         }).toPromise();
     }
 
     reactivate(userEmail: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
-            user_email : userEmail
+            user_email: userEmail
         }).toPromise();
     }
 
@@ -227,14 +225,14 @@ export class NxCloudApiService {
 
     restorePasswordRequest(userEmail: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
-            user_email : userEmail
+            user_email: userEmail
         }).toPromise();
     }
 
     restorePassword(code: string, newPassword: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
-            new_password : newPassword
+            new_password: newPassword
         }).toPromise();
     }
 
