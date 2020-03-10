@@ -41,6 +41,9 @@ class Event(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     send_date = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f'{self.object} - {self.type}'
+
     def send(self):
         self.save()
         # 1. Get all subscriptions for this event
@@ -86,6 +89,9 @@ class Subscription(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     enabled = models.BooleanField(default=True)
 
+    def __str__(self):
+        return f'{self.object} - {self.type}'
+
 
 class Message(models.Model):
     user_email = models.CharField(max_length=255)
@@ -99,6 +105,9 @@ class Message(models.Model):
     event = models.ForeignKey(Event, null=True, on_delete=models.CASCADE)
 
     REQUIRED_FIELDS = ['user_email', 'type', 'message']
+
+    def __str__(self):
+        return f'{self.type} - {self.user_email}'
 
     def send(self):
         self.save()
@@ -135,6 +144,9 @@ class Feedback(models.Model):
     sender_email = models.CharField(max_length=255)
     target_asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
     type = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f'{self.asset_name} - {self.type}'
 
     def send(self):
         self.save()
@@ -203,6 +215,9 @@ class PushSubscription(models.Model):
     # subscription_id = models.UUIDField(blank=True, null=True)
     # username = models.CharField(max_length=255, blank=True, null=True)
 
+    def __str__(self):
+        return f'{self.SUB_TYPES[self.type]} - {self.system_id}'
+
 
 class PushDevice(GCMDevice):
     OS = Choices((0, 'web', 'Web'),
@@ -214,6 +229,9 @@ class PushDevice(GCMDevice):
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
+
+    def __str__(self):
+        return self.name or 'Unnamed Device'
 
 
 class PushNotification(models.Model):
@@ -231,6 +249,9 @@ class PushNotification(models.Model):
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.title or 'Untitled Notification'
 
     def clean(self):
         if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
