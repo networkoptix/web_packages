@@ -80,6 +80,7 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     resolution:                Resolution;
+    maintenanceInProgress:     string;
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;
@@ -845,6 +846,7 @@ const typeMap: any = {
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
+        { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "" },

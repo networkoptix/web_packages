@@ -16,9 +16,9 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 */
 
 @Component({
-    selector: 'nx-page-placeholder',
-    templateUrl: 'page-placeholder.component.html',
-    styleUrls: ['page-placeholder.component.scss'],
+    selector : 'nx-page-placeholder',
+    templateUrl : 'page-placeholder.component.html',
+    styleUrls : ['page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit {
@@ -37,7 +37,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     iconName: string;
 
     constructor(private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
+                private languageService: NxLanguageProviderService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();
@@ -91,9 +91,14 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.iconName = 'NoAccess';
                     break;
                 case '404' :
-                    this.placeholderTitle = this.LANG.pageTitles.pageNotFound
+                    this.placeholderTitle = this.LANG.pageTitles.pageNotFound;
                     this.message = '';
                     this.iconName = '404';
+                    break;
+                case '503' :
+                    this.placeholderTitle = this.LANG.common.maintenanceInProgress;
+                    this.message = '%CONTENT%';
+                    this.iconName = 'Maintenance';
                     break;
             }
         }

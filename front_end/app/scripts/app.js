@@ -64,8 +64,8 @@ window.L = {};
 
                 if (!window.SETTINGS) {
                     if (PRODUCTION && error.status == 503) {
-                        if(window.location.pathname !== '/503.html') {
-                            window.location.pathname = '/503.html';
+                        if(window.location.pathname !== '/503') {
+                            window.location.pathname = '/503';
                         }
                     } else if (PRODUCTION && error.status >= 500) {
                         if(window.location.pathname !== '/500') {
@@ -92,8 +92,8 @@ window.L = {};
                     // cloud_portal is under maintenance
                     // TODO: Causes IOS to not load sometimes but not sure why
                     if (error.status == 503) {
-                        if(window.location.pathname !== '/503.html') {
-                            window.location.pathname = '/503.html';
+                        if(window.location.pathname !== '/503') {
+                            window.location.pathname = '/503';
                         }
                     } else if (PRODUCTION && error.status >= 500) {
                         if(window.location.pathname !== '/500') {

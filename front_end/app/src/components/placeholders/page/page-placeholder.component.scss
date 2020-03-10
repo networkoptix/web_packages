@@ -79,10 +79,6 @@ $preloader_small_circle_distance : 8px;
     width            : calc(100% - 16px);
     margin           : 0 auto;
     z-index          : 1;
-    display          : flex;
-    flex-direction   : column;
-    justify-content  : space-around;
-    align-items      : center;
     /*This is used for the preloaders.
                      It should always be higher than the video,
                      but not the top bar of the video player*/
@@ -97,63 +93,66 @@ $preloader_small_circle_distance : 8px;
     .contrain-width {
         max-width     : 550px;
     }
+}
 
-    .placeholder-content {
-        text-align    : center;
-        top           : calc(#{$navbar-height} / 2);
-        position      : relative;
-        position      : relative;
-        margin        : 0 auto;
-        width         : 100%;
-        font-size     : 130%;
-        font-weight   : 300;
-        line-height   : 30px;
-        color         : $light;
+.placeholder-content {
+    display          : flex;
+    flex-direction   : column;
+    padding          : 40px 0 50px 0;
+    justify-content  : space-around;
+    align-items      : center;
+    text-align       : center;
+    position         : relative;
+    margin           : 0 auto;
+    width            : 100%;
+    font-size        : 130%;
+    font-weight      : 300;
+    line-height      : 30px;
+    color            : $light;
+    & > * {
+        text-align : center;
+        margin     : auto;
+    }
 
-        & > * {
-            text-align : center;
-            margin     : auto;
-        }
-
-        .placeholder-icon {
-            margin-bottom : 24px;
-
-            svg{
-                .brand_element {
-                    fill : $brand_core;
-                }
-            }
-        }
-
-        .placeholder-title {
-            @extend #medium24;
-            line-height    : rem(40px);
-            text-align     : center;
-            margin-bottom  : 1rem;
-            justify-content: center;
-        }
-
-        .placeholder-message {
-            @extend #regular15;
-            line-height   : 24px;
-            margin-bottom : rem(40px);
-        }
-
-        a {
-            color           : $light12;
-            text-decoration : underline;
-
-            &:hover, &:active {
-                color : $light1;
-            }
-        }
-
-        .placeholder-preloader {
-            @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+    a {
+        color           : $light12;
+        text-decoration : underline;
+    
+        &:hover, &:active {
+            color : $light1;
         }
     }
-    .footer {
-        margin-top: 100px;
+}
+
+
+.placeholder-icon {
+    margin-bottom : 24px;
+
+    svg{
+        .brand_element {
+            fill : $brand_core;
+        }
     }
+}
+
+.placeholder-title {
+    @extend #medium24;
+    line-height    : rem(40px);
+    text-align     : center;
+    margin-bottom  : 1rem;
+    justify-content: center;
+}
+
+.placeholder-message {
+    @extend #regular15;
+    line-height   : 24px;
+}
+
+.placeholder-preloader {
+    @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
+}
+
+.footer {
+    width: calc(100% - 16px);
 }
 
