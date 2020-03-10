@@ -3,11 +3,10 @@ import {
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
 }                                   from '@angular/core';
-import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }          from '../../../../services/nx-config';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { NxHealthLayoutService } from '../../health-layout.service';
-import { IConfig } from '../../../../services/nx-config/config-types';
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',

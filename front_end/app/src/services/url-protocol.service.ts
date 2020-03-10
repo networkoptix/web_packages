@@ -1,9 +1,8 @@
 import { Inject, Injectable }        from '@angular/core';
-import { NxConfigService }           from './nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
-import { IConfig } from './nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 @Injectable({

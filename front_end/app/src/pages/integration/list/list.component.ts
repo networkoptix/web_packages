@@ -3,11 +3,10 @@ import {
     Input, SimpleChanges, OnChanges, OnInit
 } from '@angular/core';
 
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../../services/nx-config';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { IntegrationService }        from '../integration.service';
-import { IConfig } from '../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({

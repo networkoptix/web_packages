@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { NxConfigService } from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { BehaviorSubject } from 'rxjs';
 import { WINDOW } from './window-provider';
-import { IConfig } from './nx-config/config-types';
 
 enum GRID_BREAKPOINTS {
     xs = 0,

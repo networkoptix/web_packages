@@ -7,14 +7,13 @@ import {
 }                                    from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxModalGenericComponent }   from '../generic/generic.component';
 import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
@@ -207,7 +206,7 @@ export class LoginModalContent implements OnInit {
     close() {
         // prevent unnecessary reload
         this.activeModal.close('canceled');
-        if (!this.keepPage) { // && this.accountService.getEmail() === undefined) {
+        if (!this.keepPage) { // && this.accountService.email === undefined) {
             return this.router.navigate([this.CONFIG.redirect.unauthorised]);
         }
     }

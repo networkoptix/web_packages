@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NxConfigService }                             from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }                             from '../../../services/nx-config';
 import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
 
 import { NxPageService }     from '../../../services/page.service';
@@ -19,7 +19,6 @@ import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 import { NxCloudStorageService } from './cloud-storage/cloud-storage.service';
-import { IConfig } from '../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
@@ -183,19 +182,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }, {
             errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
         }).then(() => {
-            const toastOptions = {
-                classname: this.CONFIG.toast.danger,
-                delay    : this.CONFIG.alertTimeout,
-                autohide : true
-            };
             this.systemReady();
-
-            if (!this.system.isOnline) {
-                return this.toastService.show(this.LANG.toastMessage.system.share.offline, toastOptions);
-            }
-            if (!this.system.permissions.editUsers) {
-                return this.toastService.show(this.LANG.toastMessage.system.share.unauthorized, toastOptions);
-            }
         });
 
         // Retrieve system info

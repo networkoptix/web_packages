@@ -5,12 +5,11 @@ import {
     ViewEncapsulation, Inject, OnDestroy
 } from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

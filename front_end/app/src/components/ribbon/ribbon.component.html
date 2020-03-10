@@ -7,7 +7,6 @@
     <div class="message">
         <span>{{message}}</span>
         <ng-container *ngIf="action">
-            <span>&nbsp;</span>
             <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                 <svg-icon
                 *ngIf="action === 'Refresh'"
@@ -16,7 +15,8 @@
                 [svgStyle]="{'width.px': '20'}" title="Reload"></svg-icon>
                 {{action}}
             </a>
-            <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank">{{action}}</a>
+
+            <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank" class="ml-2">{{action}}</a>
         </ng-container>
     </div>
 </div>

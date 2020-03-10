@@ -6,7 +6,7 @@ import { Location }                  from '@angular/common';
 import { ActivatedRoute }            from '@angular/router';
 import { filter }                    from 'rxjs/operators';
 
-import { NxConfigService }           from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
@@ -19,7 +19,6 @@ import { NxApplyService, Watcher }              from '../../../../services/apply
 import { NxUriService }                         from '../../../../services/uri.service';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { IConfig } from '../../../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()

@@ -9,7 +9,7 @@ import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { IpvdSearchService }                     from './ipvd-search.service';
 import { MessageParams }                         from '../../dialogs/message/message.component';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -22,7 +22,6 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxPageService }             from '../../services/page.service';
 import { delay }                     from 'rxjs/operators';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 interface Params {
@@ -119,7 +118,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     constructor(configService: NxConfigService,
-                languageService: NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
                 private cloudApi: NxCloudApiService,
                 private cameraSearchService: IpvdSearchService,
                 // TODO: Use dialog service when it is not being downgraded
@@ -132,7 +131,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 private pageService: NxPageService,
                 private accountService: NxAccountService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                @Inject(PLATFORM_ID) private platformId: object,
+                @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.setupDefaults();
 
@@ -219,7 +218,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     ngOnDestroy() {}
 
     updateFilterModel() {
-
         this.filterModel.query = '';
 
         if (this.params.search && this.params.search.length > 0) {
@@ -227,7 +225,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         if (this.filterModel.tags && this.filterModel.tags.length) {
-            this.filterModel.tags.forEach(tag => tag.value = false);
+            this.filterModel.tags.forEach((tag: any) => {
+                tag.value = false;
+            });
             if (this.params.tags) {
                 this.params.tags
                     .split(',')
@@ -288,35 +288,35 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
         }
 
-        this.filterModel = {...this.filterModel};
+        this.filterModel = { ...this.filterModel };
     }
 
     addFilterResolutions() {
         this.resolutions = this.CONFIG.ipvd.supportedResolutions;
 
         this.filterModel.selects.push(
-                {
-                    id      : 'resolution',
-                    label   : this.LANG.search.minResolution,
-                    items   : this.resolutions,
-                    selected: this.resolutions[0]
-                });
+            {
+                id      : 'resolution',
+                label   : this.LANG.search.minResolution,
+                items   : this.resolutions,
+                selected: this.resolutions[0]
+            });
     }
 
     addAnalyticsEvents() {
         if (this.showAnalytics && this.analytics) {
             this.filterModel.multiselects.push(
-                    {
-                        id                 : 'analytics',
-                        label              : this.LANG.search.analytics,
-                        searchLabel        : this.LANG.search.analyticsSelected,
-                        searchLabelSingular: '',
-                        items              : this.analytics
-                                                 .map(v => (
-                                                    { id: v, label: v })
-                                                 ),
-                        selected           : []
-                    });
+                {
+                    id                 : 'analytics',
+                    label              : this.LANG.search.analytics,
+                    searchLabel        : this.LANG.search.analyticsSelected,
+                    searchLabelSingular: '',
+                    items              : this.analytics
+                        .map(v => (
+                            { id: v, label: v })
+                        ),
+                    selected: []
+                });
         }
     }
 
@@ -335,7 +335,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.filterModel.tags = this.filterModel.tags.filter((tag) => tag.id !== 'isAnalyticsSupported');
         }
 
-        this.filterModel.tags.forEach(tag => tag.label = this.LANG.ipvd[tag.id]);
+        this.filterModel.tags.forEach((tag: any) => {
+            tag.label = this.LANG.ipvd[tag.id];
+        });
     }
 
     addFilterTypes() {
@@ -392,7 +394,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                             label   : this.LANG.search.vendors,
                             singular: this.LANG.search.vendor,
                             items   : this.vendors.map(v => (
-                                    { id: v.name, label: v.name }
+                                { id: v.name, label: v.name }
                             )),
                             selected: []
                         });
@@ -410,11 +412,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         const filteredCameras = [];
         values.forEach(camera => {
             const filteredCamera = Object.keys(camera)
-                                         .filter(key => this.allowedParameters.indexOf(key) > -1 || key === 'sortKey')
-                                         .reduce((obj, key) => {
-                                             obj[key] = camera[key];
-                                             return obj;
-                                         }, {});
+                .filter(key => this.allowedParameters.indexOf(key) > -1 || key === 'sortKey')
+                .reduce((obj, key) => {
+                    obj[key] = camera[key];
+                    return obj;
+                }, {});
             filteredCameras.push(filteredCamera);
         });
         return filteredCameras;
@@ -473,7 +475,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
                 this.params = queryParams;
             }
-
         }
     }
 
@@ -500,7 +501,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (this.activeCamera && this.activeCamera.sortKey === selectedCamera.sortKey) {
             return;
         }
-        this.activeCamera = {... selectedCamera};
+        this.activeCamera = { ...selectedCamera };
         this.showAll = false;
 
         const queryParams: Params = {};
@@ -518,13 +519,12 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }, 500);
     }
 
-
     openFeedback(param) {
         const type = (param === 'device') ? this.CONFIG.dialogs.message.type.ipvd_device : this.CONFIG.dialogs.message.type.ipvd_page;
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
             disclaimer: this.LANG.privacyPolicy.ipvd,
-            asset: device,
+            asset     : device
         };
         this.dialogs
             .message(this.accountService, type, data)

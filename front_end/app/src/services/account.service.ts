@@ -2,26 +2,34 @@ import { Inject, Injectable, OnDestroy }      from '@angular/core';
 import { DOCUMENT, Location }                 from '@angular/common';
 import { LocalStorageService }                from 'ngx-store';
 import { ActivatedRoute, Router }             from '@angular/router';
-import { NxConfigService }                    from './nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from './nx-config';
 import { NxCloudApiService }                  from './nx-cloud-api';
 import { NxLanguageProviderService }          from './nx-language-provider';
 import { NxDialogsService }                   from '../dialogs/dialogs.service';
 import { NxSessionService }                   from './session.service';
 import { NxApplyService }                     from './apply.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { ReplaySubject, Subscription, timer, Subscribable, Observable } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { WINDOW }                             from './window-provider';
 import { NxAppStateService }                  from './nx-app-state.service';
 import { NxUriService }                       from './uri.service';
-import { IConfig } from './nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { NxPollService } from './poll.service';
+import { Utils } from '../utils/helpers';
 
-// TODO Need to refine this types
-export type account = undefined | any
-
-export type accountResolvedPromise = any
-
-export type accountRejectedPromise = any
+export interface Account {
+    email: string;
+    // eslint-disable-next-line camelcase
+    first_name: string;
+    // eslint-disable-next-line camelcase
+    last_name: string;
+    language: string;
+    // eslint-disable-next-line camelcase
+    is_staff: boolean;
+    // eslint-disable-next-line camelcase
+    is_superuser: boolean;
+    permissions: string[];
+}
 
 @Injectable({
     providedIn: 'root'
@@ -29,15 +37,14 @@ export type accountRejectedPromise = any
 export class NxAccountService implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    // Use Location type?
     location: Location;
+    accountSubject = new BehaviorSubject<Account|undefined>(undefined);
     loggingOut: boolean;
     requestingLogin: Promise<any>;
-    account: account;
-    loginStateSubject = new ReplaySubject(1);
     loginDialogActive: boolean;
-    reloading: boolean;
 
+    private accountPoll: any;
+    private accountPollSubscription: Subscription;
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
@@ -45,20 +52,21 @@ export class NxAccountService implements OnDestroy {
                 @Inject(WINDOW) private window: Window,
                 configService: NxConfigService,
                 languageService: NxLanguageProviderService,
+                locationService: Location,
                 private cloudApi: NxCloudApiService,
                 private sessionService: NxSessionService,
                 private uriService: NxUriService,
                 private localStorageService: LocalStorageService,
-                private locationService: Location,
                 private dialogs: NxDialogsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private applyService: NxApplyService,
-                private appStateService: NxAppStateService
+                private appStateService: NxAppStateService,
+                private pollService: NxPollService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
-        this.location = this.locationService;
+        this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
 
@@ -73,7 +81,7 @@ export class NxAccountService implements OnDestroy {
                         .then((account) => {
                             // prevent stale loginState
                             if (account) {
-                                this.loginStateSubject.next(loginState);
+                                this.startAccountPoll();
                             } else {
                                 this.clearLoginState();
                             }
@@ -89,6 +97,8 @@ export class NxAccountService implements OnDestroy {
                 this.handleAuthKeyLogin(params.auth);
             }
         });
+
+        this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
     }
 
     ngOnDestroy() {
@@ -96,67 +106,22 @@ export class NxAccountService implements OnDestroy {
         this.queryParamSubscription.unsubscribe();
     }
 
-    clearLoginState() {
-        this.sessionService.invalidateSession();
+    get account() {
+        return this.accountSubject.getValue();
     }
 
-    setupAccount(account: account) {
-        // cleanup
-        if (this.account && this.account.timer) {
-            this.account.timer.unsubscribe();
+    set account(account: Account) {
+        if (!Utils.isEqual(account, this.account)) {
+            this.accountSubject.next(account);
         }
-        this.account = account;
-
-        // Set up timer
-        const timer$ = timer(this.CONFIG.updateInterval, this.CONFIG.updateInterval);
-
-        // Update account to unsure any external changes are applied to this session
-        this.account.timer = timer$.subscribe(() => {
-            this.cloudApi
-                .account()
-                .then((account) => {
-                    this.account = account;
-                })
-                .catch(() => {
-                    this.cloudApi
-                        .logout()
-                        .finally(() => {
-                            this.account = undefined;
-                            this.sessionService.invalidateSession(); // Clear session
-
-                            setTimeout(() => {
-                                return this.document.location.reload();
-                            });
-                        });
-                });
-        });
     }
 
-    get(forceUpdate = false): undefined | Promise<account> {
-        if (this.requestingLogin) {
-            // login is requesting, so we wait
-            return this.requestingLogin
-                .then(() => {
-                    this.requestingLogin = undefined; // clean requestingLogin reference
-                    return this.get(); // Try again
-                });
-        }
+    get email() {
+        return this.sessionService.email;
+    }
 
-        if (this.account && !forceUpdate) {
-            return new Promise(resolve => {
-                return resolve(this.account);
-            });
-        }
-
-        return this.cloudApi
-            .account()
-            .then((account) => {
-                this.setupAccount(account);
-                return account;
-            })
-            .catch(() => {
-                return undefined;
-            });
+    set email(email: string) {
+        this.sessionService.email = email;
     }
 
     authKey() {
@@ -183,32 +148,55 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
+    clearLoginState() {
+        this.stopAccountPoll();
+        this.sessionService.invalidateSession();
+    }
+
+    get(forceUpdate = false) {
+        if (this.requestingLogin) {
+            // login is requesting, so we wait
+            return this.requestingLogin
+                .then(() => {
+                    this.requestingLogin = undefined; // clean requestingLogin reference
+                    return this.get(); // Try again
+                });
+        }
+
+        if (this.account && !forceUpdate) {
+            return Promise.resolve(this.account);
+        }
+
+        return this.cloudApi
+            .account().toPromise()
+            .then((account: Account) => {
+                this.account = account;
+                return account;
+            })
+            .catch(() => {
+                return undefined;
+            });
+    }
+
     requireLogin() {
         return this.get()
-            .then((account) => {
+            .then((account: Account) => {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(this, true, true).then(() => {
-                            return this.get().then((account) => {
-                                return account;
-                            });
-                        })
-                        .catch(() => {
-                            this.router.navigate([this.CONFIG.redirect.unauthorised]);
-                        }).finally(() => {
+                        .login(this, true, true).then(() => this.get())
+                        .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
+                        .finally(() => {
                             this.loginDialogActive = false;
                         });
-                } else if (this.loginDialogActive) {
-                    return undefined;
                 }
-                return account;
+                return this.loginDialogActive ? undefined : account;
             });
     }
 
     redirectAuthorised() {
         this.get()
-            .then((account) => {
+            .then((account: Account) => {
                 if (account) {
                     this.router.navigate([this.CONFIG.redirect.authorised]);
                 }
@@ -217,7 +205,7 @@ export class NxAccountService implements OnDestroy {
 
     redirectToHome() {
         this.get()
-            .then((account) => {
+            .then((account: Account) => {
                 if (account) {
                     this.router.navigate([this.CONFIG.redirect.authorised]);
                 } else {
@@ -228,15 +216,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    setEmail(email: string) {
-        this.sessionService.email = email;
-    }
-
-    getEmail() {
-        return this.sessionService.email;
-    }
-
-    login(email: string, password: string, remember: boolean): Promise<accountResolvedPromise | accountRejectedPromise> {
+    login(email: string, password: string, remember: boolean) {
         this.sessionService.email = email;
 
         this.requestingLogin = this.cloudApi
@@ -247,7 +227,7 @@ export class NxAccountService implements OnDestroy {
                         // If the user that logged in matches the current session there's no need to show
                         // the logout dialog.
                         if (result.email !== this.sessionService.loginState) {
-                            this.logoutAuthorised();
+                            return this.logoutAuthorised();
                         }
 
                         return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
@@ -260,10 +240,12 @@ export class NxAccountService implements OnDestroy {
 
                     return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
                 }
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ error: { resultCode: result.resultCode } });
             })
             .catch((result: any) => {
                 if (this.cloudApi.checkResponseHasError(result.error)) {
+                    // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ resultCode: result.error.resultCode });
                 }
             });
@@ -302,36 +284,17 @@ export class NxAccountService implements OnDestroy {
 
         this.applyService
             .canMove()
-            .then((allowed) => {
+            .then((allowed: boolean) => {
                 if (allowed) {
                     this.loggingOut = true;
-                    this.cloudApi
-                        .logout()
-                        .finally(() => {
-                            if (this.account && this.account.timer) {
-                                this.account.timer.unsubscribe();
-                            }
-                            this.account = undefined;
-                            this.sessionService.invalidateSession(); // Clear session
-                            if (!doNotRedirect) {
-                                return this.router
-                                    .navigate([this.CONFIG.redirect.unauthorised])
-                                    .finally(() => {
-                                        setTimeout(() => this.window.location.reload());
-                                    });
-                            }
-
-                            setTimeout(() => {
-                                return this.window.location.reload();
-                            });
-                        });
+                    this.logoutHelper(doNotRedirect);
                 }
             });
     }
 
     logoutAuthorised() {
         return this.get()
-            .then((account) => {
+            .then((account: Account) => {
                 // logoutAuthorisedLogoutButton
                 if (account) {
                     const isRegister = this.router.url.includes('/register');
@@ -364,17 +327,9 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    checkUnauthorized(data: accountResolvedPromise) {
-        if (data && data.resultCode === 'notAuthorized') {
-            this.logout(true);
-            return false;
-        }
-        return true;
-    }
-
     private handleAuthKeyLogin(auth: string) {
         this.get()
-            .then((account) => {
+            .then((account: Account) => {
                 if (!account) {
                     return this.loginWithAuthKey(auth).then(() => {
                         return this.document.location.reload();
@@ -401,10 +356,7 @@ export class NxAccountService implements OnDestroy {
                         return this.cloudApi
                             .logout()
                             .finally(() => {
-                                if (this.account && this.account.timer) {
-                                    this.account.timer.unsubscribe();
-                                }
-                                this.account = undefined;
+                                this.stopAccountPoll();
                                 this.localStorageService.clear('all'); // Clear session
                                 // this.sessionService.invalidateSession(); // Clear session
                                 return this.loginWithAuthKey(auth).then(() => {
@@ -419,5 +371,44 @@ export class NxAccountService implements OnDestroy {
                     }
                 });
             });
+    }
+
+    private logoutHelper(doNotRedirect: boolean) {
+        this.cloudApi
+            .logout()
+            .finally(() => {
+                this.sessionService.invalidateSession(); // Clear session
+                if (!doNotRedirect) {
+                    return this.router
+                        .navigate([this.CONFIG.redirect.unauthorised])
+                        .finally(() => {
+                            setTimeout(() => this.window.location.reload());
+                        });
+                }
+
+                setTimeout(() => {
+                    return this.window.location.reload();
+                });
+            });
+    }
+
+    private startAccountPoll() {
+        this.stopAccountPoll();
+        this.accountPollSubscription = this.accountPoll.pipe(
+            catchError((error) => {
+                console.log(error);
+                this.logoutHelper(false);
+                return of('Error');
+            })
+        ).subscribe((account) => {
+            this.account = account;
+        });
+    }
+
+    private stopAccountPoll() {
+        if (this.accountPollSubscription) {
+            this.account = undefined;
+            this.accountPollSubscription.unsubscribe();
+        }
     }
 }

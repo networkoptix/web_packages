@@ -7,7 +7,7 @@ import { ActivatedRoute, Router }         from '@angular/router';
 import { Location }                       from '@angular/common';
 import { Subject }                        from 'rxjs/Subject';
 import { isArray }                        from 'rxjs/internal-compatibility';
-import { NxConfigService }                from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }       from '../../services/nx-config';
 import { NxUriService }                   from '../../services/uri.service';
 import { NxLanguageProviderService }      from '../../services/nx-language-provider';
 import { Subscription, SubscriptionLike } from 'rxjs';
@@ -16,7 +16,6 @@ import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { debounceTime }                   from 'rxjs/operators';
 import { NxUtilsService }                 from '../../services/utils.service';
 import { Utils } from '../../utils/helpers';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 /* Usage
  <nx-search

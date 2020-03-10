@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
-import { NxConfigService } from '../app/src/services/nx-config/nx-config.service';
+import { NxConfigService, IConfig } from '../app/src/services/nx-config';
 import '../app/styles/main.scss';
 import 'bootstrap';
-import { IConfig } from '../app/src/services/nx-config/config-types';
+
 @Component({
     selector: 'ipvd-app',
     template: '<router-outlet></router-outlet>'

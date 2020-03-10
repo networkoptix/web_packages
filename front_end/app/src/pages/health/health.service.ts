@@ -1,8 +1,7 @@
 import { Injectable }                      from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NxConfigService }                 from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }        from '../../services/nx-config';
 import { NxScrollMechanicsService }        from '../../services/scroll-mechanics.service';
-import { IConfig } from '../../services/nx-config/config-types';
 
 @Injectable({
     providedIn: 'root'

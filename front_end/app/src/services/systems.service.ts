@@ -2,13 +2,12 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject, Observable, Subscribable, Subscription } from 'rxjs';
 import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
-import { NxConfigService } from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxCloudApiService } from './nx-cloud-api';
 import { NxPollService } from './poll.service';
 import { NxToastService } from '../dialogs/toast.service';
 import { Utils } from '../utils/helpers';
-import { IConfig } from './nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { NxSystem } from './system.service';
 import { NxSystemAPI } from './system-api.service';

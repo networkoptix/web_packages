@@ -5,7 +5,7 @@ import {
 }                                            from '@angular/core';
 import { ActivatedRoute }                    from '@angular/router';
 import { Location }                          from '@angular/common';
-import { NxConfigService }                   from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }          from '../../../services/nx-config';
 import { NxMenuService }                     from '../../../components/menu/menu.service';
 import { NxHealthService }                   from '../health.service';
 import { of, SubscriptionLike }              from 'rxjs';
@@ -16,7 +16,6 @@ import { NxUtilsService }                    from '../../../services/utils.servi
 import { delay, throttleTime }               from 'rxjs/operators';
 import { NxHealthLayoutService }             from '../health-layout.service';
 import { Utils } from '../../../utils/helpers';
-import { IConfig } from '../../../services/nx-config/config-types';
 
 interface Params {
     [key: string]: any;

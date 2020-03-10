@@ -1,12 +1,11 @@
 import { Component, Input, Renderer2, ViewChild } from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

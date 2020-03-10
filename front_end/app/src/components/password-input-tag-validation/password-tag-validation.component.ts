@@ -2,9 +2,8 @@ import {
     Component, forwardRef, Input,
     OnChanges, SimpleChanges, ViewEncapsulation
 } from '@angular/core';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

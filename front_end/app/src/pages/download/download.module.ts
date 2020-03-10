@@ -15,7 +15,7 @@ import { TranslateModule }       from '@ngx-translate/core';
 
 import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
-import { NxConfigService } from '../../services/nx-config/nx-config.service';
+import { NxConfigService } from '../../services/nx-config';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {

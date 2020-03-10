@@ -3,13 +3,12 @@ import {
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
 }                                   from '@angular/core';
-import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }          from '../../../../services/nx-config';
 import { NxUriService }             from '../../../../services/uri.service';
 import { Subscription }             from 'rxjs';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { delay }                    from 'rxjs/operators';
-import { IConfig } from '../../../../services/nx-config/config-types';
 
 @AutoUnsubscribe()
 @Component({

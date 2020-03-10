@@ -5,6 +5,9 @@ from rest_hooks.models import AbstractHook
 class ZapHook(AbstractHook):
     event = models.CharField(max_length=1024)
 
+    def __str__(self):
+        return f'{self.user} - {self.event}'
+
 
 class GeneratedRule(models.Model):
     caption = models.CharField(max_length=1024)
@@ -13,3 +16,6 @@ class GeneratedRule(models.Model):
     email = models.CharField(max_length=1024)
     direction = models.CharField(max_length=100)
     times_used = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.caption

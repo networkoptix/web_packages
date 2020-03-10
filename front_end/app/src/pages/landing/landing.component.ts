@@ -1,13 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router }                       from '@angular/router';
 
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxAccountService }          from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LocalStorageService }       from 'ngx-store';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
@@ -58,7 +57,7 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                     // downgraded component cause this page to load twice and we end up with two login dialogs
                     if (account) {
                         this.accountService.redirectAuthorised();
-                        this.userEmail = this.accountService.getEmail();
+                        this.userEmail = this.accountService.email;
                     } else {
                         if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
                             this.localStorage.set('login', true);

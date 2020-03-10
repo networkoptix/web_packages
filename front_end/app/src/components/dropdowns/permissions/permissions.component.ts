@@ -2,10 +2,10 @@ import {
     Component, ViewEncapsulation,
     Input, Output, EventEmitter,
     SimpleChanges
-}                                    from '@angular/core';
+}                                   from '@angular/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService }           from '../../../services/nx-config';
 
 @Component({
     selector     : 'nx-permissions-select',

@@ -3,11 +3,10 @@ import {
 } from '@angular/core';
 import { Location }                              from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }                       from '../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }              from '../../services/nx-config';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { IConfig } from '../../services/nx-config/config-types';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()

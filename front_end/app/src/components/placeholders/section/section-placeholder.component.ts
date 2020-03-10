@@ -1,7 +1,6 @@
 import { Component, Input, OnInit }    from '@angular/core';
 import { NxLanguageProviderService }   from '../../../services/nx-language-provider';
-import { NxConfigService }             from '../../../services/nx-config/nx-config.service';
-import { IConfig } from '../../../services/nx-config/config-types';
+import { NxConfigService, IConfig }             from '../../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 /* Usage

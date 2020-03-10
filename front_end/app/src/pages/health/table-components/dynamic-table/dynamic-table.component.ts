@@ -7,17 +7,17 @@ import {
 import { Location }                 from '@angular/common';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { DeviceDetectorService }    from 'ngx-device-detector';
-import { NxConfigService }          from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }          from '../../../../services/nx-config';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxUriService }             from '../../../../services/uri.service';
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { SubscriptionLike }         from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
-import { NxHealthLayoutService } from '../../health-layout.service';
-import { delay } from 'rxjs/operators';
-import { Utils } from '../../../../utils/helpers';
-import { IConfig } from '../../../../services/nx-config/config-types';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import { delay }                    from 'rxjs/operators';
+import { Utils }                    from '../../../../utils/helpers';
+import { NxRibbonService }          from '../../../../components/ribbon/ribbon.service';
 
 interface Params {
     [key: string]: any;
@@ -72,6 +72,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     serviceParams;
     serviceHeaders;
 
+    isRibbon: any;
     windowSize: any = {};
     clientHeight: number;
     offsetHeight: number;
@@ -80,6 +81,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     hideTooltip: any;
     mobileDetailMode: boolean;
 
+    ribbonSubscription: SubscriptionLike;
     pageSubscription: SubscriptionLike;
     resizeSubscription: SubscriptionLike;
     locationSubscription: SubscriptionLike;
@@ -90,7 +92,8 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     @ViewChild('nxTable', { static: false }) tableElement: ElementRef;
     @ViewChild('tooltip', { static: false }) tableTooltip: ElementRef;
 
-    constructor(private configService: NxConfigService,
+    constructor(configService: NxConfigService,
+                private ribbonService: NxRibbonService,
                 private uri: NxUriService,
                 private utilsService: NxUtilsService,
                 private router: Router,
@@ -101,7 +104,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private deviceDetectorService: DeviceDetectorService,
                 private healthLayoutService: NxHealthLayoutService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.elements = this.elements || [];
 
         this.pagedItems = [];
@@ -161,6 +164,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.startIndex = parseInt(this.params.index) || 0;
         }
         this.healthService.tableReady = true;
+
+        this.ribbonSubscription = this.ribbonService
+            .contextSubject
+            .subscribe(() => {
+                this.setTableDimensions();
+            });
     }
 
     initLayoutService() {

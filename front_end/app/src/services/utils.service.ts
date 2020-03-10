@@ -1,8 +1,7 @@
 import { Inject, Injectable, LOCALE_ID }    from '@angular/core';
-import { NxConfigService }       from './nx-config/nx-config.service';
+import { NxConfigService, IConfig } from './nx-config';
 import { DOCUMENT }              from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { IConfig } from './nx-config/config-types';
 import * as moment from 'moment';
 import { TranslatePipe } from '@ngx-translate/core';
 

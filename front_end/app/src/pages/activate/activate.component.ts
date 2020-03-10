@@ -1,6 +1,5 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { Location }                  from '@angular/common';
 
 import { NxUriService }              from '../../services/uri.service';
 import { NxPageService }             from '../../services/page.service';
@@ -11,8 +10,7 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { SessionStorageService }     from 'ngx-store';
 import { NxAccountService }          from '../../services/account.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
-import { IConfig } from '../../services/nx-config/config-types';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
@@ -109,9 +107,8 @@ export class NxActivateComponent implements OnInit {
                 private router: Router,
                 private languageService: NxLanguageProviderService,
                 private configService: NxConfigService,
-                private pageService: NxPageService,
+                private pageService: NxPageService
     ) {
-
         this.setupDefaults();
     }
 
@@ -119,7 +116,6 @@ export class NxActivateComponent implements OnInit {
         // Process service trigger route reload (maybe AJS? ) ... revise this after we remove AJS
         this.uriParam = this.route.snapshot.data.uriParam;
         this.uriParamCode = this.route.snapshot.params.code;
-
 
         this.accountInfo = {
             newPassword : '',
@@ -145,7 +141,7 @@ export class NxActivateComponent implements OnInit {
             this.accountService.redirectAuthorised();
         }
 
-        this.accountInfo.email = this.accountService.getEmail();
+        this.accountInfo.email = this.accountService.email;
 
         if (this.accountInfo.activateCode) {
             this.accountService.logoutAuthorised();
@@ -164,4 +160,3 @@ export class NxActivateComponent implements OnInit {
         this.dialogs.login(this.accountService, false, true);
     }
 }
-

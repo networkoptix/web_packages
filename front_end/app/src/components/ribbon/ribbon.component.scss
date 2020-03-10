@@ -8,7 +8,7 @@
     color            : $light1;
     background-color : $brand_d1;
     line-height      : 1rem;
-    border-top       : 1px solid $brand_d2;
+    //border-top       : 1px solid $brand_d2;
     border-bottom    : 1px solid $brand_d2;
     padding          : .5rem 1rem;
     display          : flex;
@@ -16,6 +16,9 @@
 
     .message {
         flex : 70%;
+        &-span {
+            position: relative
+        }
     }
 
     .action {
@@ -35,7 +38,7 @@
 }
 
 .alert-ribbon {
-    border-top: 1px solid #EEDC9E;
+    //border-top: 1px solid #EEDC9E;
     border-bottom: 1px solid #EEDC9E;
     background-color: #FFEEB5 !important;
 
@@ -50,13 +53,15 @@
 }
 
 .action-link {
+    float : right;
     color: $blue10;
     text-decoration: underline;
-    margin-left: 2rem;
     cursor: pointer;
 
     &:hover {
         color: $blue9;
+        text-decoration: underline;
+        cursor: pointer;
         svg * {
             fill: $blue9;
         }
