@@ -15,7 +15,7 @@ export class Nx503Component {
 
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
-                private pageService: NxPageService
+        private pageService: NxPageService
     ) {
         this.LANG = languageService.getTranslations();
         this.pageService.setPageTitle(this.LANG.common.maintenanceInProgress);
