@@ -5,9 +5,10 @@ import {
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { ControlValueAccessor }      from '@angular/forms';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
-const noop = () => {};
+const noop = () => {
+};
 
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, ControlValueAccessor {
@@ -21,16 +22,17 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    public onTouchedCallback: () => void      = noop;
+    public onTouchedCallback: () => void = noop;
     public onChangeCallback: (_: any) => void = noop;
 
-    constructor(languageService: NxLanguageProviderService,
-                configService: NxConfigService,
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
     ) {
-        this.CONFIG  = configService.getConfig();
-        this.LANG    = languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
         this.message = this.LANG.pleaseSelect;
-        this.show    = false;
+        this.show = false;
     }
 
     ngOnInit() {
@@ -42,7 +44,6 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
 
     ngOnChanges(changes: SimpleChanges) {
     }
-
 
     trackItem(index, item) {
         if (!item) {

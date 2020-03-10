@@ -1,9 +1,9 @@
 import { Inject, Injectable }        from '@angular/core';
-import { NxConfigService, IConfig }           from './nx-config';
+import { NxConfigService, IConfig }  from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxAccountService }          from './account.service';
 import { WINDOW }                    from './window-provider';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 
 @Injectable({
     providedIn: 'root'
@@ -12,13 +12,14 @@ export class NxUrlProtocolService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    constructor(@Inject(WINDOW) private window: Window,
+    constructor(
+        @Inject(WINDOW) private window: Window,
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
         private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = languageService.getTranslations();
     }
 
     private parseSource() {
@@ -26,7 +27,7 @@ export class NxUrlProtocolService {
         const search = this.window.location.search.replace('?', '').split('&');
 
         let fromLocation = '';
-        const from = search.find((param) => {
+        const from       = search.find((param) => {
             return param.indexOf('from') >= 0;
         });
         if (from) {
@@ -34,7 +35,7 @@ export class NxUrlProtocolService {
         }
 
         let contextParam = '';
-        const context = search.find((param) => {
+        const context    = search.find((param) => {
             return param.indexOf('context') >= 0;
         });
         if (context) {
@@ -69,7 +70,7 @@ export class NxUrlProtocolService {
         settings = { ...settings, ...linkSettings };
 
         const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
-        const host = this.window.location.host;
+        const host     = this.window.location.host;
 
         const getParams: any = { ...settings.actionParameters };
 
@@ -127,7 +128,7 @@ export class NxUrlProtocolService {
         return this.getLink({
             systemId
         }).then((data: any) => {
-            let link = data.link;
+            let link      = data.link;
             const authKey = data.authKey;
             link = link.replace(/&/g, '&&'); // This is a hack,
             // Google Chrome for mac has a bug - he looses one ampersand which brakes the link parameters
@@ -143,7 +144,7 @@ export class NxUrlProtocolService {
                  * If the page blurs only once that means that the user probably canceled the dialog.
                  * If the page blurs more than once the vms client probably opened.
                  */
-                let blurCount = 0;
+                let blurCount      = 0;
                 this.window.onblur = () => {
                     blurCount += 1;
                 };
@@ -155,7 +156,7 @@ export class NxUrlProtocolService {
                 };
                 // Check on before unload
                 // @ts-ignore
-                this.window.protocolCheck(link, (_) => reject({ resultCode : this.CONFIG.openClientError }), () => {
+                this.window.protocolCheck(link, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
                     setTimeout(() => {
                         this.accountService
                             .checkVisitedKey(authKey)
@@ -168,7 +169,7 @@ export class NxUrlProtocolService {
                                  *      case > 1: The browser opened the app but the code didnt work.
                                  */
                                 if (!visited && blurCount !== 1) {
-                                    return reject({ resultCode : this.CONFIG.openClientError });
+                                    return reject({ resultCode: this.CONFIG.openClientError });
                                 }
                                 return resolve(visited);
                             });
@@ -186,10 +187,10 @@ export class NxUrlProtocolService {
 export type linkSettings = {
     native?: boolean,
     from?: string,
-    context? : any,
-    command? : string,
-    systemId? : string,
-    action? : any,
+    context?: any,
+    command?: string,
+    systemId?: string,
+    action?: any,
     actionParameters?: any,
     auth?: boolean
 }

@@ -14,7 +14,7 @@ import { NxModalGenericComponent }   from '../generic/generic.component';
 import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'ngbd-modal-content',
@@ -42,29 +42,30 @@ export class LoginModalContent implements OnInit {
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
-    private setupDefaults(configService) {
+    private setupDefaults() {
         this.auth = { email: this.localStorage.get('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         location: Location,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private localStorage: LocalStorageService,
-                private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private genericModal: NxModalGenericComponent,
-                private renderer: Renderer2,
-                private router: Router,
-                @Inject(DOCUMENT) private document: any
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private localStorage: LocalStorageService,
+        private activeModal: NgbActiveModal,
+        private genericModal: NxModalGenericComponent,
+        private renderer: Renderer2,
+        private router: Router,
+        @Inject(DOCUMENT) private document: any
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+        this.setupDefaults();
 
         this.location = location;
     }

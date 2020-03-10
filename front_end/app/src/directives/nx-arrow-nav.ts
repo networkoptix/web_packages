@@ -1,13 +1,15 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {
+    Directive, ElementRef,
+    HostListener, Input
+} from '@angular/core';
 
-@Directive({ selector : '[nxArrowNav]' })
+@Directive({ selector: '[nxArrowNav]' })
 export class NxArrowNavDirective {
     @Input() nxArrowNav: boolean;
 
-    // idx: number;
-
-    constructor(private _elementRef: ElementRef) {
-        // this.idx = -1; // position outside so first click will initialize element[0]
+    constructor(
+        private _elementRef: ElementRef
+    ) {
     }
 
     private static increase(idx: number, limit: number): number {
@@ -19,10 +21,6 @@ export class NxArrowNavDirective {
         idx = (idx > 0) ? --idx : 0;
         return idx;
     }
-
-    // ngOnChanges(changes: SimpleChanges) {
-    //     this.idx = -1; // reset index on dropdown open / close
-    // }
 
     @HostListener('document:keydown', ['$event'])
     onKeydown(e) {

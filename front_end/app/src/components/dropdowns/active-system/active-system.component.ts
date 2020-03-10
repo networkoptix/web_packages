@@ -1,35 +1,35 @@
 import {
-    Component, Input,
-    SimpleChanges
-}                                   from '@angular/core';
+    Component, Input, SimpleChanges
+}                                    from '@angular/core';
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '../../../services/nx-config';
 import { Router }                    from '@angular/router';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
-    selector: 'nx-active-system',
+    selector   : 'nx-active-system',
     templateUrl: 'active-system.component.html',
-    styleUrls: ['active-system.component.scss']
+    styleUrls  : ['active-system.component.scss']
 })
 
-export class NxActiveSystemDropdown extends BaseDropdown{
+export class NxActiveSystemDropdown extends BaseDropdown {
     @Input() activeSystem: any;
 
     canViewInfo: boolean;
     params: any;
     show: boolean;
     active = {
-        health: false,
+        health  : false,
         settings: false,
-        view: false,
+        view    : false
     };
 
-    constructor(private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
-                private router: Router,
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private router: Router
     ) {
-            super(languageService, configService);
+        super(languageService, configService);
     }
 
     private updateActive(endpoint = 'settings') {
@@ -46,7 +46,7 @@ export class NxActiveSystemDropdown extends BaseDropdown{
     ngOnChanges(changes: SimpleChanges) {
         if (changes.activeSystem) {
             if (!('id' in changes.activeSystem.currentValue)) {
-                this.activeSystem = {id: '0'}; // Avoid JS timing error (in console)
+                this.activeSystem = { id: '0' }; // Avoid JS timing error (in console)
             } else if (changes.activeSystem.currentValue.id !== '0') {
                 this.canViewInfo = this.CONFIG.accessRoles.adminAccess
                     .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());

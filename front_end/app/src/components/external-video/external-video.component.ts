@@ -1,11 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer }             from '@angular/platform-browser';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
-    selector: 'nx-external-video',
+    selector   : 'nx-external-video',
     templateUrl: 'external-video.component.html',
-    styleUrls: [ 'external-video.component.scss' ]
+    styleUrls  : ['external-video.component.scss']
 })
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
@@ -13,7 +13,8 @@ export class NxExternalVideoComponent implements OnInit {
     src: any;
 
     constructor(configService: NxConfigService,
-                private sanitizer: DomSanitizer) {
+                private sanitizer: DomSanitizer
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

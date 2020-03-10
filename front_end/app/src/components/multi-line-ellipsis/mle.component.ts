@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 /* Usage
  * <nx-ml-ellipsis config='{"height" : "75", "lineHeight" : "25", "lines" : "3" }' >

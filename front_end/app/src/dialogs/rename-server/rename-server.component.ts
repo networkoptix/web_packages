@@ -1,13 +1,13 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Input }          from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-rename-server-content',
+    selector   : 'nx-modal-rename-server-content',
     templateUrl: 'rename-server.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class RenameServerModalContent {
     @Input() system: any;
@@ -18,11 +18,12 @@ export class RenameServerModalContent {
     LANG: LanguageI18NStaticTypes;
     renameServer: any;
 
-    constructor(private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
+    constructor(
+        languageService: NxLanguageProviderService,
+        private activeModal: NgbActiveModal,
+        private processService: NxProcessService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {

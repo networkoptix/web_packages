@@ -1,19 +1,20 @@
-import { Injectable } from '@angular/core';
+import { Injectable }               from '@angular/core';
 import { NxConfigService, IConfig } from './nx-config';
 import { Title, Meta }              from '@angular/platform-browser';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxPageService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    constructor(configService: NxConfigService,
-                private title: Title,
-                private meta: Meta) {
+    constructor(
+        configService: NxConfigService,
+        private title: Title,
+        private meta: Meta
+    ) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -34,10 +35,10 @@ export class NxPageService {
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({ name : 'viewport', content : this.CONFIG.meta.viewport.default });
+        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({ name : 'viewport', content : this.CONFIG.meta.viewport.desktopLayout });
+        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
     }
 }

@@ -1,16 +1,14 @@
-import { Injectable, OnDestroy } from '@angular/core';
-import { of, ReplaySubject, Observable, Subscribable, Subscription } from 'rxjs';
-import { distinctUntilChanged, map, tap } from 'rxjs/operators';
-
-import { NxConfigService, IConfig } from './nx-config';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxCloudApiService } from './nx-cloud-api';
-import { NxPollService } from './poll.service';
-import { NxToastService } from '../dialogs/toast.service';
-import { Utils } from '../utils/helpers';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
-import { NxSystem } from './system.service';
-import { NxSystemAPI } from './system-api.service';
+import { Injectable, OnDestroy }                       from '@angular/core';
+import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
+import { NxConfigService, IConfig }                    from './nx-config';
+import { NxLanguageProviderService }                   from './nx-language-provider';
+import { NxCloudApiService }                           from './nx-cloud-api';
+import { NxPollService }                               from './poll.service';
+import { NxToastService }                              from '../dialogs/toast.service';
+import { NxUtilsService }                              from './utils.service';
+import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
+import { NxSystem }                                    from './system.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,13 +24,14 @@ export class NxSystemsService implements OnDestroy {
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         pollService: NxPollService,
         private cloudApi: NxCloudApiService,
-        private language: NxLanguageProviderService,
         private toastService: NxToastService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
         this.mergingSystems = new Set();
@@ -124,7 +123,7 @@ export class NxSystemsService implements OnDestroy {
         this.activeSubscription = this.systemsPoll
             .pipe(
                 tap((systems: NxSystem[]) => this.processSystems(systems)),
-                distinctUntilChanged((a, b) => Utils.isEqual(a, b))
+                distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
     }

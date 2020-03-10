@@ -1,13 +1,13 @@
 import {
-    Component, OnInit, Input, Renderer2, ViewChild, OnDestroy, AfterViewInit
-} from '@angular/core';
-import { Location }                              from '@angular/common';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }              from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+    Component, OnInit, Input,
+    ViewChild, OnDestroy, AfterViewInit
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -29,18 +29,16 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('embedForm', { static: true }) embedForm;
 
-    constructor(private activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private location: Location,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                /* @Inject(DOCUMENT) private document: Document */
+    constructor(
+        language: NxLanguageProviderService,
+        configService: NxConfigService,
+        private activeModal: NgbActiveModal
     ) {
         this.params = {
             authString: '',
             nocameras : false,
             noheader  : false,
-            nocontrols: false,
+            nocontrols: false
         };
 
         this.auth = {
@@ -49,10 +47,11 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         };
 
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
         this.createEmbedUrl(this.params);
@@ -66,15 +65,15 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     createEmbedUrl(params): void {
         // Cannot use A6 router at this moment - AJS is leading the parade
-        const url = window.location.href.replace('systems', 'embed').split('?')[ 0 ];
-        let uri = '';
+        const url = window.location.href.replace('systems', 'embed').split('?')[0];
+        let uri   = '';
 
         for (const paramsKey in params) {
             if (params.hasOwnProperty(paramsKey)) {
                 // filter checkboxes in form
-                if (this.params[ paramsKey ] !== undefined && !params[ paramsKey ]) {
+                if (this.params[paramsKey] !== undefined && !params[paramsKey]) {
                     uri += (uri === '') ? '?' : '&';
-                    uri += (typeof params[ paramsKey ] === 'boolean') ? paramsKey : params[ paramsKey ];
+                    uri += (typeof params[paramsKey] === 'boolean') ? paramsKey : params[paramsKey];
                 }
             }
         }
@@ -84,9 +83,9 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
         // HTML tags are needed for copy to clipboard functionality
         this.embedUrl = '<iframe ' +
-                            'src = "' + url + uri + '" >' +
-                            'Your browser doesn\'t support iframe.' +
-                        '</iframe>';
+            'src = "' + url + uri + '" >' +
+            'Your browser doesn\'t support iframe.' +
+            '</iframe>';
     }
 
     close() {

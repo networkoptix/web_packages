@@ -7,27 +7,27 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseDropdown }      from '../injDropdown';
 
 /* Usage
-<nx-select [id]="select.id"
-           [name]="permissions"
-           [items]="accessRoles"
-           label="optionLabel"          <- which property should be shown
-           [(ngModel)]="user.role.name"
-           (ngModelChange)="onModelChange($event)"
-           [selected]="user.role.name ? user.role.name : null"
-           required>
-</nx-select>
-*/
+ <nx-select [id]="select.id"
+     [name]="permissions"
+     [items]="accessRoles"
+     label="optionLabel"          <- which property should be shown
+     [(ngModel)]="user.role.name"
+     (ngModelChange)="onModelChange($event)"
+     [selected]="user.role.name ? user.role.name : null"
+     required>
+ </nx-select>
+ */
 
 @Component({
-    selector: 'nx-select',
-    templateUrl: 'dropdown.component.html',
-    styleUrls: ['dropdown.component.scss'],
+    selector     : 'nx-select',
+    templateUrl  : 'dropdown.component.html',
+    styleUrls    : ['dropdown.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    providers: [
+    providers    : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxGenericDropdown),
-            multi: true
+            multi      : true
         }
     ]
 })
@@ -54,4 +54,3 @@ export class NxGenericDropdown extends BaseDropdown {
         }
     }
 }
-

@@ -4,12 +4,12 @@ import {
     NgModule, NgModuleRef,
     ViewChild,
     ViewContainerRef
-}                           from '@angular/core';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
+}                                   from '@angular/core';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
-    selector : 'landing-display-component',
-    template : `
+    selector: 'landing-display-component',
+    template: `
         <ng-container #dynamicTemplate></ng-container>`,
     styleUrls: ['landing-display.component.scss']
 })
@@ -23,8 +23,8 @@ export class NxLandingDisplayComponent implements AfterViewInit {
     constructor(private _compiler: Compiler,
                 private _injector: Injector,
                 private _m: NgModuleRef<any>,
-                private configService: NxConfigService) {
-
+                private configService: NxConfigService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -32,7 +32,7 @@ export class NxLandingDisplayComponent implements AfterViewInit {
         const myTemplateUrl = '/' + this.CONFIG.viewsDir + 'static/landing.html';
 
         const tmpCmp = Component({
-            moduleId: module.id,
+            moduleId   : module.id,
             templateUrl: myTemplateUrl
         })(class {
         });
@@ -44,8 +44,8 @@ export class NxLandingDisplayComponent implements AfterViewInit {
 
         this._compiler.compileModuleAndAllComponentsAsync(tmpModule)
             .then((factories) => {
-                const factory = factories.componentFactories[0];
-                const compRef = factory.create(this._injector, [], null, this._m);
+                const factory         = factories.componentFactories[0];
+                const compRef         = factory.create(this._injector, [], null, this._m);
                 compRef.instance.name = 'dynamic';
 
                 if (this.CONFIG.previewPath) {

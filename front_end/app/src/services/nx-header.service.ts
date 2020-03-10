@@ -3,7 +3,7 @@ import { NxConfigService, IConfig } from './nx-config';
 import { BehaviorSubject, timer } from 'rxjs';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxHeaderService {
     CONFIG: IConfig;
@@ -11,7 +11,8 @@ export class NxHeaderService {
     // Only to communicate with AJS
     systemIdSubject = new BehaviorSubject(undefined);
 
-    constructor(configService: NxConfigService
+    constructor(
+        configService: NxConfigService
     ) {
         this.CONFIG = configService.getConfig();
     }

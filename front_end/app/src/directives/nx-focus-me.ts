@@ -1,6 +1,6 @@
 import { Directive, ElementRef, OnInit } from '@angular/core';
 
-@Directive({ selector : '[nxFocusMe]' })
+@Directive({ selector: '[nxFocusMe]' })
 export class NxFocusMeDirective implements OnInit {
     constructor(private _elementRef: ElementRef) {
     }

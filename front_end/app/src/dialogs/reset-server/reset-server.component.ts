@@ -1,18 +1,17 @@
-import { Component, Input, Renderer2 } from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService, IConfig }    from '../../services/nx-config';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { timer }                       from 'rxjs';
-import { delayWhen, retryWhen, map }   from 'rxjs/operators';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Input }          from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxToastService }            from '../toast.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { timer }                     from 'rxjs';
+import { delayWhen, retryWhen, map } from 'rxjs/operators';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-reset-server-content',
+    selector   : 'nx-modal-reset-server-content',
     templateUrl: 'reset-server.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class ResetServerModalContent {
     @Input() system: any;
@@ -25,14 +24,15 @@ export class ResetServerModalContent {
     resetServer: any;
     password: string;
 
-    constructor(private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private configService: NxConfigService,
-                private toastService: NxToastService,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private toastService: NxToastService
     ) {
-        this.LANG = this.language.getTranslations();
-        this.CONFIG = this.configService.getConfig();
+        this.LANG = languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
@@ -40,8 +40,8 @@ export class ResetServerModalContent {
             .createProcess(() => {
                 const options = {
                     classname: this.CONFIG.toast.warning,
-                    autohide: true,
-                    delay: this.CONFIG.alertTimeout
+                    autohide : true,
+                    delay    : this.CONFIG.alertTimeout
                 };
                 return this.system.restoreFactorySettings(this.serverId, this.password).toPromise().then(res => {
                     console.log('res in restoreFactorySettings', res);
@@ -69,17 +69,17 @@ export class ResetServerModalContent {
                                 .subscribe(() => {
                                     this.system.currentServerNotBusy = true;
                                     this.system.systemInfo = this.system;
-                                    const successMessage = this.LANG.servers.resetSuccessful.replace('{{ serverName }}', this.serverName);
+                                    const successMessage             = this.LANG.servers.resetSuccessful.replace('{{ serverName }}', this.serverName);
                                     options.classname = this.CONFIG.toast.success;
                                     this.toastService.show(successMessage, options);
                                     serverSubscription.unsubscribe();
                                 });
                         })
-                        .catch(() => this.toastService.show(this.LANG.servers.restartFailed, options));
+                            .catch(() => this.toastService.show(this.LANG.servers.restartFailed, options));
                     })
-                    .catch(() => this.toastService.show(this.LANG.servers.getModuleFailed, options));
+                        .catch(() => this.toastService.show(this.LANG.servers.getModuleFailed, options));
                 })
-                .catch(() => this.toastService.show(this.LANG.servers.resetFailed, options));
+                    .catch(() => this.toastService.show(this.LANG.servers.resetFailed, options));
             }, { successMessage: this.LANG.servers.beginReset });
     }
 

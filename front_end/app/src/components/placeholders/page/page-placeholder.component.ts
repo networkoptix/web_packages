@@ -1,24 +1,27 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import {
+    Component, Input, OnInit,
+    ViewEncapsulation
+}                                    from '@angular/core';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 /* Usage
-<nx-page-placeholder
-     type?="500 | 404 | NO_ALERTS | OFFLINE | NO_CAMS..."
-     -- OR ---
-     iconClass?='server-offline'
-     placeholderTitle?='SERVER OFFLINE'
-     message?='Warning! Dragons ahead!'
-     preloader?=BOOLEAN
-     [condition]= WHEN_TO_SHOW >
-</nx-page-placeholder>
-*/
+ <nx-page-placeholder
+ type?="500 | 404 | NO_ALERTS | OFFLINE | NO_CAMS..."
+ -- OR ---
+ iconClass?='server-offline'
+ placeholderTitle?='SERVER OFFLINE'
+ message?='Warning! Dragons ahead!'
+ preloader?=BOOLEAN
+ [condition]= WHEN_TO_SHOW >
+ </nx-page-placeholder>
+ */
 
 @Component({
-    selector : 'nx-page-placeholder',
-    templateUrl : 'page-placeholder.component.html',
-    styleUrls : ['page-placeholder.component.scss'],
+    selector     : 'nx-page-placeholder',
+    templateUrl  : 'page-placeholder.component.html',
+    styleUrls    : ['page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit {
@@ -36,11 +39,12 @@ export class NxPagePlaceholderComponent implements OnInit {
 
     iconName: string;
 
-    constructor(private configService: NxConfigService,
-                private languageService: NxLanguageProviderService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {

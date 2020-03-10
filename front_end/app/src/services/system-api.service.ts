@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import { NxConfigService, IConfig } from './nx-config';
-import { from, of, throwError } from 'rxjs';
-import { mergeMap, retryWhen } from 'rxjs/operators';
-import { Location } from '@angular/common';
+import { NxConfigService, IConfig }            from './nx-config';
+import { from, of, throwError }                from 'rxjs';
+import { mergeMap, retryWhen }                 from 'rxjs/operators';
+import { Location }                            from '@angular/common';
 
 interface User {
     canBeEdited: boolean;
@@ -20,33 +20,33 @@ interface User {
 
 export class NxSystemAPI {
     /*
-    * System API is a unified service for making API requests to media servers
-    *
-    * There are several modes for this service:
-    * 1. Upper level: working locally (no systemId) or through the cloud (with systemId)
-    * 2. Lower level: working with default server (no serverID) or through the proxy (with serverId)
-    *
-    * Service supports authentication methods for all these cases
-    * 1. working locally we use cookie authentication on server
-    * 2. working through cloud we use cloudAPI method to get auth keys
-    *
-    * Service also supports re-authentication?
-    *
-    *
-    * Service also should support global handlers for responses:
-    * 1. Not authorised
-    * 2. Server offline
-    * 3. Server not available
-    *
-    * Other error handling is done outside. For example, in process service, or in model
-    * No http cache here - caching is handled either by browser or by upper-level model
-    *
-    * Service is initialised to work with specific system and server.
-    * Each instance representing a single connection and is cached
-    *
-    *
-    * TODO (v 3.2): Support websocket connection to server as well
-    * */
+     * System API is a unified service for making API requests to media servers
+     *
+     * There are several modes for this service:
+     * 1. Upper level: working locally (no systemId) or through the cloud (with systemId)
+     * 2. Lower level: working with default server (no serverID) or through the proxy (with serverId)
+     *
+     * Service supports authentication methods for all these cases
+     * 1. working locally we use cookie authentication on server
+     * 2. working through cloud we use cloudAPI method to get auth keys
+     *
+     * Service also supports re-authentication?
+     *
+     *
+     * Service also should support global handlers for responses:
+     * 1. Not authorised
+     * 2. Server offline
+     * 3. Server not available
+     *
+     * Other error handling is done outside. For example, in process service, or in model
+     * No http cache here - caching is handled either by browser or by upper-level model
+     *
+     * Service is initialised to work with specific system and server.
+     * Each instance representing a single connection and is cached
+     *
+     *
+     * TODO (v 3.2): Support websocket connection to server as well
+     * */
     private authGet: string;
     private authPost: string;
     private authPlay: string;
@@ -66,8 +66,9 @@ export class NxSystemAPI {
     urlBase: string;
     unauthorizedCallback: any;
 
-    constructor(http: HttpClient,
-        config: IConfig,
+    constructor(
+        http: HttpClient,
+        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -75,7 +76,7 @@ export class NxSystemAPI {
         unauthorizedCallback: (any) => any
     ) {
         this.http = http;
-        this.CONFIG = config;
+        this.CONFIG = configService;
         this.location = location;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
     }
@@ -84,7 +85,7 @@ export class NxSystemAPI {
         let urlBase = '';
         if (this.systemId) {
             urlBase = window.location.protocol + '//' +
-            (this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId));
+                (this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId));
         }
         urlBase += '/web';
         if (this.serverId) {
@@ -205,7 +206,7 @@ export class NxSystemAPI {
     }
 
     getRolePermissions(roleId) {
-        return this.get('/ec2/getUserRoles', { id : roleId });
+        return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
     checkPermissions(flag) {
@@ -225,6 +226,7 @@ export class NxSystemAPI {
         this.authPost = authPost;
         this.authPlay = authPlay;
     }
+
     /* End of Authentication  */
 
     /* Server settings */
@@ -273,6 +275,7 @@ export class NxSystemAPI {
     restoreFactorySettings(currentPassword) {
         return this.post('/api/restoreState', { currentPassword });
     }
+
     /* End of Server settings */
 
     /* Working with users */
@@ -285,7 +288,7 @@ export class NxSystemAPI {
     }
 
     deleteUser(userId) {
-        return this.post('/ec2/removeUser', { id : userId });
+        return this.post('/ec2/removeUser', { id: userId });
     }
 
     isEmptyId(id) {
@@ -325,6 +328,7 @@ export class NxSystemAPI {
             fullName
         };
     }
+
     /* End of Working with users */
 
     /* Cameras and Servers */
@@ -349,6 +353,7 @@ export class NxSystemAPI {
     getResourceTypes() {
         return this.get('/ec2/getResourceTypes');
     }
+
     /* End of Cameras and Servers */
 
     /* Formatting urls */
@@ -356,7 +361,7 @@ export class NxSystemAPI {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
-        let endpoint = '/ec2/cameraThumbnail';
+        let endpoint    = '/ec2/cameraThumbnail';
 
         if (time) {
             data.time = time;
@@ -380,7 +385,7 @@ export class NxSystemAPI {
 
     hlsUrl(cameraId, position, resolution) {
         const data: any = {
-            auth : this.authGet
+            auth: this.authGet
         };
         if (position) {
             data.pos = position;
@@ -391,7 +396,7 @@ export class NxSystemAPI {
 
     webmUrl(cameraId, position, resolution, force) {
         const data: any = {
-            auth : this.authGet,
+            auth: this.authGet,
             resolution
         };
         if (position) {
@@ -400,6 +405,7 @@ export class NxSystemAPI {
         const url = `/media/${this.cleanId(cameraId)}.webm?rt`;
         return this.generateGetUrl(url, data, force);
     }
+
     /* End of formatting urls */
 
     /* Working with archive */
@@ -419,7 +425,7 @@ export class NxSystemAPI {
             periodsType = 0;
         }
         const params: any = {
-            cameraId : this.cleanId(cameraId),
+            cameraId: this.cleanId(cameraId),
             detail,
             endTime,
             periodsType,
@@ -431,11 +437,12 @@ export class NxSystemAPI {
         // RecordedTimePeriods
         return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
     }
+
     /* End of Working with archive */
 
     setCameraPath(cameraId) {
         let systemLink = '';
-        const route = this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
+        const route    = this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
 
         if (this.systemId) {
             if (route !== '') {
@@ -472,7 +479,7 @@ export class NxSystemAPI {
 
     checkLocalAdminPassword(password) {
         const localPasswordUrl = this.urlBase.replace('/web', '');
-        const httpOptions = {
+        const httpOptions      = {
             headers: new HttpHeaders({
                 Authorization: 'Basic ' + btoa(`admin:${password}`)
             })
@@ -491,7 +498,7 @@ export class NxSystemAPIService {
 
     constructor(configService: NxConfigService,
         location: Location,
-        private http: HttpClient
+                private http: HttpClient
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();

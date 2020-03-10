@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
-import { NxRibbonComponent } from './ribbon.component';
+import { Injectable }      from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
 
 @Injectable()
 export class NxRibbonService {
-
     context = {
-        visibility: false,
-        message: '',
-        text: '',
-        url: '',
-        type: '',
+        visibility    : false,
+        message       : '',
+        text          : '',
+        url           : '',
+        type          : '',
         updateFunction: ''
     };
+
     contextSubject = new BehaviorSubject(this.context);
 
     constructor() {
@@ -33,11 +31,11 @@ export class NxRibbonService {
 
     hide() {
         this.context = {
-            visibility: false,
-            message: '',
-            text: '',
-            url: '',
-            type: '',
+            visibility    : false,
+            message       : '',
+            text          : '',
+            url           : '',
+            type          : '',
             updateFunction: ''
         };
         this.contextSubject.next(this.context);

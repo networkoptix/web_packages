@@ -1,17 +1,17 @@
 import {
-    Component, Inject, Input,
+    Component, Input,
     Renderer2, ViewChild
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-disconnect-content',
+    selector   : 'nx-modal-disconnect-content',
     templateUrl: 'disconnect.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class DisconnectModalContent {
     @Input() systemId;
@@ -22,18 +22,19 @@ export class DisconnectModalContent {
     password: string;
     wrongPassword: boolean;
     auth = {
-      password: ''
+        password: ''
     };
 
     @ViewChild('disconnectForm', { static: true }) disconnectForm: HTMLFormElement;
 
-    constructor(private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private renderer: Renderer2,
+    constructor(
+        language: NxLanguageProviderService,
+        private activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private renderer: Renderer2
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
     }
 
     ngOnInit() {
@@ -46,16 +47,16 @@ export class DisconnectModalContent {
             return this.cloudApiService.disconnect(this.systemId, this.auth.password).toPromise();
         }, {
             ignoreUnauthorized: true,
-            errorCodes: {
+            errorCodes        : {
                 wrongPassword: () => {
                     this.wrongPassword = true;
                     this.auth.password = '';
 
                     this.renderer.selectRootElement('#password').focus();
-                },
+                }
             },
             successMessage: this.LANG.toastMessage.system.disconnected.Success,
-            errorPrefix: this.LANG.errorCodes.cantDisconnectSystemPrefix
+            errorPrefix   : this.LANG.errorCodes.cantDisconnectSystemPrefix
         }).then(() => {
             this.activeModal.close(true);
         });

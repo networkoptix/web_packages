@@ -1,13 +1,16 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges, SimpleChange } from '@angular/core';
-import { NxConfigService, IConfig }          from '../../../services/nx-config';
+import {
+    Component, Input, OnInit,
+    OnChanges, SimpleChanges
+}                                   from '@angular/core';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
 
 /* Usage
-*/
+ */
 
 @Component({
-    selector: 'nx-level-3-item',
+    selector   : 'nx-level-3-item',
     templateUrl: 'level-3-item.component.html',
-    styleUrls: ['level-3-item.component.scss']
+    styleUrls  : ['level-3-item.component.scss']
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges {
     @Input() base: any = {};
@@ -19,8 +22,9 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
     isEnabled: boolean;
     CONFIG: IConfig;
 
-    constructor(private configService: NxConfigService) {
-        this.CONFIG = this.configService.getConfig();
+    constructor(configService: NxConfigService
+    ) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

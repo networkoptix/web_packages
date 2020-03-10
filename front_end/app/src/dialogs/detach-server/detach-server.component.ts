@@ -1,15 +1,15 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService, IConfig }    from '../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Input }          from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxToastService }            from '../toast.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-detach-server-content',
+    selector   : 'nx-modal-detach-server-content',
     templateUrl: 'detach-server.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class DetachServerModalContent {
     @Input() system: any;
@@ -22,14 +22,15 @@ export class DetachServerModalContent {
     detachServer: any;
     password: string;
 
-    constructor(private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private toastService: NxToastService,
-                private configService: NxConfigService,
+    constructor(
+        language: NxLanguageProviderService,
+        configService: NxConfigService,
+        private activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private toastService: NxToastService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
     }
 
     ngOnInit() {
@@ -37,8 +38,8 @@ export class DetachServerModalContent {
             .createProcess(() => {
                 const options = {
                     classname: this.CONFIG.toast.warning,
-                    autohide: true,
-                    delay: this.CONFIG.alertTimeout
+                    autohide : true,
+                    delay    : this.CONFIG.alertTimeout
                 };
                 return this.system.detachFromSystem(this.serverId, this.password).toPromise()
                     .then(res => {

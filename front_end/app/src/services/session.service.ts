@@ -1,10 +1,10 @@
-import { Inject, Injectable } from '@angular/core';
-import { LocalStorageService }       from 'ngx-store';
-import { ReplaySubject } from 'rxjs';
-import { WINDOW } from './window-provider';
+import { Inject, Injectable }  from '@angular/core';
+import { LocalStorageService } from 'ngx-store';
+import { ReplaySubject }       from 'rxjs';
+import { WINDOW }              from './window-provider';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxSessionService {
     loginStateSubject = new ReplaySubject(0);

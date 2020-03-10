@@ -1,16 +1,15 @@
 import {
     Component, Inject, Input, OnInit,
     Renderer2, ViewChild
-} from '@angular/core';
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NgForm }    from '@angular/forms';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
+import { NgForm }                    from '@angular/forms';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 export interface MessageParams {
     disclaimer: string;
@@ -26,9 +25,9 @@ interface Subject {
 }
 
 @Component({
-    selector: 'nx-modal-message-content',
+    selector   : 'nx-modal-message-content',
     templateUrl: 'message.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class MessageModalContent implements OnInit {
     @Input() account;
@@ -53,24 +52,24 @@ export class MessageModalContent implements OnInit {
 
     @ViewChild('feedbackForm', { static: true }) public feedbackForm: NgForm;
 
-    constructor(configService: NxConfigService,
-                private activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                @Inject(WINDOW) private window: Window,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.placeholder = '';
         this.subject = '';
         this.subjectMessage = '';
         this.url = this.window.location.href;
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {
-        this.LANG = this.language.getTranslations();
-
         this.initForm();
         this.sendMessage = this.processService.createProcess(() => {
             const asset = this.data.assetId || this.data.asset;
@@ -102,7 +101,7 @@ export class MessageModalContent implements OnInit {
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
                 value: subject,
-                name: this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
+                name : this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
             };
         });
 
