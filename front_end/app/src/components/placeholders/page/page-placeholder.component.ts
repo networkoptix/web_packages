@@ -22,7 +22,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
     selector     : 'nx-page-placeholder',
     templateUrl  : 'page-placeholder.component.html',
     styleUrls    : ['page-placeholder.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    // encapsulation: ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
@@ -31,7 +31,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() message: string;
     @Input() preloader: boolean;
     @Input() condition: boolean;
-    @Input() withFooter: boolean;
+    @Input() withFooter: any;
     @Input() constrainWidth: boolean;
 
     CONFIG: IConfig;
@@ -48,6 +48,8 @@ export class NxPagePlaceholderComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.withFooter = (this.withFooter !== undefined);
+
         if (this.type) {
             if (!this.preloader && !this.condition) {
                 this.preloader = false;

@@ -3,10 +3,9 @@ import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }  from '@ngx-translate/core';
-
-import { Nx404Component } from './404.component';
-import { ComponentsModule } from '../../components/components.module';
+import { TranslateModule }      from '@ngx-translate/core';
+import { Nx404Component }       from './404.component';
+import { ComponentsModule }     from '../../components/components.module';
 
 const appRoutes: Routes = [
     { path: '404', component: Nx404Component },
@@ -14,7 +13,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -23,16 +22,16 @@ const appRoutes: Routes = [
 
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [],
-    declarations   : [
-        Nx404Component,
+    providers: [],
+    declarations: [
+        Nx404Component
     ],
-    bootstrap      : [],
+    bootstrap: [],
     entryComponents: [
-        Nx404Component,
+        Nx404Component
     ],
-    exports        : [
-        Nx404Component,
+    exports: [
+        Nx404Component
     ]
 })
 export class Nx404Module {

@@ -207,4 +207,4 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.directives')
-    .directive('nxPagePlaceholder', downgradeComponent({ component: NxPagePlaceholderComponent }) as angular.IDirectiveFactory);
+    // .directive('nxPagePlaceholder', downgradeComponent({ component: NxPagePlaceholderComponent }) as angular.IDirectiveFactory);
