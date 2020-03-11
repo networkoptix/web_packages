@@ -330,12 +330,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     .map(peer => {
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
+                            ...peer,
+                            id        : peer.id.replace(/[{}]/g, ''),
                             url       : `${peer.remoteAddresses[0]}:${peer.port}`,
                             systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
                             ip        : peer.remoteAddresses[0],
                             name      : peer.name,
-                            isNew,
-                            ...peer
+                            isNew
                         };
                         if (peer.status === 'Incompatible' && this.system.moduleInfo) {
                             system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
@@ -383,7 +384,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
-
         return this.dialogs
             .merge(this.system, this.systems, this.peerSystems, this.accountService)
             .then((mergeInfo) => {
