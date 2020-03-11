@@ -1,6 +1,6 @@
 <nx-pre-loader *ngIf="accountInfo.activateCode && activate.processing"></nx-pre-loader>
 
-<nx-page-placeholder *ngIf="true" [type]="'ACCOUNT_ACTIVATED'">
+<nx-page-placeholder *ngIf="activationSuccess" [type]="'ACCOUNT_ACTIVATED'">
     <button class="btn btn-primary btn-collapse login btn-caption" (click)="login()" translate>
         Log In
     </button>
