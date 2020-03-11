@@ -23,7 +23,7 @@ from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
-
+from selenium.webdriver.chrome.options import Options
 
 class NoptixLibrary(object):
 
@@ -420,3 +420,17 @@ class NoptixLibrary(object):
         imgs = client.images.list(name="mergemediaserver")
         for img in imgs:
             client.images.remove(img.id)
+            
+    def chrome_options_for_push_notifications(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument("--disable-infobars")
+        options.add_argument("start-maximized")
+        options.add_argument("--disable-extensions")
+        options.add_experimental_option("prefs", {
+            "profile.default_content_setting_values.notifications": 1
+        })
+        return options
+    
+    def push_notifications_swarm(self, slaves, users, ramp, minutes):
+        cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {minutes}m"
+        os.system(cmd)

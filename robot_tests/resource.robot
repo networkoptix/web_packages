@@ -17,8 +17,8 @@ ${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
-@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3    --start-maximized
-@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3    --headless
+@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3   
+@{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    30
 
@@ -43,12 +43,10 @@ Regular Open Browser
 
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
-    ${chrome_options}=    Set Chrome Options Headless
-    ${system}=    Evaluate    platform.system()    platform
-    Run Keyword if    "${system}"=="Darwin"      Create Webdriver    Chrome    chrome_options=${chrome_options}    executable_path=/usr/local/bin/chromedriver
-    ...            ELSE    Create Webdriver    Chrome    chrome_options=${chrome_options}
+    ${chrome_options}=    Set Chrome Options Headless    
+    Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
-    Go to    ${ENV}
+   # Go to    ${ENV}
 
 Open page anonymously
     [Arguments]    ${url}    ${title}
@@ -69,7 +67,7 @@ Set Chrome Options Headless
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
     FOR    ${option}    IN    @{chrome_arguments_headless}
         Call Method    ${options}    add_argument    ${option}
-    END
+    END    
     [Return]    ${options}
 
 Check Language Anonymous
