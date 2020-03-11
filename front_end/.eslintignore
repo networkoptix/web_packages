@@ -4,3 +4,5 @@ node_modules
 dist
 # don't lint nyc coverage output
 coverage
+# Don't lint the auto generated static language types file
+app/src/language_l18n_static_types.ts
