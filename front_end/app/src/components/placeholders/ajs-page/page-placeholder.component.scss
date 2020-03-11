@@ -83,7 +83,7 @@ $preloader_small_circle_distance : 8px;
 
     &.with-footer {
         height : calc(100% - 100px);
-        min-height: 400px;
+        min-height: 420px;
     }
 }
 
@@ -125,22 +125,19 @@ $preloader_small_circle_distance : 8px;
 
 .placeholder-title {
     @extend #medium24;
-    line-height    : rem(40px);
     text-align     : center;
     margin-bottom  : 1rem;
     justify-content: center;
+    max-width      : 560px;
 }
 
 .placeholder-message {
     @extend #regular15;
-    line-height   : 24px;
+    line-height : 24px;
+    max-width   : 560px;
 }
 
 .placeholder-preloader {
     @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
-}
-
-.footer {
-    width: calc(100% - 16px);
 }
 
