@@ -214,7 +214,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.elementTableWidthSubscription = this.scrollMechanicsService
             .elementTableWidthSubject
             .subscribe(() => {
-                const width       = this.scrollMechanicsService.elementTableWidthSubject.getValue();
+                const width       = this.scrollMechanicsService.elementTableWidth;
                 this.elementWidth = (width > 0) ? width + 'px' : '100%';
             });
 
@@ -394,10 +394,10 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     calcElementScrollMechanics() {
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
+        this.windowScroll = this.scrollMechanicsService.windowScroll;
 
         this.clientHeight = this.camerasTable.nativeElement.clientHeight;
-        this.searchHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue();
+        this.searchHeight = this.scrollMechanicsService.searchViewHeight;
 
         if (this.clientHeight + this.searchHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
             this.tableScrollFixed = true;

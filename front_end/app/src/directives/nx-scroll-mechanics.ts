@@ -22,7 +22,7 @@ export class NxScrollMechanicsDirective implements OnInit {
             this.scrollMechanicsService
                 .elementViewWidthSubject
                 .subscribe(() => {
-                    const width = this.scrollMechanicsService.elementViewWidthSubject.getValue();
+                    const width = this.scrollMechanicsService.elementViewWidth;
                     this.renderer.setStyle(this.element.nativeElement, 'width', (width > 0) ? (width - 8 /* -gutter */) + 'px' : '100%');
                 });
         });

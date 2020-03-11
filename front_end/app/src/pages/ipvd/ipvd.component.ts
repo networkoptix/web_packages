@@ -155,13 +155,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             .windowSizeSubject
             .subscribe(() => {
                 if (this.viewContainer && this.viewContainer.nativeElement) {
-                    this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
+                    this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
                 }
 
                 if (this.tableContainer && this.tableContainer.nativeElement) {
                     let width = this.tableContainer.nativeElement.clientWidth;
                     width = (this.activeCamera) ? width - 8 : width; /* -gutter */
-                    this.scrollMechanicsService.setElementTableWidth(width);
+                    this.scrollMechanicsService.elementTableWidth = width;
                 }
             });
 
@@ -205,13 +205,13 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.offsetSubscription = this.scrollMechanicsService
             .offsetSubject.pipe(delay(0))
             .subscribe(() => {
-                this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
+                this.scrollMechanicsService.searchViewHeight = this.searchContainer.nativeElement.clientHeight;
             });
     }
 
     ngAfterViewInit() {
         if (this.searchContainer && this.searchContainer.nativeElement) {
-            this.scrollMechanicsService.setSearchViewHeight(this.searchContainer.nativeElement.clientHeight);
+            this.scrollMechanicsService.searchViewHeight = this.searchContainer.nativeElement.clientHeight;
         }
     }
 
@@ -452,11 +452,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         if (this.cameras && this.cameras.length) {
             if (this.filterEmpty()) {
-                const cameras = this.cameraSearchService.ipvdSearch(this.cameras, this.filterModel);
+                const filteredCameras: any = this.cameraSearchService.ipvdSearch(this.cameras, this.filterModel);
 
-                this.noResult = (cameras.length === 0);
+                this.noResult = (filteredCameras.length === 0);
                 if (!this.noResult) {
-                    this.camerasTable = this.preFilterCameraTable(cameras);
+                    this.camerasTable = this.preFilterCameraTable(filteredCameras);
                 } else {
                     this.camerasTable = [];
                 }
@@ -514,8 +514,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.toggleCamview = true;
         setTimeout(() => {
-            this.scrollMechanicsService.setElementViewWidth(this.viewContainer.nativeElement.clientWidth);
-            this.scrollMechanicsService.setElementTableWidth(this.tableContainer.nativeElement.clientWidth - 8/* -gutter */);
+            this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
+            this.scrollMechanicsService.elementTableWidth = this.tableContainer.nativeElement.clientWidth - 8/* -gutter */;
         }, 500);
     }
 
@@ -549,6 +549,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.mobileDetailMode = false;
         this.toggleCamview = false;
 
-        this.scrollMechanicsService.setElementTableWidth(0);
+        this.scrollMechanicsService.elementTableWidth = 0;
     }
 }

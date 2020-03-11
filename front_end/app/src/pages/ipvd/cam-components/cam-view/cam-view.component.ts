@@ -100,14 +100,14 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         this.elementViewWidthSubscription = this.scrollMechanicsService
             .elementViewWidthSubject
             .subscribe(() => {
-                const width = this.scrollMechanicsService.elementViewWidthSubject.getValue();
+                const width = this.scrollMechanicsService.elementViewWidth;
                 this.elementWidth = (width > 0) ? (width - 8 /* -gutter */) + 'px' : '100%';
             });
 
         this.searchViewHeightSubscription = this.scrollMechanicsService
             .searchViewHeightSubject.pipe(delay(0))
             .subscribe(() => {
-                this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
+                this.scrollHeight = this.scrollMechanicsService.searchViewHeight + NxScrollMechanicsService.HEADER_OFFSET;
             });
     }
 
@@ -132,10 +132,10 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
     calcElementScrollMechanics() {
         this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
-        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
+        this.windowScroll = this.scrollMechanicsService.windowScroll;
 
         this.clientHeight = this.cameraView.nativeElement.clientHeight;
-        this.searchHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue();
+        this.searchHeight = this.scrollMechanicsService.searchViewHeight;
 
         if (this.clientHeight < this.windowSize.height - this.searchHeight && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
             this.viewScrollFixedTop = true;
