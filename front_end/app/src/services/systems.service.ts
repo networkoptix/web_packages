@@ -70,7 +70,7 @@ export class NxSystemsService implements OnDestroy {
 
     getSystemOwnerName(system: NxSystem, currentUserEmail: string, forOrder?: boolean) {
         // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
-        if (system.ç === currentUserEmail) {
+        if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {
                 // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
