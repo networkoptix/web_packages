@@ -585,7 +585,7 @@
                 "success": "System {{systemName}} is successfully deleted from your account"
             },
             "disconnected": {
-                "Success": "System is successfully disconnected from %CLOUD_NAME%"
+                "success": "System is successfully disconnected from %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "System merge failed",

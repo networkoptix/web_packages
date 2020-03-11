@@ -635,7 +635,7 @@ export interface ToastMessage {
 
 export interface ToastMessageSystem {
     deleted:      Deleted;
-    disconnected: Disconnected;
+    disconnected: Deleted;
     merge:        SystemMerge;
     rename:       Deleted;
     share:        Share;
@@ -643,10 +643,6 @@ export interface ToastMessageSystem {
 
 export interface Deleted {
     success: string;
-}
-
-export interface Disconnected {
-    Success: string;
 }
 
 export interface SystemMerge {
@@ -1370,16 +1366,13 @@ const typeMap: any = {
     ], false),
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },
-        { json: "disconnected", js: "disconnected", typ: r("Disconnected") },
+        { json: "disconnected", js: "disconnected", typ: r("Deleted") },
         { json: "merge", js: "merge", typ: r("SystemMerge") },
         { json: "rename", js: "rename", typ: r("Deleted") },
         { json: "share", js: "share", typ: r("Share") },
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "" },
-    ], false),
-    "Disconnected": o([
-        { json: "Success", js: "Success", typ: "" },
     ], false),
     "SystemMerge": o([
         { json: "failed", js: "failed", typ: "" },
