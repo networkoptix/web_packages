@@ -9,7 +9,7 @@ import { NxDialogsService }                               from '../dialogs/dialo
 import { NxSessionService }                               from './session.service';
 import { NxApplyService }                                 from './apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { BehaviorSubject, of, Subscription }              from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
 import { WINDOW }                                         from './window-provider';
 import { NxAppStateService }                              from './nx-app-state.service';
 import { NxUriService }                                   from './uri.service';
@@ -43,7 +43,7 @@ export class NxAccountService implements OnDestroy {
     requestingLogin: Promise<any>;
     loginDialogActive: boolean;
 
-    private accountPoll: any;
+    private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
@@ -405,8 +405,7 @@ export class NxAccountService implements OnDestroy {
     private startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError((error) => {
-                console.log(error);
+            catchError(() => {
                 this.logoutHelper(false);
                 return of('Error');
             })
