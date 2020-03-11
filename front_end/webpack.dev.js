@@ -40,8 +40,16 @@ module.exports = merge(common, {
 
             },
             {
-                context     : '/static/lang_en_US/',
-                target      : cloudInstance,
+                context     : '/static/lang_en_US/views',
+                target      : localStatic,
+                pathRewrite: { '^/static/lang_en_US/views': '/views' },
+                changeOrigin: true,
+                secure      : false
+            },
+            {
+                context     : '/static/lang_en_US/web_common/views',
+                target      : localStatic,
+                pathRewrite : { '^/static/lang_en_US/web_common/views': '/web_common/views' },
                 changeOrigin: true,
                 secure      : false
             },

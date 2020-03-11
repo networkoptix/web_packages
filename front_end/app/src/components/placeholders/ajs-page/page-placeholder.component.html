@@ -1,0 +1,21 @@
+
+    <div class="page-placeholder" [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}">
+        <div class="placeholder-content {{constrainWidth ? 'constrain-wdith' : ''}}">
+            <div *ngIf="preloader && !condition" class="placeholder-preloader">
+                <div class="circleG circleG_1"></div>
+                <div class="circleG circleG_2"></div>
+                <div class="circleG circleG_3"></div>
+            </div>
+            <div *ngIf="condition">
+                <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
+                <div *ngIf="!iconClass" [attr.name]="type" class="placeholder-icon">
+                    <svg-icon [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"></svg-icon>
+                </div>
+                <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
+                     [innerHTML]="placeholderTitle"></h2>
+                <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message"></div>
+            </div>
+        </div>
+    </div>
+
+

@@ -2,21 +2,21 @@
              preloader="true"
              class="webclient-placeholder"></placeholder>
 
-<nx-page-placeholder
+<nx-ajs-page-placeholder
         type="OFFLINE"
         ng-if="systemReady && !currentSystem.isOnline">
-</nx-page-placeholder>
+</nx-ajs-page-placeholder>
 
-<nx-page-placeholder
+<nx-ajs-page-placeholder
         ng-if="!systemReady && unreachable"
         iconClass='server-offline'
         placeholderTitle="$root.L.common.systemUnreachable">
-</nx-page-placeholder>
+</nx-ajs-page-placeholder>
 
-<nx-page-placeholder
+<nx-ajs-page-placeholder
         ng-if="systemReady && currentSystem.isOnline && !hasCameras"
         type="NO_CAMS">
-</nx-page-placeholder>
+</nx-ajs-page-placeholder>
 
 <div ng-if="systemReady && currentSystem.isOnline && hasCameras"
      webclient system="system"

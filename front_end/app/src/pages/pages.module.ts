@@ -28,7 +28,7 @@ import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
 
 @NgModule({
-    imports         : [
+    imports: [
         DirectivesModule,
         SandboxModule,
         DownloadModule,
@@ -57,10 +57,10 @@ import { Nx503Module }               from './503/503.module';
         Nx503Module,
         Nx404Module // Must be last module for routing
     ],
-    declarations    : [],
-    entryComponents : [],
-    providers       : [],
-    exports         : [
+    declarations : [],
+    entryComponents: [],
+    providers : [],
+    exports : [
         SandboxModule,
         DownloadModule,
         DownloadHistoryModule,
