@@ -11,8 +11,7 @@
         <p translate>Move to...</p>
         <nx-select class="mb-2" id="system" [items]="items" [selected]="items[0]" (onSelected)="setTargetSystem($event)" required></nx-select>
         <p *ngIf="!errorText" class="light-text" translate>
-            If selected system already has cloud storage, it will be merged with
-            this one.
+            {{ LANG.dialogs.cloudStorage.moveCloudStorage.status.initial }}
         </p>
         <p *ngIf="errorText" class="mt-2 error-label">{{ errorText }}</p>
     </div>

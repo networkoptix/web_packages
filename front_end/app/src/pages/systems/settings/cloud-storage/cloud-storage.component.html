@@ -5,10 +5,7 @@
         <svg-icon [src]="CONFIG.icons.dir + 'storages' + '.svg'" [applyCss]="true" [svgStyle]="{ 'width.px': '80', 'height.px': '80' }"></svg-icon>
         <h2 translate>Secure your most sensitive data</h2>
         <p translate>
-            Cloud storage works just as a regular storage, just is hosted on AWS
-            servers and protects your data from all kinds of threats. We offer
-            50 GB of the cloud storage per system for free for evaluation and
-            test purposes.
+            Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats. We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.
         </p>
         <button class="btn btn-default" (click)="enableCloudStorage()">Enable Cloud Storage</button>
     </div>
@@ -24,9 +21,9 @@
         <div class="details" (click)="toggleCloudState()">
             <div class="details-section">
                 <div class="details-section-keys">
-                    <p>Current recordings</p>
-                    <p>When fully used</p>
-                    <p>Amount used</p>
+                    <p translate>Current recordings</p>
+                    <p translate>When fully used</p>
+                    <p translate>Amount used</p>
                 </div>
                 <div class="details-section-values">
                     <p>{{ msFriendlyTime(stats.currentRecordings) }}</p>
@@ -36,9 +33,9 @@
             </div>
             <div class="details-section">
                 <div class="details-section-keys">
-                    <p>Archive from</p>
-                    <p>Recording Bitrate</p>
-                    <p>Delay from live</p>
+                    <p translate>Archive from</p>
+                    <p translate>Recording Bitrate</p>
+                    <p translate>Delay from live</p>
                 </div>
                 <div class="details-section-values">
                     <p>{{ numberOfCameras() }}</p>
@@ -49,14 +46,12 @@
         </div>
     </div>
     <div class="normal-state-footer">
-        <p>
-            Cloud storage location is available for all servers in this
-            system.<br />
-            You can manage it using the desktop Nx Witness client.
+        <p translate>
+            Cloud storage location is available for all servers in this system.<br /> You can manage it using the desktop Nx Witness client.
         </p>
         <div class="pt-3">
             <button class="btn btn-default" (click)="moveToDialog()">Move to Another System</button>
-            <button class="btn btn-default" (click)="deleteCloudStorageDialog()">
+            <button class="btn btn-default" (click)="deleteCloudStorageDialog()" translate>
                 <svg-icon 
                     [src]="CONFIG.icons.dir + 'delete.svg'" 
                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
