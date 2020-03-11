@@ -75,7 +75,7 @@
 
             <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
                 <span [translate]="'ipvd.disclaimer'"
-                      [translateParams]="{companyName: CONFIG.companyName, vmsName: CONFIG.vmsName}">
+                      [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
                 </span>
                 <span>
                     {{LANG.ipvd.feedback.a_Please}} <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvd.feedback.b_Link}}</a> {{LANG.ipvd.feedback.c_Info}}
