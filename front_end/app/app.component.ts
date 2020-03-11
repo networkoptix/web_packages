@@ -146,7 +146,7 @@ export class AppComponent {
         };
         // @ts-ignore
         const { feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases } = window.SETTINGS;
-        this.CONFIG.capabilities = {
+        this.CONFIG.cloudCapabilities = {
             feedbackEnabled,
             healthMonitor,
             integrationStore,
