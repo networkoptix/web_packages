@@ -4,7 +4,7 @@ import {
     LOCALE_ID,
     Inject
 }                                       from '@angular/core';
-import { NxConfigService }              from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }              from '../../../../services/nx-config';
 import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
 import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
 import { Subscription }                 from 'rxjs';
@@ -17,6 +17,10 @@ import {
 import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
 import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
 import { NxUtilsService }               from '../../../../services/utils.service';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { NxProcessService } from '../../../../services/process.service';
+import { NxCloudApiService } from '../../../../services/nx-cloud-api';
+import { NxAccountService } from '../../../../services/account.service';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -24,13 +28,13 @@ import { NxUtilsService }               from '../../../../services/utils.service
     styleUrls  : ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent implements OnInit {
-    CONFIG: any = {};
-    LANG: any = {};
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     routerParamsSubscription: Subscription;
     cloudStateSubscription: Subscription;
     systemId: string;
     currentState: IMockState;
-    stats: IUsageStats;
+    usageStats: IUsageStats;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -43,7 +47,10 @@ export class NxCloudStorageComponent implements OnInit {
         private dialogService: NxDialogsService,
         private route: ActivatedRoute,
         private cloudStorageService: NxCloudStorageService,
-        private utilsService: NxUtilsService
+        private utilsService: NxUtilsService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private accountService: NxAccountService
     ) {
         this.setupDefaults({ configService, languageService });
     }
@@ -56,7 +63,7 @@ export class NxCloudStorageComponent implements OnInit {
         });
         this.cloudStateSubscription = this.cloudStorageService.currentState.subscribe(currentState => {
             this.currentState = currentState;
-            this.stats = this.currentState.usageStats;
+            this.usageStats = this.currentState.usageStats;
         });
     }
     // Helper Methods
@@ -69,9 +76,9 @@ export class NxCloudStorageComponent implements OnInit {
     public bitrate() {
         const { locale } = this;
         return (
-            this.stats.recordingBitrate === '_'
-                ? this.stats.recordingBitrate
-                : fromBits(this.stats.recordingBitrate, { unitType: 'bps', locale })
+            this.usageStats.recordingBitrate === '_'
+                ? this.usageStats.recordingBitrate
+                : fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
         );
     }
 
@@ -85,13 +92,13 @@ export class NxCloudStorageComponent implements OnInit {
     public cloudStorageUsed() {
         const { locale } = this;
         return (
-            this.stats.amountUsed === '_'
-                ? this.stats.amountUsed
+            this.usageStats.amountUsed === '_'
+                ? this.usageStats.amountUsed
                 : wrapWithPercent(
-                    this.stats.amountUsed,
+                    this.usageStats.amountUsed,
                     this.currentState.cloudCapacity,
                     fromBits(
-                        this.stats.amountUsed,
+                        this.usageStats.amountUsed,
                         { locale, roundTo: 1073741824 / 10 }),
                     2
                 )
@@ -99,29 +106,44 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public numberOfCameras() {
-        if (this.stats.archiveFrom === '_') return this.stats.archiveFrom;
-        return this.pluralize(this.stats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
+        if (this.usageStats.archiveFrom === '_') return this.usageStats.archiveFrom;
+        return this.pluralize(this.usageStats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
     }
 
     public pluralize = this.utilsService.pluralize
 
     public translate = this.utilsService.translate
 
-    // Update State Methods
+    // Processes
 
     public enableCloudStorage() {
-        this.cloudStorageService.enable('test', 'test');
+        const { systemId, accountService: { email } } = this;
+        return this.processService.createProcess(() => this.cloudApiService.enableCloudStorage(systemId, email))
+            .then(() => {
+            // handle success here
+            });
+        // this.cloudStorageService.enable('test', 'test');
     }
 
     public disableCloudStorage() {
+        const { systemId, accountService: { email } } = this;
+        return this.processService.createProcess(() => this.cloudApiService.disableCloudStorage(systemId, email))
+            .then(() => {
+            // handle success here
+            });
         // this.cloudStorageService.disable();
+    }
+
+    public moveCloudStorage(targetSystemId: string) {
+        const { systemId, accountService: { email } } = this;
+        return this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(systemId, targetSystemId, email));
     }
 
     public toggleCloudState() {
         // this.cloudStorageService.toggleUsageState();
     }
 
-    // Dialog Methods
+    // TEMP
 
     public moveToDialog() {
         // const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();

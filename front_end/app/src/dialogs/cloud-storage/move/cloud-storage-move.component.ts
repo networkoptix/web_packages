@@ -4,11 +4,12 @@ import {
     ViewChild
 }                                   from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
 import { NxCloudStorageService } from '../../../pages/systems/settings/cloud-storage/cloud-storage.service';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-cloud-storage-move-content',
@@ -16,8 +17,8 @@ import { NxCloudStorageService } from '../../../pages/systems/settings/cloud-sto
     styleUrls  : ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent {
-    LANG: any;
-    CONFIG: any;
+    LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
 
     items: DropdownItem[];
     errorText: string;
@@ -39,7 +40,7 @@ export class CloudStorageMoveModalContent {
     move() {
         // need to write method
         console.log('wip');
-        this.cloudStorageService.move('string', 'string').then(() => {
+        this.cloudStorageService.move('string', 'string', 'string').then(() => {
             this.close();
         });
     }

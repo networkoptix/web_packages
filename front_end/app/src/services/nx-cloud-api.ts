@@ -241,4 +241,28 @@ export class NxCloudApiService {
             review_id: reviewId
         }).toPromise();
     }
+
+    // Cloud Storage
+
+    enableCloudStorage(systemId: string, password: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+            systemId,
+            password
+        }).toPromise();
+    }
+
+    disableCloudStorage(systemId: string, password: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+            systemId,
+            password
+        }).toPromise();
+    }
+
+    moveCloudStorage(sourceSystemId: string, destinationSystemId: string, password: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+            sourceSystemId,
+            destinationSystemId,
+            password
+        }).toPromise();
+    }
 }

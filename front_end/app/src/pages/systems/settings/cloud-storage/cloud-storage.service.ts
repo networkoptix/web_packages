@@ -1,8 +1,8 @@
 import { Injectable }           from '@angular/core';
-import { NxConfigService }      from '../../../../services/nx-config/nx-config.service';
+import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import {  BehaviorSubject }     from 'rxjs';
-import { IConfig }              from '../../../../services/nx-config';
 import { HttpClient }           from '@angular/common/http';
+import { NxCloudApiService } from '../../../../services/nx-cloud-api';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +13,8 @@ export class NxCloudStorageService {
 
     constructor(
         configService: NxConfigService,
-        private http: HttpClient
+        private http: HttpClient,
+        private cloudApiService: NxCloudApiService
     //   private accountService: NxAccountService having issues injecting accountService
     ) {
         this.cloudStorageState = new BehaviorSubject(initialMockState);
@@ -26,40 +27,39 @@ export class NxCloudStorageService {
 
     enable(systemId: string, password: string) {
         const prevState = this.cloudStorageState.value;
-        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+        return this.cloudApiService.disableCloudStorage(
             systemId,
             password
-        }).toPromise().then(() => {
+        ).then(() => {
             // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true });
         }).catch(() => {
             // TODO handle error
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true }); // pretending this works
         });
-        // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true, usageStats: emptyUsage });
     }
 
     disable(systemId: string, password: string) {
         const prevState = this.cloudStorageState.value;
-        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+        return this.cloudApiService.disableCloudStorage(
             systemId,
             password
-        }).toPromise().then(() => {
+        ).then(() => {
             // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
         }).catch(() => {
             // TODO handle error
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false }); // pretending this works
         });
-        // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false, usageStats: emptyUsage });
     }
 
-    move(sourceSystemId: string, destinationSystemId: string) {
+    move(sourceSystemId: string, destinationSystemId: string, password) {
         const prevState = this.cloudStorageState.value;
-        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+        return this.cloudApiService.moveCloudStorage(
             sourceSystemId,
-            destinationSystemId
-        }).toPromise().then(() => {
+            destinationSystemId,
+            password
+        ).then(() => {
             // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
         }).catch(() => {
