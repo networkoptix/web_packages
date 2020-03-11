@@ -80,11 +80,8 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     resolution:                Resolution;
-<<<<<<< HEAD
     general:                   string;
-=======
     maintenanceInProgress:     string;
->>>>>>> 7e3a90552dc3cdd3d7b346156af560ce1c1815f0
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;

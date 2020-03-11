@@ -101,22 +101,23 @@ export class NxCloudStorageComponent implements OnInit {
     // Update State Methods
 
     public enableCloudStorage() {
-        this.cloudStorageService.enable();
+        this.cloudStorageService.enable('test', 'test');
     }
 
     public disableCloudStorage() {
-        this.cloudStorageService.disable();
+        // this.cloudStorageService.disable();
     }
 
     public toggleCloudState() {
-        this.cloudStorageService.toggleUsageState();
+        // this.cloudStorageService.toggleUsageState();
     }
 
     // Dialog Methods
 
     public moveToDialog() {
-        const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();
-        this.dialogService.cloudStorageMove(system, systems, peerSystems, user);
+        // const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();
+        // this.dialogService.cloudStorageMove(system, systems, peerSystems, user);
+        this.dialogService.cloudStorageMove('string', 'string', 'string', 'string')
     }
 
     public deleteCloudStorageDialog() {

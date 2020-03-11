@@ -6,42 +6,82 @@ import { NxSystemsService } from '../../../../services/systems.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { NxSystemService } from '../../../../services/system.service';
+import { IConfig } from '../../../../services/nx-config';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxCloudStorageService {
-    mockState: BehaviorSubject<IMockState>;
+    cloudStorageState: BehaviorSubject<IMockState>;
+    CONFIG: IConfig
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
       private systemService: NxSystemService,
       private systemsService: NxSystemsService,
       private route: ActivatedRoute,
+      private http: HttpClient
     //   private accountService: NxAccountService
     ) {
-        this.mockState = new BehaviorSubject(initialMockState);
+        this.cloudStorageState = new BehaviorSubject(initialMockState);
+        this.CONFIG = configService.getConfig();
     }
 
     get currentState() {
-        return this.mockState;
+        return this.cloudStorageState;
     }
 
-    getMoveParams() {
-        return ['this.system', 'this.systems', 'this.peerSystems', 'this.accountService'];
+    // getMoveParams() {
+    //     return ['this.system', 'this.systems', 'this.peerSystems', 'this.accountService'];
+    // }
+
+    // Post request to back end
+
+    enable(systemId: string, password: string) {
+        const prevState = this.cloudStorageState.value;
+        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+            systemId,
+            password
+        }).toPromise().then(() => {
+            // handle success
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true });
+        }).catch(() => {
+            // handle error
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true }); // pretending this works
+        });
+
+        // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true, usageStats: emptyUsage });
     }
 
-    enable() {
-        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true, usageStats: emptyUsage });
+    disable(systemId: string, password: string) {
+        const prevState = this.cloudStorageState.value;
+        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+            systemId,
+            password
+        }).toPromise().then(() => {
+            // handle success
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
+        }).catch(() => {
+            // handle error
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false }); // pretending this works
+        });
+
+        // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false, usageStats: emptyUsage });
     }
 
-    disable() {
-        this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false, usageStats: emptyUsage });
-    }
-
-    toggleUsageState() {
-        const showRegular = this.mockState.value.usageStats.currentRecordings === '_';
-        this.mockState.next({ ...this.mockState.value, usageStats: showRegular ? regularUsage : emptyUsage });
+    move(sourceSystemId: string, destinationSystemId: string) {
+        const prevState = this.cloudStorageState.value;
+        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+            sourceSystemId,
+            destinationSystemId
+        }).toPromise().then(() => {
+            // handle success
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
+        }).catch(() => {
+            // handle error
+            this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false }); // pretending this works
+        });
     }
 }
 

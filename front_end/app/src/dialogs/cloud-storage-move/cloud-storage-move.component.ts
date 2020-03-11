@@ -8,6 +8,7 @@ import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import { BehaviorSubject } from 'rxjs';
 import { DropdownItem } from '../../components/dropdowns/generic/dropdown.component';
+import { NxCloudStorageService } from '../../pages/systems/settings/cloud-storage/cloud-storage.service';
 
 @Component({
     selector   : 'nx-cloud-storage-move-content',
@@ -26,7 +27,8 @@ export class CloudStorageMoveModalContent {
         languageService: NxLanguageProviderService,
                 public activeModal: NgbActiveModal,
                 public renderer: Renderer2,
-                private systemsService: NxSystemsService
+                private systemsService: NxSystemsService,
+                private cloudStorageService: NxCloudStorageService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -37,6 +39,9 @@ export class CloudStorageMoveModalContent {
     move() {
         // need to write method
         console.log('wip');
+        this.cloudStorageService.move('string', 'string').then(()=>{
+            this.close();
+        });
     }
 
     close() {

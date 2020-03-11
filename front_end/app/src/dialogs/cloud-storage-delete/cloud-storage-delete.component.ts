@@ -46,7 +46,7 @@ export class CloudStorageDeleteModalContent {
             this.deleteForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
             // Need to setup new method on cloudApiService for delete cloud storage
-            return this.cloudApiService.disconnect(this.systemId, this.auth.password).toPromise();
+            return this.cloudStorageService.disable(this.systemId, this.auth.password);
         }, {
             ignoreUnauthorized: true,
             errorCodes: {
@@ -69,7 +69,7 @@ export class CloudStorageDeleteModalContent {
     }
 
     disableCloudStorage() {
-        this.cloudStorageService.disable();
+        this.cloudStorageService.disable('test', 'test');
         this.close();
     }
 }
