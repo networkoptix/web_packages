@@ -2,9 +2,7 @@ import {
     Component, Inject, OnInit,
     Input, ViewChild, Renderer2
 }                                    from '@angular/core';
-import {
-    DOCUMENT, Location
-}                                    from '@angular/common';
+import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -35,7 +33,6 @@ export class LoginModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
-    location: any;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -53,7 +50,7 @@ export class LoginModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        location: Location,
+        private location: Location,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
@@ -66,8 +63,6 @@ export class LoginModalContent implements OnInit {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
         this.setupDefaults();
-
-        this.location = location;
     }
 
     resendActivation(email) {
@@ -165,7 +160,7 @@ export class LoginModalContent implements OnInit {
         }).then((result) => {
             this.activeModal.close();
             if (this.keepPage) {
-                if (this.router.url === '/') {
+                if (this.location.path() === '/') {
                     this.router
                         .navigate([this.CONFIG.redirect.authorised])
                         .then(() => {
