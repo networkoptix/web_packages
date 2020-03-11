@@ -571,7 +571,7 @@
                 "success": "System merge completed"
             },
             "rename": {
-                "Success": "System name saved"
+                "success": "System name saved"
             },
             "share": {
                 "offline": "Cannot share system while it is offline",

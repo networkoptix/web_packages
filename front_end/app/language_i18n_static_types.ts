@@ -613,7 +613,7 @@ export interface ToastMessageSystem {
     deleted:      Deleted;
     disconnected: Disconnected;
     merge:        SystemMerge;
-    rename:       Disconnected;
+    rename:       Deleted;
     share:        Share;
 }
 
@@ -1328,7 +1328,7 @@ const typeMap: any = {
         { json: "deleted", js: "deleted", typ: r("Deleted") },
         { json: "disconnected", js: "disconnected", typ: r("Disconnected") },
         { json: "merge", js: "merge", typ: r("SystemMerge") },
-        { json: "rename", js: "rename", typ: r("Disconnected") },
+        { json: "rename", js: "rename", typ: r("Deleted") },
         { json: "share", js: "share", typ: r("Share") },
     ], false),
     "Deleted": o([

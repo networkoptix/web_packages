@@ -32,7 +32,7 @@ export class RenameModalContent {
         this.rename = this.processService.createProcess(() => {
             return this.cloudApiService.renameSystem(this.systemId, this.systemName);
         }, {
-            successMessage: this.LANG.toastMessage.system.rename.Success
+            successMessage: this.LANG.toastMessage.system.rename.success
         }).then(() => {
             this.activeModal.close(this.systemName);
         });
