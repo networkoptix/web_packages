@@ -1,5 +1,4 @@
-import { NgModule } from '@angular/core';
-
+import { NgModule }                   from '@angular/core';
 import { NxArrowNavDirective }        from './nx-arrow-nav';
 import { NxClickElsewhereDirective }  from './nx-click-elsewhere';
 import { NxFocusMeDirective }         from './nx-focus-me';
@@ -9,8 +8,8 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxUrlValidatorDirective }    from './nx-url-validator';
 
 @NgModule({
-    imports      : [],
-    declarations : [
+    imports     : [],
+    declarations: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,
@@ -19,8 +18,8 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective
     ],
-    entryComponents : [],
-    exports         : [
+    entryComponents: [],
+    exports        : [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxFocusMeDirective,

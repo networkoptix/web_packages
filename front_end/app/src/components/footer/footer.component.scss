@@ -11,6 +11,7 @@
     width: 100%;
     & > .row {
         padding-bottom: 16px;
+        margin: 0;
     }
 }
 
@@ -22,22 +23,22 @@ footer {
     padding-top: 15px;
     z-index: 9;
 
-    
+
     .row {
         margin : 0;
     }
-    
+
     .nav > li {
         position : relative;
         display  : block;
         height   : auto;
-        
+
         & > span {
             line-height : 24px;
             display     : block;
         }
     }
-    
+
     .nav > li > a,
     .nav > li > span {
         position: relative;
@@ -73,7 +74,7 @@ footer {
             }
         }
     }
-    
+
    @media (max-width: 479px) {
         ul.nav {
             flex-direction: column !important;

@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NxRibbonService } from './ribbon.service';
-import { distinctUntilChanged } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { Utils } from '../../utils/helpers';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxRibbonService }              from './ribbon.service';
+import { distinctUntilChanged }         from 'rxjs/operators';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { NxUtilsService }                        from '../../services/utils.service';
+import { NxConfigService, IConfig }     from '../../services/nx-config';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'nx-ribbon',
+    selector   : 'nx-ribbon',
     templateUrl: 'ribbon.component.html',
-    styleUrls: ['ribbon.component.scss'],
+    styleUrls  : ['ribbon.component.scss']
 })
 export class NxRibbonComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -31,17 +31,20 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
         this.updateFunction = '';
     }
 
-    constructor(configService: NxConfigService,
-        private ribbonService: NxRibbonService) {
+    constructor(
+        configService: NxConfigService,
+        private ribbonService: NxRibbonService
+    ) {
         this.CONFIG = configService.getConfig();
         this.setupDefaults();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
         this.ribbonSubscription = this.ribbonService.contextSubject.pipe(
-            distinctUntilChanged((contextA, contextB) => Utils.isEqual(contextA, contextB))
+            distinctUntilChanged((contextA, contextB) => NxUtilsService.isEqual(contextA, contextB))
         ).subscribe(context => {
             this.showRibbon = context.visibility || false;
             this.message = context.message || '';

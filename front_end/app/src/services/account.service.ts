@@ -1,21 +1,21 @@
-import { Inject, Injectable, OnDestroy }      from '@angular/core';
-import { DOCUMENT, Location }                 from '@angular/common';
-import { LocalStorageService }                from 'ngx-store';
-import { ActivatedRoute, Router }             from '@angular/router';
-import { NxConfigService, IConfig }           from './nx-config';
-import { NxCloudApiService }                  from './nx-cloud-api';
-import { NxLanguageProviderService }          from './nx-language-provider';
-import { NxDialogsService }                   from '../dialogs/dialogs.service';
-import { NxSessionService }                   from './session.service';
-import { NxApplyService }                     from './apply.service';
+import { Inject, Injectable, OnDestroy }                  from '@angular/core';
+import { DOCUMENT, Location }                             from '@angular/common';
+import { LocalStorageService }                            from 'ngx-store';
+import { ActivatedRoute, Router }                         from '@angular/router';
+import { NxConfigService, IConfig }                       from './nx-config';
+import { NxCloudApiService }                              from './nx-cloud-api';
+import { NxLanguageProviderService }                      from './nx-language-provider';
+import { NxDialogsService }                               from '../dialogs/dialogs.service';
+import { NxSessionService }                               from './session.service';
+import { NxApplyService }                                 from './apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { BehaviorSubject, of, Subscription } from 'rxjs';
-import { WINDOW }                             from './window-provider';
-import { NxAppStateService }                  from './nx-app-state.service';
-import { NxUriService }                       from './uri.service';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
-import { NxPollService } from './poll.service';
-import { Utils } from '../utils/helpers';
+import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
+import { WINDOW }                                         from './window-provider';
+import { NxAppStateService }                              from './nx-app-state.service';
+import { NxUriService }                                   from './uri.service';
+import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
+import { NxPollService }                                  from './poll.service';
+import { NxUtilsService }                                 from './utils.service';
 
 export interface Account {
     email: string;
@@ -38,12 +38,12 @@ export class NxAccountService implements OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     location: Location;
-    accountSubject = new BehaviorSubject<Account|undefined>(undefined);
+    accountSubject = new BehaviorSubject<Account | undefined>(undefined);
     loggingOut: boolean;
     requestingLogin: Promise<any>;
     loginDialogActive: boolean;
 
-    private accountPoll: any;
+    private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
@@ -111,7 +111,7 @@ export class NxAccountService implements OnDestroy {
     }
 
     set account(account: Account) {
-        if (!Utils.isEqual(account, this.account)) {
+        if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
     }
@@ -230,7 +230,12 @@ export class NxAccountService implements OnDestroy {
                             return this.logoutAuthorised();
                         }
 
-                        return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
+                        return Promise.resolve({
+                            data: {
+                                account   : result,
+                                resultCode: this.CONFIG.responseOk
+                            }
+                        });
                     }
 
                     if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
@@ -238,7 +243,12 @@ export class NxAccountService implements OnDestroy {
                         this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
                     }
 
-                    return Promise.resolve({ data: { account: result, resultCode: this.CONFIG.responseOk } });
+                    return Promise.resolve({
+                        data: {
+                            account   : result,
+                            resultCode: this.CONFIG.responseOk
+                        }
+                    });
                 }
                 // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ error: { resultCode: result.resultCode } });
@@ -258,8 +268,8 @@ export class NxAccountService implements OnDestroy {
     }
 
     loginWithAuthKey(authKey: string) {
-        const auth = atob(authKey).split(':');
-        const tempLogin = auth[0];
+        const auth         = atob(authKey).split(':');
+        const tempLogin    = auth[0];
         const tempPassword = auth[1];
 
         return this.login(tempLogin, tempPassword, false)
@@ -298,7 +308,7 @@ export class NxAccountService implements OnDestroy {
                 // logoutAuthorisedLogoutButton
                 if (account) {
                     const isRegister = this.router.url.includes('/register');
-                    const isRestore = this.router.url.includes('/restore_password');
+                    const isRestore  = this.router.url.includes('/restore_password');
                     const isActivate = this.router.url.includes('/activate');
 
                     let cancelLabel = '';
@@ -395,8 +405,7 @@ export class NxAccountService implements OnDestroy {
     private startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError((error) => {
-                console.log(error);
+            catchError(() => {
                 this.logoutHelper(false);
                 return of('Error');
             })

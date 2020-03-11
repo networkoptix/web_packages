@@ -1,14 +1,17 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { NxConfigService, IConfig }                           from '../../../services/nx-config';
-import { NxMenuService }                                      from '../menu.service';
+import {
+    Component, Input, OnChanges,
+    OnInit, SimpleChanges
+}                                   from '@angular/core';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxMenuService }            from '../menu.service';
 
 /* Usage
-*/
+ */
 
 @Component({
-    selector: 'nx-level-1-item',
+    selector   : 'nx-level-1-item',
     templateUrl: 'level-1-item.component.html',
-    styleUrls: ['level-1-item.component.scss']
+    styleUrls  : ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
     @Input() base: any = {};
@@ -19,10 +22,10 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     CONFIG: IConfig;
 
-    constructor(private configService: NxConfigService,
-                private menuService: NxMenuService,
+    constructor(configService: NxConfigService,
+                private menuService: NxMenuService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

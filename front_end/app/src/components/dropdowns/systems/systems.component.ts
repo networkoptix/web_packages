@@ -1,16 +1,16 @@
 import {
     Component,
     Input, SimpleChanges
-}                                   from '@angular/core';
+}                                    from '@angular/core';
 import { BaseDropdown }              from '../injDropdown';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxConfigService }           from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
-    selector: 'nx-systems',
+    selector   : 'nx-systems',
     templateUrl: 'systems.component.html',
-    styleUrls: ['systems.component.scss']
+    styleUrls  : ['systems.component.scss']
 })
 
 export class NxSystemsDropdown extends BaseDropdown {
@@ -20,18 +20,19 @@ export class NxSystemsDropdown extends BaseDropdown {
 
     systemCounter: number;
     active = {
-        health: false,
+        health  : false,
         register: false,
         settings: false,
-        view: false,
+        view    : false
     };
+
     params: any;
     show: boolean;
 
     constructor(
-        private languageService: NxLanguageProviderService,
-        private configService: NxConfigService,
-        private uriService: NxUriService,
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private uriService: NxUriService
     ) {
         super(languageService, configService);
     }
@@ -45,7 +46,7 @@ export class NxSystemsDropdown extends BaseDropdown {
 
     updateURI(sid) {
         this.show = false;
-        let url = '/systems/' + sid;
+        let url   = '/systems/' + sid;
 
         if (this.endpoint.view) {
             url += '/view';
@@ -64,7 +65,6 @@ export class NxSystemsDropdown extends BaseDropdown {
                 }
             });
     }
-
 
     ngOnInit(): void {
         this.systemCounter = this.systems.length;

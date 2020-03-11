@@ -1,13 +1,16 @@
-import { Component, Input, Renderer2, ViewChild, ElementRef } from '@angular/core';
+import {
+    Component, Input, Renderer2,
+    ViewChild, ElementRef
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
-import StateMachine from './stateMachine';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import StateMachine                  from './stateMachine';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -25,7 +28,6 @@ export class MergeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: any;
-    // checking: boolean;
     checkMergeabilityProcess: any;
     checkPasswordProcess: any;
     mergingProcess: any;
@@ -36,7 +38,6 @@ export class MergeModalContent {
     secondarySystem: any;
     serverUrl: string; // candidate for removal
     serverUrlInputExists: boolean;
-    // state: string;
     systemMergeable: string;
     targetSystem: any;
     targetSystemDropdown: any;
@@ -47,19 +48,19 @@ export class MergeModalContent {
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
 
-    constructor(configService: NxConfigService,
-                public activeModal: NgbActiveModal,
-                public renderer: Renderer2,
-                private cloudApi: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private systemService: NxSystemService,
-                private systemsService: NxSystemsService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        public renderer: Renderer2,
+        private cloudApi: NxCloudApiService,
+        private processService: NxProcessService,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-        // this.checking = false;
-        // this.state = 'select';
+        this.LANG = languageService.getTranslations();
+
         this.wrongPassword = false;
     }
 
@@ -197,7 +198,7 @@ export class MergeModalContent {
                 this.insertErrorMessages();
             }
             Object.keys(show).forEach(e => {
-                show[e] = showUpdates[newShow][e] ? true : false;
+                show[e] = !!showUpdates[newShow][e];
             });
             if (this.machine.currentState === 'checkMerge') {
                 const newBodyTitle = newShow.includes('noOtherSystem')
@@ -220,7 +221,9 @@ export class MergeModalContent {
             }
         } else {
             ['serverUrlInputValidationErrorText', 'checkingErrorText', 'passwordErrorText']
-                .forEach(clearText => { template[clearText] = ''; });
+                .forEach(clearText => {
+                    template[clearText] = '';
+                });
         }
         console.log('machine state on update', this.machine.state);
     }
@@ -236,8 +239,8 @@ export class MergeModalContent {
 
     // call this when dropdown changes
     insertErrorMessages() {
-        const { errorText } = this.machine.state;
-        const targetSystemName = this.targetSystem.name || this.targetSystem.info.name;
+        const { errorText }       = this.machine.state;
+        const targetSystemName  = this.targetSystem.name || this.targetSystem.info.name;
         const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
         for (const error in errorText) {
             errorText[error] = this.LANG.dialogs.merge[error]
@@ -302,7 +305,7 @@ export class MergeModalContent {
                 this.mergeForm.controls.mergePassword.setErrors(undefined);
 
                 if (!this.password) {
-                    return Promise.reject({ error: { data: {resultCode: 'missingPassword'}}});
+                    return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
                 return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
             }, {
@@ -344,10 +347,10 @@ export class MergeModalContent {
                 }
 
                 /* Get the names of the primary and secondary system.
-                Next try to figure out which system caused the problem.
-                If the primary system's stateOfHealth is not online set it as the failedSystem.
-                Otherwise the secondary system is set as the failedSystem no matter what.
-                */
+                                       Next try to figure out which system caused the problem.
+                                       If the primary system's stateOfHealth is not online set it as the failedSystem.
+                                       Otherwise the secondary system is set as the failedSystem no matter what.
+                                       */
 
                 if (!error.data) {
                     error.data = {};
@@ -418,7 +421,8 @@ export class MergeModalContent {
             .createProcess(() => {
                 return this.targetSystemService.checkLocalAdminPassword(this.machine.state.template.passwordValue)
                     .subscribe(
-                        () => {},
+                        () => {
+                        },
                         err => {
                             if (err.status === 404) {
                                 this.machine.transition('choosePrimary');
@@ -432,11 +436,11 @@ export class MergeModalContent {
     }
 
     addStatus(system) {
-        let status = '';
+        let status               = '';
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
-        const statusUnavailable = ` – ${this.LANG.systemStatuses.unavailable}`;
-        const statusOffline = ` – ${this.LANG.systemStatuses.offline}`;
-        const stateOfHealth = (system.info && system.info.stateOfHealth) ||
+        const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
+        const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
+        const stateOfHealth      = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
         // need to refactor to handle auto-discovered systems
         switch (stateOfHealth.toLowerCase()) {
@@ -558,7 +562,9 @@ export class MergeModalContent {
             ]);
             console.log('getMediaServers return', system, target);
             const systemIds = {};
-            system.forEach(sys => { systemIds[sys.id] = true; });
+            system.forEach(sys => {
+                systemIds[sys.id] = true;
+            });
             if (target.some(sys => systemIds[sys.id]) === true) {
                 throw Error('duplicateServers');
             }
@@ -615,7 +621,7 @@ export class MergeModalContent {
             this.targetSystem.value = this.targetSystem.id;
             this.systemMergeable = this.checkMergeability(this.targetSystem);
 
-            let showUpdate = 'checkMergeDefault';
+            let showUpdate             = 'checkMergeDefault';
             const templateUpdates: any = {
                 helpText      : this.LANG.dialogs.merge.ownerCanMergeText,
                 selectedTarget: this.targetSystem.value
@@ -642,7 +648,7 @@ export class MergeModalContent {
             this.setTargetSystem({ value: 'otherSystem', name: 'Other System...' });
         }
         // handles validation error messages
-        let showUpdate = 'serverUrl';
+        let showUpdate             = 'serverUrl';
         const templateUpdates: any = { serverUrlInputValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
             showUpdate = 'serverUrlValidationError';
@@ -656,7 +662,7 @@ export class MergeModalContent {
 
     // handles password error messages
     passwordChange(input) {
-        let showUpdate = '';
+        let showUpdate        = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
             showUpdate = 'addPasswordError';

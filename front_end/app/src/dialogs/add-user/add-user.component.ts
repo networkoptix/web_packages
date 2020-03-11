@@ -1,6 +1,7 @@
 import {
-    Component, Input, Renderer2, ViewChild
-} from '@angular/core';
+    Component, Input, Renderer2,
+    ViewChild
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -8,7 +9,7 @@ import { NxModalGenericComponent }   from '../generic/generic.component';
 import { NxToastService }            from '../toast.service';
 import { NxProcessService }          from '../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-add-user-content',
@@ -168,7 +169,7 @@ export class AddUserModalContent {
             }
         }, {
             errorPrefix: this.LANG.errorCodes.cantSharePrefix,
-            errorCodes: {
+            errorCodes : {
                 userExists: () => {
                     return false;
                 }

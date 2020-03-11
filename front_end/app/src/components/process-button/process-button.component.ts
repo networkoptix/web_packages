@@ -1,10 +1,13 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
-import { NxConfigService, IConfig }                    from '../../services/nx-config';
+import {
+    Component, OnInit, Input,
+    ViewEncapsulation
+}                                   from '@angular/core';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
-    selector: 'nx-process-button',
-    templateUrl: 'process-button.component.html',
-    styleUrls: ['process-button.component.scss'],
+    selector     : 'nx-process-button',
+    templateUrl  : 'process-button.component.html',
+    styleUrls    : ['process-button.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
@@ -27,7 +30,8 @@ export class NxProcessButtonComponent implements OnInit {
 
     ngOnInit() {
         if (!this.clickFn) {
-            this.clickFn = () => {};
+            this.clickFn = () => {
+            };
         }
 
         this.buttonClass = 'btn-primary';

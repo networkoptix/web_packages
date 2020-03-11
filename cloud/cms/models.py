@@ -730,6 +730,9 @@ class UserGroupsToAssetPermissions(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     asset = models.ForeignKey(Asset, default=None, null=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.group.name
+
     @staticmethod
     def check_permission(user, asset, permission=None):
         if user.is_superuser:
@@ -770,6 +773,9 @@ class UserGroupsToAssetPermissions(models.Model):
 class UserGroupsToAssetType(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     asset_type = models.ForeignKey(AssetType, default=None, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.group.name
 
     @staticmethod
     def check_asset_type(user, asset_type, permission):
@@ -991,6 +997,9 @@ class ContributerAgreement(models.Model):
     accepted_date = models.DateTimeField(auto_now_add=True)
     accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.accepted_agreement} - {self.user}'
 
     def clean(self):
         if self.accepted_agreement and \

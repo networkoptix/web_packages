@@ -1,9 +1,12 @@
-import { ComponentFactoryResolver, Injectable, ViewContainerRef, ComponentRef } from '@angular/core';
+import {
+    ComponentFactoryResolver, Injectable,
+    ViewContainerRef, ComponentRef
+}                                               from '@angular/core';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, skip } from 'rxjs/operators';
-import { NxDialogsService } from '../dialogs/dialogs.service';
-import { NxApplyComponent } from '../components/apply/apply.component';
-import { NgForm } from '@angular/forms';
+import { distinctUntilChanged, filter, skip }   from 'rxjs/operators';
+import { NxDialogsService }                     from '../dialogs/dialogs.service';
+import { NxApplyComponent }                     from '../components/apply/apply.component';
+import { NgForm }                               from '@angular/forms';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -43,7 +46,7 @@ export class Watcher<T> {
 }
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 /**
  * Make sure the route has the ApplyGuard in the canDeactivate part. Other wise navigation will
@@ -80,7 +83,8 @@ export class NxApplyService {
     form: NgForm;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
-                private dialogsService: NxDialogsService) {}
+                private dialogsService: NxDialogsService) {
+    }
 
     get locked() {
         return this.lockedSubject.getValue();

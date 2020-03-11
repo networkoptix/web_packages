@@ -1,12 +1,15 @@
-import { Inject, Injectable, LOCALE_ID }    from '@angular/core';
+import { Inject, Injectable, LOCALE_ID }       from '@angular/core';
 import { NxConfigService, IConfig } from './nx-config';
-import { DOCUMENT }              from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DOCUMENT }                 from '@angular/common';
+import { DeviceDetectorService }    from 'ngx-device-detector';
 import * as moment from 'moment';
-import { TranslatePipe } from '@ngx-translate/core';
+
+export interface Array {
+    move(arr: Array, oldIndex: number, newIndex: number): void;
+}
 
 @Injectable({
-    providedIn : 'root',
+    providedIn: 'root'
 })
 export class NxUtilsService {
     CONFIG: IConfig;
@@ -22,6 +25,27 @@ export class NxUtilsService {
     ) {
         this.CONFIG = configService.getConfig();
         this.momentWithLocale(locale);
+    }
+
+    static move(arr, oldIndex, newIndex): Array {
+        while (oldIndex < 0) {
+            oldIndex += arr.length;
+        }
+        while (newIndex < 0) {
+            newIndex += arr.length;
+        }
+        if (newIndex >= arr.length) {
+            let k = newIndex - arr.length;
+            while ((k--) + 1) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+        return arr;
+    };
+
+    static isEqual(obj1, obj2) {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 
     static deepCopy(obj = {}) {
@@ -64,6 +88,10 @@ export class NxUtilsService {
         }
 
         return bVal ? 'Yes' : 'No';
+    }
+
+    static mod(n, m) {
+        return ((n % m) + m) % m;
     }
 
     static getRelativeLocation(href: string): string {

@@ -1,26 +1,22 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    forwardRef,
-    ViewEncapsulation
-} from '@angular/core';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+    Component, Input,
+    forwardRef, ViewEncapsulation
+}                                    from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator,
-    FormControl
+    Validator, FormControl
 }                                    from '@angular/forms';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-email-input',
-    templateUrl: 'email.component.html',
-    styleUrls  : ['email.component.scss'],
-    providers  : [
+    selector     : 'nx-email-input',
+    templateUrl  : 'email.component.html',
+    styleUrls    : ['email.component.scss'],
+    providers    : [
         {
             provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxEmailComponent),
@@ -30,7 +26,7 @@ import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
             provide    : NG_VALIDATORS,
             useExisting: forwardRef(() => NxEmailComponent),
             multi      : true,
-        },
+        }
     ],
     encapsulation: ViewEncapsulation.None
 })
@@ -39,7 +35,6 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     @Input() form: any;
     @Input() componentId: string;
     @Input() lockEmail: boolean;
-
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -50,6 +45,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     // by the Control Value Accessor
     private onTouchedCallback = () => {
     };
+
     private onChangeCallback = (_: any) => {
     };
 

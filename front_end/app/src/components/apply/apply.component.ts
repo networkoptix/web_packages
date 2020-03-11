@@ -1,22 +1,25 @@
-import { Component, forwardRef, Input, HostListener, ViewChild } from '@angular/core';
+import {
+    Component, forwardRef, Input,
+    HostListener, ViewChild
+}                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
-import { NxProcessButtonComponent } from '../process-button/process-button.component';
+import { NxProcessButtonComponent }  from '../process-button/process-button.component';
 
 
 @Component({
-    selector: 'nx-apply',
+    selector   : 'nx-apply',
     templateUrl: 'apply.component.html',
-    styleUrls: ['apply.component.scss'],
-    providers: [
+    styleUrls  : ['apply.component.scss'],
+    providers  : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxApplyComponent),
-            multi: true
+            multi      : true
         }
     ],
 })
 export class NxApplyComponent {
-    @ViewChild(NxProcessButtonComponent, {static: false}) processButton: NxProcessButtonComponent;
+    @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;
 
     @Input() show: boolean;
     @Input() save: any;

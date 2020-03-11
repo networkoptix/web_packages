@@ -1,21 +1,8 @@
-@import '../../../styles/native-theme/_theme_palette';
-@import '../../../styles/_theme_palette';
-@import '../../../styles/custom/_custom_palette';
-@import '../../styles/buttons';
+.main-button {
+    margin-top : 40px !important;
 
-.page-wrapper {
-    position: relative;
-    margin: $navbar-height auto 0 auto;
-    height: 55vh;
-    @media screen and (max-width: 740px)  {
-        height: 65vh;
-    }
-  }
-  
-  .main-button {
-    margin-top: 40px !important;
     a {
-        text-decoration: none;
-        color: inherit;
+        text-decoration : none;
+        color           : inherit;
     }
-  }
+}

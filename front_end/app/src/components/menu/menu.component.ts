@@ -1,18 +1,18 @@
 import {
     Component, Input, OnChanges,
-    OnInit, SimpleChanges, ViewEncapsulation
-} from '@angular/core';
+    SimpleChanges, ViewEncapsulation
+}                                   from '@angular/core';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 
 /* Usage
-<nx-menu>
-</nx-menu>
-*/
+ <nx-menu>
+ </nx-menu>
+ */
 
 @Component({
-    selector: 'nx-menu',
-    templateUrl: 'menu.component.html',
-    styleUrls: ['menu.component.scss'],
+    selector     : 'nx-menu',
+    templateUrl  : 'menu.component.html',
+    styleUrls    : ['menu.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxMenuComponent implements OnChanges {
@@ -25,8 +25,8 @@ export class NxMenuComponent implements OnChanges {
 
     CONFIG: IConfig;
 
-
-    constructor(configService: NxConfigService) {
+    constructor(configService: NxConfigService
+    ) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -68,7 +68,7 @@ export class NxMenuComponent implements OnChanges {
                 if (this.CONFIG && subSection.id === this.CONFIG.menus.systemSettings.buttons.id) {
                     return true;
                 }
-            })[0] || [] ;
+            })[0] || [];
         }
 
         if (buttons.items && buttons.items.length) {

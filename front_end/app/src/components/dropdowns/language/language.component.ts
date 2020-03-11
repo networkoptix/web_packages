@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef
-}                                   from '@angular/core';
+}                                    from '@angular/core';
 import { NxUtilsService }            from '../../../services/utils.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
@@ -10,15 +10,15 @@ import { NxConfigService }           from '../../../services/nx-config';
 import { BaseDropdown }              from '../injDropdown';
 
 @Component({
-    selector: 'nx-language-select',
-    templateUrl: 'language.component.html',
-    styleUrls: ['language.component.scss'],
+    selector     : 'nx-language-select',
+    templateUrl  : 'language.component.html',
+    styleUrls    : ['language.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    providers: [
+    providers    : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxLanguageDropdown),
-            multi: true
+            multi      : true
         }
     ]
 })
@@ -36,19 +36,21 @@ export class NxLanguageDropdown extends BaseDropdown {
     langCode: string;
     activeLanguage = {
         language: '',
-        name: ''
+        name    : ''
     };
+
     languages = [];
     languagesCol1 = [];
     languagesCol2 = [];
 
-    constructor(private cloudApi: NxCloudApiService,
-                private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private cloudApi: NxCloudApiService
     ) {
         super(languageService, configService);
 
-        this.currentLang = this.languageService.getLang();
+        this.currentLang = languageService.getLang();
     }
 
     private splitLanguages() {
@@ -76,10 +78,10 @@ export class NxLanguageDropdown extends BaseDropdown {
 
             if (this.instantApply && this.instantReload) {
                 /*  TODO: Currently this is not needed because the language file will
-                be loaded during page reload. Once we transfer everything to Angular 5
-                we should use this for seamless change of language
-                // this.translate.use(lang.replace('_', '-'));
-                */
+                 be loaded during page reload. Once we transfer everything to Angular 5
+                 we should use this for seamless change of language
+                 // this.translate.use(lang.replace('_', '-'));
+                 */
                 this.cloudApi
                     .changeLanguage(this.langCode)
                     .then((response) => {

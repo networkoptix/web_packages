@@ -1,25 +1,15 @@
 <nx-pre-loader *ngIf="accountInfo.activateCode && activate.processing"></nx-pre-loader>
 
-<div class="container">
+<nx-page-placeholder *ngIf="activationSuccess" [type]="'ACCOUNT_ACTIVATED'">
+    <button class="btn btn-primary btn-collapse login btn-caption" (click)="login()" translate>
+        Log In
+    </button>
+</nx-page-placeholder>
+
+<div *ngIf="!activationSuccess" class="container">
     <div *ngIf="accountInfo.activateCode && !activate.processing">
-        <h1 class="process-success" *ngIf="activate.success" translate>
-            Your account is successfully activated
-        </h1>
-        <h1 class="process-success" *ngIf="activate.success">
-            <a class="btn btn-default" href (click)="login()" translate>Log In</a>
-        </h1>
-
-        <h1 class="process-success" *ngIf="!activate.success" translate>
-            Account is already activated or confirmation code is incorrect
-        </h1>
-    </div>
-
-    <div *ngIf="!accountInfo.activateCode && activationSuccess">
         <h1 class="process-success" translate>
-            Your account is successfully activated
-        </h1>
-        <h1 class="process-success">
-            <a class="btn btn-default" href (click)="login()" translate>Log In</a>
+            Account is already activated or confirmation code is incorrect
         </h1>
     </div>
 

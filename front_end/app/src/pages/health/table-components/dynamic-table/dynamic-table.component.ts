@@ -16,7 +16,6 @@ import { SubscriptionLike }         from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxHealthLayoutService }    from '../../health-layout.service';
 import { delay }                    from 'rxjs/operators';
-import { Utils }                    from '../../../../utils/helpers';
 import { NxRibbonService }          from '../../../../components/ribbon/ribbon.service';
 
 interface Params {
@@ -240,7 +239,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             this.selectedHeader = undefined;
 
             if (changes.headers.previousValue !== undefined &&
-                !Utils.isEqual(changes.headers.previousValue, changes.headers.currentValue)) {
+                !NxUtilsService.isEqual(changes.headers.previousValue, changes.headers.currentValue)) {
                 resetURI = true;
             }
         }

@@ -1,14 +1,14 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { NxConfigService, IConfig }    from '../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Input }          from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-change-password',
+    selector   : 'nx-modal-change-password',
     templateUrl: 'change-password.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class ChangePasswordModalContent {
     @Input() system: any;
@@ -23,7 +23,7 @@ export class ChangePasswordModalContent {
     constructor(private activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
-                private configService: NxConfigService,
+                private configService: NxConfigService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
@@ -37,14 +37,14 @@ export class ChangePasswordModalContent {
                 return this.system.saveUser(this.user, this.user.role)
                     .then(() => this.activeModal.close());
             }, {
-                errorCodes          : {
+                errorCodes: {
                     notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
                     wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
                 },
                 // @ts-ignore: TODO passwordChangedSuccess is not on language json
-                successMessage      : this.LANG.account.passwordChangedSuccess,
-                errorPrefix         : this.LANG.errorCodes.cantChangePasswordPrefix,
-                ignoreUnauthorized  : true
+                successMessage    : this.LANG.account.passwordChangedSuccess,
+                errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix,
+                ignoreUnauthorized: true
             });
     }
 

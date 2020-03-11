@@ -46,7 +46,7 @@ import { NxPasswordTagValidationComponent } from './password-input-tag-validatio
 import { downgradeComponent }               from '@angular/upgrade/static';
 
 @NgModule({
-    imports : [
+    imports: [
         CommonModule,
         DirectivesModule,
         TranslateModule,
@@ -57,7 +57,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NgbModule,
         AngularSvgIconModule.forRoot()
     ],
-    declarations : [
+    declarations: [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -94,7 +94,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSectionPlaceholderComponent,
         ToastsContainer
     ],
-    entryComponents : [
+    entryComponents: [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -131,7 +131,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSectionPlaceholderComponent,
         ToastsContainer
     ],
-    providers : [
+    providers: [
         NxProcessButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
@@ -161,7 +161,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
 
         NxRibbonService
     ],
-    exports : [
+    exports: [
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -207,4 +207,4 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.directives')
-    .directive('nxPagePlaceholder', downgradeComponent({ component : NxPagePlaceholderComponent }) as angular.IDirectiveFactory);
+    // .directive('nxPagePlaceholder', downgradeComponent({ component: NxPagePlaceholderComponent }) as angular.IDirectiveFactory);

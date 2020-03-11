@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxToastService } from '../dialogs/toast.service';
-import { NxCloudApiService } from './nx-cloud-api';
-import { NxConfigService, IConfig } from './nx-config';
-import { NxSessionService } from './session.service';
+import { Injectable }                          from '@angular/core';
+import { NxLanguageProviderService }           from './nx-language-provider';
+import { NxToastService }                      from '../dialogs/toast.service';
+import { NxCloudApiService }                   from './nx-cloud-api';
+import { NxConfigService, IConfig }            from './nx-config';
+import { NxSessionService }                    from './session.service';
 import { LanguageI18NStaticTypes, ErrorCodes } from '../../language_i18n_static_types';
 
 interface ProcessSettings {
@@ -42,16 +42,17 @@ class Process {
     successHandler: (any) => any;
     errorHandler: (any) => any;
 
-    constructor(CONFIG: IConfig,
-        LANG: LanguageI18NStaticTypes,
+    constructor(
+        configService: IConfig,
+        languageService: LanguageI18NStaticTypes,
         sessionService: NxSessionService,
         cloudApiService: NxCloudApiService,
         toastService: NxToastService,
         caller,
         settings
     ) {
-        this.CONFIG = CONFIG;
-        this.LANG = LANG;
+        this.CONFIG = configService;
+        this.LANG = languageService;
         this.cloudApiService = cloudApiService;
         this.sessionService = sessionService;
         this.toastService = toastService;
@@ -61,14 +62,14 @@ class Process {
 
     init(caller, settings) {
         /*
-        settings: {
-            errorCodes,
+         settings: {
+         errorCodes,
 
-            holdAlerts
-            successMessage,
-            errorPrefix,
-        }
-        settings.successMessage
+         holdAlerts
+         successMessage,
+         errorPrefix,
+         }
+         settings.successMessage
          */
         if (settings) {
             settings.errorPrefix = settings.errorPrefix ? `${settings.errorPrefix}: ` : '';
@@ -113,9 +114,9 @@ class Process {
                     // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
-                        classname : this.CONFIG.toast.success,
-                        autohide  : !this.settings.holdAlerts,
-                        delay     : this.CONFIG.alertTimeout
+                        classname: this.CONFIG.toast.success,
+                        autohide : !this.settings.holdAlerts,
+                        delay    : this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
@@ -134,7 +135,8 @@ class Process {
 
     then(successHandler: (any) => any, errorHandler?: (any) => any) {
         this.successHandler = successHandler;
-        this.errorHandler = errorHandler || (() => {});
+        this.errorHandler = errorHandler || (() => {
+        });
         return this;
     }
 
@@ -149,7 +151,7 @@ class Process {
             });
 
             return {
-                promise : p,
+                promise: p,
                 reject,
                 resolve
             };
@@ -192,8 +194,8 @@ class Process {
         const formatted = this.formatError(data, this.settings.errorCodes);
         if (formatted !== false) {
             this.settings.errorMessage = formatted;
-            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
-            const options = {
+            const message              = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+            const options              = {
                 autohide : !this.settings.holdAlerts,
                 classname: this.CONFIG.toast.danger,
                 delay    : this.CONFIG.alertTimeout
@@ -205,11 +207,12 @@ class Process {
 }
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxProcessService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
     constructor(private configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
                 private cloudApiService: NxCloudApiService,

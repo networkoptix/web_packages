@@ -18,13 +18,13 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
  */
 
 @Component({
-    selector: 'nx-tag',
+    selector   : 'nx-tag',
     templateUrl: 'tag.component.html',
-    styleUrls: ['tag.component.scss'],
-    providers: [{
-        provide: NG_VALUE_ACCESSOR,
+    styleUrls  : ['tag.component.scss'],
+    providers  : [{
+        provide    : NG_VALUE_ACCESSOR,
         useExisting: forwardRef(() => NxTagComponent),
-        multi: true
+        multi      : true
     }]
 })
 export class NxTagComponent implements OnInit, ControlValueAccessor {
@@ -107,5 +107,4 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
         this.propagateChange(value);
         this.onClick.emit(value);
     }
-
 }

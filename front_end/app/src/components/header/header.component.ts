@@ -1,32 +1,32 @@
 import {
-    Component, OnDestroy, OnInit, Renderer2
-} from '@angular/core';
+    Component, OnDestroy,
+    OnInit, Renderer2
+}                                    from '@angular/core';
 import {
-    ActivatedRoute, NavigationEnd, Event,
-    Router, RoutesRecognized
-}                              from '@angular/router';
-import { NxConfigService, IConfig }        from '../../services/nx-config';
-import { NxAppStateService }      from '../../services/nx-app-state.service';
-import { NxAccountService }       from '../../services/account.service';
-import { NxDialogsService }       from '../../dialogs/dialogs.service';
-import { NxSessionService }       from '../../services/session.service';
-import { NxSystemsService }       from '../../services/systems.service';
-import { LocalStorageService }    from 'ngx-store';
-import { Subscription, timer }    from 'rxjs';
-import { NxHeaderService }        from '../../services/nx-header.service';
+    ActivatedRoute, NavigationEnd,
+    Event, Router, RoutesRecognized
+}                                    from '@angular/router';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAppStateService }         from '../../services/nx-app-state.service';
+import { NxAccountService }          from '../../services/account.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxSessionService }          from '../../services/session.service';
+import { NxSystemsService }          from '../../services/systems.service';
+import { LocalStorageService }       from 'ngx-store';
+import { Subscription, timer }       from 'rxjs';
+import { NxHeaderService }           from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'nx-header',
+    selector   : 'nx-header',
     templateUrl: 'header.component.html',
-    styleUrls: [ 'header.component.scss' ]
+    styleUrls  : ['header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -86,7 +86,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 .toPromise().then(() => {
                     this.updateActiveSystem();
                     this.updateActive();
-            });
+                });
         } else {
             this.updateActiveSystem();
             this.updateActive();
@@ -117,7 +117,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
@@ -153,29 +154,29 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         this.routerSubscription = this.router.events
-              .subscribe((event: Event) => {
-                  if (event instanceof RoutesRecognized) {
-                      this.systemId = event.state.root.firstChild.params.systemId || '';
-                      this.localStorage.set('systemId', this.systemId);
-                      this.updateActiveSystem();
-                      this.updateActive();
-                  }
+            .subscribe((event: Event) => {
+                if (event instanceof RoutesRecognized) {
+                    this.systemId = event.state.root.firstChild.params.systemId || '';
+                    this.localStorage.set('systemId', this.systemId);
+                    this.updateActiveSystem();
+                    this.updateActive();
+                }
 
-                  if (event instanceof NavigationEnd) {
-                      // You only receive NavigationEnd events
-                      if (this.systemId && !this.systems) {
-                          this.systemsService
-                              .forceUpdateSystems()
-                              .toPromise().then(() => {
-                                  this.updateActiveSystem();
-                                  this.updateActive();
-                              });
-                      } else {
-                          this.updateActiveSystem();
-                          this.updateActive();
-                      }
-                  }
-              });
+                if (event instanceof NavigationEnd) {
+                    // You only receive NavigationEnd events
+                    if (this.systemId && !this.systems) {
+                        this.systemsService
+                            .forceUpdateSystems()
+                            .toPromise().then(() => {
+                                this.updateActiveSystem();
+                                this.updateActive();
+                            });
+                    } else {
+                        this.updateActiveSystem();
+                        this.updateActive();
+                    }
+                }
+            });
 
         this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState: string) => {
             this.accountService
@@ -234,14 +235,15 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    login () {
-        const url = this.router.url;
+    login() {
+        const url      = this.router.url;
         const redirect = this.CONFIG.redirect.paths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
-        this.dialogs.login(this.accountService, !redirect).then(() => {});
+        this.dialogs.login(this.accountService, !redirect).then(() => {
+        });
     }
 
-    logout () {
+    logout() {
         this.accountService.logout(true);
     }
 
@@ -279,7 +281,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                             this.stopActiveSubscription();
                             this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
 
-                            this.system.getInfoAndPermissions(false).catch(_ => {}).then(system => {
+                            this.system.getInfoAndPermissions(false).catch(_ => {
+                            }).then(system => {
                                 this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
                             });
                         }
@@ -296,5 +299,4 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             !this.active.integrations &&
             !this.active.ipvd;
     }
-
 }

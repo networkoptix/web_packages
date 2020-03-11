@@ -15,7 +15,6 @@ import { NxScrollMechanicsService }          from '../../../services/scroll-mech
 import { NxUtilsService }                    from '../../../services/utils.service';
 import { delay, throttleTime }               from 'rxjs/operators';
 import { NxHealthLayoutService }             from '../health-layout.service';
-import { Utils } from '../../../utils/helpers';
 
 interface Params {
     [key: string]: any;
@@ -23,13 +22,12 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-alerts-component',
-    templateUrl: 'alerts.component.html',
-    styleUrls  : ['alerts.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    selector : 'nx-system-alerts-component',
+    templateUrl : 'alerts.component.html',
+    styleUrls : ['alerts.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
-
     CONFIG: IConfig;
 
     filterModel: any;
@@ -82,8 +80,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
-            selects : [],
-            query: ''
+            selects: [],
+            query  : ''
         };
     }
 
@@ -154,7 +152,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             setTimeout(() => {
-                const params = {...this.route.snapshot.queryParams};
+                const params = { ...this.route.snapshot.queryParams };
 
                 if (params.id) {
                     const alarm = this.healthService.alertsValues.find((alert) => {
@@ -175,15 +173,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             .pipe(throttleTime(1000))
             .subscribe(selection => {
             // when user click same section in the menu - we need to reset table and entity
-            if (this.metricId === selection) {
-                this.resetActiveEntity();
-                this.resetFilterModel();
-                this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
-            } else {
+                if (this.metricId === selection) {
+                    this.resetActiveEntity();
+                    this.resetFilterModel();
+                    this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
+                } else {
                 // short circuit first subscription
-                this.metricId = 'alerts';
-            }
-        });
+                    this.metricId = 'alerts';
+                }
+            });
     }
 
     ngAfterViewInit() {
@@ -219,7 +217,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     modelChanged(model) {
-        if (!Utils.isEqual(this.filterModel, model)) { // avoid unnecessary trips
+        if (!NxUtilsService.isEqual(this.filterModel, model)) { // avoid unnecessary trips
             this.filterModel = NxUtilsService.deepCopy(model);
             this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, model);
             this.countAlerts();
@@ -238,25 +236,24 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     addFilterAlarms() {
-        let selected;
         const alertItems = [
             { value: '0', name: 'All Alerts' },
             { value: 'warning', name: 'Only Warnings' },
             { value: 'error', name: 'Only Errors' }
         ];
 
-        selected = alertItems.filter((item) => {
+        const selected = alertItems.filter((item) => {
             return this.params.alertType === item.value;
         })[0];
 
         this.filterModel.selects.push(
-                {
-                    id      : 'alertType',
-                    label   : '',
-                    css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                    items   : alertItems,
-                    selected: selected || alertItems[0]
-                });
+            {
+                id      : 'alertType',
+                label   : '',
+                css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+                items   : alertItems,
+                selected: selected || alertItems[0]
+            });
     }
 
     addFilterTypes() {
@@ -275,16 +272,16 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             }
         }
 
-        typesItems.unshift({ value: '0', name: 'All Device Types'});
+        typesItems.unshift({ value: '0', name: 'All Device Types' });
 
         this.filterModel.selects.push(
-                {
-                    id      : 'deviceType',
-                    label   : '',
-                    css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
-                    items   : typesItems,
-                    selected: selected || typesItems[0]
-                });
+            {
+                id      : 'deviceType',
+                label   : '',
+                css     : 'col-12 col-lg-3 mr-0 mr-lg-2 p-0',
+                items   : typesItems,
+                selected: selected || typesItems[0]
+            });
     }
 
     addFilterServers() {
@@ -304,13 +301,13 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         serverItems.unshift({ value: '0', name: 'All Servers' });
 
         this.filterModel.selects.push(
-                {
-                    id      : 'server',
-                    label   : '',
-                    css     : 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
-                    items   : serverItems,
-                    selected: selected || serverItems[0]
-                });
+            {
+                id      : 'server',
+                label   : '',
+                css     : 'col-12 col-lg-4 mr-0 mr-lg-2 p-0',
+                items   : serverItems,
+                selected: selected || serverItems[0]
+            });
     }
 
     isFilterEmpty() {
@@ -341,8 +338,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         }).reduce((obj: any, item: any) => {
             obj[item.id] = {
                 alarms: {
-                    error: 0,
-                    warning: 0,
+                    error  : 0,
+                    warning: 0
                 },
                 name: item.name
             };
@@ -368,32 +365,32 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     initializeHeader() {
         this.tableHeaders = {
-            id: 'alerts',
+            id    : 'alerts',
             values: [{
-                id: '_',
-                name: '',
+                id    : '_',
+                name  : '',
                 values: [
                     {
                         display: 'table',
-                        name: '',
-                        id: 'alarm',
+                        name   : '',
+                        id     : 'alarm'
                     },
                     {
-                        display: 'table',
-                        name: 'Type',
-                        id: 'type',
+                        display    : 'table',
+                        name       : 'Type',
+                        id         : 'type',
                         formatClass: 'text'
                     },
                     {
-                        display: 'table',
-                        name: 'Server',
-                        id: 'server',
+                        display    : 'table',
+                        name       : 'Server',
+                        id         : 'server',
                         formatClass: 'long-text'
                     },
                     {
                         display: 'table',
-                        name: 'Alert',
-                        id: 'message'
+                        name   : 'Alert',
+                        id     : 'message'
                     }
                 ]
             }]
@@ -416,7 +413,6 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
-
         } else {
             this.resetActiveEntity();
         }
@@ -425,8 +421,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     resetActiveEntity(updateURI = true) {
         if (updateURI) {
             const queryParams: Params = {};
-            queryParams.id            = undefined;
-            queryParams.metric        = undefined;
+            queryParams.id = undefined;
+            queryParams.metric = undefined;
             this.uriService.updateURI(undefined, queryParams);
         }
         this.healthLayoutService.resetActiveEntity();

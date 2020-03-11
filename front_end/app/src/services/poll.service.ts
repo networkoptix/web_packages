@@ -1,9 +1,9 @@
 import { BehaviorSubject, concat, Observable, of } from 'rxjs';
-import { concatMap, delay, skip, tap } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
+import { concatMap, delay, skip, tap }             from 'rxjs/operators';
+import { Injectable }                              from '@angular/core';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 /*
  * How to use the poll service.
@@ -22,9 +22,11 @@ import { Injectable } from '@angular/core';
  * examplePoll.unsubscribe();
  */
 export class NxPollService {
-    constructor() {}
+    constructor() {
+    }
+
     createPoll(apiCall: Observable<any>, intervalDelay: number): Observable<any> {
-        const load$ = new BehaviorSubject('');
+        const load$    = new BehaviorSubject('');
         const refresh$ = of('').pipe(
             delay(intervalDelay),
             tap(_ => load$.next('')),

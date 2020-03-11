@@ -436,16 +436,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
+        if (!this.settingsService.mergeTarget) {
+            return;
+        }
+
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        if (this.systemsService.systems.length > 1 || this.settingsService.mergeTarget) {
-            let route = this.CONFIG.redirect.authorised;
-            if (this.settingsService.mergeTarget) {
-                route = `${route}/${this.settingsService.mergeTarget}`;
-                this.settingsService.mergeTarget = '';
-            }
-            setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
-        }
+        const route = `${this.CONFIG.redirect.authorised}/${this.settingsService.mergeTarget}`;
+        this.settingsService.mergeTarget = '';
+        setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

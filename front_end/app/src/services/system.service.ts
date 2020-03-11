@@ -1,18 +1,18 @@
-import * as _ from 'underscore';
-import { NxConfigService, IConfig } from './nx-config';
-import { NxLanguageProviderService } from './nx-language-provider';
-import { NxCloudApiService } from './nx-cloud-api';
-import { NxSystemsService } from './systems.service';
-import { Injectable, OnDestroy } from '@angular/core';
+import * as _                              from 'underscore';
+import { NxConfigService, IConfig }        from './nx-config';
+import { NxLanguageProviderService }       from './nx-language-provider';
+import { NxCloudApiService }               from './nx-cloud-api';
+import { NxSystemsService }                from './systems.service';
+import { Injectable, OnDestroy }           from '@angular/core';
 import { NxSystemAPIService, NxSystemAPI } from './system-api.service';
-import { BehaviorSubject, from, of } from 'rxjs';
-import { flatMap, tap } from 'rxjs/operators';
-import { NxPollService } from './poll.service';
-import { Utils } from '../utils/helpers';
-import { PredefinedRole } from './nx-config/base-config';
-import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { BehaviorSubject, from, of }       from 'rxjs';
+import { flatMap, tap }                    from 'rxjs/operators';
+import { NxPollService }                   from './poll.service';
+import { NxUtilsService }                  from './utils.service';
+import { PredefinedRole }                  from './nx-config/base-config';
+import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 
-export interface NxSystemRole extends PredefinedRole{
+export interface NxSystemRole extends PredefinedRole {
     id?: string;
     isAdmin?: boolean;
     label?: string;
@@ -165,7 +165,7 @@ class UserManager {
     }
 
     checkPermissions() {
-        const isMine = this.isMine;
+        const isMine                         = this.isMine;
         const permissions: SystemPermissions = {
             editAdmins: isMine,
             editUsers : isMine,
@@ -186,13 +186,14 @@ class UserManager {
             this.users = this.users.filter((user) => {
                 return user.id !== data.id;
             });
-        }).catch(() => {});
+        }).catch(() => {
+        });
     }
 
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         // TODO Need to figure out role type here
-        const role = roles.find((role: any) => {
+        const role  = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
@@ -251,9 +252,9 @@ class UserManager {
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
 
-            const isAdmin = this.isAdmin(user);
+            const isAdmin      = this.isAdmin(user);
             const isCloudOwner = this.isOwner(user);
-            const isMe = user.email === this.currentUserEmail;
+            const isMe         = user.email === this.currentUserEmail;
             if (isMe) {
                 this.currentUser = user;
                 this.accessRole = user.accessRole;
@@ -350,7 +351,7 @@ class UserManager {
         });
 
         const newRoles = Array.from(new Set([...predefinedRoles, ...userRolesList, this.CONFIG.accessRoles.customPermission]));
-        if (!Utils.isEqual(newRoles, this.accessRoles)) {
+        if (!NxUtilsService.isEqual(newRoles, this.accessRoles)) {
             this.accessRoles = newRoles;
         }
         return this.accessRoles;
@@ -366,11 +367,12 @@ class ServerManager {
     servers: NxSystemServer[];
 
     constructor(private mediaserver: NxSystemAPI,
-        private systemApiService: NxSystemAPIService,
-        private currentUserEmail: string,
-        private systemId: string,
-        private cloudApi: NxCloudApiService
-    ) {}
+                private systemApiService: NxSystemAPIService,
+                private currentUserEmail: string,
+                private systemId: string,
+                private cloudApi: NxCloudApiService
+    ) {
+    }
 
     initSystemMediaServers() {
         if (this.servers.length) {
@@ -378,12 +380,12 @@ class ServerManager {
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
-                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
-                        undefined,
-                        () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                            return Promise.resolve(true);
-                        }));
+                                                              `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
+                                                              undefined,
+                                                              () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                                                                  this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                                                                  return Promise.resolve(true);
+                                                              }));
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
@@ -525,12 +527,14 @@ export class NxSystem extends System implements OnDestroy {
     get users() {
         return this.userManager.users;
     }
+
     // End of userManager get functions
 
     // Start of serverManager functions
     get servers() {
         return this.serverManager.servers;
     }
+
     // End of serverManager functions
 
     constructor(CONFIG: IConfig,
@@ -584,17 +588,18 @@ export class NxSystem extends System implements OnDestroy {
         this.currentUserEmail = currentUserEmail;
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
-                Some options here:
-                    - Access was revoked
-                    - System was disconnected from cloud\Password was changed
-                    - Nonce expired
-                We try to update nonce and auth on the server again
-                Other cases are not distinguishable
-            */
+             Some options here:
+             - Access was revoked
+             - System was disconnected from cloud\Password was changed
+             - Nonce expired
+             We try to update nonce and auth on the server again
+             Other cases are not distinguishable
+             */
             return this.updateSystemAuth(true);
         });
         // Handling promise to satisfy the linter.
-        this.updateSystemAuth(true).then(() => {});
+        this.updateSystemAuth(true).then(() => {
+        });
         this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail);
         this.serverManager = new ServerManager(
@@ -736,7 +741,9 @@ export class NxSystem extends System implements OnDestroy {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll
-                    .subscribe(() => { this.systemInfo = this; });
+                    .subscribe(() => {
+                        this.systemInfo = this;
+                    });
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }

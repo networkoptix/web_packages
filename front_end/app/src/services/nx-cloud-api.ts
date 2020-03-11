@@ -1,8 +1,8 @@
-import { Injectable }      from '@angular/core';
-import { HttpClient }      from '@angular/common/http';
-import { Observable }      from 'rxjs';
+import { Injectable }               from '@angular/core';
+import { HttpClient }               from '@angular/common/http';
+import { Observable }               from 'rxjs';
 import { NxConfigService, IConfig } from './nx-config';
-import { Account } from './account.service';
+import { Account }                  from './account.service';
 
 @Injectable({
     providedIn: 'root'

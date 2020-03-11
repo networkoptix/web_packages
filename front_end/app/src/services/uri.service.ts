@@ -1,9 +1,9 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, Router, Params }          from '@angular/router';
+import { ActivatedRoute, Router, Params }  from '@angular/router';
 import { BehaviorSubject, Observable }     from 'rxjs';
 
 @Injectable({
-    providedIn : 'root'
+    providedIn: 'root'
 })
 export class NxUriService {
     private _pageOffset: number;
@@ -52,9 +52,9 @@ export class NxUriService {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {
                     queryParams,
-                    relativeTo          : this.route,
-                    replaceUrl          : replace,
-                    queryParamsHandling : 'merge'
+                    relativeTo         : this.route,
+                    replaceUrl         : replace,
+                    queryParamsHandling: 'merge'
                 }).then(success => {
                     resolve(success);
                 }, error => {
@@ -67,8 +67,8 @@ export class NxUriService {
     resetURI(navigateTo: string, queryParams: Params = {}) {
         this.router.navigate([navigateTo], {
             queryParams,
-            relativeTo : this.route,
-            replaceUrl : false
+            relativeTo: this.route,
+            replaceUrl: false
         });
     }
 }

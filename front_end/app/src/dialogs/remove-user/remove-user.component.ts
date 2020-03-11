@@ -1,11 +1,11 @@
 import {
-    Component, Input, OnInit, Renderer2, ViewEncapsulation
-}                                                from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }                       from '../../services/nx-config';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxProcessService }                      from '../../services/process.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+    Component, Input, Renderer2
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-remove-user-content',
@@ -44,7 +44,7 @@ export class RemoveUserModalContent {
                 return this.system.getUsers(true);
             });
         }, {
-            errorPrefix   : this.LANG.errorCodes.cantSharePrefix
+            errorPrefix: this.LANG.errorCodes.cantSharePrefix
         }).then(() => {
             this.activeModal.close(true);
         });

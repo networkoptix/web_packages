@@ -1,16 +1,14 @@
 import {
-    Component,
-    OnInit,
-    Input,
-    ViewEncapsulation, Inject, OnDestroy
-} from '@angular/core';
+    Component, OnInit, Input,
+    ViewEncapsulation, OnDestroy
+}                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector     : 'nx-client-button',
@@ -19,7 +17,6 @@ import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
-
     @Input() system: any;
     @Input() customClass: any;
     @Input() actionType: any;
@@ -37,8 +34,8 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
                 private urlProtocol: NxUrlProtocolService,
                 private language: NxLanguageProviderService,
                 private dialogs: NxDialogsService,
-                private router: Router) {
-
+                private router: Router
+    ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
@@ -82,6 +79,6 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
                 }).finally(() => {
                     this.modalActive = false;
                 });
-            });
+        });
     }
 }

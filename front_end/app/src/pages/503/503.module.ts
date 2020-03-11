@@ -3,13 +3,13 @@ import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }      from '@ngx-translate/core';
-import { Nx404Component }       from './404.component';
-import { ComponentsModule }     from '../../components/components.module';
+import { TranslateModule }  from '@ngx-translate/core';
+
+import { Nx503Component } from './503.component';
+import { ComponentsModule } from '../../components/components.module';
 
 const appRoutes: Routes = [
-    { path: '404', component: Nx404Component },
-    { path: '**', component: Nx404Component }
+    { path: '503', component: Nx503Component }
 ];
 
 @NgModule({
@@ -22,17 +22,17 @@ const appRoutes: Routes = [
 
         RouterModule.forChild(appRoutes)
     ],
-    providers: [],
+    providers : [],
     declarations: [
-        Nx404Component
+        Nx503Component
     ],
-    bootstrap: [],
+    bootstrap      : [],
     entryComponents: [
-        Nx404Component
+        Nx503Component
     ],
     exports: [
-        Nx404Component
+        Nx503Component
     ]
 })
-export class Nx404Module {
+export class Nx503Module {
 }

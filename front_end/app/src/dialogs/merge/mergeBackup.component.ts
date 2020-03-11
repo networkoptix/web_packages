@@ -1,12 +1,15 @@
-import { Component, Input, Renderer2, ViewChild } from '@angular/core';
+import {
+    Component, Input, Renderer2,
+    ViewChild
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-merge-content',
@@ -43,20 +46,21 @@ export class MergeModalContent {
 
     @ViewChild('mergeForm', { static: false }) mergeForm: HTMLFormElement;
 
-    constructor(public activeModal: NgbActiveModal,
-                public renderer: Renderer2,
-                configService: NxConfigService,
-                private cloudApi: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private systemService: NxSystemService,
-                private systemsService: NxSystemsService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        public renderer: Renderer2,
+        private cloudApi: NxCloudApiService,
+        private processService: NxProcessService,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
         this.checking = false;
         this.state = 'select';
         this.wrongPassword = false;
-        this.LANG = this.language.getTranslations();
     }
 
     ngOnInit() {
@@ -85,7 +89,7 @@ export class MergeModalContent {
             this.mergeForm.controls.mergePassword.setErrors(undefined);
 
             if (!this.password) {
-                return Promise.reject({ error: { data: {resultCode : 'missingPassword'}}});
+                return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
             }
 
             return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
@@ -107,16 +111,16 @@ export class MergeModalContent {
                     // this.password = '';
 
                     this.renderer.selectRootElement('#mergePassword').focus();
-                },
+                }
             },
             successMessage: this.LANG.toastMessage.system.merge.start
         }).then(() => {
             this.systemsService.forceUpdateSystems();
             this.activeModal.close({
                 anotherSystemId: this.targetSystem.id,
-                role: this.primarySystem.id === this.system.id ?
-                    this.CONFIG.system.status.master :
-                    this.CONFIG.system.status.slave
+                role           : this.primarySystem.id === this.system.id
+                    ? this.CONFIG.system.status.master
+                    : this.CONFIG.system.status.slave
             });
         }, (error) => {
             const errorCode = error.resultCode || error.data && error.data.resultCode;
@@ -125,9 +129,9 @@ export class MergeModalContent {
             }
 
             /* Get the names of the primary and secondary system.
-               Next try to figure out which system caused the problem.
-               If the primary system's stateOfHealth is not online set it as the failedSystem.
-               Otherwise the secondary system is set as the failedSystem no matter what.
+             Next try to figure out which system caused the problem.
+             If the primary system's stateOfHealth is not online set it as the failedSystem.
+             Otherwise the secondary system is set as the failedSystem no matter what.
              */
 
             if (!error.data) {
@@ -176,16 +180,18 @@ export class MergeModalContent {
             });
         }, {
             errorCodes: {
-                target: () => {},
-                system: () => {}
+                target: () => {
+                },
+                system: () => {
+                }
             }
         })
-        .then((res) => {
-            if (!res.system && this.systemMergeable === '' || this.CONFIG.clientMode.debug) {
-                return this.updateState();
-            }
-        }, (error) => {
-        });
+            .then((res) => {
+                if (!res.system && this.systemMergeable === '' || this.CONFIG.clientMode.debug) {
+                    return this.updateState();
+                }
+            }, (error) => {
+            });
     }
 
     addStatus(system) {
@@ -251,14 +257,14 @@ export class MergeModalContent {
             return this.targetSystem.getUsersDataFromTheSystem().then(() => {
                 return Promise.all([
                     this.system.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({error: { data: { resultCode:  'current'}, errorResponse: error }});
+                        return Promise.reject({ error: { data: { resultCode: 'current' }, errorResponse: error } });
                     }),
                     this.targetSystem.mediaserver.getMediaServers().toPromise().catch(error => {
-                        return Promise.reject({ error: { data: { resultCode: 'target'}, errorResponse: error }});
+                        return Promise.reject({ error: { data: { resultCode: 'target' }, errorResponse: error } });
                     })
                 ]).then(res => {
                     this.tooManySystems = res.map(req => req.length)
-                                             .reduce((acc, cur) => acc + cur) > this.CONFIG.maxServers;
+                        .reduce((acc, cur) => acc + cur) > this.CONFIG.maxServers;
 
                     return Promise.resolve({});
                 });
@@ -283,10 +289,10 @@ export class MergeModalContent {
         }
         for (const i in this.systems) {
             if (this.checkMergeability(this.systems[i]) === '') {
-                return {...this.systems[i]};
+                return { ...this.systems[i] };
             }
         }
-        const system = {...this.systems[0]};
+        const system = { ...this.systems[0] };
         system.value = system.id;
         return system;
     }
@@ -298,7 +304,7 @@ export class MergeModalContent {
 
     setTargetSystem(targetSystem) {
         this.systemMergeable = '';
-        this.targetSystem = {... this.systems.find(system => system.id === targetSystem.value)};
+        this.targetSystem = { ...this.systems.find(system => system.id === targetSystem.value) };
         this.targetSystem.value = this.targetSystem.id;
         this.setSystems();
     }

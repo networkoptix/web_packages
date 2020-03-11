@@ -10,9 +10,9 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-account-settings-select',
+    selector   : 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',
-    styleUrls : ['account-settings.component.scss']
+    styleUrls  : ['account-settings.component.scss']
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown {
@@ -29,7 +29,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
                 private configService: NxConfigService,
                 private sessionService: NxSessionService,
                 private router: Router
-
     ) {
         super(languageService, configService);
     }
@@ -54,12 +53,12 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     }
 
     logout(): void {
-        const url = this.router.url;
+        const url  = this.router.url;
         const stay = url.startsWith('/systems') ||
-                     url.startsWith('/account') ||
-                     url.startsWith('/push-notifications') ||
-                     url.startsWith('/download') && !this.CONFIG.cloudCapabilities.publicDownloads ||
-                     url.startsWith('/downloads') && !this.CONFIG.cloudCapabilities.publicReleases;
+            url.startsWith('/account') ||
+            url.startsWith('/push-notifications') ||
+            url.startsWith('/download') && !this.CONFIG.cloudCapabilities.publicDownloads ||
+            url.startsWith('/downloads') && !this.CONFIG.cloudCapabilities.publicReleases;
         this.accountService.logout(!stay);
     }
 }

@@ -1,17 +1,23 @@
-import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, Validator } from '@angular/forms';
+import {
+    Component, EventEmitter, forwardRef,
+    Input, OnInit, Output
+} from '@angular/core';
+import {
+    ControlValueAccessor, FormControl,
+    NG_VALUE_ACCESSOR, Validator
+} from '@angular/forms';
 
 @Component({
-    selector: 'nx-switch',
+    selector   : 'nx-switch',
     templateUrl: 'switch.component.html',
-    styleUrls: ['switch.component.scss'],
-    providers: [
+    styleUrls  : ['switch.component.scss'],
+    providers  : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxSwitchComponent),
-            multi: true
+            multi      : true
         }
-    ],
+    ]
 })
 export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validator {
     @Input() componentId: string;
@@ -27,8 +33,11 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {};
-    private onChangeCallback = (_: any) => {};
+    private onTouchedCallback = () => {
+    };
+
+    private onChangeCallback = (_: any) => {
+    };
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
@@ -50,8 +59,8 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     }
 
     ngOnInit() {
-        this.disabled = (this.disabled !== undefined);  // optional param
-        this.required = (this.required !== undefined);  // optional param
+        this.disabled = (this.disabled !== undefined); // optional param
+        this.required = (this.required !== undefined); // optional param
 
         setTimeout(() => {
             // set state after model was updated

@@ -2,7 +2,7 @@ import {
     Component, ViewEncapsulation,
     Input, Output, EventEmitter,
     SimpleChanges
-}                                   from '@angular/core';
+}                                    from '@angular/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '../../../services/nx-config';
@@ -10,8 +10,8 @@ import { NxConfigService }           from '../../../services/nx-config';
 @Component({
     selector     : 'nx-permissions-select',
     templateUrl  : 'permissions.component.html',
-    styleUrls    : [ 'permissions.component.scss' ],
-    encapsulation: ViewEncapsulation.None,
+    styleUrls    : ['permissions.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class NxPermissionsDropdown extends BaseDropdown {
@@ -28,7 +28,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     differ: any;
 
     constructor(private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
+                private configService: NxConfigService
     ) {
         super(languageService, configService);
 
@@ -40,7 +40,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
 
     ngOnInit(): void {
         this.processAccessRoles();
-        const role = this.accessRoles.filter(x => x.name === this.selected.name)[ 0 ];
+        const role = this.accessRoles.filter(x => x.name === this.selected.name)[0];
         this.selection = '';
 
         if (role) {
@@ -53,9 +53,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
         if (this.roles) {
             this.accessRoles = this.roles.filter((role) => {
                 if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
-                    role.optionLabel = this.LANG.accessRoles[ role.name ] ?
-                        this.LANG.accessRoles[role.name].label :
-                        role.name;
+                    role.optionLabel = this.LANG.accessRoles[role.name]
+                        ? this.LANG.accessRoles[role.name].label
+                        : role.name;
                     return true;
                 }
 
@@ -67,7 +67,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     ngOnChanges(changes: SimpleChanges) {
         if (changes.roles && changes.roles.currentValue) {
             this.processAccessRoles();
-            const role = this.accessRoles.filter(x => x.name === this.selected.name)[ 0 ];
+            const role = this.accessRoles.filter(x => x.name === this.selected.name)[0];
             if (!role || role.optionLabel !== this.selection) {
                 this.selection = role.optionLabel || this.message;
                 this.changePermission(role);
@@ -86,7 +86,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             if (accessRole.name === role.name) {
                 return role;
             }
-        })[ 0 ];
+        })[0];
         this.onSelected.emit(selectedRole);
 
         return false; // return false so event will not bubble to HREF

@@ -2,8 +2,8 @@ import { Component, Input }  from '@angular/core';
 import { NxSettingsService } from '../pages/systems/settings/settings.service';
 
 @Component({
-    selector : 'nx-menu-button',
-    template : `<button class="btn btn-menu btn-clear"
+    selector: 'nx-menu-button',
+    template: `<button class="btn btn-menu btn-clear"
                        [disabled]="button.disabled"
                        (click)="action()">{{button.label}}</button>`
 })

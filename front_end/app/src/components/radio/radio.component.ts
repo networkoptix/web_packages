@@ -1,6 +1,7 @@
 import {
     Component, Input, Output,
-    EventEmitter, forwardRef, OnInit, ViewEncapsulation
+    EventEmitter, forwardRef,
+    OnInit, ViewEncapsulation
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR, ControlValueAccessor,
@@ -8,23 +9,23 @@ import {
 } from '@angular/forms';
 
 /* Usage
-<nx-radio name="groupName" id="groupID"
-      [(ngModel)]="user.remember_me"
-      (click)?="onClick($event)"
-      value="SOME_VALUE"
-      disabled?>LABEL
-</nx-radio>
-*/
+ <nx-radio name="groupName" id="groupID"
+     [(ngModel)]="user.remember_me"
+     (click)?="onClick($event)"
+     value="SOME_VALUE"
+     disabled?>LABEL
+ </nx-radio>
+ */
 
 @Component({
-    selector: 'nx-radio',
-    templateUrl: 'radio.component.html',
-    styleUrls: ['radio.component.scss'],
-    providers: [
+    selector     : 'nx-radio',
+    templateUrl  : 'radio.component.html',
+    styleUrls    : ['radio.component.scss'],
+    providers    : [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide    : NG_VALUE_ACCESSOR,
             useExisting: forwardRef(() => NxRadioComponent),
-            multi: true
+            multi      : true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -40,10 +41,10 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     private state: string;
     private _value: any;    // ngModel representation
     private _rbxStates = {
-        rbFalse: 'unchecked',
-        rbTrue: 'checked',
+        rbFalse   : 'unchecked',
+        rbTrue    : 'checked',
         rbDisabled: 'disabled',
-        rbOrElse: 'tristate'
+        rbOrElse  : 'tristate'
     };
 
     // the method set in registerOnChange to emit changes back to the form
@@ -86,7 +87,8 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Set the function to be called
      * when the control receives a touch event.
      */
-    registerOnTouched(fn: () => void): void {}
+    registerOnTouched(fn: () => void): void {
+    }
 
     changeState() {
         if (this.disabled) {

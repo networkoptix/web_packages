@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
-    Input, forwardRef, SimpleChanges,
-}                                   from '@angular/core';
+    Input, forwardRef, SimpleChanges
+}                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
@@ -46,8 +46,9 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     private innerValue: any;
 
-    constructor(private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
     ) {
         super(languageService, configService);
 
@@ -63,7 +64,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     clearSelected() {
         this.items.forEach((item) => {
             item.selected = false;
-            const index = this.innerValue.indexOf(item.id);
+            const index   = this.innerValue.indexOf(item.id);
             if (index > -1) {
                 this.innerValue.splice(index, 1);
             }
@@ -162,4 +163,3 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         }
     }
 }
-

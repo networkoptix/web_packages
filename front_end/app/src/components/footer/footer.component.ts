@@ -1,17 +1,20 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { DomSanitizer }      from '@angular/platform-browser';
-import { NxConfigService, IConfig }   from '../../services/nx-config';
-import { NxAppStateService } from '../../services/nx-app-state.service';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import {
+    Component, Input,
+    OnDestroy, OnInit
+}                                   from '@angular/core';
+import { DomSanitizer }             from '@angular/platform-browser';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxAppStateService }        from '../../services/nx-app-state.service';
+import { Subscription }             from 'rxjs';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'nx-footer',
+    selector   : 'nx-footer',
     templateUrl: 'footer.component.html',
-    styleUrls: [ 'footer.component.scss' ]
+    styleUrls  : ['footer.component.scss']
 })
- export class NxFooterComponent implements OnInit, OnDestroy {
+export class NxFooterComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     companyLink: string;
     companyName: string;
@@ -30,7 +33,8 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
         this.CONFIG = configService.getConfig();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+    }
 
     ngOnInit() {
         this.companyLink = this.CONFIG.company.link;

@@ -80,7 +80,11 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     resolution:                Resolution;
+<<<<<<< HEAD
     general:                   string;
+=======
+    maintenanceInProgress:     string;
+>>>>>>> 7e3a90552dc3cdd3d7b346156af560ce1c1815f0
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;
@@ -636,7 +640,7 @@ export interface ToastMessageSystem {
     deleted:      Deleted;
     disconnected: Disconnected;
     merge:        SystemMerge;
-    rename:       Disconnected;
+    rename:       Deleted;
     share:        Share;
 }
 
@@ -870,6 +874,7 @@ const typeMap: any = {
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
+        { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "" },
@@ -1370,7 +1375,7 @@ const typeMap: any = {
         { json: "deleted", js: "deleted", typ: r("Deleted") },
         { json: "disconnected", js: "disconnected", typ: r("Disconnected") },
         { json: "merge", js: "merge", typ: r("SystemMerge") },
-        { json: "rename", js: "rename", typ: r("Disconnected") },
+        { json: "rename", js: "rename", typ: r("Deleted") },
         { json: "share", js: "share", typ: r("Share") },
     ], false),
     "Deleted": o([

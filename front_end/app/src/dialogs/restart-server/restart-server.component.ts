@@ -1,17 +1,17 @@
-import { Component, Input }            from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
-import { NxToastService }              from '../../dialogs/toast.service';
-import { NxConfigService, IConfig }             from '../../services/nx-config';
-import { timer }                       from 'rxjs';
-import { delayWhen, retryWhen, map }   from 'rxjs/operators';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Input }          from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxToastService }            from '../toast.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { timer }                     from 'rxjs';
+import { delayWhen, retryWhen, map } from 'rxjs/operators';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector: 'nx-modal-restart-server-content',
+    selector   : 'nx-modal-restart-server-content',
     templateUrl: 'restart-server.component.html',
-    styleUrls: []
+    styleUrls  : []
 })
 export class RestartServerModalContent {
     @Input() system: any;
@@ -23,22 +23,23 @@ export class RestartServerModalContent {
     CONFIG: IConfig;
     restartServer: any;
 
-    constructor(configService: NxConfigService,
-                private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private toastService: NxToastService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {
         let initialRuntimeId;
-        const options = {
+        const options      = {
             classname: this.CONFIG.toast.warning,
-            autohide: true,
-            delay: this.CONFIG.alertTimeout
+            autohide : true,
+            delay    : this.CONFIG.alertTimeout
         };
         this.restartServer = this.processService
             .createProcess(() => {
@@ -49,7 +50,7 @@ export class RestartServerModalContent {
                             this.system.currentServerNotBusy = true;
                             this.toastService.show(this.LANG.servers.restartFailed, options);
                         });
-                    })
+                })
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
                         this.toastService.show(this.LANG.servers.getModuleFailed, options);
@@ -81,7 +82,7 @@ export class RestartServerModalContent {
                         serverSubscription.unsubscribe();
                     });
                 return true;
-                });
+            });
     }
 
     close(msg) {

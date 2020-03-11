@@ -1,19 +1,19 @@
 import {
-    Component, forwardRef, Input,
-    OnChanges, SimpleChanges, ViewEncapsulation
-} from '@angular/core';
+    Component, Input,
+    OnChanges, SimpleChanges,
+    ViewEncapsulation
+}                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-password-input-tag-validation',
-    templateUrl: 'password-tag-validation.component.html',
-    styleUrls  : ['password-tag-validation.component.scss'],
+    selector     : 'nx-password-input-tag-validation',
+    templateUrl  : 'password-tag-validation.component.html',
+    styleUrls    : ['password-tag-validation.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordTagValidationComponent implements OnChanges {
-
     @Input() forElement: any;
     @Input() value: any;
 
@@ -24,18 +24,19 @@ export class NxPasswordTagValidationComponent implements OnChanges {
 
     weak: boolean;
 
-    constructor(private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.value) {
             this.forElement.weak = false;
             if (this.forElement.errors && !this.forElement.errors.pattern) {
-                const {weak, common, minlength, required} = this.forElement.errors;
+                const { weak, common, minlength, required } = this.forElement.errors;
                 this.weak = (weak && !common && !minlength) || (common && !minlength && !required) || minlength;
             }
         }

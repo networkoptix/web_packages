@@ -1,21 +1,24 @@
-<div class="page-placeholder" [ngClass]="{'has-preloader':preloader}">
-    <div class="placeholder-content {{constrainWidth ? 'constrain-wdith' : ''}}">
-        <div *ngIf="preloader && !condition" class="placeholder-preloader">
-            <div class="circleG circleG_1"></div>
-            <div class="circleG circleG_2"></div>
-            <div class="circleG circleG_3"></div>
+<div class="container h-100">
+    <div class="page-placeholder" [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}">
+        <div class="placeholder-content {{constrainWidth ? 'constrain-wdith' : ''}}">
+            <div *ngIf="preloader && !condition" class="placeholder-preloader">
+                <div class="circleG circleG_1"></div>
+                <div class="circleG circleG_2"></div>
+                <div class="circleG circleG_3"></div>
+            </div>
+            <div *ngIf="condition">
+                <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
+                <div *ngIf="!iconClass" [attr.name]="type" class="placeholder-icon">
+                    <svg-icon [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"></svg-icon>
+                </div>
+                <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
+                     [innerHTML]="placeholderTitle"></h2>
+                <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message"></div>
+
+                <ng-content></ng-content>
+
+            </div>
         </div>
-        <div *ngIf="condition">
-            <div *ngIf="iconClass && type !== '404'" class="placeholder-icon" [ngClass]="iconClass"></div>
-            <div *ngIf="!iconClass" class="placeholder-icon">
-                <svg-icon *ngIf="type !== '404'" [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"></svg-icon>
-                <img *ngIf="type === '404'" [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'" width="400" height="200">
-            </div>    
-            <h2 *ngIf="placeholderTitle" class="placeholder-title"
-                 [innerHTML]="placeholderTitle"></h2>
-            <div *ngIf="message" class="placeholder-message" [innerHTML]="message"></div>
-        </div>
-        <ng-content></ng-content>
     </div>
     <nx-footer *ngIf="withFooter" center="true" [ngClass]="'footer'"></nx-footer>
 </div>

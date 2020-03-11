@@ -2,9 +2,7 @@ import {
     Component, Inject, OnInit,
     Input, ViewChild, Renderer2
 }                                    from '@angular/core';
-import {
-    DOCUMENT, Location
-}                                    from '@angular/common';
+import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -14,7 +12,7 @@ import { NxModalGenericComponent }   from '../generic/generic.component';
 import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'ngbd-modal-content',
@@ -35,38 +33,36 @@ export class LoginModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
-    location: any;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
 
     @ViewChild('loginForm', { static: true }) loginForm: HTMLFormElement;
 
-    private setupDefaults(configService) {
+    private setupDefaults() {
         this.auth = { email: this.localStorage.get('email') };
         this.next = '';
         this.password = '';
         this.remember = true;
         this.wrongPassword = false;
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
     }
 
-    constructor(configService: NxConfigService,
-        location: Location,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private localStorage: LocalStorageService,
-                private activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private genericModal: NxModalGenericComponent,
-                private renderer: Renderer2,
-                private router: Router,
-                @Inject(DOCUMENT) private document: any
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private location: Location,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private localStorage: LocalStorageService,
+        private activeModal: NgbActiveModal,
+        private genericModal: NxModalGenericComponent,
+        private renderer: Renderer2,
+        private router: Router,
+        @Inject(DOCUMENT) private document: any
     ) {
-        this.setupDefaults(configService);
-
-        this.location = location;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+        this.setupDefaults();
     }
 
     resendActivation(email) {
@@ -164,7 +160,7 @@ export class LoginModalContent implements OnInit {
         }).then((result) => {
             this.activeModal.close();
             if (this.keepPage) {
-                if (this.router.url === '/') {
+                if (this.location.path() === '/') {
                     this.router
                         .navigate([this.CONFIG.redirect.authorised])
                         .then(() => {
