@@ -1,14 +1,14 @@
-import { Component, Input, Renderer2, ViewChild, ElementRef } from '@angular/core';
+import {
+    Component,
+    Renderer2,
+    ViewChild
+}                                   from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService }           from '../../services/nx-config/nx-config.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxSystemService }           from '../../services/system.service';
-import { NxSystemsService }          from '../../services/systems.service';
-import { BehaviorSubject } from 'rxjs';
-import { DropdownItem } from '../../components/dropdowns/generic/dropdown.component';
-import { NxCloudStorageService } from '../../pages/systems/settings/cloud-storage/cloud-storage.service';
+import { NxConfigService }           from '../../../services/nx-config/nx-config.service';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
+import { NxCloudStorageService } from '../../../pages/systems/settings/cloud-storage/cloud-storage.service';
 
 @Component({
     selector   : 'nx-cloud-storage-move-content',
@@ -25,10 +25,10 @@ export class CloudStorageMoveModalContent {
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
-                public activeModal: NgbActiveModal,
-                public renderer: Renderer2,
-                private systemsService: NxSystemsService,
-                private cloudStorageService: NxCloudStorageService
+        public activeModal: NgbActiveModal,
+        public renderer: Renderer2,
+        private systemsService: NxSystemsService,
+        private cloudStorageService: NxCloudStorageService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -39,7 +39,7 @@ export class CloudStorageMoveModalContent {
     move() {
         // need to write method
         console.log('wip');
-        this.cloudStorageService.move('string', 'string').then(()=>{
+        this.cloudStorageService.move('string', 'string').then(() => {
             this.close();
         });
     }
@@ -50,6 +50,7 @@ export class CloudStorageMoveModalContent {
 
     setTargetSystem({ value }) {
         if (value === 'otherSystem') {
+            // Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
@@ -63,6 +64,7 @@ export class CloudStorageMoveModalContent {
     }
 }
 
+// Currently using mock values for dropdown, having a few issues with accountService that I need to resolve before implementing with dynamic data
 const mockItems = [{ value: 'a9e17746-41df-438d-91a0-79f0fa644261', name: '<span>Docker VMS</span><span class="text-muted"> – offline</span>' },
     { value: '0dc2065d-f07d-4d4f-8346-a46f76ea3e99', name: '<span>kyle-vbox-2</span><span class="text-muted"> – offline</span>' },
     { value: 'a1e63ea3-c512-4e67-ab02-0f54090f87a7', name: '<span>kyle-VirtualBox-1</span><span class="text-muted"> – offline</span>' },

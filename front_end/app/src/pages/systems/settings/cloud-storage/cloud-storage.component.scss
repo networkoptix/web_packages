@@ -1,5 +1,5 @@
-@import '../../../../styles/theme/variables';
-@import '../../../../styles/typography';
+@import "../../../../styles/theme/variables";
+@import "../../../../styles/typography";
 
 .initial-state {
     padding: 40px 16px;
@@ -26,7 +26,7 @@
     padding: 16px;
     background-color: $additional_light1;
     border-bottom: 1px dotted $light3;
-    
+
     h2 {
         @extend #medium24;
         text-align: left;
@@ -37,7 +37,7 @@
         justify-content: space-between;
         align-items: center;
     }
-    
+
     &-footer {
         padding: 16px;
         div {
@@ -57,13 +57,13 @@
         margin-right: 40px;
         display: flex;
         div {
-           display: flex;
-           flex-direction: column;
-           white-space: nowrap;
+            display: flex;
+            flex-direction: column;
+            white-space: nowrap;
 
-           p {
-               margin-bottom: 4px;
-           }
+            p {
+                margin-bottom: 4px;
+            }
         }
         &-keys {
             p {
@@ -75,21 +75,21 @@
                     flex-grow: 0;
                 }
                 &:after {
-                content: "";
-                position: relative;
-                display: inline-block;
-                margin: 0 8px 4px 4px;
-                border-bottom: 1px dotted $light3;
-                z-index: 1;
-                min-width: 16px;
-                flex-basis: 1;
-                flex-grow: 1;
+                    content: "";
+                    position: relative;
+                    display: inline-block;
+                    margin: 0 8px 4px 4px;
+                    border-bottom: 1px dotted $light3;
+                    z-index: 1;
+                    min-width: 16px;
+                    flex-basis: 1;
+                    flex-grow: 1;
+                }
             }
         }
-        }
-        &-values {
-
-        }
+        // &-values {
+            // Might use this later
+        // }
     }
 }
 

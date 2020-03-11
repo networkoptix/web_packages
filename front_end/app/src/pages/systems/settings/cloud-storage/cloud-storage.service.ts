@@ -1,13 +1,8 @@
-import { Injectable } from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxAccountService } from '../../../../services/account.service';
-import { NxSystemsService } from '../../../../services/systems.service';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription, BehaviorSubject } from 'rxjs';
-import { NxSystemService } from '../../../../services/system.service';
-import { IConfig } from '../../../../services/nx-config';
-import { HttpClient } from '@angular/common/http';
+import { Injectable }           from '@angular/core';
+import { NxConfigService }      from '../../../../services/nx-config/nx-config.service';
+import {  BehaviorSubject }     from 'rxjs';
+import { IConfig }              from '../../../../services/nx-config';
+import { HttpClient }           from '@angular/common/http';
 
 @Injectable({
     providedIn: 'root'
@@ -15,14 +10,11 @@ import { HttpClient } from '@angular/common/http';
 export class NxCloudStorageService {
     cloudStorageState: BehaviorSubject<IMockState>;
     CONFIG: IConfig
+
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService,
-      private systemService: NxSystemService,
-      private systemsService: NxSystemsService,
-      private route: ActivatedRoute,
-      private http: HttpClient
-    //   private accountService: NxAccountService
+        private http: HttpClient
+    //   private accountService: NxAccountService having issues injecting accountService
     ) {
         this.cloudStorageState = new BehaviorSubject(initialMockState);
         this.CONFIG = configService.getConfig();
@@ -32,25 +24,18 @@ export class NxCloudStorageService {
         return this.cloudStorageState;
     }
 
-    // getMoveParams() {
-    //     return ['this.system', 'this.systems', 'this.peerSystems', 'this.accountService'];
-    // }
-
-    // Post request to back end
-
     enable(systemId: string, password: string) {
         const prevState = this.cloudStorageState.value;
         return this.http.post(this.CONFIG.apiBase + '/storage/create', {
             systemId,
             password
         }).toPromise().then(() => {
-            // handle success
+            // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true });
         }).catch(() => {
-            // handle error
+            // TODO handle error
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: true }); // pretending this works
         });
-
         // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: true, usageStats: emptyUsage });
     }
 
@@ -60,13 +45,12 @@ export class NxCloudStorageService {
             systemId,
             password
         }).toPromise().then(() => {
-            // handle success
+            // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
         }).catch(() => {
-            // handle error
+            // TODO handle error
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false }); // pretending this works
         });
-
         // this.mockState.next({ ...this.mockState.value, systemCloudEnabled: false, usageStats: emptyUsage });
     }
 
@@ -76,15 +60,16 @@ export class NxCloudStorageService {
             sourceSystemId,
             destinationSystemId
         }).toPromise().then(() => {
-            // handle success
+            // TODO handle success
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false });
         }).catch(() => {
-            // handle error
+            // TODO handle error
             this.cloudStorageState.next({ ...prevState, systemCloudEnabled: false }); // pretending this works
         });
     }
 }
 
+// Lines below are for data, still need to implement retreiving from config or server
 const emptyUsage: IUsageStats = {
     currentRecordings: '_',
     whenFullyUsed    : '_',

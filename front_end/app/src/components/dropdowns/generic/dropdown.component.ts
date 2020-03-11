@@ -46,7 +46,6 @@ export class NxGenericDropdown extends BaseDropdown {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log(this.items)
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected.currentValue) {
             this._selected = changes.selected.currentValue;

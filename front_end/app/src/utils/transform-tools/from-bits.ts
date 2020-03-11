@@ -41,25 +41,28 @@ Formats the given number using `Number#toLocaleString`.
 - If no value for locale is specified, the number is returned unmodified.
 */
 
-const toLocaleString = (number: number, locale): string | number => (
+const toLocaleString = (number: number, locale): string | number =>
     typeof locale === 'string'
         ? number.toLocaleString(locale)
         : locale === true
             ? number.toLocaleString()
-            : number);
+            : number;
 
 // Need to add logic to figure out rounding
 
-export const fromBits = (number: number, options?: IFromBytesOptions): string => {
+export const fromBits = (
+    number: number,
+    options?: IFromBytesOptions
+): string => {
     const defaultOptions: IFromBytesOptions = { unitType: 'byte' }; // round to GB / 10 bits
     options = { ...defaultOptions, ...options };
 
     if (typeof options.roundTo === 'number') {
         number = Math.round(number / options.roundTo) * options.roundTo;
     } else if (options.roundTo) {
-        // TODO: Need to figure out how to take object {unit: 'GB', toDecimal: 1} and make it work
-        throw new Error('I haven\'t implemented this feature yet...');
-    };
+        // TODO: Need to figure out how to take an object {unit: 'GB', toDecimal: 1} and use it to figure out rounding
+        throw new Error("I haven't implemented this feature yet...");
+    }
 
     const unitList = {
         bit : BIT_UNITS,
@@ -75,7 +78,7 @@ export const fromBits = (number: number, options?: IFromBytesOptions): string =>
     }
 
     const isNegative = number < 0;
-    const prefix = isNegative ? '-' : (options.signed ? '+' : '');
+    const prefix = isNegative ? '-' : options.signed ? '+' : '';
 
     if (isNegative) {
         number = -number;
@@ -86,10 +89,11 @@ export const fromBits = (number: number, options?: IFromBytesOptions): string =>
         return prefix + numberString + ' ' + UNITS[0];
     }
 
-    const getLog = (num: number): number => is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
+    const getLog = (num: number): number =>
+        is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
     const exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
 
-    number = Number((number / Math.pow(base, exponent))); // add toPrecision or something???
+    number = Number(number / Math.pow(base, exponent)); // add toPrecision or something???
     const numberString = toLocaleString(number, options.locale);
 
     const unit = UNITS[exponent];
@@ -98,20 +102,40 @@ export const fromBits = (number: number, options?: IFromBytesOptions): string =>
 };
 
 export interface IFromBytesOptions {
-    unitType?: UnitTypeOptions
-    signed?: boolean
-    locale?: string | boolean
-    percentFrom?: number
-    roundTo?: number | {
-        unit: Byte | Bit
-        toDecimal: number
-    }
+    unitType?: UnitTypeOptions;
+    signed?: boolean;
+    locale?: string | boolean;
+    percentFrom?: number;
+    roundTo?:
+        | number
+        | {
+              unit: Byte | Bit;
+              toDecimal: number;
+          };
 }
 
-type UnitTypeOptions = 'bit' | 'byte' | 'bps'
+type UnitTypeOptions = 'bit' | 'byte' | 'bps';
 
 type Byte = 'B' | 'kB' | 'MB' | 'GB' | 'TB' | 'PB' | 'EB' | 'ZB' | 'YB';
 
-type Bit = 'b' | 'kbit' | 'Mbit' | 'Gbit' | 'Tbit' | 'Pbit' | 'Ebit' | 'Zbit' | 'Ybit';
+type Bit =
+    | 'b'
+    | 'kbit'
+    | 'Mbit'
+    | 'Gbit'
+    | 'Tbit'
+    | 'Pbit'
+    | 'Ebit'
+    | 'Zbit'
+    | 'Ybit';
 
-type Bps = 'bps' | 'kbps' | 'Mbps' | 'Gbps' | 'Tbps' | 'Pbps' | 'Ebps' | 'Zbps' | 'Ybps';
+type Bps =
+    | 'bps'
+    | 'kbps'
+    | 'Mbps'
+    | 'Gbps'
+    | 'Tbps'
+    | 'Pbps'
+    | 'Ebps'
+    | 'Zbps'
+    | 'Ybps';

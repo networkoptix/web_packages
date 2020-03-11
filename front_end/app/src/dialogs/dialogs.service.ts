@@ -22,8 +22,10 @@ import { RestartServerModalContent }  from './restart-server/restart-server.comp
 import { DetachServerModalContent }   from './detach-server/detach-server.component';
 import { ResetServerModalContent }    from './reset-server/reset-server.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
-import { CloudStorageDeleteModalContent } from './cloud-storage-delete/cloud-storage-delete.component';
-import { CloudStorageMoveModalContent } from './cloud-storage-move/cloud-storage-move.component';
+import {
+    CloudStorageDeleteModalContent,
+    CloudStorageMoveModalContent
+}                                    from './cloud-storage';
 import { LanguageI18NStaticTypes }    from '../../language_i18n_static_types';
 
 import './../dialogs/dialogs.scss';
@@ -173,7 +175,8 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    cloudStorageDelete(systemId) {
+    cloudStorageDelete(systemId: string) {
+        // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -187,8 +190,8 @@ export class NxDialogsService {
         return this.createModal(CloudStorageDeleteModalContent, options, params);
     }
 
-
-    cloudStorageMove(system, systems, peerSystems, user) {
+    cloudStorageMove(system, systems, user) {
+        // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
             backdrop   : 'static'
@@ -198,7 +201,6 @@ export class NxDialogsService {
             user,
             system,
             systems,
-            peerSystems,
             closable: true
         };
 

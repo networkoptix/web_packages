@@ -1,26 +1,28 @@
 <form #deleteForm="ngForm" name="deleteForm" novalidate>
     <div class="modal-header">
         <h1 class="modal-title" translate>Delete Cloud Storage?</h1>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="activeModal.close()" *ngIf="closable">
+        <button *ngIf="closable" type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="activeModal.close()">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
 
     <div class="modal-body">
-        <!-- <p class="warning-label" translate>All cloud users will be deleted.</p> -->
         <p translate>Cloud storage will be removed from this system</p>
         <p translate>All existing archives on this storage will be deleted.</p>
         <p translate class="mb-3">Enter password to continue.</p>
-
         <div class="form-group">
             <label for="password" translate>Password</label>
-            <input class="form-control"
-                   [(ngModel)]="auth.password" #password="ngModel"
-                   id="password" autocomplete="new-password"
-                   name="password" type="password"
-                   required nxFocusMe>
+            <input
+                class="form-control"
+                [(ngModel)]="auth.password"
+                #password="ngModel"
+                id="password"
+                autocomplete="new-password"
+                name="password"
+                type="password"
+                required
+                nxFocusMe
+            />
             <div *ngIf="password.invalid && password.touched && password.dirty && !wrongPassword">
                 <div class="input-error" translate>Password is required</div>
             </div>
@@ -30,12 +32,8 @@
         </div>
     </div>
     <div class="modal-footer" (click)="disableCloudStorage()">
-        <!-- need to make process -->
-        <nx-process-button [process]="delete"
-                           [form]="deleteForm"
-                           [actionType]="'danger'"
-                           buttonText="{{ 'Delete' | translate }}"></nx-process-button>
-
+        <!-- delete process still needs to be implemented -->
+        <nx-process-button [process]="delete" [form]="deleteForm" [actionType]="'danger'" buttonText="{{ 'Delete' | translate }}"></nx-process-button>
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
     </div>
 </form>

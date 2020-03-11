@@ -22,10 +22,18 @@ import { ChangePasswordModalContent }  from './change-password/change-password.c
 import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
-import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
-import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
-import { CloudStorageMoveModalContent }                 from './cloud-storage-move/cloud-storage-move.component';
-import { CloudStorageDeleteModalContent }               from './cloud-storage-delete/cloud-storage-delete.component';
+import {
+    GenericModalContent,
+    NxModalGenericComponent
+}                                     from './generic/generic.component';
+import {
+    ApplyModalContent,
+    NxModalApplyComponent
+}                                     from './apply/apply.component';
+import {
+    CloudStorageMoveModalContent,
+    CloudStorageDeleteModalContent
+}                                     from './cloud-storage';
 
 @NgModule({
     imports: [

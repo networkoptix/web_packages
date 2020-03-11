@@ -155,12 +155,13 @@ export class NxUtilsService {
         return this.momentWithLocale().subtract(input).fromNow(!suffix);
     }
 
-    // static string methods
+    // TODO static string methods, still need to implmement pluralize and translate
     public pluralize(qty: number, single, plural, zero = plural) {
         return `${qty} ${qty === 0 ? zero : qty === single ? single : plural}`;
     }
 
     public translate = (str: string) => str // TODO: Need to figure out how to do translate pipe within function
+
     public isTablet() {
         return this.deviceService.isTablet();
     }

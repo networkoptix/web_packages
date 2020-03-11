@@ -1,13 +1,22 @@
-import { Component, OnInit, LOCALE_ID, Inject } from '@angular/core';
-import { NxConfigService } from '../../../../services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxDialogsService } from '../../../../dialogs/dialogs.service';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { NxCloudStorageService, IMockState, IUsageStats } from './cloud-storage.service';
-import { fromBits, IFromBytesOptions } from '../../../../utils/transform-tools/from-bits';
-import { wrapWithPercent } from '../../../../utils/transform-tools/wrap-with-percent';
-import { NxUtilsService } from '../../../../services/utils.service';
+import {
+    Component,
+    OnInit,
+    LOCALE_ID,
+    Inject
+}                                       from '@angular/core';
+import { NxConfigService }              from '../../../../services/nx-config/nx-config.service';
+import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
+import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
+import { Subscription }                 from 'rxjs';
+import { ActivatedRoute }               from '@angular/router';
+import {
+    NxCloudStorageService,
+    IMockState,
+    IUsageStats
+}                                       from './cloud-storage.service';
+import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
+import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
+import { NxUtilsService }               from '../../../../services/utils.service';
 
 @Component({
     selector   : 'nx-cloud-storage',
@@ -117,7 +126,7 @@ export class NxCloudStorageComponent implements OnInit {
     public moveToDialog() {
         // const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();
         // this.dialogService.cloudStorageMove(system, systems, peerSystems, user);
-        this.dialogService.cloudStorageMove('string', 'string', 'string', 'string')
+        this.dialogService.cloudStorageMove('string', 'string', 'string');
     }
 
     public deleteCloudStorageDialog() {

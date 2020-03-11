@@ -1,42 +1,26 @@
 <!-- Initial State -->
 <nx-block *ngIf="!currentState.systemCloudEnabled" type="mt-3 mb-3">
-    <header>
-        <h4 translate>Cloud Storage</h4>
-    </header>
+    <header><h4 translate>Cloud Storage</h4></header>
     <div class="initial-state">
-        <svg-icon [src]="CONFIG.icons.dir + 'storages' +'.svg'"
-        [applyCss]="true"
-        [svgStyle]="{'width.px': '80', 'height.px': '80'}"></svg-icon>
+        <svg-icon [src]="CONFIG.icons.dir + 'storages' + '.svg'" [applyCss]="true" [svgStyle]="{ 'width.px': '80', 'height.px': '80' }"></svg-icon>
         <h2 translate>Secure your most sensitive data</h2>
         <p translate>
-            Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats.
-            We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.</p>
-        <button class="btn btn-default" 
-            (click)="enableCloudStorage()">
-            Enable Cloud Storage
-        </button>
+            Cloud storage works just as a regular storage, just is hosted on AWS
+            servers and protects your data from all kinds of threats. We offer
+            50 GB of the cloud storage per system for free for evaluation and
+            test purposes.
+        </p>
+        <button class="btn btn-default" (click)="enableCloudStorage()">Enable Cloud Storage</button>
     </div>
-    <!-- <footer>
-        Test
-    </footer> -->
 </nx-block>
 
-<!-- Empty State -->
+<!-- Empty and Regular State -->
 <nx-block *ngIf="currentState.systemCloudEnabled" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
-        <!-- <button class="server-buttons">
-            <a [routerLink]="''">
-                <span>
-                    <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                        [applyCss]="true"></svg-icon>
-                </span>
-                <span class="ml-1" translate>Detailed Statistics</span>
-            </a>
-        </button> -->
     </header>
     <div class="normal-state">
-        <h2>{{cloudCapacity()}}</h2>
+        <h2>{{ cloudCapacity() }}</h2>
         <div class="details" (click)="toggleCloudState()">
             <div class="details-section">
                 <div class="details-section-keys">
@@ -45,9 +29,9 @@
                     <p>Amount used</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{msFriendlyTime(stats.currentRecordings)}}</p>
-                    <p>{{msFriendlyTime(stats.whenFullyUsed)}}</p>
-                    <p>{{cloudStorageUsed()}}</p>
+                    <p>{{ msFriendlyTime(stats.currentRecordings) }}</p>
+                    <p>{{ msFriendlyTime(stats.whenFullyUsed) }}</p>
+                    <p>{{ cloudStorageUsed() }}</p>
                 </div>
             </div>
             <div class="details-section">
@@ -57,32 +41,26 @@
                     <p>Delay from live</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{numberOfCameras()}}</p>
-                    <p>{{bitrate()}}</p>
-                    <p>{{msFriendlyTime(stats.delayFromLive, true)}}</p>
+                    <p>{{ numberOfCameras() }}</p>
+                    <p>{{ bitrate() }}</p>
+                    <p>{{ msFriendlyTime(stats.delayFromLive, true) }}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="normal-state-footer">
         <p>
-            Cloud storage location is available for all servers in this system.<br/>
+            Cloud storage location is available for all servers in this
+            system.<br />
             You can manage it using the desktop Nx Witness client.
         </p>
-        <div class='pt-3'>
-            <button class="btn btn-default"
-                (click)="moveToDialog()">
-                <!-- WIP just here to test dialogs -->
-                Move to Another System
-            </button>
-            <button class="btn btn-default"
-                (click)="deleteCloudStorageDialog()"
-                >
-                <!-- WIP just here to test dialogs -->
-                <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
-                [applyCss]="true"
-                [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
-                class="ml-n2 mr-1"></svg-icon>
+        <div class="pt-3">
+            <button class="btn btn-default" (click)="moveToDialog()">Move to Another System</button>
+            <button class="btn btn-default" (click)="deleteCloudStorageDialog()">
+                <svg-icon 
+                    [src]="CONFIG.icons.dir + 'delete.svg'" 
+                    [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
+                    class="ml-n2 mr-1"></svg-icon>
                 Delete Cloud Storage
             </button>
         </div>
