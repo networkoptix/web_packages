@@ -66,21 +66,24 @@
            }
         }
         &-keys {
-
-            // WIP need to fix, border is overlapping text
-            padding-right: 8px;
             p {
                 position: relative;
-                padding-right: 16px;
-                &:before {
+                display: flex;
+                justify-content: stretch;
+                & > * {
+                    flex-basis: 0;
+                    flex-grow: 0;
+                }
+                &:after {
                 content: "";
-                position: absolute;
-                bottom: 4px;
-                left: 0;
-                right: 0;
+                position: relative;
+                display: inline-block;
+                margin: 0 8px 4px 4px;
                 border-bottom: 1px solid $light3;
                 z-index: 1;
                 min-width: 16px;
+                flex-basis: 1;
+                flex-grow: 1;
             }
         }
         }
