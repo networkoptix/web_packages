@@ -379,17 +379,26 @@ Check share email for registered user
     [Tags]    C47297
     ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
-
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
     ...    port=${BASE PORT}
     ...    user=${BASE EMAIL}
     ...    is_secure=True
+    ${email}    Wait For Email    recipient=${random email}    timeout=120
+    Check Email Subject
+    ...    ${email}
+    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
+    ...    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}
+    ...    ${BASE HOST}
+    ...    ${BASE PORT}
+    Delete email    ${email}
+
+    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
+    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
+
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
     ...    {{message.system_name}}
@@ -418,6 +427,7 @@ Check share email for registered user
     Close Mailbox
 
 Users should be able to disconnect themselves from cloud
+    [Tags]
     ${roles}=   Get Dictionary Values    ${ACCESS ROLES}
     FOR    ${role}    IN    @{roles}
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
