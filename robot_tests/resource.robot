@@ -8,7 +8,7 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
-Resource     resources/health-monitor-resource.robot
+Resource     Resources/health-monitor-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 

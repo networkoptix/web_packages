@@ -387,7 +387,7 @@ class NoptixLibrary(object):
             version = "4.1.0.30298"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
-                            tag="mediaserver",
+                            tag="mergemediaserver",
                             buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
@@ -398,7 +398,7 @@ class NoptixLibrary(object):
                 }
         prt = {7001:port}
         client = docker.from_env()
-        cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=time.time())
+        cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=f"mergemediaserver{time.time()}")
         return cont
 
     def stop_containers(self, allContainers=True):
@@ -406,7 +406,8 @@ class NoptixLibrary(object):
         conts = client.containers.list()
         if allContainers:
             for cont in conts:
-                cont.stop()
+                if "mergemediaserver" in cont.name:
+                    cont.stop()
         else:
             conts[0].stop()
 
@@ -416,6 +417,6 @@ class NoptixLibrary(object):
 
     def remove_images(self):
         client = docker.from_env()
-        imgs = client.images.list()
+        imgs = client.images.list(name="mergemediaserver")
         for img in imgs:
             client.images.remove(img.id)
