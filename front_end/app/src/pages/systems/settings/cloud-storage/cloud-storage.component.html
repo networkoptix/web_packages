@@ -50,12 +50,12 @@
         [translateParams]="{ vmsName: CONFIG.vmsName }"></p>
         <div class="pt-3">
             <button class="btn btn-default" (click)="moveToDialog()">Move to Another System</button>
-            <button class="btn btn-default" (click)="deleteCloudStorageDialog()" translate>
+            <button class="btn btn-default" (click)="deleteCloudStorageDialog()">
                 <svg-icon 
                     [src]="CONFIG.icons.dir + 'delete.svg'" 
                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                     class="ml-n2 mr-1"></svg-icon>
-                Delete Cloud Storage
+                <span translate>Delete Cloud Storage</span>
             </button>
         </div>
     </div>

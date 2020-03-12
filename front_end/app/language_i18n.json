@@ -1,6 +1,5 @@
 {
     "2-Way Audio": "2-Way Audio",
-    "<svg-icon \n                    [src]=\"CONFIG.icons.dir + 'delete.svg'\" \n                    [svgStyle]=\"{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}\"\n                    class=\"ml-n2 mr-1\"></svg-icon>\n                Delete Cloud Storage": "<svg-icon \n                    [src]=\"CONFIG.icons.dir + 'delete.svg'\" \n                    [svgStyle]=\"{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}\"\n                    class=\"ml-n2 mr-1\"></svg-icon>\n                Delete Cloud Storage",
     "Access Level": "Access Level",
     "Access level": "Access level",
     "Account Information": "Account Information",
@@ -58,6 +57,7 @@
     "Current recordings": "Current recordings",
     "Delay from live": "Delay from live",
     "Delete": "Delete",
+    "Delete Cloud Storage": "Delete Cloud Storage",
     "Delete Cloud Storage?": "Delete Cloud Storage?",
     "Depending of the size of the database it may take up to several hours.": "Depending of the size of the database it may take up to several hours.",
     "Detach": "Detach",
