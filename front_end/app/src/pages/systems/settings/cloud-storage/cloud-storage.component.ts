@@ -11,7 +11,7 @@ import { Subscription }                 from 'rxjs';
 import { ActivatedRoute }               from '@angular/router';
 import {
     NxCloudStorageService,
-    IMockState,
+    ICloudStorageState,
     IUsageStats
 }                                       from './cloud-storage.service';
 import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
@@ -33,7 +33,7 @@ export class NxCloudStorageComponent implements OnInit {
     routerParamsSubscription: Subscription;
     cloudStateSubscription: Subscription;
     systemId: string;
-    currentState: IMockState;
+    currentState: ICloudStorageState;
     usageStats: IUsageStats;
 
     private setupDefaults({ configService, languageService }) {

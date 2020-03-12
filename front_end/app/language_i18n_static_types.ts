@@ -184,6 +184,7 @@ export interface Buttons {
 
 export interface CloudStorage {
     title:                 string;
+    available:             string;
     activationError:       Created;
     systemDisconnectError: Created;
     moveCloudStorage:      MoveCloudStorage;
@@ -967,6 +968,7 @@ const typeMap: any = {
     ], false),
     "CloudStorage": o([
         { json: "title", js: "title", typ: "" },
+        { json: "available", js: "available", typ: "" },
         { json: "activationError", js: "activationError", typ: r("Created") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },

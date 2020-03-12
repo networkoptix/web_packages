@@ -45,7 +45,6 @@
     "Clear": "Clear",
     "Close": "Close",
     "Cloud Storage": "Cloud Storage",
-    "Cloud storage location is available for all servers in this system.<br /> You can manage it using the desktop Nx Witness client.": "Cloud storage location is available for all servers in this system.<br /> You can manage it using the desktop Nx Witness client.",
     "Cloud storage will be removed from this system": "Cloud storage will be removed from this system",
     "Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats. We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.": "Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats. We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.",
     "Cloud users will not be transferred to the new system.": "Cloud users will not be transferred to the new system.",

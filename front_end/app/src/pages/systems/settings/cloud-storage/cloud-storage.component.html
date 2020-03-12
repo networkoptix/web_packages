@@ -26,8 +26,8 @@
                     <p translate>Amount used</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{ msFriendlyTime(stats.currentRecordings) }}</p>
-                    <p>{{ msFriendlyTime(stats.whenFullyUsed) }}</p>
+                    <p>{{ msFriendlyTime(usageStats.currentRecordings) }}</p>
+                    <p>{{ msFriendlyTime(usageStats.whenFullyUsed) }}</p>
                     <p>{{ cloudStorageUsed() }}</p>
                 </div>
             </div>
@@ -40,15 +40,14 @@
                 <div class="details-section-values">
                     <p>{{ numberOfCameras() }}</p>
                     <p>{{ bitrate() }}</p>
-                    <p>{{ msFriendlyTime(stats.delayFromLive, true) }}</p>
+                    <p>{{ msFriendlyTime(usageStats.delayFromLive, true) }}</p>
                 </div>
             </div>
         </div>
     </div>
     <div class="normal-state-footer">
-        <p translate>
-            Cloud storage location is available for all servers in this system.<br /> You can manage it using the desktop Nx Witness client.
-        </p>
+        <p [translate]="'dialogs.cloudStorage.available'"
+        [translateParams]="{ vmsName: CONFIG.vmsName }"></p>
         <div class="pt-3">
             <button class="btn btn-default" (click)="moveToDialog()">Move to Another System</button>
             <button class="btn btn-default" (click)="deleteCloudStorageDialog()" translate>
