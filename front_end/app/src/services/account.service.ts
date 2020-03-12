@@ -198,7 +198,11 @@ export class NxAccountService implements OnDestroy {
         this.get()
             .then((account: Account) => {
                 if (account) {
-                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                    this.router
+                        .navigate([this.CONFIG.redirect.authorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             });
     }
@@ -207,12 +211,24 @@ export class NxAccountService implements OnDestroy {
         this.get()
             .then((account: Account) => {
                 if (account) {
-                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                    this.router
+                        .navigate([this.CONFIG.redirect.authorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 } else {
-                    this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                    this.router
+                        .navigate([this.CONFIG.redirect.unauthorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             }).catch(() => {
-                this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                this.router
+                    .navigate([this.CONFIG.redirect.unauthorised])
+                    .catch(error => {
+                        console.error(error);
+                    });
             });
     }
 

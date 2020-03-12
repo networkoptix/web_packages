@@ -317,7 +317,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .forceUpdateSystems(this.accountService.email)
             .subscribe(() => {
                 setTimeout(() => {
-                    this.router.navigate([this.CONFIG.redirect.authorised]);
+                    this.router
+                        .navigate([this.CONFIG.redirect.authorised])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 });
             });
     }

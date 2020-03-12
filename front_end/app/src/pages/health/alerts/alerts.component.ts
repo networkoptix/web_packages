@@ -407,7 +407,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 const queryParams: Params = {};
                 queryParams.id = alarm.entity;
                 queryParams.metric = alarm.metric;
-                this.uriService.updateURI(undefined, queryParams);
+
+                this.uriService
+                    .updateURI(undefined, queryParams)
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
 
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
@@ -423,7 +428,12 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             const queryParams: Params = {};
             queryParams.id = undefined;
             queryParams.metric = undefined;
-            this.uriService.updateURI(undefined, queryParams);
+
+            this.uriService
+                .updateURI(undefined, queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
         this.healthLayoutService.resetActiveEntity();
     }

@@ -151,7 +151,12 @@ export class NxRegisterComponent implements OnInit {
                 }
 
                 if (response.activated) {
-                    this.uriService.updateURI('/register/successActivated', {}, false);
+                    this.uriService
+                        .updateURI('/register/successActivated', {}, false)
+                        .catch(error => {
+                            console.error(error);
+                        });
+
                     this.accountService
                         .login(this.accountInfo.email, this.accountInfo.password, true)
                         .then(() => {
@@ -161,7 +166,12 @@ export class NxRegisterComponent implements OnInit {
                             this.localStorage.set('regActivated', 'activated');
                         });
                 } else {
-                    this.uriService.updateURI('/register/success', {}, true);
+                    this.uriService
+                        .updateURI('/register/success', {}, true)
+                        .catch(error => {
+                            console.error(error);
+                        });
+
                     this.accountService.email = this.accountInfo.email;
                     this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
                     this.registerSuccess = true;

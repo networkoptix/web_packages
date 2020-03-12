@@ -101,7 +101,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.setTitle($event.nextId);
         this.activeTab = $event.nextId;
         this.calcDisplayedPackages(this.activeTab);
-        this.uriService.updateURI('/download/' + $event.nextId, {});
+
+        this.uriService
+            .updateURI('/download/' + $event.nextId, {})
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     private calcDisplayedPackages(platformName) {
@@ -214,7 +219,11 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 .requireLogin()
                 .then(result => {
                     if (!result) {
-                        this.router.navigate([this.CONFIG.redirect.unauthorised]);
+                        this.router
+                            .navigate([this.CONFIG.redirect.unauthorised])
+                            .catch(error => {
+                                console.error(error);
+                            });
                         return;
                     }
 

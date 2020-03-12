@@ -84,7 +84,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                     .subscribe((result: any) => {
                         if (result) {
                             if (!this.CONFIG.cloudCapabilities.integrationStore && !(account && account.is_staff)) {
-                                this.router.navigate([this.CONFIG.redirect.page404]);
+                                this.router
+                                    .navigate([this.CONFIG.redirect.page404])
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
                             } else {
                                 this.allElements = result;
                                 this.setTags();
@@ -95,7 +99,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
                         }
                     }, error => {
                         console.error('Integration plugins error -> ', error);
-                        this.router.navigate([this.CONFIG.redirect.page404]);
+                        this.router
+                            .navigate([this.CONFIG.redirect.page404])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     });
             });
     }

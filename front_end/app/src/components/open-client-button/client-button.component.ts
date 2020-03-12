@@ -74,7 +74,11 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
                 )
                 .then((result) => {
                     if (result === true) {
-                        this.router.navigate(['/download']);
+                        this.router
+                            .navigate(['/download'])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                 }).finally(() => {
                     this.modalActive = false;

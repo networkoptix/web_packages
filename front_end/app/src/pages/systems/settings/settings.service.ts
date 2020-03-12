@@ -55,7 +55,12 @@ export class NxSettingsService implements OnDestroy {
                 if (userId) {
                     userId = this.system.mediaserver.cleanId(userId);
                     this.menuService.setDetailsSection(userId);
-                    this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
+
+                    this.uriService
+                        .updateURI(`systems/${this.system.id}/users/${userId}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
                 }
             }, (reason) => {
                 // dialog was dismissed ... this handler is required if dialog is dismissible

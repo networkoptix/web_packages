@@ -286,7 +286,11 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         queryParams.sortBy = filter;
         queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
 
-        this.uri.updateURI('/ipvd', queryParams);
+        this.uri
+            .updateURI('/ipvd', queryParams)
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     toggleSort(param, keepURI) {
@@ -433,7 +437,11 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 
-            this.uri.updateURI('/ipvd', queryParams);
+            this.uri
+                .updateURI('/ipvd', queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
     }
 

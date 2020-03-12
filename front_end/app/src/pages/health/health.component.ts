@@ -114,7 +114,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
 
         const currentRoute = this.router.url;
         if (currentRoute.endsWith('health')) {
-            this.uriService.updateURI(`${currentRoute}/alerts`, {}, true).then(() => {});
+            this.uriService
+                .updateURI(`${currentRoute}/alerts`, {}, true)
+                .catch(error => {
+                    console.error(error);
+                });
         }
 
         this.route.params.subscribe((params: any) => {
@@ -495,7 +499,13 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         fileReader.onload = _ => {
             const data = JSON.parse(fileReader.result as string);
             this.setupReport(data);
-            this.router.navigate([this.menu.base + 'alerts']);
+
+            this.router
+                .navigate([this.menu.base + 'alerts'])
+                .catch(error => {
+                    console.error(error);
+                });
+
             let time = '-';
             if (data.time) {
                 time = new Date(data.time).toUTCString();

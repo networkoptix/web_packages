@@ -410,7 +410,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     cleanUrl() {
-        return this.router.navigate([this.CONFIG.redirect.authorised, this.systemId]);
+        return this.router
+            .navigate([this.CONFIG.redirect.authorised, this.systemId])
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     connectionLost() {

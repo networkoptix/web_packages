@@ -65,10 +65,12 @@ export class NxUriService {
     }
 
     resetURI(navigateTo: string, queryParams: Params = {}) {
-        this.router.navigate([navigateTo], {
-            queryParams,
-            relativeTo: this.route,
-            replaceUrl: false
-        });
+        this.router
+            .navigate([navigateTo], {
+                queryParams,
+                relativeTo: this.route,
+                replaceUrl: false
+            })
+            .catch(error => { console.error(error); });
     }
 }

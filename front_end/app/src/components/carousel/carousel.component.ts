@@ -17,14 +17,14 @@ const config = new NxConfigService().config;
                     opacity   : 1,
                     visibility: 'visible'
                 }),
-                animate(config.animations.carouselImage.leave, style({opacity: 0, visibility: 'hidden'}))
+                animate(config.animations.carouselImage.leave, style({ opacity: 0, visibility: 'hidden' }))
             ]),
             transition('* => enter', [
                 style({
                     opacity   : 0,
                     visibility: 'hidden'
                 }),
-                animate(config.animations.carouselImage.enter, style({opacity: 1, visibility: 'visible'}))
+                animate(config.animations.carouselImage.enter, style({ opacity: 1, visibility: 'visible' }))
             ])
         ])
     ]
@@ -32,7 +32,7 @@ const config = new NxConfigService().config;
 export class NxCarouselComponent implements OnInit {
     @Input() screenshots: any;
 
-    images: any          = [];
+    images: any = [];
     private currentIndex = 0;
     private imageCount: number;
 
@@ -42,7 +42,7 @@ export class NxCarouselComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.caption    = '';
+        this.caption = '';
         this.imageCount = this.screenshots.length;
 
         if (this.imageCount) {

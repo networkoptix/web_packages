@@ -227,6 +227,7 @@ class UserManager {
                 return resolve(this.processUsers(users));
             });
         }, () => {
+            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject('Media server cloud not be reached.');
         });
     }

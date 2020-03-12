@@ -140,20 +140,21 @@ class Process {
         return this;
     }
 
+    // TODO: possible deprecation
     private createDeferredPromise() {
         return (() => {
-            let resolve;
-            let reject;
+            let res;
+            let rej;
 
-            const p = new Promise((res, rej) => {
-                resolve = res;
-                reject = rej;
+            const p = new Promise((resolve, reject) => {
+                res = resolve;
+                rej = reject;
             });
 
             return {
                 promise: p,
-                reject,
-                resolve
+                reject : rej,
+                resolve: res
             };
         })();
     }

@@ -103,6 +103,7 @@ export class NxUtilsService {
          *   hash     -> match[7]
          *
          * */
+        // eslint-disable-next-line no-useless-escape
         const match = href.match(/^(https?:)?\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
         if (match) {
             return match[5] + match[6] + match[7];

@@ -78,7 +78,12 @@ export class NxActivateComponent implements OnInit {
             this.activationSuccess = true;
             this.loading = false;
             this.dialogs.dismiss();
-            this.uriService.updateURI('/activate/success', {}, true);
+
+            this.uriService
+                .updateURI('/activate/success', {}, true)
+                .catch(error => {
+                    console.error(error);
+                });
         });
 
         this.reactivate = this.processService.createProcess(() => {

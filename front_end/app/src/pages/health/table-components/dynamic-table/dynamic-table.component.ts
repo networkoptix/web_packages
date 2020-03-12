@@ -368,7 +368,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             }
             queryParams.index = (this.currentPage === 1) ? undefined : this.startIndex;
 
-            this.uri.updateURI(this.uri.getURL(), queryParams);
+            this.uri
+                .updateURI(this.uri.getURL(), queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
     }
 
@@ -443,7 +447,12 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             queryParams.sortBy = groupId + ',' + paramId;
             queryParams.sortBy += (this.sortOrderASC) ? ',ASC' : ',DESC';
             this.params.sortBy = queryParams.sortBy;
-            this.uri.updateURI(undefined, queryParams);
+
+            this.uri
+                .updateURI(undefined, queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
 
             setTimeout(() => this.setPage(1));
         }

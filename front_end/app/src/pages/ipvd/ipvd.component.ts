@@ -506,7 +506,12 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         const queryParams: Params = {};
         queryParams.camera = selectedCamera.model || selectedCamera.value.model;
-        this.uri.updateURI(this.uriPath, queryParams);
+
+        this.uri
+            .updateURI(this.uriPath, queryParams)
+            .catch(error => {
+                console.error(error);
+            });
 
         if (this.breakpointObserver.isMatched(this.breakpoint)) {
             this.mobileDetailMode = true;
@@ -542,7 +547,12 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         if (!skipUpdateURI) {
             const queryParams: Params = {};
             queryParams.camera = undefined;
-            this.uri.updateURI(this.uriPath, queryParams);
+
+            this.uri
+                .updateURI(this.uriPath, queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
 
         this.activeCamera = undefined;

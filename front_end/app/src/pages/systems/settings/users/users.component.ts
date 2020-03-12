@@ -97,7 +97,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-                    this.uriService.updateURI('systems/' + this.system.id, {});
+
+                    this.uriService
+                        .updateURI('systems/' + this.system.id, {})
+                        .catch(error => {
+                            console.error(error);
+                        });
                     return;
                 }
                 if (this.userSubscription) {
@@ -165,7 +170,13 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 delete this.locked[user.email];
                 this.paramUser = this.nextUserId;
-                this.uriService.updateURI(`systems/${this.system.id}/users/${this.nextUserId}`);
+
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/users/${this.nextUserId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
+
                 this.menuService.setDetailsSection(this.nextUserId);
             } else {
                 this.locked[user.email] = false;
@@ -192,7 +203,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (typeof(user) === 'undefined') {
                 user = this.system.users[0];
                 const userId = this.system.mediaserver.cleanId(user.id);
-                this.uriService.updateURI(`systems/${this.system.id}/users/${userId}`);
+
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/users/${userId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
 
             // If there's no users skip setting section and permissions
@@ -240,7 +256,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     routeToAccountSettings() {
-        this.uriService.updateURI('/account');
+        this.uriService
+            .updateURI('/account')
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     updateForm(e) {
