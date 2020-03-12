@@ -43,13 +43,13 @@ export class NxCloudStorageService {
     // Private instance methods
 
     init() {
-        const userCloudEnabled = [...this.accountService.account.permissions, 'cloud_storage_enabled'].includes('cloud_storage_enabled');
+        // const userCloudEnabled = [...this.accountService.account.permissions, 'cloud_storage_enabled'].includes('cloud_storage_enabled');
 
-        this.pending$ = new BehaviorSubject(false);
-        this.userCloudEnabled$ = new BehaviorSubject(userCloudEnabled);
-        this.systemCloudEnabled$ = new BehaviorSubject(false);
-        this.usageStats$ = new BehaviorSubject(null);
-        this.systemId$ = new BehaviorSubject('');
+        // this.pending$ = new BehaviorSubject(false);
+        // this.userCloudEnabled$ = new BehaviorSubject(userCloudEnabled);
+        // this.systemCloudEnabled$ = new BehaviorSubject(false);
+        // this.usageStats$ = new BehaviorSubject(null);
+        // this.systemId$ = new BehaviorSubject('');
         // this.currentState$ = combineLatest(
         //     [this.userCloudEnabled$,
         //         this.systemCloudEnabled$,

@@ -626,6 +626,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
     }
 
+    canViewCloudStorage() {
+        // Need to confirm if all admins have cloud storage access
+        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+    }
+
     getInfoAndPermissions(useCache = true) {
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)

@@ -26,6 +26,7 @@ import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
 import { ApplyGuard }                from '../../../routeGuards/applyGuard';
 import { AuthGuard }                 from '../../../routeGuards/authGuard';
 import { UserGuard }                 from '../../../routeGuards/userGuard';
+import { CloudStorageGuard } from '../../../routeGuards/cloudStorageGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -64,6 +65,7 @@ const appRoutes: Routes = [
             {
                 path: 'cloud-storage',
                 component    : NxCloudStorageComponent,
+                // canActivate  : [CloudStorageGuard],
                 canDeactivate: [ApplyGuard],
             }
         ]

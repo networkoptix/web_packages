@@ -56,7 +56,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     mergeTargetSystem: any;
     gettingSystemUsers: any;
     selectedUser: any;
-    userCloudEnabled: boolean;
 
     headerHeight: number;
 
@@ -77,7 +76,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
         this.userDisconnectSystem = false;
         this.selectedUser = { email: '' };
-        this.userCloudEnabled = false;
     }
 
     private systemReady() {
@@ -103,7 +101,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private cloudStorageService: NxCloudStorageService
     ) {
         this.setupDefaults(configService);
-        this.cloudStorageService.currentState.subscribe(({ userCloudEnabled }) => { this.userCloudEnabled = userCloudEnabled; });
     }
 
     ngOnInit(): void {
@@ -407,7 +404,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (this.userCloudEnabled && !this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
+        if (!this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
             const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
             const generalNode = {
                 id   : this.CONFIG.menus.systemSettings.admin.id,
@@ -419,7 +416,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 label: this.LANG.dialogs.cloudStorage.title,
                 path : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
-            adminNode.level2 = [generalNode, cloudStorageNode];
+
+            adminNode.level2 = this.system.canViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
         this.content = { ...this.content };
