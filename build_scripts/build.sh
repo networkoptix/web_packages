@@ -111,8 +111,8 @@ fi
 
 echo "Checking mustache templates"
 if ! python check_mustache_templates.py; then
-    echo "There were template translation errors. Please notify Boris"
-    exit 1
+    echo "There were template translation errors. Please notify the web team and Boris"
+    # exit 1 # Will add way to notify admins
 else
     echo "No template errors"
 fi
