@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy }                  from '@angular/core';
+import { Inject, Injectable, OnDestroy, Injector }                  from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { ActivatedRoute, Router }                         from '@angular/router';
@@ -48,6 +48,11 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
+
+    // Declare services that cause circular dependencies here instead of injecting in constructor
+    private dialogs: NxDialogsService
+    private applyService: NxApplyService
+
     constructor(@Inject(DOCUMENT) private document: Document,
                 @Inject(WINDOW) private window: Window,
                 configService: NxConfigService,
@@ -57,12 +62,11 @@ export class NxAccountService implements OnDestroy {
                 private sessionService: NxSessionService,
                 private uriService: NxUriService,
                 private localStorageService: LocalStorageService,
-                private dialogs: NxDialogsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private applyService: NxApplyService,
                 private appStateService: NxAppStateService,
-                private pollService: NxPollService
+                private pollService: NxPollService,
+                injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -99,6 +103,12 @@ export class NxAccountService implements OnDestroy {
         });
 
         this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
+
+        // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
+        setTimeout(() => {
+            this.dialogs = injector.get(NxDialogsService);
+            this.applyService = injector.get(NxApplyService);
+        });
     }
 
     ngOnDestroy() {
