@@ -19,11 +19,10 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 @Component({
     selector   : 'integration-detail-component',
     templateUrl: 'details.component.html',
-    styleUrls  : ['details.component.scss'],
+    styleUrls  : ['details.component.scss']
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     plugin: any;
@@ -49,7 +48,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private menuService: NxMenuService,
                 private accountService: NxAccountService,
-                private pageService: NxPageService,
+                private pageService: NxPageService
     ) {
         this.setupDefaults(configService);
     }
@@ -60,72 +59,74 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
-                this.content = {...this.content}; // trigger onChange
-        });
+                this.content = { ...this.content }; // trigger onChange
+            });
 
         this.routeSubscription = combineLatest(this.route.params, this.route.queryParams)
-                .pipe(map(results => ({ params: results[0], query: results[1] })))
-                .subscribe(results => {
+            .pipe(map(results => ({ params: results[0], query: results[1] })))
+            .subscribe(results => {
+                // @ts-ignore
+                if (results.params.id) {
+                    this.integrationService.setIntegrationPlugin({});
 
                     // @ts-ignore
-                    if (results.params.id) {
+                    const query = results.query;
 
-                        this.integrationService.setIntegrationPlugin({});
+                    this.content = {
+                        selectedSection: '', // updated by selectedSectionSubject
+                        base           : '/integrations/', // updated by route param
+                        level1         : [
+                            {
+                                id    : '',
+                                label : '',
+                                path  : '',
+                                level3: [
+                                    {
+                                        id   : 'how-it-works',
+                                        label: this.LANG['How it works'] || 'How it works',
+                                        // path : 'how-it-works',
+                                        path : '',
+                                        query
+                                    },
+                                    {
+                                        id   : 'how-to-setup',
+                                        label: this.LANG['How to setup?'] || 'How to setup?',
+                                        path : 'how-to-setup',
+                                        query
+                                    }]
+                            }]
+                    };
 
-                        // @ts-ignore
-                        const query = results.query;
+                    // @ts-ignore
+                    this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
+                        .subscribe(result => {
+                            if (result.length) {
+                                // @ts-ignore
+                                this.content.base += results.params.id;
 
-                        this.content = {
-                            selectedSection: '',        // updated by selectedSectionSubject
-                            base  : '/integrations/',   // updated by route param
-                            level1: [
-                                {
-                                    id    : '',
-                                    label : '',
-                                    path  : '',
-                                    level3: [
-                                        {
-                                            id   : 'how-it-works',
-                                            label: this.LANG['How it works'] || 'How it works',
-                                            // path : 'how-it-works',
-                                            path : '',
-                                            query
-                                        },
-                                        {
-                                            id   : 'how-to-setup',
-                                            label: this.LANG['How to setup?'] || 'How to setup?',
-                                            path : 'how-to-setup',
-                                            query
-                                        }]
-                                }]
-                        };
+                                this.plugin = this.integrationService.format(result[0]);
 
-                        // @ts-ignore
-                        this.integrationSubscription = this.integrationService.getIntegrationBy(results.params.id, results.query.state)
-                            .subscribe(result => {
-                                if (result.length) {
-                                    // @ts-ignore
-                                    this.content.base += results.params.id;
-
-                                    this.plugin = this.integrationService.format(result[0]);
-
-                                    if (this.plugin.pending || this.plugin.draft) {
-                                        this.ribbonService.show(
-                                                this.LANG.ribbon.integration.previewRibbon,
-                                                this.LANG.ribbon.integration.backToEditText,
-                                                this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
-                                        );
-                                    }
-
-                                    this.integrationService.setIntegrationPlugin(this.plugin);
+                                if (this.plugin.pending || this.plugin.draft) {
+                                    this.ribbonService.show(
+                                        this.LANG.ribbon.integration.previewRibbon,
+                                        this.LANG.ribbon.integration.backToEditText,
+                                        this.CONFIG.integration.adminLink.replace('%ID%', this.plugin.id)
+                                    );
                                 }
-                            }).add(() => {
-                                if (!this.plugin) {
-                                    this.router.navigate([this.CONFIG.redirect.page404]);
-                                }
-                            });
-                    }
-                });
+
+                                this.integrationService.setIntegrationPlugin(this.plugin);
+                            }
+                        }).add(() => {
+                            if (!this.plugin) {
+                                this.router
+                                    .navigate([this.CONFIG.redirect.page404])
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+                        });
+                }
+            });
     }
 
     ngOnDestroy() {
@@ -139,15 +140,14 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         disclaimer = disclaimer.replace(/{{INTEGRATION_COMPANY}}/g, this.plugin.information.companyName);
         disclaimer = disclaimer.replace(/{{INTEGRATION_PRIVACY_POLICY}}/g, this.plugin.information.companyPrivacyPolicyLink);
         const data: MessageParams = {
-            to: this.plugin.information.companyName,
-            email: this.plugin.support.supportEmail,
+            to     : this.plugin.information.companyName,
+            email  : this.plugin.support.supportEmail,
             disclaimer,
             assetId: this.plugin.id,
-            asset: this.plugin.information.name,
+            asset  : this.plugin.information.name
         };
         this.dialogs
             .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)
             .then(() => {});
     }
 }
-

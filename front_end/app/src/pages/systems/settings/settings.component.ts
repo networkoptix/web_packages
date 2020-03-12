@@ -273,7 +273,29 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateAlert() {
         if (!this.system.isOnline) {
             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+        } else if (this.system.mergeInfo && this.mergeTargetSystem && !this.mergeTargetSystem.name) {
+            this.ribbonService.show(this.LANG.ribbon.finishingMerge, '', '', 'alert');
+        } else if (this.system.mergeInfo) {
+            const { mergeInfo } = this.system;
+            if (mergeInfo && Object.keys(mergeInfo).length > 0) {
+                this.currentlyMerging = true;
+                this.isMaster = mergeInfo.role
+                    ? mergeInfo.role !== this.CONFIG.system.status.slave
+                    : mergeInfo.masterSystemId === this.system.id;
+                this.mergeTargetSystem = this.systemsService.systems
+                    .find((system) => mergeInfo.anotherSystemId === system.id) || this.LANG.system.mergeUnknownName;
+                if (!this.isMaster) {
+                    this.settingsService.mergeTarget = this.mergeTargetSystem.id;
+                }
+                const template =
+                    `<div class="my-1">
+                        <div class="larger"><strong>${this.mergeTargetSystem.name}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                        <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
+                    </div>`;
+                this.ribbonService.show(template, '', '', 'alert');
+            }
         } else {
+            this.currentlyMerging = false;
             this.ribbonService.hide();
         }
         setTimeout(() => {
@@ -432,7 +454,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     cleanUrl() {
-        return this.router.navigate([this.CONFIG.redirect.authorised, this.systemId]);
+        return this.router
+            .navigate([this.CONFIG.redirect.authorised, this.systemId])
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     connectionLost() {

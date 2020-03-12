@@ -295,7 +295,7 @@ export class NxSystemAPI {
         return !id || id === this.emptyId;
     }
 
-    cleanUserObject(user) { // Remove unnesesary fields from the object
+    cleanUserObject(user) { // Remove unnecessary fields from the object
         const cleanedUser: any = {};
         if (user.id) {
             cleanedUser.id = user.id;
@@ -471,20 +471,6 @@ export class NxSystemAPI {
 
     getAggregateHealthReport() {
         return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
-    }
-
-    getPeerSystems() {
-        return this.get('/api/discoveredPeers', { showAddresses: true });
-    }
-
-    checkLocalAdminPassword(password) {
-        const localPasswordUrl = this.urlBase.replace('/web', '');
-        const httpOptions      = {
-            headers: new HttpHeaders({
-                Authorization: 'Basic ' + btoa(`admin:${password}`)
-            })
-        };
-        return this.http.get(`${localPasswordUrl}/api/`, httpOptions);
     }
 }
 

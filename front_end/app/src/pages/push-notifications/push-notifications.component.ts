@@ -68,8 +68,11 @@ export class PushComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.accountService.requireLogin().then(account => {
             if (!(account && account.email.endsWith('@networkoptix.com'))) {
-                this.router.navigate(['/']);
-                return;
+                this.router
+                    .navigate(['/'])
+                    .catch(error => {
+                        console.error(error);
+                    });
             } else {
                 this.account = account;
                 this.setSystems();

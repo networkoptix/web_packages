@@ -517,7 +517,7 @@ export class MergeModalContent {
         console.log('targetSystem', this.targetSystem);
         this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
         let url: string;
-        if (!this.targetSystem.id) {
+        if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             url = this.machine.state.template.serverUrlInputValue;
             if ((/^https?:\/\//).test(url) === false) {
                 url = `${window.location.protocol}//${url}`;
@@ -556,19 +556,18 @@ export class MergeModalContent {
             return this.precheckSystemMerge();
         }
         if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
-            const [system, target] = await Promise.all([
+            const [servers, target] = await Promise.all([
                 this.system.mediaserver.getMediaServers().toPromise(),
                 this.targetSystemService.mediaserver.getMediaServers(url).toPromise()
             ]);
-            console.log('getMediaServers return', system, target);
-            const systemIds = {};
-            system.forEach(sys => {
-                systemIds[sys.id] = true;
+            const serverIds = {};
+            servers.forEach(server => {
+                serverIds[server.id] = true;
             });
-            if (target.some(sys => systemIds[sys.id]) === true) {
+            if (target.some(server => serverIds[server.id]) === true) {
                 throw Error('duplicateServers');
             }
-            this.tooManyServers = system.length + target.length > this.CONFIG.maxServers;
+            this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
         } else {
             const param1 = this.targetSystem.systemName ? 'server' : 'system';
             const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';

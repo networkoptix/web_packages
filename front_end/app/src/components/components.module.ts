@@ -40,6 +40,7 @@ import { NxHeaderComponent }                from './header/header.component';
 import { NxNavLocationDropdown }            from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }                 from './apply/apply.component';
 import { NxPagePlaceholderComponent }       from './placeholders/page/page-placeholder.component';
+import { NxAjsPagePlaceholderComponent }    from './placeholders/ajs-page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }    from './placeholders/section/section-placeholder.component';
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent } from './password-input-tag-validation/password-tag-validation.component';
@@ -91,6 +92,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer
     ],
@@ -128,6 +130,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer
     ],
@@ -156,6 +159,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
 
@@ -195,6 +199,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
+        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
 
@@ -207,4 +212,4 @@ export class ComponentsModule {
 declare var angular: angular.IAngularStatic;
 angular
     .module('cloudApp.directives')
-    // .directive('nxPagePlaceholder', downgradeComponent({ component: NxPagePlaceholderComponent }) as angular.IDirectiveFactory);
+    .directive('nxAjsPagePlaceholder', downgradeComponent({ component: NxAjsPagePlaceholderComponent }) as angular.IDirectiveFactory);

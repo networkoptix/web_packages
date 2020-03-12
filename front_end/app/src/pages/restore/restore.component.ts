@@ -19,7 +19,6 @@ import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 })
 
 export class NxRestoreComponent implements OnInit {
-
     @Input() uriParam;
     @Input() uriParamCode;
 
@@ -55,7 +54,7 @@ export class NxRestoreComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private language: NxLanguageProviderService,
-                private pageService: NxPageService,
+                private pageService: NxPageService
     ) {
         this.setupDefaults(configService);
     }
@@ -72,14 +71,13 @@ export class NxRestoreComponent implements OnInit {
         // Check session context
         if (this.uriParam !== 'restoring' &&
             this.checkContexts(['changeSuccess', 'restoringSuccess'])) {
-
             this.setContext(undefined);
         }
 
         this.data = {
-            newPassword : '',
-            email       : this.localStorage.get('email') || '',
-            restoreCode : this.uriParamCode
+            newPassword: '',
+            email      : this.localStorage.get('email') || '',
+            restoreCode: this.uriParamCode
         };
 
         this.localStorage.remove('email');
@@ -96,21 +94,32 @@ export class NxRestoreComponent implements OnInit {
                 .then(registered => {
                     if (!registered) {
                         // send to registration form with the code
-                        this.router.navigate(['/register/' + code]);
+                        this.router
+                            .navigate(['/register/' + code])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     } else {
-                        this.router.navigate(['/restore_password/' + code]);
+                        this.router
+                            .navigate(['/restore_password/' + code])
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                 }, () => {
                     // Wrong activation code or some error - send to activation page
-                    this.router.navigate(['/activate/' + code]);
+                    this.router
+                        .navigate(['/activate/' + code])
+                        .catch(error => {
+                            console.error(error);
+                        });
                 });
         }
-
 
         this.change = this.processService.createProcess(() => {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
-            errorCodes        : {
+            errorCodes: {
                 notFound     : this.LANG.errorCodes.wrongCodeRestore,
                 notAuthorized: this.LANG.errorCodes.wrongCodeRestore
             },
@@ -121,13 +130,17 @@ export class NxRestoreComponent implements OnInit {
             this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.setContext('changeSuccess');
             this.dialogs.dismiss();
-            this.uriService.updateURI('/restore_password/success', {});
+            this.uriService
+                .updateURI('/restore_password/success', {})
+                .catch(error => {
+                    console.error(error);
+                });
         });
 
         this.restore = this.processService.createProcess(() => {
             return this.cloudApiService.restorePasswordRequest(this.data.email);
         }, {
-            errorCodes        : {
+            errorCodes: {
                 notFound: this.LANG.errorCodes.emailNotFound
             },
             ignoreUnauthorized: true,
@@ -140,7 +153,12 @@ export class NxRestoreComponent implements OnInit {
             this.setContext('restoringSuccess');
             this.setEmail(this.data.email);
             this.dialogs.dismiss();
-            this.uriService.updateURI('/restore_password/sent', {});
+
+            this.uriService
+                .updateURI('/restore_password/sent', {})
+                .catch(error => {
+                    console.error(error);
+                });
         });
 
         // give checkContext time to redirect if context is not correct
@@ -170,11 +188,10 @@ export class NxRestoreComponent implements OnInit {
         this.dialogs.login(this.accountService, false, true);
     }
 
-    loginRedirect () {
+    loginRedirect() {
         const url = this.router.url;
         const redirect = this.CONFIG.redirect.paths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
         this.dialogs.login(this.accountService, !redirect).then(() => {});
     }
 }
-

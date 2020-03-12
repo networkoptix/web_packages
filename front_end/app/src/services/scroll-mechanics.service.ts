@@ -40,28 +40,43 @@ export class NxScrollMechanicsService {
         this.CONFIG = configService.getConfig();
     }
 
-    setElementTableWidth(width: number) {
+    set elementTableWidth(width: number) {
         this.elementTableWidthSubject.next(width);
     }
 
-    setElementViewWidth(width: number) {
+    get elementTableWidth() {
+        return this.elementTableWidthSubject.getValue();
+    }
+
+    set elementViewWidth(width: number) {
         this.elementViewWidthSubject.next(width);
     }
 
-    setSearchViewHeight(height: number) {
+    get elementViewWidth() {
+        return this.elementViewWidthSubject.getValue();
+    }
+
+    set searchViewHeight(height: number) {
         this.searchViewHeightSubject.next(height);
+    }
+
+    get searchViewHeight() {
+        return this.searchViewHeightSubject.getValue();
     }
 
     setWindowSize(height: number, width: number) {
         this.windowSizeSubject.next({ height, width });
-        // this.setMediaSize(width);
     }
 
-    setWindowScroll(value: number) {
+    set windowScroll(value: number) {
         this.windowScrollSubject.next(value);
     }
 
-    panelVisible(value: boolean) {
+    get windowScroll() {
+        return this.windowScrollSubject.getValue();
+    }
+
+    set panelVisible(value: boolean) {
         this.panelSubject.next(value);
     }
 

@@ -102,7 +102,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.system = system;
                 // Route guard did not worked :( ... so doing it the old way ...was done in users.component, so replicating
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-                    this.uriService.updateURI('systems/' + this.system.id, {});
+
+                    this.uriService
+                        .updateURI('systems/' + this.system.id, {})
+                        .catch(error => {
+                            console.error(error);
+                        });
+
                     return;
                 }
                 if (this.system) {
@@ -159,7 +165,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             if (typeof server === 'undefined') {
                 if (this.system.servers.length > 0) {
                     server = this.system.servers[0];
-                    this.uriService.updateURI(`systems/${this.system.id}/servers/${server.id}`);
+
+                    this.uriService
+                        .updateURI(`systems/${this.system.id}/servers/${server.id}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
                 } else {
                     return;
                 }
@@ -251,7 +262,12 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .detachServer(this.system, id, name)
             .then(detach => {
                 if (detach === 'success') {
-                    this.uriService.updateURI(`systems/${this.system.id}/servers/${nextServerId}`);
+                    this.uriService
+                        .updateURI(`systems/${this.system.id}/servers/${nextServerId}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
+
                     this.menuService.setDetailsSection(nextServerId);
                 }
             });

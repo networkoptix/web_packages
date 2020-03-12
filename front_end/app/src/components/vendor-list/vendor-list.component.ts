@@ -227,7 +227,11 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
             });
         }
 
-        this.uri.updateURI('/ipvd', queryParams);
+        this.uri
+            .updateURI('/ipvd', queryParams)
+            .catch(error => {
+                console.error(error);
+            });
 
         // Propagate component's value attribute (model)
         this.propagateChange({ ...this.filter });
@@ -248,7 +252,11 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
                 queryParams[select.id] = select.selected;
 
-                this.uri.updateURI(this.uriPath, queryParams);
+                this.uri
+                    .updateURI(this.uriPath, queryParams)
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
         });
 

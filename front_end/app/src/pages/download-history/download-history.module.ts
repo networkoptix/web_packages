@@ -19,8 +19,12 @@ export class TypeResolver implements Resolve<any> {
     }
 
     resolve() {
-            this.router.navigate(['/downloads/releases']);
-            return empty;
+        this.router
+            .navigate(['/downloads/releases'])
+            .catch(error => {
+                console.error(error);
+            });
+        return empty;
     }
 }
 

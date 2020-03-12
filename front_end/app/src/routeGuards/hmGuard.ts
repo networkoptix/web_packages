@@ -16,15 +16,17 @@ export class HMGuard implements CanActivate {
     CONFIG: IConfig;
     system: NxSystem;
 
-    constructor(private router: Router,
-                private configService: NxConfigService,
-                private accountService: NxAccountService,
-                private systemService: NxSystemService
+    constructor(
+        configService: NxConfigService,
+        private router: Router,
+        private accountService: NxAccountService,
+        private systemService: NxSystemService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
     }
 
-    canActivate(route: ActivatedRouteSnapshot,
+    canActivate(
+        route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         const systemId = route.pathFromRoot.find((snapshot: any) => {

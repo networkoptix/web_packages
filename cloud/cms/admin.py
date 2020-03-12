@@ -782,8 +782,10 @@ admin.site.register(ExternalFile, ExternalFileAdmin)
 @admin.register(ContributerAgreement)
 class ContributerAgreementAdmin(CMSAdmin):
     form = ContributerAgreementForm
+    search_fields = ('user__email',)
+    list_filter = ('accepted_agreement__customization',)
     list_display = ('user', 'customization', 'version', 'valid', 'accepted_review')
-    readonly_fields = ('customization', 'version', 'valid')
+    readonly_fields = ('accepted_agreement', 'customization', 'version', 'valid')
 
     def customization(self, obj):
         if obj.accepted_agreement:

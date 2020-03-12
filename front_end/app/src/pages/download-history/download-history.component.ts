@@ -6,9 +6,6 @@ import { ActivatedRoute, ActivationEnd, Router }                from '@angular/r
 import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                                            from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
-
-import isArray = require('core-js/features/array/is-array');
-import angular = require('angular');
 import { NxConfigService, IConfig }                                      from '../../services/nx-config';
 import { NxLanguageProviderService }                            from '../../services/nx-language-provider';
 import { NxAccountService }                                     from '../../services/account.service';
@@ -20,11 +17,14 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxPageService } from '../../services/page.service';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
+import isArray = require('core-js/features/array/is-array');
+import angular = require('angular');
+
 @AutoUnsubscribe()
 @Component({
     selector   : 'download-history',
     templateUrl: 'download-history.component.html',
-    styleUrls  : [ 'download-history.component.scss' ]
+    styleUrls  : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
@@ -68,7 +68,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
                 private location: Location,
-                @Inject(PLATFORM_ID) private platformId: object,
+                @Inject(PLATFORM_ID) private platformId: object
     ) {
         this.setupDefaults(configService);
 
@@ -103,33 +103,36 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
         const data = this.cloudApiService
             .getDownloadsHistory(this.build)
             .then((data: any) => {
-                    this.linkbase = data.updatesPrefix;
-                    if (!this.build) { // only one build
-                        this.downloadsData = data;
-                        if (!(this.section in this.downloadsData)) {
-                            this.section = this.releases;
-                        }
-                        this.activeBuilds = this.downloadsData[ this.section ];
-                        this.getAvailableDownloadTypes(this.downloadsData);
-                    } else {
-                        this.activeBuilds = [ data ];
-                        this.noteTypes = [ data.type ];
-                        this.downloadsData = {};
-                        this.downloadsData[ data.type ] = this.activeBuilds;
+                this.linkbase = data.updatesPrefix;
+                if (!this.build) { // only one build
+                    this.downloadsData = data;
+                    if (!(this.section in this.downloadsData)) {
+                        this.section = this.releases;
                     }
-
-                    this.pageService.setPageTitle(new TitleCasePipe().transform(this.noteTypes[ 0 ])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
-
-                    setTimeout(() => {
-                        this.tabsVisible = true;
-                        if (this.tabs) {
-                            this.tabs.select(this.section);
-                        }
-                    });
-
-                }, () => {
-                    this.router.navigate([this.CONFIG.redirect.page404]);
+                    this.activeBuilds = this.downloadsData[this.section];
+                    this.getAvailableDownloadTypes(this.downloadsData);
+                } else {
+                    this.activeBuilds = [data];
+                    this.noteTypes = [data.type];
+                    this.downloadsData = {};
+                    this.downloadsData[data.type] = this.activeBuilds;
                 }
+
+                this.pageService.setPageTitle(new TitleCasePipe().transform(this.noteTypes[0])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+
+                setTimeout(() => {
+                    this.tabsVisible = true;
+                    if (this.tabs) {
+                        this.tabs.select(this.section);
+                    }
+                });
+            }, () => {
+                this.router
+                    .navigate([this.CONFIG.redirect.page404])
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
             )
             .finally(() => {
                 this.sub.unsubscribe();
@@ -137,9 +140,14 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     }
 
     public beforeChange($event: NgbTabChangeEvent) {
-        this.activeBuilds = this.downloadsData[ $event.nextId ];
+        this.activeBuilds = this.downloadsData[$event.nextId];
         this.pageService.setPageTitle(new TitleCasePipe().transform($event.nextId));
-        this.uriService.updateURI('/downloads/' + $event.nextId, {});
+
+        this.uriService
+            .updateURI('/downloads/' + $event.nextId, {})
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     ngOnInit(): void {
@@ -162,8 +170,11 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                         if (this.canViewRelease) {
                             this.getData();
                         } else {
-                            this.router.navigate([this.CONFIG.redirect.page404]);
-                            return;
+                            this.router
+                                .navigate([this.CONFIG.redirect.page404])
+                                .catch(error => {
+                                    console.error(error);
+                                });
                         }
                     });
             } else {
@@ -175,4 +186,3 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {}
 }
-

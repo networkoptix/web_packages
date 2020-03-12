@@ -156,6 +156,7 @@ export class NxUrlProtocolService {
                 };
                 // Check on before unload
                 // @ts-ignore
+                // eslint-disable-next-line prefer-promise-reject-errors
                 this.window.protocolCheck(link, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
                     setTimeout(() => {
                         this.accountService
@@ -169,6 +170,7 @@ export class NxUrlProtocolService {
                                  *      case > 1: The browser opened the app but the code didnt work.
                                  */
                                 if (!visited && blurCount !== 1) {
+                                    // eslint-disable-next-line prefer-promise-reject-errors
                                     return reject({ resultCode: this.CONFIG.openClientError });
                                 }
                                 return resolve(visited);

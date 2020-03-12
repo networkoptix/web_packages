@@ -28,19 +28,20 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
 
     @ViewChild('nxPanelView', { static: false }) nxPanelView: ElementRef;
 
-    constructor(private configService: NxConfigService,
-                private healthService: NxHealthService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+    constructor(
+        configService: NxConfigService,
+        private healthService: NxHealthService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private healthLayoutService: NxHealthLayoutService
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
         });
     }
 
     ngAfterViewInit() {
-        this.scrollMechanicsService.panelVisible(true);
+        this.scrollMechanicsService.panelVisible = true;
     }
 
     closeView() {

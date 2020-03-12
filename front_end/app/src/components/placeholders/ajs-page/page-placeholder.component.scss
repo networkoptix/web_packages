@@ -76,16 +76,6 @@ $preloader_small_circle_distance : 8px;
 .section-placeholder {}
 
 .page-placeholder {
-    width            : calc(100% - 16px);
-    margin           : 0 auto;
-    z-index          : 1;
-    /*This is used for the preloaders.
-                     It should always be higher than the video,
-                     but not the top bar of the video player*/
-
-    //background-color : $dark9;
-    position         : relative;
-
     &.has-preloader {
         background-color : transparent;
         opacity          : 1;
@@ -150,3 +140,4 @@ $preloader_small_circle_distance : 8px;
 .placeholder-preloader {
     @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
 }
+

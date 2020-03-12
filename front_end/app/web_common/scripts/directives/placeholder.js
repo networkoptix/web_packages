@@ -1,12 +1,12 @@
 (function () {
-    
+
     'use strict';
-    
+
     angular.module('nxCommon')
         .directive('placeholder', ['nxConfigService', function (nxConfigService) {
-    
+
             const CONFIG = nxConfigService.getConfig();
-            
+
             return {
                 restrict: 'E',
                 scope: {

@@ -25,10 +25,10 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-metrics-component',
-    templateUrl: 'metrics.component.html',
-    styleUrls  : ['metrics.component.scss'],
-    encapsulation: ViewEncapsulation.None,
+    selector : 'nx-system-metrics-component',
+    templateUrl : 'metrics.component.html',
+    styleUrls : ['metrics.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
@@ -86,7 +86,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG  = this.languageService.getTranslations();
+        this.LANG = this.languageService.getTranslations();
         this.filterModel = {
             query: ''
         };
@@ -99,7 +99,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force view component update without URI update
             this.locationReadySubscription = of('').pipe(delay(0)).subscribe(() => {
-                const params = {...this.route.snapshot.queryParams};
+                const params = { ...this.route.snapshot.queryParams };
                 if (params.id) {
                     this.fromBrowserNav = true;
                     // Avoid selecting and entity from non updated selectItems
@@ -117,12 +117,12 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .pipe(throttleTime(1000))
             .subscribe(selection => {
             // when user click same section in the menu - we need to reset table and entity
-            if (this.metricId === selection) {
-                this.filterModel.query = '';
-                this.resetActiveEntity();
-                this.search();
-            }
-        });
+                if (this.metricId === selection) {
+                    this.filterModel.query = '';
+                    this.resetActiveEntity();
+                    this.search();
+                }
+            });
 
         this.routeSubscription = this.route
             .params.pipe(delay(0))
@@ -211,7 +211,6 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     }
 
     setActiveEntity(entity, forceURIUpdate = true) {
-
         const queryParams: Params = {};
         this.layoutReady = !!this.healthLayoutService.activeEntity;
 
@@ -225,12 +224,20 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     queryParams.id = entity;
                 }
 
-                this.uri.updateURI(undefined, queryParams);
-
+                this.uri
+                    .updateURI(undefined, queryParams)
+                    .catch(error => {
+                        console.error(error);
+                    });
             } else {
                 this.healthLayoutService.activeEntity = entity;
                 queryParams.id = entity.id;
-                this.uri.updateURI(undefined, queryParams);
+
+                this.uri
+                    .updateURI(undefined, queryParams)
+                    .catch(error => {
+                        console.error(error);
+                    });
             }
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.healthLayoutService.mobileDetailMode = true;
@@ -246,8 +253,13 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
         }
         if (updateURI) {
             const queryParams: Params = {};
-            queryParams.id            = undefined;
-            this.uri.updateURI(undefined, queryParams);
+            queryParams.id = undefined;
+
+            this.uri
+                .updateURI(undefined, queryParams)
+                .catch(error => {
+                    console.error(error);
+                });
         }
         this.healthLayoutService.resetActiveEntity();
     }

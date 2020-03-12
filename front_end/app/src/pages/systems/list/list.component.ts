@@ -142,7 +142,11 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     openSystem(system) {
-        this.router.navigate(['/systems/' + system.id]);
+        this.router
+            .navigate(['/systems/' + system.id])
+            .catch(error => {
+                console.error(error);
+            });
     }
 
     canShowTag(system) {

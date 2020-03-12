@@ -21,8 +21,6 @@
     right: 0;
     bottom: 0;
     background-color: $red_l1;
-    -webkit-transition: 160ms background-color ease-in-out;
-    transition: 160ms background-color ease-in-out;
 
     &:hover {
         background-color: $red_l2;

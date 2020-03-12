@@ -1,9 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer }        from '@angular/platform-browser';
 
-@Pipe({ name : 'NxUrlSafe' })
+@Pipe({ name: 'NxUrlSafe' })
 export class NxUrlSafePipe implements PipeTransform {
-    constructor(private sanitizer: DomSanitizer) {
+    constructor(
+        private sanitizer: DomSanitizer
+    ) {
     }
 
     transform(url) {
