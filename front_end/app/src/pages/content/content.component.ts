@@ -76,10 +76,6 @@ export class NxContentComponent implements OnInit {
             this.sessionStorage.remove('staticContent');
         };
 
-        this.accountService.get().then(account => {
-            this.account = account;
-        });
-
         this.agreeProcess = this.processService.createProcess(() => {
             return this.cloudApiService.acceptAgreement(this.agreementDetails.review_id);
         }, {
@@ -93,6 +89,13 @@ export class NxContentComponent implements OnInit {
     }
 
     ngAfterViewInit(): void {
+        this.accountService.get().then(account => {
+            this.account = account;
+            this.subscribeParams();
+        });
+    }
+
+    subscribeParams() {
         this.route.paramMap.subscribe((paramMap) => {
             this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
