@@ -509,8 +509,15 @@ export interface Registration {
 }
 
 export interface Ribbon {
-    integration:   RibbonIntegration;
-    systemOffline: string;
+    beingMerged:    BeingMerged;
+    finishingMerge: string;
+    integration:    RibbonIntegration;
+    systemOffline:  string;
+}
+
+export interface BeingMerged {
+    to:      string;
+    mayTake: string;
 }
 
 export interface RibbonIntegration {
@@ -1233,8 +1240,14 @@ const typeMap: any = {
         { json: "agreement", js: "agreement", typ: "" },
     ], false),
     "Ribbon": o([
+        { json: "beingMerged", js: "beingMerged", typ: r("BeingMerged") },
+        { json: "finishingMerge", js: "finishingMerge", typ: "" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
         { json: "systemOffline", js: "systemOffline", typ: "" },
+    ], false),
+    "BeingMerged": o([
+        { json: "to", js: "to", typ: "" },
+        { json: "mayTake", js: "mayTake", typ: "" },
     ], false),
     "RibbonIntegration": o([
         { json: "backToEditText", js: "backToEditText", typ: "" },

@@ -480,6 +480,11 @@
         "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
     },
     "ribbon": {
+        "beingMerged": {
+            "to": "is being merged to this sytem.",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
+        },
+        "finishingMerge": "Finishing systems merge",
         "integration": {
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."

@@ -4,13 +4,15 @@ import { distinctUntilChanged }         from 'rxjs/operators';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { NxUtilsService }                        from '../../services/utils.service';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { ViewEncapsulation }        from '@angular/core';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-ribbon',
-    templateUrl: 'ribbon.component.html',
-    styleUrls  : ['ribbon.component.scss']
+    selector     : 'nx-ribbon',
+    templateUrl  : 'ribbon.component.html',
+    styleUrls    : ['ribbon.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class NxRibbonComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

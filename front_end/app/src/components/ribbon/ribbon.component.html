@@ -5,7 +5,7 @@
 
 <div class="clearfix alert-ribbon ribbon" *ngIf="showRibbon && type === 'alert'">
     <div class="message">
-        <span>{{message}}</span>
+        <div [innerHTML]="message"></div>
         <ng-container *ngIf="action">
             <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                 <svg-icon

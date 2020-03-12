@@ -45,6 +45,9 @@
     .message {
         color: $dark9;
         text-align: center;
+        .larger {
+            @extend #regular18;
+        }
     }
 
     a:hover {
