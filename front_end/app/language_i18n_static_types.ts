@@ -197,7 +197,6 @@ export interface MoveCloudStorage {
 }
 
 export interface MoveCloudStorageStatus {
-    initial: string;
     offline: string;
 }
 
@@ -979,7 +978,6 @@ const typeMap: any = {
         { json: "status", js: "status", typ: r("MoveCloudStorageStatus") },
     ], false),
     "MoveCloudStorageStatus": o([
-        { json: "initial", js: "initial", typ: "" },
         { json: "offline", js: "offline", typ: "" },
     ], false),
     "NoOtherSystemsError": o([

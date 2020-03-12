@@ -188,7 +188,6 @@
             "moveCloudStorage": {
                 "title": "Move Cloud Storage",
                 "status": {
-                    "initial": "If selected system already has cloud storage, it will be merged with this one",
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }
             },

@@ -1,8 +1,8 @@
 <div class="modal-header">
-    <h1 class="modal-title">
-        {{ LANG.dialogs.cloudStorage.moveCloudStorage.title }}
+    <h1 class="modal-title" translate>
+        Move Cloud Storage
     </h1>
-    <button *ngIf="closable" type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="activeModal.close()">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="activeModal.close()">
         <div class="close-content"><span class="close-icon"></span></div>
     </button>
 </div>
@@ -11,7 +11,7 @@
         <p translate>Move to...</p>
         <nx-select class="mb-2" id="system" [items]="items" [selected]="items[0]" (onSelected)="setTargetSystem($event)" required></nx-select>
         <p *ngIf="!errorText" class="light-text" translate>
-            {{ LANG.dialogs.cloudStorage.moveCloudStorage.status.initial }}
+            If selected system already has cloud storage, it will be merged with this one.
         </p>
         <p *ngIf="errorText" class="mt-2 error-label">{{ errorText }}</p>
     </div>
