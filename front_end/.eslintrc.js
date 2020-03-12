@@ -66,7 +66,18 @@ module.exports = {
             "ignoreComments"        : false,
             "ignoredNodes"          : ["TemplateLiteral *"]
         }],
-        "key-spacing"                  : ["error", { align: "colon" }],
+        // "key-spacing"                  : ["error", { align: "colon" }],
+        'key-spacing': ['error', {
+            'singleLine': {
+                'beforeColon': false,
+                'afterColon' : true
+            },
+            "align"     : {
+                "beforeColon": true,
+                "afterColon" : true,
+                "on"         : "colon"
+            }
+        }],
         "keyword-spacing"              : ["error", { "before": true, "after": true }],
         "lines-between-class-members"  : ["error", "always", { "exceptAfterSingleLine": true }],
         "new-cap"                      : ["error", { "newIsCap": true, "capIsNew": false, "properties": true }],
