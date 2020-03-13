@@ -6,6 +6,9 @@ import { NxCloudApiService } from '../../../../services/nx-cloud-api';
 import { NxAccountService } from '../../../../services/account.service';
 import { tap } from 'rxjs/operators';
 import { NxSettingsService } from '../settings.service';
+import { NxSystem, NxSystemService } from '../../../../services/system.service';
+import { ActivatedRoute } from '@angular/router';
+import { NxUriService } from '../../../../services/uri.service';
 
 export enum StateActions {
     PENDING = 'PENDING',
@@ -22,12 +25,13 @@ export class NxCloudStorageService {
     CONFIG: IConfig
 
     // State handling
-    userCloudEnabled$: BehaviorSubject<boolean>
+    userCloudEnabled$: BehaviorSubject<boolean> // Implemented
     systemCloudEnabled$: BehaviorSubject<boolean>
     cloudCapacity$: BehaviorSubject<number>
     usageStats$: BehaviorSubject<null | IUsageStats>
-    systemId$: BehaviorSubject<string>
-    pending$: BehaviorSubject<boolean>
+    system$: BehaviorSubject<NxSystem> // Implemented
+    systemId$: BehaviorSubject<string> // TODO: Weird issues getting systemId froma activatedRoute
+    pending$: BehaviorSubject<boolean> // Implemented
 
     // Combined State
     currentState$: Observable<any | ICloudStorageState>;
@@ -36,27 +40,34 @@ export class NxCloudStorageService {
         configService: NxConfigService,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
+        private systemService: NxSystemService
     ) {
         this.CONFIG = configService.getConfig();
+        this.init();
     }
 
     // Private instance methods
 
     init() {
-        // const userCloudEnabled = [...this.accountService.account.permissions, 'cloud_storage_enabled'].includes('cloud_storage_enabled');
+        // TODO: Issue with getting :systemId using activated route
+        this.systemId$ = new BehaviorSubject('cff37c9f-969f-4c68-8cf0-e071a182a0d8');
+        this.systemId$.subscribe(() => {
+            const { value: systemId } = this.systemId$;
+            this.systemService
+                .createSystem(this.accountService.email, systemId)
+                .getInfoAndPermissions(false)
+                .catch(() => {}).then(systemWithPermissions => {
+                    this.system$ = new BehaviorSubject(systemWithPermissions);
+                    this.systemCloudEnabled$ = new BehaviorSubject(false); // Need to find out where this will come from
+                    this.userCloudEnabled$ = new BehaviorSubject(this.system$.value.canViewCloudStorage());
+                    // this.userCloudEnabled$.subscribe(value => alert(`can view cloud storage ${value}`));
+                });
+        });
 
-        // this.pending$ = new BehaviorSubject(false);
-        // this.userCloudEnabled$ = new BehaviorSubject(userCloudEnabled);
-        // this.systemCloudEnabled$ = new BehaviorSubject(false);
+        this.pending$ = new BehaviorSubject(false);
+
         // this.usageStats$ = new BehaviorSubject(null);
         // this.systemId$ = new BehaviorSubject('');
-        // this.currentState$ = combineLatest(
-        //     [this.userCloudEnabled$,
-        //         this.systemCloudEnabled$,
-        //         this.cloudCapacity$,
-        //         this.usageStats$,
-        //         this.systemId$]
-        // );
     }
 
     private updateCloudStorageState(action: StateActions) {
