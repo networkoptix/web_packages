@@ -1,10 +1,10 @@
-const fs = require('fs');
-const webpack = require('webpack');
-const merge = require('webpack-merge');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const fs = require( 'fs' );
+const webpack = require( 'webpack' );
+const merge = require( 'webpack-merge' );
+const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const common = require('./webpack.common.js');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const common = require( './webpack.common.js' );
+const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
 const host = '0.0.0.0';
@@ -12,10 +12,10 @@ const port = 9000;
 const cloudInstance = process.env.CLOUD_INSTANCE || 'https://dev2.cloud.hdw.mx';
 const localStatic = `https://${host}:${port}`;
 
-module.exports = merge(common, {
+module.exports = merge( common, {
     devtool  : 'cheap-module-eval-source-map',
     devServer: {
-        stats: {
+        stats             : {
             warningsFilter: /System.import/ // https://github.com//issues/21560
         },
         disableHostCheck  : true,
@@ -26,23 +26,23 @@ module.exports = merge(common, {
         proxy             : [
             // Uncomment to test local translation strings
             {
-                context: ['/api/utils/language'],
-                target: localStatic,
-                pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
+                context     : ['/api/utils/language'],
+                target      : localStatic,
+                pathRewrite : { '^/api/utils/language': 'language_compiled.json' },
                 changeOrigin: true,
-                secure: false
+                secure      : false
             },
             {
-                context: [ '/api/', '/gateway/', '/admin/' ],
-                target : cloudInstance,
+                context     : ['/api/', '/gateway/', '/admin/'],
+                target      : cloudInstance,
                 changeOrigin: true,
-                secure: false
+                secure      : false
 
             },
             {
                 context     : '/static/lang_en_US/views',
                 target      : localStatic,
-                pathRewrite: { '^/static/lang_en_US/views': '/views' },
+                pathRewrite : { '^/static/lang_en_US/views': '/views' },
                 changeOrigin: true,
                 secure      : false
             },
@@ -54,40 +54,41 @@ module.exports = merge(common, {
                 secure      : false
             },
             {
+                context     : '/static/images/',
+                target      : localStatic,
+                pathRewrite : { '^/static/images': '/images' },
+                changeOrigin: true,
+                secure      : false
+            },
+            {
                 context     : '/static/lang_en_GB/',
                 target      : cloudInstance,
                 changeOrigin: true,
                 secure      : false
             },
             {
-                context: '/static/lang_ru_RU/',
-                target: cloudInstance,
+                context     : '/static/lang_ru_RU/',
+                target      : cloudInstance,
                 changeOrigin: true,
-                secure: false
+                secure      : false
             },
             {
-                context: '/static/lang_de_DE/',
-                target: cloudInstance,
+                context     : '/static/lang_de_DE/',
+                target      : cloudInstance,
                 changeOrigin: true,
-                secure: false
+                secure      : false
             },
             {
-                context: '/static/lang_he_IL/',
-                target: cloudInstance,
+                context     : '/static/lang_he_IL/',
+                target      : cloudInstance,
                 changeOrigin: true,
-                secure: false
+                secure      : false
             },
             {
-                context: '/static/lang_pt_BR/',
-                target: cloudInstance,
+                context     : '/static/lang_pt_BR/',
+                target      : cloudInstance,
                 changeOrigin: true,
-                secure: false
-            },
-            {
-                context: '/static/images/',
-                target: cloudInstance,
-                changeOrigin: true,
-                secure: false
+                secure      : false
             },
             {
                 context     : '/static/',
@@ -98,19 +99,19 @@ module.exports = merge(common, {
             },
             // Use firebase service worker locally
             {
-                context: ['/firebase-messaging-sw.js'],
-                target: localStatic,
-                pathRewrite: {'^/firebase-messaging-sw.js': 'scripts/vendor/firebase-messaging-sw.js'},
+                context     : ['/firebase-messaging-sw.js'],
+                target      : localStatic,
+                pathRewrite : { '^/firebase-messaging-sw.js': 'scripts/vendor/firebase-messaging-sw.js' },
                 changeOrigin: true,
-                secure: false
+                secure      : false
             },
         ],
         https             : {
             spdy: {
                 protocols: ['http/1.1']
             },
-            key : fs.readFileSync('ssl_keys/server.key').toString(),
-            cert: fs.readFileSync('ssl_keys/server.crt').toString()
+            key : fs.readFileSync( 'ssl_keys/server.key' ).toString(),
+            cert: fs.readFileSync( 'ssl_keys/server.crt' ).toString()
         },
         historyApiFallback: {
             index: '/'
@@ -121,7 +122,7 @@ module.exports = merge(common, {
         // new BundleAnalyzerPlugin({analyzerHost:'0.0.0.0', analyzerPort:9001})
 
         // make some resources available while serve the project locally
-        new CopyWebpackPlugin([
+        new CopyWebpackPlugin( [
             // *****************************************
             // Local test for commonPasswordsList ******
             {
@@ -129,9 +130,9 @@ module.exports = merge(common, {
                 to  : 'static/scripts/commonPasswordsList.json'
             }
             // *****************************************
-        ])
+        ] )
     ],
-    output: {
+    output   : {
         filename  : 'scripts/[name].js',
         publicPath: '/'
     },
@@ -140,12 +141,12 @@ module.exports = merge(common, {
             {
                 test   : /\.scss$/,
                 include: /src/,
-                loaders: [ 'raw-loader', 'sass-loader' ]
+                loaders: ['raw-loader', 'sass-loader']
             },
             {
-                test: /\.s?css$/,
+                test   : /\.s?css$/,
                 exclude: /src/,
-                use : ExtractTextPlugin.extract({
+                use    : ExtractTextPlugin.extract( {
                     fallback: 'style-loader',
                     use     : [
                         {
@@ -170,8 +171,8 @@ module.exports = merge(common, {
                             }
                         }
                     ]
-                })
+                } )
             }
         ]
     }
-});
+} );

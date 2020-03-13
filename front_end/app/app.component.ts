@@ -15,11 +15,11 @@ import { NxScrollMechanicsService }                from './src/services/scroll-m
 import { NxUriService }                            from './src/services/uri.service';
 import { NxPageService }                           from './src/services/page.service';
 import { NxSystemRole }                            from './src/services/system.service';
-import { LanguageI18NStaticTypes } from './language_i18n_static_types';
+import { LanguageI18NStaticTypes }                 from './language_i18n_static_types';
 
 @Component({
-    selector: 'nx-app',
-    template: `
+    selector : 'nx-app',
+    template : `
         <div class="outerContainer" *ngIf="appStateService.ready">
             <div class="headerContainer">
                 <nx-header></nx-header>
@@ -45,21 +45,21 @@ export class AppComponent {
 
     eventSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                languageService: NxLanguageProviderService,
-                private cookieService: CookieService,
-                private deviceService: DeviceDetectorService,
-                private location: Location,
-                private applyService: NxApplyService,
-                private appStateService: NxAppStateService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private router: Router,
-                private ribbonService: NxRibbonService,
-                private uriService: NxUriService,
-                private pageService: NxPageService,
-                @Inject(WINDOW) private window: Window,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private cookieService: CookieService,
+        private deviceService: DeviceDetectorService,
+        private location: Location,
+        private applyService: NxApplyService,
+        private appStateService: NxAppStateService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private router: Router,
+        private ribbonService: NxRibbonService,
+        private uriService: NxUriService,
+        private pageService: NxPageService,
+        @Inject(WINDOW) private window: Window
     ) {
-
         this.CONFIG = configService.getConfig();
 
         // this language will be used as a fallback when a translation
@@ -73,7 +73,7 @@ export class AppComponent {
         // @ts-ignore
         this.pageService.setPageTitle(this.LANG.pageTitles.default);
 
-        // Allows 3 seconds for auth query param to be detected and set appstate.ready to false.
+        // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
         // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
         const authUriSub = this.uriService.getURI()
@@ -83,26 +83,27 @@ export class AppComponent {
                     authUriSub.unsubscribe();
                 }
                 this.appStateService.ready = !params.auth;
-            }, () => {});
+            }, () => {
+            });
 
         this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
 
         // TODO: Componentize this
         this.allowedDevices = {
             windows: {
-                ie     : 10,
-                safari : 10,
-                chrome : 64,
-                firefox: 60
+                ie      : 10,
+                safari  : 10,
+                chrome  : 64,
+                firefox : 60
             },
             mac: {
-                safari : 10,
-                chrome : 64,
-                firefox: 60
+                safari  : 10,
+                chrome  : 64,
+                firefox : 60
             },
             linux: {
-                chrome : 64,
-                firefox: 60
+                chrome  : 64,
+                firefox : 60
             }
         };
 
@@ -125,7 +126,7 @@ export class AppComponent {
             }
         } // else -> unknown platform or device ... cross fingers and hope for the best
 
-        // extend CONFIG ... arghhh ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+        // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
         // This was done every time a system is created. Its only need once
         this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
             if (option.permissions) {
@@ -138,9 +139,9 @@ export class AppComponent {
         this.CONFIG.company = {
             copyrightYear,
             links: {
-                privacy: privacyLink,
-                support: supportLink,
-                website: companyLink,
+                privacy : privacyLink,
+                support : supportLink,
+                website : companyLink
             },
             name: companyName
         };
@@ -165,8 +166,8 @@ export class AppComponent {
         // @ts-ignore
         const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
         this.CONFIG.integration.filter = {
-            items     : integrationFilterItems,
-            limitation: integrationFilterLimitation
+            items      : integrationFilterItems,
+            limitation : integrationFilterLimitation
         };
         // @ts-ignore
         if (window.SETTINGS.appTypesForPlatform) {
@@ -228,7 +229,8 @@ export class AppComponent {
     windowListener() {
         if (this.applyService.locked) {
             window.history.go(1);
-            this.applyService.showDialog().catch(() => {});
+            this.applyService.showDialog().catch(() => {
+            });
         }
     }
 }

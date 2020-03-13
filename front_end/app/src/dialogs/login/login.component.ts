@@ -15,9 +15,9 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'ngbd-modal-content',
-    templateUrl: 'login.component.html',
-    styleUrls  : []
+    selector    : 'ngbd-modal-content',
+    templateUrl : 'login.component.html',
+    styleUrls   : []
 })
 export class LoginModalContent implements OnInit {
     @Input() account;
@@ -29,6 +29,7 @@ export class LoginModalContent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
+    locationService: Location;
     auth: any;
     next: string;
     password: string;
@@ -50,7 +51,7 @@ export class LoginModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private location: Location,
+        locationService: Location,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
@@ -62,6 +63,8 @@ export class LoginModalContent implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
+        this.locationService = locationService;
+
         this.setupDefaults();
     }
 
@@ -72,11 +75,11 @@ export class LoginModalContent implements OnInit {
             return this.cloudApiService.reactivate(email);
         }, {
             errorCodes: {
-                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
-                notFound : this.LANG.errorCodes.emailNotFound
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated,
+                notFound  : this.LANG.errorCodes.emailNotFound
             },
-            holdAlerts : true,
-            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
+            holdAlerts  : true,
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
         })
             .run()
             .then(() => {
@@ -106,7 +109,7 @@ export class LoginModalContent implements OnInit {
     }
 
     ngOnInit() {
-        // Check the url queryparams for next. if it exists set next equal to it.
+        // Check the url queryParams for next. if it exists set next equal to it.
         const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
@@ -121,8 +124,8 @@ export class LoginModalContent implements OnInit {
 
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
-            ignoreUnauthorized: true,
-            errorCodes        : {
+            ignoreUnauthorized : true,
+            errorCodes         : {
                 accountNotActivated: () => {
                     this.password = '';
                     this.loginForm.controls.login_password.markAsPristine();
@@ -159,8 +162,11 @@ export class LoginModalContent implements OnInit {
             }
         }).then((result) => {
             this.activeModal.close();
+
+            const isRootPath = ['/', ''].includes(this.locationService.path());
+
             if (this.keepPage) {
-                if (this.location.path() === '/') {
+                if (isRootPath) {
                     this.router
                         .navigate([this.CONFIG.redirect.authorised])
                         .then(() => {
@@ -184,7 +190,7 @@ export class LoginModalContent implements OnInit {
             } else {
                 setTimeout(() => {
                     this.router
-                        .navigate([this.CONFIG.redirect.authorised])
+                        .navigate([this.CONFIG.redirect.authorised], { replaceUrl: isRootPath })
                         .then(() => {
                             // ensure language reload as translations are loaded on page load
                             window.location.reload();

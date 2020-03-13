@@ -54,22 +54,23 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private systemSubscription: Subscription;
     private systemIdSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                private renderer: Renderer2,
-                private appState: NxAppStateService,
-                private route: ActivatedRoute,
-                private systemsService: NxSystemsService,
-                private systemService: NxSystemService,
-                private dialogs: NxDialogsService,
-                private languageService: NxLanguageProviderService,
-                private accountService: NxAccountService,
-                private sessionService: NxSessionService,
-                private localStorage: LocalStorageService,
-                private router: Router,
-                private headerService: NxHeaderService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private renderer: Renderer2,
+        private appState: NxAppStateService,
+        private route: ActivatedRoute,
+        private systemsService: NxSystemsService,
+        private systemService: NxSystemService,
+        private dialogs: NxDialogsService,
+        private accountService: NxAccountService,
+        private sessionService: NxSessionService,
+        private localStorage: LocalStorageService,
+        private router: Router,
+        private headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = languageService.getTranslations();
     }
 
     private isActive(val) {
@@ -236,11 +237,12 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     login() {
-        const url      = this.router.url;
+        const url = this.router.url;
         const redirect = this.CONFIG.redirect.paths.some((path) => url.indexOf(path) > -1);
         // Handling promise to satisfy the linter.
-        this.dialogs.login(this.accountService, !redirect).then(() => {
-        });
+        this.dialogs
+            .login(this.accountService, !redirect)
+            .then(() => {});
     }
 
     logout() {

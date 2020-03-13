@@ -1,11 +1,11 @@
 <div class="status-wrapper" *ngIf="registerSuccess && !activated">
-    <nx-page-placeholder [type]="'ACCOUNT_CREATED'"
+    <nx-page-placeholder type="ACCOUNT_CREATED"
         [message]="'common.account.created.message' | translate: { email: accountInfo.email }">
     </nx-page-placeholder>
 </div>
 <div class="status-wrapper" *ngIf="registerSuccess && activated">
-    <nx-page-placeholder [type]="'ACCOUNT_ACTIVATED'">
-        <button class="btn btn-primary login-button" (click)="login()" translate>Log In</button>
+    <nx-page-placeholder type="ACCOUNT_ACTIVATED">
+        <button class="btn btn-primary login-button mx-auto" (click)="login()" translate>Log In</button>
     </nx-page-placeholder>
 </div>
 <div class="container auth-hidden">

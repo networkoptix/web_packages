@@ -1,7 +1,6 @@
-import { Injectable }                from '@angular/core';
-import { downgradeInjectable }       from '@angular/upgrade/static';
-import { IConfig } from './config-types';
-import { nxConfig } from './config';
+import { Injectable } from '@angular/core';
+import { IConfig }    from './config-types';
+import { nxConfig }   from './config';
 
 @Injectable({
     providedIn: 'root'
