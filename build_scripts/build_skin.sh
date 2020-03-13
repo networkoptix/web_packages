@@ -124,7 +124,7 @@ dir=../skins/$SKIN
             popd
         else
             echo "Copy language.json from blue skin"
-            cp $TARGET_DIR/blue/static/lang_$LANG/language_compiled.json $TARGET_DIR/$SKIN/static/lang_LANG/language_compiled.json
+            cp $TARGET_DIR/blue/static/lang_$LANG/language_compiled.json $TARGET_DIR/$SKIN/static/lang_$LANG/language_compiled.json
         fi
 
         echo
