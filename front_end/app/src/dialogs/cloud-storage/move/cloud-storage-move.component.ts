@@ -23,7 +23,7 @@ export class CloudStorageMoveModalContent {
     items: DropdownItem[];
     errorText: string;
 
-    @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
+    @ViewChild('confirmMergeForm') mergeForm: HTMLFormElement;
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
