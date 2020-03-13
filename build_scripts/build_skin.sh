@@ -117,10 +117,16 @@ dir=../skins/$SKIN
         echo "Copy web_common default views - untranslatable"
         cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
-        echo "Generate language.json"
-        pushd $TARGET_DIR/$SKIN
-        python ../../../../build_scripts/generate_language_json.py $LANG
-        popd
+        if [ "$SKIN" = "blue" ] ; then
+            echo "Generate language.json"
+            pushd $TARGET_DIR/$SKIN
+            python ../../../../build_scripts/generate_language_json.py $LANG
+            popd
+        else
+            echo "Copy language.json from blue skin"
+            cp $TARGET_DIR/blue/static/lang_$LANG/language_compiled.json $TARGET_DIR/$SKIN/static/lang_LANG/language_compiled.json
+        fi
+
         echo
 
     done
