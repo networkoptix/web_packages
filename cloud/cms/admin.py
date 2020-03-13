@@ -55,6 +55,30 @@ def clone_asset(request, asset_id):
     return asset.id
 
 
+class AssetTypeFilter(SimpleListFilter):
+    title = 'Asset Type'
+    parameter_name = 'asset_type'
+
+    def lookups(self, request, model_admin):
+        qs = AssetType.objects.all()
+        return [('all', 'All')] + [(asset_type.id, str(asset_type)) for asset_type in qs]
+
+    def choices(self, cl):
+        for lookup, title in self.lookup_choices:
+            yield {
+                'selected': self.value() == str(lookup) if self.value() else lookup == 'all',
+                'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
+                'display': title,
+            }
+
+    def queryset(self, request, queryset):
+        val = self.value()
+        if val and val != 'all':
+            return queryset.filter(asset_type__id=self.value())
+        return queryset
+
+
+
 class ContextFilter(SimpleListFilter):
     title = 'Show Hidden Pages'
     parameter_name = 'hidden'
@@ -274,7 +298,7 @@ admin.site.register(AssetType, AssetTypeAdmin)
 class AssetAdmin(CMSAdmin):
     list_display = ('asset_settings', 'edit_asset_button', 'name', 'asset_type', 'customizations_list', 'last_modified', )
     list_display_links = ('name',)
-    list_filter = ('asset_type', CustomizationFilter,)
+    list_filter = (AssetTypeFilter, CustomizationFilter,)
     search_fields = ('name', 'created_by__email',)
     form = AssetForm
     change_form_template = 'cms/asset_change_form.html'
@@ -307,13 +331,19 @@ class AssetAdmin(CMSAdmin):
 
     def changelist_view(self, request, extra_context=None):
         filters_dict = caches['filters'].get(request.user.id) or {}
-        if not request.META['QUERY_STRING']:
-            if request.path_info in filters_dict:
-                return redirect(f'{request.path_info}?{filters_dict[request.path_info]}')
+        if not request.META['QUERY_STRING'] and request.path_info in filters_dict:
+            return redirect(f'{request.path_info}?{filters_dict[request.path_info]}')
         else:
-            filters_dict[request.path_info] = request.META['QUERY_STRING']
-            caches['filters'].set(request.user.id, filters_dict)
-        return super(AssetAdmin, self).changelist_view(request, extra_context)
+            # If an exception is raised, clear the saved filter
+            try:
+                response = super(AssetAdmin, self).changelist_view(request, extra_context)
+                filters_dict[request.path_info] = request.META['QUERY_STRING']
+                caches['filters'].set(request.user.id, filters_dict)
+                return response
+            except Exception as exception:
+                filters_dict.pop(request.path_info, None)
+                caches['filters'].set(request.user.id, filters_dict)
+                raise exception
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
         extra_context = extra_context or {}
