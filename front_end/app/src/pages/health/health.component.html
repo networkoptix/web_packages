@@ -7,14 +7,14 @@
                              class="page-placeholder">
         </nx-page-placeholder>
 
-        <nx-page-placeholder *ngIf="hasServerError" type="500" [withFooter]="true">
-            <button class="btn btn-primary support-button">
+        <nx-page-placeholder *ngIf="hasServerError" type="500" withFooter>
+            <button class="btn btn-primary support-button mx-auto">
                 <a [href]="CONFIG.company.links.support" target="_blank" rel="noopener" translate>
                     Go to Support Page
                 </a>
             </button>
         </nx-page-placeholder>
-        
+
         <nx-page-placeholder *ngIf="outdatedVersion"
                              type="NEW_VERSION"
                              class="page-placeholder">

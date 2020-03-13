@@ -58,7 +58,7 @@ import { Nx503Module }               from './503/503.module';
         Nx404Module // Must be last module for routing
     ],
     declarations : [],
-    entryComponents: [],
+    entryComponents : [],
     providers : [],
     exports : [
         SandboxModule,
