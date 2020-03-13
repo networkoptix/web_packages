@@ -7,34 +7,32 @@ import {
 import { NxConfigService, IConfig }              from '../../../../services/nx-config';
 import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
 import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
-import { Subscription }                 from 'rxjs';
+import { Subscription, Subscribable, BehaviorSubject }                 from 'rxjs';
 import { ActivatedRoute }               from '@angular/router';
 import {
     NxCloudStorageService,
-    ICloudStorageState,
-    IUsageStats
+    ICloudStorageState
 }                                       from './cloud-storage.service';
 import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
 import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
 import { NxUtilsService }               from '../../../../services/utils.service';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { NxProcessService } from '../../../../services/process.service';
-import { NxCloudApiService } from '../../../../services/nx-cloud-api';
-import { NxAccountService } from '../../../../services/account.service';
+import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
+import { NxProcessService }             from '../../../../services/process.service';
+import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
+import { NxAccountService }             from '../../../../services/account.service';
 
 @Component({
-    selector   : 'nx-cloud-storage',
-    templateUrl: './cloud-storage.component.html',
-    styleUrls  : ['./cloud-storage.component.scss']
+    selector : 'nx-cloud-storage',
+    templateUrl : './cloud-storage.component.html',
+    styleUrls : ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     routerParamsSubscription: Subscription;
-    cloudStateSubscription: Subscription;
     systemId: string;
     currentState: ICloudStorageState;
-    usageStats: IUsageStats;
+    usageStats = this.currentState.usageStats;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -53,19 +51,20 @@ export class NxCloudStorageComponent implements OnInit {
         private accountService: NxAccountService
     ) {
         this.setupDefaults({ configService, languageService });
+        this.cloudStorageService.currentState$.subscribe(nextState => {
+            this.currentState = nextState;
+        });
     }
 
     ngOnInit(): void {
-        this.routerParamsSubscription = this.route.params.subscribe(params => {
-            if (params.systemId) {
-                this.systemId = params.systemId;
-            }
-        });
-        this.cloudStateSubscription = this.cloudStorageService.currentState.subscribe(currentState => {
-            this.currentState = currentState;
-            this.usageStats = this.currentState.usageStats;
-        });
+        // ????
+        // this.routerParamsSubscription = this.route.params.subscribe(params => {
+        //     if (params.systemId) {
+        //         this.systemId = params.systemId;
+        //     }
+        // });
     }
+
     // Helper Methods
 
     public cloudCapacity() {
@@ -110,11 +109,13 @@ export class NxCloudStorageComponent implements OnInit {
         return this.pluralize(this.usageStats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
     }
 
+    // TODO: pluralize and translate not implmented, need to figure out how we're going to handle
+
     public pluralize = this.utilsService.pluralize
 
     public translate = this.utilsService.translate
 
-    // Processes
+    // Processes should be in dialogService
 
     public enableCloudStorage() {
         const { systemId, accountService: { email } } = this;
