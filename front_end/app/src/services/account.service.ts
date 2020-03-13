@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy, Injector }                  from '@angular/core';
+import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { ActivatedRoute, Router }                         from '@angular/router';
@@ -48,10 +48,9 @@ export class NxAccountService implements OnDestroy {
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
 
-
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    private dialogs: NxDialogsService
-    private applyService: NxApplyService
+    private dialogs: NxDialogsService;
+    private applyService: NxApplyService;
 
     constructor(@Inject(DOCUMENT) private document: Document,
                 @Inject(WINDOW) private window: Window,
@@ -258,8 +257,8 @@ export class NxAccountService implements OnDestroy {
 
                         return Promise.resolve({
                             data: {
-                                account   : result,
-                                resultCode: this.CONFIG.responseOk
+                                account    : result,
+                                resultCode : this.CONFIG.responseOk
                             }
                         });
                     }
@@ -271,8 +270,8 @@ export class NxAccountService implements OnDestroy {
 
                     return Promise.resolve({
                         data: {
-                            account   : result,
-                            resultCode: this.CONFIG.responseOk
+                            account    : result,
+                            resultCode : this.CONFIG.responseOk
                         }
                     });
                 }
