@@ -18,13 +18,13 @@ import {
     retryWhen, delayWhen, catchError
 }                                      from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }     from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-server-component',
-    templateUrl: 'servers.component.html',
-    styleUrls  : ['servers.component.scss']
+    selector    : 'nx-server-component',
+    templateUrl : 'servers.component.html',
+    styleUrls   : ['servers.component.scss']
 })
 
 export class NxSystemServersComponent implements OnInit, OnDestroy {
@@ -102,7 +102,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.system = system;
                 // Route guard did not worked :( ... so doing it the old way ...was done in users.component, so replicating
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-
                     this.uriService
                         .updateURI('systems/' + this.system.id, {})
                         .catch(error => {
@@ -182,9 +181,11 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             server.ip = ip;
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
             this.selectedServer = server;
-            this.checkIfOnline(this.selectedServer.id);
-            this.menuService.setDetailsSection(this.selectedServer.id);
 
+            this.checkIfOnline(this.selectedServer.id)
+                .catch(error => console.error(error));
+
+            this.menuService.setDetailsSection(this.selectedServer.id);
             this.renameDisabled = !this.system.permissions.editAdmins;
             this.restartDisabled = !this.system.permissions.isAdmin;
             this.detachDisabled = !this.system.permissions.editAdmins;
@@ -282,7 +283,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     }
 
     storePreviousValue(e) {
-        // prevents [.+-e] from being inputed
+        // prevents [.+-e] from being input
         if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
             e.preventDefault();
         }

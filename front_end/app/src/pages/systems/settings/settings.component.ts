@@ -1,30 +1,32 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { NxConfigService, IConfig }                             from '../../../services/nx-config';
-import { NxLanguageProviderService }                   from '../../../services/nx-language-provider';
-
-import { NxPageService }     from '../../../services/page.service';
-import { NxDialogsService }  from '../../../dialogs/dialogs.service';
-import { NxSettingsService } from './settings.service';
-import { NxMenuService }     from '../../../components/menu/menu.service';
+import {
+    Component, Input,
+    OnDestroy, OnInit
+}                                    from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxPageService }             from '../../../services/page.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxSettingsService }         from './settings.service';
+import { NxMenuService }             from '../../../components/menu/menu.service';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxSystemsService }        from '../../../services/systems.service';
-import { NxAccountService }        from '../../../services/account.service';
-import { NxProcessService }        from '../../../services/process.service';
-import { NxUtilsService }          from '../../../services/utils.service';
-import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
-import { NxToastService }          from '../../../dialogs/toast.service';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxProcessService }          from '../../../services/process.service';
+import { NxUtilsService }            from '../../../services/utils.service';
+import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
+import { NxToastService }            from '../../../dialogs/toast.service';
+import { Subscription }              from 'rxjs';
+import { filter }                    from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-settings-component',
-    templateUrl: 'settings.component.html',
-    styleUrls  : ['settings.component.scss']
+    selector    : 'nx-system-settings-component',
+    templateUrl : 'settings.component.html',
+    styleUrls   : ['settings.component.scss']
 })
 
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
@@ -134,16 +136,16 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             });
 
         this.content = {
-            selectedSection   : '', // updated by selectedSectionSubject
-            selectedSubSection: '', // updated by selectedSubSectionSubject
-            system            : {}, // updated by getSystemInfo
-            base              : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
-            level1            : [
+            selectedSection    : '', // updated by selectedSectionSubject
+            selectedSubSection : '', // updated by selectedSubSectionSubject
+            system             : {}, // updated by getSystemInfo
+            base               : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
+            level1             : [
                 {
-                    id   : this.CONFIG.menus.systemSettings.admin.id,
-                    svg  : this.CONFIG.menus.systemSettings.admin.icon,
-                    label: this.LANG.menu.titles.systemAdministration,
-                    path : this.CONFIG.menus.systemSettings.admin.path
+                    id    : this.CONFIG.menus.systemSettings.admin.id,
+                    svg   : this.CONFIG.menus.systemSettings.admin.icon,
+                    label : this.LANG.menu.titles.systemAdministration,
+                    path  : this.CONFIG.menus.systemSettings.admin.path
                 }
             ]
         };
@@ -306,18 +308,18 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
             if (!usersNode) {
                 usersNode = {
-                    id    : this.CONFIG.menus.systemSettings.users.id,
-                    svg   : this.CONFIG.menus.systemSettings.users.icon,
-                    label : this.LANG.menu.titles.users,
-                    path  : this.CONFIG.menus.systemSettings.users.path,
-                    level2: [
+                    id     : this.CONFIG.menus.systemSettings.users.id,
+                    svg    : this.CONFIG.menus.systemSettings.users.icon,
+                    label  : this.LANG.menu.titles.users,
+                    path   : this.CONFIG.menus.systemSettings.users.path,
+                    level2 : [
                         {
-                            id   : this.CONFIG.menus.systemSettings.buttons.id,
-                            items: [
+                            id    : this.CONFIG.menus.systemSettings.buttons.id,
+                            items : [
                                 {
-                                    id      : 'addUser',
-                                    label   : this.LANG['Add User'],
-                                    disabled: true
+                                    id       : 'addUser',
+                                    label    : this.LANG['Add User'],
+                                    disabled : true
                                 }
                             ],
                             level3: []
@@ -337,12 +339,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = user.id.replace(/{|}/g, '');
                     const node: any = {
-                        additionalLabel: (this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label) || user.role.name,
+                        additionalLabel : (this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label) || user.role.name,
                         id,
-                        isEnabled      : user.isEnabled,
-                        label          : user.name || user.email,
-                        path           : 'users/' + id,
-                        svgIcon        : 'user'
+                        isEnabled       : user.isEnabled,
+                        label           : user.name || user.email,
+                        path            : 'users/' + id,
+                        svgIcon         : 'user'
                     };
                     if (user.isCloud === true) {
                         node.svgIcon = '';
@@ -370,10 +372,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {
-                    id   : this.CONFIG.menus.systemSettings.servers.id,
-                    svg  : this.CONFIG.menus.systemSettings.servers.icon,
-                    label: this.LANG.servers.servers,
-                    path : this.CONFIG.menus.systemSettings.servers.path
+                    id    : this.CONFIG.menus.systemSettings.servers.id,
+                    svg   : this.CONFIG.menus.systemSettings.servers.icon,
+                    label : this.LANG.servers.servers,
+                    path  : this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
             }
@@ -386,13 +388,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
-                    const server = this.parseUrl(systemServer);
+                    const server = this.formatURL(systemServer);
+
                     serversNode.level3.push({
-                        id             : server.id,
-                        icon           : '',
-                        label          : server.name,
-                        path           : `servers/${server.id}`,
-                        additionalLabel: server.ip
+                        id              : server.id,
+                        icon            : '',
+                        label           : server.name,
+                        path            : `servers/${server.id}`,
+                        additionalLabel : server.ip
                     });
                 });
             }
@@ -404,32 +407,39 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * If url is ipv6, then looks for a ipv4 from within networkAddresses
-     * If no ipv4 address found, formats ipv6 address
+     * Return IPv4 address or IPv6 address if none
      */
-    parseUrl(server) {
-        const splitUrl = server.url.split(':');
-        if (splitUrl.length > 3) {
-            const networkAddresses = server.networkAddresses.split(';');
-            for (const address of networkAddresses) {
-                const addressSplit = address.split(':');
-                if (addressSplit.length === 2) {
-                    server.url = address;
-                    server.ip = addressSplit[0];
-                    server.port = addressSplit[1];
-                    return server;
-                }
+    formatURL(server) {
+        function ipReducer(result: any, currentValue: any) {
+            if (currentValue[0] === '[') {
+                result.ipv6.push(currentValue);
+            } else {
+                result.ipv4.push(currentValue);
             }
-            const firstColonIndex = server.url.indexOf(':');
-            const lastColonIndex = server.url.lastIndexOf(':');
-            server.ip = server.url.slice(firstColonIndex + 4, lastColonIndex - 1);
-            server.port = splitUrl[splitUrl.length - 1];
-        } else {
-            server.ip = splitUrl[1].slice(2);
-            server.port = splitUrl[2];
+            return result;
         }
+
+        const addr = server.networkAddresses.split(';');
+        const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
+        let mainAddr = '';
+
+        if (addresses.ipv4.length > 0) {
+            mainAddr = addresses.ipv4[0];
+            const index = mainAddr.lastIndexOf(':');
+            server.ip = index !== -1 ? mainAddr.substring(0, index) : mainAddr;
+            server.port = index !== -1 ? mainAddr.substring(index + 1) : '';
+        } else if (addresses.ipv6.length > 0) {
+            mainAddr = addresses.ipv6[0];
+            const index = mainAddr.lastIndexOf(']:');
+            server.ip = index !== -1 ? mainAddr.substring(0, index) : mainAddr;
+            server.port = index !== -1 ? mainAddr.substring(index + 2) : '';
+        } else {
+            server.ip = 'N/A';
+            server.port = '';
+        }
+
         return server;
-    }
+    };
 
     cleanUrl() {
         return this.router
