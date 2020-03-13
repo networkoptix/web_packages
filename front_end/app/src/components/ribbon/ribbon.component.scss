@@ -62,9 +62,9 @@
     cursor: pointer;
 
     span {
-    position: relative;
-    color: $blue10;
-    cursor: pointer;
+        position: relative;
+        color: $blue10;
+        cursor: pointer;
         &:after {
             content: '';
             position: absolute;
