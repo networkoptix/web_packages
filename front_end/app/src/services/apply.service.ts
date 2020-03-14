@@ -219,7 +219,9 @@ export class NxApplyService {
 
     public setVisible(state?: boolean) {
         state = (state === undefined) ? true : state;
-        (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = state;
+        }
     }
 
     public setWarn(message: string) {
