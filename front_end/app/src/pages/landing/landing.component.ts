@@ -15,7 +15,7 @@ import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
     styleUrls  : ['landing.component.scss']
 })
 
-export class NxLandingComponent implements OnInit, OnDestroy {
+export class NxLandingComponent implements OnInit {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -53,14 +53,11 @@ export class NxLandingComponent implements OnInit, OnDestroy {
             this.accountService
                 .get()
                 .then(account => {
-                    // TODO: remove this hack after we retire AJS
-                    // downgraded component cause this page to load twice and we end up with two login dialogs
                     if (account) {
                         this.accountService.redirectAuthorised();
                         this.userEmail = this.accountService.email;
                     } else {
-                        if (this.router.url.includes('/login') && !this.localStorage.get('login')) {
-                            this.localStorage.set('login', true);
+                        if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
                             this.pageService.setPageTitle(this.LANG.pageTitles.login);
                         } else {
@@ -72,10 +69,6 @@ export class NxLandingComponent implements OnInit, OnDestroy {
                     this.loaded = true;
                 });
         }
-    }
-
-    ngOnDestroy() {
-        this.localStorage.remove('login');
     }
 }
 

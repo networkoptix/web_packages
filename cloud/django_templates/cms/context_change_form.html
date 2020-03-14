@@ -135,14 +135,18 @@
 
 <script>
     var bytesToMb = "{{ BYTES_TO_MB }}";
+    function openPreview() {
+        let screen = window.screen;
+        let windowScale = 0.75;
+        let dim = `width=${Math.floor(screen.availWidth * windowScale)},height=${Math.floor(screen.availHeight * windowScale)}`;
+        let win = window.open('', '', `_blank,${dim}`);
+        win.opener = null;
+        win.location = "{{ preview_link | safe }}";
+    }
 
     {% if preview_link %}
-        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
+        openPreview();
     {% endif %}
-
-    function openPreview() {
-        window.open("{{ preview_link | safe }}", '', '_blank,noopener,noreferrer');
-    }
 
     function wasTouched() {
         var inputs = document.getElementsByTagName('input');
