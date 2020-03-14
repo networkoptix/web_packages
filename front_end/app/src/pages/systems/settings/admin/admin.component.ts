@@ -151,6 +151,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
                 this.updateSettings();
+                this.applyService.setVisible(false);
                 if (system && system.isAvailable) {
                     this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                     this.system.updateOrGetSystemSettings().subscribe((res: any) => {
@@ -165,7 +166,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                             .pipe(throttleTime(this.CONFIG.system.throttleTime))
                             .subscribe(() => {
                                 this.settingsService.footerSubject.next(true);
-                                if (!this.applyService.locked && this.system.permissions.isAdmin) {
+                                this.updateSettings(this.currentlyMerging);
+                                if (!this.applyService.locked && this.system.permissions && this.system.permissions.isAdmin) {
                                     if (this.settingsSubscription) {
                                         this.settingsSubscription.unsubscribe();
                                     }

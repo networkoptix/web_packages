@@ -31,12 +31,12 @@ export class NxRibbonService {
 
     hide() {
         this.context = {
-            visibility    : false,
-            message       : '',
-            text          : '',
-            url           : '',
-            type          : '',
-            updateFunction: ''
+            visibility     : false,
+            message        : '',
+            text           : '',
+            url            : '',
+            type           : '',
+            updateFunction : ''
         };
         this.contextSubject.next(this.context);
     }

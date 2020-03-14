@@ -1,5 +1,6 @@
 import requests
 from requests.auth import HTTPDigestAuth
+import base64
 
 
 class CloudPortalAPI(object):
@@ -78,3 +79,20 @@ class CloudPortalAPI(object):
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
+        
+    def subscribe_push_notification(self, env, email, password, token):
+        authAscii = email+":"+password
+        authAscii = authAscii.encode('ascii')
+        auth = b"Basic "+base64.b64encode(authAscii)
+        headers = {'Authorization': auth}
+        r = requests.put(f'{env}/api/notifications/subscriptions/{token}', headers=headers, json={'type': 'notification','systems': ['all']})
+        return r.json()
+        
+    def get_new_FCM_token(self, key, auth, body):
+        headers = {'Content-Type': 'application/json','x-goog-api-key': key, 'x-goog-firebase-installations-auth': auth}
+        print(headers)
+        r = requests.post('https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations', headers=headers, data=body)
+        print(r)
+        token = r.json()['token'] 
+        return token
+    
