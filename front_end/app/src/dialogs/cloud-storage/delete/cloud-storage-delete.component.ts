@@ -7,7 +7,6 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../services/process.service';
-import { NxCloudStorageService }     from '../../../pages/systems/settings/cloud-storage/cloud-storage.service';
 
 @Component({
     selector   : 'nx-modal-cloud-storage-delete-content',
@@ -31,8 +30,7 @@ export class CloudStorageDeleteModalContent {
     constructor(private activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
-                private renderer: Renderer2,
-                public cloudStorageService: NxCloudStorageService
+                private renderer: Renderer2
     ) {
         this.LANG = this.language.getTranslations();
     }
@@ -44,7 +42,7 @@ export class CloudStorageDeleteModalContent {
             this.deleteForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
             // the disable method still on cloudStorageService still needs to be implemented
-            return this.cloudStorageService.disable(this.systemId, this.auth.password);
+            // return this.cloudStorageService.disable(this.systemId, this.auth.password);
         }, {
             ignoreUnauthorized: true,
             errorCodes        : {

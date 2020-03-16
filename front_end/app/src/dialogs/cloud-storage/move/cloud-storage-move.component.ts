@@ -8,7 +8,6 @@ import { NxConfigService, IConfig }           from '../../../services/nx-config'
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
-import { NxCloudStorageService } from '../../../pages/systems/settings/cloud-storage/cloud-storage.service';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
@@ -28,8 +27,7 @@ export class CloudStorageMoveModalContent {
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         public renderer: Renderer2,
-        private systemsService: NxSystemsService,
-        private cloudStorageService: NxCloudStorageService
+        private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -40,9 +38,9 @@ export class CloudStorageMoveModalContent {
     move() {
         // need to write method
         console.log('wip');
-        this.cloudStorageService.move('string', 'string', 'string').then(() => {
-            this.close();
-        });
+        // this.cloudStorageService.move('string', 'string', 'string').then(() => {
+        //     this.close();
+        // });
     }
 
     close() {

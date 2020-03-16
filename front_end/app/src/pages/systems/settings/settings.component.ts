@@ -21,7 +21,6 @@ import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { NxCloudStorageService } from './cloud-storage/cloud-storage.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -100,7 +99,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private toastService: NxToastService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                private cloudStorageService: NxCloudStorageService
     ) {
         this.setupDefaults(configService);
     }

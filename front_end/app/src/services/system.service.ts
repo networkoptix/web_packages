@@ -517,6 +517,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.userManager.permissions.isAdmin;
     }
 
+    get isOwner() {
+        return this.userManager.isOwner(this.userManager.currentUser);
+    }
+
     get isMine() {
         return this.userManager.isMine;
     }

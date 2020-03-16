@@ -1,5 +1,5 @@
 <!-- Initial State -->
-<nx-block *ngIf="!currentState.systemCloudEnabled" type="mt-3 mb-3">
+<nx-block *ngIf="!cloudStorageSystemEnabled" type="mt-3 mb-3">
     <header><h4 translate>Cloud Storage</h4></header>
     <div class="header-svg">
         <svg-icon [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
@@ -13,12 +13,12 @@
 </nx-block>
 
 <!-- Empty and Regular State -->
-<nx-block *ngIf="currentState.systemCloudEnabled" type="mt-3 mb-3">
+<nx-block *ngIf="cloudStorageSystemEnabled" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
     </header>
     <div class="normal-state">
-        <h2>{{ cloudCapacity() }}</h2>
+        <h2>{{ cloudCapacity }}</h2>
         <div class="details" (click)="toggleCloudState()">
             <div class="details-section">
                 <div class="details-section-keys">
@@ -29,7 +29,7 @@
                 <div class="details-section-values">
                     <p>{{ msFriendlyTime(usageStats.currentRecordings) }}</p>
                     <p>{{ msFriendlyTime(usageStats.whenFullyUsed) }}</p>
-                    <p>{{ cloudStorageUsed() }}</p>
+                    <p>{{ cloudStorageUsed }}</p>
                 </div>
             </div>
             <div class="details-section">
@@ -39,8 +39,8 @@
                     <p translate>Delay from live</p>
                 </div>
                 <div class="details-section-values">
-                    <p>{{ numberOfCameras() }}</p>
-                    <p>{{ bitrate() }}</p>
+                    <p>{{ numberOfCameras }}</p>
+                    <p>{{ bitrate }}</p>
                     <p>{{ msFriendlyTime(usageStats.delayFromLive, true) }}</p>
                 </div>
             </div>
