@@ -52,6 +52,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     serverOffline: boolean;
     canSeeInfo: boolean;
     fullInfoPath: string;
+    parsedServerId: string;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -91,6 +92,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 if (params.serverId) {
                     this.menuService.setDetailsSection(params.serverId);
                     this.serverIdFromParams = params.serverId;
+                    this.parsedServerId = params.serverId.replace(/\s|\{|\}/g, '');
                     this.setServer();
                 }
             });
