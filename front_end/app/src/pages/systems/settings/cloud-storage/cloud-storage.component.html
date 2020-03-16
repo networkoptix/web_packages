@@ -1,12 +1,13 @@
 <!-- Initial State -->
 <nx-block *ngIf="!currentState.systemCloudEnabled" type="mt-3 mb-3">
     <header><h4 translate>Cloud Storage</h4></header>
+    <div class="header-svg">
+        <svg-icon [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
+    </div>
     <div class="initial-state">
-        <svg-icon [src]="CONFIG.icons.dir + 'storages' + '.svg'" [applyCss]="true" [svgStyle]="{ 'width.px': '80', 'height.px': '80' }"></svg-icon>
-        <h2 translate>Secure your most sensitive data</h2>
-        <p translate>
-            Cloud storage works just as a regular storage, just is hosted on AWS servers and protects your data from all kinds of threats. We offer 50 GB of the cloud storage per system for free for evaluation and test purposes.
-        </p>
+        <h2 translate>Enhance your data storage experience</h2>
+        <p translate>Avoid the hassle of local storage and start using our convenient and secure cloud storage service.</p>
+        <p translate>We are offering 50 GB of complementary cloud storage per system to get you started.</p>
         <button class="btn btn-default" (click)="enableCloudStorage()">Enable Cloud Storage</button>
     </div>
 </nx-block>

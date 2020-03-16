@@ -2,11 +2,13 @@
 @import "../../../../styles/typography";
 
 .initial-state {
-    padding: 40px 16px;
+    position: relative;
+    padding: 0 16px 40px 16px;
     display: flex;
     flex-direction: column;
     justify-self: center;
     align-items: center;
+
     h2 {
         @extend #medium24;
         margin: 16px;
@@ -14,12 +16,21 @@
 
     p {
         @extend #regular13;
-        max-width: 400px;
+        max-width: 480px;
+        text-align: center;
     }
 
     button {
         margin-top: 24px;
     }
+}
+
+.header-svg {
+    background: $additional_light1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .normal-state {
@@ -88,7 +99,7 @@
             }
         }
         // &-values {
-            // Might use this later
+        // Might use this later
         // }
     }
 }
