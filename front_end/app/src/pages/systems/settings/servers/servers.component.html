@@ -31,7 +31,7 @@
                     </button>
                     <button *ngIf="canSeeInfo" class="server-buttons pr-0"
                         [routerLink]="fullInfoPath"
-                        [queryParams]="{id: system.servers.length > 1 ? serverIdFromParams : null}">
+                        [queryParams]="{id: parsedServerId}">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                     [applyCss]="true"></svg-icon>
