@@ -41,20 +41,25 @@
         .server-buttons {
             &:hover {
                 color: $dark15;
-                fill: $dark15;
+                svg-icon {
+                    svg {
+                        g, path {
+                            fill: $dark15 !important;
+                        }
+                    }
+                }
             }
             @extend #regular13;
             background-color: inherit;
             color: $light16;
             display: flex;
             align-items: center;
-            fill: $light16;
             white-space: nowrap;
             svg-icon {
                 svg {
                     height: 20px;
-                    g {
-                        fill: inherit;
+                    g, path {
+                        fill: $light16 !important;
                     }
                 }
             }
