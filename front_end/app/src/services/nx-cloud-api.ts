@@ -244,25 +244,32 @@ export class NxCloudApiService {
 
     // Cloud Storage
 
-    enableCloudStorage(systemId: string, password: string): Promise<any> {
-        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
-            systemId,
-            password
-        }).toPromise();
+    enableCloudStorage(systemId: string): Promise<any> {
+        // TODO: don't forget to remove this and uncomment request to cloud storage end point
+        const success = prompt('Add any message to mock success');
+        return success ? Promise.resolve() : Promise.reject();
+        // return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+        //     systemId
+        // }).toPromise();
     }
 
-    disableCloudStorage(systemId: string, password: string): Promise<any> {
-        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
-            systemId,
-            password
-        }).toPromise();
+    deleteCloudStorage(systemId: string, password: string): Promise<any> {
+        // TODO: don't forget to remove this and uncomment request to cloud storage end point
+        const success = prompt('Add any message to mock success');
+        return success ? Promise.resolve() : Promise.reject(new Error('wrongPassword'));
+        // return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+        //     systemId,
+        //     password
+        // }).toPromise();
     }
 
-    moveCloudStorage(sourceSystemId: string, destinationSystemId: string, password: string): Promise<any> {
-        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
-            sourceSystemId,
-            destinationSystemId,
-            password
-        }).toPromise();
+    moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
+        // TODO: don't forget to remove this and uncomment request to cloud storage end point
+        const success = prompt('Add any message to mock success');
+        return success ? Promise.resolve() : Promise.reject();
+        // return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+        //     sourceSystemId,
+        //     destinationSystemId
+        // }).toPromise();
     }
 }

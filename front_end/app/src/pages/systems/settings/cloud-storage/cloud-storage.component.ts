@@ -13,6 +13,8 @@ import { NxUtilsService }               from '../../../../services/utils.service
 import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
 import { NxSettingsService } from '../settings.service';
 import { NxSystem, NxSystemUser } from '../../../../services/system.service';
+import { NxCloudApiService } from '../../../../services/nx-cloud-api';
+import { NxProcessService } from '../../../../services/process.service';
 
 @Component({
     selector : 'nx-cloud-storage',
@@ -26,6 +28,7 @@ export class NxCloudStorageComponent {
 
     usageStats: IUsageStats;
     _cloudCapacity: number;
+    cloudStorageSystemEnabled = false;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -37,7 +40,9 @@ export class NxCloudStorageComponent {
         @Inject(LOCALE_ID) private locale: string,
         private dialogService: NxDialogsService,
         private utilsService: NxUtilsService,
-        private settingsService: NxSettingsService
+        private settingsService: NxSettingsService,
+        private cloudApiService: NxCloudApiService,
+        private processService: NxProcessService
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -73,9 +78,6 @@ export class NxCloudStorageComponent {
         return this.system$.value.id;
     }
 
-    get cloudStorageSystemEnabled() {
-        return false;
-    }
     // Helper Methods
 
     public get cloudCapacity() {
@@ -128,48 +130,27 @@ export class NxCloudStorageComponent {
 
     // Processes should be in dialogService
 
-    public enableCloudStorage() {
-        // // replace
-        // const { system$: {} } = this;
-        // return this.processService.createProcess(() => this.cloudApiService.enableCloudStorage(systemId, email))
-        //     .then(() => {
-        //     // handle success here
-        //     });
-        // // this.cloudStorageService.enable('test', 'test');
-    }
-
-    public disableCloudStorage() {
-        // const { systemId, accountService: { email } } = this;
-        // return this.processService.createProcess(() => this.cloudApiService.disableCloudStorage(systemId, email))
-        //     .then(() => {
-        //     // handle success here
-        //     });
-        // // this.cloudStorageService.disable();
-    }
-
-    public moveCloudStorage(targetSystemId: string) {
-        // const { systemId, accountService: { email } } = this;
-        // return this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(systemId, targetSystemId, email));
-    }
-
-    public toggleCloudState() {
-        // this.cloudStorageService.toggleUsageState();
-    }
-
-    // TEMP
-
-    public moveToDialog() {
-        // const [system, systems, peerSystems, user] = this.cloudStorageService.getMoveParams();
-        // this.dialogService.cloudStorageMove(system, systems, peerSystems, user);
-        // this.dialogService.cloudStorageMove('string', 'string', 'string');
-    }
+    public enableCloudStorage = this.processService.createProcess(() => {
+        const { systemId, userEmail } = this;
+        return this.cloudApiService.enableCloudStorage(systemId)
+            .then(() => {
+                this.cloudStorageSystemEnabled = true;
+            });
+    }, {
+        successMessage : 'Cloud Storage Enabled',
+        errorPrefix    : 'Error Enabling Cloud Storage'
+    });
 
     public deleteCloudStorageDialog() {
-        // this.dialogService.cloudStorageDelete(this.systemId);
+        this.dialogService.cloudStorageDelete(this.systemId);
     }
 
-    // Error Dialog Methods
+    public moveCloudStorageDialog() {
+        // TODO: Need list of systems
+        this.dialogService.cloudStorageMove(this.systemId, 'systems', this.user);
+    }
 
+    // TODO: Move to dialog service
     public activationErrorDialog() {
         // const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
         // this.dialogService.confirm(message, title, ok);

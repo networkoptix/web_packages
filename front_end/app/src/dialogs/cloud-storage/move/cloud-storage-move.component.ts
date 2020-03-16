@@ -9,11 +9,13 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxSystemsService }          from '../../../services/systems.service';
 import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { NxProcessService } from '../../../services/process.service';
 
 @Component({
-    selector   : 'nx-cloud-storage-move-content',
-    templateUrl: 'cloud-storage-move.component.html',
-    styleUrls  : ['cloud-storage-move.component.scss']
+    selector : 'nx-cloud-storage-move-content',
+    templateUrl : 'cloud-storage-move.component.html',
+    styleUrls : ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent {
     LANG: LanguageI18NStaticTypes;
@@ -27,7 +29,9 @@ export class CloudStorageMoveModalContent {
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         public renderer: Renderer2,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -35,13 +39,24 @@ export class CloudStorageMoveModalContent {
         this.errorText = '';
     }
 
-    move() {
-        // need to write method
-        console.log('wip');
-        // this.cloudStorageService.move('string', 'string', 'string').then(() => {
-        //     this.close();
-        // });
-    }
+    // TODO: Replace with process
+    public move = this.processService.createProcess(() => {
+        return this.cloudApiService.moveCloudStorage('fromSystem', 'toSystem')
+            .then(() => this.close());
+    }, {
+        successMessage : 'Storage Succesfully moved',
+        errorPrefix    : 'Cloud Storage Move Error'
+    })
+
+    // move() {
+    //     // TODO: need to get from and to systems for move
+    //     return this.cloudApiService.moveCloudStorage('fromSystem', 'toSystem')
+    //         .then(() => this.close())
+    //         .catch(() =>{});
+    //     // this.cloudStorageService.move('string', 'string', 'string').then(() => {
+    //     //     this.close();
+    //     // });
+    // }
 
     close() {
         this.activeModal.close();

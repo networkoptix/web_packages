@@ -7,6 +7,8 @@ import {
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../services/process.service';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { NxCloudApiService } from '../../../services/nx-cloud-api';
 
 @Component({
     selector   : 'nx-modal-cloud-storage-delete-content',
@@ -18,7 +20,7 @@ export class CloudStorageDeleteModalContent {
     @Input() delete;
     @Input() closable;
 
-    LANG: any;
+    LANG: LanguageI18NStaticTypes;
     password: string;
     wrongPassword: boolean;
     auth = {
@@ -27,10 +29,11 @@ export class CloudStorageDeleteModalContent {
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
-    constructor(private activeModal: NgbActiveModal,
+    constructor(public activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
-                private renderer: Renderer2
+                private renderer: Renderer2,
+                private cloudApiService: NxCloudApiService
     ) {
         this.LANG = this.language.getTranslations();
     }
@@ -41,8 +44,7 @@ export class CloudStorageDeleteModalContent {
         this.delete = this.processService.createProcess(() => {
             this.deleteForm.controls.password.setErrors(undefined);
             this.wrongPassword = false;
-            // the disable method still on cloudStorageService still needs to be implemented
-            // return this.cloudStorageService.disable(this.systemId, this.auth.password);
+            return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
             ignoreUnauthorized: true,
             errorCodes        : {
@@ -53,8 +55,8 @@ export class CloudStorageDeleteModalContent {
                     this.renderer.selectRootElement('#password').focus();
                 }
             },
-            successMessage: this.LANG.toastMessage.system.disconnected.success,
-            errorPrefix   : this.LANG.errorCodes.cantDisconnectSystemPrefix
+            successMessage: 'Cloud Storage Successfully removed from system',
+            errorPrefix   : 'Error removing cloud storage'
         }).then(() => {
             this.activeModal.close(true);
         });
@@ -64,8 +66,7 @@ export class CloudStorageDeleteModalContent {
         this.activeModal.close();
     }
 
-    disableCloudStorage() {
-        this.cloudStorageService.disable('test', 'test');
+    deleteCloudStorage() {
         this.close();
     }
 }

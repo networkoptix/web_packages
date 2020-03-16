@@ -31,7 +31,7 @@
             </div>
         </div>
     </div>
-    <div class="modal-footer" (click)="disableCloudStorage()">
+    <div class="modal-footer" (click)="deleteCloudStorage()">
         <!-- delete process still needs to be implemented -->
         <nx-process-button [process]="delete" [form]="deleteForm" [actionType]="'danger'" buttonText="{{ 'Delete' | translate }}"></nx-process-button>
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
