@@ -74,16 +74,16 @@ Start
 
 Check Details Panel Alerts
     [Arguments]    ${type}    ${hardware}    ${name}    ${category}    ${metric}
-    ${color}=   Set Variable If    '''${type}'''=='''Error'''    ${ERROR COLOR}    ${WARNING COLOR}
+    ${color}=   Set Variable If    '''${type}'''=='''Error'''    ${ERROR COLOR WITH OPACITY}    ${WARNING COLOR}
     ${svg}=   Set Variable If    '''${type}'''=='''Error'''    ${HM ERROR ICON}    ${HM WARNING ICON}
     ${match}=   Get Regexp Matches    ${TEST_NAME}    with
-    ${color}=   Set Variable If    ${match}    ${ERROR COLOR}    ${color}
+    ${color}=   Set Variable If    ${match}    ${ERROR COLOR WITH OPACITY}    ${color}
 
     Click Link    ${HM ${hardware}s Page Link}
     Wait Until Element is Visible    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
     Wait Until Element has Style    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]   color    ${color}
     Click Element    ${HM TABLE}//tr//td/span[contains(text(), "${name}")]
-    ${color}=   Set Variable If    '''${type}'''=='''Error'''    ${ERROR COLOR}    ${WARNING COLOR}
+    ${color}=   Set Variable If    '''${type}'''=='''Error'''    ${ERROR COLOR WITH OPACITY}    ${WARNING COLOR}
     Wait Until Elements are Visible
     ...    ${HM DETAILS PANEL}
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..//div[@title="${hardware} ${name} is broken"]
