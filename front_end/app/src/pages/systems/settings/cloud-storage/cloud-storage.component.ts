@@ -146,8 +146,12 @@ export class NxCloudStorageComponent {
 
     public enableCloudStorage = this.processService.createProcess(() => {
         return this.cloudApiService.enableCloudStorage(this.systemId)
-            .then(() => {
+            .then(({ totalSpace }) => {
+                this._cloudCapacity = totalSpace;
                 this.cloudStorageSystemEnabled = true;
+                this.cloudApiService.getCloudStorageUsage(this.systemId)
+                    .then(value => { this.usageStats = value; })
+                    .catch(() => { this.usageStats = emptyUsage; });
             });
     }, {
         successMessage : 'Cloud Storage Enabled',

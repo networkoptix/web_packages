@@ -246,8 +246,11 @@ export class NxCloudApiService {
 
     enableCloudStorage(systemId: string): Promise<any> {
         // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock success');
-        return success ? Promise.resolve() : Promise.reject();
+        const success = prompt('Add any message to mock enable success');
+        return success ? Promise.resolve({
+            systems    : [systemId],
+            totalSpace : 50 * 1073741824 // get from config?
+        }) : Promise.reject(); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
         // return this.http.post(this.CONFIG.apiBase + '/storage/create', {
         //     systemId
         // }).toPromise();
@@ -255,8 +258,8 @@ export class NxCloudApiService {
 
     deleteCloudStorage(systemId: string, password: string): Promise<any> {
         // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock success');
-        return success ? Promise.resolve() : Promise.reject(new Error('wrongPassword'));
+        const success = prompt('Add any message to mock delete success');
+        return success ? Promise.resolve() : Promise.reject(new Error('wrongPassword')); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
         // return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
         //     systemId,
         //     password
@@ -265,11 +268,28 @@ export class NxCloudApiService {
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
         // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock success');
+        const success = prompt('Add any message to mock move success');
         return success ? Promise.resolve() : Promise.reject();
         // return this.http.post(this.CONFIG.apiBase + '/storage/move', {
         //     sourceSystemId,
         //     destinationSystemId
         // }).toPromise();
+    }
+
+    getCloudStorageUsage(systemId: string): Promise<any> {
+        /*
+        TODO: Nick, not sure if this is where this should be handled or of the system api service
+        Or is this something that would even need its own endpoint? I couldn't find where this
+        data could come from looking at the other services but I could have missed it.
+        */
+        const success = prompt('Add any message to mock get usage success');
+        return success ? Promise.resolve({
+            currentRecordings : 7457136000, // ms, rounded to the hour
+            whenFullyUsed     : 1209600000, // ms, rounded to the hour
+            amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
+            archiveFrom       : 11, // number of cameras represented by integer
+            recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
+            delayFromLive     : 1200000 // ms, rounded to 0.1s
+        }) : Promise.reject();
     }
 }
