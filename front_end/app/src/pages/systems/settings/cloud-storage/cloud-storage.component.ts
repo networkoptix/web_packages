@@ -54,7 +54,7 @@ export class NxCloudStorageComponent {
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
             if (system === undefined) return;
-            this.usageStats = emptyUsage;
+            this.updateEnabledAndUsageStats();
             this._cloudCapacity = 100000000000;
         });
     }
@@ -149,9 +149,7 @@ export class NxCloudStorageComponent {
             .then(({ totalSpace }) => {
                 this._cloudCapacity = totalSpace;
                 this.cloudStorageSystemEnabled = true;
-                this.cloudApiService.getCloudStorageUsage(this.systemId)
-                    .then(value => { this.usageStats = value; })
-                    .catch(() => { this.usageStats = emptyUsage; });
+                this.updateEnabledAndUsageStats();
             },
             () => this.activationErrorDialog()
             );
@@ -162,6 +160,14 @@ export class NxCloudStorageComponent {
 
     private handleCloudStorageDisabled = () => {
         this.cloudStorageSystemEnabled = false;
+    }
+
+    private updateEnabledAndUsageStats() {
+        this.cloudApiService.getCloudStorageUsage(this.systemId)
+            .then(({ enabled, ...usageStats }) => {
+                this.usageStats = { ...emptyUsage, ...usageStats };
+                this.cloudStorageSystemEnabled = enabled;
+            });
     }
 
     public deleteCloudStorage() {

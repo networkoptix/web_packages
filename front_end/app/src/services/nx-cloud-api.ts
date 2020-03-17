@@ -283,14 +283,21 @@ export class NxCloudApiService {
         Or is this something that would even need its own endpoint? I couldn't find where this
         data could come from looking at the other services but I could have missed it.
         */
-        const success = prompt('Add any message to mock get usage success');
-        return success ? Promise.resolve({
+        const success = prompt('blank to mock not enabled, "empty" to mock empty state, anything else to mock regular state');
+        const regular = {
             currentRecordings : 7457136000, // ms, rounded to the hour
             whenFullyUsed     : 1209600000, // ms, rounded to the hour
             amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
             archiveFrom       : 11, // number of cameras represented by integer
             recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
-            delayFromLive     : 1200000 // ms, rounded to 0.1s
-        }) : Promise.reject();
+            delayFromLive     : 1200000 // ms, rounded to 0.1s}
+        };
+
+        const usage = success && success !== 'empty' ? regular : {};
+
+        return Promise.resolve({
+            enabled: !!success,
+            ...usage
+        });
     }
 }
