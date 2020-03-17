@@ -14,7 +14,6 @@ import { ComponentsModule }          from '../../../components/components.module
 import { NxSystemAdminModule }       from './admin/admin.module';
 import { NxSystemUsersModule }       from './users/users.module';
 import { NxSystemServersModule }     from './servers/servers.module';
-import { NxSystemMergeStatusModule } from './merge-status/merge-status.module';
 import { NxCloudStorageModule }      from './cloud-storage/cloud-storage.module';
 
 import { NxSystemAdminComponent }    from './admin/admin.component';
@@ -44,18 +43,18 @@ const appRoutes: Routes = [
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard],
+                canActivate: [UserGuard]
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard],
+                canActivate: [UserGuard]
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers/:serverId',
@@ -81,7 +80,6 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        NxSystemMergeStatusModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,

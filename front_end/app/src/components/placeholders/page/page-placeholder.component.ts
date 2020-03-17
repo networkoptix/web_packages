@@ -19,10 +19,10 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
  */
 
 @Component({
-    selector     : 'nx-page-placeholder',
-    templateUrl  : 'page-placeholder.component.html',
-    styleUrls    : ['page-placeholder.component.scss'],
-    // encapsulation: ViewEncapsulation.None
+    selector : 'nx-page-placeholder',
+    templateUrl : 'page-placeholder.component.html',
+    styleUrls : ['page-placeholder.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;
@@ -33,6 +33,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() condition: boolean;
     @Input() withFooter: any;
     @Input() constrainWidth: boolean;
+    @Input() passedProps: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -105,6 +106,15 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.placeholderTitle = this.LANG.common.maintenanceInProgress;
                     this.message = '%CONTENT%';
                     this.iconName = 'Maintenance';
+                    break;
+                case 'MERGE':
+                    this.placeholderTitle = this.LANG.placeholderTexts.merge.title
+                        .replace('{{systemName}}', this.passedProps);
+                    this.message =
+                        `<p>${this.LANG.placeholderTexts.merge.message.dependingOnSize}</p>
+                        <p class="mt-2">${this.LANG.placeholderTexts.merge.message.untilFinished}</p>
+                        <p class="mt-2">${this.LANG.placeholderTexts.merge.message.whenFinished.replace('{{systemName}}', this.passedProps)}`;
+                    this.iconName = 'Merge';
                     break;
             }
         }

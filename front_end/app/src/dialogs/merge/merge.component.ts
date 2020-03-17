@@ -32,7 +32,6 @@ export class MergeModalContent {
     checkPasswordProcess: any;
     mergingProcess: any;
     multipleSystems: boolean;
-    password: string; // candidate for removal
     primarySystem: any;
     processedSystems = [];
     secondarySystem: any;
@@ -43,7 +42,6 @@ export class MergeModalContent {
     targetSystemDropdown: any;
     targetSystemService: any;
     tooManyServers: boolean;
-    wrongPassword: boolean; // candidate for removal
 
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
@@ -60,8 +58,6 @@ export class MergeModalContent {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
-
-        this.wrongPassword = false;
     }
 
     stateMachine = {
@@ -146,7 +142,7 @@ export class MergeModalContent {
                 default: {
                     passwordError: false
                 },
-                addPasswordError: {
+                confirmPasswordError: {
                     passwordError: true
                 }
             },
@@ -173,7 +169,7 @@ export class MergeModalContent {
                 default: {
                     passwordError: false
                 },
-                addPasswordError: {
+                confirmPasswordError: {
                     passwordError: true
                 }
             },
@@ -301,13 +297,12 @@ export class MergeModalContent {
     initProcesses() {
         this.mergingProcess = this.processService
             .createProcess(() => {
-                this.wrongPassword = false;
-                this.mergeForm.controls.mergePassword.setErrors(undefined);
+                const password = this.machine.state.template.passwordValue;
 
-                if (!this.password) {
+                if (!password) {
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
-                return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, this.password);
+                return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
             }, {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
@@ -317,15 +312,10 @@ export class MergeModalContent {
                         return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
-                        this.mergeForm.controls.mergePassword.setErrors({ required: true });
+                        this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordRequired' });
                     },
                     wrongPassword: () => {
-                        this.wrongPassword = true;
-                        this.mergeForm.controls.mergePassword.setErrors({ wrongPassword: true });
-                        // Do not reset the value - it will reset errors for this field
-                        // this.password = '';
-
-                        this.renderer.selectRootElement('#mergePassword').focus();
+                        this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordWrong', passwordValue: '' });
                     }
                 },
                 successMessage: this.LANG.toastMessage.system.merge.start
@@ -334,8 +324,16 @@ export class MergeModalContent {
                 console.log('then from cloudapi merge', res);
                 this.systemsService.forceUpdateSystems();
                 this.activeModal.close({
-                    anotherSystemId: this.targetSystem.id,
-                    role           : this.primarySystem.id === this.system.id
+                    secondary: {
+                        id   : this.secondarySystem.id,
+                        name : this.secondarySystem.name || this.secondarySystem.info.name
+                    },
+                    primary: {
+                        id   : this.primarySystem.id,
+                        name : this.primarySystem.name || this.primarySystem.info.name
+                    },
+                    anotherSystemId : this.targetSystem.id,
+                    role            : this.primarySystem.id === this.system.id
                         ? this.CONFIG.system.status.master
                         : this.CONFIG.system.status.slave
                 });
@@ -347,10 +345,10 @@ export class MergeModalContent {
                 }
 
                 /* Get the names of the primary and secondary system.
-                                       Next try to figure out which system caused the problem.
-                                       If the primary system's stateOfHealth is not online set it as the failedSystem.
-                                       Otherwise the secondary system is set as the failedSystem no matter what.
-                                       */
+                    Next try to figure out which system caused the problem.
+                    If the primary system's stateOfHealth is not online set it as the failedSystem.
+                    Otherwise the secondary system is set as the failedSystem no matter what.
+                */
 
                 if (!error.data) {
                     error.data = {};
@@ -428,7 +426,7 @@ export class MergeModalContent {
                                 this.machine.transition('choosePrimary');
                                 this.targetSystemService.stopPoll();
                             } else if (err.status === 401) {
-                                this.updateShow('addPasswordError', { passwordErrorText: 'passwordWrong' });
+                                this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordWrong' });
                             }
                         }
                     );
@@ -664,7 +662,7 @@ export class MergeModalContent {
         let showUpdate        = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
-            showUpdate = 'addPasswordError';
+            showUpdate = 'confirmPasswordError';
             templateUpdates.passwordErrorText = 'passwordRequired';
         } else {
             showUpdate = 'default';
