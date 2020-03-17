@@ -1,12 +1,11 @@
 <nx-pre-loader type="page" *ngIf="!system"></nx-pre-loader>
 
-<ng-container *ngIf="system && !systemNoAccess">
+<ng-container *ngIf="system && !(systemNoAccess || secondaryMerge)">
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
             <div class="fixed-sidebar col-12 d-flex flex-column ml-md-2 fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
-                <nx-system-merge></nx-system-merge>
                 <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
                 <nx-menu *ngIf="menuVisible" [content]="content"></nx-menu>
             </div>
@@ -24,4 +23,8 @@
     <button class="btn btn-primary main-button mx-auto">
         <a routerLink="/" translate>Go to Main Page</a>
     </button>
+</nx-page-placeholder>
+
+<nx-page-placeholder *ngIf="secondaryMerge"
+    [type]="'MERGE'" [passedProps]="mergeTargetSystem.name" [withFooter]="true">
 </nx-page-placeholder>

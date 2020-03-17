@@ -14,7 +14,6 @@ import { ComponentsModule } from '../../../components/components.module';
 import { NxSystemAdminModule }       from './admin/admin.module';
 import { NxSystemUsersModule }       from './users/users.module';
 import { NxSystemServersModule }     from './servers/servers.module';
-import { NxSystemMergeStatusModule } from './merge-status/merge-status.module';
 import { NxSystemAdminComponent }    from './admin/admin.component';
 import { NxSystemUsersComponent }    from './users/users.component';
 import { NxSystemServersComponent }  from './servers/servers.component';
@@ -39,23 +38,23 @@ const appRoutes: Routes = [
                 path: 'users',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard],
+                canActivate: [UserGuard]
             },
             {
                 path: 'users/:userId',
                 component: NxSystemUsersComponent,
                 canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard],
+                canActivate: [UserGuard]
             },
             {
                 path: 'servers',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
+                canDeactivate: [ApplyGuard]
             },
             {
                 path: 'servers/:serverId',
                 component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
+                canDeactivate: [ApplyGuard]
             }
         ]
     }
@@ -70,7 +69,6 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        NxSystemMergeStatusModule,
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
@@ -82,7 +80,7 @@ const appRoutes: Routes = [
     ],
     declarations   : [
         NxSystemSettingsComponent,
-        NxNoSystemsComponent,
+        NxNoSystemsComponent
     ],
     bootstrap      : [],
     entryComponents: [

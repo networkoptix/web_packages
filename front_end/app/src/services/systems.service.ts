@@ -23,6 +23,10 @@ export class NxSystemsService implements OnDestroy {
     systems: any;
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
+    systemsMerging: { primary: any, secondary: any } = {
+        primary   : undefined,
+        secondary : undefined
+    };
 
     constructor(
         configService: NxConfigService,
@@ -37,6 +41,11 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
+    processMerge(mergeInfo: any) {
+        this.systemsMerging.primary = mergeInfo.primary;
+        this.systemsMerging.secondary = mergeInfo.secondary;
+    }
+
     addToMergeList(systemId: string) {
         this.mergingSystems.add(systemId);
     }
@@ -45,9 +54,9 @@ export class NxSystemsService implements OnDestroy {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {
-                autoHide : true,
-                classname: this.CONFIG.toast.success,
-                delay    : this.CONFIG.alertTimeout
+                autoHide  : true,
+                classname : this.CONFIG.toast.success,
+                delay     : this.CONFIG.alertTimeout
             };
             this.toastService.show(this.LANG.toastMessage.system.merge.success, options);
         }
@@ -151,7 +160,13 @@ export class NxSystemsService implements OnDestroy {
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                setTimeout(_ => this.removeFromMergeList(system.id), 500);
+                setTimeout(() => {
+                    this.systemsMerging = {
+                        primary   : undefined,
+                        secondary : undefined
+                    };
+                    this.removeFromMergeList(system.id);
+                }, 500);
             }
         });
     }

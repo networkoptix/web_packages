@@ -28,6 +28,7 @@ export interface LanguageI18NStaticTypes {
     menu:                  Menu;
     pageTitles:            PageTitles;
     passwordRequirements:  PasswordRequirements;
+    placeholderTexts:      PlaceholderTexts;
     pleaseSelect:          string;
     privacyPolicy:         PrivacyPolicy;
     registration:          Registration;
@@ -162,7 +163,7 @@ export interface VoiceCommands {
 export interface Dialogs {
     buttons:      Buttons;
     merge:        DialogsMerge;
-    message:      Message;
+    message:      DialogsMessage;
     removeSystem: RemoveSystem;
     sharing:      Sharing;
     titles:       DialogsTitles;
@@ -220,7 +221,7 @@ export interface RecommendSupport {
     c_proceeding: string;
 }
 
-export interface Message {
+export interface DialogsMessage {
     failedToSend: string;
     placeholders: Placeholders;
     sent:         string;
@@ -497,6 +498,21 @@ export interface PasswordRequirements {
     strongMessage:    string;
     weak:             string;
     weakMessage:      string;
+}
+
+export interface PlaceholderTexts {
+    merge: PlaceholderTextsMerge;
+}
+
+export interface PlaceholderTextsMerge {
+    title:   string;
+    message: MergeMessage;
+}
+
+export interface MergeMessage {
+    dependingOnSize: string;
+    untilFinished:   string;
+    whenFinished:    string;
 }
 
 export interface PrivacyPolicy {
@@ -802,6 +818,7 @@ const typeMap: any = {
         { json: "menu", js: "menu", typ: r("Menu") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
+        { json: "placeholderTexts", js: "placeholderTexts", typ: r("PlaceholderTexts") },
         { json: "pleaseSelect", js: "pleaseSelect", typ: "" },
         { json: "privacyPolicy", js: "privacyPolicy", typ: r("PrivacyPolicy") },
         { json: "registration", js: "registration", typ: r("Registration") },
@@ -923,7 +940,7 @@ const typeMap: any = {
     "Dialogs": o([
         { json: "buttons", js: "buttons", typ: r("Buttons") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
-        { json: "message", js: "message", typ: r("Message") },
+        { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "sharing", js: "sharing", typ: r("Sharing") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
@@ -977,7 +994,7 @@ const typeMap: any = {
         { json: "b_support", js: "b_support", typ: "" },
         { json: "c_proceeding", js: "c_proceeding", typ: "" },
     ], false),
-    "Message": o([
+    "DialogsMessage": o([
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },
@@ -1231,6 +1248,18 @@ const typeMap: any = {
         { json: "strongMessage", js: "strongMessage", typ: "" },
         { json: "weak", js: "weak", typ: "" },
         { json: "weakMessage", js: "weakMessage", typ: "" },
+    ], false),
+    "PlaceholderTexts": o([
+        { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
+    ], false),
+    "PlaceholderTextsMerge": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "message", js: "message", typ: r("MergeMessage") },
+    ], false),
+    "MergeMessage": o([
+        { json: "dependingOnSize", js: "dependingOnSize", typ: "" },
+        { json: "untilFinished", js: "untilFinished", typ: "" },
+        { json: "whenFinished", js: "whenFinished", typ: "" },
     ], false),
     "PrivacyPolicy": o([
         { json: "integration", js: "integration", typ: "" },

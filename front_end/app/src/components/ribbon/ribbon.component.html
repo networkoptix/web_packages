@@ -5,18 +5,18 @@
 
 <div class="clearfix alert-ribbon ribbon" *ngIf="showRibbon && type === 'alert'">
     <div class="message">
-        <span class="message-content">
-            {{message}}
+        <div class="message-content">
+            <div [innerHTML]="message"></div>
             <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                 <svg-icon
                     *ngIf="action === 'Refresh'"
                     [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                     [svgStyle]="{'width.px': '20'}" title="Reload"></svg-icon>
                 <span>
-                {{action}}
+                    {{action}}
                 </span>
             </a>
-        </span>
+        </div>
         <ng-container *ngIf="action">
             <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank" class="ml-2">{{action}}</a>
         </ng-container>
