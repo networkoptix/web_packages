@@ -1,3 +1,4 @@
+# Make sure any changes here do not break build_scripts/generate_language_compiled_json.py
 import json
 
 

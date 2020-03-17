@@ -120,7 +120,7 @@ dir=../skins/$SKIN
         if [ "$SKIN" = "blue" ] ; then
             echo "Generate language.json"
             pushd $TARGET_DIR/$SKIN
-            python ../../../../build_scripts/generate_language_json.py $LANG
+            python ../../../../build_scripts/generate_language_compiled_json.py $LANG
             popd
         else
             echo "Copy language.json from blue skin"
@@ -132,7 +132,7 @@ dir=../skins/$SKIN
     done
 
     pushd $TARGET_DIR/$SKIN
-    python ../../../../build_scripts/generate_all_languages_json.py
+    python ../../../../build_scripts/generate_languages_json.py
     popd
 
     rm -rf $TARGET_DIR/$SKIN/static/{views,web_common/views}
