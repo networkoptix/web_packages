@@ -121,7 +121,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'config': {
                 'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
-                'cloud_merge': asset.read_global_value("%CLOUD_MERGE%"),
                 'cloud_storage_enabled': asset.read_global_value("%CLOUD_STORAGE_ENABLED%"),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
