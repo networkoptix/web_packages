@@ -30,7 +30,7 @@ export class NxCloudStorageComponent {
     usageStats: IUsageStats;
     _cloudCapacity: number;
     cloudStorageSystemEnabled$ = new BehaviorSubject(false);
-    systems$: BehaviorSubject<NxSystem>;
+    systems$: BehaviorSubject<NxSystem[]>;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -44,8 +44,7 @@ export class NxCloudStorageComponent {
         private utilsService: NxUtilsService,
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
-        private processService: NxProcessService,
-        private systemsService: NxSystemsService
+        private processService: NxProcessService
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -57,7 +56,6 @@ export class NxCloudStorageComponent {
             if (system === undefined) return;
             this.usageStats = emptyUsage;
             this._cloudCapacity = 100000000000;
-            this.systems$ = new BehaviorSubject(this.systemsService.getMySystems(system.currentUserEmail, system.id));
         });
     }
     // Property getters
@@ -92,10 +90,6 @@ export class NxCloudStorageComponent {
 
     set systems(value) {
         this.systems$.next(value);
-    }
-
-    get systems() {
-        return this.systems$.value;
     }
 
     // Helper Methods
@@ -165,12 +159,12 @@ export class NxCloudStorageComponent {
     }
 
     public deleteCloudStorageDialog() {
-        this.dialogService.cloudStorageDelete(this.systemId, this.handleCloudStorageDisabled);
+        this.dialogService.cloudStorageDelete(this.system$, this.handleCloudStorageDisabled);
     }
 
     public moveCloudStorageDialog() {
         // TODO: Need list of systems
-        this.dialogService.cloudStorageMove(this.systemId, this.systems, this.user, this.handleCloudStorageDisabled);
+        this.dialogService.cloudStorageMove(this.system$, this.handleCloudStorageDisabled);
     }
 
     // TODO: Move to dialog service

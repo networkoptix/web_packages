@@ -2,7 +2,8 @@ import {
     Component,
     Renderer2,
     ViewChild,
-    Input
+    Input,
+    OnInit
 }                                   from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }           from '../../../services/nx-config';
@@ -13,16 +14,16 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { NxProcessService } from '../../../services/process.service';
 import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
+import { BehaviorSubject } from 'rxjs';
+import { NxSystem, NxSystemUser } from '../../../services/system.service';
 
 @Component({
     selector : 'nx-cloud-storage-move-content',
     templateUrl : 'cloud-storage-move.component.html',
     styleUrls : ['cloud-storage-move.component.scss']
 })
-export class CloudStorageMoveModalContent {
-    @Input() systemId: string;
-    // Need to figure out why this is undefined
-    @Input() systems: any;
+export class CloudStorageMoveModalContent implements OnInit {
+    @Input() system$: BehaviorSubject<NxSystem>;
     @Input() updateCallback: () => void;
 
     LANG: LanguageI18NStaticTypes;
@@ -30,6 +31,8 @@ export class CloudStorageMoveModalContent {
 
     items: DropdownItem[];
     errorText: string;
+    systemId = '';
+    userEmail = '';
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
     constructor(configService: NxConfigService,
@@ -42,9 +45,26 @@ export class CloudStorageMoveModalContent {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
-        this.items = mockItems;
-        console.log(this.systems);
+
+        this.items = [];
         this.errorText = '';
+    }
+
+    ngOnInit() {
+        this.system$.subscribe(system => {
+            this.systemId = system.id;
+            this.userEmail = system.currentUserEmail;
+            this.systemsService.getMySystems(this.userEmail, this.systemId);
+            this.systemsService.systemsSubject.subscribe((systems: any[]) => {
+                const processedSystems = systems.map(({ id: value, name, stateOfHealth }) => ({
+                    value,
+                    name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
+                }));
+
+                const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
+                this.items = [...processedSystems, ...otherSystems];
+            });
+        });
     }
 
     // TODO: Replace with process

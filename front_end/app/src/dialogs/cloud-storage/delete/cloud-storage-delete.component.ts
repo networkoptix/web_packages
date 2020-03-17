@@ -9,7 +9,8 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxProcessService }          from '../../../services/process.service';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
+import { BehaviorSubject } from 'rxjs';
+import { NxSystem } from '../../../services/system.service';
 
 @Component({
     selector : 'nx-modal-cloud-storage-delete-content',
@@ -17,7 +18,7 @@ import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-s
     styleUrls : []
 })
 export class CloudStorageDeleteModalContent {
-    @Input() systemId: string;
+    @Input() system$: BehaviorSubject<NxSystem>;
     @Input() updateCallback: () => void;
     @Input() closable: boolean;
 
@@ -27,6 +28,9 @@ export class CloudStorageDeleteModalContent {
     auth = {
         password: ''
     };
+
+    systemId = '';
+    userEmail = '';
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
@@ -41,6 +45,10 @@ export class CloudStorageDeleteModalContent {
 
     ngOnInit() {
         this.auth.password = '';
+        this.system$.subscribe(system => {
+            this.systemId = system.id;
+            this.userEmail = system.currentUserEmail;
+        });
     }
 
     public delete = this.processService.createProcess(() => {

@@ -29,6 +29,8 @@ import {
 import { LanguageI18NStaticTypes }    from '../../language_i18n_static_types';
 
 import './../dialogs/dialogs.scss';
+import { BehaviorSubject } from 'rxjs';
+import { NxSystem, NxSystemUser } from '../services/system.service';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -175,7 +177,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    cloudStorageDelete(systemId: string, updateCallback: () => void) {
+    cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
         // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
@@ -183,7 +185,7 @@ export class NxDialogsService {
         };
 
         const params: any = {
-            systemId,
+            system$,
             closable: true,
             updateCallback
         };
@@ -191,7 +193,7 @@ export class NxDialogsService {
         return this.createModal(CloudStorageDeleteModalContent, options, params);
     }
 
-    cloudStorageMove(system, systems, user, updateCallback: () => void) {
+    cloudStorageMove(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
         // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
@@ -199,9 +201,7 @@ export class NxDialogsService {
         };
 
         const params: any = {
-            user,
-            system,
-            systems,
+            system$,
             closable: true,
             updateCallback
         };
