@@ -302,6 +302,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     disconnect() {
         if (this.system.isMine) {
+            // Need to figure where this.system.cloudStorageEnabled config will be
+            // eslint-disable-next-line no-constant-condition
+            if (true /* Will replace once I figure out where cloudStorage state will be */) {
+                const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
+                return this.dialogs.confirm(message, title, ok);
+            }
             // User is the owner. Deleting system means unbinding it and disconnecting all accounts
             // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
             this.dialogs.disconnect(this.system.id)
