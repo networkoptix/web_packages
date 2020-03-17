@@ -152,9 +152,11 @@ export class NxCloudStorageComponent {
                 this.cloudApiService.getCloudStorageUsage(this.systemId)
                     .then(value => { this.usageStats = value; })
                     .catch(() => { this.usageStats = emptyUsage; });
-            });
+            },
+            () => this.activationErrorDialog()
+            );
     }, {
-        successMessage : 'Cloud Storage Enabled',
+        // successMessage : 'Cloud Storage Enabled',
         errorPrefix    : 'Error Enabling Cloud Storage'
     });
 
@@ -162,19 +164,18 @@ export class NxCloudStorageComponent {
         this.cloudStorageSystemEnabled = false;
     }
 
-    public deleteCloudStorageDialog() {
+    public deleteCloudStorage() {
         this.dialogService.cloudStorageDelete(this.system$, this.handleCloudStorageDisabled);
     }
 
-    public moveCloudStorageDialog() {
+    public moveCloudStorage() {
         // TODO: Need list of systems
         this.dialogService.cloudStorageMove(this.system$, this.handleCloudStorageDisabled);
     }
 
-    // TODO: Move to dialog service
-    public activationErrorDialog() {
-        // const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
-        // this.dialogService.confirm(message, title, ok);
+    private activationErrorDialog() {
+        const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
+        this.dialogService.confirm(message, title, ok);
     }
 
     public noOtherSystemsErrorDialog() {

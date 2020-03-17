@@ -250,7 +250,8 @@ export class NxCloudApiService {
         return success ? Promise.resolve({
             systems    : [systemId],
             totalSpace : 50 * 1073741824 // get from config?
-        }) : Promise.reject(); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
+        // eslint-disable-next-line prefer-promise-reject-errors
+        }) : Promise.reject({}); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
         // return this.http.post(this.CONFIG.apiBase + '/storage/create', {
         //     systemId
         // }).toPromise();

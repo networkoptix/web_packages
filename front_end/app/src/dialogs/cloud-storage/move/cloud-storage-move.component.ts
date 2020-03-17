@@ -3,7 +3,8 @@ import {
     Renderer2,
     ViewChild,
     Input,
-    OnInit
+    OnInit,
+    Injector
 }                                   from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }           from '../../../services/nx-config';
@@ -16,6 +17,7 @@ import { NxProcessService } from '../../../services/process.service';
 import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
 import { BehaviorSubject } from 'rxjs';
 import { NxSystem, NxSystemUser } from '../../../services/system.service';
+import { NxDialogsService } from '../../dialogs.service';
 
 @Component({
     selector : 'nx-cloud-storage-move-content',
@@ -29,10 +31,12 @@ export class CloudStorageMoveModalContent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    items: DropdownItem[];
+    targetSystems: DropdownItem[];
     errorText: string;
     systemId = '';
     userEmail = '';
+
+    showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
     constructor(configService: NxConfigService,
@@ -41,12 +45,13 @@ export class CloudStorageMoveModalContent implements OnInit {
         public renderer: Renderer2,
         private systemsService: NxSystemsService,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
+        private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
 
-        this.items = [];
+        this.targetSystems = [];
         this.errorText = '';
     }
 
@@ -56,13 +61,18 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.userEmail = system.currentUserEmail;
             this.systemsService.getMySystems(this.userEmail, this.systemId);
             this.systemsService.systemsSubject.subscribe((systems: any[]) => {
-                const processedSystems = systems.map(({ id: value, name, stateOfHealth }) => ({
+                const processedSystems = systems.filter(({id}) => id !== this.systemId).map(({ id: value, name, stateOfHealth }) => ({
                     value,
                     name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
                 }));
 
                 const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
-                this.items = [...processedSystems, ...otherSystems];
+                this.targetSystems = [...processedSystems, ...otherSystems];
+                if (systems && this.targetSystems.length <= 2) {
+                    this.close();
+                    const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
+                    this.injector.get(NxDialogsService).confirm(message, title, ok);
+                };
             });
         });
     }
