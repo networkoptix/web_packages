@@ -9,16 +9,17 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxProcessService }          from '../../../services/process.service';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
+import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
 
 @Component({
-    selector   : 'nx-modal-cloud-storage-delete-content',
-    templateUrl: 'cloud-storage-delete.component.html',
-    styleUrls  : []
+    selector : 'nx-modal-cloud-storage-delete-content',
+    templateUrl : 'cloud-storage-delete.component.html',
+    styleUrls : []
 })
 export class CloudStorageDeleteModalContent {
-    @Input() systemId;
-    @Input() delete;
-    @Input() closable;
+    @Input() systemId: string;
+    @Input() updateCallback: () => void;
+    @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     password: string;
@@ -40,33 +41,30 @@ export class CloudStorageDeleteModalContent {
 
     ngOnInit() {
         this.auth.password = '';
-
-        this.delete = this.processService.createProcess(() => {
-            this.deleteForm.controls.password.setErrors(undefined);
-            this.wrongPassword = false;
-            return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
-        }, {
-            ignoreUnauthorized: true,
-            errorCodes        : {
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.auth.password = '';
-
-                    this.renderer.selectRootElement('#password').focus();
-                }
-            },
-            successMessage: 'Cloud Storage Successfully removed from system',
-            errorPrefix   : 'Error removing cloud storage'
-        }).then(() => {
-            this.activeModal.close(true);
-        });
     }
+
+    public delete = this.processService.createProcess(() => {
+        this.deleteForm.controls.password.setErrors(undefined);
+        this.wrongPassword = false;
+        return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
+    }, {
+        ignoreUnauthorized : true,
+        errorCodes         : {
+            wrongPassword: () => {
+                this.wrongPassword = true;
+                this.auth.password = '';
+
+                this.renderer.selectRootElement('#password').focus();
+            }
+        },
+        successMessage : 'Cloud Storage Successfully removed from system',
+        errorPrefix    : 'Error removing cloud storage'
+    }).then(() => {
+        this.updateCallback();
+        this.activeModal.close(true);
+    });
 
     close() {
         this.activeModal.close();
-    }
-
-    deleteCloudStorage() {
-        this.close();
     }
 }

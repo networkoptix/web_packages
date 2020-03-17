@@ -175,7 +175,7 @@ export class NxDialogsService {
         return this.createModal(AddUserModalContent, options, params);
     }
 
-    cloudStorageDelete(systemId: string) {
+    cloudStorageDelete(systemId: string, updateCallback: () => void) {
         // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
@@ -184,13 +184,14 @@ export class NxDialogsService {
 
         const params: any = {
             systemId,
-            closable: true
+            closable: true,
+            updateCallback
         };
 
         return this.createModal(CloudStorageDeleteModalContent, options, params);
     }
 
-    cloudStorageMove(system, systems, user) {
+    cloudStorageMove(system, systems, user, updateCallback: () => void) {
         // WIP still need to implement
         const options: any = {
             windowClass: 'modal-holder',
@@ -201,7 +202,8 @@ export class NxDialogsService {
             user,
             system,
             systems,
-            closable: true
+            closable: true,
+            updateCallback
         };
 
         return this.createModal(CloudStorageMoveModalContent, options, params);

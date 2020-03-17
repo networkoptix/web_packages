@@ -1,7 +1,8 @@
 import {
     Component,
     Renderer2,
-    ViewChild
+    ViewChild,
+    Input
 }                                   from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }           from '../../../services/nx-config';
@@ -11,6 +12,7 @@ import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.com
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { NxCloudApiService } from '../../../services/nx-cloud-api';
 import { NxProcessService } from '../../../services/process.service';
+import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
 
 @Component({
     selector : 'nx-cloud-storage-move-content',
@@ -18,13 +20,18 @@ import { NxProcessService } from '../../../services/process.service';
     styleUrls : ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent {
+    @Input() systemId: string;
+    // Need to figure out why this is undefined
+    @Input() systems: any;
+    @Input() updateCallback: () => void;
+
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     items: DropdownItem[];
     errorText: string;
 
-    @ViewChild('confirmMergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('moveForm') moveForm: HTMLFormElement;
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
@@ -36,27 +43,21 @@ export class CloudStorageMoveModalContent {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
         this.items = mockItems;
+        console.log(this.systems);
         this.errorText = '';
     }
 
     // TODO: Replace with process
     public move = this.processService.createProcess(() => {
         return this.cloudApiService.moveCloudStorage('fromSystem', 'toSystem')
-            .then(() => this.close());
+            .then(() => {
+                this.updateCallback();
+                this.close();
+            });
     }, {
         successMessage : 'Storage Succesfully moved',
         errorPrefix    : 'Cloud Storage Move Error'
     })
-
-    // move() {
-    //     // TODO: need to get from and to systems for move
-    //     return this.cloudApiService.moveCloudStorage('fromSystem', 'toSystem')
-    //         .then(() => this.close())
-    //         .catch(() =>{});
-    //     // this.cloudStorageService.move('string', 'string', 'string').then(() => {
-    //     //     this.close();
-    //     // });
-    // }
 
     close() {
         this.activeModal.close();

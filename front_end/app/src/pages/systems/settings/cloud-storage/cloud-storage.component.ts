@@ -15,11 +15,12 @@ import { NxSettingsService } from '../settings.service';
 import { NxSystem, NxSystemUser } from '../../../../services/system.service';
 import { NxCloudApiService } from '../../../../services/nx-cloud-api';
 import { NxProcessService } from '../../../../services/process.service';
+import { NxSystemsService } from '../../../../services/systems.service';
 
 @Component({
     selector : 'nx-cloud-storage',
     templateUrl : './cloud-storage.component.html',
-    styleUrls : ['./cloud-storage.component.scss']
+    styleUrls : ['./cloud-storage.component.scss'],
 })
 export class NxCloudStorageComponent {
     CONFIG: IConfig;
@@ -28,7 +29,8 @@ export class NxCloudStorageComponent {
 
     usageStats: IUsageStats;
     _cloudCapacity: number;
-    cloudStorageSystemEnabled = false;
+    cloudStorageSystemEnabled$ = new BehaviorSubject(false);
+    systems$: BehaviorSubject<NxSystem>;
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
@@ -42,7 +44,8 @@ export class NxCloudStorageComponent {
         private utilsService: NxUtilsService,
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private systemsService: NxSystemsService
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -51,9 +54,10 @@ export class NxCloudStorageComponent {
     private init() {
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
-            // Not sure if this observable will be needed
+            if (system === undefined) return;
             this.usageStats = emptyUsage;
             this._cloudCapacity = 100000000000;
+            this.systems$ = new BehaviorSubject(this.systemsService.getMySystems(system.currentUserEmail, system.id));
         });
     }
     // Property getters
@@ -76,6 +80,22 @@ export class NxCloudStorageComponent {
 
     get systemId() {
         return this.system$.value.id;
+    }
+
+    set cloudStorageSystemEnabled(value: boolean) {
+        this.cloudStorageSystemEnabled$.next(value);
+    }
+
+    get cloudStorageSystemEnabled() {
+        return this.cloudStorageSystemEnabled$.value;
+    }
+
+    set systems(value) {
+        this.systems$.next(value);
+    }
+
+    get systems() {
+        return this.systems$.value;
     }
 
     // Helper Methods
@@ -131,8 +151,7 @@ export class NxCloudStorageComponent {
     // Processes should be in dialogService
 
     public enableCloudStorage = this.processService.createProcess(() => {
-        const { systemId, userEmail } = this;
-        return this.cloudApiService.enableCloudStorage(systemId)
+        return this.cloudApiService.enableCloudStorage(this.systemId)
             .then(() => {
                 this.cloudStorageSystemEnabled = true;
             });
@@ -141,13 +160,17 @@ export class NxCloudStorageComponent {
         errorPrefix    : 'Error Enabling Cloud Storage'
     });
 
+    private handleCloudStorageDisabled = () => {
+        this.cloudStorageSystemEnabled = false;
+    }
+
     public deleteCloudStorageDialog() {
-        this.dialogService.cloudStorageDelete(this.systemId);
+        this.dialogService.cloudStorageDelete(this.systemId, this.handleCloudStorageDisabled);
     }
 
     public moveCloudStorageDialog() {
         // TODO: Need list of systems
-        this.dialogService.cloudStorageMove(this.systemId, 'systems', this.user);
+        this.dialogService.cloudStorageMove(this.systemId, this.systems, this.user, this.handleCloudStorageDisabled);
     }
 
     // TODO: Move to dialog service

@@ -15,7 +15,7 @@
         </p>
         <p *ngIf="errorText" class="mt-2 error-label">{{ errorText }}</p>
     </div>
-    <div class="modal-footer" (click)="move()">
+    <div class="modal-footer">
         <!-- move process still needs to be implemented -->
         <nx-process-button [process]="move" [form]="moveForm" [actionType]="'primary'" buttonText="{{ 'OK' | translate }}"></nx-process-button>
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
