@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
+from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
@@ -133,7 +134,7 @@ class CustomizationFilter(SimpleListFilter):
         for lookup, title in self.lookup_choices:
             lookup = str(lookup)
             yield {
-                'selected': self.value() == lookup if self.value() else lookup == self.default_customization,
+                'selected': self.value() == lookup if self.value() else lookup == str(self.default_customization),
                 'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
                 'display': title,
             }
@@ -337,6 +338,10 @@ class AssetAdmin(CMSAdmin):
         else:
             # If an exception is raised, clear the saved filter
             try:
+                # Extra context for search form
+                if not extra_context:
+                    extra_context = {}
+                extra_context['search_var'] = SEARCH_VAR
                 response = super(AssetAdmin, self).changelist_view(request, extra_context)
                 filters_dict[request.path_info] = request.META['QUERY_STRING']
                 caches['filters'].set(request.user.id, filters_dict)
