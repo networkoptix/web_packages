@@ -18,6 +18,7 @@ import { throttleTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { NxCloudApiService } from '../../../../services/nx-cloud-api';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -28,9 +29,9 @@ interface Settings {
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-admin-component',
-    templateUrl: 'admin.component.html',
-    styleUrls  : ['admin.component.scss']
+    selector : 'nx-system-admin-component',
+    templateUrl : 'admin.component.html',
+    styleUrls : ['admin.component.scss']
 })
 
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
@@ -66,13 +67,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
-        autoDiscoveryEnabled        : new Watcher<boolean>(),
-        statisticsAllowed           : new Watcher<boolean>(),
-        cameraSettingsOptimization  : new Watcher<boolean>(),
-        auditTrailEnabled           : new Watcher<boolean>(),
-        trafficEncryptionForced     : new Watcher<boolean>(),
-        videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitMinutes         : new Watcher<number>()
+        autoDiscoveryEnabled         : new Watcher<boolean>(),
+        statisticsAllowed            : new Watcher<boolean>(),
+        cameraSettingsOptimization   : new Watcher<boolean>(),
+        auditTrailEnabled            : new Watcher<boolean>(),
+        trafficEncryptionForced      : new Watcher<boolean>(),
+        videoTrafficEncryptionForced : new Watcher<boolean>(),
+        sessionLimitMinutes          : new Watcher<number>()
     };
 
     readonly minutes: string = 'minutes';
@@ -104,10 +105,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         const available = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
-            disconnectDisabled: merging,
-            mergeDisabled     : (merging || available) && !(this.debugMode || this.betaMode),
-            renameDisabled    : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge         : this.system && this.system.isMine && this.systemsService.systems.length > 1
+            disconnectDisabled : merging,
+            mergeDisabled      : (merging || available) && !(this.debugMode || this.betaMode),
+            renameDisabled     : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
+            showMerge          : this.system && this.system.isMine && this.systemsService.systems.length > 1
         };
     }
 
@@ -123,7 +124,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private menuService: NxMenuService,
-                private router: Router
+                private router: Router,
+                private cloudApiService: NxCloudApiService
     ) {
         this.viewContainerRef = viewContainerRef;
         this.setupDefaults(configService);
@@ -131,15 +133,15 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.settings = {
-            disconnectDisabled: false,
-            mergeDisabled     : true,
-            renameDisabled    : false,
-            showMerge         : true
+            disconnectDisabled : false,
+            mergeDisabled      : true,
+            renameDisabled     : false,
+            showMerge          : true
         };
 
         this.limitSessionTimeUnits = {
-            hours  : { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 1, max: 600, default: 24 },
-            minutes: { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 2, max: 600 }
+            hours   : { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 1, max: 600, default: 24 },
+            minutes : { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 2, max: 600 }
         };
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
 
@@ -183,8 +185,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
-                        successMessage: this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
-                        errorPrefix   : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
+                        successMessage : this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
+                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
                     }).then(() => {
                         this.updateAndGoToSystems();
                     }, (error) => {
@@ -302,20 +304,21 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     disconnect() {
         if (this.system.isMine) {
-            // Need to figure where this.system.cloudStorageEnabled config will be
-            // eslint-disable-next-line no-constant-condition
-            if (true /* Will replace once I figure out where cloudStorage state will be */) {
-                const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
-                return this.dialogs.confirm(message, title, ok);
-            }
-            // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-            // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-            this.dialogs.disconnect(this.system.id)
-                .then((result) => {
-                    if (result) {
-                        this.updateAndGoToSystems();
-                    }
-                });
+            this.cloudApiService.getCloudStorageUsage(this.system.id).then(({ enabled }) => {
+                if (enabled) {
+                    const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
+                    return this.dialogs.confirm(message, title, ok);
+                } else {
+                    // User is the owner. Deleting system means unbinding it and disconnecting all accounts
+                    // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
+                    this.dialogs.disconnect(this.system.id)
+                        .then((result) => {
+                            if (result) {
+                                this.updateAndGoToSystems();
+                            }
+                        });
+                }
+            });
         }
     }
 
@@ -343,11 +346,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
                             ...peer,
-                            id        : peer.id.replace(/[{}]/g, ''),
-                            url       : `${peer.remoteAddresses[0]}:${peer.port}`,
-                            systemName: isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
-                            ip        : peer.remoteAddresses[0],
-                            name      : peer.name,
+                            id         : peer.id.replace(/[{}]/g, ''),
+                            url        : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            systemName : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
+                            ip         : peer.remoteAddresses[0],
+                            name       : peer.name,
                             isNew
                         };
                         if (peer.status === 'Incompatible' && this.system.moduleInfo) {
