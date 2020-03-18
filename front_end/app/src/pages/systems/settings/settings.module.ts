@@ -30,49 +30,49 @@ import { CloudStorageGuard } from '../../../routeGuards/cloudStorageGuard';
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId',
-        component: NxSystemSettingsComponent,
-        canActivate: [AuthGuard],
-        children: [
+        path        : 'systems/:systemId',
+        component   : NxSystemSettingsComponent,
+        canActivate : [AuthGuard],
+        children    : [
             {
-                path: '',
-                component: NxSystemAdminComponent,
-                canDeactivate: [ApplyGuard]
+                path          : '',
+                component     : NxSystemAdminComponent,
+                canDeactivate : [ApplyGuard]
             },
             {
-                path: 'users',
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard]
+                path          : 'users',
+                component     : NxSystemUsersComponent,
+                canDeactivate : [ApplyGuard],
+                canActivate   : [UserGuard]
             },
             {
-                path: 'users/:userId',
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard]
+                path          : 'users/:userId',
+                component     : NxSystemUsersComponent,
+                canDeactivate : [ApplyGuard],
+                canActivate   : [UserGuard]
             },
             {
-                path: 'servers',
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                path          : 'servers',
+                component     : NxSystemServersComponent,
+                canDeactivate : [ApplyGuard]
             },
             {
-                path: 'servers/:serverId',
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
+                path          : 'servers/:serverId',
+                component     : NxSystemServersComponent,
+                canDeactivate : [ApplyGuard]
             },
             {
-                path: 'cloud-storage',
-                component    : NxCloudStorageComponent,
-                // canActivate  : [CloudStorageGuard],
-                canDeactivate: [ApplyGuard],
+                path          : 'cloud-storage',
+                component     : NxCloudStorageComponent,
+                canActivate   : [CloudStorageGuard],
+                canDeactivate : [ApplyGuard]
             }
         ]
     }
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -86,15 +86,15 @@ const appRoutes: Routes = [
         NxCloudStorageModule,
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [
-        ApplyGuard,
+    providers: [
+        ApplyGuard
     ],
-    declarations   : [
+    declarations: [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap : [],
+    entryComponents : [
         NxSystemSettingsComponent
     ],
     exports: [
