@@ -37,3 +37,14 @@ def move(request):
                            request.data.get('sourceSystemId'),
                            request.data.get('destinationSystemId'))
     return api_success()
+
+
+@api_view(['GET'])
+@permission_classes((IsAuthenticated, ))
+@handle_exceptions
+def usage_stats(request):
+    require_params(request, ['systemId'])
+    storage_info = cloud_api.Storage.statistics(request.session['login'],
+                                                request.session['password'],
+                                                request.data.get('systemId'))
+    return api_success(storage_info)

@@ -28,9 +28,10 @@ urlpatterns = [
     url(r'^account/checkAuthCode$',      account.check_auth_code),
     url(r'^account/?$',                  account.index),
 
-    url(r'^storage/create', storage.enable),
-    url(r'^storage/delete', storage.delete),
-    url(r'^storage/move',   storage.move),
+    url(r'^storage/create',     storage.enable),
+    url(r'^storage/delete',     storage.delete),
+    url(r'^storage/move',       storage.move),
+    url(r'^storage/usageStats', storage.usage_stats),
 
     url(r'^systems/disconnect$',                     systems.disconnect),
     url(r'^systems/connect$',                        systems.connect),
