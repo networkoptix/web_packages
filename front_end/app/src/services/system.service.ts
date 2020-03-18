@@ -632,7 +632,7 @@ export class NxSystem extends System implements OnDestroy {
 
     canUserViewCloudStorage() {
         // Need to confirm if all admins have cloud storage access
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase()) || this.canMerge;
     }
 
     getInfoAndPermissions(useCache = true) {

@@ -46,7 +46,7 @@
             </div>
         </div>
     </div>
-    <div class="normal-state-footer">
+    <div *ngIf="isOwner" class="normal-state-footer">
         <p [translate]="'dialogs.cloudStorage.available'"
             [translateParams]="{ vmsName: CONFIG.vmsName }"></p>
         <div class="pt-3">
