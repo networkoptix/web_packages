@@ -418,7 +418,9 @@ export class MergeModalContent {
 
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
-                return this.system.preCheckSystemMerge(this.serverUrl, this.machine.state.template.passwordValue)
+                const index = this.serverUrl.indexOf('//') + 2;
+                const urlWithPassword = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
+                return this.system.mergeSystems(urlWithPassword, true)
                     .subscribe(
                         res => {
                             console.log('res from password check', res);
