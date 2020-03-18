@@ -7,15 +7,13 @@
     <div class="message">
         <div class="message-content">
             <div class="message-content-wrapper">
-                {{message}}
+                <ng-container>{{message}}</ng-container>
                 <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                     <svg-icon
                         *ngIf="action === 'Refresh'"
                         [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                         [svgStyle]="{'width.px': '20'}" title="Reload"></svg-icon>
-                    <span>
-                        {{action}}
-                    </span>
+                    <span>{{action}}</span>
                 </a>
             </div>
         </div>
