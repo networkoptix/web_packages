@@ -39,7 +39,7 @@ export interface BaseConfig {
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
     company: Company;
-    footerItems: string;
+    footerItems: any;
     googleTagManagerId: string;
     pushConfig: string;
     trafficRelayHost: string;
