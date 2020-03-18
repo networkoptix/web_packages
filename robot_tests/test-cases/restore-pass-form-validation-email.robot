@@ -71,6 +71,6 @@ Test Email Invalid
 
 Check Email Outline
     [Arguments]    ${email}
-    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/../parent::div/parent::div/div/span[contains(@class,'input-error')]
+    Wait Until Element Is Visible    ${RESTORE PASSWORD EMAIL INPUT}/parent::nx-email-input/parent::form//span[contains(@class,'input-error')]
     Run Keyword If    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL IS REQUIRED}
     Run Keyword Unless    "${email}"=="${EMPTY}" or "${email}"=="${SPACE}"    Wait Until Element Is Visible    ${EMAIL INVALID}

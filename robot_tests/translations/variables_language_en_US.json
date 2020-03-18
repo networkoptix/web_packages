@@ -29,7 +29,7 @@
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED"   :    "Your account is successfully saved",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT"  :    "Account successfully activated",
     "SYSTEM NAME SAVED"                    :    "System name saved",
-    "ACCOUNT IS CREATED"                   :    "Account is created",
+    "ACCOUNT CREATED TEXT"                 :    "Account Created",
     "CONFIRMATION MESSAGE IS SENT TO"      :    "Confirmation message is sent to %email%",
 
     "CANNOT SAVE PASSWORD"                 :    "Cannot save password:",
@@ -108,15 +108,15 @@
     "THIS LINK IS BROKEN TEXT"             :    "This link is broken,System may be disconnected from %PRODUCT_NAME%,Access to this System may be revoked, or you may be logged into a different account.",
 
     "PAGE NOT FOUND TEXT"                  :    "Page not found",
-    "TAKE ME HOME TEXT"                    :    "Take me home",
+    "GO TO MAIN PAGE TEXT"                 :    "Go to Main Page",
     "OPEN NX WITNESS BUTTON TEXT"          :    "Open %VMS_NAME%",
 
     "PASSWORD TOO SHORT BADGE TEXT"        :    "too short",
     "PASSWORD TOO COMMON BADGE TEXT"       :    "too common",
-    "PASSWORD IS WEAK BADGE TEXT"          :    "weak",
-    "PASSWORD IS FAIR BADGE TEXT"          :    "fair",
-    "PASSWORD IS GOOD BADGE TEXT"          :    "good",
-    "PASSWORD INCORRECT BADGE TEXT"        :    "incorrect",
+    "PASSWORD IS WEAK BADGE TEXT"          :    "WEAK",
+    "PASSWORD IS FAIR BADGE TEXT"          :    "FAIR",
+    "PASSWORD IS GOOD BADGE TEXT"          :    "GOOD",
+    "PASSWORD INCORRECT BADGE TEXT"        :    "INCORRECT",
 
     "IPVD SEARCH PLACEHOLDER TEXT"         :    "Search by model or manufacturer",
     "IPVD FILTERS APPLIED TEXT"            :    "filters applied",

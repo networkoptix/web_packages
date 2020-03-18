@@ -152,12 +152,8 @@ Register Form Validation
 Check Password Badge
     [arguments]    ${pass}
     Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${7char password}'''
-    ...    Element Should Be Visible    ${PASSWORD TOO SHORT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${no upper password}''' or '''${pass}'''=='''${weak password}'''
+    Run Keyword If    '''${pass}'''=='''${7char password}''' or '''${pass}'''=='''${no upper password}''' or '''${pass}'''=='''${weak password}''' or '''${pass}'''=='''${common password}''' or '''${pass}'''=='''${7char password}'''
     ...    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${common password}'''
-    ...    Element Should Be Visible    ${PASSWORD TOO COMMON BADGE}
     ...    ELSE IF    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
     ...    ELSE IF    '''${pass}'''=='''${symbol password}'''
