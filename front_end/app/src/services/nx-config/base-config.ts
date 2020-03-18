@@ -116,6 +116,7 @@ export interface CloudCapabilities {
     integrationStore: string;
     publicDownloads: string;
     publicReleases: string;
+    cloudStorageEnabled: string;
 }
 
 export interface Company {

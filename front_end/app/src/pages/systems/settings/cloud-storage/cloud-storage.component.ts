@@ -69,7 +69,7 @@ export class NxCloudStorageComponent {
     }
 
     get canViewCloudStorage() {
-        return this.system$.value.canViewCloudStorage();
+        return this.system$.value.canUserViewCloudStorage();
     }
 
     get isOwner() {
