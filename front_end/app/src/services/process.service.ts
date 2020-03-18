@@ -14,6 +14,7 @@ interface ProcessSettings {
     ignoreUnauthorized: boolean;
     logoutForbidden: boolean;
     successMessage: string;
+    ignoreError?: boolean;
 }
 
 class Process {
@@ -76,13 +77,14 @@ class Process {
             this.settings = { ...this.settings, ...settings };
         } else {
             this.settings = {
-                errorCodes        : {},
-                errorMessage      : '',
-                errorPrefix       : '',
-                holdAlerts        : false,
-                ignoreUnauthorized: false,
-                logoutForbidden   : false,
-                successMessage    : ''
+                errorCodes         : {},
+                errorMessage       : '',
+                errorPrefix        : '',
+                holdAlerts         : false,
+                ignoreUnauthorized : false,
+                logoutForbidden    : false,
+                successMessage     : '',
+                ignoreError        : false
             };
         }
         this.caller = caller;
@@ -114,9 +116,9 @@ class Process {
                     // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
                     // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
-                        classname: this.CONFIG.toast.success,
-                        autohide : !this.settings.holdAlerts,
-                        delay    : this.CONFIG.alertTimeout
+                        classname : this.CONFIG.toast.success,
+                        autohide  : !this.settings.holdAlerts,
+                        delay     : this.CONFIG.alertTimeout
                     };
                     this.toastService.show(this.settings.successMessage, options);
                 }
@@ -152,9 +154,9 @@ class Process {
             });
 
             return {
-                promise: p,
-                reject : rej,
-                resolve: res
+                promise : p,
+                reject  : rej,
+                resolve : res
             };
         })();
     }
@@ -193,13 +195,13 @@ class Process {
             return;
         }
         const formatted = this.formatError(data, this.settings.errorCodes);
-        if (formatted !== false) {
+        if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
             const message              = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
             const options              = {
-                autohide : !this.settings.holdAlerts,
-                classname: this.CONFIG.toast.danger,
-                delay    : this.CONFIG.alertTimeout
+                autohide  : !this.settings.holdAlerts,
+                classname : this.CONFIG.toast.danger,
+                delay     : this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }

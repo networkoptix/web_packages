@@ -832,6 +832,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
 
+    mergeSystems(url, dryRun, currentPassword?) {
+        return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
+    }
+
     getPeerSystems() {
         return this.mediaserver.getPeerSystems();
     }

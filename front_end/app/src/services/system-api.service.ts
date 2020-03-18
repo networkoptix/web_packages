@@ -2,7 +2,7 @@ import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError }                from 'rxjs';
-import { mergeMap, retryWhen }                 from 'rxjs/operators';
+import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 
 interface User {
@@ -130,7 +130,8 @@ export class NxSystemAPI {
             params.auth = this.authPost;
         }
         return this.http.post(fullUrl, data, { params }).pipe(
-            retryWhen((request) => this.retryHandler(request))
+            retryWhen((request) => this.retryHandler(request)),
+            timeout(8000)
         );
     }
 
@@ -316,15 +317,15 @@ export class NxSystemAPI {
 
     userObject(fullName, email): User {
         return {
-            canBeEdited : true,
-            canBeDeleted: true,
+            canBeEdited  : true,
+            canBeDeleted : true,
             email,
-            isCloud     : true,
-            isEnabled   : true,
-            userRoleId  : this.emptyId,
-            permissions : '',
+            isCloud      : true,
+            isEnabled    : true,
+            userRoleId   : this.emptyId,
+            permissions  : '',
             // TODO: Remove the trash below after #VMS-2968
-            name        : email,
+            name         : email,
             fullName
         };
     }
@@ -472,9 +473,21 @@ export class NxSystemAPI {
     getAggregateHealthReport() {
         return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
     }
+    // End of Health Monitor
 
+    /** Merge Systems */
     getPeerSystems() {
         return this.get('/api/discoveredPeers', { showAddresses: true });
+    }
+
+    mergeSystems(url, dryRun, currentPassword?) {
+        const data = {
+            url,
+            currentPassword,
+            takeRemoteSettings: false,
+            dryRun
+        };
+        return this.post('/api/mergeSystems', data);
     }
 
     checkLocalAdminPassword(password) {

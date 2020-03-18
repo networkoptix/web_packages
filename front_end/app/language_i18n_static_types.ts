@@ -207,9 +207,10 @@ export interface DialogsMerge {
     serverNotYours:             string;
     serverVersionOld:           string;
     serverVersionNew:           string;
+    systemOffline:              string;
+    systemsIncompatible:        string;
     systemVersionOld:           string;
     systemVersionNew:           string;
-    systemOffline:              string;
     urlEmpty:                   string;
     urlNotValid:                string;
     unknownError:               string;
@@ -987,9 +988,10 @@ const typeMap: any = {
         { json: "serverNotYours", js: "serverNotYours", typ: "" },
         { json: "serverVersionOld", js: "serverVersionOld", typ: "" },
         { json: "serverVersionNew", js: "serverVersionNew", typ: "" },
+        { json: "systemOffline", js: "systemOffline", typ: "" },
+        { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },
         { json: "systemVersionOld", js: "systemVersionOld", typ: "" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "" },
-        { json: "systemOffline", js: "systemOffline", typ: "" },
         { json: "urlEmpty", js: "urlEmpty", typ: "" },
         { json: "urlNotValid", js: "urlNotValid", typ: "" },
         { json: "unknownError", js: "unknownError", typ: "" },
