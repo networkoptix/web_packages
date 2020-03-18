@@ -10,7 +10,7 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
+import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxProcessService }          from '../../../services/process.service';
@@ -31,11 +31,12 @@ export class CloudStorageMoveModalContent implements OnInit {
     CONFIG: IConfig;
 
     targetSystems: DropdownItem[];
-    target$: BehaviorSubject<string>;
     errorText: string;
     systemId = '';
     userEmail = '';
 
+    target$ = new BehaviorSubject('');
+    targetOnline$ = new BehaviorSubject(false);
     showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
@@ -64,12 +65,13 @@ export class CloudStorageMoveModalContent implements OnInit {
                 // Generate dropdown items
                 const processedSystems = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth }) => ({
                     value,
+                    stateOfHealth,
                     name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
                 }));
 
                 const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
                 this.targetSystems = [...processedSystems, ...otherSystems];
-                this.target$ = new BehaviorSubject(this.targetSystems[0].value);
+                this.setTargetSystem(this.targetSystems[0])
                 if (systems && this.targetSystems.length <= 2) {
                     // Display noOtherSystemsError when only system
                     this.close();
@@ -82,6 +84,10 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     public get currentTarget() {
         return this.target$.value;
+    }
+
+    public get currentTargetOnline() {
+        return this.targetOnline$.value;
     }
 
     public move = this.processService.createProcess(() => {
@@ -100,8 +106,9 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.activeModal.close();
     }
 
-    setTargetSystem({ value }) {
+    setTargetSystem({ value, stateOfHealth }: DropdownItem) {
         this.target$.next(value);
+        this.targetOnline$.next(stateOfHealth !== 'offline');
         if (value === 'otherSystem') {
             // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";

@@ -245,22 +245,19 @@ export class NxCloudApiService {
     // Cloud Storage
 
     enableCloudStorage(systemId: string): Promise<any> {
-        // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock enable success');
-        return success ? Promise.resolve({
+        // TODO: This method will be implemented later once endpoints are finalized
+        return Promise.resolve({
             systems    : [systemId],
             totalSpace : 50 * 1073741824 // get from config?
-        // eslint-disable-next-line prefer-promise-reject-errors
-        }) : Promise.reject({}); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
+        });
         // return this.http.post(this.CONFIG.apiBase + '/storage/create', {
         //     systemId
         // }).toPromise();
     }
 
     deleteCloudStorage(systemId: string, password: string): Promise<any> {
-        // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock delete success');
-        return success ? Promise.resolve() : Promise.reject(new Error('wrongPassword')); // TODO: Nick, will the api return a rejected promise or resolve and send back a JSON?
+        // TODO: This method will be implemented later once endpoints are finalized
+        return Promise.resolve();
         // return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
         //     systemId,
         //     password
@@ -268,10 +265,8 @@ export class NxCloudApiService {
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
-        console.log(`source: ${sourceSystemId}, target: ${destinationSystemId}`);
-        // TODO: don't forget to remove this and uncomment request to cloud storage end point
-        const success = prompt('Add any message to mock move success');
-        return success ? Promise.resolve() : Promise.reject();
+        // TODO: This will be implemented later once endpoints are finalized
+        return Promise.resolve();
         // return this.http.post(this.CONFIG.apiBase + '/storage/move', {
         //     sourceSystemId,
         //     destinationSystemId
@@ -279,27 +274,16 @@ export class NxCloudApiService {
     }
 
     getCloudStorageUsage(systemId: string): Promise<any> {
-        /*
-        TODO: Nick, not sure if this is where this should be handled or of the system api service
-        Or is this something that would even need its own endpoint? I couldn't find where this
-        data could come from looking at the other services but I could have missed it.
-        */
-        const success = prompt('blank to mock not enabled, "empty" to mock empty state, anything else to mock regular state');
-        const regular = {
+        // TODO: This method will be implemented later once endpoints are finalized
+        return Promise.resolve({
+            enabled           : true,
+            cloudCapacity     : 53687091200,
             currentRecordings : 7457136000, // ms, rounded to the hour
             whenFullyUsed     : 1209600000, // ms, rounded to the hour
             amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
             archiveFrom       : 11, // number of cameras represented by integer
             recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
             delayFromLive     : 1200000 // ms, rounded to 0.1s}
-        };
-
-        const usage = success && success !== 'empty' ? regular : {};
-
-        return Promise.resolve({
-            enabled       : !!success,
-            cloudCapacity : 53687091200,
-            ...usage
         });
     }
 }

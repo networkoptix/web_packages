@@ -58,6 +58,7 @@ export class NxGenericDropdown extends BaseDropdown {
 export class DropdownItem {
     constructor(
         public name: string,
-        public value?: string
+        public value?: string,
+        public stateOfHealth?: string
     ) {}
 };
