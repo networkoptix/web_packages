@@ -17,7 +17,14 @@
     .message {
         flex : 70%;
         &-content {
-            position: relative
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &-wrapper {
+                position: relative;
+            }
         }
     }
 
