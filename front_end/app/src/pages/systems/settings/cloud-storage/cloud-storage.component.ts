@@ -42,17 +42,17 @@ export class NxCloudStorageComponent {
         this.init();
     }
 
+    private setupDefaults({ configService, languageService }) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+    }
+
     private init() {
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
             if (system === undefined) return;
             this.updateEnabledAndUsageStats();
         });
-    }
-
-    private setupDefaults({ configService, languageService }) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
     }
 
     private updateEnabledAndUsageStats() {
@@ -64,7 +64,7 @@ export class NxCloudStorageComponent {
             });
     }
 
-    // Property getters
+    // Getters for view
 
     get user() {
         return this.system$.value.currentUser;
@@ -81,24 +81,6 @@ export class NxCloudStorageComponent {
     get isOwner() {
         return this.system$.value.isOwner;
     }
-
-    get systemId() {
-        return this.system$.value.id;
-    }
-
-    set cloudStorageSystemEnabled(value: boolean) {
-        this.cloudStorageSystemEnabled$.next(value);
-    }
-
-    get cloudStorageSystemEnabled() {
-        return this.cloudStorageSystemEnabled$.value;
-    }
-
-    set systems(value) {
-        this.systems$.next(value);
-    }
-
-    // Getters for view
 
     public get cloudCapacity() {
         const { locale } = this;
@@ -138,9 +120,10 @@ export class NxCloudStorageComponent {
 
     public get numberOfCameras() {
         if (this.usageStats.archiveFrom === '_') return this.usageStats.archiveFrom;
-        return this.pluralize(this.usageStats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
+        const single = this.usageStats.archiveFrom === 1;
+        const { camera, cameras } = this.LANG.dialogs.cloudStorage;
+        return `${this.usageStats.archiveFrom} ${single ? camera : cameras}`;
     }
-
 
     // String methods for view
 
@@ -151,11 +134,22 @@ export class NxCloudStorageComponent {
                 : this.utilsService.msFromNowToString(ms, suffix));
     }
 
-    // TODO: pluralize and translate not implmented, need to figure out how we're going to handle
+    // Other getters
+    get systemId() {
+        return this.system$.value.id;
+    }
 
-    public pluralize = this.utilsService.pluralize
+    set cloudStorageSystemEnabled(value: boolean) {
+        this.cloudStorageSystemEnabled$.next(value);
+    }
 
-    public translate = this.utilsService.translate
+    get cloudStorageSystemEnabled() {
+        return this.cloudStorageSystemEnabled$.value;
+    }
+
+    set systems(value) {
+        this.systems$.next(value);
+    }
 
     // Handler methods for actions
 
@@ -163,9 +157,11 @@ export class NxCloudStorageComponent {
         return this.cloudApiService.enableCloudStorage(this.systemId)
             .then(({ totalSpace }) => {
                 this._cloudCapacity = totalSpace;
+                // TODO: Will implement on a future task when api service is finalized
                 this.cloudStorageSystemEnabled = true;
                 this.updateEnabledAndUsageStats();
             },
+            // TODO: Will implement on a future task when api service is finalized
             () => {
                 // Activation Error Dialog
                 const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
@@ -173,6 +169,7 @@ export class NxCloudStorageComponent {
             }
             );
     }, {
+        // TODO: These messages and errorCodes will be implemented on a future ticket
         successMessage : 'Cloud Storage Enabled',
         errorPrefix    : 'Error Enabling Cloud Storage'
     });
@@ -201,21 +198,6 @@ export const emptyUsage: IUsageStats = {
     recordingBitrate  : '_',
     delayFromLive     : '_'
 };
-
-export const regularUsage: IUsageStats = {
-    currentRecordings : 7457136000, // ms, rounded to the hour
-    whenFullyUsed     : 1209600000, // ms, rounded to the hour
-    amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
-    archiveFrom       : 11, // number of cameras represented by integer
-    recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
-    delayFromLive     : 1200000 // ms, rounded to 0.1s
-};
-
-export interface ICloudStorageUsageAndStats {
-    enabled: boolean
-    cloudCapacity: number
-    usageStats: IUsageStats
-  }
 
 export interface IUsageStats {
       currentRecordings: UsageTypes

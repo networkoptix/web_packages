@@ -3,14 +3,14 @@ import {
     Input,
     Renderer2,
     ViewChild
-}                                   from '@angular/core';
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../services/process.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { BehaviorSubject } from 'rxjs';
-import { NxSystem } from '../../../services/system.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { BehaviorSubject }           from 'rxjs';
+import { NxSystem }                  from '../../../services/system.service';
 
 @Component({
     selector    : 'nx-modal-cloud-storage-delete-content',
@@ -24,11 +24,11 @@ export class CloudStorageDeleteModalContent {
 
     LANG: LanguageI18NStaticTypes;
     wrongPassword: boolean;
+
+    systemId = '';
     auth = {
         password: ''
     };
-
-    systemId = '';
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
@@ -55,7 +55,6 @@ export class CloudStorageDeleteModalContent {
     }, {
         ignoreUnauthorized : true,
         errorCodes         : {
-            // TODO: Need to add more error codes
             wrongPassword: () => {
                 this.wrongPassword = true;
                 this.auth.password = '';
@@ -63,6 +62,7 @@ export class CloudStorageDeleteModalContent {
                 this.renderer.selectRootElement('#password').focus();
             }
         },
+        // TODO: These messages and errorCodes will be implemented on a future ticket
         successMessage : 'Cloud Storage Successfully removed from system',
         errorPrefix    : 'Error removing cloud storage'
     }).then(() => {

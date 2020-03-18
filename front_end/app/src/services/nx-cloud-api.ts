@@ -54,8 +54,8 @@ export class NxCloudApiService {
 
     merge(masterSystemId: string, slaveSystemId: string, password: string): Promise<any> {
         return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id: masterSystemId,
-            slave_system_id : slaveSystemId,
+            master_system_id : masterSystemId,
+            slave_system_id  : slaveSystemId,
             password
         }).toPromise();
     }
@@ -85,8 +85,8 @@ export class NxCloudApiService {
                 {
                     email,
                     password,
-                    first_name: firstName,
-                    last_name : lastName,
+                    first_name : firstName,
+                    last_name  : lastName,
                     subscribe,
                     code
                 })
@@ -132,8 +132,8 @@ export class NxCloudApiService {
 
     unshare(systemId: string, userEmail: string): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
-            user_email: userEmail,
-            role      : this.CONFIG.accessRoles.unshare
+            user_email : userEmail,
+            role       : this.CONFIG.accessRoles.unshare
         });
     }
 
@@ -193,21 +193,21 @@ export class NxCloudApiService {
     accountPost(account: Account): Promise<any> {
         // strip unnecessary account info
         const accountInfo = {
-            email       : account.email,
-            first_name  : account.first_name,
-            last_name   : account.last_name,
-            is_staff    : account.is_staff,
-            is_superuser: account.is_superuser || false,
-            language    : account.language,
-            permissions : account.permissions
+            email        : account.email,
+            first_name   : account.first_name,
+            last_name    : account.last_name,
+            is_staff     : account.is_staff,
+            is_superuser : account.is_superuser || false,
+            language     : account.language,
+            permissions  : account.permissions
         };
         return this.http.post(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password: newPassword,
-            old_password: oldPassword
+            new_password : newPassword,
+            old_password : oldPassword
         }).toPromise();
     }
 

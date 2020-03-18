@@ -178,6 +178,8 @@
             "title": "Cloud Storage",
             "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
             "activationError": {
                 "title": "Cannot Enable Cloud Storage",
                 "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "

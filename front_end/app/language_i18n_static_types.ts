@@ -187,6 +187,8 @@ export interface CloudStorage {
     title:                 string;
     initial:               string;
     available:             string;
+    camera:                string;
+    cameras:               string;
     activationError:       Created;
     systemDisconnectError: Created;
     moveCloudStorage:      MoveCloudStorage;
@@ -987,6 +989,8 @@ const typeMap: any = {
         { json: "title", js: "title", typ: "" },
         { json: "initial", js: "initial", typ: "" },
         { json: "available", js: "available", typ: "" },
+        { json: "camera", js: "camera", typ: "" },
+        { json: "cameras", js: "cameras", typ: "" },
         { json: "activationError", js: "activationError", typ: r("Created") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },

@@ -10,7 +10,7 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
+import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxProcessService }          from '../../../services/process.service';
@@ -32,9 +32,9 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     targetSystems: DropdownItem[];
     errorText: string;
+
     systemId = '';
     userEmail = '';
-
     target$ = new BehaviorSubject('');
     targetOnline$ = new BehaviorSubject(false);
     showNoOtherSystems = false;
@@ -71,9 +71,9 @@ export class CloudStorageMoveModalContent implements OnInit {
 
                 const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
                 this.targetSystems = [...processedSystems, ...otherSystems];
-                this.setTargetSystem(this.targetSystems[0])
+                this.setTargetSystem(this.targetSystems[0]);
                 if (systems && this.targetSystems.length <= 2) {
-                    // Display noOtherSystemsError when only system
+                    // Display noOtherSystemsError when current system is the only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
                     this.injector.get(NxDialogsService).confirm(message, title, ok);
@@ -82,6 +82,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         });
     }
 
+    // Getters for view
     public get currentTarget() {
         return this.target$.value;
     }
@@ -90,6 +91,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         return this.targetOnline$.value;
     }
 
+    // Move Process
     public move = this.processService.createProcess(() => {
         return this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget)
             .then(() => {
@@ -97,11 +99,12 @@ export class CloudStorageMoveModalContent implements OnInit {
                 this.close();
             });
     }, {
-        // TODO: Need to handle whatever errors I can here
+        // TODO: These messages and errorCodes will be implemented on a future ticket
         successMessage : 'Storage Succesfully moved',
         errorPrefix    : 'Cloud Storage Move Error'
     })
 
+    // Other instance methods
     close() {
         this.activeModal.close();
     }
