@@ -54,9 +54,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     parsedServerId: string;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+    private setupDefaults() {
         this.checking = false;
         this.serverOffline = false;
         this.renameDisabled = true;
@@ -70,19 +68,23 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.fullInfoPath = '';
     }
 
-    constructor(configService: NxConfigService,
-                @Inject(ViewContainerRef) viewContainerRef,
-                private applyService: NxApplyService,
-                private processService: NxProcessService,
-                private route: ActivatedRoute,
-                private language: NxLanguageProviderService,
-                private dialogs: NxDialogsService,
-                private settingsService: NxSettingsService,
-                private menuService: NxMenuService,
-                private uriService: NxUriService
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        @Inject(ViewContainerRef) viewContainerRef,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
+        private route: ActivatedRoute,
+        private dialogs: NxDialogsService,
+        private settingsService: NxSettingsService,
+        private menuService: NxMenuService,
+        private uriService: NxUriService
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {

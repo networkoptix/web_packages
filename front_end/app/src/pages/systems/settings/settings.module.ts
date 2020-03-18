@@ -1,67 +1,72 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { NxSystemSettingsComponent } from './settings.component';
-
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../../components/components.module';
-
-import { NxSystemAdminModule }       from './admin/admin.module';
-import { NxSystemUsersModule }       from './users/users.module';
-import { NxSystemServersModule }     from './servers/servers.module';
-import { NxSystemAdminComponent }    from './admin/admin.component';
-import { NxSystemUsersComponent }    from './users/users.component';
-import { NxSystemServersComponent }  from './servers/servers.component';
-import { NxNoSystemsComponent }      from '../no-systems/no-systems.component';
-import { ApplyGuard }                from '../../../routeGuards/applyGuard';
-import { AuthGuard }                 from '../../../routeGuards/authGuard';
-import { UserGuard }                 from '../../../routeGuards/userGuard';
+import { NgModule }                         from '@angular/core';
+import { CommonModule }                     from '@angular/common';
+import { BrowserModule }                    from '@angular/platform-browser';
+import { UpgradeModule }                    from '@angular/upgrade/static';
+import { RouterModule, Routes }             from '@angular/router';
+import { NgbModule }                        from '@ng-bootstrap/ng-bootstrap';
+import { NxSystemSettingsComponent }        from './settings.component';
+import { TranslateModule }                  from '@ngx-translate/core';
+import { ComponentsModule }                 from '../../../components/components.module';
+import { NxSystemAdminModule }              from './admin/admin.module';
+import { NxSystemUsersModule }             from './users/users.module';
+import { NxSystemServersModule }           from './servers/servers.module';
+import { NxSystemAdminComponent }          from './admin/admin.component';
+import { NxSystemUsersComponent }          from './users/users.component';
+import { NxSystemServersComponent }        from './servers/servers.component';
+import { NxNoSystemsComponent }            from '../no-systems/no-systems.component';
+import { ApplyGuard }                      from '../../../routeGuards/applyGuard';
+import { AuthGuard }                       from '../../../routeGuards/authGuard';
+import { UserGuard }                       from '../../../routeGuards/userGuard';
+import { NxSystemServerAdvancedComponent } from './advanced/advanced.component';
+import { NxSystemServerAdvancedModule }    from './advanced/advanced.module';
+import { AdminGuard }                      from '../../../routeGuards/adminGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
     {
-        path    : 'systems/:systemId',
-        component: NxSystemSettingsComponent,
-        canActivate: [AuthGuard],
-        children: [
+        path        : 'systems/:systemId',
+        component   : NxSystemSettingsComponent,
+        canActivate : [AuthGuard],
+        children    : [
             {
-                path: '',
-                component: NxSystemAdminComponent,
-                canDeactivate: [ApplyGuard]
+                path          : '',
+                component     : NxSystemAdminComponent,
+                canDeactivate : [ApplyGuard]
             },
             {
-                path: 'users',
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard]
+                path          : 'users',
+                component     : NxSystemUsersComponent,
+                canDeactivate : [ApplyGuard],
+                canActivate   : [UserGuard]
             },
             {
-                path: 'users/:userId',
-                component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuard],
-                canActivate: [UserGuard]
+                path          : 'users/:userId',
+                component     : NxSystemUsersComponent,
+                canDeactivate : [ApplyGuard],
+                canActivate   : [UserGuard]
             },
             {
-                path: 'servers',
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                path          : 'servers',
+                component     : NxSystemServersComponent,
+                canDeactivate : [ApplyGuard]
             },
             {
-                path: 'servers/:serverId',
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard]
+                path          : 'servers/:serverId',
+                component     : NxSystemServersComponent,
+                canDeactivate : [ApplyGuard]
+            },
+            {
+                path          : 'servers/:serverId/advanced',
+                component     : NxSystemServerAdvancedComponent,
+                canActivate   : [AdminGuard],
+                canDeactivate : [ApplyGuard]
             }
         ]
     }
 ];
 
 @NgModule({
-    imports        : [
+    imports         : [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -72,21 +77,22 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
+        NxSystemServerAdvancedModule,
 
         RouterModule.forChild(appRoutes)
     ],
-    providers      : [
-        ApplyGuard,
+    providers       : [
+        ApplyGuard
     ],
-    declarations   : [
+    declarations    : [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap       : [],
+    entryComponents : [
         NxSystemSettingsComponent
     ],
-    exports: [
+    exports         : [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ]

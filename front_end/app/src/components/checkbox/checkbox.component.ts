@@ -11,7 +11,7 @@ import {
 
 /* Usage
  <nx-checkbox
-     name="remember" id="remember"
+     name="remember" componentId="remember"
      [(ngModel)]="user.remember_me"
      (click)?="onClick($event)"
      checked?

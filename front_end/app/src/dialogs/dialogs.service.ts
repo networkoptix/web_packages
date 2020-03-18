@@ -23,15 +23,20 @@ import { DetachServerModalContent }   from './detach-server/detach-server.compon
 import { ResetServerModalContent }    from './reset-server/reset-server.component';
 import { ChangePasswordModalContent } from './change-password/change-password.component';
 import { LanguageI18NStaticTypes }    from '../../language_i18n_static_types';
+import { SubscriptionLike }           from 'rxjs';
+import { AutoUnsubscribe }            from 'ngx-auto-unsubscribe';
 
 import './../dialogs/dialogs.scss';
 
+@AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     location: any;
     closeResult: any;
+
+    languageSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
@@ -43,10 +48,16 @@ export class NxDialogsService {
         private domSanitizer: DomSanitizer,
         private router: Router
     ) {
-        this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
         this.location = location;
+
+        this.languageSubscription = languageService.translateSubject
+            .subscribe(() => {
+                this.LANG = languageService.getTranslations();
+            });
     }
+
+    ngOnDestroy() {}
 
     dismiss() {
         this.toastService.remove();
@@ -76,6 +87,8 @@ export class NxDialogsService {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
+
+        console.log('LANG2 ->', this.LANG);
 
         const params: any = {
             message    : this.domSanitizer.bypassSecurityTrustHtml(message),

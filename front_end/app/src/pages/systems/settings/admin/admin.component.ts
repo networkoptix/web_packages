@@ -91,10 +91,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-
+    private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.setSection('admin');
@@ -111,22 +108,26 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
     }
 
-    constructor(configService: NxConfigService,
-                @Inject(ViewContainerRef) viewContainerRef,
-                private accountService: NxAccountService,
-                private applyService: NxApplyService,
-                private processService: NxProcessService,
-                private route: ActivatedRoute,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private systemsService: NxSystemsService,
-                private settingsService: NxSettingsService,
-                private menuService: NxMenuService,
-                private router: Router
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        @Inject(ViewContainerRef) viewContainerRef,
+        private accountService: NxAccountService,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
+        private route: ActivatedRoute,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private systemsService: NxSystemsService,
+        private settingsService: NxSettingsService,
+        private menuService: NxMenuService,
+        private router: Router
     ) {
         this.viewContainerRef = viewContainerRef;
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {

@@ -7,7 +7,7 @@
     background-color : $light5;
     padding          : 0 12px;
     position         : relative;
-    
+
     &:after {
         height           : 1px;
         background-color : $light7;
@@ -21,4 +21,9 @@
     margin-bottom : 8px;
     font-family   : $font-family-regular;
     color         : $light16;
+}
+
+.error-label {
+    @extend #regular13;
+    color : $error;
 }

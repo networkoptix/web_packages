@@ -30,6 +30,7 @@ import { initializeApp }     from './src/pages/push-notifications/push-notificat
 import { AuthGuard }         from './src/routeGuards/authGuard';
 import { HMGuard }           from './src/routeGuards/hmGuard';
 import { UserGuard }         from './src/routeGuards/userGuard';
+import { AdminGuard }         from './src/routeGuards/adminGuard';
 
 
 // AoT requires an exported function for factories
@@ -58,7 +59,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken',
+            headerName: 'X-CSRFToken'
         }),
         WebStorageModule,
         OrderModule,
@@ -99,9 +100,10 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         AuthGuard,
         HMGuard,
         UserGuard,
+        AdminGuard
     ],
     declarations   : [
-        AppComponent,
+        AppComponent
     ],
     exports        : [
     ],

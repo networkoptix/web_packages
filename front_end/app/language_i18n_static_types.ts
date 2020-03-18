@@ -38,6 +38,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    settingsConfig:        { [key: string]: string };
 }
 
 export interface AccessRole {
@@ -222,11 +223,13 @@ export interface RecommendSupport {
 }
 
 export interface DialogsMessage {
-    failedToSend: string;
-    placeholders: Placeholders;
-    sent:         string;
-    subject:      Subject;
-    title:        Title;
+    settingsSaved:    string;
+    settingsNotSaved: string;
+    failedToSend:     string;
+    placeholders:     Placeholders;
+    sent:             string;
+    subject:          Subject;
+    title:            Title;
 }
 
 export interface Placeholders {
@@ -262,6 +265,8 @@ export interface Sharing {
 }
 
 export interface DialogsTitles {
+    error:                  string;
+    success:                string;
     changeAccount:          string;
     deleteUser:             string;
     loggedFromOtherAccount: string;
@@ -828,6 +833,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "settingsConfig", js: "settingsConfig", typ: m("") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "" },
@@ -995,6 +1001,8 @@ const typeMap: any = {
         { json: "c_proceeding", js: "c_proceeding", typ: "" },
     ], false),
     "DialogsMessage": o([
+        { json: "settingsSaved", js: "settingsSaved", typ: "" },
+        { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },
@@ -1029,6 +1037,8 @@ const typeMap: any = {
         { json: "shareTitle", js: "shareTitle", typ: "" },
     ], false),
     "DialogsTitles": o([
+        { json: "error", js: "error", typ: "" },
+        { json: "success", js: "success", typ: "" },
         { json: "changeAccount", js: "changeAccount", typ: "" },
         { json: "deleteUser", js: "deleteUser", typ: "" },
         { json: "loggedFromOtherAccount", js: "loggedFromOtherAccount", typ: "" },

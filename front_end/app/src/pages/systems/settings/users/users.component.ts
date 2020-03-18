@@ -1,15 +1,14 @@
 import {
     Component, Inject, OnDestroy,
     OnInit, ViewContainerRef
-}                                    from '@angular/core';
-import { Location }                  from '@angular/common';
-import { ActivatedRoute }            from '@angular/router';
-import { filter }                    from 'rxjs/operators';
-
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxPageService }             from '../../../../services/page.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
-import { NxSettingsService }         from '../settings.service';
+}                                               from '@angular/core';
+import { Location }                             from '@angular/common';
+import { ActivatedRoute }                       from '@angular/router';
+import { filter }                               from 'rxjs/operators';
+import { NxConfigService, IConfig }             from '../../../../services/nx-config';
+import { NxPageService }                        from '../../../../services/page.service';
+import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }                    from '../settings.service';
 import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
 import { NxMenuService }                        from '../../../../components/menu/menu.service';
 import { NxAccountService }                     from '../../../../services/account.service';
@@ -18,8 +17,8 @@ import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/syste
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 import { NxUriService }                         from '../../../../services/uri.service';
 import { Subscription }                         from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -54,26 +53,29 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription;
 
     private setupDefaults() {
-        this.CONFIG = this.configService.getConfig();
         this.locked = {};
         this.menuService.setSection('users');
     }
 
-    constructor(@Inject(ViewContainerRef) viewContainerRef,
-                private route: ActivatedRoute,
-                private accountService: NxAccountService,
-                private applyService: NxApplyService,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private settingsService: NxSettingsService,
-                private menuService: NxMenuService,
-                private processService: NxProcessService,
-                private uriService: NxUriService,
-                location: Location) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(ViewContainerRef) viewContainerRef,
+        private route: ActivatedRoute,
+        private accountService: NxAccountService,
+        private applyService: NxApplyService,
+        private language: NxLanguageProviderService,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private settingsService: NxSettingsService,
+        private menuService: NxMenuService,
+        private processService: NxProcessService,
+        private uriService: NxUriService,
+        location: Location
+    ) {
         this.location = location;
         this.viewContainerRef = viewContainerRef;
+        this.CONFIG = configService.getConfig();
+
         this.setupDefaults();
     }
 
@@ -118,19 +120,19 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
         this.initProcesses();
 
-        this.applyService.initPageWatcher(this.viewContainerRef, this.editUser, () => {
-            this.selectedUser.isEnabled = this.userEnabled.originalValue;
-            this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
-            this.applyService.reset();
-        },
+        this.applyService
+            .initPageWatcher(this.viewContainerRef, this.editUser, () => {
+                this.selectedUser.isEnabled = this.userEnabled.originalValue;
+                this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
+                this.applyService.reset();
+            },
             [
                 this.userEnabled,
                 this.userRole,
                 this.name,
                 this.fullName,
                 this.email
-            ]
-        );
+            ]);
     }
 
     ngOnDestroy(): void {}
@@ -184,7 +186,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         });
     }
 
-    calcNextUserId () {
+    calcNextUserId() {
         const currentUserIndex = this.system.users.findIndex((user) => {
             return user.id === this.selectedUser.id;
         });
@@ -200,7 +202,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     return user.id.replace(/{|}/g, '') === this.paramUser;
                 });
             }
-            if (typeof(user) === 'undefined') {
+            if (typeof (user) === 'undefined') {
                 user = this.system.users[0];
                 const userId = this.system.mediaserver.cleanId(user.id);
 
@@ -212,11 +214,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             }
 
             // If there's no users skip setting section and permissions
-            if (typeof(user) === 'undefined') {
+            if (typeof (user) === 'undefined') {
                 return;
             }
             this.applyService.hardReset();
-            this.selectedUser = {... user};
+            this.selectedUser = { ...user };
 
             this.deleteMessage = this.selectedUser.isCloud ?
                 this.LANG.system.users.cloudDelete : this.LANG.system.users.localDelete;
@@ -238,14 +240,14 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     changePassword() {
         return this.dialogs
-                .changePassword(this.system, this.selectedUser);
+            .changePassword(this.system, this.selectedUser);
     }
 
-    setPermission(role: NxSystemRole|any) {
+    setPermission(role: NxSystemRole | any) {
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole] ?
-                this.LANG.accessRoles[userRole].description :
-                this.LANG.accessRoles.customRole.description;
+            this.LANG.accessRoles[userRole].description :
+            this.LANG.accessRoles.customRole.description;
         this.selectedUser.role = role;
         this.userRole.value = role.name;
     }
