@@ -1,26 +1,21 @@
-import {
-    Component,
-    LOCALE_ID,
-    Inject
-}                                       from '@angular/core';
-import { NxConfigService, IConfig }              from '../../../../services/nx-config';
+import { Component, LOCALE_ID, Inject } from '@angular/core';
+import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
 import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
-import { BehaviorSubject }                 from 'rxjs';
+import { BehaviorSubject }              from 'rxjs';
 import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
 import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
 import { NxUtilsService }               from '../../../../services/utils.service';
 import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxSettingsService } from '../settings.service';
-import { NxSystem, NxSystemUser } from '../../../../services/system.service';
-import { NxCloudApiService } from '../../../../services/nx-cloud-api';
-import { NxProcessService } from '../../../../services/process.service';
-import { NxSystemsService } from '../../../../services/systems.service';
+import { NxSettingsService }            from '../settings.service';
+import { NxSystem }                     from '../../../../services/system.service';
+import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
+import { NxProcessService }             from '../../../../services/process.service';
 
 @Component({
-    selector : 'nx-cloud-storage',
+    selector    : 'nx-cloud-storage',
     templateUrl : './cloud-storage.component.html',
-    styleUrls : ['./cloud-storage.component.scss'],
+    styleUrls   : ['./cloud-storage.component.scss']
 })
 export class NxCloudStorageComponent {
     CONFIG: IConfig;
@@ -32,10 +27,7 @@ export class NxCloudStorageComponent {
     cloudStorageSystemEnabled$ = new BehaviorSubject(false);
     systems$: BehaviorSubject<NxSystem[]>;
 
-    private setupDefaults({ configService, languageService }) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
-    }
+    // Constructor and class initialization methods
 
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
@@ -55,9 +47,23 @@ export class NxCloudStorageComponent {
         this.system$.subscribe(system => {
             if (system === undefined) return;
             this.updateEnabledAndUsageStats();
-            this._cloudCapacity = 100000000000;
         });
     }
+
+    private setupDefaults({ configService, languageService }) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+    }
+
+    private updateEnabledAndUsageStats() {
+        this.cloudApiService.getCloudStorageUsage(this.systemId)
+            .then(({ enabled, cloudCapacity, ...usageStats }) => {
+                this.usageStats = { ...emptyUsage, ...usageStats };
+                this.cloudStorageSystemEnabled = enabled;
+                this._cloudCapacity = cloudCapacity;
+            });
+    }
+
     // Property getters
 
     get user() {
@@ -92,11 +98,17 @@ export class NxCloudStorageComponent {
         this.systems$.next(value);
     }
 
-    // Helper Methods
+    // Getters for view
 
     public get cloudCapacity() {
         const { locale } = this;
         return fromBits(this._cloudCapacity, { locale, roundTo: 1073741824 / 10 });
+    }
+
+    public get compCloudCapacity() {
+        const { locale } = this;
+        // TODO: Where will the comp cloud capacity come from? Config?
+        return fromBits(53687091200, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get bitrate() {
@@ -106,13 +118,6 @@ export class NxCloudStorageComponent {
                 ? this.usageStats.recordingBitrate
                 : fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
         );
-    }
-
-    public msFriendlyTime(ms: number | '_', suffix = false) {
-        return (
-            ms === '_'
-                ? ms
-                : this.utilsService.msFromNowToString(ms, suffix));
     }
 
     public get cloudStorageUsed() {
@@ -136,13 +141,23 @@ export class NxCloudStorageComponent {
         return this.pluralize(this.usageStats.archiveFrom, this.translate('Camera'), this.translate('Cameras'));
     }
 
+
+    // String methods for view
+
+    public msFriendlyTime(ms: number | '_', suffix = false) {
+        return (
+            ms === '_'
+                ? ms
+                : this.utilsService.msFromNowToString(ms, suffix));
+    }
+
     // TODO: pluralize and translate not implmented, need to figure out how we're going to handle
 
     public pluralize = this.utilsService.pluralize
 
     public translate = this.utilsService.translate
 
-    // Processes should be in dialogService
+    // Handler methods for actions
 
     public enableCloudStorage = this.processService.createProcess(() => {
         return this.cloudApiService.enableCloudStorage(this.systemId)
@@ -151,24 +166,16 @@ export class NxCloudStorageComponent {
                 this.cloudStorageSystemEnabled = true;
                 this.updateEnabledAndUsageStats();
             },
-            () => this.activationErrorDialog()
+            () => {
+                // Activation Error Dialog
+                const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
+                this.dialogService.confirm(message, title, ok);
+            }
             );
     }, {
-        // successMessage : 'Cloud Storage Enabled',
+        successMessage : 'Cloud Storage Enabled',
         errorPrefix    : 'Error Enabling Cloud Storage'
     });
-
-    private handleCloudStorageDisabled = () => {
-        this.cloudStorageSystemEnabled = false;
-    }
-
-    private updateEnabledAndUsageStats() {
-        this.cloudApiService.getCloudStorageUsage(this.systemId)
-            .then(({ enabled, ...usageStats }) => {
-                this.usageStats = { ...emptyUsage, ...usageStats };
-                this.cloudStorageSystemEnabled = enabled;
-            });
-    }
 
     public deleteCloudStorage() {
         this.dialogService.cloudStorageDelete(this.system$, this.handleCloudStorageDisabled);
@@ -179,19 +186,10 @@ export class NxCloudStorageComponent {
         this.dialogService.cloudStorageMove(this.system$, this.handleCloudStorageDisabled);
     }
 
-    private activationErrorDialog() {
-        const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
-        this.dialogService.confirm(message, title, ok);
-    }
+    // Callback for disabled or moved storage
 
-    public noOtherSystemsErrorDialog() {
-        // const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
-        // this.dialogService.confirm(message, title, ok);
-    }
-
-    public systemDisconnectErrorDialog() {
-        // const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
-        // this.dialogService.confirm(message, title, ok);
+    private handleCloudStorageDisabled = () => {
+        this.cloudStorageSystemEnabled = false;
     }
 }
 
@@ -213,10 +211,9 @@ export const regularUsage: IUsageStats = {
     delayFromLive     : 1200000 // ms, rounded to 0.1s
 };
 
-export interface ICloudStorageState {
+export interface ICloudStorageUsageAndStats {
+    enabled: boolean
     cloudCapacity: number
-    systemCloudEnabled: boolean
-    userCloudEnabled: boolean
     usageStats: IUsageStats
   }
 
@@ -228,12 +225,5 @@ export interface IUsageStats {
       recordingBitrate: UsageTypes
       delayFromLive: UsageTypes
   }
-
-export const mockState: ICloudStorageState = {
-    cloudCapacity      : 100000000000,
-    systemCloudEnabled : true,
-    userCloudEnabled   : true,
-    usageStats         : regularUsage
-};
 
   type UsageTypes = '_' | number

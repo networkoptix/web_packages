@@ -176,6 +176,7 @@
         },
         "cloudStorage": {
             "title": "Cloud Storage",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
             "activationError": {
                 "title": "Cannot Enable Cloud Storage",

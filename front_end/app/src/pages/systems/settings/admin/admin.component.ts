@@ -306,6 +306,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.system.isMine) {
             this.cloudApiService.getCloudStorageUsage(this.system.id).then(({ enabled }) => {
                 if (enabled) {
+                    // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
                     const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
                     return this.dialogs.confirm(message, title, ok);
                 } else {

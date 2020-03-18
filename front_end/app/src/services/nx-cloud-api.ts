@@ -268,6 +268,7 @@ export class NxCloudApiService {
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
+        console.log(`source: ${sourceSystemId}, target: ${destinationSystemId}`);
         // TODO: don't forget to remove this and uncomment request to cloud storage end point
         const success = prompt('Add any message to mock move success');
         return success ? Promise.resolve() : Promise.reject();
@@ -296,7 +297,8 @@ export class NxCloudApiService {
         const usage = success && success !== 'empty' ? regular : {};
 
         return Promise.resolve({
-            enabled: !!success,
+            enabled       : !!success,
+            cloudCapacity : 53687091200,
             ...usage
         });
     }

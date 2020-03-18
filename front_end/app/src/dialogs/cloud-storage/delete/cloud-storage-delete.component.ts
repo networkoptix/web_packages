@@ -13,9 +13,9 @@ import { BehaviorSubject } from 'rxjs';
 import { NxSystem } from '../../../services/system.service';
 
 @Component({
-    selector : 'nx-modal-cloud-storage-delete-content',
+    selector    : 'nx-modal-cloud-storage-delete-content',
     templateUrl : 'cloud-storage-delete.component.html',
-    styleUrls : []
+    styleUrls   : []
 })
 export class CloudStorageDeleteModalContent {
     @Input() system$: BehaviorSubject<NxSystem>;
@@ -23,14 +23,12 @@ export class CloudStorageDeleteModalContent {
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
-    password: string;
     wrongPassword: boolean;
     auth = {
         password: ''
     };
 
     systemId = '';
-    userEmail = '';
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
@@ -47,7 +45,6 @@ export class CloudStorageDeleteModalContent {
         this.auth.password = '';
         this.system$.subscribe(system => {
             this.systemId = system.id;
-            this.userEmail = system.currentUserEmail;
         });
     }
 
@@ -58,6 +55,7 @@ export class CloudStorageDeleteModalContent {
     }, {
         ignoreUnauthorized : true,
         errorCodes         : {
+            // TODO: Need to add more error codes
             wrongPassword: () => {
                 this.wrongPassword = true;
                 this.auth.password = '';

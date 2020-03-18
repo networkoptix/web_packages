@@ -185,6 +185,7 @@ export interface Buttons {
 
 export interface CloudStorage {
     title:                 string;
+    initial:               string;
     available:             string;
     activationError:       Created;
     systemDisconnectError: Created;
@@ -984,6 +985,7 @@ const typeMap: any = {
     ], false),
     "CloudStorage": o([
         { json: "title", js: "title", typ: "" },
+        { json: "initial", js: "initial", typ: "" },
         { json: "available", js: "available", typ: "" },
         { json: "activationError", js: "activationError", typ: r("Created") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },

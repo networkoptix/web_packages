@@ -5,24 +5,23 @@ import {
     Input,
     OnInit,
     Injector
-}                                   from '@angular/core';
+}                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { DropdownItem } from '../../../components/dropdowns/generic/dropdown.component';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { NxCloudApiService } from '../../../services/nx-cloud-api';
-import { NxProcessService } from '../../../services/process.service';
-import { NxCloudStorageComponent } from '../../../pages/systems/settings/cloud-storage/cloud-storage.component';
-import { BehaviorSubject } from 'rxjs';
-import { NxSystem, NxSystemUser } from '../../../services/system.service';
-import { NxDialogsService } from '../../dialogs.service';
+import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NxProcessService }          from '../../../services/process.service';
+import { BehaviorSubject }           from 'rxjs';
+import { NxSystem }                  from '../../../services/system.service';
+import { NxDialogsService }          from '../../dialogs.service';
 
 @Component({
-    selector : 'nx-cloud-storage-move-content',
+    selector    : 'nx-cloud-storage-move-content',
     templateUrl : 'cloud-storage-move.component.html',
-    styleUrls : ['cloud-storage-move.component.scss']
+    styleUrls   : ['cloud-storage-move.component.scss']
 })
 export class CloudStorageMoveModalContent implements OnInit {
     @Input() system$: BehaviorSubject<NxSystem>;
@@ -32,6 +31,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     CONFIG: IConfig;
 
     targetSystems: DropdownItem[];
+    target$: BehaviorSubject<string>;
     errorText: string;
     systemId = '';
     userEmail = '';
@@ -61,14 +61,17 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.userEmail = system.currentUserEmail;
             this.systemsService.getMySystems(this.userEmail, this.systemId);
             this.systemsService.systemsSubject.subscribe((systems: any[]) => {
-                const processedSystems = systems.filter(({id}) => id !== this.systemId).map(({ id: value, name, stateOfHealth }) => ({
+                // Generate dropdown items
+                const processedSystems = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth }) => ({
                     value,
                     name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
                 }));
 
                 const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
                 this.targetSystems = [...processedSystems, ...otherSystems];
+                this.target$ = new BehaviorSubject(this.targetSystems[0].value);
                 if (systems && this.targetSystems.length <= 2) {
+                    // Display noOtherSystemsError when only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
                     this.injector.get(NxDialogsService).confirm(message, title, ok);
@@ -77,14 +80,18 @@ export class CloudStorageMoveModalContent implements OnInit {
         });
     }
 
-    // TODO: Replace with process
+    public get currentTarget() {
+        return this.target$.value;
+    }
+
     public move = this.processService.createProcess(() => {
-        return this.cloudApiService.moveCloudStorage('fromSystem', 'toSystem')
+        return this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget)
             .then(() => {
                 this.updateCallback();
                 this.close();
             });
     }, {
+        // TODO: Need to handle whatever errors I can here
         successMessage : 'Storage Succesfully moved',
         errorPrefix    : 'Cloud Storage Move Error'
     })
@@ -94,8 +101,9 @@ export class CloudStorageMoveModalContent implements OnInit {
     }
 
     setTargetSystem({ value }) {
+        this.target$.next(value);
         if (value === 'otherSystem') {
-            // Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
+            // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
@@ -108,11 +116,3 @@ export class CloudStorageMoveModalContent implements OnInit {
         });
     }
 }
-
-// Currently using mock values for dropdown, having a few issues with accountService that I need to resolve before implementing with dynamic data
-const mockItems = [{ value: 'a9e17746-41df-438d-91a0-79f0fa644261', name: '<span>Docker VMS</span><span class="text-muted"> – offline</span>' },
-    { value: '0dc2065d-f07d-4d4f-8346-a46f76ea3e99', name: '<span>kyle-vbox-2</span><span class="text-muted"> – offline</span>' },
-    { value: 'a1e63ea3-c512-4e67-ab02-0f54090f87a7', name: '<span>kyle-VirtualBox-1</span><span class="text-muted"> – offline</span>' },
-    { value: 'b57b279e-2cbb-4c98-8e26-c814cd349d49', name: '<span>Mac Server</span><span class="text-muted"> – offline</span>' },
-    { name: 'horizontal' },
-    { value: 'otherSystem', name: 'Other System...' }];
