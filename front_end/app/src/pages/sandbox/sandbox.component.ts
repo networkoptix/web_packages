@@ -2,6 +2,7 @@ import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { NxDialogsService }              from '../../dialogs/dialogs.service';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { NxProcessService }              from '../../services/process.service';
 
 @Component({
     selector   : 'sandbox-component',
@@ -26,12 +27,21 @@ export class NxSandboxComponent {
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
     // cameraEmbedUrl: SafeResourceUrl;
+    data: any = {};
+    change: any;
+    restore: any;
 
     submitted = false;
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
+
+        this.data = {
+            newPassword : '',
+            email : ''
+        }
+
         let host = '//' + window.location.hostname;
         if (host === '//localhost' || host === '//127.0.0.1') {
             host += ':9000';
@@ -141,8 +151,19 @@ export class NxSandboxComponent {
     }
 
     constructor(private dialogs: NxDialogsService,
+                private processService: NxProcessService,
                 private sanitizer: DomSanitizer) {
         this.setupDefaults();
+    }
+
+    ngOnInit() {
+        this.change = this.processService.createProcess(() => {
+            return true;
+        });
+
+        this.restore = this.processService.createProcess(() => {
+            return true;
+        });
     }
 
     private touchForm(form) {

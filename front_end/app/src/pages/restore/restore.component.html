@@ -54,7 +54,8 @@
             </div>
         </div>
 
-        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form-horizontal" *ngIf="!change.success && !changeSuccess"
+        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm"
+              class="form-horizontal" *ngIf="!change.success && !changeSuccess"
               novalidate>
 
             <h1 translate>Set New Password</h1>
@@ -65,6 +66,7 @@
                 </div>
                 <div class="col-md-4">
                     <nx-password-input
+                            class="form-component"
                             name="newPassword"
                             componentId="newPassword"
                             [(ngModel)]="data.newPassword"
