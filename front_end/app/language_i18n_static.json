@@ -491,7 +491,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this sytem.",
+            "to": "is being merged to this system.",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
         "finishingMerge": "Finishing systems merge",
