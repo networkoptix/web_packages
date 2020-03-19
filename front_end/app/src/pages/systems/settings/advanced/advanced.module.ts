@@ -10,6 +10,7 @@ import { DirectivesModule }                 from '../../../../directives/directi
 import { NxSystemServerAdvancedComponent } from './advanced.component';
 import { TranslateModule }                  from '@ngx-translate/core';
 import { ComponentsModule }                 from '../../../../components/components.module';
+import { NxSystemAdvancedStorageComponent } from './storage/storage.component';
 
 @NgModule({
     imports         : [
@@ -26,7 +27,8 @@ import { ComponentsModule }                 from '../../../../components/compone
     ],
     providers       : [],
     declarations    : [
-        NxSystemServerAdvancedComponent
+        NxSystemServerAdvancedComponent,
+        NxSystemAdvancedStorageComponent
     ],
     bootstrap       : [],
     entryComponents : [
