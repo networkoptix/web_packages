@@ -110,16 +110,16 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.activeModal.close();
     }
 
-    setTargetSystem({ value, state: stateOfHealth }: DropdownItem) {
+    setTargetSystem({ value, state }: DropdownItem) {
         this.target$.next(value);
-        this.targetOnline$.next(stateOfHealth !== 'offline');
+        this.targetOnline$.next(state !== 'offline');
         if (value === 'otherSystem') {
             // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
-        this.systemsService.getSystem(value).toPromise().then(({ stateOfHealth }) => {
-            if (stateOfHealth === 'offline') {
+        this.systemsService.getSystem(value).toPromise().then(({ state }) => {
+            if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
             } else {
                 this.errorText = '';
