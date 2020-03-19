@@ -57,7 +57,6 @@ export interface BaseConfig {
     timelineMouseEventTimeout: number;
     updateInterval: number;
     webclient: Webclient;
-    settingsConfig: SettingsConfig;
 }
 
 export interface Capabilities {
@@ -485,82 +484,6 @@ export interface Webclient {
     updateArchiveRecordsTimeout: number;
     useServerTime: boolean;
     useSystemTime: boolean;
-}
-
-export interface Setting {
-    type: string;
-    alert?: string;
-    setupWizard?: boolean;
-    label?: string;
-}
-
-export interface SettingsConfig {
-    auditTrailEnabled: Setting,
-    cameraSettingsOptimization: Setting,
-    disabledVendors: Setting,
-    ec2AliveUpdateIntervalSec: Setting,
-    ec2ConnectionKeepAliveTimeoutSec: Setting,
-    ec2KeepAliveProbeCount:Setting,
-    emailFrom: Setting,
-    emailSignature: Setting,
-    emailSupportEmail: Setting,
-    ldapAdminDn: Setting,
-    ldapAdminPassword: Setting,
-    ldapSearchBase: Setting,
-    ldapSearchFilter: Setting,
-    ldapUri: Setting,
-    autoDiscoveryEnabled: Setting,
-    smtpConnectionType: Setting,
-    smtpHost: Setting,
-    smtpPort:Setting,
-    smtpSimple: Setting,
-    smtpTimeout:Setting,
-    smtpPassword: Setting,
-    smtpUser: Setting,
-    updateNotificationsEnabled: Setting,
-    arecontRtspEnabled: Setting,
-    backupNewCamerasByDefault: Setting,
-    statisticsAllowed: Setting,
-    backupQualities: Setting,
-    serverDiscoveryPingTimeoutSec:Setting,
-
-    cloudAccountName: Setting,
-    cloudHost: Setting,
-    cloudAuthKey: Setting,
-    cloudSystemID: Setting,
-
-    systemName: Setting,
-
-    newSystem: Setting,
-    proxyConnectTimeoutSec:Setting,
-    crossdomainEnabled: Setting,
-    maxRtspConnectDurationSec: Setting,
-
-    statisticsReportLastNumber: Setting,
-    statisticsReportLastTime: Setting,
-    statisticsReportServerApi: Setting,
-    statisticsReportTimeCycle:Setting,
-    localSystemId: Setting,
-    systemId: Setting,
-    systemNameForId: Setting,
-    takeCameraOwnershipWithoutLock: Setting,
-    upnpPortMappingEnabled: Setting,
-
-    trafficEncryptionForced: Setting,
-    videoTrafficEncryptionForced: Setting,
-    updateStatus: Setting,
-    watermarkSettings: Setting,
-
-    timeSynchronizationEnabled: Setting,
-    primaryTimeServer: Setting,
-    osTimeChangeCheckPeriodMs:Setting,
-    syncTimeExchangePeriod:Setting,
-    syncTimeEpsilon:Setting,
-
-    maxWearableArchiveSynchronizationThreads:Setting,
-    maxEventLogRecords:Setting,
-
-    forceLiveCacheForPrimaryStream: Setting
 }
 
 // Converts JSON strings to/from your types

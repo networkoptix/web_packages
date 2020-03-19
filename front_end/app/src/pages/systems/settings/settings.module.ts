@@ -17,9 +17,6 @@ import { NxNoSystemsComponent }            from '../no-systems/no-systems.compon
 import { ApplyGuard }                      from '../../../routeGuards/applyGuard';
 import { AuthGuard }                       from '../../../routeGuards/authGuard';
 import { UserGuard }                       from '../../../routeGuards/userGuard';
-import { NxSystemServerAdvancedComponent } from './advanced/advanced.component';
-import { NxSystemServerAdvancedModule }    from './advanced/advanced.module';
-import { AdminGuard }                      from '../../../routeGuards/adminGuard';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -54,12 +51,6 @@ const appRoutes: Routes = [
                 path          : 'servers/:serverId',
                 component     : NxSystemServersComponent,
                 canDeactivate : [ApplyGuard]
-            },
-            {
-                path          : 'servers/:serverId/advanced',
-                component     : NxSystemServerAdvancedComponent,
-                canActivate   : [AdminGuard],
-                canDeactivate : [ApplyGuard]
             }
         ]
     }
@@ -77,7 +68,6 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-        NxSystemServerAdvancedModule,
 
         RouterModule.forChild(appRoutes)
     ],
