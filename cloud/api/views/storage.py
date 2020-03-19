@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from api.controllers import cloud_api
-from api.helpers.exceptions import handle_exceptions, api_success, require_params
+from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_success, require_params
 
 
 @api_view(['POST'])
@@ -44,7 +44,13 @@ def move(request):
 @handle_exceptions
 def usage_stats(request):
     require_params(request, ['systemId'])
+    storage = cloud_api.Storage.list_system_storages(request.session['login'],
+                                                     request.session['password'],
+                                                     request.data.get('systemId'))
+    storage_id = storage.get('id')
+    if not storage_id:
+        raise APINotFoundException({'message': 'System does not cloud storage.'})
     storage_info = cloud_api.Storage.statistics(request.session['login'],
                                                 request.session['password'],
-                                                request.data.get('systemId'))
+                                                storage_id)
     return api_success(storage_info)
