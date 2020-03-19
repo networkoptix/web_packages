@@ -111,8 +111,6 @@
     "GO TO MAIN PAGE TEXT"                 :    "Go to Main Page",
     "OPEN NX WITNESS BUTTON TEXT"          :    "Open %VMS_NAME%",
 
-    "PASSWORD TOO SHORT BADGE TEXT"        :    "too short",
-    "PASSWORD TOO COMMON BADGE TEXT"       :    "too common",
     "PASSWORD IS WEAK BADGE TEXT"          :    "WEAK",
     "PASSWORD IS FAIR BADGE TEXT"          :    "FAIR",
     "PASSWORD IS GOOD BADGE TEXT"          :    "GOOD",
