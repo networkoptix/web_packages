@@ -1,0 +1,116 @@
+<nx-block type="mt-3">
+    <header><h4 translate>Storages</h4></header>
+    <nx-section>
+        <form
+            class="form form-horizontal row"
+            role="form"
+            name="storageSettings"
+            novalidate
+        >
+            <ng-container *ngFor="let storage of storages; index as i">
+                <div class="form-group col-12 row">
+                    <div
+                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">Url</div>
+                    </div>
+                    <div
+                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">
+                            <input
+                                type="text"
+                                id="storageUrl{{ i }}"
+                                name="storageUrl{{ i }}"
+                                [(ngModel)]="storage.url"
+                                class="form-control input-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div
+                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">Free Space</div>
+                    </div>
+                    <div
+                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">
+                            <div class="progress progress-custom">
+                                <div class="progress-bar" role="progressbar" style="width: {{storage.freeSpace / storage.totalSpace}}" [attr.aria-valuenow]="storage.freeSpace" aria-valuemin="0" [attr.aria-valuemax]="storage.totalSpace">
+                                    {{ storage.freeSpace }} of {{ storage.totalSpace }}
+                                </div>
+                              </div>
+                            <!-- <input
+                                type="text"
+                                id="freeSpace{{ i }}"
+                                name="freeSpace{{ i }}"
+                                [(ngModel)]="storage.freeSpace"
+                                class="form-control input-sm"
+                            /> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div
+                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">Reserved Space</div>
+                    </div>
+                    <div
+                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">
+                            <input
+                                type="text"
+                                id="reservedSpace{{ i }}"
+                                name="reservedSpace{{ i }}"
+                                [(ngModel)]="storage.reservedSpace"
+                                class="form-control input-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div
+                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">Used for writing</div>
+                    </div>
+                    <div
+                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">
+                            <nx-checkbox
+                                componentId="isUsedForWriting{{ i }}"
+                                name="isUsedForWriting{{ i }}"
+                                [(ngModel)]="storage.isUsedForWriting"
+                            >
+                            </nx-checkbox>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div
+                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">StorageType</div>
+                    </div>
+                    <div
+                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
+                    >
+                        <div class="w-100">
+                            <p
+                                class="form-control-static input-sm m-0 d-flex align-items-center"
+                            >
+                                {{ storage.storageType }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </form>
+    </nx-section>
+</nx-block>
