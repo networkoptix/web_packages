@@ -25,6 +25,7 @@ from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
+from psutil import users
 
 class NoptixLibrary(object):
 
@@ -434,71 +435,28 @@ class NoptixLibrary(object):
         })
         return options
     
-    def push_notifications_swarm(self, slaves, users, ramp, minutes, max):
-        if max <= 1250:
-            os.environ['MAXLOCUST'] = str(max)
-        elif max > 1250 and max <= 2500:
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = str(max)
-            slaves = "20"
-            users = "20"
-        elif max > 2500 and max <= 3750:
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = str(max)
-            slaves = "30"
-            users = "30"
-        elif max > 3750 and max <= 5000:
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = "3750"
-            os.environ['MAXLOCUST04'] = str(max)
-            slaves = "40"
-            users = "40"
-        elif max > 5000 and max <= 6250:
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = "3750"
-            os.environ['MAXLOCUST04'] = "5000"
-            os.environ['MAXLOCUST05'] = str(max)
-            slaves = "50"
-            users = "50"
-        elif max > 6250 and max <= 7500:      
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = "3750"
-            os.environ['MAXLOCUST04'] = "5000"
-            os.environ['MAXLOCUST05'] = "6250"
-            os.environ['MAXLOCUST06'] = str(max)
-            slaves = "60"
-            users = "60"
-        elif max > 7500 and max <= 8750:          
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = "3750"
-            os.environ['MAXLOCUST04'] = "5000"
-            os.environ['MAXLOCUST05'] = "6250"
-            os.environ['MAXLOCUST06'] = "7500"
-            os.environ['MAXLOCUST07'] = str(max)
-            slaves = "70"
-            users = "70"
-        elif max > 8750 and max <= 10000:          
-            os.environ['MAXLOCUST'] = "1250"
-            os.environ['MAXLOCUST02'] = "2500"
-            os.environ['MAXLOCUST03'] = "3750"
-            os.environ['MAXLOCUST04'] = "5000"
-            os.environ['MAXLOCUST05'] = "6250"
-            os.environ['MAXLOCUST06'] = "7500"
-            os.environ['MAXLOCUST07'] = "8750"
-            os.environ['MAXLOCUST08'] = str(max)
-            slaves = "80"
-            users = "80"
+    def push_notifications_swarm(self, slaves, users, ramp, seconds):
         txtFile = str(uuid.uuid1())    
         f= open(f"{txtFile}.txt","w+")
-        f.write("0\n")
+        f.write("1\n")
         f.close()
         os.environ['LOCUSTTEXT'] = txtFile
-        cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {minutes}m"
+        users = int(users)
+        ramp = int(ramp)
+        slaves = int(slaves)
+#        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
+#        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
+        cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"
         print(cmd)
         os.system(cmd)
         
+        
+    def push_notification_pabot_command(self, max):
+        txtFile = str(uuid.uuid1())    
+        f= open(f"{txtFile}.txt","w+")
+        f.write("LOG OF RESPONSES\n\n")
+        f.close()
+        os.environ['LOCUSTTEXT'] = txtFile
+        cmd = f"pabot --testlevelsplit --processes 10 --variable max:{max} --outputdir Load-Testing Load-Testing/push_notifications_pabot.robot"
+#       print(cmd)
+        os.system(cmd)

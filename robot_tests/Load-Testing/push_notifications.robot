@@ -3,7 +3,7 @@ Resource          ../resource.robot
 # Suite Setup       Open Browser and go to URL    ${url}
 # Test Setup        Restart
 # Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-Suite Teardown    Close All Browsers
+# Suite Teardown    Close All Browsers
 
 *** Variables ***
 ${url}             http://localhost:8085/
@@ -12,9 +12,12 @@ ${google api key}  //*[@id="googApiKey"]
 ${FIS}             //*[@id="googFirebaseInstallationAuth"]
 ${post body}       //*[@id="postBody"]
 ${recieved msg}    //*[@id="messages"]/h5
-${tokens per browser}      8
-${browsers}                16
-${devices per user}        5
+${tokens per browser}      250
+${browsers}                40
+${devices per user}        1
+${testenv}    https://test3.cloud.hdw.mx/
+${email}  noptixautoqa+owner@gmail.com
+${password}  qweasd 123
 
 *** Keywords ***
 Get Tokens
@@ -60,10 +63,13 @@ Push Notifications To Browsers
     ${total browsers} =     Evaluate    ${browsers}*${devices per user} 
     ${browser index} =    Evaluate    ${total browsers}+1
     ${recieved per browser} =    Evaluate    ${tokens per browser} * 10
-    ${sleep} =    Evaluate    120+(${total browsers}*15)
-    ${max locust} =    Evaluate    ${tokens per browser}*${browsers}*10
+    ${sleep} =    Evaluate    120+${total browsers}
+    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/10
+    ${locust ramp} =    Evaluate    ${locust users}/10      
     
-    Push Notifications Swarm    10    10    1    1    ${max locust}
+    Create Systems Json    ${testenv}    ${email}    ${password}
+
+    Push Notifications Swarm    10    ${locust users}    ${locust ramp}    1   
     Sleep    ${sleep}    
     
    
@@ -75,5 +81,15 @@ Push Notifications To Browsers
     #Close All Browsers
 
 Locust
-    ${max locust} =    Evaluate    7400
-    Push Notifications Swarm    10    10    10    1    ${max locust}
+    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/5
+    ${locust ramp} =    Evaluate    ${locust users}/10      
+    ${locust slaves} =    Evaluate    ${locust users}/20
+    
+    Create Systems Json    ${testenv}    ${email}    ${password}
+
+    Push Notifications Swarm     ${locust slaves}    ${locust users}    ${locust ramp}    150
+#    Push Notifications Swarm    1    1    1    1   
+    
+Pabot
+    ${max} =    Evaluate    1000
+    Push Notification Pabot Command    ${max}

@@ -1,7 +1,14 @@
 import requests
-from requests.auth import HTTPDigestAuth
+from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 import base64
-
+import uuid
+import json
+from random import *
+import random
+import time
+import string
+from urllib3.util.timeout import current_time
+import os
 
 class CloudPortalAPI(object):
 
@@ -96,3 +103,109 @@ class CloudPortalAPI(object):
         token = r.json()['token'] 
         return token
     
+    def push_notifications_requests(self, env, email, password, process, min, max):
+        r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
+#        print(r)
+#        print(r.json())
+        self.systemsDict = r.json()
+        self.systemsList = []
+        
+        for system in self.systemsDict['systems']:
+            self.systemsList.append(system)
+            
+        self.sortedList = sorted(self.systemsList, key = lambda i: i['registrationTime'])
+        uid = 0
+        self.userId = str(uuid.uuid1())
+#        systemStart = int(self.minEmail/10)
+#        systemEnd = int(self.maxEmail/10)
+        txtFile = os.environ['LOCUSTTEXT']
+        f= open(f'{txtFile}.txt', 'a')
+#        print(len(systemsList))
+        min = int(min)
+        max = int(max)
+        for system in self.sortedList[min:max]:
+#            print(system)
+            authKey = system["authKey"]
+            id = system["id"]
+            name = system["name"]
+#            f2= open("posts.txt", "w+")
+            title = process+" "+str(uid)+"_"+self.userId
+#            print(authKey, id, name)
+ #           print(system)
+                      
+            emailIntStart = (int(name.strip(string.ascii_letters)))*10
+ #           print(name+" stripped number "+str(emailIntStart)+" minEmail "+str(self.minEmail))
+            emailIntEnd = emailIntStart+10
+            
+ #           if  emailIntStart == self.maxEmail:
+ #              break
+ #           elif emailIntStart >= self.minEmail:
+            targetList = []
+            for x in range(emailIntStart, emailIntEnd):
+                targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
+            body = {
+                "systemId":id,
+                "targets":targetList,
+                "notification":{
+                    "title": title,
+                    "body": name,
+                    "payload": {
+                        "url": "nx-vms://test3.cloud.hdw.mx/client/"+id+"/view",
+                        "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
+                        }
+                    }
+                }         
+    # to test script comment out the post and write to file instead
+            r = requests.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(id, authKey), headers={'Content-Type':'application/json'}, data=json.dumps(body))
+            f.write(f"{r.text} {title}\n")
+            uid += 1
+        f.close()
+#       print("Sleeping for 300 secs")
+#        time.sleep(300)
+
+    def create_systems_json(self, env, email, password):
+        r = requests.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
+
+        systemsDict = r.json()
+        systemsList = []
+        
+        for system in systemsDict['systems']:
+            systemsList.append(system)
+            
+        sortedList = sorted(systemsList, key = lambda i: i['registrationTime'])
+        sysID = 1
+        systemsJson = {}
+
+        for system in sortedList:
+            
+            authKey = system["authKey"]
+            id = system["id"]
+            name = system["name"]
+
+            title = str(sysID)
+
+                      
+            emailIntStart = (int(name.strip(string.ascii_letters)))*10
+            emailIntEnd = emailIntStart+10
+            
+
+            targetList = []
+            for x in range(emailIntStart, emailIntEnd):
+                targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
+            body = {
+                "systemId":id,
+                "targets":targetList,
+                "notification":{
+                    "title": title,
+                    "body": name,
+                    "payload": {
+                        "url": "nx-vms://test3.cloud.hdw.mx/client/"+id+"/view",
+                        "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
+                        }
+                    }
+                }         
+            systemsJson[sysID] = {"authKey": authKey, "id": id, "body": json.dumps(body)}
+            sysID += 1
+        f= open('systems.json', 'w')
+        f.write(json.dumps(systemsJson))
+        f.close()
