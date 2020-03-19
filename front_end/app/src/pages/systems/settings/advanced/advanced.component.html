@@ -41,22 +41,29 @@
             </header>
         </nx-block>
 
-        <nx-server-advanced-storage-component></nx-server-advanced-storage-component>
-        
+<!--        <nx-server-advanced-storage-component></nx-server-advanced-storage-component>-->
+
         <nx-block type="mt-3">
             <header>
                 <h4 translate>Advanced System Settings</h4>
                 <span class="error-label" translate>Warning! Any changes on this page may cause server to work incorrectly.</span>
             </header>
-            <nx-section *ngIf="false">
+            <nx-section *ngIf="(systemSettings | keyvalue)?.length > 0">
                 <form class="form form-horizontal row" role="form" name="systemSettings" novalidate>
-                    <div class="form-group col-12 row" *ngFor="let setting of systemSettings | keyvalue">
+                    <div class="form-group col-12 row"
+                         *ngFor="let setting of systemSettings | keyvalue">
+
+                        <div class="form-group col-12 row"
+                             *ngIf="(CONFIG.settingsConfig[setting.key] | keyvalue)?.length > 0">
+
                         <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                             <div class="w-100">{{LANG.settingsConfig[setting.key] || setting.key}}</div>
                             <div class="w-100 text-muted" *ngIf="LANG.settingsConfig[setting.key]">({{setting.key}})</div>
                         </div>
                         <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                             <div class="w-100">
+                                    settings: {{CONFIG.settingsConfig[setting.key] | json}}
+
                                 <nx-checkbox
                                         *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox' "
                                         [componentId]="setting"
@@ -83,13 +90,15 @@
                                        class="form-control input-sm"/>
 
                                 <p *ngIf="CONFIG.settingsConfig[setting.key].type === 'static'"
-                                   class="form-control-static input-sm m-0 d-flex align-items-center">{{setting.value || 'empty'}}</p>
+                                       class="form-control-static input-sm m-0 d-flex align-items-center">{{systemSettings[setting.key].value || 'empty'}}</p>
                             </div>
 <!--                            value: {{setting}} | {{settingsWatcher | json}}-->
 
                             <div class="help-block"
                                  *ngIf="CONFIG.settingsConfig[setting.key].alert"
-                                 [innerHTML]="CONFIG.settingsConfig[setting.key].alert"></div>
+                                     [innerHTML]="CONFIG.settingsConfig[setting.key].alert">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
