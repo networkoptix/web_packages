@@ -64,10 +64,10 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.systemsService.getMySystems(this.userEmail, this.systemId);
             this.systemsService.systemsSubject.subscribe((systems: any[]) => {
                 // Generate dropdown items
-                const processedSystems = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth }) => ({
+                const processedSystems: DropdownItem[] = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth: state }) => ({
                     value,
-                    stateOfHealth,
-                    name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
+                    state,
+                    name: `<span>${name}</span><span class="${state === 'offline' ? 'text-muted' : ''}"> – ${state}</span>`
                 }));
 
                 const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: this.LANG.dialogs.cloudStorage.otherSystem }];
@@ -110,7 +110,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         this.activeModal.close();
     }
 
-    setTargetSystem({ value, stateOfHealth }: DropdownItem) {
+    setTargetSystem({ value, state: stateOfHealth }: DropdownItem) {
         this.target$.next(value);
         this.targetOnline$.next(stateOfHealth !== 'offline');
         if (value === 'otherSystem') {
