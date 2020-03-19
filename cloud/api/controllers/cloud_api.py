@@ -421,10 +421,10 @@ class Storage(object):
     @lower_case_email
     def list_system_storages(email, password, system_id):
         request = f"{CLOUD_STORAGE_URL}/storages/"
-        query = {
+        params = {
             "system-id": system_id
         }
-        return get_wrapper(request, query=query, auth=HTTPDigestAuth(email, password))
+        return get_wrapper(request, params=params, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
