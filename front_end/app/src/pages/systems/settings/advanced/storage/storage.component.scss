@@ -6,4 +6,18 @@
     height: 32px;
     font-size: rem(14px);
     line-height: 1.428571429;
+    position: relative;
+}
+
+.progress-label {
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.progress-text {
+    // maybe contast text here
+    color: inherit;
 }

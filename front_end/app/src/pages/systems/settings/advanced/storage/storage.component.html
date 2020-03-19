@@ -38,9 +38,11 @@
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
                         <div class="w-100">
-                            <div class="progress progress-custom">
-                                <div class="progress-bar" role="progressbar" style="width: {{storage.freeSpace / storage.totalSpace}}" [attr.aria-valuenow]="storage.freeSpace" aria-valuemin="0" [attr.aria-valuemax]="storage.totalSpace">
-                                    {{ storage.freeSpace }} of {{ storage.totalSpace }}
+                            <div class="progress progress-custom" 
+                                title="Reserved: 30.00 GB, /nFree: 1.67 TB, /nOccupied: 117.83 GB, /nTotal: 1.79 TB">
+                                <div class="progress-bar bg-info" role="progressbar" style="width: 50%" [attr.aria-valuenow]="storage.freeSpace" aria-valuemin="0" [attr.aria-valuemax]="storage.totalSpace"></div>
+                                <div class="progress-label d-flex justify-content-center align-items-center progress-text">
+                                    {{ friendlyBytes(storage.freeSpace) }} of {{ friendlyBytes(storage.totalSpace) }}
                                 </div>
                               </div>
                             <!-- <input
@@ -53,7 +55,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12 row">
+                <div *ngIf="storage.isWritable" class="form-group col-12 row">
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
@@ -62,18 +64,18 @@
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">
+                        <div class="w-100 input-group d-flex">
                             <input
-                                type="text"
+                                type="number"
                                 id="reservedSpace{{ i }}"
                                 name="reservedSpace{{ i }}"
                                 [(ngModel)]="storage.reservedSpace"
-                                class="form-control input-sm"
+                                class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number"
                             />
                         </div>
                     </div>
                 </div>
-                <div class="form-group col-12 row">
+                <div *ngIf="storage.isWritable" class="form-group col-12 row">
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
@@ -89,6 +91,8 @@
                                 [(ngModel)]="storage.isUsedForWriting"
                             >
                             </nx-checkbox>
+                            <span *ngIf="storage.isUsedForWriting">Writing is enabled for this storage</span>
+                            <span *ngIf="!storage.isUsedForWriting">Writing is disabled for this storage</span>
                         </div>
                     </div>
                 </div>
@@ -110,6 +114,7 @@
                         </div>
                     </div>
                 </div>
+                <div *ngIf="i !== storages.length - 1" class="border-top w-100 mb-3"></div>
             </ng-container>
         </form>
     </nx-section>
