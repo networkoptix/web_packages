@@ -26,5 +26,5 @@
 </nx-page-placeholder>
 
 <nx-page-placeholder *ngIf="secondaryMerge"
-    [type]="'MERGE'" [passedProps]="mergeTargetSystem.name" [withFooter]="true">
+    [type]="'MERGE'" [data]="{ systemName: mergeTargetSystem.name }" [withFooter]="true">
 </nx-page-placeholder>

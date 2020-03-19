@@ -258,7 +258,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     updateAlert() {
-        const { primary, secondary } = this.systemsService.systemsMerging[this.system.id] || {};
+        const { primary, secondary } = this.systemsService.systemsMerging || {};
         if (!this.system.isOnline) {
             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
         } else if (primary && primary.id === this.system.id) {
@@ -274,7 +274,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.ribbonService.show(template, '', '', 'alert');
         } else if (secondary && secondary.id === this.system.id) {
             this.mergeTargetSystem = this.systemsService.systems
-                .find((system) => primary.id === system.id);
+                .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
             this.secondaryMerge = true;
         } else {
             this.secondaryMerge = false;

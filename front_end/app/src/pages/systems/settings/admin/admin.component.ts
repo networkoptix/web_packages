@@ -397,7 +397,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
                     const systemId = mergeInfo.role === 'master' ? this.system.id : mergeInfo.anotherSystemId;
-                    this.systemsService.addToMergeList(systemId, mergeInfo);
+                    this.systemsService.addToMergeList(systemId);
+                    this.systemsService.processMerge(mergeInfo);
                     this.system.systemInfo = this.system;
                 }
             }, (error) => {
