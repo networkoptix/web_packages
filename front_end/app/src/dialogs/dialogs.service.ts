@@ -88,8 +88,6 @@ export class NxDialogsService {
             backdrop   : 'static'
         };
 
-        console.log('LANG2 ->', this.LANG);
-
         const params: any = {
             message    : this.domSanitizer.bypassSecurityTrustHtml(message),
             title,

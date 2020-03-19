@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                             <div class="w-100">
-                                    settings: {{CONFIG.settingsConfig[setting.key] | json}}
+<!--                                settings: {{CONFIG.settingsConfig[setting.key] | json}}-->
 
                                 <nx-checkbox
                                         *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox' "
@@ -92,7 +92,6 @@
                                 <p *ngIf="CONFIG.settingsConfig[setting.key].type === 'static'"
                                        class="form-control-static input-sm m-0 d-flex align-items-center">{{systemSettings[setting.key].value || 'empty'}}</p>
                             </div>
-<!--                            value: {{setting}} | {{settingsWatcher | json}}-->
 
                             <div class="help-block"
                                  *ngIf="CONFIG.settingsConfig[setting.key].alert"

@@ -4,8 +4,8 @@ import {
 }                                     from '@angular/core';
 import {
     filter, map, delay,
-    retryWhen
-}                                     from 'rxjs/operators';
+    retryWhen, take
+} from 'rxjs/operators';
 import { Subscription }               from 'rxjs';
 import { ActivatedRoute }             from '@angular/router';
 import { NxConfigService, IConfig }   from '../../../../services/nx-config';
@@ -191,6 +191,7 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
                         }),
                         retryWhen(err => err.pipe(delay(1000)))
                     )
+                    .pipe(take(1))
                     .subscribe(() => {
                         this.settingsService.footerSubject.next(true);
                         if (this.system.currentServerNotBusy) {
