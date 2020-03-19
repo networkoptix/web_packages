@@ -62,11 +62,9 @@
                         </div>
                         <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                             <div class="w-100">
-<!--                                settings: {{CONFIG.settingsConfig[setting.key] | json}}-->
-
                                 <nx-checkbox
                                         *ngIf="CONFIG.settingsConfig[setting.key].type === 'checkbox' "
-                                        [componentId]="setting"
+                                        [componentId]="setting.key"
                                         name="{{setting.key}}"
                                         [(ngModel)]="systemSettings[setting.key].value">
                                 </nx-checkbox>

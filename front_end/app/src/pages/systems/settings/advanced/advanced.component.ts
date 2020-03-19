@@ -243,39 +243,56 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
             .then(response => {
                 this.applyService.setVisible(false);
                 this.applyService.hardReset();
-                Object.keys(response.reply.settings).forEach((key) => {
-                    const value = response.reply.settings[key];
-                    if (!this.CONFIG.settingsConfig[key]) {
-                        let type = 'text';
-                        if (value === true || value === false ||
-                            value === 'true' || value === 'false') {
-                            type = 'checkbox';
-                        }
-                        this.CONFIG.settingsConfig[key] = { label: key, type: type };
-                    }
-
-                    if (this.CONFIG.settingsConfig[key].type === 'number') {
-                        this.systemSettings[key].value = parseInt(value);
-                    } else if (this.CONFIG.settingsConfig[key].type === 'checkbox') {
-                        this.systemSettings[key].value = value === 'true';
-                    } else {
-                        this.systemSettings[key].value = value;
-                    }
-
-                    this.CONFIG.settingsConfig[key].oldValue = value;
-                });
+                this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.applyService.reset();
                 this.applyService.setVisible(true);
             });
     }
 
+    settingsToBeDisplayedOrUpdated(settings) {
+        Object.keys(settings).forEach((key) => {
+            const value = settings[key];
+            if (!this.CONFIG.settingsConfig[key]) {
+                let type = 'text';
+                if (value === true || value === false ||
+                    value === 'true' || value === 'false') {
+                    type = 'checkbox';
+                }
+                this.CONFIG.settingsConfig[key] = { label: key, type: type };
+            }
+
+            if (this.CONFIG.settingsConfig[key].type === 'number') {
+                this.systemSettings[key].value = this.systemSettings[key].originalValue = (value !== '') ? parseInt(value) : '';
+            } else if (this.CONFIG.settingsConfig[key].type === 'checkbox') {
+                this.systemSettings[key].value = this.systemSettings[key].originalValue = (value === 'true');
+            } else {
+                this.systemSettings[key].value = this.systemSettings[key].originalValue = value;
+            }
+
+            this.CONFIG.settingsConfig[key].oldValue = value;
+        });
+    }
+
+    settingsToBeSaved() {
+        const serverSettings = {};
+
+        Object.keys(this.systemSettings).forEach((key) => {
+            if (this.systemSettings[key].value !== this.systemSettings[key].originalValue) {
+                serverSettings[key] = this.systemSettings[key].value;
+            }
+        });
+
+        return serverSettings;
+    }
+
     initApplyService(): void {
         this.saveSettings = this.processService.createProcess(() => {
             return this.system
-                .updateOrGetSystemSettings(this.systemSettings)
+                .updateOrGetSystemSettings(this.settingsToBeSaved())
                 .toPromise()
                 .then(response => {
                     this.applyService.reset();
+                    this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
