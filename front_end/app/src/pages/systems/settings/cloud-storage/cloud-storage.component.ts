@@ -200,12 +200,12 @@ export const emptyUsage: IUsageStats = {
 };
 
 export interface IUsageStats {
-      currentRecordings: UsageTypes
-      whenFullyUsed: UsageTypes
-      amountUsed: UsageTypes
-      archiveFrom: UsageTypes
-      recordingBitrate: UsageTypes
-      delayFromLive: UsageTypes
-  }
+    currentRecordings: UsageTypes
+    whenFullyUsed: UsageTypes
+    amountUsed: UsageTypes
+    archiveFrom: UsageTypes
+    recordingBitrate: UsageTypes
+    delayFromLive: UsageTypes
+}
 
-  type UsageTypes = '_' | number
+type UsageTypes = '_' | number

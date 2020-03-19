@@ -13,7 +13,7 @@ import { NxSystemsService }          from '../../../services/systems.service';
 import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxProcessService }          from '../../../services/process.service';
+import { NxProcessService, Process }          from '../../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
 import { NxSystem }                  from '../../../services/system.service';
 import { NxDialogsService }          from '../../dialogs.service';
@@ -32,6 +32,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     targetSystems: DropdownItem[];
     errorText: string;
+    move: Process;
 
     systemId = '';
     userEmail = '';
@@ -69,16 +70,29 @@ export class CloudStorageMoveModalContent implements OnInit {
                     name: `<span>${name}</span><span class="${stateOfHealth === 'offline' ? 'text-muted' : ''}"> – ${stateOfHealth}</span>`
                 }));
 
-                const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: 'Other System...' }];
+                const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: this.LANG.dialogs.cloudStorage.otherSystem }];
                 this.targetSystems = [...processedSystems, ...otherSystems];
                 this.setTargetSystem(this.targetSystems[0]);
-                if (systems && this.targetSystems.length <= 2) {
+                if (systems && this.targetSystems.length < 2) {
                     // Display noOtherSystemsError when current system is the only system
                     this.close();
                     const { dialogs: { cloudStorage:{ noOtherSystemsError: { message }, moveCloudStorage: { title } }, buttons: { ok } } } = this.LANG;
                     this.injector.get(NxDialogsService).confirm(message, title, ok);
                 };
             });
+        });
+
+        // Move Process
+        this.move = this.processService.createProcess(() => {
+            return this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget)
+                .then(() => {
+                    this.updateCallback();
+                    this.close();
+                });
+        }, {
+        // TODO: These messages and errorCodes will be implemented on a future ticket
+            successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
+            errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
         });
     }
 
@@ -90,19 +104,6 @@ export class CloudStorageMoveModalContent implements OnInit {
     public get currentTargetOnline() {
         return this.targetOnline$.value;
     }
-
-    // Move Process
-    public move = this.processService.createProcess(() => {
-        return this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget)
-            .then(() => {
-                this.updateCallback();
-                this.close();
-            });
-    }, {
-        // TODO: These messages and errorCodes will be implemented on a future ticket
-        successMessage : 'Storage Succesfully moved',
-        errorPrefix    : 'Cloud Storage Move Error'
-    })
 
     // Other instance methods
     close() {
@@ -119,7 +120,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
         this.systemsService.getSystem(value).toPromise().then(({ stateOfHealth }) => {
             if (stateOfHealth === 'offline') {
-                this.errorText = 'Cloud storage cannot be moved to offline systems.';
+                this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
             } else {
                 this.errorText = '';
             }

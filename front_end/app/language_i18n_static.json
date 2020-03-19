@@ -176,10 +176,16 @@
         },
         "cloudStorage": {
             "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
             "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
             "camera": "camera",
             "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
             "activationError": {
                 "title": "Cannot Enable Cloud Storage",
                 "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
@@ -190,6 +196,8 @@
             },
             "moveCloudStorage": {
                 "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
                 "status": {
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }

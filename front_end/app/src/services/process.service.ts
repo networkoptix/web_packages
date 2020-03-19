@@ -16,7 +16,7 @@ interface ProcessSettings {
     successMessage: string;
 }
 
-class Process {
+export class Process {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     cloudApiService: NxCloudApiService;
