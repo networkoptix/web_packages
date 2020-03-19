@@ -57,6 +57,7 @@ export interface BaseConfig {
     timelineMouseEventTimeout: number;
     updateInterval: number;
     webclient: Webclient;
+    settingsConfig: SettingsConfig;
 }
 
 export interface Capabilities {
@@ -484,6 +485,74 @@ export interface Webclient {
     updateArchiveRecordsTimeout: number;
     useServerTime: boolean;
     useSystemTime: boolean;
+}
+
+export interface Setting {
+    type: string;
+    alert?: string;
+    setupWizard?: boolean;
+    label?: string;
+}
+
+export interface SettingsConfig {
+    auditTrailEnabled: Setting,
+    cameraSettingsOptimization: Setting,
+    disabledVendors: Setting,
+    ec2AliveUpdateIntervalSec: Setting,
+    ec2ConnectionKeepAliveTimeoutSec: Setting,
+    ec2KeepAliveProbeCount:Setting,
+    emailFrom: Setting,
+    emailSignature: Setting,
+    emailSupportEmail: Setting,
+    ldapAdminDn: Setting,
+    ldapAdminPassword: Setting,
+    ldapSearchBase: Setting,
+    ldapSearchFilter: Setting,
+    ldapUri: Setting,
+    autoDiscoveryEnabled: Setting,
+    smtpConnectionType: Setting,
+    smtpHost: Setting,
+    smtpPort:Setting,
+    smtpSimple: Setting,
+    smtpTimeout:Setting,
+    smtpPassword: Setting,
+    smtpUser: Setting,
+    updateNotificationsEnabled: Setting,
+    arecontRtspEnabled: Setting,
+    backupNewCamerasByDefault: Setting,
+    statisticsAllowed: Setting,
+    backupQualities: Setting,
+    serverDiscoveryPingTimeoutSec:Setting,
+    cloudAccountName: Setting,
+    cloudHost: Setting,
+    cloudAuthKey: Setting,
+    cloudSystemID: Setting,
+    systemName: Setting,
+    newSystem: Setting,
+    proxyConnectTimeoutSec:Setting,
+    crossdomainEnabled: Setting,
+    maxRtspConnectDurationSec: Setting,
+    statisticsReportLastNumber: Setting,
+    statisticsReportLastTime: Setting,
+    statisticsReportServerApi: Setting,
+    statisticsReportTimeCycle:Setting,
+    localSystemId: Setting,
+    systemId: Setting,
+    systemNameForId: Setting,
+    takeCameraOwnershipWithoutLock: Setting,
+    upnpPortMappingEnabled: Setting,
+    trafficEncryptionForced: Setting,
+    videoTrafficEncryptionForced: Setting,
+    updateStatus: Setting,
+    watermarkSettings: Setting,
+    timeSynchronizationEnabled: Setting,
+    primaryTimeServer: Setting,
+    osTimeChangeCheckPeriodMs:Setting,
+    syncTimeExchangePeriod:Setting,
+    syncTimeEpsilon:Setting,
+    maxWearableArchiveSynchronizationThreads:Setting,
+    maxEventLogRecords:Setting,
+    forceLiveCacheForPrimaryStream: Setting
 }
 
 // Converts JSON strings to/from your types
@@ -1026,5 +1095,65 @@ const typeMap: any = {
         { json: 'updateArchiveRecordsTimeout', js: 'updateArchiveRecordsTimeout', typ: 0 },
         { json: 'useServerTime', js: 'useServerTime', typ: true },
         { json: 'useSystemTime', js: 'useSystemTime', typ: true }
+    ], false),
+    SettingsConfig: o([
+        { json: 'auditTrailEnabled', js: 'auditTrailEnabled', typ: r('Setting') },
+        { json: 'cameraSettingsOptimization', js: 'cameraSettingsOptimization', typ: r('Setting') },
+        { json: 'disabledVendors', js: 'disabledVendors', typ: r('Setting') },
+        { json: 'ec2AliveUpdateIntervalSec', js: 'ec2AliveUpdateIntervalSec', typ: r('Setting') },
+        { json: 'ec2ConnectionKeepAliveTimeoutSec', js: 'ec2ConnectionKeepAliveTimeoutSec', typ: r('Setting') },
+        { json: 'ec2KeepAliveProbeCount', js: 'ec2KeepAliveProbeCount', typ: r('Setting') },
+        { json: 'emailFrom', js: 'emailFrom', typ: r('Setting') },
+        { json: 'emailSignature', js: 'emailSignature', typ: r('Setting') },
+        { json: 'emailSupportEmail', js: 'emailSupportEmail', typ: r('Setting') },
+        { json: 'ldapAdminDn', js: 'ldapAdminDn', typ: r('Setting') },
+        { json: 'ldapAdminPassword', js: 'ldapAdminPassword', typ: r('Setting') },
+        { json: 'ldapSearchBase', js: 'ldapSearchBase', typ: r('Setting') },
+        { json: 'ldapSearchFilter', js: 'ldapSearchFilter', typ: r('Setting') },
+        { json: 'ldapUri', js: 'ldapUri', typ: r('Setting') },
+        { json: 'autoDiscoveryEnabled', js: 'autoDiscoveryEnabled', typ: r('Setting') },
+        { json: 'smtpConnectionType', js: 'smtpConnectionType', typ: r('Setting') },
+        { json: 'smtpHost', js: 'smtpHost', typ: r('Setting') },
+        { json: 'smtpPort', js: 'smtpPort', typ: r('Setting') },
+        { json: 'smtpSimple', js: 'smtpSimple', typ: r('Setting') },
+        { json: 'smtpTimeout', js: 'smtpTimeout', typ: r('Setting') },
+        { json: 'smtpPassword', js: 'smtpPassword', typ: r('Setting') },
+        { json: 'smtpUser', js: 'smtpUser', typ: r('Setting') },
+        { json: 'updateNotificationsEnabled', js: 'updateNotificationsEnabled', typ: r('Setting') },
+        { json: 'arecontRtspEnabled', js: 'arecontRtspEnabled', typ: r('Setting') },
+        { json: 'backupNewCamerasByDefault', js: 'backupNewCamerasByDefault', typ: r('Setting') },
+        { json: 'statisticsAllowed', js: 'statisticsAllowed', typ: r('Setting') },
+        { json: 'backupQualities', js: 'backupQualities', typ: r('Setting') },
+        { json: 'serverDiscoveryPingTimeoutSec', js: 'serverDiscoveryPingTimeoutSec', typ: r('Setting') },
+        { json: 'cloudAccountName', js: 'cloudAccountName', typ: r('Setting') },
+        { json: 'cloudHost', js: 'cloudHost', typ: r('Setting') },
+        { json: 'cloudAuthKey', js: 'cloudAuthKey', typ: r('Setting') },
+        { json: 'cloudSystemID', js: 'cloudSystemID', typ: r('Setting') },
+        { json: 'systemName', js: 'systemName', typ: r('Setting') },
+        { json: 'newSystem', js: 'newSystem', typ: r('Setting') },
+        { json: 'proxyConnectTimeoutSec', js: 'proxyConnectTimeoutSec', typ: r('Setting') },
+        { json: 'crossdomainEnabled', js: 'crossdomainEnabled', typ: r('Setting') },
+        { json: 'maxRtspConnectDurationSec', js: 'maxRtspConnectDurationSec', typ: r('Setting') },
+        { json: 'statisticsReportLastNumber', js: 'statisticsReportLastNumber', typ: r('Setting') },
+        { json: 'statisticsReportLastTime', js: 'statisticsReportLastTime', typ: r('Setting') },
+        { json: 'statisticsReportServerApi', js: 'statisticsReportServerApi', typ: r('Setting') },
+        { json: 'statisticsReportTimeCycle', js: 'statisticsReportTimeCycle', typ: r('Setting') },
+        { json: 'localSystemId', js: 'localSystemId', typ: r('Setting') },
+        { json: 'systemId', js: 'systemId', typ: r('Setting') },
+        { json: 'systemNameForId', js: 'systemNameForId', typ: r('Setting') },
+        { json: 'takeCameraOwnershipWithoutLock', js: 'takeCameraOwnershipWithoutLock', typ: r('Setting') },
+        { json: 'upnpPortMappingEnabled', js: 'upnpPortMappingEnabled', typ: r('Setting') },
+        { json: 'trafficEncryptionForced', js: 'trafficEncryptionForced', typ: r('Setting') },
+        { json: 'videoTrafficEncryptionForced', js: 'videoTrafficEncryptionForced', typ: r('Setting') },
+        { json: 'updateStatus', js: 'updateStatus', typ: r('Setting') },
+        { json: 'watermarkSettings', js: 'watermarkSettings', typ: r('Setting') },
+        { json: 'timeSynchronizationEnabled', js: 'timeSynchronizationEnabled', typ: r('Setting') },
+        { json: 'primaryTimeServer', js: 'primaryTimeServer', typ: r('Setting') },
+        { json: 'osTimeChangeCheckPeriodMs', js: 'osTimeChangeCheckPeriodMs', typ: r('Setting') },
+        { json: 'syncTimeExchangePeriod', js: 'syncTimeExchangePeriod', typ: r('Setting') },
+        { json: 'syncTimeEpsilon', js: 'syncTimeEpsilon', typ: r('Setting') },
+        { json: 'maxWearableArchiveSynchronizationThreads', js: 'maxWearableArchiveSynchronizationThreads', typ: r('Setting') },
+        { json: 'maxEventLogRecords', js: 'maxEventLogRecords', typ: r('Setting') },
+        { json: 'forceLiveCacheForPrimaryStream', js: 'forceLiveCacheForPrimaryStream', typ: r('Setting') }
     ], false)
 };
