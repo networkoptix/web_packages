@@ -59,6 +59,6 @@ export class DropdownItem {
     constructor(
         public name: string,
         public value?: string,
-        public stateOfHealth?: string
+        public state?: string
     ) {}
 };
