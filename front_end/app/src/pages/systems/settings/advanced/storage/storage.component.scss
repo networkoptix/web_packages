@@ -1,4 +1,9 @@
-@import '../../../../../styles/typography';
-@import '../../../../../../styles/theme_palette';
-@import '../advanced.component.scss';
+@import "../../../../../styles/typography";
+@import "../../../../../../styles/theme_palette";
+@import "../advanced.component.scss";
 
+.progress-custom {
+    height: 32px;
+    font-size: rem(14px);
+    line-height: 1.428571429;
+}

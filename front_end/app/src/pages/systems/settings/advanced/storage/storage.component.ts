@@ -38,31 +38,31 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
             ],
             storages: [
                 {
-                    freeSpace        : '1837679546368',
+                    freeSpace        : 1837679546368,
                     isBackup         : false,
                     isExternal       : false,
                     isOnline         : true,
                     isUsedForWriting : true,
                     isWritable       : true,
-                    reservedSpace    : '32212254720',
+                    reservedSpace    : 32212254720,
                     storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
                     storageStatus    : 'used|system',
                     storageType      : 'local',
-                    totalSpace       : '1964203130880',
+                    totalSpace       : 1964203130880,
                     url              : '/opt/networkoptix/mediaserver/var/data'
                 },
                 {
-                    freeSpace        : '1837679546368',
+                    freeSpace        : 183767954636,
                     isBackup         : false,
                     isExternal       : false,
                     isOnline         : true,
                     isUsedForWriting : true,
                     isWritable       : true,
-                    reservedSpace    : '32212254720',
+                    reservedSpace    : 32212254720,
                     storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
                     storageStatus    : 'used|system',
                     storageType      : 'local',
-                    totalSpace       : '1964203130880',
+                    totalSpace       : 1964203130880,
                     url              : '/opt/networkoptix/mediaserver/var/second'
                 }
             ]
