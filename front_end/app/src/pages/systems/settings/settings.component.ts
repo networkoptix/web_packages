@@ -412,12 +412,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             const [ip, port] = addresses.ipv4[0].split(':');
             server.ip = ip;
             server.port = port || '';
-
         } else if (addresses.ipv6.length > 0) {
-
-            const [ip, port] = addresses.ipv6[0].split(']:');
-            server.ip = ip.substring(1);
-            server.port = port || '';
+            if (addresses.ipv6[0].indexOf('[') === 0) {
+                const [ip, port] = addresses.ipv6[0].split(']:');
+                server.ip = ip.substring(1);
+                server.port = port || '';
+            } else {
+                server.ip = addresses.ipv6[0];
+                server.port = '';
+            }
         } else {
             server.ip = 'N/A';
             server.port = '';
