@@ -31,7 +31,6 @@ export class MergeModalContent {
     checkMergeabilityProcess: any;
     checkPasswordProcess: any;
     mergingProcess: any;
-    multipleSystems: boolean;
     primarySystem: any;
     processedSystems = [];
     secondarySystem: any;
@@ -137,16 +136,10 @@ export class MergeModalContent {
             }
         },
         adminPassword: {
-            show: {
-                passwordError: false
-            },
-            showUpdates: {
-                default: {
-                    passwordError: false
-                },
-                confirmPasswordError: {
-                    passwordError: true
-                }
+            show        : { passwordError: false },
+            showUpdates : {
+                default              : { passwordError: false },
+                confirmPasswordError : { passwordError: true }
             },
             template: {
                 passwordErrorText : '',
@@ -155,25 +148,16 @@ export class MergeModalContent {
             errorText: {
                 passwordRequired : '',
                 passwordWrong    : ''
-                // serverNotAvailable: ''
             }
         },
         choosePrimary: {
-            template: {
-                selectedPrimarySystem: ''
-            }
+            template: { selectedPrimarySystem: '' }
         },
         confirmMerge: {
-            show: {
-                passwordError: false
-            },
-            showUpdates: {
-                default: {
-                    passwordError: false
-                },
-                confirmPasswordError: {
-                    passwordError: true
-                }
+            show        : { passwordError: false },
+            showUpdates : {
+                default              : { passwordError: false },
+                confirmPasswordError : { passwordError: true }
             },
             template: {
                 passwordErrorText : '',
@@ -223,17 +207,20 @@ export class MergeModalContent {
                     template[clearText] = '';
                 });
         }
-        console.log('machine state on update', this.machine.state);
     }
 
     goBack(serverUrlError?) {
         this.machine.goBack();
+        const { template } = this.machine.state;
         if (serverUrlError) {
-            this.updateShow('serverUrlMergeError', { checkingErrorText: serverUrlError });
-            this.setTargetSystem({ value: this.machine.state.template.selectedTarget });
+            this.updateShow('serverUrlMergeError', {
+                serverUrlInputValue : template.serverUrlInputValue,
+                checkingErrorText   : serverUrlError
+            });
+            this.setTargetSystem({ value: template.selectedTarget });
         } else if (this.machine.currentState === 'checkMerge') {
             this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem({ value: this.machine.state.template.selectedTarget });
+            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
         }
     }
 
@@ -554,6 +541,7 @@ export class MergeModalContent {
                                 throw Error('unknownError');
                         }
                     }
+                    this.systemMergeable = '';
                     return res;
                 });
         } else {
@@ -619,7 +607,7 @@ export class MergeModalContent {
         const systems = [...this.systems, ...this.peerSystems];
         for (const system of systems) {
             if (this.checkMergeability(system) === '') {
-                return { ...system };
+                return { ...system, value: system.id };
             }
         }
         return { ...systems[0], value: systems[0].id };
@@ -631,10 +619,9 @@ export class MergeModalContent {
     }
 
     setTargetSystem(targetSystem, serverUrlInputValue = '') {
-        console.log('targetSystem to be set', targetSystem);
         if (targetSystem.value === 'otherSystem') {
             // need to figure out how to check for mergeability for serverUrl ones
-            this.targetSystemDropdown = targetSystem;
+            this.targetSystemDropdown = { value: 'otherSystem', name: 'Other System...' };
             // need to figure out what to set targetSystem as here for otherSystem
             this.targetSystem = targetSystem;
             this.updateShow('serverUrl', { serverUrlInputValue, selectedTarget: 'otherSystem' });
@@ -642,8 +629,8 @@ export class MergeModalContent {
             this.targetSystem = this.systems.find(system => system.id === targetSystem.value) ||
                 this.peerSystems.find(system => system.id === targetSystem.value);
             this.targetSystem.value = this.targetSystem.id;
+            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
             this.systemMergeable = this.checkMergeability(this.targetSystem);
-
             let showUpdate             = 'checkMergeDefault';
             const templateUpdates: any = {
                 helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
