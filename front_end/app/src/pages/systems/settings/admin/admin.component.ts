@@ -350,7 +350,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         }
                         return system;
                     });
-                console.log('peerSystems', this.peerSystems);
                 this.updateSettings(this.currentlyMerging);
             });
     }
