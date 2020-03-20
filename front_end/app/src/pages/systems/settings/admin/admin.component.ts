@@ -304,21 +304,19 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     disconnect() {
         if (this.system.isMine) {
-            this.cloudApiService.getCloudStorageUsage(this.system.id).then(({ enabled }) => {
-                if (enabled) {
-                    // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
-                    const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
-                    return this.dialogs.confirm(message, title, ok);
-                } else {
-                    // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-                    // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-                    this.dialogs.disconnect(this.system.id)
-                        .then((result) => {
-                            if (result) {
-                                this.updateAndGoToSystems();
-                            }
-                        });
-                }
+            this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
+                // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
+                const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
+                this.dialogs.confirm(message, title, ok);
+            }).catch(() => {
+                // User is the owner. Deleting system means unbinding it and disconnecting all accounts
+                // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
+                this.dialogs.disconnect(this.system.id)
+                    .then((result) => {
+                        if (result) {
+                            this.updateAndGoToSystems();
+                        }
+                    });
             });
         }
     }

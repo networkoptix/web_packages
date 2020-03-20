@@ -245,14 +245,12 @@ export class NxCloudApiService {
     // Cloud Storage
 
     enableCloudStorage(systemId: string): Promise<any> {
-        // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/create', {
             systemId
         }).toPromise();
     }
 
     deleteCloudStorage(systemId: string, password: string): Promise<any> {
-        // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
             systemId,
             password
@@ -260,7 +258,6 @@ export class NxCloudApiService {
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
-        // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/move', {
             sourceSystemId,
             destinationSystemId
@@ -279,8 +276,10 @@ export class NxCloudApiService {
         //     delayFromLive     : 1200000 // ms, rounded to 0.1s}
         // });
 
-        return this.http.post(this.CONFIG.apiBase + '/storage/usageStats', {
-            systemId
+        return this.http.get(this.CONFIG.apiBase + '/storage/usageStats', {
+            params: {
+                systemId
+            }
         }).toPromise();
     }
 }
