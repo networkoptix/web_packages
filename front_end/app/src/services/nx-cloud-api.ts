@@ -246,44 +246,48 @@ export class NxCloudApiService {
 
     enableCloudStorage(systemId: string): Promise<any> {
         // TODO: This method will be implemented later once endpoints are finalized
-        return Promise.resolve({
-            systems    : [systemId],
-            totalSpace : 50 * 1073741824 // get from config?
-        });
-        // return this.http.post(this.CONFIG.apiBase + '/storage/create', {
-        //     systemId
-        // }).toPromise();
+        // return Promise.resolve({
+        //     systems    : [systemId],
+        //     totalSpace : 50 * 1073741824 // get from config?
+        // });
+        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+            systemId
+        }).toPromise();
     }
 
     deleteCloudStorage(systemId: string, password: string): Promise<any> {
         // TODO: This method will be implemented later once endpoints are finalized
-        return Promise.resolve();
-        // return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
-        //     systemId,
-        //     password
-        // }).toPromise();
+        // return Promise.resolve();
+        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+            systemId,
+            password
+        }).toPromise();
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
         // TODO: This will be implemented later once endpoints are finalized
-        return Promise.resolve();
-        // return this.http.post(this.CONFIG.apiBase + '/storage/move', {
-        //     sourceSystemId,
-        //     destinationSystemId
-        // }).toPromise();
+        // return Promise.resolve();
+        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+            sourceSystemId,
+            destinationSystemId
+        }).toPromise();
     }
 
     getCloudStorageUsage(systemId: string): Promise<any> {
         // TODO: This method will be implemented later once endpoints are finalized
-        return Promise.resolve({
-            enabled           : true,
-            cloudCapacity     : 53687091200,
-            currentRecordings : 7457136000, // ms, rounded to the hour
-            whenFullyUsed     : 1209600000, // ms, rounded to the hour
-            amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
-            archiveFrom       : 11, // number of cameras represented by integer
-            recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
-            delayFromLive     : 1200000 // ms, rounded to 0.1s}
-        });
+        // return Promise.resolve({
+        //     enabled           : true,
+        //     cloudCapacity     : 53687091200,
+        //     currentRecordings : 7457136000, // ms, rounded to the hour
+        //     whenFullyUsed     : 1209600000, // ms, rounded to the hour
+        //     amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
+        //     archiveFrom       : 11, // number of cameras represented by integer
+        //     recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
+        //     delayFromLive     : 1200000 // ms, rounded to 0.1s}
+        // });
+
+        return this.http.post(this.CONFIG.apiBase + '/storage/usageStats', {
+            systemId
+        }).toPromise();
     }
 }
