@@ -83,16 +83,13 @@ export class CloudStorageMoveModalContent implements OnInit {
         });
 
         // Move Process
-        this.move = this.processService.createProcess(() => {
-            return this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget)
-                .then(() => {
-                    this.updateCallback();
-                    this.close();
-                });
-        }, {
-        // TODO: These messages and errorCodes will be implemented on a future ticket
+        this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
+            // TODO: These messages and errorCodes will be implemented on a future ticket
             successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
             errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
+        }).then(() => {
+            this.updateCallback();
+            this.close();
         });
     }
 

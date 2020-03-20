@@ -245,18 +245,13 @@ export class NxCloudApiService {
     // Cloud Storage
 
     enableCloudStorage(systemId: string): Promise<any> {
-        // TODO: This method will be implemented later once endpoints are finalized
-        // return Promise.resolve({
-        //     systems    : [systemId],
-        //     totalSpace : 50 * 1073741824 // get from config?
-        // });
+        // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/create', {
             systemId
         }).toPromise();
     }
 
     deleteCloudStorage(systemId: string, password: string): Promise<any> {
-        // TODO: This method will be implemented later once endpoints are finalized
         // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
             systemId,
@@ -265,7 +260,6 @@ export class NxCloudApiService {
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
-        // TODO: This will be implemented later once endpoints are finalized
         // return Promise.resolve();
         return this.http.post(this.CONFIG.apiBase + '/storage/move', {
             sourceSystemId,
@@ -274,7 +268,6 @@ export class NxCloudApiService {
     }
 
     getCloudStorageUsage(systemId: string): Promise<any> {
-        // TODO: This method will be implemented later once endpoints are finalized
         // return Promise.resolve({
         //     enabled           : true,
         //     cloudCapacity     : 53687091200,

@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID, Inject } from '@angular/core';
+import { Component, LOCALE_ID, Inject, OnInit } from '@angular/core';
 import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
 import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
@@ -10,14 +10,14 @@ import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_stati
 import { NxSettingsService }            from '../settings.service';
 import { NxSystem }                     from '../../../../services/system.service';
 import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
-import { NxProcessService }             from '../../../../services/process.service';
+import { NxProcessService, Process }             from '../../../../services/process.service';
 
 @Component({
     selector    : 'nx-cloud-storage',
     templateUrl : './cloud-storage.component.html',
     styleUrls   : ['./cloud-storage.component.scss']
 })
-export class NxCloudStorageComponent {
+export class NxCloudStorageComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system$: BehaviorSubject<NxSystem>;
@@ -26,6 +26,8 @@ export class NxCloudStorageComponent {
     _cloudCapacity: number;
     cloudStorageSystemEnabled$ = new BehaviorSubject(false);
     systems$: BehaviorSubject<NxSystem[]>;
+    enableCloudStorage: Process;
+    updateEnabledUsageAndStats: Process;
 
     // Constructor and class initialization methods
 
@@ -55,13 +57,8 @@ export class NxCloudStorageComponent {
         });
     }
 
-    private updateEnabledAndUsageStats() {
-        this.cloudApiService.getCloudStorageUsage(this.systemId)
-            .then(({ enabled, cloudCapacity, ...usageStats }) => {
-                this.usageStats = { ...emptyUsage, ...usageStats };
-                this.cloudStorageSystemEnabled = enabled;
-                this._cloudCapacity = cloudCapacity;
-            });
+    ngOnInit() {
+        this.initEnableCloudStorageProcess();
     }
 
     // Getters for view
@@ -153,26 +150,35 @@ export class NxCloudStorageComponent {
 
     // Handler methods for actions
 
-    public enableCloudStorage = this.processService.createProcess(() => {
-        return this.cloudApiService.enableCloudStorage(this.systemId)
-            .then(({ totalSpace }) => {
-                this._cloudCapacity = totalSpace;
-                // TODO: Will implement on a future task when api service is finalized
-                this.cloudStorageSystemEnabled = true;
-                this.updateEnabledAndUsageStats();
-            },
-            // TODO: Will implement on a future task when api service is finalized
-            () => {
-                // Activation Error Dialog
-                const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
-                this.dialogService.confirm(message, title, ok);
+    private initEnableCloudStorageProcess() {
+        this.enableCloudStorage = this.processService.createProcess(() => {
+            const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
+            // TODO: check if more storage is available, need to find where to get this
+            // eslint-disable-next-line no-constant-condition
+            if (false) {
+                return this.dialogService.confirm(message, title, ok);
             }
-            );
-    }, {
-        // TODO: These messages and errorCodes will be implemented on a future ticket
-        successMessage : 'Cloud Storage Enabled',
-        errorPrefix    : 'Error Enabling Cloud Storage'
-    });
+            return this.cloudApiService.enableCloudStorage(this.systemId);
+        }, {
+            successMessage : 'Cloud Storage Enabled',
+            errorPrefix    : 'Error Enabling Cloud Storage'
+        }).then(() => {
+            this.cloudStorageSystemEnabled = true;
+            this.updateEnabledAndUsageStats();
+        }
+        // TODO: Will implement erros on a future task when api service is finalized
+        );
+    };
+
+    private updateEnabledAndUsageStats() {
+        // TODO: maybe needs to be a process
+        this.cloudApiService.getCloudStorageUsage(this.systemId)
+            .then(({ enabled, cloudCapacity, ...usageStats }) => {
+                this.usageStats = { ...emptyUsage, ...usageStats };
+                this.cloudStorageSystemEnabled = enabled;
+                this._cloudCapacity = cloudCapacity;
+            });
+    }
 
     public deleteCloudStorage() {
         this.dialogService.cloudStorageDelete(this.system$, this.handleCloudStorageDisabled);
