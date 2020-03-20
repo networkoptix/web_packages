@@ -14,7 +14,7 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
-import { throttleTime }              from 'rxjs/operators';
+import { filter, throttleTime }      from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
@@ -149,12 +149,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
+            .pipe(filter((system) => system !== undefined))
             .subscribe((system) => {
                 this.system = system;
                 this.updateSettings();
                 this.applyService.setVisible(false);
-                if (system && system.isAvailable) {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
+                this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
+                if (this.system.isAvailable) {
                     this.system.updateOrGetSystemSettings().subscribe((res: any) => {
                         this.updatePeerSystems();
                         this.cleanUpWatchers(res.reply.settings);
@@ -180,18 +181,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 }
                             });
                     });
-
-                    this.deletingSystem = this.processService.createProcess(() => {
-                        return this.system.deleteFromCurrentAccount();
-                    }, {
-                        successMessage : this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
-                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
-                    }).then(() => {
-                        this.updateAndGoToSystems();
-                    }, (error) => {
-                        return error;
-                    });
                 }
+                this.deletingSystem = this.processService.createProcess(() => {
+                    return this.system.deleteFromCurrentAccount();
+                }, {
+                    successMessage : this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
+                    errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
+                }).then(() => {
+                    this.updateAndGoToSystems();
+                }, (error) => {
+                    return error;
+                });
             });
     }
 

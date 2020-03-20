@@ -130,9 +130,8 @@ def send_notification(request):
         validation_error = False
         error_data = {}
 
-        external_id = None
-        if 'id' in request.data:  # external service generated an id for this message to track it
-            external_id = request.data['id']
+        external_id = request.query_params.get('id')
+        if external_id:  # external service generated an id for this message to track it
             msg = notifications_api.find_message(external_id)
             if msg:
                 # there is already a message with this id - do not send the message, respond with status
