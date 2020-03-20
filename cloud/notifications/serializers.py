@@ -7,6 +7,7 @@ from .models import PushSubscription, PushDevice
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 
+
 class NotificationSerializer(serializers.Serializer):
     systemId = serializers.UUIDField(allow_null=False)
     targets = serializers.ListField(child=serializers.CharField(min_length=1))
