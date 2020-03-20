@@ -15,7 +15,7 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
-import {filter, throttleTime} from 'rxjs/operators';
+import { filter, throttleTime }      from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
