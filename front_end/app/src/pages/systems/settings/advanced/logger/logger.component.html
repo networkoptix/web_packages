@@ -1,0 +1,24 @@
+<nx-block type="mt-3">
+    <header>
+        <h4 translate>Log settings</h4>
+    </header>
+    <nx-section>
+        <form class="form" role="form" name="logLevels" novalidate>
+            <div *ngFor="let name of loggers" class="form-group">
+                <label class="col-sm-4">{{name}} log level</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="{{name}}LogLevel" id="{{name}}LogLevel"
+                            [(ngModel)]="loggers[name]">
+                        <option value="none">None: Log disabled.</option>
+                        <option value="always">Always: Log errors, warnings and most important messages.</option>
+                        <option value="error">Error: Log errors only.</option>
+                        <option value="warning">Warning: Log warnings and errors.</option>
+                        <option value="info">Info: Log errors, warnings and all messages.</option>
+                        <option value="debug">Debug: Log every System message and debug information.</option>
+                        <option value="verbose">Verbose: Log all information available.</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </nx-section>
+</nx-block>

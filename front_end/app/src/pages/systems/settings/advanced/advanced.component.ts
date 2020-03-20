@@ -31,6 +31,7 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
+    serverForLoggers: NxSystem;
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
     selectedServer: any;
@@ -233,6 +234,8 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
 
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
             this.selectedServer = server;
+            debugger;
+            this.serverForLoggers = this.selectedServer.id.replace(/[\{\}]/g, '');
             this.menuService.setDetailsSection(this.selectedServer.id);
         }
     }
