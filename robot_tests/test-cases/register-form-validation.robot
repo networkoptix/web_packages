@@ -120,9 +120,7 @@ Test Register Invalid
     ...    ${EMAIL IS REQUIRED}
     ...    ${PASSWORD BADGE}
     ...    ${PASSWORD IS REQUIRED}
-    ...    ${PASSWORD TOO SHORT}
     ...    ${PASSWORD SPECIAL CHARS}
-    ...    ${PASSWORD TOO COMMON}
     ...    ${PASSWORD IS WEAK}
     ...    ${FIRST NAME IS REQUIRED}
     ...    ${LAST NAME IS REQUIRED}
