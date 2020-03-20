@@ -8,6 +8,7 @@ from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 import string
 import uuid
 import os
+import math
 
 env = "https://test3.cloud.hdw.mx/"
 
@@ -19,7 +20,7 @@ class UserBehavior(TaskSet):
 #        if f.mode == 'r':
 #            contents = f.read()
         lines = f.readlines()
-        self.currentProc = int(len(lines)/2)
+        self.currentProc = math.ceil(len(lines)/2)
         f= open(f'{txtFile}.txt', 'a')
         f.write(f"{self.currentProc+1}\n")
         f.close()
@@ -46,7 +47,7 @@ class UserBehavior(TaskSet):
         print(str(self.currentProc)+" proc started push")
         for x in range(5): 
             r = self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
-            time.sleep(random.uniform(0, 1))
+            time.sleep(random.uniform(0, 5))
             print(f'{self.currentProc}_{x}')
 #             f.write(f'{self.currentProc} {x} {r.text}\n\n')
         print(str(self.currentProc)+" proc ended push")

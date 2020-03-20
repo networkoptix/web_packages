@@ -193,6 +193,9 @@ class CloudPortalAPI(object):
             for x in range(emailIntStart, emailIntEnd):
                 targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
             body = {
+                "process": True,
+                "object": True,
+                "queue": True,
                 "systemId":id,
                 "targets":targetList,
                 "notification":{

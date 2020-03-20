@@ -3,7 +3,7 @@ Resource          ../resource.robot
 # Suite Setup       Open Browser and go to URL    ${url}
 # Test Setup        Restart
 # Test Teardown     Run Keyword If Test Failed    Open New Browser On Failure
-# Suite Teardown    Close All Browsers
+Suite Teardown    Close All Browsers
 
 *** Variables ***
 ${url}             http://localhost:8085/
@@ -64,12 +64,14 @@ Push Notifications To Browsers
     ${browser index} =    Evaluate    ${total browsers}+1
     ${recieved per browser} =    Evaluate    ${tokens per browser} * 10
     ${sleep} =    Evaluate    120+${total browsers}
-    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/10
+    ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/5
     ${locust ramp} =    Evaluate    ${locust users}/10      
+    ${locust slaves} =    Evaluate    ${locust users}/20
+    ${locust time} =    Evaluate    ${locust users}/20 + 45
     
     Create Systems Json    ${testenv}    ${email}    ${password}
 
-    Push Notifications Swarm    10    ${locust users}    ${locust ramp}    1   
+    Push Notifications Swarm     ${locust slaves}    ${locust users}    ${locust ramp}    ${locust time}  
     Sleep    ${sleep}    
     
    
@@ -82,14 +84,15 @@ Push Notifications To Browsers
 
 Locust
     ${locust users} =    Evaluate    ${tokens per browser}*${browsers}/5
-    ${locust ramp} =    Evaluate    ${locust users}/10      
+    ${locust ramp} =    Evaluate    ${locust users}/50      
     ${locust slaves} =    Evaluate    ${locust users}/20
+    ${locust time} =    Evaluate    ${locust users}/20 + 45
     
     Create Systems Json    ${testenv}    ${email}    ${password}
 
-    Push Notifications Swarm     ${locust slaves}    ${locust users}    ${locust ramp}    150
+    Push Notifications Swarm     ${locust slaves}    ${locust users}    ${locust ramp}    ${locust time}
 #    Push Notifications Swarm    1    1    1    1   
     
-Pabot
-    ${max} =    Evaluate    1000
-    Push Notification Pabot Command    ${max}
+# Pabot
+    # ${max} =    Evaluate    1000
+    # Push Notification Pabot Command    ${max}
