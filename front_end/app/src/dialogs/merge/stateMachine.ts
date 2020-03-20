@@ -13,19 +13,21 @@ class StateMachine {
         this.history = [];
     }
 
-    transition(newState) {
+    transition(newState, goingBack = false) {
         const nextState = this.store[newState];
         if (!nextState) {
             throw new Error(`invalid: ${this.state} -> ${newState}`);
         }
-        this.history.push(this.currentState);
+        if (!goingBack) {
+            this.history.push(this.currentState);
+        }
         this.currentState = newState;
         this.state = nextState;
     }
 
     goBack() {
         if (this.history.length > 0) {
-            this.transition(this.history.pop());
+            this.transition(this.history.pop(), true);
         } else {
             throw new Error('Nothing to go back to');
         }
