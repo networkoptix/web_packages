@@ -402,7 +402,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 label : this.LANG.dialogs.cloudStorage.title,
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
-            const systemCloudStorageEnabled = this.CONFIG.cloudCapabilities.cloudStorageEnabled || true; // replace true with system cloud storage capable
+            const systemCloudStorageEnabled = this.CONFIG.cloudCapabilities.cloudStorageEnabled || this.system.canMerge;
             adminNode.level2 = this.system.canUserViewCloudStorage() && systemCloudStorageEnabled ? [generalNode, cloudStorageNode] : [];
         }
 
