@@ -62,7 +62,7 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
         default_params.update(params)
 
     logger.info('\nPUT: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
-    return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
+    return requests.put(url, params=default_params, auth=auth, json=json, headers=headers)
 
 
 def get_ip_of_system(email, password, system_id):
