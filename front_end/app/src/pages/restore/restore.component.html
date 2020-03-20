@@ -74,84 +74,27 @@
                             [form]="restorePasswordWithCode"
                             #newPassword="ngModel">
                     </nx-password-input>
+                    <nx-password-input-tag-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-tag-validation>
                 </div>
 
                 <div class="col-md-4">
-                <span class="help-block" *ngIf="newPassword.valid && LANG.passwordRequirements">
-                    <nx-tag type="success"
-                          *ngIf="newPassword.control && !newPassword.control.fairPassword">{{LANG.passwordRequirements.good}}</nx-tag>
-                    <nx-tag type="warning"
-                          *ngIf="newPassword.control && newPassword.control.fairPassword"
-                          title="{{ LANG.passwordRequirements.fairMessage}}">{{LANG.passwordRequirements.fair}}</nx-tag>
-                </span>
-
-                <span class="help-block" *ngIf="!newPassword.valid && !newPassword.touched">
-                    <nx-tag type="danger"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.weak &&
-                                 !newPassword.errors.common &&
-                                 !newPassword.errors.pattern &&
-                                 !newPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</nx-tag>
-                    <nx-tag type="danger"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.common &&
-                                 !newPassword.errors.pattern &&
-                                 !newPassword.errors.minlength &&
-                                 !newPassword.errors.required"
-                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</nx-tag>
-                    <nx-tag type="danger"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.minlength &&
-                                 !newPassword.errors.pattern"
-                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</nx-tag>
-                    <nx-tag type="danger"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.pattern &&
-                                 !newPassword.errors.minlength"
-                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.required}}</nx-tag>
-                </span>
-
-                <span class="help-block" *ngIf="!newPassword.valid && newPassword.touched">
-                    <span class="input-error"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.weak &&
-                                 !newPassword.errors.common &&
-                                 !newPassword.errors.pattern &&
-                                 !newPassword.errors.required &&
-                                 !newPassword.errors.minlength">{{ LANG.passwordRequirements.weakMessage}}</span>
-
-                    <span class="input-error"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.common &&
-                                 !newPassword.errors.required">{{ LANG.passwordRequirements.commonMessage}}</span>
-
-                    <span class="input-error"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.minlength">{{ LANG.passwordRequirements.minLengthMessage}}
-                    </span>
-                    <span class="input-error"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.pattern &&
-                                 !newPassword.errors.minlength">{{ LANG.passwordRequirements.requiredMessage}}
-                    </span>
-                    <span class="input-error"
-                          *ngIf="newPassword.errors &&
-                                 newPassword.errors.required">{{ LANG.passwordRequirements.missingMessage}}</span>
-                </span>
-            </div>
+                    <nx-password-input-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-validation>
+                </div>
             </div>
 
-            <nx-password-input-validation
-                class="mb-3"
-                *ngIf="newPassword.errors && !newPassword.errors.required"
-                [forElement]="newPassword"></nx-password-input-validation>
             <nx-process-button
                 [customButtonClass]="'full-width'"
                 [customClass]="'full-width'"
                 [process]="change"
                 [form]="restorePasswordWithCode"
-                [buttonText]="'OK' | translate"></nx-process-button>
+                [buttonText]="LANG.dialogs.buttons.ok">
+            </nx-process-button>
         </form>
     </div>
 
