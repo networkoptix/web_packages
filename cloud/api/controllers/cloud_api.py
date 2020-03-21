@@ -11,8 +11,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
-CLOUD_STORAGE_URL = settings.CLOUD_CONNECT['url']  # TODO: add cloud storage url
-CLOUD_STORAGE_SPACE = 50 * 1073741824  # TODO: move to config
+CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
+CLOUD_STORAGE_SPACE = settings.CLOUD_STORAGE_SIZE
 
 
 def lower_case_email(func):
@@ -397,10 +397,6 @@ class Storage(object):
     @lower_case_email
     def create(email, password, system_id):
         request = f"{CLOUD_STORAGE_URL}/storages/"
-        # TODO: Get ip of system for creating storage.
-        # headers = {
-        #     'X-Forwarded-For': ''
-        # }
         body = {
             "systems": [system_id],
             "totalSpace": CLOUD_STORAGE_SPACE

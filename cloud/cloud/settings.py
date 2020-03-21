@@ -221,7 +221,9 @@ CACHES = {
 DEPLOYMENT_READY = 'ready'
 
 if LOCAL_ENVIRONMENT:
-    conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
+    _HOST = 'https://dev3.cloud.hdw.mx'
+    conf["cloud_db"]["url"] = f"{_HOST}/cdb"
+    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
 
     # BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
@@ -551,3 +553,7 @@ PUSH_NOTIFICATIONS_SETTINGS = {
     'MAX_RETRIES': 3,
     'RETRY_INTERVAL': 20
 }
+
+# Cloud storage settings
+CLOUD_STORAGE_URL = conf['cloud_storage']['url']
+CLOUD_STORAGE_SIZE = 50 * 1073741824
