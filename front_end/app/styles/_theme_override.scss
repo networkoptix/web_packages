@@ -41,14 +41,18 @@ body {
     &-condensed {
         .card-body {
             padding : 12px 16px 14px;
-
-            .user-name {
-                font-size     : $font-size-sm;
-                font-family   : $font-family-medium;
-                height        : 16px;
-                margin-bottom : 0;
+            
+            h2 {
+                display : inline !important;
             }
 
+            .user-name {
+                font-size     : $font-size-sm !important;
+                font-family   : $font-family-medium;
+                height        : 16px;
+                margin-bottom : 0 !important;
+            }
+    
             .process-button {
                 margin-top : 12px;
             }
@@ -105,9 +109,9 @@ hr {
     margin-bottom : 16px;
 }
 
-.buttons-panel {
-    display : flex;
-}
+//.buttons-panel {
+//    display : flex;
+//}
 
 .alert {
     font-size      : $h4-font-size;
@@ -239,73 +243,6 @@ select {
     }
 }
 
-#badge-large {
-    height    : 2rem !important;
-    font-family: $font-family-regular !important;
-    font-weight : 400 !important;
-    font-size : rem(13px) !important;
-    padding   : 0 12px !important;
-    line-height: 2rem !important;
-}
-
-.badge {
-    
-    & {
-        background-color : $light4;
-        color            : $light16;
-        height           : 20px;
-        font-family      : $font-family-regular;
-        font-weight      : 400;
-        line-height      : 12px;
-        
-        &.large {
-            @extend #badge-large;
-        }
-    }
-    
-    &-brand {
-        @extend .badge;
-        background-color: $brand_core;
-        color: $light1;
-        height: 20px;
-        
-        &.large {
-            @extend #badge-large;
-        }
-    }
-
-    &-default {
-        background-color : $light8 !important;
-        color: $light1 !important;
-        line-height : rem(14px);
-    }
-
-    &-primary {
-        background-color : $brand_core;
-        color            : $brand_contrast;
-    }
-
-    &-secondary {
-        background-color : $light6;
-        color            : $dark9;
-    }
-    
-    &-danger {
-        background-color : $red_l2;
-        color            : $light1;
-    }
-
-    &-warning {
-        background-color: $warning;
-        color           : $dark9;
-    }
-    
-    &-success {
-        background-color : $brand-success;
-        color            : $light1;
-    }
-}
-
 .table {
     & thead {
         & th {
@@ -357,4 +294,11 @@ ngb-tabset {
 .button-fix > div.alert > button {
     padding: 0 1.25rem !important;
     margin-top: 0.5rem;
+}
+
+///////////////////////
+// Bootstrap style additions
+///////////////////////
+.overflow-x-auto {
+    overflow-x: auto;
 }

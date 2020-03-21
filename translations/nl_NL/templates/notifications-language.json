@@ -8,11 +8,11 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "Verkoopaanvraag voor {{message.asset}}"
   },
-  "contact_support": {
-    "emailSubject": "Support aanvraag voor {{message.asset}}"
+  "technical_inquiry": {
+    "emailSubject": "Technische aanvraag voor {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Feedback over {{message.asset}}"
@@ -30,6 +30,6 @@
     "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} nodigt u uit voor %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}video systeem {{message.system_name}} werd gedeeld met u{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Videosysteem {{message.system_name}} is met u gedeeld"
+    "emailSubject": "Het systeem {{message.system_name}} werd met u gedeeld"
   }
 }

@@ -8,6 +8,13 @@ US_LANGUAGE_NAME = "English (US)"
 US_LANGUAGE_CODE = "en_US"
 
 
+def merge_two_json(x, y):
+    z = x.copy()  # start with x's keys and values
+    z.update(y)   # modifies z with y's keys and values & returns None
+
+    return z
+
+
 def make_dir(filename):
     dirname = os.path.dirname(filename)
     print(f"make dir {dirname} for {filename}")
@@ -64,9 +71,14 @@ def generate_languages_files(languages, template_filename):
     with codecs.open("static/language_i18n.json", "r", "utf-8") as file_descriptor:
         base_i18n = json.load(file_descriptor)
 
+    with codecs.open("static/language_i18n_static.json", "r", "utf-8") as file_descriptor:
+        base_i18n_static = json.load(file_descriptor)
+
     for lang in languages:
         ajs = merge_files(base_lang, lang, "language.json")
         i18n = merge_files(base_i18n, lang, "language_i18n.json")
+        i18n_static = merge_files(base_i18n_static, lang, "language_i18n_static.json")
+        i18n = merge_two_json(i18n, i18n_static)
         compiled = {"ajs": ajs, "i18n": i18n}
         save_content(f"static/lang_{lang}/language_compiled.json", json.dumps(compiled, indent=4, ensure_ascii=False, sort_keys=True))
 

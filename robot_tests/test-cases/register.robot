@@ -12,11 +12,7 @@ ${url}         ${ENV}
 
 *** Keywords ***
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In    timeout=5
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser and Reset DB On Failure
     Close Browser
@@ -32,22 +28,22 @@ Clear Register Fields
     Clear Element Text    ${REGISTER EMAIL INPUT}
 
 *** Test Cases ***
-should open register page in anonymous state by clicking Register button on top right corner
+Should open register page in anonymous state by clicking Register button on top right corner
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
+    Run keyword and continue on failure    Title Should Be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
-should open register page from register success page by clicking Register button on top right corner
-    [tags]    email
+Should open register page from register success page by clicking Register button on top right corner
+    [Tags]    email
     ${email}    Get Random Email        ${BASE EMAIL}
-    Go To    ${url}/register
     Register    'mark'    'hamill'    ${email}    ${password}
     Activate    ${email}
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Location Should Be    ${url}/register
 
-should open register page in anonymous state by clicking Register button on homepage
+Should open register page in anonymous state by clicking Register button on homepage
     Close Browser
     Open Browser and go to URL    ${url}
     Wait Until Element Is Visible    ${CREATE ACCOUNT BODY}
@@ -55,27 +51,25 @@ should open register page in anonymous state by clicking Register button on home
     Location Should Be    ${url}/register
 
 #I am assuming this means directly going to the /register url and not clicking a button
-should open register page in anonymous state
-    [tags]    C24211
-    Go To    ${url}/register
-    Location should be    ${url}/register
+Should open register page in anonymous state
+    [tags]    C24211    anonymous
+    Run keyword and continue on failure    Open page anonymously    ${url}/register    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${REGISTER FORM}
+    Check Log In
 
-should register user with correct credentials
+Should register user with correct credentials
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
 
-should allow !#$%&'*+-/=?^_`{|}~ in email field
+Should allow !#$%&'*+-/=?^_`{|}~ in email field
     [documentation]    This is here because testing activation with the '&' freaks out Python's imaplib so we test that our form accepts it.
     [tags]
     ${email}    Get Random Symbol Email    ${BASE EMAIL}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Validate Register Success
 
-with valid inputs no errors are displayed
+With valid inputs no errors are displayed
     [tags]    C41557
     ${email}    Get Random Email    ${BASE EMAIL}
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
@@ -95,7 +89,7 @@ with valid inputs no errors are displayed
     : FOR    ${element}    IN    @{list}
     \    Element Should Not Be Visible    ${element}
 
-displays password masked, shows password and changes eye icon when clicked
+Displays password masked, shows password and changes eye icon when clicked
     [tags]    C24211
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${REGISTER PASSWORD INPUT}    ${REGISTER EYE ICON CLOSED}
@@ -110,7 +104,7 @@ displays password masked, shows password and changes eye icon when clicked
     ${input type}    Get Element Attribute    ${REGISTER PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-should respond to Enter key and save data
+Should respond to Enter key and save data
     ${email}    Get Random Email    ${BASE EMAIL}
     Go To    ${url}/register
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
@@ -119,73 +113,74 @@ should respond to Enter key and save data
     Input Text    ${REGISTER EMAIL INPUT}    ${email}
     Input Text    ${REGISTER PASSWORD INPUT}    ${password}
     Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
-    Press Key    ${REGISTER PASSWORD INPUT}    ${ENTER}
+    Press Keys    ${REGISTER PASSWORD INPUT}    ENTER
     Validate Register Success
 
-should respond to Tab key
+Should respond to Tab key
     [tags]    C41867
     Wait Until Element Is Visible    ${CREATE ACCOUNT HEADER}
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
-    Press Key    ${REGISTER FIRST NAME INPUT}    ${TAB}
+    Press Keys    ${REGISTER FIRST NAME INPUT}    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
-    Press Key    ${REGISTER LAST NAME INPUT}    ${TAB}
+    Press Keys    ${REGISTER LAST NAME INPUT}    TAB
     Element Should Be Focused    ${REGISTER EMAIL INPUT}
     Sleep    1
-    Press Key    ${REGISTER EMAIL INPUT}    ${TAB}
+    Press Keys    ${REGISTER EMAIL INPUT}    TAB
     Element Should Be Focused    ${REGISTER PASSWORD INPUT}
-    Press Key    ${REGISTER PASSWORD INPUT}    ${TAB}
+    Press Keys    ${REGISTER PASSWORD INPUT}    TAB
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"checked")]
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}/../../span[contains(@class,"unchecked")]
 
-    Press Key    ${TERMS AND CONDITIONS CHECKBOX REAL}    ${TAB}
-    Press Key    ${TERMS AND CONDITIONS LINK}    ${ENTER}
+    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    get locations
+    Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
-    Location Should Be    ${url}/content/eula
-    Select Window    @{tabs}[0]
-    Press Key    ${TERMS AND CONDITIONS LINK}    ${TAB}
+    Switch Window    @{tabs}[1]
+    Location Should Be    ${url}${TERMS URL}
+    Switch Window    @{tabs}[0]
+    Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Key    ${PRIVACY POLICY LINK}    ${ENTER}
+    Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[2]
+    Switch Window    @{tabs}[3]
     Location Should Be    ${PRIVACY POLICY URL FULL}
-    Select Window    @{tabs}[0]
+    Switch Window    @{tabs}[0]
 
     Clear Register Fields
-    Press Key    ${PRIVACY POLICY LINK}    ${TAB}
+    Press Keys    ${PRIVACY POLICY LINK}    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
-    Press Key    ${CREATE ACCOUNT BUTTON}    ${ENTER}
+    Press Keys    ${CREATE ACCOUNT BUTTON}    ENTER
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 
-should open Terms and conditions in a new page
+Should open Terms and conditions in a new page
     [tags]    C41558
     Go To    ${url}/register
     Wait Until Element Is Visible    ${TERMS AND CONDITIONS LINK}
     Click Link    ${TERMS AND CONDITIONS LINK}
     Sleep    2    #This is specifically for Firefox
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Switch Window    @{tabs}[1]
     Location Should Be    ${url}/content/eula
 
-should open Privacy Policy in a new page
+Should open Privacy Policy in a new page
     [tags]    C41558
     Go To    ${url}/register
     Wait Until Element Is Visible    ${PRIVACY POLICY LINK}
     Click Link    ${PRIVACY POLICY LINK}
     Sleep    2    #This is specifically for Firefox
     ${windows}    Get Window Handles
-    Select Window    @{windows}[1]
+    Switch Window    @{windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
-should suggest user to create new account, if he was logged in and goes to registration link
+Should suggest user to create new account, if he was logged in and goes to registration link
     Log In    ${EMAIL VIEWER}    ${password}
     Validate Log In
     Go To    ${url}/register
@@ -198,32 +193,32 @@ should suggest user to create new account, if he was logged in and goes to regis
     Click Button    ${LOGGED IN NEW ACCOUNT BUTTON}
     Validate on Register Page
 
-should display promo-block, if user goes to registration from native app
+Should display promo-block, if user goes to registration from native app
     Go To    ${url}/register?from=client
     Wait Until Element Is Visible    ${JUMBOTRON}
     Go To    ${url}/register?from=mobile
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-should not display promo-block, if user goes to registration not from native app
+Should not display promo-block, if user goes to registration not from native app
     Go To    ${url}/register
     Wait Until Element Is Visible    ${REGISTER FIRST NAME INPUT}
     Element Should Not Be Visible    ${JUMBOTRON}
 
-should remove promo-block on registration form successful submitting form when from=client
+Should remove promo-block on registration form successful submitting form when from=client
+    [Tags]    qwe
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register?from=client
-    Register    mark    hamill    ${email}    ${password}
+    Register    mark    hamill    ${email}    ${password}    from=client
     Validate Register Success    ${url}/register/success?from=client
     Element Should Not Be Visible    ${JUMBOTRON}
 
-should remove promo-block on registration form successful submitting form when from=mobile
+Should remove promo-block on registration form successful submitting form when from=mobile
+    [Tags]    qwe
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register?from=mobile
-    Register    mark    hamill    ${email}    ${password}
+    Register    mark    hamill    ${email}    ${password}    from=mobile
     Validate Register Success    ${url}/register/success?from=mobile
     Element Should Not Be Visible    ${JUMBOTRON}
 
-should not allow to access /register/success /activate/success by direct input
+Should not allow to access /register/success /activate/success by direct input
     Close Browser
     Open Browser and go to URL    ${url}/register/success
     Wait Until Element Is Visible    ${JUMBOTRON}
@@ -235,31 +230,26 @@ should not allow to access /register/success /activate/success by direct input
 Cannot register email that is already registered
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Cannot register email that is already activated
     [tags]    C41563
     ${email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Activate    ${email}
-    Go To    ${url}/register
     Register    mark    hamill    ${email}    ${password}
     Wait Until Element Is Visible    ${REGISTER FORM}//span[contains(@class,"help-block input-error") and text()="${EMAIL ALREADY REGISTERED TEXT}"]
 
 Check registration email links, colors, cloud name, and user name
     [tags]    C24211
     ${random email}    Get Random Email    ${BASE EMAIL}
-    Go To    ${url}/register
     Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${random email}    ${password}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${random email}    timeout=120    status=UNSEEN
     ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8
+    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
 
     Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
     Check Email User Names    ${email text}    ${TEST FIRST NAME}    ${TEST LAST NAME}
@@ -274,24 +264,24 @@ Check registration email links, colors, cloud name, and user name
     \    check in list    ${expected links}    ${link}
     Delete Email    ${email}
     Close Mailbox
-    
+
 Check automatic loggout when registering new account while logged in
     [tags]    C63393
     Log In    ${EMAIL VIEWER}     ${BASE PASSWORD}
     Validate Log In
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${MODAL DIALOG}//button[@class="close ng-star-inserted"]
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${LOGGED IN STAY LOGGED IN BUTTON}
     Location Should Be    ${ENV}/systems
     Go To    ${ENV}/register
     Wait Until Elements Are Visible    ${LOGGED IN STAY LOGGED IN BUTTON}    ${LOGGED IN NEW ACCOUNT BUTTON}
-    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    You are already logged in with as ${EMAIL VIEWER}  
+    Element Text Should Be    ${MODAL DIALOG}//h1/span[contains(text(),'${EMAIL VIEWER}')]    ${YOU ARE ALREADY LOGGED IN TEXT} ${EMAIL VIEWER}
     Click Button     ${LOGGED IN NEW ACCOUNT BUTTON}
     Wait Until Location Is    ${ENV}/register
-    Wait Until Elements Are Visible    ${REGISTER FORM} 
+    Wait Until Elements Are Visible    ${REGISTER FORM}

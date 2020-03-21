@@ -98,9 +98,9 @@
                         {% endif %}
                     </div>
                 {% endif %}
-                {% if not field.field.disabled %}
+                {% if not field.field.disabled or data_structure_type != HTML%}
                     {{ field }}
-                {% elif not field|is_FileField and not field|is_ImageField %}
+                {% elif data_structure_type == HTML %}
                     <div class="show-html">{{ field.value|safe }}</div>
                 {% endif %}
 
@@ -249,6 +249,43 @@
         disableSubmitButtons(false);
     });
 
+    tinymce.PluginManager.add('placeholder', function(editor) {
+        var Label = function () {
+            var placeholder_text = editor.getElement().getAttribute('placeholder');
+            var placeholder_attrs = {
+                class: 'mce-placeholder'
+            };
+            var contentAreaContainer = editor.getContentAreaContainer();
+            tinymce.DOM.setStyle(contentAreaContainer, 'position', 'relative');
+            this.el = tinymce.DOM.add(contentAreaContainer, 'label', placeholder_attrs, placeholder_text);
+        };
+        Label.prototype.hide = function() {
+            tinymce.DOM.setStyle(this.el, 'display', 'none');
+        };
+        Label.prototype.show = function() {
+            tinymce.DOM.setStyle(this.el, 'display', '');
+        };
+        editor.onInit.add(function () {
+            function onFocus() {
+                if (!editor.settings.readonly === true) {
+                    label.hide();
+                }
+                editor.execCommand('mceFocus', false);
+            }
+
+            function onBlur() {
+                editor.getContent() === '' ? label.show() : label.hide();
+            }
+
+            var label = new Label;
+            onBlur();
+            editor.dom.events.add(editor.getBody(), 'blur', onBlur);
+            editor.dom.events.add(editor.getBody(), 'focus', onFocus);
+
+
+        });
+    });
+
     tinymce.init({
         selector: '.tinymce',
         paste_postprocess: function(plugin, args) {
@@ -261,7 +298,7 @@
         menubar: false,
         resize: 'both',
         theme: 'advanced',
-        plugins: 'preview,-visualblocks,-advcode,paste',
+        plugins: 'preview,-visualblocks,-advcode,paste,placeholder',
         theme_advanced_buttons1: 'undo,redo,separator,formatselect,link,bold,italic,underline,separator,bullist,numlist,separator,outdent,indent,separator,code,removeformat,pasteword,preview',
         theme_advanced_toolbar_location: 'top',
         theme_advanced_toolbar_align: 'left',

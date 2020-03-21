@@ -5,4 +5,4 @@
 {{>body}}
 
 %COMPANY_LINK%
-지원: %SUPPORT_LINK%
+Support: %SUPPORT_LINK%

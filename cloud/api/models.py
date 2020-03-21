@@ -176,7 +176,8 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
         for cloud_id in cloud_portal_ids:
             asset = Asset.objects.get(id=cloud_id)
-            if UserGroupsToAssetPermissions.check_permission(self, asset, 'cms.access_customization'):
+            if UserGroupsToAssetPermissions.check_permission(self, asset, 'cms.access_customization') and \
+                    asset.customizations.all().exists():
                 customizations.append(asset.customizations.first().name)
 
         return list(set(customizations))

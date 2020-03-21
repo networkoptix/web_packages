@@ -16,7 +16,7 @@
 	},
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
-		"Search": "Pesquisar",
+		"Search": "Pesquisa",
 		"search_ipvd": "Pesquisar por modelo ou fabricante",
 		"filter applied": "filtro aplicado",
 		"filters applied": "filtros aplicados",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM based servers support policy</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cruzar plataforma SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -113,9 +107,9 @@
 		"releasesTypes": {
 			"beta": "Beta",
 			"betas": "Betas",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "Releases",
+			"rc": "Candidato a lançamento",
+			"release": "Lançamento",
+			"releases": "Versões",
 			"patch": "Patch",
 			"patches": "Patches"
 		}
@@ -164,6 +158,7 @@
 		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente.",
 		"backToEditText": "Voltar às interfaces de edição",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Controle de Acesso",
 		"Connector": "Conector",
 		"Data Analytics": "Análise de dados",
@@ -175,25 +170,27 @@
 		"feedback": "Certifique-se de incluir seu modelo de câmera e fabricante..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Bem-vindo ao",
 		"register": "Criar Conta",
-		"changePassword": "Mudar senha -",
-		"account": "Definições da conta -",
-		"systems": "Sistemas -",
-		"system": "Sistema -",
-		"systemShare": "Partilha de Sistema -",
-		"activate": "Ativar conta -",
-		"activateSent": "Ativar conta -",
-		"activateSuccess": "Conta ativada -",
-		"activateCode": "Ativar conta -",
-		"restorePassword": "Reset de Senha -",
-		"restorePasswordSuccess": "Senha guardada -",
-		"restorePasswordCode": "Reset de Senha -",
-		"view": "Visualizar câmaras - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Depurar",
-		"login": "Entrar -",
+		"login": "Log in",
 		"download": "Baixar %VMS_NAME%",
 		"downloadPlatform": "Baixar %VMS_NAME% para ",
 		"pageNotFound": "Página não encontrada",
@@ -204,10 +201,10 @@
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
 		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in with as {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "You will be logged in with a different account",
 		"loginTitle": "Logar em %CLOUD_NAME%",
-		"loginButton": "Entrar",
+		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
@@ -224,7 +221,13 @@
 			"primarySystemOffline": "O sistema {{primarySystem}} está offline e não pode ser mesclado com o sistema {{targetSystem}}.",
 			"secondaryCannotMerge": "O sistema {{targetSystem}} tem uma versão mais antiga do software que é incompatível com o sistema atual. Atualize {{targetSystem}} para a versão mais recente <a href=\"/download\" target=\"_blank\" translate></a> para mesclar com o atual.",
 			"systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual.",
-			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato"
+			"systemUnavailable": "O sistema {{targetSystem}} está atualmente inacessível. Tente novamente em alguns minutos ou contato",
+			"recommendSupport": {
+				"a_recommend": "Recomendamos consulta com",
+				"b_support": "suporte",
+				"c_proceeding": "antes de prosseguir."
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Falha no envio da mensagem.",
@@ -234,9 +237,9 @@
 				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Entre em contato com vendas para {{asset}}",
-				"contact_support": "Contate o suporte para {{asset}}",
+			"subject": {
+				"sales_inquiry": "Pesquisa de vendas para {{asset}}",
+				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "Feedback para integração {{asset}}",
 				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{asset}}"
@@ -298,16 +301,16 @@
 		"good": "boa",
 		"fair": "justo",
 		"fairMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
-		"minLength": "curto demais",
+		"minLength": "demasiado curta",
 		"minLengthMessage": "A senha deve conter pelo menos 8 caracteres",
 		"required": "incorreta",
 		"requiredMessage": "Use apenas letras latinas, números e símbolos do teclado, evite espaços à esquerda e à direita",
 		"weak": "fraca",
 		"weakMessage": "Use números, letras maiúsculas e minúsculas e caracteres especiais para tornar a sua senha mais forte",
 		"strongMessage": "Senha forte!",
-		"common": "muito comum",
+		"common": "demasiado comum",
 		"commonMessage": "Esta senha está principais senhas mais populares no mundo",
-		"missingMessage": "A senha é obrigatória"
+		"missingMessage": "A senha é necessária"
 	},
 	"registration": {
 		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
@@ -340,7 +343,17 @@
 		"mergeSuccess": "Mesclagem de sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
 		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "Cannot share system while it is offline",
+		"shareUnauthorized": "You do not have permission to share this system",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "hora",
+				"minutes": "minuto"
+			},
+			"warningMessages": {
+				"videoEncryption": "A encriptação do tráfego de vídeo irá aumentar significativamente o uso de CPU."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "ativado",
@@ -370,7 +383,7 @@
 		},
 		"Advanced Viewer": {
 			"label": "Visualizador Avançado",
-			"description": "Pode ver vídeo ao vivo, navegar no arquivo, controle PTZ etc"
+			"description": "Pode visualizar vídeo ao vivo, pesquisar os arquivos, configurar câmaras, controlar PTZ etc"
 		},
 		"Administrator": {
 			"label": "Administrador",
@@ -410,13 +423,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
-		"ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
+		"integration": "Ao enviar este formulário você concorda em ser contatado por {{INTEGRATION_COMPANY}} e/ou %COMPANY_NAME%.\nVocê encontrará {{INTEGRATION_COMPANY}} política de privacidade <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aqui</a> e %COMPANY_NAME% Política de Privacidade aqui <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a> que incluem instruções sobre como retirar seu consentimento.",
+		"ipvd": "Ao enviar este formulário você concorda em ser contatado por %COMPANY_NAME%.\nVocê encontrará %COMPANY_NAME% política de privacidade <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aqui</a> que inclui instruções sobre como retirar seu consentimento."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Alto fluxo",
+			"lowStream": "Baixo fluxo",
+			"transcoding": "Transcodificação",
+			"unknown": "Desconhecido",
+			"copyToClipboard": "copiar para o Clipboard",
+			"copyDefaultText": "copiar",
+			"copyActiveText": "copiado para o Clipboard"
+		},
+		"systemOffline": "Sistema Offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Erro interno do servidor",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "SEM CÂMARAS",
+		"systemUnreachable": "SISTEMA INACESSÍVEL",
+		"cameraStates": {
+			"offline": "Desligado",
+			"error": "Erro",
+			"errorLoading": "An error occurred while loading this video.",
+			"unauthorized": "Necessária autenticação",
+			"noData": "Sem dados",
+			"iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
+			"flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
+			"flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
+			"noArmSupport": "Este navegador ou dispositivo não suporta a reprodução de vídeo a partir de servidores baseados em ARM.",
+			"noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
+			"ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
+			"ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
+			"ubuntuNX": "Este navegador não suporta vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium."
+		},
+		"searchCamPlaceholder": "Pesquisa",
+		"resolution": {
+			"auto": "Auto",
+			"high": "Alta",
+			"low": "Baixa"
+		},
+		"chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
+		"voiceCommands": {
+			"play": "reproduzir",
+			"pause": "pausa",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "limpar pesquisa",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "expandir todos os servidores",
+			"collapse all servers": "recolher todos os servidores",
+			"stop listening": "parar de ouvir",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Administração do Sistema",
 	"users": "Utilizadores",
-	"testedVersionLabel": "Testado em versão {{vmsName}}:",
-	"testedVersionsLabel": "Testado em versões de {{vmsName}}:",
+	"testedVersionLabel": "Tested with {{vmsName}} version:",
+	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
 	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrações",
@@ -430,5 +500,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Você não tem sistemas conectados a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Faça o login no seu sistema usando %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vá a aba \"Cloud\" na caixa de diálogo \"Administração do sistema\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Pressione \"Conecte o sistema a %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Pressione \"Conecte o sistema a %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

@@ -19,11 +19,13 @@ import { NxOverviewModule }          from './integration/details/overview/overvi
 import { NxSetupModule }             from './integration/details/setup/setup.module';
 import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxSystemsListModule }       from './systems/list/list.module';
+import { NxHealthModule }            from './health/health.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
 import { Nx404Module }               from './404/404.module';
 import { NxDebugModule }             from './debug/debug.module';
-import { PushNotificationsModule } from './push-notifications/push-notifications.module';
+import { NxGridLayoutModule }        from './layout/layout.module';
+import { PushNotificationsModule }   from './push-notifications/push-notifications.module';
 
 @NgModule({
     imports        : [
@@ -46,9 +48,11 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         NxOverviewModule,
         NxSetupModule,
         NxSettingsModule,
+        NxHealthModule,
         NxSystemsListModule,
         NxAccountModule,
         NxDebugModule,
+        NxGridLayoutModule,
         Nx404Module,  // Must be last module for routing
     ],
     declarations   : [],
@@ -65,6 +69,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         IntegrationsModule,
         IntegrationsListModule,
         NxSettingsModule,
+        NxHealthModule,
         ContentModule,          // TODO: Remove it after test
         RightMenuModule,        // TODO: Remove it after test
         PushNotificationsModule,
@@ -72,6 +77,7 @@ import { PushNotificationsModule } from './push-notifications/push-notifications
         Angular2CsvModule,
         LandingModule,
         NxDebugModule,
+        NxGridLayoutModule,
         Nx404Module, // Must be last module for routing
     ]
 })

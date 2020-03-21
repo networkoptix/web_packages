@@ -42,7 +42,7 @@ export class NxRegisterComponent implements OnInit {
         };
 
         this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.register);
+        this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
     }
 
     constructor(private processService: NxProcessService,
@@ -70,6 +70,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
+            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess, true);
         }
 
         if (this.uriParam === 'activated') {

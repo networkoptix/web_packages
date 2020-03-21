@@ -1,7 +1,7 @@
 import {
-    Component, Inject, OnInit,
+    Component, Inject, OnDestroy, OnInit,
     Renderer2
-}                            from '@angular/core';
+} from '@angular/core';
 import {
     ActivatedRoute, NavigationEnd, Event,
     Router, RoutesRecognized
@@ -14,20 +14,26 @@ import { NxSessionService }       from '../../services/session.service';
 import { NxSystemsService }       from '../../services/systems.service';
 import { WINDOW }                 from '../../services/window-provider';
 import { LocalStorageService }    from 'ngx-store';
-import { BehaviorSubject, timer } from 'rxjs';
-import { take }                   from 'rxjs/operators';
-import { NxSystemsDropdown }      from '../dropdowns/systems/systems.component';
+import { Subscription, timer }    from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
+import { NxSystem, NxSystemService } from '../../services/system.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
     styleUrls: [ 'header.component.scss' ]
 })
-export class NxHeaderComponent implements OnInit {
+export class NxHeaderComponent implements OnInit, OnDestroy {
 
     CONFIG: any = {};
+    LANG: any = {};
 
+    user: any = {};
+    canSeeInfo: boolean;
+    system: NxSystem;
     systems: any;
     systemId: any;
     active: any = {};
@@ -42,6 +48,12 @@ export class NxHeaderComponent implements OnInit {
 
     getUrlSystemId: any;
     untilHaveID: any;
+    private headerSubscription: Subscription;
+    private infoSubscription: Subscription;
+    private loginSubscription: Subscription;
+    private routerSubscription: Subscription;
+    private systemSubscription: Subscription;
+    private systemIdSubscription: Subscription;
 
     constructor(@Inject(WINDOW) private window: Window,
                 private renderer: Renderer2,
@@ -49,7 +61,9 @@ export class NxHeaderComponent implements OnInit {
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
+                private systemService: NxSystemService,
                 private dialogs: NxDialogsService,
+                private languageService: NxLanguageProviderService,
                 private accountService: NxAccountService,
                 private sessionService: NxSessionService,
                 private localStorage: LocalStorageService,
@@ -57,6 +71,7 @@ export class NxHeaderComponent implements OnInit {
                 private headerService: NxHeaderService,
     ) {
         this.CONFIG = this._config.getConfig();
+        this.LANG = this.languageService.getTranslations();
     }
 
     private isActive(val) {
@@ -96,6 +111,16 @@ export class NxHeaderComponent implements OnInit {
         });
     }
 
+    private stopActiveSubscription() {
+        if (this.infoSubscription && !this.infoSubscription.closed) {
+            this.infoSubscription.unsubscribe();
+            this.system.stopPoll();
+            this.system = undefined;
+        }
+    }
+
+    ngOnDestroy() {}
+
     ngOnInit() {
         // TODO: root route is maintained by AJS - replace this once we get rid of it.
         this.inline = this.window.location.search.indexOf('inline') > 0;
@@ -108,7 +133,7 @@ export class NxHeaderComponent implements OnInit {
         this.startTimerSystemIdUpdate(); // ensure update on page reload
 
         // notification from view.js
-        this.headerService.systemIdSubject.subscribe((systemId) => {
+        this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
             if (systemId) {
                 this.systemIdUpdate(systemId);
             }
@@ -127,15 +152,17 @@ export class NxHeaderComponent implements OnInit {
         this.viewHeader = this.CONFIG.showHeaderAndFooter;
         this.active = {};
 
-        this.appState.headerVisibleSubject.subscribe((visible) => {
+        this.headerSubscription = this.appState.headerVisibleSubject.subscribe((visible) => {
             this.viewHeader = visible;
         });
 
-        this.router.events
+        this.routerSubscription = this.router.events
               .subscribe((event: Event) => {
                   if (event instanceof RoutesRecognized) {
-                      this.systemId = event.state.root.firstChild.params.systemId;
+                      this.systemId = event.state.root.firstChild.params.systemId || '';
                       this.localStorage.set('systemId', this.systemId);
+                      this.updateActiveSystem();
+                      this.updateActive();
                   }
 
                   if (event instanceof NavigationEnd) {
@@ -154,33 +181,32 @@ export class NxHeaderComponent implements OnInit {
                   }
               });
 
-        this.sessionService.loginStateSubject.subscribe((loginState) => {
+        this.loginSubscription = this.sessionService.loginStateSubject.subscribe((loginState) => {
             this.accountService
                 .get()
                 .then(account => {
+                    this.renderer.removeClass(document.body, 'loading');
+
                     if (account) {
                         this.dropdownsVisible = true;
                         this.systemsService.getSystem(account.email);
+
+                        this.loginState = true;
+                        this.renderer.removeClass(document.body, 'anonymous');
+                        this.renderer.addClass(document.body, 'authorized');
+                        this.systemsService
+                            .forceUpdateSystems(loginState)
+                            .toPromise()
+                            .then(() => this.updateActive());
+                    } else {
+                        this.loginState = false;
+                        this.renderer.removeClass(document.body, 'authorized');
+                        this.renderer.addClass(document.body, 'anonymous');
                     }
                 });
-
-            this.loginState = loginState;
-            if (loginState) {
-                this.renderer.removeClass(document.body, 'loading');
-                this.renderer.removeClass(document.body, 'anonymous');
-                this.renderer.addClass(document.body, 'authorized');
-                this.systemsService
-                    .forceUpdateSystems(loginState)
-                    .toPromise()
-                    .then(() => this.updateActive());
-            } else {
-                this.renderer.removeClass(document.body, 'loading');
-                this.renderer.removeClass(document.body, 'authorized');
-                this.renderer.addClass(document.body, 'anonymous');
-            }
         });
 
-        this.systemsService.systemsSubject.subscribe((systems) => {
+        this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
             if (!systems) {
                 return;
             }
@@ -195,9 +221,17 @@ export class NxHeaderComponent implements OnInit {
             this.systemCounter = this.systems.length;
 
             this.updateActiveSystem();
+            this.updateActive();
         });
 
 
+    }
+
+    onClick(event, page: string) {
+        if (this.isActive(page)) {
+            event.stopPropagation();
+            return false;
+        }
     }
 
     login () {
@@ -216,7 +250,8 @@ export class NxHeaderComponent implements OnInit {
         this.active.integrations = this.isActive('/integrations');
         this.active.register = this.isActive('/register');
         this.active.view = this.isActive('/view');
-        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view');
+        this.active.information = this.isActive('/health');
+        this.active.settings = this.systemId && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
         this.navVisible = true;
     }
 
@@ -224,14 +259,36 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
-
-        if (this.singleSystem) { // Special case for a single system - it always active
-            this.activeSystem = this.systems[0];
-            return;
+        if (this.systemId) {
+            if (this.singleSystem) { // Special case for a single system - it always active
+                this.activeSystem = this.systems[0];
+            } else {
+                this.activeSystem = this.systems.find((system) => {
+                    return this.systemId === system.id;
+                });
+            }
+        } else {
+            this.activeSystem = undefined;
         }
 
-        this.activeSystem = this.systems.find((system) => {
-            return this.systemId === system.id;
-        });
-    }
+        this.accountService
+            .get()
+            .then(account => {
+                if (account) {
+                    this.user = account;
+                    if (this.activeSystem) {
+                        if (!this.system || this.system.id !== this.systemId) {
+                            this.stopActiveSubscription();
+                            this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
+
+                            this.system.getInfoAndPermissions(false).catch(_ => {}).then(system => {
+                                this.canSeeInfo = (this.CONFIG.healthMonitoringEnabled || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                            });
+                        }
+                    } else {
+                        this.stopActiveSubscription();
+                    }
+                }
+            });
+        }
 }

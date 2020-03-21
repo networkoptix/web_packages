@@ -2,99 +2,6 @@
   "language": "pl_PL",
   "language_name": "Polski",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Witamy w",
-    "register": "Utwórz konto w",
-    "changePassword": "Zmień hasło -",
-    "account": "Ustawienia konta -",
-    "systems": "Systemy -",
-    "system": "System -",
-    "systemShare": "Udostępnij system -",
-    "activate": "Aktywuj konto -",
-    "activateSent": "Aktywuj konto -",
-    "activateSuccess": "Konto aktywne -",
-    "activateCode": "Aktywuj konto -",
-    "restorePassword": "Resetuj hasło -",
-    "restorePasswordSuccess": "Hasło zapisane -",
-    "restorePasswordCode": "Resetuj hasło -",
-    "view": "Podgląd kamer -",
-    "debug": "Debugowanie",
-    "login": "Zaloguj się -",
-    "download": "Pobierz %VMS_NAME%",
-    "downloadPlatform": "Pobierz %VMS_NAME% dla",
-    "pageNotFound": "Nie znaleziono strony"
-  },
-  "systemStatuses": {
-    "activated": "aktywny",
-    "incompatible": "niekompatybilny",
-    "merging": "łączenie",
-    "notActivated": "nieaktywny",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "niedostępny"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Wyłączone",
-      "description": "Użytkownik jest zablokowany i nie może zalogować się do systemu"
-    },
-    "Owner": {
-      "label": "Właściciel",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania i łączenia systemu z chmurą"
-    },
-    "Viewer": {
-      "label": "Użytkownik",
-      "description": "Podgląd wideo na żywo i przeglądanie archiwum"
-    },
-    "Live Viewer": {
-      "label": "Użytkownik podglądu na żywo",
-      "description": "Tylko podgląd wideo na żywo"
-    },
-    "Advanced Viewer": {
-      "label": "Zaawansowany użytkownik",
-      "description": "Może wyświetlać wideo na żywo, przeglądać archiwum, sterować PTZ itp."
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania"
-    },
-    "Custom": {
-      "label": "Niestandardowa",
-      "description": "Użyj aplikacji klienckiej %VMS_NAME% , aby skonfigurować niestandardowe uprawnienia"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Konfiguracja i udostępnianie systemu"
-    },
-    "customRole": {
-      "label": "Grupa niestandardowa",
-      "description": "Niestandardowa grupa określona w systemie"
-    },
-    "owner": {
-      "label": "Właściciel",
-      "description": "Nieograniczony dostęp, w tym możliwość udostępniania i łączenia systemu z chmurą"
-    },
-    "viewer": {
-      "label": "Użytkownik",
-      "description": "Podgląd wideo na żywo i przeglądanie archiwum"
-    },
-    "liveViewer": {
-      "label": "Użytkownik podglądu na żywo",
-      "description": "Tylko podgląd wideo na żywo"
-    },
-    "advancedViewer": {
-      "label": "Zaawansowany użytkownik",
-      "description": "Podgląd wideo na żywo, przeglądanie archiwum, konfigurowanie kamer, sterowanie PTZ itp."
-    },
-    "custom": {
-      "label": "Niestandardowa",
-      "description": "Użyj aplikacji klienckiej %VMS_NAME% , aby skonfigurować niestandardowe uprawnienia"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Nie można wysłać e-maila z potwierdzeniem",
@@ -138,41 +45,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> jest obecnie niedostępny.<br>Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
     "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
   },
-  "system": {
-    "yourSystem": "Twój system",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "System jest niedostępny",
-    "offline": "Serwer jest odłączony",
-    "openClient": "Otwórz w %VMS_NAME%",
-    "openClientNoSystem": "Otwórz %VMS_NAME%",
-    "confirmMergeAction": "Złącz",
-    "mergeSystemTitle": "Złącz systemy",
-    "confirmRenameTitle": "Nazwa systemu",
-    "confirmRenameAction": "Zachowaj",
-    "successRename": "Zapisana nazwa systemu",
-    "confirmDisconnectTitle": "Odłączyć system od %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Rozłącz",
-    "confirmUnshareFromMe": "Nie będziesz już mógł zalogować się do tego systemu.",
-    "confirmUnshareFromMeTitle": "Odłączyć system od Twojego konta?",
-    "confirmUnshareFromMeAction": "Rozłącz",
-    "confirmUnshareTitle": "Usunąć użytkownika?",
-    "confirmUnshareAction": "Usuń",
-    "successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
-    "successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
-    "mergeFailed": "Łączenie systemu nie powiodło się",
-    "mergeStart": "Rozpoczęto złączanie systemów",
-    "mergeSuccess": "Zakończono łączenie systemu",
-    "permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
-    "unknownName": "Nieznana nazwa systemu (złączenie w chmurze)"
-  },
-  "regActions": {
-    "passwordLabel": "Hasło",
-    "createAccount": "Utwórz konto"
-  },
-  "header": {
-    "allSystems": "Wszystkie systemy",
-    "systems": "Systemy"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Wysoki strumień",
@@ -204,8 +76,8 @@
     "searchCamPlaceholder": "Szukaj",
     "resolution": {
       "auto": "Auto",
-      "high": "Wysoka",
-      "low": "Niska"
+      "high": "Wysoki",
+      "low": "Niski"
     },
     "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
     "voiceCommands": {
@@ -223,9 +95,8 @@
       "help": "pomoc | pokaż polecenia"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Zalecamy skonsultowanie się z",
-    "b_support": "wsparcie",
-    "c_proceeding": "przed kontynuowaniem."
+  "system": {
+    "offline": "Serwer jest odłączony",
+    "unavailable": "System jest niedostępny"
   }
 }

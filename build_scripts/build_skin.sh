@@ -114,11 +114,8 @@ dir=../skins/$SKIN
 
         mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
-        echo "Copy web_common default views - with default language"
+        echo "Copy web_common default views - untranslatable"
         cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
-
-        echo "Overwrite them with localized sources"
-        cp -rf $lang_dir/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common || true
 
         echo "Generate language.json"
         pushd $TARGET_DIR/$SKIN

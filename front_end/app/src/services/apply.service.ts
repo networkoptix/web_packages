@@ -100,6 +100,7 @@ export class NxApplyService {
             });
         }
         this.locked = false;
+        this.setWarn('');
     }
 
     // Resets all watchers to their first value that wasn't undefined.
@@ -110,6 +111,7 @@ export class NxApplyService {
             });
         }
         this.locked = false;
+        this.setWarn('');
     }
 
     touched() {
@@ -212,6 +214,10 @@ export class NxApplyService {
     public setVisible(state?) {
         state = (state === undefined) ? true : state;
         (<NxApplyComponent>this.applyComponentRef.instance).applyVisible = state;
+    }
+
+    public setWarn(message) {
+        (<NxApplyComponent>this.applyComponentRef.instance).warn = message;
     }
 
     /**

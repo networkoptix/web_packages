@@ -1,4 +1,5 @@
 @import '../../styles/buttons';
+@import '../../styles/typography';
 
 .container {
   max-width: 991px;
@@ -10,8 +11,7 @@
 }
 
 .btn {
-  font-size: 16px;
-  font-family: $font-family-medium;
+  @extend #medium15;
   height: 40px;
   padding: 0 25px;
 }

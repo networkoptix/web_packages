@@ -1,36 +1,36 @@
 (function () {
-    
+
     'use strict';
-    
+
     angular.module('nxCommon').controller('ViewCtrl',
-        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', 'chromeCast', '$q',
+        ['$scope', '$rootScope', '$location', '$routeParams', 'cameraRecords', '$q',
             'camerasProvider', '$sessionStorage', '$localStorage', '$timeout', 'systemAPI', 'voiceControl',
-            'nxDialogsService', 'nxConfigService', 'languageService', 'nxHeaderService',
-            
-            function ($scope, $rootScope, $location, $routeParams, cameraRecords, chromeCast, $q,
+            'nxDialogsService', 'nxConfigService', 'nxLanguageService',
+
+            function ($scope, $rootScope, $location, $routeParams, cameraRecords, $q,
                       camerasProvider, $sessionStorage, $localStorage, $timeout, systemAPI, voiceControl,
-                      nxDialogsService, nxConfigService, languageService, nxHeaderService) {
-                
+                      nxDialogsService, nxConfigService, nxLanguageService) { // chromeCast
+
                 const CONFIG = nxConfigService.getConfig();
-                const LANG = languageService.lang;
-                
+                const LANG = nxLanguageService.getTranslations();
+
                 const ROUTE_CAMERA_ID = $routeParams.cameraId ?
                     '{' + $routeParams.cameraId + '}' :
                     undefined;
-                
+
                 var channels = {
                     Auto: 'lo',
                     High: 'hi',
                     Low: 'lo'
                 };
-                
+
                 $scope.showSettings = false;
-                
+
                 if ($scope.system) { // Use system from outer scope (directive)
                     systemAPI = $scope.system;
                 }
                 $scope.systemAPI = systemAPI;
-                
+
                 $scope.betaMode = CONFIG.allowBetaMode;
                 $scope.debugMode = CONFIG.allowDebugMode;
                 $scope.session = $sessionStorage;
@@ -38,50 +38,51 @@
                 $scope.camerasProvider = camerasProvider.getProvider(systemAPI);
                 $scope.storage.serverStates = $scope.storage.serverStates || {};
                 $scope.storage.activeCameras = $scope.storage.activeCameras || {};
-                
+
                 $scope.canViewArchive = false;
                 $scope.searchCams = '';
                 $scope.storage.cameraId = ROUTE_CAMERA_ID || $scope.storage.cameraId || null;
-                
+
                 $scope.isWebAdmin = CONFIG.webadminSystemApiCompatibility;
                 $scope.cameraLinks = {enabled: $location.search().cameraLinks};
                 $scope.voiceControls = {enabled: false, showCommands: false};
-                
+
                 if (!ROUTE_CAMERA_ID && $scope.storage.cameraId) {
-                    systemAPI.setCameraPath($scope.storage.cameraId);
+                    systemAPI.setCameraPath($scope.storage.cameraId, true /* replace URL */);
                 }
-                
+
                 $scope.isEmbeded = ($location.path().indexOf('/embed') === 0);
                 var nocontrols = !$location.search().nocontrols,
                     noheader = !$location.search().noheader,
                     nocameras = !$location.search().nocameras;
-                
+
                 function setCameraComponentsVisibility () {
                     $scope.showTimeline = !$scope.isEmbeded || $scope.isEmbeded && nocontrols;
                     $scope.showCameraHeader = !$scope.isEmbeded || $scope.isEmbeded && noheader;
                     $scope.showCamerasMenu = !$scope.isEmbeded || $scope.isEmbeded && nocameras;
                     $scope.showCameraPanel = $scope.showCamerasMenu;
                 }
-    
+
                 setCameraComponentsVisibility();
-                
-                var castAlert = false;
-                $scope.showWarning = function () {
-                    if (!castAlert) {
-                        alert(LANG.common.chromeCastWarning);
-                        castAlert = true;
-                    }
-                };
-                
+
+                // CLOUD-4344 **********************************
+                // var castAlert = false;
+                // $scope.showWarning = function () {
+                //     if (!castAlert) {
+                //         alert(LANG.common.chromeCastWarning);
+                //         castAlert = true;
+                //     }
+                // };
+
                 $scope.positionProvider = null;
                 $scope.activeVideoRecords = null;
                 $scope.activeCamera = null;
                 $scope.player = null;
-                
+
                 $scope.activeResolution = 'Auto';
                 // TODO: detect better resolution here?
                 var transcodingResolutions = [LANG.common.resolution.auto, '1080p', '720p', '640p', '320p', '240p'];
-                
+
                 var mimeTypes = {
                     'hls': 'application/x-mpegURL',
                     'webm': 'video/webm',
@@ -90,7 +91,7 @@
                     'mjpeg': 'video/x-motion-jpeg',
                     'jpeg': 'image/jpeg'
                 };
-                
+
                 $scope.activeFormat = 'Auto';
                 $scope.manualFormats = ['Auto', 'jshls', 'native-hls', 'flashls', 'webm'];
                 $scope.availableFormats = [
@@ -98,9 +99,9 @@
                     'video/webm',
                     'application/x-mpegURL'
                 ];
-                
+
                 $scope.volumeLevel = typeof($scope.storage.volumeLevel) === 'number' ? $scope.storage.volumeLevel : 50;
-                
+
                 if (window.jscd.mobile) {
                     $scope.mobileStore = window.jscd.os === 'iOS' ? 'appstore' : 'googleplay';
                     var found = _.find(CONFIG.helpLinks, function (links) {
@@ -118,7 +119,7 @@
                     });
                     $scope.hasMobileApp = !!found;
                 }
-                
+
                 function cameraSupports(type) {
                     if (!$scope.activeCamera) {
                         return false;
@@ -130,12 +131,12 @@
                         return stream.transports.indexOf(type) > 0;
                     });
                 }
-                
+
                 function largeResolution(resolution) {
                     var dimensions = resolution.split('x');
                     return dimensions[0] > 1920 || dimensions[1] > 1080;
                 }
-                
+
                 function checkiOSResolution(camera) {
                     var streams = _.find(camera.mediaStreams, function (stream) {
                         return stream.transports.indexOf('hls') > 0 && largeResolution(stream.resolution);
@@ -143,7 +144,7 @@
                     // Here we have two hls streams
                     return !!streams;
                 }
-                
+
                 function updateAvailableResolutions() {
                     if ($scope.player === null) {
                         $scope.availableResolutions = [LANG.common.resolution.auto];
@@ -156,15 +157,15 @@
                     //1. Does browser and server support webm?
                     if ($scope.player !== 'webm') {
                         $scope.iOSVideoTooLarge = false;
-                        
+
                         //1. collect resolutions with hls
                         var streams = [LANG.common.resolution.auto];
                         if ($scope.activeCamera) {
                             var availableFormats = _.filter($scope.activeCamera.mediaStreams, function (stream) {
                                 return stream.transports.indexOf('hls') > 0;
                             });
-                            
-                            
+
+
                             for (var i = 0; i < availableFormats.length; i++) {
                                 if (availableFormats[i].encoderIndex === 0) {
                                     if (window.jscd.os !== 'iOS' || (window.jscd.os === 'iOS' && !checkiOSResolution($scope.activeCamera))) {
@@ -177,7 +178,7 @@
                             }
                         }
                         $scope.availableResolutions = streams;
-                        
+
                         if ($scope.activeCamera && streams.length === 1) {
                             if (window.jscd.os === 'iOS' && $scope.activeCamera.status !== 'Unauthorized') {
                                 $scope.iOSVideoTooLarge = true;
@@ -190,64 +191,64 @@
                     else {
                         $scope.availableResolutions = transcodingResolutions;
                     }
-                    
+
                     if ($scope.availableResolutions.indexOf($scope.activeResolution) < 0) {
                         $scope.activeResolution = $scope.availableResolutions[0];
                     }
                 }
-                
+
                 function findRotation(param) {
                     return param.name === 'rotation';
                 }
-                
+
                 $scope.toggleSettingsMenu = function () {
                     $scope.showSettings = !$scope.showSettings;
                 };
-                
+
                 function updateVideoSource(playingPositionDisplay) {
                     // clear preview for next camera
                     $scope.preview = '';
-                    
+
                     if (!$scope.activeCamera) {
                         $scope.activeVideoSource = {src: ''};
                         return;
                     }
-                    
+
                     var salt = '&' + Math.random(),
                         cameraId = $scope.activeCamera.id,
                         resolution = $scope.activeResolution,
                         resolutionHls = channels[resolution] || channels.Low,
                         live = !playingPositionDisplay;
-                    
+
                     if ($scope.playerAPI) {
                         // Pause playing
                         $scope.playerAPI.pause();
                     }
-                    
+
                     updateAvailableResolutions();
-                    
+
                     $scope.positionSelected = !!playingPositionDisplay;
                     if (!$scope.positionProvider) {
                         return;
                     }
-                    
+
                     $scope.positionProvider.init(playingPositionDisplay, $scope.positionProvider.playing);
-                    
+
                     var playingPositionServer;
                     if (live) {
                         playingPositionServer = window.timeManager.nowToServer();
                     } else {
                         playingPositionServer = Math.round(window.timeManager.displayToServer(playingPositionDisplay));
                     }
-                    
+
                     // Fix here!
                     if (resolutionHls === channels.Low && $scope.availableResolutions.indexOf('Low') < 0) {
                         resolutionHls = channels.High;
                     }
                     $scope.resolution = resolutionHls;
-                    
+
                     $scope.currentResolution = $scope.player === 'webm' ? resolution : resolutionHls;
-                    
+
                     let videoSources = [
                         {
                             src: systemAPI.hlsUrl(cameraId, !live && playingPositionServer, resolutionHls) + salt,
@@ -265,48 +266,49 @@
                             transport: 'preview'
                         }
                     ];
-                    
+
                     $scope.activeVideoSource = videoSources.filter((src) => {
                         return cameraSupports(src.transport);
                     });
-                    
+
                     $scope.preview = _.find($scope.activeVideoSource, function (src) {
                         return src.type === 'image/jpeg';
                     }).src;
-                    
+
                     if ((CONFIG.allowBetaMode || $scope.debugMode) && window.jscd.browser.toLowerCase() === 'chrome') {
                         var streamInfo = {};
                         var streamType = 'webm';
-                        
+
                         if ($scope.debugMode) {
                             streamType = $scope.player === 'webm' ? 'webm' : 'hls';
                         }
-                        
+
                         streamInfo.src = streamType === 'webm' ? systemAPI.webmUrl(cameraId, !live && playingPositionServer, resolution, true)
                             : systemAPI.hlsUrl(cameraId, !live && playingPositionServer, resolutionHls);
                         streamInfo.title = $scope.activeCamera.name;
-                        
-                        if (cameraSupports(streamType) || $scope.debugMode) {
-                            $scope.showCastButton = true;
-                            chromeCast.load(streamInfo, streamType);
-                        }
-                        else {
-                            $scope.showCastButton = false;
-                        }
+
+                        // CLOUD-4344 ********************************************
+                        // if (cameraSupports(streamType) || $scope.debugMode) {
+                        //     $scope.showCastButton = true;
+                        //     chromeCast.load(streamInfo, streamType);
+                        // }
+                        // else {
+                        //     $scope.showCastButton = false;
+                        // }
                     }
                 }
-                
+
                 $scope.updateCamera = function (position) {
                     var oldTimePosition = null;
                     if ($scope.positionProvider && !$scope.positionProvider.liveMode) {
                         oldTimePosition = $scope.positionProvider.playedPosition;
                     }
-                    
+
                     var camRotation = _.find($scope.activeCamera.addParams, findRotation);
                     $scope.rotation = camRotation && camRotation.value ? parseInt(camRotation.value) : 0;
-                    
+
                     position = position ? parseInt(position) : oldTimePosition;
-                    
+
                     if ($scope.activeCamera) {
                         $scope.positionProvider = cameraRecords.getPositionProvider([$scope.activeCamera.id], systemAPI);
                         $scope.activeVideoRecords = cameraRecords.getRecordsProvider([$scope.activeCamera.id], systemAPI, 640);
@@ -314,7 +316,7 @@
                         $scope.switchPlaying(true);
                     }
                 };
-                
+
                 var playerReadyTimeout = null;
                 $scope.playerReady = function (API) {
                     $scope.playerAPI = API;
@@ -331,7 +333,7 @@
                         }, CONFIG.webclient.playerReadyTimeout);
                     }
                 };
-                
+
                 $scope.updateTime = function (currentTime, duration) {
                     if (currentTime === null && duration === null) {
                         //Video ended
@@ -339,13 +341,13 @@
                         return;
                     }
                     currentTime = currentTime || 0;
-                    
+
                     $scope.positionProvider.setPlayingPosition(currentTime * 1000);
                     /*if(!$scope.positionProvider.liveMode) {
                         $location.search('time', Math.round($scope.positionProvider.playedPosition));
                     }*/
                 };
-                
+
                 $scope.switchPlaying = function (play) {
                     if ($scope.playerAPI && $scope.playerAPI.video) {
                         if (play) {
@@ -353,23 +355,23 @@
                         } else {
                             $scope.playerAPI.pause();
                         }
-                        
+
                         if ($scope.positionProvider) {
                             $scope.positionProvider.playing = play;
                         }
                     }
                 };
-                
+
                 var self = $scope;
                 $scope.$watch('positionProvider.isReady', function (ready) {
                     if (ready && !self.positionProvider.playing) {
                         self.positionProvider.liveMode = self.positionProvider.isArchiveEmpty();
                     }
                 });
-                
+
                 $scope.switchPosition = function (val) {
                     //var playing = $scope.positionProvider.checkPlayingDate(val);
-                    
+
                     //if(playing === false) {
                     $scope.crashCount = 0;
                     updateVideoSource(val);// We have nothing more to do with it.
@@ -377,10 +379,10 @@
                         $scope.playerAPI.seekTime(playing); // Jump to buffered video
                     }*/
                 };
-                
+
                 //On player error update source to cause player to restart
                 $scope.crashCount = 0;
-                
+
                 function handleVideoError(forceLive) {
                     var showError = $scope.crashCount < CONFIG.webclient.maxCrashCount;
                     if (showError) {
@@ -393,7 +395,7 @@
                     }
                     return !showError;
                 }
-                
+
                 $scope.playerHandler = function (error) {
                     if (error) {
                         return $scope.positionProvider.checkEndOfArchive().then(function (jumpToLive) {
@@ -402,67 +404,61 @@
                             return true;
                         });
                     }
-                    
+
                     $scope.crashCount = 0;
                     return $q.resolve(false);
                 };
-                
+
                 $scope.selectFormat = function (format) {
                     $scope.showSettings = false;
                     $scope.activeFormat = format;
                     updateVideoSource($scope.positionProvider.liveMode ? null : $scope.positionProvider.playedPosition);
                 };
-                
+
                 $scope.toggleVoice = function () {
                     $scope.showSettings = false;
                     $scope.voiceControls.showCommands = !$scope.voiceControls.showCommands;
                 };
-                
+
                 $scope.showEmbed = function () {
                     $scope.showSettings = false;
                     nxDialogsService.embed({});
                 };
-                
+
                 $scope.selectResolution = function (resolution) {
                     /*if(resolution === 'auto' || resolution === 'Auto' || resolution === 'AUTO'){
                         resolution = '320p'; //TODO: detect better resolution here
                     }*/
-                    
+
                     $scope.showSettings = false;
-                    
+
                     if ($scope.activeResolution === resolution) {
                         return;
                     }
                     $scope.activeResolution = resolution;
                     updateVideoSource($scope.positionProvider.liveMode ? null : $scope.positionProvider.playedPosition);
                 };
-    
+
                 var fullElement = document.getElementById('fullscreen-area');
-    
+                $scope.enableFullScreen = screenfull.isEnabled;
+
                 angular.element(fullElement).on('dblclick', function (event) {
                     screenfull.toggle(fullElement);
                 });
-                
-                $scope.enableFullScreen = screenfull.enabled;
-                var fullElement = $('.fullscreen-area').get(0);
-    
-                angular.element(fullElement).on('dblclick', function (event) {
-                    screenfull.toggle(fullElement);
-                });
-                
+
                 $scope.fullScreen = function () {
                     $scope.showSettings = false;
-                    if (screenfull.enabled) {
+                    if (screenfull.isEnabled) {
                         screenfull.request(fullElement);
                     }
                 };
-                
+
                 if ($scope.enableFullScreen) {
                     screenfull.onchange(function () {
                         $scope.isFullscreen = screenfull.isFullscreen;
                     });
                 }
-                
+
                 switch (window.jscd.browser) {
                     case "Safari":
                     case "Microsoft Internet Explorer":
@@ -472,43 +468,43 @@
                     default:
                         $scope.enableFullscreenNotification = false;
                 }
-                
+
                 $scope.closeFullscreen = function () {
                     $scope.showSettings = false;
                     screenfull.exit();
                 };
-                
+
                 $scope.showCamerasPanel = function () {
                     $scope.showSettings = false;
                     $scope.showOnTop = true; // z-index -> show panel on small screen
-    
+
                     setCameraComponentsVisibility();
                 };
-                
+
                 document.addEventListener('MSFullscreenChange', function () { // IE only
                     $('.videowindow').toggleClass('fullscreen');
                 });
-                
-                
+
+
                 $scope.$watch('positionProvider.liveMode', function (mode) {
                     if (mode) {
                         $scope.positionSelected = false;
                     }
                 });
-                
+
                 $scope.$watch('activeCamera.status', function (status, oldStatus) {
                     if (typeof(oldStatus) === 'undefined') {
                         return;
                     }
-                    
+
                     if ((!$scope.positionProvider || $scope.positionProvider.liveMode) && !(status === 'Offline' || status === 'Unauthorized')) {
                         updateVideoSource();
                     }
                 });
-                
+
                 //timeFromUrl is used if we have a time from the url if not then set to false
                 var timeFromUrl = $routeParams.time || null;
-                
+
                 function resetSystemActiveCamera() {
                     if ($scope.isEmbeded) {
                         // don't reset storage
@@ -522,11 +518,11 @@
                             }
                         }
                     }
-                    
+
                     // record active camera again as only one camera should be selected per system
                     $scope.storage.activeCameras[$scope.activeCamera.server.id] = $scope.activeCamera.id;
                 }
-                
+
                 $scope.$watch('activeCamera', function () {
                     if (!$scope.activeCamera) {
                         if (Object.keys($scope.camerasProvider.cameras).length !== 0) {
@@ -536,27 +532,27 @@
                         }
                         return;
                     }
-                    
+
                     resetSystemActiveCamera();
                     setCameraComponentsVisibility();
-                    
+
                     $scope.showOnTop = false; // z-index -> hide panel on small screen
-                    
+
                     $scope.player = null;
                     $scope.crashCount = 0;
-                    
+
                     if (!$scope.isEmbeded) {
                         $scope.storage.cameraId = $scope.activeCamera.id;
                         $scope.storage.serverStates[$scope.activeCamera.server.id] = true; // media server status - expanded
                     }
-                    
+
                     systemAPI.setCameraPath($scope.activeCamera.id);
                     timeFromUrl = timeFromUrl || null;
                     if (!timeFromUrl && $scope.positionProvider) {
                         timeFromUrl = $scope.positionProvider.playedPosition;
                     }
                     $scope.updateCamera(timeFromUrl);
-                    
+
                     //When camera is changed request offset for camera
                     $scope.camerasProvider
                         .getServerTimeOffset($scope.activeCamera.parentId)
@@ -568,18 +564,18 @@
                             timeFromUrl = null;
                         });
                 });
-                
+
                 window.timeManager.init(CONFIG.webclient.useServerTime, CONFIG.webclient.useSystemTime);
-                
+
                 function isActive(val) {
                     var currentPath = $location.path();
                     return currentPath.indexOf(val) >= 0;
                 }
-                
+
                 // This hack was meant for IE and iPad to fix some issues with overflow:scroll and height:100%
                 // But I kept it for all browsers to avoid future possible bugs in different browsers
                 // Now every browser behaves the same way
-                
+
                 var $window = $(window);
                 var $header = $('header');
                 var updateHeights = function () {
@@ -588,29 +584,29 @@
                     var $placeholder = $(".webclient-placeholder .placeholder");
                     var windowHeight = $window.height();
                     var headerHeight = $header.outerHeight() || 0;
-                    
+
                     var topAlertHeight = 0;
-                    
+
                     var topAlert = $('td.alert');
                     //after the user is notified this should not be calculated again
                     if (topAlert.length && !$scope.session.mobileAppNotified) {
                         topAlertHeight = topAlert.outerHeight() + 1; // -1 here is a hack.
                     }
-                    
+
                     var viewportHeight = (windowHeight - headerHeight - topAlertHeight) + 'px';
-                    
+
                     $camerasPanel.css('height', viewportHeight);
                     $viewPanel.css('height', viewportHeight);
                     $placeholder.css('height', viewportHeight);
-                    
+
                     //One more IE hack.
                     if (window.jscd.browser === 'Microsoft Internet Explorer') {
                         var videoWidth = $header.width() - $camerasPanel.outerWidth(true) - 1;
                         $('videowindow').parent().css('width', videoWidth + 'px');
                     }
                 };
-                
-                
+
+
                 systemAPI.checkPermissions(CONFIG.globalViewArchivePermission).then(function(result) {
                     $scope.canViewArchive = result;
                     // instead of requesting gettime once - we request it for all servers to know each timezone
@@ -629,37 +625,37 @@
                         voiceControl.initControls($scope);
                     }
                 });
-                
+
                 //wait for the page to load then update
                 $timeout(updateHeights);
-                
+
                 $header.click(function () {
                     //350ms delay is to give the navbar enough time to collapse
                     $timeout(updateHeights, 350);
                 });
-                
+
                 $window.resize(updateHeights);
                 window.addEventListener('orientationchange', $timeout(updateHeights, 200));
-                
+
                 $scope.mobileAppAlertClose = function () {
                     $scope.session.mobileAppNotified = true;
                     $timeout(updateHeights, 50);
                 };
-                
+
                 var killSubscription = $rootScope.$on('$routeChangeStart', function (event, next) {
                     timeFromUrl = $location.search().time;
-    
+
                     if (next.params.cameraId) {
                         $scope.storage.cameraId = '{' + next.params.cameraId + '}';
                         $scope.activeCamera = $scope.camerasProvider.getCamera(next.params.cameraId);
-                        
+
                         if ($scope.activeCamera) {
                             $scope.storage.activeCameras[$scope.activeCamera.server.id] = $scope.activeCamera.id;
                         }
                     }
-    
+
                 });
-                
+
                 $('html').addClass('webclient-page');
                 $scope.$on('$destroy', function (event) {
                     killSubscription();
@@ -667,7 +663,7 @@
                     $window.unbind('resize', updateHeights);
                     $('html').removeClass('webclient-page');
                 });
-                
+
                 $scope.$watch('player', function () {
                     if (!$scope.player) {
                         return;
@@ -675,13 +671,13 @@
                     $scope.crashCount = 0;
                     updateVideoSource($scope.positionProvider.liveMode ? null : $scope.positionProvider.playedPosition);
                 }, true);
-                
+
                 $scope.$watch('volumeLevel', function () {
                     if ($scope.playerAPI) {
                         $scope.playerAPI.volume($scope.volumeLevel);
                     }
                     $scope.storage.volumeLevel = $scope.volumeLevel;
                 });
-                
+
             }]);
 })();

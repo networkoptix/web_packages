@@ -212,6 +212,8 @@ class GroupAdmin(admin.ModelAdmin):
     # Filter permissions horizontal as well.
     filter_horizontal = ['permissions']
     list_display = ('name', 'list_permissions', 'assets', 'asset_types')
+    search_fields = ('name', 'user__email', 'permissions__name')
+    list_filter = ('usergroupstoassetpermissions__asset__asset_type', 'usergroupstoassetpermissions__asset__customizations')
 
     def list_permissions(self, obj):
         return [permission.name for permission in obj.permissions.all()]
@@ -219,7 +221,7 @@ class GroupAdmin(admin.ModelAdmin):
     list_permissions.short_description = 'Group of permissions'
 
     def assets(self, obj):
-        return [relation.asset.name for relation in obj.usergroupstoassetpermissions_set.all()]
+        return [relation.asset.name for relation in obj.usergroupstoassetpermissions_set.all() if relation.asset]
 
     def asset_types(self, obj):
         return [relation.asset_type.name or AssetType.ASSET_TYPES[relation.asset_type.type] for relation in obj.usergroupstoassettype_set.all()]

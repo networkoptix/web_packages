@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { of, ReplaySubject } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { distinctUntilChanged, map, tap } from 'rxjs/operators';
 
 import { NxConfigService } from './nx-config';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -112,8 +112,10 @@ export class NxSystemsService implements OnDestroy {
         if (this.activeSubscription) {
             this.activeSubscription.unsubscribe();
         }
-        this.activeSubscription = this.systemsPoll.subscribe((systems) => {
-            this.processSystems(systems);
+        this.activeSubscription = this.systemsPoll.pipe(
+            tap(systems => this.processSystems(systems)),
+            distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b))
+        ).subscribe(() => {
             this.systemsSubject.next(this.systems);
         });
     }
@@ -135,13 +137,13 @@ export class NxSystemsService implements OnDestroy {
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
             system.canMerge = system.isMine && (system.capabilities &&
-                system.capabilities.indexOf(this.CONFIG.systemCapabilities.cloudMerge) > -1
+                system.capabilities.cloudMerge
                 || this.CONFIG.allowDebugMode
                 || this.CONFIG.allowBetaMode);
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                this.removeFromMergeList(system.id);
+                setTimeout(_ => this.removeFromMergeList(system.id), 500);
             }
         });
     }

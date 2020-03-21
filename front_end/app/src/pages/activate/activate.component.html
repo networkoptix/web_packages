@@ -19,15 +19,17 @@
             Your account is successfully activated
         </h1>
         <h1 class="process-success">
-            <a class="btn btn-default" href="" (click)="login()">Log In</a>
+            <a class="btn btn-default" href="" (click)="login()" translate>Log In</a>
         </h1>
     </div>
 
     <div *ngIf="reactivating" class="text-center">
         <div *ngIf='accountInfo.email'>
-            <h1 translate>You have registered in %CLOUD_NAME%</h1>
-            <p>We've sent you a letter with activation link to {{accountInfo.email}}.<br>
-                Please activate your account by visiting this link.</p>
+            <h1><span translate>You have registered in</span> {{CONFIG.cloudName}}</h1>
+            <p>
+                <span translate>We've sent you a letter with activation link to</span> {{accountInfo.email}}.<br>
+                <span translate>Please activate your account by visiting this link.</span>
+            </p>
         </div>
         <h1 *ngIf="!accountInfo.email" translate>Activate your account</h1>
         <form name="reactivateAccount"
@@ -52,32 +54,31 @@
                 </div>
                 <div class="col-sm-4">
                     <span class="help-block" *ngIf="!reactivateAccountEmail.valid && !reactivateAccountEmail.touched">
-
-                    <span class="badge badge-danger"
-                          *ngIf="reactivateAccountEmail.errors &&
-                                 reactivateAccountEmail.errors.weak &&
-                                 !reactivateAccountEmail.errors.common &&
-                                 !reactivateAccountEmail.errors.pattern &&
-                                 !reactivateAccountEmail.errors.minlength"
-                          title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</span>
-                    <span class="badge badge-danger"
-                          *ngIf="reactivateAccountEmail.errors &&
-                                 reactivateAccountEmail.errors.common &&
-                                 !reactivateAccountEmail.errors.pattern &&
-                                 !reactivateAccountEmail.errors.minlength &&
-                                 !reactivateAccountEmail.errors.required"
-                          title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</span>
-                    <span class="badge badge-danger"
-                          *ngIf="reactivateAccountEmail.errors &&
-                                 reactivateAccountEmail.errors.minlength &&
-                                 !reactivateAccountEmail.errors.pattern"
-                          title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</span>
-                    <span class="badge badge-danger"
-                          *ngIf="reactivateAccountEmail.errors &&
-                                 reactivateAccountEmail.errors.pattern &&
-                                 !reactivateAccountEmail.errors.minlength"
-                          title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</span>
-                </span>
+                        <nx-tag type="danger"
+                              *ngIf="reactivateAccountEmail.errors &&
+                                     reactivateAccountEmail.errors.weak &&
+                                     !reactivateAccountEmail.errors.common &&
+                                     !reactivateAccountEmail.errors.pattern &&
+                                     !reactivateAccountEmail.errors.minlength"
+                              title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</nx-tag>
+                        <nx-tag type="danger"
+                              *ngIf="reactivateAccountEmail.errors &&
+                                     reactivateAccountEmail.errors.common &&
+                                     !reactivateAccountEmail.errors.pattern &&
+                                     !reactivateAccountEmail.errors.minlength &&
+                                     !reactivateAccountEmail.errors.required"
+                              title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</nx-tag>
+                        <nx-tag type="danger"
+                              *ngIf="reactivateAccountEmail.errors &&
+                                     reactivateAccountEmail.errors.minlength &&
+                                     !reactivateAccountEmail.errors.pattern"
+                              title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</nx-tag>
+                        <nx-tag type="danger"
+                              *ngIf="reactivateAccountEmail.errors &&
+                                     reactivateAccountEmail.errors.pattern &&
+                                     !reactivateAccountEmail.errors.minlength"
+                              title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</nx-tag>
+                    </span>
 
                     <span class="help-block" *ngIf="!reactivateAccountEmail.valid && reactivateAccountEmail.touched">
                     <span class="input-error"

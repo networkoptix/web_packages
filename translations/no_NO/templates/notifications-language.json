@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "Aktiver kontoen din"
+    "emailSubject": "Aktiver din konto"
   },
   "cloud_invite": {
     "emailSubject": "Du har blitt invitert til %CLOUD_NAME%"
@@ -8,11 +8,11 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "Salgsforespørsel for {{message.asset}}"
   },
-  "contact_support": {
-    "emailSubject": "Support forespørsel for {{message.asset}}"
+  "technical_inquiry": {
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Tilbakemelding for {{message.asset}}"

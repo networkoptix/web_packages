@@ -263,10 +263,3 @@ ${255CHARS}                           QWErtyuiopasdfghhkljzxcvbnmqwertyuiopasdfg
 #Eye icons for password forms
 ${EYE ICON OPEN}             //span[@ng-if="!passwordVisible"]
 ${EYE ICON CLOSED}           //span[@ng-if="passwordVisible"]
-
-#ASCII
-${ESCAPE}                             \\27
-${ENTER}                              \\13
-${TAB}                                \\9
-${SPACEBAR}                           \\32
-${BACKSPACE}                          \\8

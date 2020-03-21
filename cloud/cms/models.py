@@ -101,6 +101,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
                                                                             "%VMS_NAME%": "%VMS_NAME%"})
 
+        public_push_config = asset.read_global_value("%PUSH_CONFIG_WEB%") or \
+            getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+
         data = {
             'version_id': asset.version_id(),
             'languages': customization.languages_list,
@@ -116,6 +119,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'smtp_tls': asset.read_global_value('%SMTP_TLS%')
             },
             'config': {
+                'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'cloud_merge': asset.read_global_value("%CLOUD_MERGE%"),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
@@ -126,6 +130,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_filter_items': asset.read_global_value("%INTEGRATION_FILTER_ITEMS%"),
                 'integration_filter_limitation': asset.read_global_value("%INTEGRATION_SHOW_FILTER_LIMITATION%"),
                 'integration_store_enabled': integration_store_enabled,
+                'health_monitoring_enabled': asset.read_global_value('%HM_ENABLED%'),
                 'public_downloads': asset.read_global_value("%PUBLIC_DOWNLOADS%"),
                 'public_releases': asset.read_global_value("%PUBLIC_RELEASE_HISTORY%"),
                 'show_analytics_events': asset.read_global_value("%SHOW_ANALYTICS_EVENTS%"),
@@ -136,11 +141,13 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'supported_resolutions': asset.read_global_value("%SUPPORTED_RESOLUTIONS%"),
                 'supported_hardware_types': asset.read_global_value("%SUPPORTED_HARDWARE_TYPES%"),
                 'search_tags': asset.read_global_value("%SEARCH_TAGS%"),
+                'tested_operating_systems': asset.read_global_value("%TESTED_OPERATING_SYSTEMS%"),
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
                 'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
-                'push_config': getattr(settings, 'PUSH_NOTIFICATIONS_SETTINGS', {}).get('PUBLIC')
+                'push_config': public_push_config,
+                'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled
@@ -178,11 +185,6 @@ def get_integration_type():
     except ProgrammingError:
         pass
     return None
-
-
-class DeploymentStatus(models.Model):
-    name = models.CharField(max_length=100, blank=True)
-    ready = models.BooleanField(default=False)
 
 
 # CMS structure (data structure). Only developers can change that
@@ -341,11 +343,27 @@ class Asset(models.Model):
     def is_integration(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
 
+    @property
+    def is_dirty(self):
+        version_id = self.contentversion_set.last().id if self.contentversion_set.exists() else 0
+        records_for_version = self.datarecord_set.filter(version__id=version_id)
+        if not records_for_version.exists():
+            return self.datarecord_set.exists()
+        most_recent_record = records_for_version.latest('created_date')
+        return self.datarecord_set.filter(created_date__gt=most_recent_record.created_date).exists()
+
+    @property
+    def last_modified(self):
+        current_version = self.version_id()
+        if not current_version:
+            return ''
+        return ContentVersion.objects.get(id=current_version).accepted_date.strftime('%m/%d/%Y')
+
     def is_asset_type(self, asset_type):
         return self.asset_type.type == asset_type
 
     def version_id(self, customization=settings.CUSTOMIZATION):
-        if self.asset_type.single_customization:
+        if self.asset_type and self.asset_type.single_customization:
             actual_customization = self.customizations.first()
             if actual_customization:
                 customization = actual_customization.name
@@ -465,8 +483,11 @@ class Context(models.Model):
         REJECTED = ('Rejected', 3)
         PUBLISHED = ('Published', 4)
 
+        customization = settings.CUSTOMIZATION
+        if asset.asset_type.single_customization and asset.customizations.exists():
+            customization = asset.customizations.first().name
         reviews = AssetCustomizationReview.objects.filter(version__asset=asset,
-                                                          customization__name=settings.CUSTOMIZATION)
+                                                          customization__name=customization)
         # Starting point so we don't get incorrect status with unpublished assets
         if reviews.filter(state=AssetCustomizationReview.REVIEW_STATES.accepted).first():
             state = PUBLISHED
@@ -516,7 +537,7 @@ class ContextTemplate(models.Model):
         unique_together = ('context', 'language', 'skin')
 
     context = models.ForeignKey(Context, on_delete=models.CASCADE)
-    language = models.ForeignKey(Language, null=True, on_delete=models.CASCADE)
+    language = models.ForeignKey(Language, blank=True, null=True, on_delete=models.CASCADE)
     template = models.TextField()
     skin = models.CharField(max_length=16, default='', blank=True)
     # Skin is a bit hacky for now:
@@ -625,7 +646,8 @@ class DataStructure(models.Model):
                                                                     DataStructure.DATA_TYPES.external_file,
                                                                     DataStructure.DATA_TYPES.external_image,
                                                                     DataStructure.DATA_TYPES.check_box,
-                                                                    DataStructure.DATA_TYPES.multiselect]):
+                                                                    DataStructure.DATA_TYPES.multiselect,
+                                                                    DataStructure.DATA_TYPES.object]):
             content_value = DataStructure.cast_value(self, self.default)
 
         return content_value
@@ -658,6 +680,19 @@ class DataStructure(models.Model):
                             if value[i] == choice['label']:
                                 value[i] = choice
                                 break
+
+        return value
+
+    @staticmethod
+    def to_string(data_structure, value):
+        if isinstance(value, str):
+            return value
+
+        if data_structure.type in [DataStructure.DATA_TYPES.array, DataStructure.DATA_TYPES.multiselect,
+                                   DataStructure.DATA_TYPES.object]:
+            value = json.dumps(value)
+        else:
+            value = str(value)
 
         return value
 
@@ -943,5 +978,8 @@ class DataRecord(models.Model):
     def save(self, *args, **kwargs):
         if not self.data_structure.translatable:
             self.language = None
+
+        if self.data_structure:
+            self.value = self.data_structure.to_string(self.data_structure, self.value)
 
         super(DataRecord, self).save(*args, **kwargs)

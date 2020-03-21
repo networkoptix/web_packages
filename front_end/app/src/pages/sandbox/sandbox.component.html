@@ -2,193 +2,14 @@
     <h1>SANDBOX</h1>
 
     <ngb-tabset #tabs>
-        <ngb-tab id="Toastr">
+        <ngb-tab id="CssGrid">
             <ng-template ngbTabTitle>
-                <span class="tab-heading">Toastr</span>
+                <span class="tab-heading">CSS Grid</span>
             </ng-template>
             <ng-template ngbTabContent>
-                <div class="form-group">
-                    <nx-checkbox
-                            name="autohide"
-                            componentId="autohide"
-                            [(ngModel)]="autohide"
-                            checked>
-                    </nx-checkbox>
-
-                    <label for="autohide">Auto hide</label>
-                </div>
-                <div class="row p-3">
-                    <button class="btn btn-default" (click)="notify( 'I\'m info asdas sadasd asd' ,'info')">Info</button>
-                    <button class="btn btn-default" (click)="notify('I\'m danger' ,'danger')">Danger</button>
-                    <button class="btn btn-default" (click)="notify('I\'m warning' ,'warning')">Warning</button>
-                    <button class="btn btn-default" (click)="notify('I\'m success' ,'success')">Success</button>
-                </div>
+                <nx-grid-layout></nx-grid-layout>
             </ng-template>
         </ngb-tab>
-        <ngb-tab id="Search">
-            <ng-template ngbTabTitle>
-                <span class="tab-heading">Search</span>
-            </ng-template>
-            <ng-template ngbTabContent>
-                <div class="row p-3">
-                    <nx-search
-                            name="filter"
-                            [(ngModel)]="filter"
-                            expandable>
-                    </nx-search>
-
-                    <div class="pt-5">
-                        Search filter: {{filter.query}}
-                    </div>
-                    <div class="pt-3">
-                        Search selects: {{filter.selects | json}}
-                    </div>
-                    <div class="pt-3">
-                        Search multi-selects: {{filter.multiselects | json}}
-                    </div>
-                    <div class="pt-3">
-                        Search tags: {{filter.tags | json}}
-                    </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-
-        <ngb-tab id="Multi DD">
-            <ng-template ngbTabTitle>
-                <span class="tab-heading">Multi DD</span>
-            </ng-template>
-            <ng-template ngbTabContent>
-                <div class="row">
-                    <div class="col-3 p-5">
-                        <nx-multi-select name="ddMultiSelect"
-                                         [items]="items"
-                                         [ngModel]="itemsSelected"
-                                         (ngModelChange)="modelChanged($event)"
-                                         canSelectAll>
-                        </nx-multi-select>
-                    </div>
-                    <div class="col-3 p-5">
-                        <nx-multi-select name="ddMultiSelect1"
-                                         [items]="items"
-                                         [ngModel]="itemsSelected"
-                                         (ngModelChange)="modelChanged($event)"
-                                         canSelectAll>
-                        </nx-multi-select>
-                    </div>
-                    <div class="col p-5">
-                        Labels:
-                        <br>
-                        {{items | json}}
-                        <br>
-                        <br>
-                        Selected
-                        <br>
-                        {{itemsSelected}}
-                    </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-
-        <ngb-tab id="Masonry Grid">
-            <ng-template ngbTabTitle>
-                <span class="tab-heading">Masonry Grid</span>
-            </ng-template>
-            <ng-template ngbTabContent>
-                <div class="container">
-                    <div class="card-columns">
-                        <div class="card">
-                            <img class="card-img-top img-fluid" src="//placehold.it/800x560" alt="Card image cap">
-                            <div class="card-body">
-                                <h4 class="card-title">Card title that wraps to a new line</h4>
-                                <p class="card-text">This is a longer card with supporting text below as a natural
-                                    lead-in to
-                                    additional content. This content is a little bit longer.</p>
-                            </div>
-                        </div>
-                        <div class="card card-body">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
-                                    ante.</p>
-
-                                <small class="text-muted">
-                                    Someone famous in <cite title="Source Title">Source Title</cite>
-                                </small>
-                            </blockquote>
-                        </div>
-                        <div class="card">
-                            <img class="card-img-top img-fluid" src="//placehold.it/800x400" alt="Card image cap">
-                            <div class="card-body">
-                                <h4 class="card-title">Card title</h4>
-                                <p class="card-text">This card has supporting text below as a natural lead-in to
-                                    additional
-                                    content.</p>
-                                <p class="card-text">
-                                    <small class="text-muted">Last updated 3 mins ago</small>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="card card-body card-inverse card-primary text-xs-center">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>
-
-                                <small>
-                                    Someone famous in <cite title="Source Title">Source Title</cite>
-                                </small>
-                            </blockquote>
-                        </div>
-                        <div class="card card-body text-xs-center">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">This card has supporting text below as a natural lead-in to additional
-                                content.</p>
-                            <p class="card-text">
-                                <small class="text-muted">Last updated 3 mins ago</small>
-                            </p>
-                        </div>
-                        <div class="card">
-                            <img class="card-img img-fluid" src="//placehold.it/800x600" alt="Card image">
-                        </div>
-                        <div class="card card-body text-right">
-                            <blockquote class="card-blockquote">
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
-                                    ante.</p>
-                                <small class="text-muted">
-                                    Someone famous in <cite title="Source Title">Source Title</cite>
-                                </small>
-                            </blockquote>
-                        </div>
-                        <div class="card card-body">
-                            <h4 class="card-title">Card title</h4>
-                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
-                                additional
-                                content. This card has even longer content than the first to show that equal height
-                                action.</p>
-                            <p class="card-text">
-                                <small class="text-muted">Last updated 3 mins ago</small>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-
-        <ngb-tab id="IFrame">
-            <ng-template ngbTabTitle>
-                <span class="tab-heading">IFrame</span>
-            </ng-template>
-            <ng-template ngbTabContent>
-                <div class="row">
-                    <div class="col-12">
-                        <br/>
-                        <br/>
-                        <iframe style="width: 700px; height: 500px;"
-                                [src]="ipvdEmbedUrl">
-                            Your browser doesn't support iframe.
-                        </iframe>
-                    </div>
-                </div>
-            </ng-template>
-        </ngb-tab>
-
         <ngb-tab id="Other">
             <ng-template ngbTabTitle>
                 <span class="tab-heading">Other</span>
@@ -209,16 +30,28 @@
                                 <label for="show1">Remember me</label>
                             </div>
 
-                            <div class="form-group">
-                                <nx-checkbox
-                                        name="show"
-                                        componentId="show"
-                                        [(ngModel)]="show"
-                                        [checked]="true"
-                                        disabled>
-                                </nx-checkbox>
+                            <div class="form-group row">
+                                <div class="col-6">
+                                    <nx-checkbox
+                                            name="show"
+                                            componentId="show"
+                                            [(ngModel)]="show"
+                                            [checked]="true"
+                                            [disabled]="toggleDisabled">
+                                    </nx-checkbox>
 
-                                <label for="show" disabled>Remember me (disabled)</label>
+                                    <label for="show" [class.disabled]="toggleDisabled">Remember me (disabled) | {{toggleDisabled}}</label>
+                                </div>
+                                <div class="col-6">
+                                    <nx-checkbox
+                                            name="toggle_disabled"
+                                            componentId="toggle_disabled"
+                                            [(ngModel)]="toggleDisabled"
+                                            [checked]="true">
+                                    </nx-checkbox>
+
+                                    <label for="toggle_disabled">Toggle [disabled]</label>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -436,6 +269,202 @@
                         <div class="d-inline-flex">
                             <nx-tag class="mr-1" *ngFor="let option of options" [type]="option.type"
                                     [value]="option.selected">{{ option.name }}</nx-tag>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
+        <ngb-tab id="IFrame">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">IFrame</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="row">
+                    <div class="col-6">
+                        <br/>
+                        <br/>
+                        <iframe style="width: 100%; height: 600px;"
+                                [src]="ipvdEmbedUrl">
+                            Your browser doesn't support iframe.
+                        </iframe>
+                    </div>
+                    <div class="col-6">
+                        <br/>
+                        <br/>
+                        <!--                        <iframe style="width: 100%; height: 600px;"-->
+                        <!--                                [src]="cameraEmbedUrl">-->
+                        <!--                            Your browser doesn't support iframe.-->
+                        <!--                        </iframe>-->
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
+        <ngb-tab id="Toastr">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">Toastr</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="form-group">
+                    <nx-checkbox
+                            name="autohide"
+                            componentId="autohide"
+                            [(ngModel)]="autohide"
+                            checked>
+                    </nx-checkbox>
+
+                    <label for="autohide">Auto hide</label>
+                </div>
+                <div class="row p-3">
+                    <button class="btn btn-default" (click)="notify( 'I\'m info asdas sadasd asd' ,'info')">Info</button>
+                    <button class="btn btn-default" (click)="notify('I\'m danger' ,'danger')">Danger</button>
+                    <button class="btn btn-default" (click)="notify('I\'m warning' ,'warning')">Warning</button>
+                    <button class="btn btn-default" (click)="notify('I\'m success' ,'success')">Success</button>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
+        <ngb-tab id="Search">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">Search</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="row p-3">
+                    <nx-search
+                            name="filter"
+                            [(ngModel)]="filter"
+                            expandable>
+                    </nx-search>
+
+                    <div class="pt-5">
+                        Search filter: {{filter.query}}
+                    </div>
+                    <div class="pt-3">
+                        Search selects: {{filter.selects | json}}
+                    </div>
+                    <div class="pt-3">
+                        Search multi-selects: {{filter.multiselects | json}}
+                    </div>
+                    <div class="pt-3">
+                        Search tags: {{filter.tags | json}}
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
+        <ngb-tab id="Multi DD">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">Multi DD</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="row">
+                    <div class="col-3 p-5">
+                        <nx-multi-select name="ddMultiSelect"
+                                         [items]="items"
+                                         [ngModel]="itemsSelected"
+                                         (ngModelChange)="modelChanged($event)"
+                                         canSelectAll>
+                        </nx-multi-select>
+                    </div>
+                    <div class="col-3 p-5">
+                        <nx-multi-select name="ddMultiSelect1"
+                                         [items]="items"
+                                         [ngModel]="itemsSelected"
+                                         (ngModelChange)="modelChanged($event)"
+                                         canSelectAll>
+                        </nx-multi-select>
+                    </div>
+                    <div class="col p-5">
+                        Labels:
+                        <br>
+                        {{items | json}}
+                        <br>
+                        <br>
+                        Selected
+                        <br>
+                        {{itemsSelected}}
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-tab>
+
+        <ngb-tab id="Masonry Grid">
+            <ng-template ngbTabTitle>
+                <span class="tab-heading">Masonry Grid</span>
+            </ng-template>
+            <ng-template ngbTabContent>
+                <div class="container">
+                    <div class="card-columns">
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="//placehold.it/800x560" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Card title that wraps to a new line</h4>
+                                <p class="card-text">This is a longer card with supporting text below as a natural
+                                    lead-in to
+                                    additional content. This content is a little bit longer.</p>
+                            </div>
+                        </div>
+                        <div class="card card-body">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
+                                    ante.</p>
+
+                                <small class="text-muted">
+                                    Someone famous in <cite title="Source Title">Source Title</cite>
+                                </small>
+                            </blockquote>
+                        </div>
+                        <div class="card">
+                            <img class="card-img-top img-fluid" src="//placehold.it/800x400" alt="Card image cap">
+                            <div class="card-body">
+                                <h4 class="card-title">Card title</h4>
+                                <p class="card-text">This card has supporting text below as a natural lead-in to
+                                    additional
+                                    content.</p>
+                                <p class="card-text">
+                                    <small class="text-muted">Last updated 3 mins ago</small>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card card-body card-inverse card-primary text-xs-center">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat.</p>
+
+                                <small>
+                                    Someone famous in <cite title="Source Title">Source Title</cite>
+                                </small>
+                            </blockquote>
+                        </div>
+                        <div class="card card-body text-xs-center">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">This card has supporting text below as a natural lead-in to additional
+                                content.</p>
+                            <p class="card-text">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </p>
+                        </div>
+                        <div class="card">
+                            <img class="card-img img-fluid" src="//placehold.it/800x600" alt="Card image">
+                        </div>
+                        <div class="card card-body text-right">
+                            <blockquote class="card-blockquote">
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a
+                                    ante.</p>
+                                <small class="text-muted">
+                                    Someone famous in <cite title="Source Title">Source Title</cite>
+                                </small>
+                            </blockquote>
+                        </div>
+                        <div class="card card-body">
+                            <h4 class="card-title">Card title</h4>
+                            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                                additional
+                                content. This card has even longer content than the first to show that equal height
+                                action.</p>
+                            <p class="card-text">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </p>
                         </div>
                     </div>
                 </div>

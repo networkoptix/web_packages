@@ -8,11 +8,11 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "Запрос на продажу {{message.asset}}"
   },
-  "contact_support": {
-    "emailSubject": "Запрос на поддержку по {{message.asset}}"
+  "technical_inquiry": {
+    "emailSubject": "Технический запрос для {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Отзыв о {{message.asset}}"

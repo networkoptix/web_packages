@@ -24,7 +24,7 @@
 		"selected": "已選取",
 		"vendor": "製造商",
 		"vendors": "製造商",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"hardwareTypes": "類型",
 		"minResolution": "最低解析度",
 		"analytics": "分析",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>ARM伺服器支援政策</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C ++跨平台SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -112,12 +106,12 @@
 		},
 		"releasesTypes": {
 			"beta": "Beta",
-			"betas": "Betas",
+			"betas": "測試版本",
 			"rc": "Release Candidate",
 			"release": "Release",
-			"releases": "Releases",
+			"releases": "版本發佈",
 			"patch": "Patch",
-			"patches": "Patches"
+			"patches": "補丁"
 		}
 	},
 	"ipvd": {
@@ -125,7 +119,7 @@
 		"count": "總計",
 		"vendor": "製造商",
 		"model": "型號",
-		"hardwareType": "類型",
+		"hardwareType": "型態",
 		"maxResolution": "<span>最大</span><br><span>解析度</span>",
 		"maxFps": "<span>最大</span><br><span>帪數</span>",
 		"primaryCodec": "編碼器",
@@ -164,6 +158,7 @@
 		"myIntegrationsLabel": "我的",
 		"previewRibbonText": "此頁面可預覽最新版本的更新，與公開版本不相符。",
 		"backToEditText": "返回編輯頁面",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "門禁管理",
 		"Connector": "連接器",
 		"Data Analytics": "數據分析",
@@ -175,27 +170,29 @@
 		"feedback": "請確認已包含您的攝影機型號和製造商......"
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "歡迎來到",
-		"register": "新建帳號",
-		"changePassword": "更改密碼 -",
-		"account": "帳號設定 -",
-		"systems": "系統 -",
-		"system": "系統 -",
-		"systemShare": "共用系統 -",
-		"activate": "啟動帳號 -",
-		"activateSent": "啟動帳號 -",
-		"activateSuccess": "帳號啟動 -",
-		"activateCode": "啟動帳號 -",
-		"restorePassword": "重置密碼 -",
-		"restorePasswordSuccess": "密碼已儲存 -",
-		"restorePasswordCode": "重置密碼 -",
-		"view": "查看攝影機 - ",
+		"register": "新建帳戶",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "除錯",
-		"login": "登入 -",
+		"login": "Log in",
 		"download": "下載 %VMS_NAME%",
-		"downloadPlatform": "下載 %VMS_NAME% ",
+		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "找不到頁面",
 		"supportedDevices": "支援設備",
 		"integrations": "整合"
@@ -204,14 +201,14 @@
 		"okButton": "確定",
 		"cancelButton": "取消",
 		"createNewAccount": "新增帳戶",
-		"changeAccountLogged": "您已經以{email} 的帳號登入。",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "您將使用其他帳號登入",
 		"loginTitle": "登入到 %CLOUD_NAME%",
 		"loginButton": "登入",
 		"logoutAuthorisedTitle": "您已經登入",
 		"logoutAuthorisedContinueButton": "繼續",
 		"logoutAuthorisedLogoutButton": "登出",
-		"noClientDetectedTitle": "安裝 %VMS_NAME% 來查看您的系統",
+		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
 		"stayAs": "以{email} 保持登入 ",
 		"stayLoggedIn": "保持登入",
 		"download": "下載 %VMS_NAME%",
@@ -224,7 +221,13 @@
 			"primarySystemOffline": "系統 {{primarySystem}} 處於離線狀態, 無法合併系統{{targetSystem}}。",
 			"secondaryCannotMerge": "系統 {{targetSystem}} 具有較舊的軟件版本，與當前系統不相容。請將 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以將與其當前版本合併。",
 			"systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
-			"systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次"
+			"systemUnavailable": "系統 {{targetSystem}} 目前無法連上。請在幾分鐘後再試一次",
+			"recommendSupport": {
+				"a_recommend": "建議您進行諮詢",
+				"b_support": "支援",
+				"c_proceeding": "在繼續執行之前。"
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "訊息發送失敗",
@@ -234,9 +237,9 @@
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
 			},
-			"topic": {
-				"contact_sales": "聯繫 {{asset}} 業務",
-				"contact_support": "聯繫 {{asset}} 技術支援",
+			"subject": {
+				"sales_inquiry": "{{asset}}的產品諮詢",
+				"technical_inquiry": "{{asset}} 的技術諮詢",
 				"integration_feedback": "整合 {{asset}} 的回饋意見",
 				"ipvd_feedback_page": "攝影機頁面的回饋意見",
 				"ipvd_feedback_device": "{{asset}} 的回饋意見"
@@ -317,8 +320,8 @@
 		"mySystemSearch": "我的",
 		"unavailable": "無法連接至系統",
 		"offline": "系統處於離線狀態",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "在 %VMS_NAME% 中打開",
+		"offlineAlertRibbon": "系統離線。某些設定可能無法使用。",
+		"openClient": "Open in %VMS_NAME%",
 		"openClientNoSystem": "開啟 %VMS_NAME%",
 		"confirmMergeAction": "合併",
 		"mergeSystemTitle": "合併系統",
@@ -334,13 +337,23 @@
 		"confirmUnshareTitle": "是否要移除使用者？",
 		"confirmUnshareAction": "移除",
 		"successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
-		"successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
+		"successDeleted": "從您的帳戶成功刪除系統 {{systemName}}",
 		"mergeFailed": "系統合併失敗",
 		"mergeStart": "系統開始合併中",
 		"mergeSuccess": "系統合併完成",
 		"permissionsRemoved": "權限從 {{email}} 被移除",
 		"unknownName": "未知的系統名稱（由雲合併引起）",
-		"shareOffline": "Cannot share system while it is offline"
+		"shareOffline": "離線時無法共用系統",
+		"shareUnauthorized": "您沒有共享本系統的權限",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "小時",
+				"minutes": "分"
+			},
+			"warningMessages": {
+				"videoEncryption": "對影像串流通訊加密會大幅提高CPU使用率。"
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "啟動",
@@ -361,15 +374,15 @@
 			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
 		},
 		"Viewer": {
-			"label": "瀏覽者",
+			"label": "瀏覽",
 			"description": "可以瀏覽即時影像和回放錄影資料"
 		},
 		"Live Viewer": {
-			"label": "即時影像瀏覽者",
+			"label": "即時影像瀏覽",
 			"description": "只能瀏覽即時影像"
 		},
 		"Advanced Viewer": {
-			"label": "進階瀏覽者",
+			"label": "進階瀏覽",
 			"description": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等"
 		},
 		"Administrator": {
@@ -393,15 +406,15 @@
 			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
 		},
 		"viewer": {
-			"label": "瀏覽者",
+			"label": "瀏覽",
 			"description": "可以瀏覽即時影像和回放錄影資料"
 		},
 		"liveViewer": {
-			"label": "即時影像瀏覽者",
+			"label": "即時影像瀏覽",
 			"description": "只能瀏覽即時影像"
 		},
 		"advancedViewer": {
-			"label": "進階瀏覽者",
+			"label": "進階瀏覽",
 			"description": "可以瀏覽即時影像, 回放錄影資料, 設定攝影機, 控制 PTZ 等"
 		},
 		"custom": {
@@ -410,8 +423,65 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"blank\">這裡</a> 可了解如何撤銷您的同意。",
-		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+		"integration": "提交表單即表示您同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤銷您的同意。",
+		"ipvd": "提交表單即表示同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "高解析串流",
+			"lowStream": "低解析串流",
+			"transcoding": "轉碼",
+			"unknown": "未知",
+			"copyToClipboard": "複製到剪貼簿",
+			"copyDefaultText": "複製",
+			"copyActiveText": "已複製到剪貼簿"
+		},
+		"systemOffline": "系統處於離線狀態",
+		"systemOfflineMessage": "該系統處於離線狀態，無法立即登入。",
+		"systemNoAlerts": "沒有警報",
+		"systemNoAlertsMessage": "您的系統必須運作良好！",
+		"systemServerError": "內部伺服器錯誤",
+		"systemServerErrorMessage": "發生錯誤。請稍後重試。發生錯誤。請稍後重試。如果問題仍然存在，請聯繫您的技術支援。",
+		"systemNewVersion": "更新您的系統",
+		"systemNewVersionMessage": "當前版本與此功能不相容。請更新您的伺服器到最新版本以使用此功能。",
+		"systemHasNoCameras": "無攝影機",
+		"systemUnreachable": "系統無法連接",
+		"cameraStates": {
+			"offline": "離線",
+			"error": "錯誤",
+			"errorLoading": "載入影片時發生錯誤",
+			"unauthorized": "需要身份驗證",
+			"noData": "無資料",
+			"iOSVideoTooLarge": "iOS不支援大於 fullHD (2MP：1920x1080) 的影像。",
+			"flashRequired": "請<a href='https://get.adobe.com/flashplayer/' target='_blank'> 安裝Adobe Flash </a>來播放影像.",
+			"flashOrWebmRequired": "要在 Internet Explorer 上播放影像, 請 <a href='https://get.adobe.com/flashplayer/' target='_blank'>安裝 Adobe Flash</a> 或 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>.",
+			"noArmSupport": "此瀏覽器或設備不支援從 ARM 伺服器上回放影像。",
+			"noFormat": "此瀏覽器不支援從此攝影機回放影像.",
+			"ieNoWebm": "請安裝 <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> 以支援 Internet Explorer.",
+			"ieWin10": "請使用Microsoft Edge或Google Chrome瀏覽器。",
+			"ubuntuNX": "此瀏覽器不支援從 ARM 伺服器播放影像。請改用 Chromium 瀏覽器。"
+		},
+		"searchCamPlaceholder": "搜尋",
+		"resolution": {
+			"auto": "自動",
+			"high": "高 (H)",
+			"low": "低 (L)"
+		},
+		"chromeCastWarning": "Chromecast佔用過多資源, 可能會導致您的伺服器出現問題.",
+		"voiceCommands": {
+			"play": "播放",
+			"pause": "暫停",
+			"live": "即時|顯示即時",
+			"view": "瀏覽 + [攝影機名稱]",
+			"search": "搜尋+ [搜索欄的文字]",
+			"clear search": "清除搜尋",
+			"expand server": "展開伺服器+ [伺服器名稱]",
+			"collapse server": "崩潰伺服器+ [伺服器名稱]",
+			"expand all servers": "展開所有伺服器",
+			"collapse all servers": "隱藏所有伺服器",
+			"stop listening": "停止聽取",
+			"help": "幫助|顯示命令"
+		}
 	},
 	"systemAdministration": "系統管理",
 	"users": "使用者",
@@ -422,13 +492,15 @@
 	"Integrations": "整合",
 	"Privacy": "隱私政策",
 	"Support": "支援",
-	"Supported Devices": "支援設備",
+	"Supported Devices": "支持設備",
 	"Terms": "條款",
 	"pleaseSelect": "請選擇...",
 	"WHEN_MERGE_FINISHES": "合併完成後, 此系統中的所有用戶和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
 	"FAILED_SYSTEM_DESCR": "此連結已損毀,<br> 系統可能會從 %CLOUD_NAME% 離線,<br>於此系統的權限可能被註銷,<br>或請您用不同的帳號登錄.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "使用 %VMS_NAME% 登入到您的系統",
+	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "到 \"系統管理\" 對話框中的 \"雲端\" 頁面",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "點擊 \"連接系統到 %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

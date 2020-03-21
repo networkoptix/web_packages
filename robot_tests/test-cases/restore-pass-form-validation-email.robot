@@ -57,12 +57,7 @@ Restart
     Open Restore Password Dialog
 
 Open Restore Password Dialog
-    ${email}    Get Random Email    ${BASE EMAIL}
-    Open Browser and go to URL    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    ${link}    Get Email Link    ${email}    activate
-    Go To    ${link}
-    Go To    ${url}/restore_password
+    Open Browser and go to URL    ${url}/restore_password
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
 
 Test Email Invalid
@@ -71,7 +66,7 @@ Test Email Invalid
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${email}
     Click Button    ${RESET PASSWORD BUTTON}
     Run Keyword Unless    '${email}'=='${EMAIL UNREGISTERED}' or '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Check Email Outline    ${email}
-    Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL} ${ACCOUNT DOES NOT EXIST}
+    Run Keyword If    '${email}'=='${EMAIL UNREGISTERED}'    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${SPACE}${ACCOUNT DOES NOT EXIST}
     Run Keyword If    '${email}'=='${SPACE}myemail@gmail.com' or '${email}'=='myemail@gmail.com${SPACE}'    Go To    ${url}/restore_password
 
 Check Email Outline

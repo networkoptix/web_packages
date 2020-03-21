@@ -47,10 +47,12 @@ import * as angular from 'angular';
                             return $q.resolve(true);
                         }
                         this.auth = false;
-                        return cloudApi.getSystemAuth(this.id).then((data) => {
-                            this.auth = true;
-                            return this.mediaserver.setAuthKeys(data.data.authGet, data.data.authPost, data.data.authPlay);
-                        });
+                        return cloudApi
+                                .getSystemAuth(this.id)
+                                .then((data) => {
+                                    this.auth = true;
+                                    return this.mediaserver.setAuthKeys(data.data.authGet, data.data.authPost, data.data.authPlay);
+                                });
                     };
 
                     System.prototype.updateSystemState = function () {
@@ -100,7 +102,7 @@ import * as angular from 'angular';
 
                             this.isOnline = this.info.stateOfHealth == CONFIG.systemStatuses.onlineStatus;
                             this.isMine = this.info.ownerAccountEmail == this.currentUserEmail;
-                            this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.indexOf(CONFIG.systemCapabilities.cloudMerge) > -1);
+                            this.canMerge = this.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                             this.mergeInfo = system.mergeInfo;
 
                             this.checkPermissions();

@@ -1,17 +1,20 @@
 import {
     Component, OnInit, Input,
-    forwardRef, ViewEncapsulation, KeyValueDiffer, KeyValueDiffers
-} from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor }                         from '@angular/forms';
-import { ActivatedRoute, Event as NavigationEvent, NavigationEnd, Router } from '@angular/router';
-import { Location }                                                        from '@angular/common';
-import { NxConfigService }                            from '../../services/nx-config';
-import { isArray }                                    from 'rxjs/internal-compatibility';
-import { NxUriService }                               from '../../services/uri.service';
-import { filter, debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Subject }                                    from 'rxjs/Subject';
-import { NxLanguageProviderService }                  from '../../services/nx-language-provider';
-
+    forwardRef, ViewEncapsulation, OnDestroy
+}                                                  from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
+import { ActivatedRoute, Router }         from '@angular/router';
+import { Location }                       from '@angular/common';
+import { Subject }                        from 'rxjs/Subject';
+import { isArray }                        from 'rxjs/internal-compatibility';
+import { NxConfigService }                from '../../services/nx-config';
+import { NxUriService }                   from '../../services/uri.service';
+import { NxLanguageProviderService }      from '../../services/nx-language-provider';
+import { Subscription, SubscriptionLike } from 'rxjs';
+import { NxScrollMechanicsService }       from '../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
+import { debounceTime }                   from 'rxjs/operators';
+import { NxUtilsService }                 from '../../services/utils.service';
 /* Usage
  <nx-search
      name="NAME"
@@ -22,13 +25,17 @@ import { NxLanguageProviderService }                  from '../../services/nx-la
      ngDefaultControl?>
  </nx-search>
 
+ * "Selectors" layout (used in Health Monitor page)
+ - will hide search box and toggle button
+ - will show advanced search and selected filters buttons (tags)
+
  * "Compact" layout (used in Integration page)
     - will hide labels and adjust spacing
     - will not show advanced search and filters selected buttons
 
  * "Full" layout (used in IPVD page)
     - will show labels and adjust spacing
-    - will show advanced search and selected filters buttons
+    - will show advanced search and selected filters buttons (tags)
 
  */
 
@@ -36,6 +43,7 @@ interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-search',
     templateUrl  : './search.component.html',
@@ -48,8 +56,9 @@ interface Params {
     styleUrls    : ['./search.component.scss']
 })
 
-export class NxSearchComponent implements OnInit, ControlValueAccessor {
+export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @Input() layout: any;
+    @Input() layoutMod: any;    // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
 
@@ -60,32 +69,41 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
     CONFIG: any;
     LANG: any = {};
 
+    private searchSubscription: Subscription;
+    private locationSubscription: SubscriptionLike;
+    private modelSubscription: SubscriptionLike;
+
     private params: any = {};
-    private uriPath: string;
     private showAdvancedOptions: boolean;
 
     public advSearch = false;
 
     private searchUpdated: any = Subject;
+    private modelUpdated: any = Subject;
 
-    constructor(private _router: Router,
-                private _route: ActivatedRoute,
-                private location: Location,
-                private uri: NxUriService,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private differs: KeyValueDiffers) {
+    constructor(
+            private _router: Router,
+            private _route: ActivatedRoute,
+            private location: Location,
+            private uri: NxUriService,
+            private configService: NxConfigService,
+            private language: NxLanguageProviderService,
+            private scrollMechanicsService: NxScrollMechanicsService,
+    ) {
 
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.language.getTranslations();
-        this.uriPath = '/' + this._route.snapshot.url.map(e => e.path).join('/');
 
-        this.location.subscribe((event: PopStateEvent) => {
+        this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update
-            setTimeout(() => this.updateFilter(this.uri.getURI()));
+            setTimeout(() => {
+                this.updateFilter(this.uri.getURI());
+                this.modelChanged(false);
+            });
         });
 
-        this.searchUpdated = new Subject();
+        this.searchUpdated = new Subject<any>();
+        this.modelUpdated = new Subject<any>();
     }
 
     ngOnInit() {
@@ -97,23 +115,26 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
         // Example URI
         // /ipvd?search=Axis&tags=isAptzSupported&resolution=SVGA&vendors=Axis,30X,Sony
-        this._route
-            .queryParams
-            .subscribe(params => {
-                this.params = { ...params };
-                this.params.search = params.search || '';
-                this.params.selects = [];
-                this.params.multiselects = [];
-            });
+        this._route.queryParams.subscribe((params) => {
+            this.params = params;
+            this.updateFilter(undefined, false);
+        });
 
-        this.searchUpdated.asObservable()
-            .debounceTime(this.CONFIG.search.debounceTime)
-            .distinctUntilChanged()
+        this.searchSubscription = this.searchUpdated
+            .pipe(debounceTime(this.CONFIG.search.debounceTime))
             .subscribe(data => {
                 this.localFilter.query = data;
                 this.modelChanged();
             });
+
+        this.modelSubscription = this.modelUpdated
+            .pipe(debounceTime(this.CONFIG.search.debounceTime))
+            .subscribe(data => {
+                this.modelChanged();
+            });
     }
+
+    ngOnDestroy() {}
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -127,16 +148,24 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.onTouchedCallback();
     }
 
-    onSearchType(value: string) {
+    onSearchType(value: any) {
         this.searchUpdated.next(value);
     }
 
-    updateFilter(params?) {
+    onModelChange(value: any) {
+        this.modelUpdated.next(value);
+    }
+
+    updateFilter(params?, resetUri?) {
         if (params && params.value) {
             this.params = params.value;
         }
 
-        this.localFilter.query = this.params.search || '';
+        this.localFilter.query = '';
+
+        if (this.params.search && this.params.search.length > 0) {
+            this.localFilter.query = this.params.search;
+        }
 
         if (this.localFilter.tags && this.localFilter.tags.length) {
             this.localFilter.tags.forEach(tag => tag.value = false);
@@ -158,9 +187,11 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 .selects
                 .find((select) => {
                     if (this.params[select.id]) {
-                        select.selected = select.items.find((item) => item.name === this.params[select.id]);
+                        select.selected = select.items.find((item) => item.value === this.params[select.id]);
                     } else {
-                        select.selected = { value: '0', name: 'All' };
+                        if (!select.selected) {
+                            select.selected = { value: '0', name: 'All' };
+                        }
                     }
                 });
         }
@@ -178,8 +209,8 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         }
 
         this.numberOfOptionsSelected();
-        this.onChangeCallback(this.localFilter);
-
+        // the component relaying on model change may not be ready
+        // this.modelChanged(resetUri);
     }
 
     writeValue(value: any): void {
@@ -189,13 +220,17 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
              (value.selects && value.selects.length) ||
              (value.multiselects && value.multiselects.length))) {
 
-            this.localFilter = value;
+            if (JSON.stringify(this.localFilter) === JSON.stringify(value)) {
+                return;
+            }
+            this.localFilter = NxUtilsService.deepCopy(value);
             this.advSearch = (this.localFilter.selects && this.localFilter.selects.length) ||
                     (this.localFilter.multiselects && this.localFilter.multiselects.length) ||
                     (this.localFilter.tags && this.localFilter.tags.length);
 
             // Update model with query params
-            this.updateFilter();
+            this.params = this._route.snapshot.queryParams;
+            this.updateFilter(undefined, false);
         }
     }
 
@@ -211,6 +246,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
 
     toggleOptions() {
         this.showAdvancedOptions = !this.showAdvancedOptions;
+        this.scrollMechanicsService.offsetSubject.next(this.showAdvancedOptions);
         return false;
     }
 
@@ -329,72 +365,60 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         this.clearFilters();
         this.numberFilters = 0;
         this.filterSelected = '';
-        this.setRouteParams();
-        this.onChangeCallback(this.localFilter);
 
-        return false;
+        this.modelChanged(true);
     }
 
     resetQuery() {
         this.localFilter.query = '';
-        this.setRouteParams();
-        this.onChangeCallback(this.localFilter);
-        this.numberOfOptionsSelected();
+        this.modelChanged(true);
     }
 
-    setRouteParams(forControl?): boolean {
+    setRouteParams(resetUri?): Promise<any> {
         const queryParams: Params = {};
 
-        switch (forControl) {
-            case 'tags':
-                let selectedTags;
-                queryParams.tags = undefined;
-                if (this.localFilter.tags && this.localFilter.tags.length) {
-                    selectedTags = this.localFilter.tags.filter((tag) => tag.value);
-                    if (selectedTags.length) {
-                        queryParams.tags = selectedTags.map((elm) => elm.id).join(',');
-                    }
-                }
-                if (queryParams.tags === this.params.tags) {
-                    return false;
-                }
+        let selectedTags;
+        queryParams.tags = undefined;
+        if (this.localFilter.tags && this.localFilter.tags.length) {
+            selectedTags = this.localFilter.tags.filter((tag) => tag.value);
+            if (selectedTags.length) {
+                queryParams.tags = selectedTags.map((elm) => elm.id).join(',');
+            }
+        }
 
-                break;
+        queryParams.search = undefined;
+        if (this.localFilter.query !== '') {
+            queryParams.search = this.localFilter.query;
+        }
 
-            default:
-                queryParams.search = undefined;
-                if (this.localFilter.query !== '') {
-                    queryParams.search = this.localFilter.query;
+        if (this.localFilter.selects && this.localFilter.selects.length) {
+            this.localFilter.selects.forEach((select) => {
+                queryParams[select.id] = undefined;
+                if (+select.selected.value !== 0) {
+                    queryParams[select.id] = select.selected.value;
                 }
+            });
+        }
 
-                if (this.localFilter.selects && this.localFilter.selects.length) {
-                    this.localFilter.selects.forEach((select) => {
-                        queryParams[select.id] = undefined;
-                        if (+select.selected.value !== 0) {
-                            queryParams[select.id] = select.selected.name;
-                        }
-                    });
+        if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
+            this.localFilter.multiselects.forEach((select) => {
+                queryParams[select.id] = undefined;
+                if (select.selected && select.selected.length) {
+                    queryParams[select.id] = select.selected.join(',');
                 }
-
-                if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
-                    this.localFilter.multiselects.forEach((select) => {
-                        queryParams[select.id] = undefined;
-                        if (select.selected && select.selected.length) {
-                            queryParams[select.id] = select.selected.join(',');
-                        }
-                    });
-                }
+            });
         }
 
         this.uri.pageOffset = window.pageYOffset;
-        this.uri.updateURI(this.uriPath, queryParams);
-        return true;
+
+        return this.uri.updateURI(this.uri.getURL(), queryParams);
     }
 
-    modelChanged(byControl?) {
-        if (this.setRouteParams(byControl)) {
-            this.onChangeCallback(this.localFilter);
-            this.numberOfOptionsSelected();
-        }
+    modelChanged(resetUri?) {
+        this.setRouteParams(resetUri)
+            .then(() => {
+                this.numberOfOptionsSelected();
+                this.onChangeCallback(this.localFilter);
+            });
     }
 }

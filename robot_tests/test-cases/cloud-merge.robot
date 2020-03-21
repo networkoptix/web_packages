@@ -1,6 +1,8 @@
 *** Settings ***
 Resource          ../resource.robot
 Resource          ../APIresource.robot
+Library           ../NoptixLibrary/
+
 Suite Setup       Startup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    reset state
@@ -72,8 +74,7 @@ Validate Merge
 Validate system available
     [arguments]    ${system name}
     Verify In System    ${system name}
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
+    Go to Users List
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     ${elements}    Set Variable    ${SHARE BUTTON SYSTEMS}
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
@@ -117,6 +118,7 @@ Create system and attach to cloud
     ${auth}=    Create List    ${user}    ${password}
     ${default auth}=    Create List    admin    admin
     &{bind json}=    bind system    ${auth}    ${ENV}    name=${system name}
+    sleep    5
     &{Setup Cloud System json}=    Setup Cloud System
     ...    ${default auth}
     ...    https://localhost:${port}
@@ -160,17 +162,13 @@ Remove containers
 
 Startup
     Open Browser and go to URL    ${url}
-    ${image}    Build Image
+    ${image}    Build Image    ${ENV}
     Set Suite Variable    ${image}    ${image}
 
 Restart
     Stop containers
     Prune Containers
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
     Validate Log Out
 
 Reset state
@@ -178,6 +176,7 @@ Reset state
     Prune Containers
     Close Browser
     Open Browser and go to URL    ${url}
+    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
     Log In    ${EMAIL MERGE OWNER 1}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
@@ -189,7 +188,6 @@ Reset state
     END
     Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
     Log Out
-    Validate Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
     ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
@@ -212,9 +210,9 @@ Reset state
 Wrong and empty password
     [tags]    C54685
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
-    ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
-    Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
+    @{auth}=    Create List    ${user}    ${password}
+    ${api made system 1 id}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
+    ${api made system 2 id}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
     log in    ${user}    ${password}
     Validate Log in
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
@@ -246,9 +244,12 @@ Wrong and empty password
     Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
     Click Button    ${MERGE BUTTON MODAL}
     Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
-    Press Key    ${MERGE BUTTON MODAL}    ${ESCAPE}
-    Disconnect from cloud
-    Disconnect from cloud
+    Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
+#    Disconnect from cloud
+#    Disconnect from cloud
+    Unbind System    ${auth}   ${url}    ${api made system 1 id}
+    Unbind System    ${auth}   ${url}    ${api made system 2 id}
+
 
 Only one system connected to Cloud Account
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
@@ -282,6 +283,10 @@ Only one system connected to Cloud Account
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
+    Delete Email    ${email}
+    Close Mailbox
     Log Out
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
     Validate Log In
@@ -319,7 +324,7 @@ Only one system connected to Cloud Account
     ...    ${MERGE DIALOG}//p[contains(text(),'${MERGE NOT OWNER MESSAGE 1 TEXT}')]
     ...    ${MERGE OK BUTTON}
     ...    ${MERGE X BUTTON}
-    Press Key    ${MERGE OK BUTTON}    ${ESCAPE}
+    Press Keys    ${MERGE OK BUTTON}    ESCAPE
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
     Disconnect from cloud
@@ -452,6 +457,7 @@ Merge with 3.0
     ...    7003
     ...    API made system 2
     Go To    ${url}/systems
+    Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Verify In System    API made system 2
@@ -504,7 +510,6 @@ From secondary system merge to primary with no other systems
     ...    ${image}
     ...    7001
     ...    API made system 1
-    ...    network=host
     Create system and attach to cloud
     ...    ${user}
     ...    ${image}
@@ -526,11 +531,9 @@ From secondary system merge to primary with no other systems
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 2
-    Check for alert    ${alert message}    timeout=${merge timeout}
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
+    Sleep    35
+    Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
@@ -574,18 +577,17 @@ From secondary system merge to primary with other systems
     Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
-
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 3
-    Check for alert    ${alert message}    timeout=${merge timeout}
+    Sleep    35 
+    Validate system available    API made system 1   
+    Go to    ${url}/systems
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
+    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
+    Sleep    1
+    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Disconnect from cloud
+    Sleep    35
     Disconnect from cloud
 
 From primary system
@@ -618,10 +620,10 @@ From primary system
     Merge    API made system 1    API made system 2    API made system 2
     Validate Merge
 
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
     Go to Users List
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
-    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}
     Validate system available    API made system 1
     Disconnect from cloud
 
@@ -660,29 +662,16 @@ Merge with different types of users
     Merge    API made system 1    API made system 1    API made system 1
     Validate Merge
 
-    ${alert message}    Replace String
-    ...    ${CONNECTION TO SYSTEM LOST}
-    ...    %SYSTEM NAME%
-    ...    API made system 2
-    Check for alert    ${alert message}    timeout=${merge timeout}
+    Check For Alert Dismissable    ${SYSTEM MERGE COMPLETED TEXT}    timeout=${merge timeout}
+
     Validate system available    API made system 1
     FOR     ${idx}    IN RANGE    90
         ${result}    Run Keyword And Ignore Error    Wait Until Element Is Visible
-        ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-        Reload Page
+        ...    //nx-menu//a[@class='menu-level-3']//span[@class='user' and text()='${email admin no reg}']
+        Run Keyword Unless    '${result[0]}'=='PASS'    Reload Page
         Exit For Loop If    '${result[0]}'=='PASS'
     END
     FOR    ${key}    IN    @{all users dict.keys()}
-        Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=120
+        Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
     END
-    ${user row}=    Set Variable
-    ...    //tr[@ng-repeat='user in system.users']//td[contains(text(), '${email admin no reg}')]
-    ${delete user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='unshare(user)']/span[contains(text(),'${DELETE USER BUTTON TEXT}')]
-    ${edit user button}=    Set Variable
-    ...    /following-sibling::td/a[@ng-click='editShare(user)']/span[contains(text(),'${EDIT USER BUTTON TEXT}')]/..
-    Mouse Over    ${user row}
-    Wait Until Elements are Visible
-    ...    ${user row}${delete user button}
-    ...    ${user row}${edit user button}
     Disconnect from cloud

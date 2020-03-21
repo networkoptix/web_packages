@@ -2,99 +2,6 @@
   "language": "pt_BR",
   "language_name": "Português (Brazil)",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Bem-vindo ao",
-    "register": "Criar Conta",
-    "changePassword": "Mudar senha -",
-    "account": "Definições da conta -",
-    "systems": "Sistemas -",
-    "system": "Sistema -",
-    "systemShare": "Partilha de Sistema -",
-    "activate": "Ativar conta -",
-    "activateSent": "Ativar conta -",
-    "activateSuccess": "Conta ativada -",
-    "activateCode": "Ativar conta -",
-    "restorePassword": "Reset de Senha -",
-    "restorePasswordSuccess": "Senha guardada -",
-    "restorePasswordCode": "Reset de Senha -",
-    "view": "Visualizar câmaras - ",
-    "debug": "Depurar",
-    "login": "Entrar -",
-    "download": "Baixar %VMS_NAME%",
-    "downloadPlatform": "Baixar %VMS_NAME% para ",
-    "pageNotFound": "Página não encontrada"
-  },
-  "systemStatuses": {
-    "activated": "ativado",
-    "incompatible": "incompatível",
-    "merging": "mesclando",
-    "notActivated": "não ativado",
-    "online": "online",
-    "offline": "desligada",
-    "unavailable": "indisponível"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Desabilitado",
-      "description": "O utilizador está desativado e não pode efetuar login no sistema"
-    },
-    "Owner": {
-      "label": "Dono",
-      "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
-    },
-    "Viewer": {
-      "label": "Visualizador",
-      "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
-    },
-    "Live Viewer": {
-      "label": "Visualizador ao vivo",
-      "description": "Só pode visualizar o vídeo ao vivo"
-    },
-    "Advanced Viewer": {
-      "label": "Visualizador Avançado",
-      "description": "Pode ver vídeo ao vivo, navegar no arquivo, controle PTZ etc"
-    },
-    "Administrator": {
-      "label": "Administrador",
-      "description": "Acesso não restrito incluindo a capacidade de partilhar"
-    },
-    "Custom": {
-      "label": "Personalizado",
-      "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
-    },
-    "cloudAdmin": {
-      "label": "Administrador",
-      "description": "Pode configurar o Sistema e partilhá-lo"
-    },
-    "customRole": {
-      "label": "Perfil Personalizado",
-      "description": "Perfil de utilizador personalizado especificado no Sistema"
-    },
-    "owner": {
-      "label": "Dono",
-      "description": "Acesso não restrito, incluindo a capacidade de partilhar e conectar/desconectar o sistema da \"Cloud\""
-    },
-    "viewer": {
-      "label": "Visualizador",
-      "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo"
-    },
-    "liveViewer": {
-      "label": "Visualizador ao vivo",
-      "description": "Só pode visualizar o vídeo ao vivo"
-    },
-    "advancedViewer": {
-      "label": "Visualizador Avançado",
-      "description": "Pode ver vídeos ao vivo, navegar no arquivo, configurar câmaras, controlar PTZ etc"
-    },
-    "custom": {
-      "label": "Personalizado",
-      "description": "Use a aplicação Cliente %VMS_NAME% para configurar permissões personalizadas"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Não é possível enviar um email de confirmação",
@@ -138,41 +45,6 @@
     "FAIL": "O sistema <strong>{{failedSystem}}</strong> está atualmente inacessível.<br>Tente novamente em alguns instantes ou entre em contato com o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
     "unknownMergeError": "Erro desconhecido. Você pode tentar atualizar a página e repetir a tentativa. Se o problema persistir - por favor, contate o suporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
-  "system": {
-    "yourSystem": "O seu Sistema",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "O sistema está inacessível",
-    "offline": "O sistema está offline",
-    "openClient": "Abrir em %VMS_NAME%",
-    "openClientNoSystem": "Abrir %VMS_NAME%",
-    "confirmMergeAction": "\"Merge\"",
-    "mergeSystemTitle": "\"Merge\" dos Sistemas",
-    "confirmRenameTitle": "Nome do Sistema",
-    "confirmRenameAction": "Gravar",
-    "successRename": "Nome do sistema guardado",
-    "confirmDisconnectTitle": "Disconnect System from %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Desconectar",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Desconectar",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Remover",
-    "successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
-    "successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
-    "mergeFailed": "Falha na mesclagem do sistema",
-    "mergeStart": "Sistemas começaram a se fundir",
-    "mergeSuccess": "Mesclagem de sistema concluída",
-    "permissionsRemoved": "As permissões foram removidas de {{email}}",
-    "unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)"
-  },
-  "regActions": {
-    "passwordLabel": "Senha",
-    "createAccount": "Criar Conta"
-  },
-  "header": {
-    "allSystems": "Todos os sistemas",
-    "systems": "Sistemas"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Alto fluxo",
@@ -199,9 +71,9 @@
       "noFormat": "Este browser não suporta a reprodução de vídeo desta câmara.",
       "ieNoWebm": "Por favor, instale <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para o Internet Explorer.",
       "ieWin10": "Por favor, utilize browsers Microsoft Edge ou Google Chrome.",
-      "ubuntuNX": "Este browser não suporta vídeo a partir de servidores baseados em ARM. Por favor, use o browser Chromium."
+      "ubuntuNX": "Este navegador não suporta vídeo de servidores baseados em ARM. Por favor, use o navegador Chromium."
     },
-    "searchCamPlaceholder": "Pesquisar",
+    "searchCamPlaceholder": "Pesquisa",
     "resolution": {
       "auto": "Auto",
       "high": "Alta",
@@ -223,9 +95,8 @@
       "help": "help | show commands"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Recomendamos consulta com",
-    "b_support": "suporte",
-    "c_proceeding": "antes de prosseguir."
+  "system": {
+    "offline": "O sistema está offline",
+    "unavailable": "O sistema está inacessível"
   }
 }

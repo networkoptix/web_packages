@@ -1,7 +1,6 @@
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
 from rest_framework import serializers
-from rest_framework.fields import empty
 
 from .models import PushSubscription, PushDevice
 
@@ -27,75 +26,149 @@ class RegisterDeviceSerializer(serializers.Serializer):
     model = serializers.CharField()
 
 
-class SubscriptionSerializer(serializers.Serializer):
-    systemId = serializers.UUIDField()
-    deviceToken = serializers.CharField(required=False, default='')
-    isActive = serializers.BooleanField(required=False, default=True)
+class UnregisterDeviceSerializer(serializers.Serializer):
+    deviceToken = serializers.CharField()
 
-    def __init__(self, instance=None, data=empty, **kwargs):
-        self.authenticated = kwargs.pop('authenticated', False)
-        super().__init__(instance, data, **kwargs)
+
+class SubscriptionSerializer(serializers.Serializer):
+    systems = serializers.ListField(required=False)
+    deviceToken = serializers.CharField(required=True)
+    oldToken = serializers.CharField(required=False)
+    isEnabled = serializers.BooleanField(required=False)
+    deviceInfo = serializers.DictField(required=False)
+
+    # def __init__(self, instance=None, data=empty, **kwargs):
+    #     self.authenticated = kwargs.pop('authenticated', False)
+    #     super().__init__(instance, data, **kwargs)
+
+    def validate_oldToken(self, value):
+        if value is not None:
+            if PushDevice.objects.filter(registration_id=value).exists():
+                return value
+            else:
+                raise serializers.ValidationError('Old token does not exist')
+        else:
+            return value
 
     def validate_deviceToken(self, value):
-        if self.context['request'].method == 'GET' and not value:
-            raise serializers.ValidationError('Device Token is required')
-        return value
-
-    def validate_systemId(self, value):
-        request_data = self.context['request'].data
-        if self.authenticated:
+        if self.instance:
             return value
-
-        try:
-            System.get(email=request_data['username'], password=request_data['password'], system_id=value)
-            return value
-        except Exception as exception:
-            if isinstance(exception, APINotAuthorisedException):
-                raise serializers.ValidationError('Invalid credentials for the system')
-            elif isinstance(exception, APILogicException):
-                raise serializers.ValidationError('System not found or not authorized for the system')
+        else:
+            device = PushDevice(registration_id=value, cloud_message_type='FCM', user=self.context['request'].user)
+            response = device.send_message(message='', dry_run=True)
+            if response['success'] == 1:
+                return value
             else:
-                raise serializers.ValidationError('Cannot authenticate at this time')
+                raise serializers.ValidationError("Token could not be validated")
 
-    def validate(self, data):
-        if data['deviceToken']:
-            if not PushDevice.objects.filter(registration_id=data['deviceToken']).exists():
-                raise serializers.ValidationError('Device not registered')
+    def validate_systems(self, value):
+        if value is not None:
+            request_data = self.context['request'].data
 
-        elif data['isActive']:
-            raise serializers.ValidationError('Device Token is required for subscribing')
+            if 'all' in value:
+                return ['all']
 
-        return data
+            try:
+                systems = System.list(email=request_data['username'], password=request_data['password'])
+                systems = [system['id'] for system in systems['systems']]
+
+                for system in value[:]:
+                    if system not in systems:
+                        value.remove(system)
+
+                return value
+
+            except Exception as exception:
+                if isinstance(exception, APINotAuthorisedException):
+                    raise serializers.ValidationError('Invalid credentials')
+                elif isinstance(exception, APILogicException):
+                    raise serializers.ValidationError(f'APILogicException: {str(exception)}')
+                else:
+                    raise serializers.ValidationError('Cannot authenticate at this time')
+        else:
+            return value
+
+    def assign_systems(self, instance, systems):
+        if systems == ['all']:
+            subscription = PushSubscription.objects.get_or_create(
+                type=PushSubscription.SUB_TYPES.cloud, system_id='all'
+            )[0]
+            instance.subscriptions.set([subscription])
+        elif systems:
+            existing_subscriptions = PushSubscription.objects.filter(system_id__in=systems)
+            systems = list(set(systems) - {str(system) for system in existing_subscriptions.values_list('system_id', flat=True)})
+            instance.subscriptions.set(existing_subscriptions)
+            for system in systems:
+                system = PushSubscription.objects.create(type=PushSubscription.SUB_TYPES.cloud, system_id=system)
+                instance.subscriptions.add(system)
+        elif type(systems) == list:
+            instance.subscriptions.clear()
+
+    def assign_device_info(self, instance, device_info):
+        if device_info is not None:
+            if 'name' in device_info:
+                instance.name = device_info['name']
+            if 'model' in device_info:
+                instance.model = device_info['model']
+        return instance
 
     def create(self, validated_data):
-        device = PushDevice.objects.get(registration_id=validated_data['deviceToken'])
-        return PushSubscription.objects.create(
-            system_id=validated_data['systemId'], account=self.context['request'].user,
-            active=validated_data['isActive'], device=device
-        )
-
-    def update(self, instance, validate_data):
-        if instance:
-            instance.active = validate_data.get('isActive', True)
-            instance.save()
-        elif not validate_data['isActive']:
-            subs = PushSubscription.objects.filter(
-                account=self.context['request'].user, system_id=validate_data['systemId']
+        if 'oldToken' in validated_data:
+            device = PushDevice.objects.get(registration_id=validated_data['oldToken'])
+            subscriptions = list(device.subscriptions.all())
+            device.registration_id = validated_data['deviceToken']
+            device.pk = None
+            device.id = None
+            device.save()
+            device.subscriptions.set(subscriptions)
+        else:
+            device = PushDevice(
+                registration_id=validated_data['deviceToken'], cloud_message_type='FCM',
+                user=self.context['request'].user
             )
-            subs.update(active=False)
+            systems = validated_data.get('systems', ['all'])
+            is_enabled = validated_data.get('isEnabled', True)
+            device_info = validated_data.get('deviceInfo', {})
+
+            device.active = is_enabled
+
+            device = self.assign_device_info(device, device_info)
+            device.save()
+
+            self.assign_systems(device, systems)
+
+        return device
+
+    def update(self, instance, validated_data):
+        systems = validated_data.get('systems', None)
+        is_enabled = validated_data.get('isEnabled', None)
+        device_info = validated_data.get('deviceInfo', None)
+
+        if is_enabled is not None:
+            instance.active = is_enabled
+
+        instance = self.assign_device_info(instance, device_info)
+        instance.save()
+
+        self.assign_systems(instance, systems)
+
         return instance
 
 
-class SubscriptionModelSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PushSubscription
-        fields = ['system_id', 'active']
-
-
 class DeviceSubscriptionsSerializer(serializers.ModelSerializer):
-    subscriptions = SubscriptionModelSerializer(many=True, read_only=True, source='pushsubscription_set')
-    deviceToken = serializers.CharField(source='registration_id', read_only=True)
+    systems = serializers.SerializerMethodField()
+    deviceInfo = serializers.SerializerMethodField()
+    isEnabled = serializers.BooleanField(required=False, source='active')
 
     class Meta:
         model = PushDevice
-        fields = ['name', 'model', 'deviceToken', 'subscriptions']
+        fields = ['deviceInfo','systems', 'isEnabled']
+
+    def get_systems(self, obj):
+        return [sub.system_id for sub in obj.subscriptions.all()]
+
+    def get_deviceInfo(self, obj):
+        return {'name': obj.name, 'model': obj.model}
+
+
+

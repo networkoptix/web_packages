@@ -5,12 +5,11 @@ Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Close Browser
 force tags    account
+
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
-${FIRST NAME IS REQUIRED}      //span[@class='error-text ng-star-inserted' and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
-${LAST NAME IS REQUIRED}       //span[@class='error-text ng-star-inserted' and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
 
 *** Keywords ***
 Verify in Account Page
@@ -24,33 +23,28 @@ Verify in Account Page
     sleep    .5
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Validate Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Reset DB and Open New Browser On Failure
     Close Browser
-    Reset user noperm first/last name
+#    Reset user noperm first/last name
+    Set Account Name    ${url}    ${EMAIL NOPERM}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Open Browser and go to URL    ${url}
 
 *** Test Cases ***
 Can access the account page from dropdown
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Click Button    ${ACCOUNT DROPDOWN}
     Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON}
     Click Link    ${ACCOUNT SETTINGS BUTTON}
+    Title Should Be    ${ACCOUNT SETTINGS TEXT} - ${PRODUCT_NAME}
     Verify in account page
 
 Can access the account page from direct link while logged in
     [tags]    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Go To    ${url}/account
     Verify in account page
 
@@ -65,16 +59,14 @@ Accessing the account page from a direct link while logged out asks for login, c
 Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page
     [tags]    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Go To    ${url}/account
     Verify in account page
 
 Changing first name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    nameChanged
@@ -82,8 +74,7 @@ Changing first name and saving maintains that setting
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     sleep    2
     Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
@@ -95,16 +86,14 @@ Changing first name and saving maintains that setting
 Changing last name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
     Close Browser
     Open Browser and go to URL    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
     Input Text    ${ACCOUNT LAST NAME}    ${TEST LAST NAME}
@@ -114,33 +103,46 @@ Changing last name and saving maintains that setting
 First name is required
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
-    Delete All Text    ${ACCOUNT FIRST NAME}
+    ${locator}=   Get WebElement    ${ACCOUNT FIRST NAME}
+    Delete All Text    ${locator}
     Click Element    ${ACCOUNT LAST NAME}
-    Element Style Should Be    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
-    Element Style Should Be    ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${ACCOUNT FIRST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT FIRST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${FIRST NAME IS REQUIRED}
 
 Last name is required
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     ${locator}=   Get WebElement    ${ACCOUNT LAST NAME}
     Delete All Text    ${locator}
     Click Element    ${ACCOUNT FIRST NAME}
-    Element Style Should Be    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
-    Element Style Should Be    ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
+    Wait Until Element Has Style    ${ACCOUNT LAST NAME}    border-color    ${ERROR COLOR}
+    Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
+
+#First and last names are required
+#    [Tags]    C41573    Threaded
+#    Go To    ${url}/account
+#    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+#    Verify in Account Page
+#    @{names}=   Create List    ${ACCOUNT FIRST NAME}   ${ACCOUNT LAST NAME}
+#    FOR    ${name}    IN    @{names}
+#        ${locator}=   Get WebElement    ${name}
+#        Delete All Text    ${locator}
+#        Click Element    ${name}
+#        Wait Until Element Has Style    ${name}    border-color    ${ERROR COLOR}
+#        Wait Until Element Has Style   ${name}    color    ${ERROR COLOR WITH OPACITY}
+#        Element Should Be Visible    ${LAST NAME IS REQUIRED}
+#    END
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    ${SPACE}
     Click Element    ${ACCOUNT LAST NAME}
@@ -151,8 +153,7 @@ SPACE for first name is not valid
 SPACE for last name is not valid
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Input Text    ${ACCOUNT FIRST NAME}    Mark
     Input Text    ${ACCOUNT LAST NAME}    ${SPACE}
@@ -164,8 +165,7 @@ SPACE for last name is not valid
 Email field is un-editable
     [tags]    C41573    Threaded
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     ${read only}    Get Element Attribute    ${ACCOUNT EMAIL}    readOnly
     Should Be True    "${read only}"
@@ -173,28 +173,26 @@ Email field is un-editable
 Should respond to tab and go in the correct order
     [tags]    C41838
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Element Should Be Focused    ${ACCOUNT FIRST NAME}
-    Press Key    ${ACCOUNT FIRST NAME}    ${TAB}
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LAST NAME}
-    Press Key    ${ACCOUNT LAST NAME}    ${TAB}
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LANGUAGE DROPDOWN}
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${ENTER}
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
+    Press Keys    None    ENTER
+    Press Keys    None    TAB
     Element Should Be Focused    //nx-language-select//a//span[1]/..
-    Press Key    //nx-language-select//a//span[1]/..    ${ENTER}
+    Press Keys    //nx-language-select//a//span[1]/..    ENTER
     Element Should Be Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang="cs_CZ"]
-    Press Key    ${ACCOUNT LANGUAGE DROPDOWN}    ${TAB}
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT SAVE}
-    Press Key    ${ACCOUNT SAVE}    ${ENTER}
+    Press Keys   None    ENTER
 
 Language is changeable on the account page
     [tags]    C41574
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     FOR    ${lang}    ${account}   IN ZIP    ${LANGUAGES LIST}    ${LANGUAGES ACCOUNT INFORMATION TEXT LIST}
         Sleep    1
         Verify in Account Page
@@ -218,14 +216,13 @@ Language is changeable on the account page
     Click Button    ${ACCOUNT SAVE}
     Sleep    1
     Verify in Account Page
-    Wait Until Element is Visible    //header/span[text()='${account}']
+    Wait Until Element is Visible    //header/span[text()='${ACCOUNT INFORMATION}']
 
 Language change affects emails
     [tags]    C41575
     ${russian subject}    Set Variable    Восстановление пароля
     Go To    ${url}/account
-    Log In    ${EMAIL NOPERM}    ${password}    button=None
-    Validate Log In
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Verify in Account Page
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     Wait Until Element is Visible
@@ -256,6 +253,12 @@ Language change affects emails
     ...    ${BASE EMAIL PASSWORD}
     ...    ${BASE HOST}
     ...    ${BASE PORT}
-    Delete All Emails
+    Delete Email    ${email}
     Close Mailbox
-    Check Langauge Logged In
+    Check Language Logged In    ${EMAIL NOPERM}    ${password}
+
+Should open account page in anonymous state
+    [tags]    anonymous
+    Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
+    Wait Until Element Is Visible    ${LOG IN MODAL}
+    Check Log In    button=None

@@ -4,7 +4,7 @@
 import docker
 import email.header
 import imaplib
-import os.path
+import os
 import re
 import time
 from datetime import date
@@ -19,12 +19,18 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 from SeleniumLibrary.utils import (is_falsy, is_truthy, secs_to_timestr,
-                                   timestr_to_secs, SELENIUM_VERSION)
+                                   timestr_to_secs)
 from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class NoptixLibrary(object):
+
+    def go_forward(self):
+        """Simulates the user clicking the forward button on their browser."""
+        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
+        seleniumlib.driver.forward()
 
     def convert_locator_to_webelement(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -40,29 +46,40 @@ class NoptixLibrary(object):
                 return element
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
-
+            
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'a')
-        locator.send_keys(Keys.CONTROL + 'c')
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.SHIFT, Keys.UP)
+            locator.send_keys(Keys.CONTROL, Keys.INSERT)
+        else:    
+            locator.send_keys(Keys.CONTROL + 'a')
+            locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'v')
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.SHIFT, Keys.INSERT)
+        else:    
+            locator.send_keys(Keys.CONTROL + 'v')
 
     def delete_all_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        locator.send_keys(Keys.CONTROL + 'a')
-        locator.send_keys(Keys.BACKSPACE)
+        if self.get_os()=="MacOS":
+            locator.send_keys(Keys.SHIFT, Keys.UP)
+            locator.send_keys(Keys.BACKSPACE)
+        else:     
+            locator.send_keys(Keys.CONTROL + 'a')
+            locator.send_keys(Keys.BACKSPACE)
 
     def get_random_email(self, email):
         index = email.find('@')
-        email = email[:index] + '+' + str(time.time()) + email[index:]
+        email = email[:index] + '+' + str(randint(1, 100)) + str(time.time()) + email[index:]
         return email
 
-    def get_many_random_emails(self, howMany, email):
+    def get_many_random_emails(self, how_many, email):
         emails = []
-        for x in range(0, int(howMany)):
+        for x in range(0, int(how_many)):
             emails.append(self.get_random_email(email))
             time.sleep(.2)
         return emails
@@ -72,6 +89,10 @@ class NoptixLibrary(object):
         email = email[:index] + \
             "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
+
+    def get_code_from_email_link(self, url):
+        url_parts = url.split('/')
+        return url_parts[-1]
 
     def get_random_system_name(self):
         return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
@@ -86,7 +107,7 @@ class NoptixLibrary(object):
             print('style: ' + styleAttribute + ', value: ' + value)
             return value
         except:
-            not_found = "No element found with style attribute " + styleAttribute
+            not_found = f"No element found with style attribute {styleAttribute}"
             raise AssertionError(not_found)
 
     def element_style_should_be(self, locator, styleAttribute, expectedValue):
@@ -339,11 +360,18 @@ class NoptixLibrary(object):
         if re.search(pat, body) == None:
             raise Exception("Button target was not 'blank'.")
 
-    def build_image(self):
+    def build_image(self, env):
+        version = ""
+        if env == "https://cloud-test.hdw.mx":
+            version = "4.1.0.30149"
+        elif env == "https://cloud-dev3.hdw.mx":
+            version = "4.1.0.30027"
+        elif env == "https://test4.cloud.hdw.mx":
+            version = "4.1.0.30298"
         client = docker.from_env()
-        return client.images.build(path="/home/kyle/develop/nx_vms/cloud_portal/robot_tests/Docker",
+        return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mediaserver",
-                            buildargs={"mediaserver_deb":"nxwitness-server-4.0.0.28541-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}

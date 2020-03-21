@@ -18,11 +18,7 @@ Open New Browser On Failure
 
 Restart
     Go To    ${url}
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log Out
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword Unless    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 *** Test Cases ***
 Can be opened in anonymous state
@@ -48,13 +44,11 @@ Can be closed by clicking on the X
 Allows to log in with existing credentials and to log out
     [tags]    C24212    C24213    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
 
 Redirects to systems after log In
     [Tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Location Should Be    ${url}/systems
 
@@ -62,14 +56,12 @@ After log In, display user's email and menu in top right corner
     [Tags]    Threaded
     Set Window Size    1920    1080
     Log In    ${email}    ${password}
-    Validate Log In
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}/span[text()="${email}"]
 
 Allows log in with existing email in uppercase
     [Tags]    Threaded
     ${email uppercase}    Convert To Uppercase    ${email}
     Log In    ${email uppercase}    ${password}
-    Validate Log In
 
 Allows log in with 'Remember Me checkmark' switched off
     [Tags]    Threaded
@@ -77,17 +69,16 @@ Allows log in with 'Remember Me checkmark' switched off
     Click Link    ${LOG IN NAV BAR}
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
-    ...   ${EMAIL INPUT}
+    ...    ${EMAIL INPUT}
     ...    ${PASSWORD INPUT}
     ...    ${LOG IN BUTTON}
     Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Log In    ${email}    ${password}    None
-    Validate Log In
+    Log In    ${email}    ${password}    button=None
 
 Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     [Tags]    Threaded
-    Log In    ${email}    'aderhgadehf'
+    Log In    ${email}    'aderhgadehf'    validate=${False}
     Wait Until Elements are Visible
     ...    ${REMEMBER ME CHECKBOX VISIBLE}
     ...    ${EMAIL INPUT}
@@ -118,13 +109,12 @@ Shows non-activated user message when not activated at login; Resend activation 
     ${random email}    get random email    ${BASE EMAIL}
     Register    'mark'    'hamill'    ${random email}    ${password}
     Wait Until Element is Visible    //h1[contains(@class,'process-success')]
-    Log In    ${random email}    ${BASE PASSWORD}
+    Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}
     Click Link    ${RESEND ACTIVATION LINK BUTTON}
     Activate    ${random email}
     Log In    ${random email}    ${password}
-    Validate Log In
 
 Displays password masked
     [tags]    Threaded
@@ -137,7 +127,6 @@ Displays password masked
 Requires log In, if the user has just logged out and pressed back button in browser
     [tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
     Go Back
     Wait Until Element is Visible    ${LOG IN MODAL}
@@ -155,12 +144,12 @@ Handles more than 255 symbols email and password
 Logout refreshes page
     [tags]    Threaded
     Log In    ${email}    ${password}
-    Validate Log In
     Log Out
 
 # We don't actually allow copy of the password field at log in.
 Allows copy-paste in input fields
     [tags]    Threaded
+    ${system} =    Evaluate    platform.system()    platform
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -175,7 +164,7 @@ Should respond to Esc key and close dialog
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${PASSWORD INPUT}
-    Press Key    ${PASSWORD INPUT}    ${ESCAPE}
+    Press Keys    ${PASSWORD INPUT}    ESCAPE
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Element Should Not Be Visible    ${LOG IN MODAL}
 
@@ -187,7 +176,7 @@ Should respond to Enter key and log in
     Input Text    ${EMAIL INPUT}    ${email}
     Input Text    ${PASSWORD INPUT}    ${password}
     Wait Until Element is Visible    ${LOG IN BUTTON}
-    Press Key    ${PASSWORD INPUT}    ${ENTER}
+    Press Keys    ${PASSWORD INPUT}    ENTER
     Validate Log In
 
 Should respond to Tab key
@@ -196,7 +185,7 @@ Should respond to Tab key
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
     Set Focus To Element    ${EMAIL INPUT}
-    Press Key    ${EMAIL INPUT}    ${TAB}
+    Press Keys    ${EMAIL INPUT}    TAB
     Element Should Be Focused    ${PASSWORD INPUT}
 
 Should respond to Space key and toggle checkbox
@@ -205,9 +194,9 @@ Should respond to Space key and toggle checkbox
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
     Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-    Press Key    ${REMEMBER ME CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    None    SPACE
     Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-    Press Key    ${REMEMBER ME CHECKBOX REAL}    ${SPACEBAR}
+    Press Keys    None    SPACE
     Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 Handles two tabs, updates second tab state if logout is done on first
@@ -231,7 +220,6 @@ Handles two tabs, updates second tab state if logout is done on first
     # load slowly and doesn't redirect correctly after login.
     Sleep    5
     Log In    ${email}    ${password}
-    Validate Log In
     Select Window    @{tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
@@ -241,7 +229,6 @@ Handles two tabs, updates second tab state if logout is done on first
     Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
     Validate Log In
     Log Out
-    Validate Log Out
     ${tabs}    Get Window Handles
     Select Window    @{tabs}[1]
     Location Should Be    ${url}/systems
@@ -277,3 +264,55 @@ Log in more than 5 times
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
     Validate Log In
+
+
+User is logged out of browser after a password change in another browser
+    [tags]    C41837
+    Log In    ${email}    ${password}
+    Open Browser and go to URL    ${url}
+    Log In    ${email}    ${password}
+    Switch Browser    1
+    Go To    ${url}/account/password
+    Sleep    1
+    Wait Until Elements are Visible
+    ...    ${CURRENT PASSWORD INPUT}
+    ...    ${NEW PASSWORD INPUT}
+    Input Text    ${CURRENT PASSWORD INPUT}    ${password}
+    Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
+    Click Button    ${CHANGE PASSWORD BUTTON}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Switch Browser    2
+    # wait for server to disconnect user
+    sleep    30
+    Wait Until Element is Visible    ${LOG IN MODAL}
+    Click Element    ${LOG IN CLOSE BUTTON}
+    Validate Log Out
+    Sleep    1
+
+    Log In    ${email}    ${ALT PASSWORD}
+    Go To    ${url}/account/password
+    Sleep    1
+    Wait Until Elements are Visible
+    ...    ${CURRENT PASSWORD INPUT}
+    ...    ${NEW PASSWORD INPUT}
+    Input Text    ${CURRENT PASSWORD INPUT}    ${ALT PASSWORD}
+    Input Text    ${NEW PASSWORD INPUT}    ${password}
+    Click Button    ${CHANGE PASSWORD BUTTON}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+
+Remember Me Checkbox
+    [Tags]    C41567
+    Log    Step 1
+    Log In With Remember Me    ${email}    ${password}
+    Log    Step 2
+    Persist Current Login State    ${url}
+    Validate Log In
+    Log    Step 3
+    Log Out
+    Persist Current Login State    ${url}
+    Validate Log Out
+    Log In With Remember Me    ${email}    ${password}     remember me=False
+    Log    Step 4
+    Validate Log In
+    Persist Current Login State    ${url}
+

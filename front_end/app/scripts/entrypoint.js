@@ -23,7 +23,6 @@ require('./app.js');
 
 //Directives
 require('./directives/process.js');
-require('./directives/setTitle.js');
 
 //Filters
 require('./filters/escape.js');
@@ -33,7 +32,6 @@ require('./services/angular-uuid2.ts');
 require('./services/cloud_api.ts');
 require('./services/language.ts');
 require('./services/mediaserver.js');
-require('./services/page.js');
 require('./services/poll.js');
 require('./services/process.ts');
 require('./services/system.ts');

@@ -127,7 +127,10 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
     log_messages = []
     zip_file = ZipFile(file_descriptor)
     # zipfile.namelist()
-    root = zip_file.namelist()[0]
+    root = None
+    first_file = zip_file.namelist()[0]
+    if zip_file.getinfo(first_file).is_dir():
+        root = first_file
     structures_changed = 0
     records_created = 0
     asset_type = asset.asset_type
@@ -180,7 +183,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                     # JSON file
                     values, template = templatify_json(json.loads(file_content))
                     file_content = json.dumps(template, indent=4, separators=(',', ': '))
-                    pass
 
                 context_template = context.contexttemplate_set.first()
                 if not context_template:
@@ -290,9 +292,6 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
 
                     records_created += 1
 
-                    if structure.type == structure.DATA_TYPES.multiselect:
-                        value = json.dumps(value)
-
                     # save if needed
                     record = DataRecord(asset=asset,
                                         data_structure=structure,
@@ -318,7 +317,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
         # logger.info(f"Name: {name}\tContext: {structure.context.name}\n\n")
         if update_structure:
             # if set_defaults or data structure has no default value - save it
-            if structure.default != data64:
+            if structure.placeholder != data64:
                 structure.placeholder = data64
                 structures_changed += 1
                 structure.save()
@@ -331,7 +330,7 @@ def process_zip(file_descriptor, user, asset, update_structure, update_content):
                 continue
             records_created += 1
 
-            # add new dataRecrod
+            # add new dataRecord
             record = DataRecord(
                 asset=asset,
                 data_structure=structure,
@@ -386,7 +385,8 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
 
     data_structure.meta_settings = record.get("meta", {})
     if not preserve_file or not DataStructure.is_file_or_image(data_structure.type):
-        data_structure.default = process_data_structure_type(data_structure, name, record.get("value", ""))
+        value = process_data_structure_type(data_structure, name, record.get("value", ""))
+        data_structure.default = value
     data_structure.deprecated = False
     data_structure.save()
 

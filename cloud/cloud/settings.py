@@ -83,6 +83,7 @@ INSTALLED_APPS = (
 
 
 MIDDLEWARE = (
+    'cloud.middleware.HeaderMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -90,7 +91,8 @@ MIDDLEWARE = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'cloud.logger.CatchExceptionMiddleware',
+    'cloud.middleware.CatchExceptionMiddleware',
+    'cloud.middleware.FilterErrorMiddleware',
 )
 
 ROOT_URLCONF = 'cloud.urls'
@@ -123,7 +125,6 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
-                   'cms.models.DeploymentStatus',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -186,33 +187,37 @@ if cloud_db and cloud_db['host'] != '$DB_HOST':
         }
     }
 
-if not LOCAL_ENVIRONMENT:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
-        },
-        "global": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://redis:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        }
+REDIS_CACHE = {
+    "BACKEND": "django_redis.cache.RedisCache",
+    "TIMEOUT": None,
+    "OPTIONS": {
+        "CLIENT_CLASS": "django_redis.client.DefaultClient",
     }
-else:
-    CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.locmem.LocMemCache"
-        },
-        "global": {
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": "redis://localhost:6379/1",
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            }
-        }
-    }
+}
 
+if not LOCAL_ENVIRONMENT:
+    REDIS_CACHE['LOCATION'] = 'redis://redis:6379/1'
+else:
+    REDIS_CACHE['LOCATION'] = 'redis://localhost:6379/1'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "TIMEOUT": None
+    },
+    "push_config": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": 15 * 60,  # 15 minutes
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION']
+    },
+    "deployment": REDIS_CACHE,
+    "global": REDIS_CACHE,
+    "integrations": REDIS_CACHE,
+    "filters": REDIS_CACHE
+}
+
+DEPLOYMENT_READY = 'ready'
 
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
@@ -327,6 +332,7 @@ MEDIA_URL = '/integrations/'
 
 # START s3 config
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
+AWS_DEFAULT_ACL = 'public-read'
 
 S3_DOMAIN = conf['s3_domain'] if 's3_domain' in conf else '%s.s3.amazonaws.com'
 AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN % AWS_STORAGE_BUCKET_NAME
@@ -377,7 +383,7 @@ if not BROKER_URL:
 
 BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
-    'region': 'us-east-1'
+    'region': os.getenv('AWS_REGION', 'us-east-1')
 }
 
 RESULT_PERSISTENT = True
@@ -431,8 +437,8 @@ CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
-SESSION_COOKIE_AGE = 60 * 60 * 24 # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14 # 2 weeks
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
 
 USE_ASYNC_QUEUE = True
 
@@ -474,10 +480,10 @@ NOTIFICATIONS_CONFIG = {
         'engine': 'email',
         'queue': 'broadcast-notifications'
     },
-    'contact_sales': {
+    'sales_inquiry': {
         'engine': 'email'
     },
-    'contact_support': {
+    'technical_inquiry': {
         'engine': 'email'
     },
     'integration_feedback': {
@@ -510,7 +516,8 @@ NOTIFICATIONS_CONFIG = {
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."
-BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = DEBUG
+# Can not trust DEBUG because it is automatically set False for celery workers to prevent memory leak
+BROADCAST_NOTIFICATIONS_SUPERUSERS_ONLY = 'debug' in conf and conf['debug']
 NOTIFICATIONS_AUTO_SUBSCRIBE = False
 
 IPVD_CONNECT = 'https://cameras.networkoptix.com/api/v1/cacameras/'
@@ -541,6 +548,7 @@ DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
 fcm = conf.get('fcm')
 if fcm:
     PUSH_NOTIFICATIONS_SETTINGS = {
+        'CONFIG': 'notifications.conf.PushConfig',
         'FCM_API_KEY': fcm.get('priv_key'),
         'MAX_RETRIES': 3,
         'RETRY_INTERVAL': 20,

@@ -15,7 +15,7 @@ import {
       [(ngModel)]="user.remember_me"
       (click)?="onClick($event)"
       checked?
-      disabled?
+      disabled? | [disabled]='isDisabled'?
       required?>
 </nx-checkbox>
 */
@@ -43,6 +43,7 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     @Input() required: any;
     @Input() checked: any;
     @Input() disabled: any;
+    @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
     private touched: boolean;
@@ -81,8 +82,8 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
     }
 
     ngOnInit() {
-        this.disabled = (this.disabled !== undefined);  // optional param
         this.required = (this.required !== undefined);  // optional param
+        this.description = this.description || undefined;
 
         setTimeout(() => {
             // set state after model was updated
@@ -97,7 +98,8 @@ export class NxCheckboxComponent implements OnInit, ControlValueAccessor, Valida
      * Write a new (model) value to the element.
      */
     writeValue(value: any) {
-        if (value !== null && !this.disabled) {
+        if (value !== null && !this.disabled
+            || this.disabled && value === false) {
             this.value = value;
             this.state = this.cbxStates[this.value];
         }
