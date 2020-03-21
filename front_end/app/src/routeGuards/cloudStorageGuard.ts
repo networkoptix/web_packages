@@ -41,8 +41,7 @@ export class CloudStorageGuard implements CanActivate {
                     return this.system
                         .getInfoAndPermissions()
                         .then((system: NxSystem) => {
-                            const systemCloudStorageEnabled = this.CONFIG.cloudCapabilities.cloudStorageEnabled || system.canMerge;
-                            const canView = system.canUserViewCloudStorage() || systemCloudStorageEnabled;
+                            const canView = system.canUserViewCloudStorage();
                             if (!canView) {
                                 return this.router.navigate([`/systems/${systemId}`]);
                             }

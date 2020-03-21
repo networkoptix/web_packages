@@ -73,6 +73,7 @@ export interface NxSystemServer {
 
 interface SystemInterface {
     canMerge: boolean;
+    cloudStorageCapable: boolean;
     id: string;
     info: any;
     isOnline: boolean;
@@ -90,6 +91,7 @@ class SystemPermissions {
 class System implements SystemInterface {
     protected _isAvailable: boolean;
     canMerge: boolean;
+    cloudStorageCapable: boolean;
     id: string;
     info: any;
     isOnline: boolean;
@@ -631,8 +633,8 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        // Need to confirm if all admins have cloud storage access
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase()) || this.canMerge;
+        const userAccess =  this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return userAccess && this.cloudStorageCapable;
     }
 
     getInfoAndPermissions(useCache = true) {
@@ -645,6 +647,7 @@ export class NxSystem extends System implements OnDestroy {
                 }
 
                 if (!response) {
+                    // eslint-disable-next-line prefer-promise-reject-errors
                     return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
                 if (this.info) {
@@ -655,6 +658,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
+                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
                 this.systemInfo = this;
                 if (!this.userManager.accessRole) {

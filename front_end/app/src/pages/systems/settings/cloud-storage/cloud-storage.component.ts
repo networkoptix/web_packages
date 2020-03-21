@@ -71,10 +71,6 @@ export class NxCloudStorageComponent implements OnInit {
         return this.system$.value.currentUserEmail;
     }
 
-    get canViewCloudStorage() {
-        return this.system$.value.canUserViewCloudStorage();
-    }
-
     get isOwner() {
         return this.system$.value.isOwner;
     }
