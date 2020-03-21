@@ -223,7 +223,7 @@ DEPLOYMENT_READY = 'ready'
 if LOCAL_ENVIRONMENT:
     _HOST = 'https://dev3.cloud.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
+    conf["cloud_storage"]["url"] = f"{_HOST}/storages"
 
     # BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials

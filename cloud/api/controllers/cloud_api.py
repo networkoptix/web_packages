@@ -372,14 +372,14 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _delete(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/storage/{storage_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
     @lower_case_email
     def _move(email, password, storage_id, system_id):
-        request = f"{CLOUD_STORAGE_URL}/storage/{storage_id}/systems/"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/"
         body = {
             "id": system_id
         }
@@ -389,14 +389,14 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _remove_from_system(email, password, storage_id, system_id):
-        request = f"{CLOUD_STORAGE_URL}/storage/{storage_id}/systems/{system_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/{system_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
     @lower_case_email
     def create(email, password, system_id):
-        request = f"{CLOUD_STORAGE_URL}/storages/"
+        request = f"{CLOUD_STORAGE_URL}/"
         body = {
             "systems": [system_id],
             "totalSpace": CLOUD_STORAGE_SPACE
@@ -416,7 +416,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def list_system_storages(email, password, system_id):
-        request = f"{CLOUD_STORAGE_URL}/storages/"
+        request = f"{CLOUD_STORAGE_URL}/"
         params = {
             "system-id": system_id
         }
@@ -426,14 +426,14 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def list_cameras(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/storages/{storage_id}/cameras"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/cameras"
         return get_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
     @lower_case_email
     def merge(email, password, master_storage_id, slave_storage_id):
-        request = f"{CLOUD_STORAGE_URL}/storage/{master_storage_id}"
+        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}"
         body = {
             "id": slave_storage_id
         }
@@ -452,5 +452,5 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def statistics(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/storage/{storage_id}/statistics"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
         return get_wrapper(request, auth=HTTPDigestAuth(email, password))
