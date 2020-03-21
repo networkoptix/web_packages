@@ -18,13 +18,7 @@
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
                         <div class="w-100">
-                            <input
-                                type="text"
-                                id="storageUrl{{ i }}"
-                                name="storageUrl{{ i }}"
-                                [(ngModel)]="storage.url"
-                                class="form-control input-sm"
-                            />
+                            <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">{{storage.url}}</p>
                         </div>
                     </div>
                 </div>
@@ -38,11 +32,18 @@
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
                         <div class="w-100">
+                            <!-- This is weird, how to I make a newline in title??? -->
                             <div class="progress progress-custom" 
-                                title="Reserved: 30.00 GB, /nFree: 1.67 TB, /nOccupied: 117.83 GB, /nTotal: 1.79 TB">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: 50%" [attr.aria-valuenow]="storage.freeSpace" aria-valuemin="0" [attr.aria-valuemax]="storage.totalSpace"></div>
+title="Reserved: {{friendlyBytes(storage.reservedSpace.bits)}}, 
+Free: {{friendlyBytes(storage.freeSpace.bits)}}, 
+Occupied: {{friendlyBytes(storage.totalSpace.bits - storage.freeSpace.bits)}}, 
+Total: {{friendlyBytes(storage.totalSpace.bits)}}">
+                                <div class="progress-bar bg-info" 
+                                    role="progressbar" 
+                                    [style.width]="storage.freeSpace.bits / storage.totalSpace.bits | percent" 
+                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace.bits)"></div>
                                 <div class="progress-label d-flex justify-content-center align-items-center progress-text">
-                                    {{ friendlyBytes(storage.freeSpace) }} of {{ friendlyBytes(storage.totalSpace) }}
+                                    {{ friendlyBytes(storage.freeSpace.bits) }} of {{ friendlyBytes(storage.totalSpace.bits) }}
                                 </div>
                               </div>
                             <!-- <input
@@ -69,9 +70,17 @@
                                 type="number"
                                 id="reservedSpace{{ i }}"
                                 name="reservedSpace{{ i }}"
-                                [(ngModel)]="storage.reservedSpace"
+                                [(ngModel)]="storage.reservedSpace.gb"
+                                (change)="log($event)"
                                 class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number"
                             />
+                            <select
+                            id="reservedSpaceUnit{{ i }}"
+                            name="reservedSpaceUnit{{ i }}"
+                            class="form-control input-sm w-50"
+                            >
+                            <option *ngFor="let unit of units" value="unit">{{unit}}</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -84,15 +93,15 @@
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
                             <nx-checkbox
                                 componentId="isUsedForWriting{{ i }}"
                                 name="isUsedForWriting{{ i }}"
                                 [(ngModel)]="storage.isUsedForWriting"
                             >
                             </nx-checkbox>
-                            <span *ngIf="storage.isUsedForWriting">Writing is enabled for this storage</span>
-                            <span *ngIf="!storage.isUsedForWriting">Writing is disabled for this storage</span>
+                            <span *ngIf="storage.isUsedForWriting" class="pl-3">Writing is enabled for this storage</span>
+                            <span *ngIf="!storage.isUsedForWriting" class="pl-3">Writing is disabled for this storage</span>
                         </div>
                     </div>
                 </div>
@@ -106,9 +115,7 @@
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
                     >
                         <div class="w-100">
-                            <p
-                                class="form-control-static input-sm m-0 d-flex align-items-center"
-                            >
+                            <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">
                                 {{ storage.storageType }}
                             </p>
                         </div>

@@ -20,13 +20,25 @@ import { NxSettingsService } from '../../settings.service';
 import { NxMenuService } from '../../../../../components/menu/menu.service';
 import { NxUriService } from '../../../../../services/uri.service';
 
+export class BitConverter {
+    constructor(public bits: number) {}
+
+    private bitsGb = 1073741824;
+    private bitsTb = 1073741824 * 102.4
+
+    get gb(): number { return this.bits / this.bitsGb; }
+    set gb(gb: number) { this.bits = gb * this.bitsGb; }
+
+    get tb(): number { return this.bits / this.bitsTb; }
+    set tb(tb: number) { this.bits = tb * this.bitsTb; }
+}
+
 @AutoUnsubscribe()
 @Component({
     selector    : 'nx-server-advanced-storage-component',
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-
 export class NxSystemAdvancedStorageComponent implements OnDestroy {
     // TODO: Replace with request to system
     response = {
@@ -52,7 +64,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
                     url              : '/opt/networkoptix/mediaserver/var/data'
                 },
                 {
-                    freeSpace        : 183767954636,
+                    freeSpace        : 183767954636 * 3,
                     isBackup         : false,
                     isExternal       : false,
                     isOnline         : true,
@@ -66,7 +78,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
                     url              : '/opt/networkoptix/mediaserver/var/second'
                 },
                 {
-                    freeSpace        : 183767954636,
+                    freeSpace        : 183767954636 * 2,
                     isBackup         : false,
                     isExternal       : false,
                     isOnline         : true,
@@ -83,13 +95,34 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
         }
     }
 
-    storages = this.response.reply.storages;
+    storages = this.response.reply.storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, ...storage }) => {
+        const freeSpace = new BitConverter(free);
+        const reservedSpace = new BitConverter(reserved);
+        const totalSpace = new BitConverter(total);
+        return { ...storage, freeSpace, reservedSpace, totalSpace };
+    });
+
+    units = [
+        // 'B',
+        // 'kB',
+        // 'MB',
+        'GB',
+        'TB'
+        // 'PB',
+        // 'EB',
+        // 'ZB',
+        // 'YB'
+    ];
 
     constructor(@Inject(LOCALE_ID) private locale: string) {}
 
-    friendlyBytes(bits) {
-        const {locale} = this;
-        return fromBits(bits, { locale, roundTo: 1073741824 });
+    friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
+        const { locale } = this;
+        return fromBits(bits, { locale, roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824 });
+    }
+
+    log(event) {
+        console.log(event);
     }
 
     ngOnDestroy() {}
@@ -97,7 +130,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
 
 // Everything below this line copied from a utility on the cloud storage branch, remove once merged and import from transform utils
 
-const BYTE_UNITS: Byte[] = [
+export const BYTE_UNITS: Byte[] = [
     'B',
     'kB',
     'MB',
@@ -164,9 +197,9 @@ export const fromBits = (
     }
 
     const unitList = {
-        bit : BIT_UNITS,
-        byte: BYTE_UNITS,
-        bps : BPS_UNITS
+        bit  : BIT_UNITS,
+        byte : BYTE_UNITS,
+        bps  : BPS_UNITS
     };
     const UNITS = unitList[options.unitType];
     const base = options.unitType === 'byte' ? 1024 : 1000;
