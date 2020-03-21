@@ -70,16 +70,20 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                                 type="number"
                                 id="reservedSpace{{ i }}"
                                 name="reservedSpace{{ i }}"
-                                [(ngModel)]="storage.reservedSpace.gb"
-                                (change)="log($event)"
-                                class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number"
+                                min="0"
+                                [max]="storage.maxReserve[storage.reservedSpace.uom]"
+                                [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.009765625"
+                                [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
+                                class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"
                             />
                             <select
                             id="reservedSpaceUnit{{ i }}"
                             name="reservedSpaceUnit{{ i }}"
+                            [(ngModel)]="storage.reservedSpace.uom"
                             class="form-control input-sm w-50"
                             >
-                            <option *ngFor="let unit of units" value="unit">{{unit}}</option>
+                            <option selected value="GB">GB</option>
+                            <option value="TB">TB</option>
                             </select>
                         </div>
                     </div>

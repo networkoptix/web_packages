@@ -21,16 +21,35 @@ import { NxMenuService } from '../../../../../components/menu/menu.service';
 import { NxUriService } from '../../../../../services/uri.service';
 
 export class BitConverter {
-    constructor(public bits: number) {}
+    constructor(public bits: number, public uom?: 'GB' | 'TB') {}
 
     private bitsGb = 1073741824;
-    private bitsTb = 1073741824 * 102.4
+    private bitsTb = 1073741824 * 1024
 
-    get gb(): number { return this.bits / this.bitsGb; }
-    set gb(gb: number) { this.bits = gb * this.bitsGb; }
+    get GB(): number { return this.bits / this.bitsGb; }
+    set GB(gb: number) { this.bits = gb * this.bitsGb; }
 
-    get tb(): number { return this.bits / this.bitsTb; }
-    set tb(tb: number) { this.bits = tb * this.bitsTb; }
+    get TB(): number { return this.bits / this.bitsTb; }
+    set TB(tb: number) { this.bits = tb * this.bitsTb; }
+
+    get unitsInCurrentUom() { return this[this.uom]; }
+    set unitsInCurrentUom(units) { this[this.uom] = units; }
+}
+
+export class FreeSpace {
+    private freeExcludeReserved: BitConverter
+
+    constructor(free: number, private reserved: BitConverter) {
+        this.freeExcludeReserved = new BitConverter(free + reserved.bits);
+    }
+
+    get bits() {
+        return this.freeExcludeReserved.bits - this.reserved.bits;
+    }
+
+    set bits(value) {
+        this.reserved.bits = value;
+    }
 }
 
 @AutoUnsubscribe()
@@ -96,10 +115,11 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
     }
 
     storages = this.response.reply.storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, ...storage }) => {
-        const freeSpace = new BitConverter(free);
-        const reservedSpace = new BitConverter(reserved);
+        const reservedSpace = new BitConverter(reserved, 'GB');
         const totalSpace = new BitConverter(total);
-        return { ...storage, freeSpace, reservedSpace, totalSpace };
+        const freeSpace = new FreeSpace(free, reservedSpace);
+        const maxReserve = new BitConverter(free + reservedSpace.bits);
+        return { ...storage, freeSpace, reservedSpace, totalSpace, maxReserve };
     });
 
     units = [
