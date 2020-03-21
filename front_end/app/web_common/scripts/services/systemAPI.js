@@ -232,7 +232,7 @@ angular.module('nxCommon')
         ServerConnection.prototype.getServerTimes = function(){
             return this._get('/ec2/getTimeOfServers');
         };
-    
+
         ServerConnection.prototype.getSystemTime = function () {
             return this._get('/api/synchronizedTime');
         };
@@ -311,22 +311,22 @@ angular.module('nxCommon')
                     cameraId:cleanId(cameraId)
                 },
                 endpoint = '/ec2/cameraThumbnail';
-            
+
             if (time) {
                 data.time = time;
             } else {
                 endpoint += '?ignoreExternalArchive';
                 data.time = 'LATEST';
             }
-            
+
             if (width) {
                 data.width = width;
             }
-            
+
             if (height) {
                 data.height = height;
             }
-            
+
             return this._setGetParams(endpoint, data, this.systemId && this.authGet());
         };
         ServerConnection.prototype.hlsUrl = function(cameraId, position, resolution){
@@ -378,7 +378,7 @@ angular.module('nxCommon')
         };
         /* End of Working with archive*/
 
-        ServerConnection.prototype.setCameraPath = function(cameraId){
+        ServerConnection.prototype.setCameraPath = function(cameraId, replaceURL){
             var systemLink = '',
                 route = ($location.path().indexOf('/embed') === 0) ? '/embed/' : '';
 
@@ -390,6 +390,9 @@ angular.module('nxCommon')
                 }
             }
             $location.path(systemLink + '/view/' + cleanId(cameraId), false);
+            if (replaceURL) {
+                $location.replace();
+            }
         };
 
         if(Config.webadminSystemApiCompatibility){

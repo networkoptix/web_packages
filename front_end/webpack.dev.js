@@ -15,19 +15,20 @@ const localStatic = `https://${host}:${port}`;
 module.exports = merge(common, {
     devtool  : 'cheap-module-eval-source-map',
     devServer: {
+        disableHostCheck  : true,
         contentBase       : './dist',
         hot               : true,
         host              : host,
         port              : port,
         proxy             : [
             // Uncomment to test local translation strings
-            // {
-            //     context: ['/api/utils/language'],
-            //     target: localStatic,
-            //     pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
-            //     changeOrigin: true,
-            //     secure: false
-            // },
+            {
+                context: ['/api/utils/language'],
+                target: localStatic,
+                pathRewrite: {'^/api/utils/language': 'language_compiled.json'},
+                changeOrigin: true,
+                secure: false
+            },
             {
                 context: [ '/api/', '/gateway/' ],
                 target : cloudInstance,

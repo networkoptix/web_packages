@@ -24,13 +24,18 @@ def get_article(request, url_param, **kwargs):
         article = Asset.objects.filter(id=article_id).first()
 
     else:
-        review = AssetCustomizationReview.objects.filter(
+        article_review = AssetCustomizationReview.objects.filter(
             version__asset__datarecord__value=url_param, version__asset__datarecord__data_structure__name='url',
             version__asset__asset_type__type=AssetType.ASSET_TYPES.article,
             state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=settings.CUSTOMIZATION
         ).order_by('-reviewed_date').first()
-        if review:
-            article = review.version.asset
+        if article_review:
+            # Check that that the asset's current url still matches
+            article = article_review.version.asset
+            version = article.version_id(settings.CUSTOMIZATION)
+            url_ds = DataStructure.objects.get(context__asset_type=article.asset_type, name='url')
+            if url_ds.find_actual_value(asset=article, version_id=version) != url_param:
+                article = None
 
     # If article is not found, then return a 404
     if article:

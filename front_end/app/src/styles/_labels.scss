@@ -1,14 +1,13 @@
 @import '../../styles/custom/custom_palette';
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
+@import '../styles/typography';
 
 label {
-    font-family   : $font-family-regular;
-    font-size     : rem(13px);
+    @extend #regular13;
     line-height   : 16px;
     margin-bottom : 8px;
-    color         : $dark9;
-    
+
     &[disabled] {
         opacity : .3;
         cursor  : default;

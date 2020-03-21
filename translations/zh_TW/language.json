@@ -2,99 +2,6 @@
   "language": "zh_TW",
   "language_name": "繁体中文",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "歡迎來到",
-    "register": "新建帳號",
-    "changePassword": "更改密碼 -",
-    "account": "帳號設定 -",
-    "systems": "系統 -",
-    "system": "系統 -",
-    "systemShare": "共用系統 -",
-    "activate": "啟動帳號 -",
-    "activateSent": "啟動帳號 -",
-    "activateSuccess": "帳號啟動 -",
-    "activateCode": "啟動帳號 -",
-    "restorePassword": "重置密碼 -",
-    "restorePasswordSuccess": "密碼已儲存 -",
-    "restorePasswordCode": "重置密碼 -",
-    "view": "查看攝影機 - ",
-    "debug": "除錯",
-    "login": "登入 -",
-    "download": "下載 %VMS_NAME%",
-    "downloadPlatform": "下載 %VMS_NAME% ",
-    "pageNotFound": "找不到頁面"
-  },
-  "systemStatuses": {
-    "activated": "啟動",
-    "incompatible": "不相容",
-    "merging": "合併中",
-    "notActivated": "未啟動",
-    "online": "線上",
-    "offline": "離線",
-    "unavailable": "不可用的"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "停用",
-      "description": "使用者被停用, 無法登入到系統"
-    },
-    "Owner": {
-      "label": "擁有者",
-      "description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
-    },
-    "Viewer": {
-      "label": "瀏覽者",
-      "description": "可以瀏覽即時影像和回放錄影資料"
-    },
-    "Live Viewer": {
-      "label": "即時影像瀏覽者",
-      "description": "只能瀏覽即時影像"
-    },
-    "Advanced Viewer": {
-      "label": "進階瀏覽者",
-      "description": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等"
-    },
-    "Administrator": {
-      "label": "管理者",
-      "description": "不受限的權限包括共用的能力"
-    },
-    "Custom": {
-      "label": "自訂",
-      "description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
-    },
-    "cloudAdmin": {
-      "label": "管理者",
-      "description": "可以配置系統和共用它"
-    },
-    "customRole": {
-      "label": "自訂角色",
-      "description": "在系統中指定的自訂使用者角色"
-    },
-    "owner": {
-      "label": "擁有者",
-      "description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
-    },
-    "viewer": {
-      "label": "瀏覽者",
-      "description": "可以瀏覽即時影像和回放錄影資料"
-    },
-    "liveViewer": {
-      "label": "即時影像瀏覽者",
-      "description": "只能瀏覽即時影像"
-    },
-    "advancedViewer": {
-      "label": "進階瀏覽者",
-      "description": "可以瀏覽即時影像, 回放錄影資料, 設定攝影機, 控制 PTZ 等"
-    },
-    "custom": {
-      "label": "自訂",
-      "description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "無法發送確認郵件",
@@ -128,7 +35,7 @@
     "passwordMismatch": "密碼不正確",
     "cantEditYourself": "不允許變更自己的權限",
     "cantEditAdmin": "此使用者具有管理員權限",
-    "cantOpenClient": "%VMS_NAME% 應用程式未檢測到.<a href=\"/download\"> 下載</a>",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
     "lostConnection": "與 {{systemName}} 的連線斷開了",
     "thisSystem": "系統",
     "oldSafariNotSupported": "不支持10歲以上的Safari版本",
@@ -137,41 +44,6 @@
     "INCOMPATIBLE": "系統有不同的軟體版本。請將它們更新到 <a href=\"/download\">最新版本</a>。",
     "FAIL": "系統 <strong>{{failedSystem}}</strong> 目前無法連上。<br>請稍後再試一次, 或聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
     "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。"
-  },
-  "system": {
-    "yourSystem": "您的系統",
-    "mySystemSearch": "我的",
-    "unavailable": "無法連接至系統",
-    "offline": "系統處於離線狀態",
-    "openClient": "在 %VMS_NAME% 中打開",
-    "openClientNoSystem": "開啟 %VMS_NAME%",
-    "confirmMergeAction": "合併",
-    "mergeSystemTitle": "合併系統",
-    "confirmRenameTitle": "系統名稱",
-    "confirmRenameAction": "儲存",
-    "successRename": "系統名稱已儲存",
-    "confirmDisconnectTitle": "是否從 %CLOUD_NAME% 中斷開系統?",
-    "confirmDisconnectAction": "斷線",
-    "confirmUnshareFromMe": "您將無法再登入此系統。",
-    "confirmUnshareFromMeTitle": "將您登出系統?",
-    "confirmUnshareFromMeAction": "斷線",
-    "confirmUnshareTitle": "是否要移除使用者？",
-    "confirmUnshareAction": "移除",
-    "successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
-    "successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
-    "mergeFailed": "系統合併失敗",
-    "mergeStart": "系統開始合併中",
-    "mergeSuccess": "系統合併完成",
-    "permissionsRemoved": "權限從 {{email}} 被移除",
-    "unknownName": "未知的系統名稱（由雲合併引起）"
-  },
-  "regActions": {
-    "passwordLabel": "密碼",
-    "createAccount": "新建帳號"
-  },
-  "header": {
-    "allSystems": "所有系統",
-    "systems": "系統"
   },
   "common": {
     "cameraLinks": {
@@ -211,21 +83,20 @@
     "voiceCommands": {
       "play": "播放",
       "pause": "暫停",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "即時|顯示即時",
+      "view": "瀏覽 + [攝影機名稱]",
+      "search": "搜尋+ [搜索欄的文字]",
       "clear search": "清除搜尋",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "展開伺服器+ [伺服器名稱]",
+      "collapse server": "崩潰伺服器+ [伺服器名稱]",
       "expand all servers": "展開所有伺服器",
       "collapse all servers": "隱藏所有伺服器",
       "stop listening": "停止聽取",
-      "help": "help | show commands"
+      "help": "幫助|顯示命令"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "建議您進行諮詢",
-    "b_support": "支援",
-    "c_proceeding": "在繼續執行之前。"
+  "system": {
+    "offline": "系統處於離線狀態",
+    "unavailable": "無法連接至系統"
   }
 }

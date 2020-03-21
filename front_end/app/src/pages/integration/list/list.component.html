@@ -7,7 +7,7 @@
 </div>
 
 <div class="row p-0 m-0" *ngIf="list && list.length">
-    <div *ngFor="let plugin of list" class="list col-12 col-md-6 col-lg-4 col-xxl-3 p-2">
+    <div *ngFor="let plugin of list" name="plugin" class="list col-12 col-md-6 col-lg-4 col-xxl-3 p-2">
 
         <a class="plugin m-0"
            [href]="plugin.link">
@@ -41,18 +41,18 @@
 
                 <footer>
                     <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.pending">
-                        <span class="badge badge-danger" translate>In Review</span>
+                        <nx-tag type="danger" translate>In Review</nx-tag>
                     </div>
                     <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.draft">
-                        <span class="badge badge-danger" translate>Draft</span>
+                        <nx-tag type="danger" translate>Draft</nx-tag>
                     </div>
                     <div *ngFor="let type of plugin.information.type">
                         <div class="float-left m-0 mt-1 mr-1" *ngIf="type.id != 'mine'">
-                            <span class="badge">{{type.label}}</span>
+                            <nx-tag>{{type.label}}</nx-tag>
                         </div>
                     </div>
                     <div class="float-left m-0 mt-1 mr-1" *ngIf="plugin.mine">
-                        <span class="badge badge-brand" translate>Mine</span>
+                        <nx-tag type="brand" translate>Mine</nx-tag>
                     </div>
                 </footer>
             </nx-block>

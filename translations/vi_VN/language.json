@@ -1,100 +1,7 @@
 {
   "language": "vi_VN",
-  "language_name": "Tiếng Việt",
+  "language_name": "TÊN NGÔN NGỮ",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Chào mừng bạn đến",
-    "register": "Tạo tài khoản tại",
-    "changePassword": "Đổi mật khẩu -",
-    "account": "Cài đặt tài khoản -",
-    "systems": "Hệ thống -",
-    "system": "Hệ thống -",
-    "systemShare": "Chia sẻ Hệ thống -",
-    "activate": "Kích hoạt tài khoản -",
-    "activateSent": "Kích hoạt tài khoản -",
-    "activateSuccess": "Tài khoản đã kích hoạt -",
-    "activateCode": "Kích hoạt tài khoản -",
-    "restorePassword": "Đặt lại mật khẩu -",
-    "restorePasswordSuccess": "Đã lưu mật khẩu -",
-    "restorePasswordCode": "Đặt lại mật khẩu -",
-    "view": "Xem camera ",
-    "debug": "Gỡ rối",
-    "login": "Đăng nhập -",
-    "download": "Tải xuống %VMS_NAME%",
-    "downloadPlatform": "Tải xuống %VMS_NAME% cho ",
-    "pageNotFound": "Không tìm thấy trang"
-  },
-  "systemStatuses": {
-    "activated": "đã kích hoạt",
-    "incompatible": "không tương thích",
-    "merging": "đang tích hợp",
-    "notActivated": "chưa kích hoạt",
-    "online": "trực tuyến",
-    "offline": "ngoại tuyến",
-    "unavailable": "không khả dụng"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Vô hiệu hóa",
-      "description": "Người dùng bị vô hiệu và không thể đăng nhập vào Hệ thống"
-    },
-    "Owner": {
-      "label": "Chủ nhân",
-      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
-    },
-    "Viewer": {
-      "label": "Người xem",
-      "description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
-    },
-    "Live Viewer": {
-      "label": "Xem trực tiếp",
-      "description": "Chỉ có thể xem video trực tiếp"
-    },
-    "Advanced Viewer": {
-      "label": "Trình xem nâng cao",
-      "description": "Có thể xem video trực tiếp, duyệt kho lưu trữ, kiểm soát PTZ"
-    },
-    "Administrator": {
-      "label": "Giám sát viên",
-      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ"
-    },
-    "Custom": {
-      "label": "Tùy chỉnh",
-      "description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
-    },
-    "cloudAdmin": {
-      "label": "Giám sát viên",
-      "description": "Có thể cấu hình Hệ thống và chia sẻ nó"
-    },
-    "customRole": {
-      "label": "Tùy chỉnh role",
-      "description": "Thiết lập người dùng được chỉ định trong Hệ thống"
-    },
-    "owner": {
-      "label": "Chủ nhân",
-      "description": "Truy cập không giới hạn bao gồm khả năng chia sẻ và kết nối / ngắt kết nối Hệ thống từ đám mây"
-    },
-    "viewer": {
-      "label": "Người xem",
-      "description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ"
-    },
-    "liveViewer": {
-      "label": "Xem trực tiếp",
-      "description": "Chỉ có thể xem video trực tiếp"
-    },
-    "advancedViewer": {
-      "label": "Trình xem nâng cao",
-      "description": "Có thể xem video trực tiếp, duyệt các kho lưu trữ, cấu hình camera, điều khiển PTZ vv"
-    },
-    "custom": {
-      "label": "Tùy chỉnh",
-      "description": "Sử dụng ứng dụng Khách hàng %VMS_NAME% để thiết lập quyền tùy chỉnh"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Không thể gửi Email xác nhận",
@@ -128,7 +35,7 @@
     "passwordMismatch": "Sai mật khẩu",
     "cantEditYourself": "Không cho phép thay đổi quyền riêng tư",
     "cantEditAdmin": "Người dùng này có quyền quản trị viên",
-    "cantOpenClient": "Ứng dụng %VMS_NAME% ứng dụng không tìm thấy. <a href=\"/download\">Tải xuống</a>",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
     "lostConnection": "Kết nối với {{systemName}} bị mất",
     "thisSystem": "hệ thống",
     "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
@@ -138,47 +45,12 @@
     "FAIL": "Hệ thống <strong>{{failedSystem}}</strong> hiện không thể truy cập được.<br>Vu lòng thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\"> để được hỗ trợ</a>.",
     "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>."
   },
-  "system": {
-    "yourSystem": "Hệ thống của bạn",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Hệ thống không thể truy cập được",
-    "offline": "Hệ thống offline",
-    "openClient": "Mở trong %VMS_NAME%",
-    "openClientNoSystem": "Mở %VMS_NAME%",
-    "confirmMergeAction": "Gộp lại",
-    "mergeSystemTitle": "Hợp nhất hệ thống",
-    "confirmRenameTitle": "Tên hệ thống",
-    "confirmRenameAction": "Tiết kiệm",
-    "successRename": "Đã lưu tên hệ thống",
-    "confirmDisconnectTitle": "Hệ thống đã ngắt kết nối từ %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Ngắt kết nối",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Ngắt kết nối",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Tẩy",
-    "successDisconnected": "Hệ thống được ngắt kết nối thành công từ %CLOUD_NAME%",
-    "successDeleted": "Tài khoản {{systemName}} đã xóa thành công từ hệ thống của bạn",
-    "mergeFailed": "Hợp nhất hệ thống không thành công",
-    "mergeStart": "Các hệ thống đã được hợp nhất",
-    "mergeSuccess": "Hoàn thành hợp nhất hệ thống",
-    "permissionsRemoved": "Các quyền đã bị xóa khỏi {{email}}",
-    "unknownName": "Tên không xác định cho hệ thống (do hợp nhất Cloud)"
-  },
-  "regActions": {
-    "passwordLabel": "Mật khẩu",
-    "createAccount": "Tạo tài khoản"
-  },
-  "header": {
-    "allSystems": "Tất cả Hệ thống",
-    "systems": "Hệ thống"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Luồng tốc độ cao",
       "lowStream": "Luồng tốc độ thấp",
       "transcoding": "Đang chuyển mã",
-      "unknown": "Không biết",
+      "unknown": "Không xác định",
       "copyToClipboard": "chép vào bảng nháp",
       "copyDefaultText": "sao chép",
       "copyActiveText": "sao chép vào clipboard"
@@ -203,9 +75,9 @@
     },
     "searchCamPlaceholder": "Tìm kiếm",
     "resolution": {
-      "auto": "Tự động",
-      "high": "Cao (H)",
-      "low": "Thấp (L)"
+      "auto": "tự động",
+      "high": "cao (H)",
+      "low": "Cao (H)"
     },
     "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
     "voiceCommands": {
@@ -223,9 +95,8 @@
       "help": "help | show commands"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Chúng tôi khuyên bạn nên tham khảo ý kiến với",
-    "b_support": "hỗ trợ",
-    "c_proceeding": "trước khi tiến hành."
+  "system": {
+    "offline": "Hệ thống offline",
+    "unavailable": "Hệ thống không thể truy cập được"
   }
 }

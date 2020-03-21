@@ -1,0 +1,3 @@
+Hej, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) har följande försäljningsfråga om {{ message.asset }}:
+<pre>{{ message.message }}</pre>

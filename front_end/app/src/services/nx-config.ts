@@ -17,7 +17,6 @@ export class NxConfigService {
 
         this.config = {
             gatewayUrl    : '/gateway',
-            googleTagsCode: 'GTM-5MRNWP',
             apiBase       : '/api',
             realm         : 'VMS',
             cacamerasUrl  : 'https://cameras.networkoptix.com/api/v1/cacameras/',
@@ -25,6 +24,7 @@ export class NxConfigService {
             cacheTimeout     : 20 * 1000, // Cache lives for 30 seconds
             updateInterval   : 30 * 1000, // Update content on pages every 30 seconds
             openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
+            openClientError: 'notVisited',
 
             openMobileClientTimeout  : 300, // 300ms for mobile browsers
             timelineMouseEventTimeout: 300, // milliseconds
@@ -65,30 +65,28 @@ export class NxConfigService {
                     'notActivated'
                 ],
                 default     : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 notActivated: {
-                    style: 'badge-danger'
+                    style: 'danger'
                 },
                 activated   : {
-                    style: 'badge-info'
+                    style: 'info'
                 },
                 online      : {
-                    style: 'badge-success'
+                    style: 'success'
                 },
                 offline     : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 unavailable : {
-                    style: 'badge-default'
+                    style: 'default'
                 },
                 master      : 'master',
                 slave       : 'slave'
             },
-            systemCapabilities            : {
-                cloudMerge: 'cloudMerge'
-            },
             accessRoles                   : {
+                adminAccess              : ['cloudadmin', 'owner', 'administrator'],
                 unshare                  : 'none',
                 default                  : 'Viewer',
                 disabled                 : 'disabled',
@@ -187,8 +185,16 @@ export class NxConfigService {
                     sdk    : {
                         name    : 'sdk',
                         os      : '',
-                        appTypes: []
+                        appTypes: ['universal']
                     }
+                },
+                platformMatch: {
+                    unix: 'Linux',
+                    linux: 'Linux',
+                    mac: 'MacOS',
+                    windows: 'Windows',
+                    arm: 'ARM',
+                    skd: 'SDK'
                 }
             },
             icons                         : {
@@ -199,7 +205,8 @@ export class NxConfigService {
                     { name: 'arm', src: '/static/icons/integration_tile_os_arm.svg' },
                     { name: 'linux', src: '/static/icons/integration_tile_os_linux.svg' },
                     { name: 'windows', src: '/static/icons/integration_tile_os_windows.svg' }
-                ]
+                ],
+                dir: '/static/icons/',
             },
             webclient                     : {
                 useServerTime              : true,
@@ -227,8 +234,8 @@ export class NxConfigService {
                 chunksToCheckFatal         : 30, // This is used in short cache when requesting chunks for jumpToPosition in timeline directive
                 skipFramesRenderingTimeline: true
             },
-            messageTopics                 : {
-                integration         : ['contact_sales', 'contact_support', 'integration_feedback'],
+            messageSubjects                : {
+                integration         : ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
                 ipvd_feedback_page  : ['ipvd_feedback_page'],
                 ipvd_feedback_device: ['ipvd_feedback_device']
             },
@@ -273,6 +280,7 @@ export class NxConfigService {
                 carouselImageLeave: '0.25s ease-out'
             },
             ipvd: {
+                pagerMaxSizeSmall               : 2,
                 pagerMaxSize                    : 4,
                 firmwaresToShow                 : 4,
                 analyticsToShow                 : 4,
@@ -285,6 +293,9 @@ export class NxConfigService {
             search: {
                 maxLength   : 200,
                 debounceTime: 500 // ms
+            },
+            systemHealthMenu: {
+                baseUrl: '/health/'
             },
             systemMenu  : {
                 baseUrl: '/systems/',
@@ -320,6 +331,69 @@ export class NxConfigService {
                     desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
                 }
             },
+            healthMonitoring: {
+                valueFormats: {
+                    '%': {multiplier: 100, decimals: 0},
+                    'TB': {multiplier: 1 / 1024 ** 4},
+                    'GB': {multiplier: 1 / 1024 ** 3},
+                    'MB': {multiplier: 1 / 1024 ** 2},
+                    'KB': {multiplier: 1 / 1024},
+                    'B': {multiplier: 1},
+                    // Start deprecated formats
+                    'GBps': {display: 'GB/s', multiplier: 1 / 1000 ** 3, decimals: 2},
+                    'MBps': {display: 'MB/s', multiplier: 1 / 1000 ** 2, decimals: 2},
+                    'KBps': {display: 'kB/s', multiplier: 1 / 1000, decimals: 2},
+                    'Bps': {display: 'B/s', multiplier: 1, decimals: 0},
+                    'Gbps': {display: 'Gbit/s', multiplier: 1 / 1000 ** 3, decimals: 2},
+                    'Mbps': {display: 'Mbit/s', multiplier: 1 / 1000 ** 2, decimals: 2},
+                    'kbps': {display: 'kbit/s', multiplier: 1 / 1000, decimals: 2},
+                    'bps': {display: 'bit/s', multiplier: 1, decimals: 0},
+                    'Transactions/s': {multiplier: 1, decimals: 1},
+                    // End deprecated formats
+                    'TB/s': {multiplier: 1 / 1024 ** 4},
+                    'GB/s': {multiplier: 1 / 1024 ** 3},
+                    'MB/s': {multiplier: 1 / 1024 ** 2},
+                    'KB/s': {multiplier: 1 / 1024},
+                    'B/s': {multiplier: 1},
+
+                    'Tbit': {multiplier: 8 * (1 / 1000 ** 4)},
+                    'Gbit': {multiplier: 8 * (1 / 1000 ** 3)},
+                    'Mbit': {multiplier: 8 * (1 / 1000 ** 2)},
+                    'Kbit': {multiplier: 8 * (1 / 1000)},
+                    'bit': {multiplier: 8},
+
+                    'Tbit/s': {multiplier: 8 * (1 / 1000 ** 4)},
+                    'Gbit/s': {multiplier: 8 * (1 / 1000 ** 3)},
+                    'Mbit/s': {multiplier: 8 * (1 / 1000 ** 2)},
+                    'Kbit/s': {multiplier: 8 * (1 / 1000)},
+                    'bit/s': {multiplier: 8},
+
+                    'TPix/s': {multiplier: 1 / 1000 ** 4},
+                    'GPix/s': {multiplier: 1 / 1000 ** 3},
+                    'MPix/s': {multiplier: 1 / 1000 ** 2},
+                    'KPix/s': {multiplier: 1 / 1000},
+                    'Tr/s': {multiplier: 1},
+                },
+                classFormats: {
+                    'resource': 'long-text',
+                    'longText': 'long-text',
+                    'shortText': 'short-text',
+                    'text': 'text',
+                    'number': '',
+                    'GB': 'volume-metric',
+                    'KB': 'volume-metric',
+                    'MB': 'volume-metric',
+                    'TB': 'volume-metric',
+                    '%': 'percent',
+                    'Mpix/s': '',
+                    'MB/s': '',
+                    'Mbit/s': '',
+                    'KB/s': '',
+                    'Kbit/s': '',
+                    'Tr/s': '',
+                    'unset': 'no-max-width'
+                }
+            },
             myIntegrationTagId            : 'mine',
             companyLink                   : '',
             companyName                   : '',
@@ -329,6 +403,7 @@ export class NxConfigService {
             integrationFilterItems        : '',
             integrationFilterLimitation   : '',
             integrationStoreEnabled       : '',
+            healthMonitoringEnabled       : '',
             publicDownloads               : '',
             publicReleases                : '',
             trafficRelayHost              : '',
@@ -337,6 +412,8 @@ export class NxConfigService {
             cloudName                     : '',
             vmsName                       : '',
             pushConfig                    : '',
+            googleTagManagerId            : '',
+            systemThrottleTime            : 5000,
         };
     }
 

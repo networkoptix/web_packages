@@ -1,4 +1,4 @@
-<nx-block first-element *ngIf="plugin.information || plugin.overview">
+<nx-block first-element *ngIf="plugin.information || plugin.overview" name="howItWorks">
     <header translate>
         How it works
     </header>
@@ -16,7 +16,7 @@
     </nx-section>
 </nx-block>
 
-<nx-block *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew"
+<nx-block *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew" name="whatsNew"
           class="d-block mt-3">
     <header translate>
         What's New?

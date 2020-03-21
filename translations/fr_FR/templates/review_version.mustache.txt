@@ -2,7 +2,7 @@ Il y a une nouvelle version pour {{ message.asset }}({{message.asset_type}}) à 
 
 Cliquez sur le lien pour évaluer le brouillon {{ message.id }} pour {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Lien vers révision: {{ config.portal_url }}admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
 Sur cette page, vous pouvez
 1) Créer un aperçu pour voir les changements récents.

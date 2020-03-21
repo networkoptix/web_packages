@@ -110,12 +110,25 @@ def log_push_result(notification_object, message, level=logging.INFO, device_tok
     _write_push_result(notification_object, result_data)
 
 
-def get_system(notification_object, request_data):
+def get_system_with_users(notification_object, request_data):
+    # If system credentials used, system should be in request_data
+    system = None
     try:
-        system = cloud_api.System.get(
-            request_data['username'], request_data['password'], notification_object.raw_system_id
-        )
-        return system['systems'][0]
+        if 'system' in request_data:
+            if request_data['system']['id'] == notification_object.raw_system_id:
+                system = request_data['system']
+            else:
+                log_push_result(notification_object, 'System credentials do not match target system')
+                return None
+        else:
+            system = cloud_api.System.get(
+                request_data['username'], request_data['password'], notification_object.raw_system_id
+            )
+            system = system['systems'][0]
+
+        if system:
+            users = cloud_api.System.users(request_data['username'], request_data['password'], system['id'])
+            system['users'] = {user.get('accountEmail', None) for user in users['sharing']}
     except Exception as exception:
         if isinstance(exception, exceptions.APINotAuthorisedException):
             log_push_result(notification_object, 'Invalid cloud credentials for system')
@@ -127,6 +140,8 @@ def get_system(notification_object, request_data):
         else:
             raise exception
 
+    return system
+
 
 def process_push_response(response, notification_object, dry_run=False):
     resend_tokens = []
@@ -136,9 +151,8 @@ def process_push_response(response, notification_object, dry_run=False):
             if 'error' in result:
                 token = result['original_registration_id']
                 if result['error'] in ('NotRegistered', 'MissingRegistration', 'InvalidRegistration'):
-                    PushDevice.objects.filter(registration_id=token).first().delete()
                     log_push_result(
-                        notification_object, f'FCM Error: {result["error"]}. Token no longer valid, deleting device',
+                        notification_object, f'FCM Error: {result["error"]}. Token no longer valid, disabling device',
                         device_token=token
                     )
                 else:
@@ -154,11 +168,12 @@ def process_push_response(response, notification_object, dry_run=False):
 def set_subscriptions_from_targets(notification_object, request_data):
     targets = set(json.loads(notification_object.raw_targets))
     system_id = notification_object.raw_system_id
-    system = get_system(notification_object, request_data)
+    system = get_system_with_users(notification_object, request_data)
 
     if not system:
         return False
 
+    targets = targets.intersection(system['users'])
     target_accounts = Account.objects.filter(email__in=targets).distinct()
 
     for account in target_accounts:
@@ -169,25 +184,10 @@ def set_subscriptions_from_targets(notification_object, request_data):
     for target in targets:
         log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
 
-    auto_active = cloud_portal_customization_cache(
-        settings.CUSTOMIZATION, 'config'
-    )['push_subscription_auto_active']
-
-    # Check all related devices for valid tokens
-    device_check_response = PushDevice.objects.filter(user__in=target_accounts).send_message(
-        'Token check', title='Token check', dry_run=True
-    )
-    process_push_response(device_check_response, notification_object, dry_run=True)
-
-    devices_without_sub = PushDevice.objects.filter(user__in=target_accounts, user__is_active=True).exclude(
-        pushsubscription__system_id=system_id).select_related('user')
-    for device in devices_without_sub:
-        active = system['ownerAccountEmail'] == device.user.email or auto_active
-        PushSubscription.objects.create(system_id=system_id, account=device.user, active=active, device=device)
-
-    matching_subscriptions = PushSubscription.objects.filter(
-        system_id=system_id, account__in=target_accounts, active=True, account__is_active=True
+    matching_devices = PushDevice.objects.filter(
+        subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
+        active=True, user__is_active=True
     ).distinct()
-    notification_object.subscriptions.set(matching_subscriptions)
+    notification_object.devices.set(matching_devices)
 
-    return notification_object.subscriptions.exists()
+    return notification_object.devices.exists()

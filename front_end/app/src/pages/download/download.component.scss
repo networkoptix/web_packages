@@ -2,6 +2,7 @@
 @import '../../../../app/styles/custom/custom_palette';
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
+@import '../../styles/typography';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -31,6 +32,47 @@
 
     .mobile-link {
         margin-right : 0.5rem;
+    }
+}
+
+.download-link {
+    display           : inline-block;
+    width             : 32px;
+    height            : 32px;
+    background-repeat : no-repeat;
+    background-size   : 32px 32px;
+
+    background-image  : url('/static/images/download.png') !important;
+
+    @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+        background-image : url('/static/images/download@2x.png') !important;
+    }
+}
+
+.mobile-link {
+    display           : inline-block;
+    width             : 140px;
+    height            : 40px;
+    position          : relative;
+    background-repeat : no-repeat;
+    background-size   : 140px 40px;
+
+    margin-right      : 10px;
+
+    &.iOS, &.ios {
+        background-image : url('/static/images/appstore.png') !important;
+
+        @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+            background-image : url('/static/images/appstore@2x.png') !important;
+        }
+    }
+
+    &.Android, &.android {
+        background-image : url('/static/images/googleplay.png') !important;
+
+        @media only screen and (-webkit-min-device-pixel-ratio : 2), only screen and (min-device-pixel-ratio : 2) {
+            background-image : url('/static/images/googleplay@2x.png') !important;
+        }
     }
 }
 
@@ -66,7 +108,7 @@
 
     .media-body {
         width : auto;
-    
+
         h3 {
             margin : 0;
         }
@@ -90,9 +132,7 @@
 }
 
 h2.version-number {
+    @extend #medium32;
     line-height : 34px;
-    font-weight : bold;
-    font-size   : 32px;
     margin      : 0 0 8px 0;
-    font-family : $font-family-medium;
 }

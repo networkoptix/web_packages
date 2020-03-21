@@ -1,11 +1,11 @@
 from django.core.management.base import BaseCommand
-from cms.models import DeploymentStatus
+from django.core.cache import caches
+from cloud.settings import DEPLOYMENT_READY
 
 
 class Command(BaseCommand):
-    help = "Set deployment ready status for False. Used to make sure filldata runs after readstructure."
+    help = "Remove ready from the deployment cache before anything else runs."
 
     def handle(self, *args, **options):
-        read_structure_lock, created = DeploymentStatus.objects.get_or_create(name='ReadStructureLock')
-        read_structure_lock.ready = False
-        read_structure_lock.save()
+        deployment_cache = caches['deployment']
+        deployment_cache.delete(DEPLOYMENT_READY)

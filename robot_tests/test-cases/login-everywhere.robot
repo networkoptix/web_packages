@@ -14,23 +14,12 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
-Check Log In
-    ${random email}    Get Random Email    ${BASE EMAIL}
-    Log In    ${random email}    ${password}
-    Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
-    Log In    ${email}    ${password}    None
-    Validate Log In
-
 Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 *** Test Cases ***
 works at registration page before submit
@@ -80,7 +69,7 @@ works at restore password page with email input - after submit error
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}
     Input Text    ${RESTORE PASSWORD EMAIL INPUT}    ${EMAIL UNREGISTERED}
     Click Button    ${RESET PASSWORD BUTTON}
-    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${ACCOUNT DOES NOT EXIST}
+    Check For Alert Dismissable    ${CANNOT SEND CONFIRMATION EMAIL}${SPACE}${SPACE}${ACCOUNT DOES NOT EXIST}
     Check Log In
 
 works at restore password page with email input - after submit success
@@ -94,6 +83,9 @@ works at restore password page with email input - after submit success
     ${replaced}    Replace String    ${text}    \n    ${SPACE}
     Should Match    ${replaced}    ${RESET EMAIL SENT MESSAGE TEXT}
     Check Log In
+    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
+    ${emailID}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN
+    Delete Email    ${emailID}
 
 works at restore password page with password input - before submit
     [tags]    email

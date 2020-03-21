@@ -2,99 +2,6 @@
   "language": "sv_SE",
   "language_name": "Svenska",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Välkommen till",
-    "register": "Skapa konto i",
-    "changePassword": "Ändra lösenord -",
-    "account": "Kontoinställningar -",
-    "systems": "System -",
-    "system": "Systemet -",
-    "systemShare": "Dela system -",
-    "activate": "Aktivera konto -",
-    "activateSent": "Aktivera konto -",
-    "activateSuccess": "Kontot aktiverat -",
-    "activateCode": "Aktivera konto -",
-    "restorePassword": "Återställ lösenord -",
-    "restorePasswordSuccess": "Lösenordet sparat -",
-    "restorePasswordCode": "Återställ lösenord -",
-    "view": "Visa kameror - ",
-    "debug": "Debugläge",
-    "login": "Logga in -",
-    "download": "Ladda ner %VMS_NAME%",
-    "downloadPlatform": "Hämta %VMS_NAME% för ",
-    "pageNotFound": "Det gick inte att hitta sidan"
-  },
-  "systemStatuses": {
-    "activated": "aktiverad",
-    "incompatible": "oförenlig",
-    "merging": "sammanslagning",
-    "notActivated": "inte aktiverad",
-    "online": "uppkopplad",
-    "offline": "frånkopplade",
-    "unavailable": "inte tillgänglig"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Inaktiverad",
-      "description": "Användaren är inaktiverad och kan inte logga in på System"
-    },
-    "Owner": {
-      "label": "Ägare",
-      "description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
-    },
-    "Viewer": {
-      "label": "Användare",
-      "description": "Kan visa live video och bläddra i arkivet"
-    },
-    "Live Viewer": {
-      "label": "Begränsad användare",
-      "description": "Kan bara visa live video"
-    },
-    "Advanced Viewer": {
-      "label": "Avancerad användare",
-      "description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc"
-    },
-    "Administrator": {
-      "label": "Administratör",
-      "description": "Obegränsad tillgång, inklusive möjligheten att dela"
-    },
-    "Custom": {
-      "label": "Anpassad",
-      "description": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter"
-    },
-    "cloudAdmin": {
-      "label": "Administratör",
-      "description": "Kan konfigurera system och dela det"
-    },
-    "customRole": {
-      "label": "Anpassad roll",
-      "description": "Anpassad användarroll anges i system"
-    },
-    "owner": {
-      "label": "Ägare",
-      "description": "Obegränsad åtkomst, inklusive möjligheten att dela och ansluta/avregistrera systemet från molnet"
-    },
-    "viewer": {
-      "label": "Användare",
-      "description": "Kan visa live video och bläddra i arkivet"
-    },
-    "liveViewer": {
-      "label": "Begränsad användare",
-      "description": "Kan bara visa live video"
-    },
-    "advancedViewer": {
-      "label": "Avancerad användare",
-      "description": "Kan visa live video, bläddra i arkivet, konfigurera kameror, styra PTZ etc"
-    },
-    "custom": {
-      "label": "Anpassad",
-      "description": "Använd %VMS_NAME% klientprogrammet för att ställa in anpassade behörigheter"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Kan inte skicka bekräftelse-e-post",
@@ -138,41 +45,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
     "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
   },
-  "system": {
-    "yourSystem": "Ditt system",
-    "mySystemSearch": "JagMigMinMin",
-    "unavailable": "Systemet är oåtkomligt",
-    "offline": "Systemet är offline",
-    "openClient": "Öppet i %VMS_NAME%",
-    "openClientNoSystem": "Öppna %VMS_NAME%",
-    "confirmMergeAction": "Sammanfoga",
-    "mergeSystemTitle": "Sammanfoga system",
-    "confirmRenameTitle": "Systemets namn",
-    "confirmRenameAction": "Spara",
-    "successRename": "Systemnamnet sparat",
-    "confirmDisconnectTitle": "Koppla bort systemet från %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Koppla från",
-    "confirmUnshareFromMe": "Du kommer inte att kunna logga in i det här systemet längre.",
-    "confirmUnshareFromMeTitle": "Koppla bort systemet från ditt konto?",
-    "confirmUnshareFromMeAction": "Koppla från",
-    "confirmUnshareTitle": "Ta bort användare?",
-    "confirmUnshareAction": "Ta bort",
-    "successDisconnected": "Systemet har kopplats bort från %CLOUD_NAME%",
-    "successDeleted": "System {{systemName}} har tagits bort från ditt konto",
-    "mergeFailed": "Systemsammanslagning misslyckades",
-    "mergeStart": "System har börjat slås samman",
-    "mergeSuccess": "Systemsammanslagning slutförd",
-    "permissionsRemoved": "Rättigheterna togs bort från {{email}}",
-    "unknownName": "Okänt namn för system (orsakad av molnsammanslagning)"
-  },
-  "regActions": {
-    "passwordLabel": "Lösenord",
-    "createAccount": "Skapa konto"
-  },
-  "header": {
-    "allSystems": "Alla system",
-    "systems": "System"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Högupplöst ström",
@@ -187,7 +59,7 @@
     "systemHasNoCameras": "INGA KAMEROR",
     "systemUnreachable": "SYSTEMET är inte tillgängligt",
     "cameraStates": {
-      "offline": "Frånkopplade",
+      "offline": "Offline",
       "error": "Fel",
       "errorLoading": "Ett fel uppstod vid laddning av den här videon.",
       "unauthorized": "Autentisering krävs",
@@ -211,21 +83,20 @@
     "voiceCommands": {
       "play": "spela",
       "pause": "pausa",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "gå till live | visa mig live",
+      "view": "visa + [kamera namn]",
+      "search": "hitta + [text för sökbar]",
       "clear search": "rensa sökningen",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "expandera server + [server namn]",
+      "collapse server": "kollapsera server + [servernamn]",
       "expand all servers": "expandera alla servrar",
       "collapse all servers": "kollapsa alla servrar",
       "stop listening": "sluta lyssna",
-      "help": "help | show commands"
+      "help": "hjälp | visa kommandon"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Vi rekommenderar att vi konsulterar med",
-    "b_support": "support",
-    "c_proceeding": "innan fortsättning."
+  "system": {
+    "offline": "Systemet är offline",
+    "unavailable": "Systemet är oåtkomligt"
   }
 }

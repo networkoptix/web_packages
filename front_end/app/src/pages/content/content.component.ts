@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Location } from '@angular/common';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService } from '../../services/nx-config';
-import { Title } from '@angular/platform-browser';
+import { NxPageService } from '../../services/page.service';
 import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
 import { ComponentsModule } from '../../components/components.module';
 import { SessionStorageService } from 'ngx-store';
@@ -42,7 +42,7 @@ export class NxContentComponent implements OnInit {
                 private location: Location,
                 private language: NxLanguageProviderService,
                 private config: NxConfigService,
-                private titleService: Title,
+                private pageService: NxPageService,
                 private _compiler: Compiler,
                 private sessionStorage: SessionStorageService) {
         this.setupDefaults();
@@ -87,7 +87,7 @@ export class NxContentComponent implements OnInit {
             (data: any) => {
                 this.title = data.title;
                 this.body = data.body;
-                this.titleService.setTitle(this.title);
+                this.pageService.setPageTitle(this.title);
                 this.loaded = true;
             },
             () => {
@@ -102,7 +102,9 @@ export class NxContentComponent implements OnInit {
 
     compileStaticArticle(templateUrl) {
         @Component({templateUrl})
-        class TemplateComponent {}
+        class TemplateComponent {
+            @ViewChild('title', { static: true }) title;
+        }
 
         @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
         class TemplateModule {}
@@ -110,8 +112,13 @@ export class NxContentComponent implements OnInit {
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
             const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
 
-            this.dynamicTemplate.createComponent(factory);
+            const component = this.dynamicTemplate.createComponent(factory);
             this.loaded = true;
+
+            const title = component.instance.title.nativeElement;
+            if (title) {
+                this.pageService.setPageTitle(title.innerText);
+            }
 
             /* If content was successfully compiled from static files,
                 add to staticContent so we don't do an API call each time we switch pages */

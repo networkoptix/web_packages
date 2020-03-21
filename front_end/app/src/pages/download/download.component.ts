@@ -3,7 +3,6 @@ import {
     ViewChild, Inject, Input, PLATFORM_ID
 }                                                from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { Title }                                 from '@angular/platform-browser';
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { filter }                                from 'rxjs/operators';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
@@ -13,8 +12,11 @@ import { NxLanguageProviderService }    from '../../services/nx-language-provide
 import { NxAccountService }             from '../../services/account.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
-import { Observable, Subscription }     from 'rxjs';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { NxPageService } from '../../services/page.service';
 
+@AutoUnsubscribe()
 @Component({
     selector   : 'download-component',
     templateUrl: 'download.component.html',
@@ -28,6 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private platform: any;
     private activeOs: string;
     private canViewDownloads: boolean;
+    private paramPlatform: string;
 
     CONFIG: any;
     LANG: any;
@@ -35,11 +38,12 @@ export class DownloadComponent implements OnInit, OnDestroy {
     downloadButton: any;
     downloads: any;
     downloadsData: any;
-    platformMatch: {};
     canSeeHistory: boolean;
     tabsVisible: boolean;
     activeTab: string;
     sortedPlatforms: any;
+    otherPackages: any;
+    private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
     public tabs: NgbTabset;
@@ -61,15 +65,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
         };
 
         this.sortedPlatforms = [];
-
-        this.platformMatch = {
-            unix   : 'Linux',
-            linux  : 'Linux',
-            mac    : 'MacOS',
-            windows: 'Windows',
-            arm    : 'Arm',
-            sdk    : 'SDK'
-        };
     }
 
     constructor(private cloudApi: NxCloudApiService,
@@ -78,7 +73,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 private deviceService: DeviceDetectorService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private titleService: Title,
+                private pageService: NxPageService,
                 private language: NxLanguageProviderService,
                 private uriService: NxUriService,
                 private location: Location,
@@ -87,38 +82,44 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
-            this.router
+            this.routerSubscription = this.router
                 .events
                 .pipe(
                     filter(event => event instanceof ActivationEnd)
                 )
                 .subscribe((event: ActivationEnd) => {
-                    if (this.tabs && event.snapshot.params.platform) {
-                        this.tabs.select(event.snapshot.params.platform);
+                    this.paramPlatform = event.snapshot.params.platform;
+                    if (this.tabs && this.paramPlatform) {
+                        this.tabs.select(this.paramPlatform);
                     }
                 });
         }
     }
 
-    private detectOS(): string {
-        return this.platformMatch[this.deviceService.getDeviceInfo().os.toLowerCase()];
-    }
-
     public beforeChange($event: NgbTabChangeEvent) {
         this.setTitle($event.nextId);
         this.activeTab = $event.nextId;
-        this.calcDownloadButton(this.activeTab);
+        this.calcDisplayedPackages(this.activeTab);
         this.uriService.updateURI('/download/' + $event.nextId, {});
     }
 
-    private calcDownloadButton(platformName) {
+    private calcDisplayedPackages(platformName) {
         const platform = this.sortedPlatforms.find(platform => platform.name === platformName);
-        this.downloadButton = platform.files[0];
+        this.downloadButton = undefined;
+        this.otherPackages = [];
+        if (platform !== 'undefined') {
+            if (platform.name === 'sdk') {
+                this.otherPackages = platform.files;
+            } else {
+                this.downloadButton = platform.files[0];
+                this.otherPackages = platform.files.slice(1);
+            }
+        }
     }
 
     private getDownloads() {
         this.sub = this.route.params.subscribe(params => {
-            this.platform = params.platform;
+            this.platform = params.platform.toLowerCase();
 
             for (const mobile in this.downloads.mobile) {
                 if (this.downloads.mobile[ mobile ].os === this.activeOs) {
@@ -143,12 +144,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     });
                     if (platform) {
                         platform.files = platform.files.filter((installer) => {
-                            switch (platform.name) {
-                                case 'sdk':
-                                    return installer.path.indexOf('sdk') > -1;
-                                default:
-                                    return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
-                            }
+                            return this.downloads.groups[platform.name].appTypes.includes(installer.appType);
                         }).map((installer) => {
                             if (!installer.niceName) {
                                 const translatedPlatform = this.LANG.downloads.platforms[installer.platform];
@@ -172,9 +168,11 @@ export class DownloadComponent implements OnInit, OnDestroy {
                 });
 
                 if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                    this.platform = this.detectOS();
+                    const configDownloads = this.CONFIG.downloads;
+                    const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
+                    this.platform = configDownloads.platformMatch[detectedOS] || configDownloads.groups.windows.name;
                 }
-
+                this.calcDisplayedPackages(this.platform);
                 this.setTitle(this.platform);
 
                 setTimeout(() => {
@@ -195,7 +193,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         } else {
             title = this.LANG.pageTitles.download;
         }
-        this.titleService.setTitle(title);
+        this.pageService.setPageTitle(title);
     }
 
     ngOnInit(): void {
@@ -209,6 +207,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
             });
 
         if (!this.CONFIG.publicDownloads) {
+            this.setTitle(this.paramPlatform);
+
             this.accountService
                 .requireLogin()
                 .then(result => {
@@ -227,7 +227,5 @@ export class DownloadComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this.sub.unsubscribe();
-    }
+    ngOnDestroy() {}
 }

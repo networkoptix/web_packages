@@ -1,7 +1,7 @@
 Buongiorno
 
 Sei stato invitato a %CLOUD_NAME%.
-{{#message.message}}
+{{ message.message}}
 
 {{ message.message }}
 

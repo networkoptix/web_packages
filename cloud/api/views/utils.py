@@ -30,6 +30,7 @@ def get_cloud_capabilities_from_cache():
 def get_settings_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
     return {
+        'appTypesForPlatform': customization_cache['app_types_for_platform'],
         'availableDownloadsPlatform': customization_cache['available_downloads_platform'],
         'cloudName': customization_cache['cloud_name'],
         'vmsName': customization_cache['vms_name'],
@@ -42,18 +43,21 @@ def get_settings_from_cache():
         'integrationFilterItems': customization_cache['integration_filter_items'],
         'integrationFilterLimitation': customization_cache['integration_filter_limitation'],
         'integrationStoreEnabled': customization_cache['integration_store_enabled'],
+        'healthMonitoringEnabled': customization_cache['health_monitoring_enabled'],
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],
         'showAnalyticsEvents': customization_cache['show_analytics_events'],
         'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
+        'testedOperatingSystems': customization_cache['tested_operating_systems'],
         'supportLink': customization_cache['support_link'],
         'privacyLink': customization_cache['privacy_link'],
         'supportedResolutions': customization_cache['supported_resolutions'],
         'supportedHardwareTypes': customization_cache['supported_hardware_types'],
         'searchTags': customization_cache['search_tags'],
         'vendorsShown': customization_cache['vendors_shown'],
-        'pushConfig': customization_cache['push_config']
+        'pushConfig': customization_cache['push_config'],
+        'googleTagManagerId': customization_cache['google_tag_manager_id']
     }
 
 

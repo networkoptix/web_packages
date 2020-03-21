@@ -2,47 +2,45 @@
 @import '../../../app/styles/custom/custom_palette';
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
+@import '../styles/typography';
 
 .nx-table {
     table-layout  : auto;
     white-space   : nowrap;
     margin-bottom : 0;
-    
+
     thead {
         background-color : $additional_light1;
         border-bottom    : 1px solid $light3;
-        
+
         th {
+            @extend #medium13;
             //display        : inline-block;
             white-space    : normal;
             padding        : .5rem 0;
-            color          : $dark9;
-            font-family    : $font-family-medium;
             font-weight    : 500 !important;
-            font-size      : $line-height-ssm;
             text-transform : none;
             overflow-wrap  : break-word;
             cursor         : pointer;
             border         : none;
-            
+
             &:first-of-type {
                 padding-left : .5rem;
             }
-            
+
             &.table-title {
-                font-family : $font-family-regular;
-                line-height : rem(24px);
+                @extend #regular24;
 
                 .text-placeholder {
                     font-size : 1.25rem;
                     color     : $light16;
                 }
             }
-            
+
             .caption {
                 position : relative;
                 height   : 2rem;
-                
+
                 .sort-dir {
                     top: 0;
                     right    : auto;
@@ -62,59 +60,60 @@
             }
         }
     }
-    
+
     tbody {
         background-color: $light1;
-        
+
         tr {
             //display: block;
             height : rem(24px);
-            
+
             &:hover {
                 color      : $dark9;
                 background : transparentize($brand_core, 0.9);
             }
-            
+
             &.spacer {
                 height           : .5rem;
                 background-color : white;
             }
-            
+
             td {
+                @extend #regular13;
                 display        : table-cell;
                 vertical-align : middle;
                 padding        : rem(4px) 1rem rem(4px) 0;
-                font-family : $font-family-regular;
-                font-size   : $font-size-base;
-                color       : $dark9;
-                line-height : 1rem;
-                border      : none;
-                
+                line-height    : 1rem;
+                border         : none;
+
                 &:first-of-type {
                     padding-left : .5rem;
                 }
             }
         }
     }
-    
+
     &-header {
+        @extend #regular13;
         padding          : 0.5rem 1rem;
         background-color : $additional_light1;
         border           : 1px solid $light3;
         border-bottom    : none;
-        color            : $dark9;
-        font-family      : $font-family-regular;
-        font-size        : 0.8125rem;
         line-height      : 16px;
         text-transform   : none;
         overflow-wrap    : break-word;
-        
+
         .results {
-            color       : $dark9;
-            font-family : $font-family-medium;
+            @extend #medium13;
             font-weight : 500 !important;
-            font-size   : $line-height-ssm;
             line-height : 16px;
         }
     }
 }
+
+.table-wrapper {
+      overflow-x       : auto;
+      box-shadow       : none;
+      border           : 1px solid $light4;
+      background-color : $light1;
+    }

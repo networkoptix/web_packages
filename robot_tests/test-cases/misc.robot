@@ -17,7 +17,6 @@ ${url}    ${ENV}
 Failed to access system page correctly shows when going to a non-existent system
     Open Browser and go to URL    ${url}
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Validate Log In
     Go To    ${url}/systems/htgfjtrdtrtyrrtydrydcrtydrtrdrtdrtdrtdrtd
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
     ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
@@ -36,7 +35,6 @@ The logo takes you to the systems page when not logged in
     [tags]    C41540
     Open Browser and go to URL    ${url}/register
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Validate Log In
     Go To    ${url}/${AUTO_TESTS SYSTEM ID}
     Wait Until Element Is Visible    ${LOGO LINK}
     Click Link    ${LOGO LINK}

@@ -1,5 +1,8 @@
-<div class="camview col-12" *ngIf="activeCamera">
-    <nx-block type='gray'>
+<div class="camview col-12"
+     *ngIf="activeCamera" #nxCamView nxScrollMechanics
+     [ngClass]="{'view-scroll-fixed-top':viewScrollFixedTop, 'view-scroll-fixed-bottom':viewScrollFixedBottom}">
+
+    <nx-block type='gray' >
 
         <header>
             <div class="camera-vendor-model">
@@ -251,3 +254,4 @@
         </nx-section>
     </nx-block>
 </div>
+

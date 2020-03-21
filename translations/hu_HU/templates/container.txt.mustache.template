@@ -5,4 +5,4 @@ Rendszer: {{systemName}} {{systemSignature}}
 {{>body}}
 
 %COMPANY_LINK%
-Támogatás: %SUPPORT_LINK%
+Support: %SUPPORT_LINK%

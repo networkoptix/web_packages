@@ -22,7 +22,7 @@
 		"filters applied": "filters toegepast",
 		"Any": "Elke",
 		"selected": "geselecteerd",
-		"vendor": "Fabrikant",
+		"vendor": "Fabrikanten",
 		"vendors": "Fabrikanten",
 		"hardwareType": "Type",
 		"hardwareTypes": "Types",
@@ -53,21 +53,17 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows",
-				"supported": "7, 8, 8.1, 10, Server 2008, Server 2012"
+				"label": "Windows"
 			},
 			"mac": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"linux": {
 				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu",
-				"supported": "Ubuntu 14.04 LTS, 16.04 LTS"
+				"shortLabel": "Ubuntu"
 			},
 			"macos": {
-				"label": "Mac OS",
-				"supported": "OSX 10.11 El Capitan, OSX 10.12 Sierra, OSX 10.13 High Sierra"
+				"label": "Mac OS"
 			},
 			"ios": {
 				"label": "iOS",
@@ -79,13 +75,11 @@
 			},
 			"arm": {
 				"label": "ARM",
-				"shortLabel": "ARM",
-				"supported": "<a href='/content/arm'>Ondersteuningsbeleid voor ARM-based servers</a>"
+				"shortLabel": "ARM"
 			},
 			"sdk": {
 				"label": "SDK",
-				"shortLabel": "SDK",
-				"supported": "C++ cross platform SDK"
+				"shortLabel": "SDK"
 			}
 		},
 		"platforms": {
@@ -164,6 +158,7 @@
 		"myIntegrationsLabel": "Mijn",
 		"previewRibbonText": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie.",
 		"backToEditText": "Terug naar het bewerken van de interface",
+		"requirements": "{{name}} Requirements",
 		"Access Control": "Toegangscontrole",
 		"Connector": "Connector",
 		"Data Analytics": "Data Analyse",
@@ -175,25 +170,27 @@
 		"feedback": "Zorg ervoor dat u uw het cameramodel en de fabrikant vermeldt..."
 	},
 	"pageTitles": {
-		"template": "{{title}} %CLOUD_NAME%",
+		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
+		"about": "About",
 		"registerSuccess": "Welkom bij",
 		"register": "Maak een account aan in",
-		"changePassword": "Wachtwoord wijzigen -",
-		"account": "Account instellingen -",
-		"systems": "Systemen -",
-		"system": "Systeem -",
-		"systemShare": "Deel Systeem -",
-		"activate": "Activeer account -",
-		"activateSent": "Activeer account -",
-		"activateSuccess": "Account geactiveerd -",
-		"activateCode": "Activeer account -",
-		"restorePassword": "Reset wachtwoord -",
-		"restorePasswordSuccess": "Wachtwoord opgeslagen -",
-		"restorePasswordCode": "Reset wachtwoord -",
-		"view": "Bekijk camera's - ",
+		"changePassword": "Change password",
+		"account": "Account settings",
+		"systems": "Systems",
+		"system": "System",
+		"systemName": "{{systemName}}",
+		"systemShare": "Share System",
+		"activate": "Activate account",
+		"activateSent": "Activate account",
+		"activateSuccess": "Account activated",
+		"activateCode": "Activate account",
+		"restorePassword": "Reset password",
+		"restorePasswordSuccess": "Password saved",
+		"restorePasswordCode": "Reset password",
+		"view": "View cameras",
 		"debug": "Debug",
-		"login": "Log in -",
+		"login": "Log in",
 		"download": "Download %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% voor ",
 		"pageNotFound": "Pagina niet gevonden",
@@ -204,7 +201,7 @@
 		"okButton": "Oké",
 		"cancelButton": "Annuleren",
 		"createNewAccount": "Creëer een nieuw account",
-		"changeAccountLogged": "U bent al ingelogd met als {email}",
+		"changeAccountLogged": "You are already logged in as {email}",
 		"loggedFromOther": "U wordt met een ander account ingelogd",
 		"loginTitle": "Meld u aan bij %CLOUD_NAME%",
 		"loginButton": "Inloggen",
@@ -224,7 +221,13 @@
 			"primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
 			"secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
 			"systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige exemplaar.",
-			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met"
+			"systemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met",
+			"recommendSupport": {
+				"a_recommend": "We raden aan om te overleggen met",
+				"b_support": "ondersteuning",
+				"c_proceeding": ", alvorens verder te gaan."
+			},
+			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
 		},
 		"message": {
 			"failedToSend": "Bericht versturen mislukt.",
@@ -234,9 +237,9 @@
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
 			},
-			"topic": {
-				"contact_sales": "Neem contact op met sales voor {{asset}}",
-				"contact_support": "Neem contact op met ondersteuning voor {{asset}}",
+			"subject": {
+				"sales_inquiry": "Verkoopaanvraag voor {{asset}}",
+				"technical_inquiry": "Technische aanvraag voor {{asset}}",
 				"integration_feedback": "Feedback voor integratie {{asset}}",
 				"ipvd_feedback_page": "Feedback voor de camerapagina",
 				"ipvd_feedback_device": "Feedback over {{asset}}"
@@ -340,12 +343,22 @@
 		"mergeSuccess": "Systeem samenvoegen voltooid",
 		"permissionsRemoved": "Toestemmingen zijn verwijderd voor {{email}}",
 		"unknownName": "Onbekende naam voor systeem (veroorzaakt door samenvoeging in de cloud)",
-		"shareOffline": "Kan systeem niet delen terwijl het offline is"
+		"shareOffline": "Kan systeem niet delen terwijl het offline is",
+		"shareUnauthorized": "U bent niet gerechtigd om dit systeem te delen",
+		"settings": {
+			"sessionLimitDuration": {
+				"hours": "uur",
+				"minutes": "minuut"
+			},
+			"warningMessages": {
+				"videoEncryption": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
+			}
+		}
 	},
 	"systemStatuses": {
 		"activated": "geactiveerd",
 		"incompatible": "incompatibel",
-		"merging": "samenvoegen",
+		"merging": "aan het samenvoegen",
 		"notActivated": "niet geactiveerd",
 		"online": "online",
 		"offline": "offline",
@@ -361,15 +374,15 @@
 			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
 		},
 		"Viewer": {
-			"label": "Gebruiker 'Basis'",
+			"label": "Kijker",
 			"description": "Kan live video bekijken en zoeken in het archief"
 		},
 		"Live Viewer": {
-			"label": "Gebruiker 'Live'",
+			"label": "Live kijker",
 			"description": "Kan alleen live video bekijken"
 		},
 		"Advanced Viewer": {
-			"label": "Gebruiker 'Geavanceerd'",
+			"label": "Geavanceerde Kijker",
 			"description": "Kan live video bekijken, bladeren in het archief, camera's configureren, PTZ, enz. bedienen"
 		},
 		"Administrator": {
@@ -393,15 +406,15 @@
 			"description": "Onbeperkt toegang, inclusief de mogelijkheid om systeem te delen en te verbinden / te verbreken vanuit de cloud"
 		},
 		"viewer": {
-			"label": "Gebruiker 'Basis'",
+			"label": "Kijker",
 			"description": "Kan live video bekijken en zoeken in het archief"
 		},
 		"liveViewer": {
-			"label": "Gebruiker 'Live'",
+			"label": "Live kijker",
 			"description": "Kan alleen live video bekijken"
 		},
 		"advancedViewer": {
-			"label": "Gebruiker 'Geavanceerd'",
+			"label": "Geavanceerde Kijker",
 			"description": "Kan live video bekijken, bladeren in het archief, camera configureren, PTZ, enz. bedienen"
 		},
 		"custom": {
@@ -410,13 +423,70 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
-		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+		"integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+		"ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
+	},
+	"common": {
+		"cameraLinks": {
+			"highStream": "Primaire stream",
+			"lowStream": "Secundaire stream",
+			"transcoding": "Transcoding",
+			"unknown": "Unknown",
+			"copyToClipboard": "kopiëren naar klembord",
+			"copyDefaultText": "kopiëren",
+			"copyActiveText": "gekopieerd naar het klembord"
+		},
+		"systemOffline": "Systeem Offline",
+		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+		"systemNoAlerts": "No Alerts",
+		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemServerError": "Interne server error",
+		"systemServerErrorMessage": "An error occurred, please, try again later. An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemNewVersion": "Update your system",
+		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemHasNoCameras": "GEEN CAMERA'S",
+		"systemUnreachable": "SYSTEEM IS ONBEREIKBAAR",
+		"cameraStates": {
+			"offline": "Offline",
+			"error": "Error",
+			"errorLoading": "Er is een fout opgetreden tijdens het laden van deze video.",
+			"unauthorized": "Authenticatie vereist",
+			"noData": "Geen data",
+			"iOSVideoTooLarge": "iOS ondersteunt geen video die groter is dan FullHD (2MP: 1920x1080).",
+			"flashRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> te installeren voor het afspelen van video's.",
+			"flashOrWebmRequired": "Gelieve <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash</a> of <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> te installeren voor het afspelen van video's in Internet Explorer.",
+			"noArmSupport": "Deze browser of dit apparaat ondersteunt geen videoweergave van ARM-gebaseerde servers.",
+			"noFormat": "Deze browser ondersteunt het afspelen van de beelden van deze camera niet.",
+			"ieNoWebm": "Installeer alstublieft de <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> voor Internet Explorer.",
+			"ieWin10": "Gebruik alsjeblieft de browsers Microsoft Edge of Google Chrome.",
+			"ubuntuNX": "Deze browser ondersteunt geen video van ARM-gebaseerde servers. Gebruik alsjeblieft de Chromium-browser."
+		},
+		"searchCamPlaceholder": "Zoeken",
+		"resolution": {
+			"auto": "Automatisch",
+			"high": "Hoog",
+			"low": "Lage"
+		},
+		"chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
+		"voiceCommands": {
+			"play": "afspelen",
+			"pause": "pauze",
+			"live": "go to live | show me live",
+			"view": "view + [camera name]",
+			"search": "find + [text for searchbar]",
+			"clear search": "wis zoekopdracht",
+			"expand server": "expand server + [server name]",
+			"collapse server": "collapse server + [server name]",
+			"expand all servers": "toon alle servers",
+			"collapse all servers": "vouw alle servers samen",
+			"stop listening": "stop met luisteren",
+			"help": "help | show commands"
+		}
 	},
 	"systemAdministration": "Systeembeheer",
 	"users": "Gebruikers",
 	"testedVersionLabel": "Getest op {{vmsName}} versie:",
-	"testedVersionsLabel": "Getest op {{vmsName}} versies:",
+	"testedVersionsLabel": "Getest op {{vmsName}} versie:",
 	"About %CLOUD_NAME%": "Over %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Download %VMS_NAME%",
 	"Integrations": "Integraties",
@@ -430,5 +500,7 @@
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "U heeft geen systemen verbonden met %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Log in op uw systeem met %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Ga naar het tabblad 'Cloud' in het dialoogvenster 'Systeembeheer'",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\""
+	"NO_SYSTEMS_CONNECT_SYSTEM": "Druk op \"Systeem verbinden met %CLOUD_NAME%\"",
+	"topXByVolume": "Top {{value}} by volume:",
+	"phoneNumberWithLabel": "Tel: {{number}}"
 }

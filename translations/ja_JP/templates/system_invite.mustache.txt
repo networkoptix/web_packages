@@ -4,7 +4,7 @@
 {{message.sharer_name}} ({{message.sharer_email}}) は、あなたを%CLOUD_NAME%に招待し、システム {{message.system_name}} を共有します。
 {{/message.sharer_name}}
 
-{{/message.sharer_name}}
+{{^message.sharer_name}}
 あなたは %CLOUD_NAME%に招待されています。
 {{message.system_name}}へのアクセスが許可されています
 {{/message.sharer_name}}

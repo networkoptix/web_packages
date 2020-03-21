@@ -3,7 +3,7 @@ angular
     .config(['$compileProvider', function ($compileProvider) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|rtsp|tel|mailto):/);
     }])
-    .run(['$route', '$rootScope', '$location', 'page', '$localStorage', function ($route, $rootScope, $location, page, $localStorage) {
+    .run(['$route', '$rootScope', '$location', '$localStorage', function ($route, $rootScope, $location, $localStorage) {
 
         // Support changing location without reloading controller
         var original = $location.path;
@@ -29,15 +29,6 @@ angular
             }
             return original.apply($location, [path]);
         };
-
-        // Support changing page titles
-        $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
-            if (current.$$route) {
-                page.title(current.$$route.title);
-            } else {
-                page.title(L.pageTitles.pageNotFound);
-            }
-        });
 
         // Add localstorage to rootScope to support global updates
         $rootScope.storage = $localStorage;

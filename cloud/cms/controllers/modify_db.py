@@ -119,6 +119,7 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
 def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
+    can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
     upload_errors = []
     for data_structure in data_structures:
         data_structure_name = data_structure.name
@@ -166,12 +167,12 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
             # if the guid is valid it will go to the next set of checks
-            new_record_value = request_data[data_structure_name]
+            new_record_value = request_data.get(data_structure_name, "")
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
                 upload_errors.append((data_structure_name, 'Invalid GUID {} it should formatted like {}'
-                                      .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXX}")))
+                                      .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}")))
                 continue
 
             # no guid submitted or default value and is not optional generate a guid
@@ -182,7 +183,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                                       .format(new_record_value)))
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-            new_record_value = request_data.getlist(data_structure_name, "")
+            getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
+            new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
             if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
                 new_record_value = new_record_value[0]
 
@@ -219,10 +221,12 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
             new_record_value = data_structure_name in request_data
+            if data_structure.advanced and not can_edit_advanced:
+                continue
 
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
             try:
-                new_record_value = int(request_data[data_structure_name])
+                new_record_value = int(request_data.get(data_structure_name, ""))
             except ValueError:
                 upload_errors.append((data_structure_name, "This field has can only be integers."))
                 continue
@@ -240,7 +244,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
             try:
-                new_record_value = DataStructure.cast_value(data_structure, request_data[data_structure_name])
+                new_record_value = DataStructure.cast_value(data_structure, request_data.get(data_structure_name, ""))
                 if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
                     raise ValueError
                 elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
@@ -251,7 +255,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 continue
 
         else:
-            new_record_value = request_data[data_structure_name]
+            new_record_value = request_data.get(data_structure_name, "")
             if 'regex' in data_structure.meta_settings:
                 pattern = data_structure.meta_settings['regex']
                 if pattern == '':
@@ -276,6 +280,8 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         # If the data structure is not optional and has no value use the default.
         if new_record_value in ["", {}, []] and not data_structure.optional:
+            if data_structure.advanced and not can_edit_advanced:
+                continue
             # If there is a default value use it. Otherwise don't fill it prevent it.
             if data_structure.default != "" and not records_exist:
                 # Gets the default value and will cast the default value
@@ -293,7 +299,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 latest_value == DataStructure.cast_value(data_structure, json.dumps(new_record_value)):
             continue
 
-        if data_structure.advanced and not (user.is_superuser or user.has_perm('cms.edit_advanced')):
+        if data_structure.advanced and not can_edit_advanced:
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
             continue
 
@@ -304,10 +310,6 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         # Remove value for delete_file
         if delete_file:
             new_record_value = ""
-
-        # Temporary until CLOUD-3362 is done
-        if type(new_record_value) in [list, dict]:
-            new_record_value = json.dumps(new_record_value)
 
         record = DataRecord(asset=asset,
                             data_structure=data_structure,
@@ -376,7 +378,8 @@ def generate_preview_link(context=None, asset=None, state=""):
             return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
         elif asset.is_asset_type(AssetType.ASSET_TYPES.article):
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
-            return f'/content/{article_url.value}?' + urlencode({'state': state, 'id': asset.id})
+            article_url = article_url.value if article_url else "tmp_url"
+            return f'/content/{article_url}?' + urlencode({'state': state, 'id': asset.id})
 
     return f"{context.url}?preview" if context else "/content/about?preview"
 
@@ -406,11 +409,18 @@ def asset_has_required_data(asset, version_id=None):
         if version_id:
             records = records.filter(version__id__lte=version_id)
         last_record_value = records.last().value if records.last() else ""
-        if last_record_value and datastructure.type in [DataStructure.DATA_TYPES.array,
-                                                        DataStructure.DATA_TYPES.object,
-                                                        DataStructure.DATA_TYPES.multiselect]:
-            last_record_value = json.loads(last_record_value)
-        if not datastructure.optional and not datastructure.default and (not records.exists() or last_record_value == ""):
+        has_default_value = datastructure.default != ""
+        if datastructure.type in [DataStructure.DATA_TYPES.array,
+                                  DataStructure.DATA_TYPES.object,
+                                  DataStructure.DATA_TYPES.multiselect]:
+            if last_record_value:
+                last_record_value = json.loads(last_record_value)
+            default_value = json.loads(datastructure.default)
+            if datastructure.type == DataStructure.DATA_TYPES.object:
+                has_default_value = len(default_value.keys()) > 0
+            else:
+                has_default_value = len(default_value) > 0
+        if not datastructure.optional and not has_default_value and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
             errors.append((ds_name,
                            "This field cannot be blank. Go to the {} page and fill in {}.".

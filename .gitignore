@@ -12,7 +12,6 @@ front_end/.sass-cache
 front_end/bower_components
 front_end/app/bower_components
 front_end/test/visual
-front_end/package-lock.json
 front_end/yarn.lock
 front_end/app/images/promo
 front_end/app/images/favicon.ico
@@ -23,31 +22,22 @@ front_end/bower_components
 front_end/test/visual
 front_end/**/*.js.map
 front_end/app/src/**/*.js
+front_end/app/language_compiled.json
+translations/**/language_compiled.json
 
-front_end/app/scripts/services/language.js
-front_end/app/scripts/services/dialogs.js
-front_end/app/scripts/services/systems.js
-front_end/app/scripts/services/process.js
-front_end/app/scripts/services/nx-config.js
-front_end/app/scripts/services/cloud_api.js
-front_end/app/scripts/services/account.js
-front_end/app/scripts/services/angular-uuid2.js
-front_end/app/scripts/services/authorizationCheckService.js
 
+front_end/app/scripts/services/{language,dialogs,systems,process,nx-config,cloud_api,account,angular-uuid2,authorizationCheckService}.js
 front_end/app/scripts/downgraded-providers.js
+front_end/app/{main,polyfills,vendor,overrides.d,app.module,app.component,ajs-upgraded-providers}.js
 
-front_end/app/main.js
-front_end/app/polyfills.js
-front_end/app/vendor.js
-front_end/app/overrides.d.js
-front_end/app/app.module.js
-front_end/app/app.component.js
-front_end/app/ajs-upgraded-providers.js
+subinclude:robot_tests/.hgignore
 
 .idea
 *.pyc
 *.pid
 *.log
+*.sql
+package-lock.json
 
 env
 cloud/.idea

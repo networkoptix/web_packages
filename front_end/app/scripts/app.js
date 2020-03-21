@@ -135,11 +135,30 @@ window.L = {};
                     })
                     .when('/systems/:systemId/view', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
+                        controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return false;
+                            }
+                        }
                     })
                     .when('/systems/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
-                        controller: 'ViewPageCtrl'
+                        controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return false;
+                            }
+                        }
+                    })
+                    .when('/systems/:systemId/health', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/alerts', {
+                        template: ''
+                    })
+                    .when('/systems/:systemId/health/:metric', {
+                        template: ''
                     })
                     .when('/systems/:systemId/share', {
                         template: ''
@@ -153,6 +172,11 @@ window.L = {};
                     .when('/embed/:systemId/view/:cameraId', {
                         templateUrl: CONFIG.viewsDir + 'view.html',
                         controller: 'ViewPageCtrl',
+                        resolve: {
+                            embed: function () {
+                                return true;
+                            }
+                        }
                     })
                     .when('/embed/ipvd', {
                         template:'',
@@ -240,7 +264,7 @@ window.L = {};
                     })
                     .when('/', {
                         // // TODO: keep until we retire AJS
-                        template: '<landing-component></landing-component>'
+                        template: ''
                         // title: ''/*lang.pageTitles.startPage*/,
                         // templateUrl: CONFIG.viewsDir + 'startPage.html',
                         // controller: 'StartPageCtrl'

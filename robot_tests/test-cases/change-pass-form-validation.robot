@@ -25,7 +25,7 @@ ${PASSWORD TOO COMMON}
 ${PASSWORD IS WEAK}
 ...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 ${CURRENT PASSWORD IS REQUIRED}
-...    //span[contains(@class, 'error-text') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
+...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 
 *** Test Cases ***              OLD PW                    NEW PW
 Incorrect Old Password          ${7char password}         ${BASE PASSWORD}
@@ -64,7 +64,7 @@ Restart
 
 Open Change Password Dialog
     Open Browser and go to URL    ${url}/account/password
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    None
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=None
     Validate Log In
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Wait Until Elements Are Visible
@@ -97,11 +97,11 @@ Check Old Password Outline
 #    ...    ${CURRENT PASSWORD INPUT}/parent::div/parent::div[contains(@class,'has-error')]
     ${class_attribute_value}=   Get Element Attribute     ${CURRENT PASSWORD INPUT}    class
     Should Contain    ${class_attribute_value}    invalid   touched
-    Page Should Contain    Current password is required
+    Page Should Contain    ${CURRENT PASSWORD IS REQUIRED TEXT}
     Element Should Be Visible    ${CURRENT PASSWORD IS REQUIRED}
 
 Check Old Password Alert
-    Check For Alert    ${CANNOT SAVE PASSWORD} ${PASSWORD INCORRECT}
+    Check For Alert    ${CANNOT SAVE PASSWORD}${SPACE}${SPACE}${PASSWORD INCORRECT}
 
 Check New Password Outline
     [Arguments]    ${new pw}

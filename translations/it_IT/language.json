@@ -2,99 +2,6 @@
   "language": "it_IT",
   "language_name": "Italiano",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Benvenuto in",
-    "register": "Creare un account",
-    "changePassword": "Cambia Password -",
-    "account": "Impostazioni dell'account -",
-    "systems": "Sistemi -",
-    "system": "Sistema -",
-    "systemShare": "Condivisione Sistema -",
-    "activate": "Attivazione Account -",
-    "activateSent": "Attivazione Account -",
-    "activateSuccess": "Attivazione dell'account",
-    "activateCode": "Attivazione Account -",
-    "restorePassword": "Reimpostare la Password -",
-    "restorePasswordSuccess": "Password salvata",
-    "restorePasswordCode": "Reimpostare la Password -",
-    "view": "Visualizzazione delle telecamere - ",
-    "debug": "Debug",
-    "login": "Accesso -",
-    "download": "Scarica %VMS_NAME%",
-    "downloadPlatform": "Scarica %VMS_NAME% ",
-    "pageNotFound": "Pagina non trovata"
-  },
-  "systemStatuses": {
-    "activated": "attivato",
-    "incompatible": "non compatibile",
-    "merging": "unione",
-    "notActivated": "non attivato",
-    "online": "online",
-    "offline": "offiline",
-    "unavailable": "non disponibile"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Non attivo",
-      "description": "L'utente è disabilitato e non può accedere al sistema"
-    },
-    "Owner": {
-      "label": "Proprietario",
-      "description": "Accesso illimitato che include la possibilità di condividere e connettere / disconnettere il sistema dal cloud"
-    },
-    "Viewer": {
-      "label": "Visualizzatore",
-      "description": "È possibile visualizzare video in diretta e sfogliare l'archivio"
-    },
-    "Live Viewer": {
-      "label": "Visualizzatore Live",
-      "description": "Possibilita' di visualizzare solo video Live"
-    },
-    "Advanced Viewer": {
-      "label": "Visualizzatore avanzato",
-      "description": "È possibile visualizzare video in diretta, sfogliare l'archivio, controllare PTZ ecc"
-    },
-    "Administrator": {
-      "label": "Amministratore",
-      "description": "Accesso illimitato inclusa la possibilità di condividere"
-    },
-    "Custom": {
-      "label": "Personalizzato",
-      "description": "Utilizzare l'applicazione client %VMS_NAME% per impostare le autorizzazioni personalizzate"
-    },
-    "cloudAdmin": {
-      "label": "Amministratore",
-      "description": "Può configurare il sistema e condividerlo"
-    },
-    "customRole": {
-      "label": "Ruoli personalizzati",
-      "description": "Ruolo utente personalizzato specificato nel Sistema"
-    },
-    "owner": {
-      "label": "Proprietario",
-      "description": "Accesso illimitato che include la possibilità di condividere e connettere / disconnettere il sistema dal cloud"
-    },
-    "viewer": {
-      "label": "Visualizzatore",
-      "description": "È possibile visualizzare video in diretta e sfogliare l'archivio"
-    },
-    "liveViewer": {
-      "label": "Visualizzatore Live",
-      "description": "Possibilita' di visualizzare solo video Live"
-    },
-    "advancedViewer": {
-      "label": "Visualizzatore avanzato",
-      "description": "È possibile visualizzare video Live, sfogliare l'archivio, configurare telecamere, controllare PTZ ecc"
-    },
-    "custom": {
-      "label": "Personalizzato",
-      "description": "Utilizzare l'applicazione client %VMS_NAME% per impostare le autorizzazioni personalizzate"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Non è possibile inviare e-mail di conferma",
@@ -138,41 +45,6 @@
     "FAIL": "Il sistema <strong>{{failedSystem}}</strong> è attualmente irraggiungibile.<br>Riprovare tra qualche istante o contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
     "unknownMergeError": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>."
   },
-  "system": {
-    "yourSystem": "Il suo sistema",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Il server è irraggiungibile",
-    "offline": "Il sistema è offline",
-    "openClient": "Apri in %VMS_NAME%",
-    "openClientNoSystem": "Apri in %VMS_NAME%",
-    "confirmMergeAction": "Unisci",
-    "mergeSystemTitle": "Unione dei sistemi",
-    "confirmRenameTitle": "Nome del sistema",
-    "confirmRenameAction": "Salvare",
-    "successRename": "Nome del sistema salvato",
-    "confirmDisconnectTitle": "Scollegare il sistema da %CLOUD_NAME%?",
-    "confirmDisconnectAction": "Scollegamento",
-    "confirmUnshareFromMe": "Non sarai più in grado di accedere a questo Sistema.",
-    "confirmUnshareFromMeTitle": "Disconnettere il sistema dal tuo account?",
-    "confirmUnshareFromMeAction": "Scollegamento",
-    "confirmUnshareTitle": "Rimuovere l'utente?",
-    "confirmUnshareAction": "Rimuovere",
-    "successDisconnected": "Il sistema è stato scollegato correttamente da %CLOUD_NAME%",
-    "successDeleted": "Il sistema {{systemName}} è stato eliminato correttamente dal suo account",
-    "mergeFailed": "Unione di sistemi fallita",
-    "mergeStart": "I sistemi hanno iniziato ad unirsi",
-    "mergeSuccess": "Unione del sistema completata",
-    "permissionsRemoved": "Le autorizzazioni sono state rimosse da {{email}}",
-    "unknownName": "Nome sconosciuto per il sistema (causato da cloud merge)"
-  },
-  "regActions": {
-    "passwordLabel": "Password",
-    "createAccount": "Creare un account"
-  },
-  "header": {
-    "allSystems": "Tutti i sistemi",
-    "systems": "Sistemi"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Flusso Primario",
@@ -211,21 +83,20 @@
     "voiceCommands": {
       "play": "riproduci",
       "pause": "pausa",
-      "live": "go to live | show me live",
-      "view": "view + [camera name]",
-      "search": "find + [text for searchbar]",
+      "live": "vai in live | mostra live",
+      "view": "visualizza + [nome telecamera]",
+      "search": "trova + [testo per la barra di ricerca]",
       "clear search": "cancella ricerca",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "espandi server + [nome server]",
+      "collapse server": "comprimi server + [nome server]",
       "expand all servers": "espandere tutti i server",
       "collapse all servers": "comprimi tutti i server",
       "stop listening": "interrompere l'ascolto",
-      "help": "help | show commands"
+      "help": "aiuto | mostra comandi"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Raccomandiamo di consultarsi con",
-    "b_support": "supporto",
-    "c_proceeding": "prima di procedere."
+  "system": {
+    "offline": "Il sistema è offline",
+    "unavailable": "Il server è irraggiungibile"
   }
 }

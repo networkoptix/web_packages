@@ -12,6 +12,8 @@ const noop = () => {
            [items]="accessRoles"
            label="optionLabel"          <- which property should be shown
            [(ngModel)]="user.role.name"
+           (ngModelChange)="onModelChange($event)"
+           [selected]="user.role.name ? user.role.name : null"
            required>
 </nx-select>
 */
@@ -57,6 +59,13 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
     ngOnInit(): void {
     }
 
+    trackItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.value;
+    }
+
     change(item) {
         this.selected = item;
         this.onSelected.emit(item);
@@ -65,18 +74,10 @@ export class NxGenericDropdown implements OnInit, ControlValueAccessor {
 
     ngOnChanges(changes: SimpleChanges) {
         // detect changes in list of items and changes in selected to support clear option
-        if (changes.items && changes.items.currentValue) {
-            if (this.selected) {
-                this.selected = changes.items.currentValue.filter(x => x.name === this.selected.name)[0];
-            } else {
-                this.selected = {name: this.message};
-            }
-        }
-
         if (changes.selected.currentValue) {
             this.selected = changes.selected.currentValue;
-        } else {
-            this.selected = {name: this.message};
+        } else if (!this.selected) {
+            this.selected = { name: this.message, value: '0' };
         }
     }
 

@@ -1,7 +1,8 @@
 __author__ = 'noptix'
 
 from django.conf.urls import url
-from api.views import account, systems, common, utils
+from cloud import settings
+from api.views import account, systems, common, utils, robot
 from notifications.views import send
 
 urlpatterns = [
@@ -43,3 +44,8 @@ urlpatterns = [
 
     url(r'feedback/?$',                              send.send_event),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [
+        url(r'^robot/get_code$', robot.get_code)
+    ]

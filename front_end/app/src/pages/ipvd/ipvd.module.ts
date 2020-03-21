@@ -10,6 +10,7 @@ import { Angular2CsvModule }    from 'angular2-csv';
 
 import { NxIpvdComponent }    from './ipvd.component';
 import { ComponentsModule }   from '../../components/components.module';
+import { DirectivesModule }   from '../../directives/directives.module';
 import { CamTableComponent }  from './cam-components/cam-table/cam-table.component';
 import { CamViewComponent }   from './cam-components/cam-view/cam-view.component';
 import { CsvButtonComponent } from './cam-components/csv-button/csv-button.component';
@@ -29,6 +30,7 @@ const appRoutes: Routes = [
         FormsModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
 

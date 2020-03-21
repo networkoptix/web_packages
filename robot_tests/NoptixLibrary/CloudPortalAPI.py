@@ -1,0 +1,75 @@
+import requests
+from requests.auth import HTTPDigestAuth
+
+
+class CloudPortalAPI(object):
+
+    def log_in(self, env, email, password):
+        s = requests.Session()
+        r = s.post(f'{env}/api/account/login', json={'email': email, 'password': password})
+        assert r.status_code == 200, "Log In Failed"
+        return s
+
+    # TODO implement logging out using API where appropriate
+    def log_out(self, env, session_id, csrftoken):
+        with requests.Session() as s:
+            s.headers.update({'X-CSRFToken': csrftoken})
+            s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
+            r = s.post(f'{env}/api/account/logout')
+            return r.status_code
+
+    def change_password(self, env, email, old_password, new_password):
+        with self.log_in(env, email, old_password) as s:
+            data = {'old_password': old_password, 'new_password': new_password}
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/account/changePassword', data)
+            return r.status_code
+
+    def restore_password(self, env, email, code=None, new_password=None):
+        with requests.Session() as s:
+            data = {'user_email': email}
+            if code and new_password:
+                data.update({'code': code, 'new_password': new_password})
+            r = s.post(f'{env}/api/account/restorePassword', data)
+            return r.status_code
+
+    def get_language_anonymous(self, env):
+        r = requests.get(env + '/api/utils/language')
+        return r.json()['ajs']['language']
+
+    def get_account_language(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            r = s.get(f'{env}/api/utils/language')
+            return r.json()['ajs']['language']
+
+    def get_account_data(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            r = s.get(f'{env}/api/account/')
+            return r.json()
+
+    def set_account_language(self, env, email, password, new_language='en_US'):
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/utils/language', json={'language': new_language})
+            return r.json()
+
+    def set_account_name(self, env, email, password, first_name, last_name):
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/account/', json={'first_name': first_name, 'last_name': last_name})
+            return r.json()
+
+    def disconnect(self, env, email, password, system_id):
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
+            return r.status_code
+
+    def get_code_from_email(self, env, auth, email, message_type):
+        with self.log_in(env, auth[0], auth[1]) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/robot/get_code', json={'email': email, 'type': message_type})
+            return r.json()['code']
+
+
+

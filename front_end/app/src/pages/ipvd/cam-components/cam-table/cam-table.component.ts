@@ -1,34 +1,38 @@
 import {
     Component, Input, Output, EventEmitter,
     OnChanges, SimpleChanges,
-    OnInit, ViewEncapsulation, Inject, PLATFORM_ID
+    OnInit, ViewEncapsulation, Inject,
+    PLATFORM_ID, OnDestroy, AfterViewInit,
+    ElementRef, ViewChild, HostListener, Renderer2,
 } from '@angular/core';
-
-import { NxConfigService }           from '../../../../services/nx-config';
-import { NxUriService }              from '../../../../services/uri.service';
-import { NxUtilsService }            from '../../../../services/utils.service';
-import { Router }                    from '@angular/router';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxConfigService }                from '../../../../services/nx-config';
+import { NxUriService }                   from '../../../../services/uri.service';
+import { NxUtilsService }                 from '../../../../services/utils.service';
+import { Router }                         from '@angular/router';
+import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
+import { Subscription, SubscriptionLike } from 'rxjs';
+import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;
 }
 
+@AutoUnsubscribe()
 @Component({
     selector     : 'nx-cam-table',
     templateUrl  : './cam-table.component.html',
     styleUrls    : ['./cam-table.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class CamTableComponent implements OnChanges, OnInit {
-
-    // @Input() headers: string[];
+export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
     @Input() allowedParameters: string[];
     @Input() activeCamera: any;
     @Input() params: any = {};
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>()
 
     public selectedHeader;
     public showHeaders;
@@ -39,7 +43,6 @@ export class CamTableComponent implements OnChanges, OnInit {
     private results;
     private cameraHeaders;
     private paramsShown;
-    // private lang;
     private debug: boolean;
     private beta: boolean;
 
@@ -56,6 +59,17 @@ export class CamTableComponent implements OnChanges, OnInit {
     serviceParams;
     serviceHeaders;
 
+    windowSize: any = {};
+    windowScroll: any;
+    clientHeight: number;
+    offsetHeight: number;
+    scrollHeight: number;
+    tableScrollFixed: boolean;
+    elementWidth: any;
+    revert: any;
+
+    uriSubscription: SubscriptionLike;
+
     // Options for the Excel export
     public csvFilename: any;
     public csvCameraData: any[];
@@ -71,11 +85,15 @@ export class CamTableComponent implements OnChanges, OnInit {
         removeNewLines  : true
     };
 
+    @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
+    @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
     constructor(private router: Router,
                 private language: NxLanguageProviderService,
                 private uri: NxUriService,
                 private config: NxConfigService,
+                private scrollMechanicsService: NxScrollMechanicsService,
+                private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
 
         this.LANG = this.language.getTranslations();
@@ -83,6 +101,10 @@ export class CamTableComponent implements OnChanges, OnInit {
 
         this.sortOrderASC = true;
         this._elements = this.elements;
+
+        this.windowSize = {};
+        this.windowScroll = 0;
+        this.tableScrollFixed = false;
 
         this.serviceHeaders = [this.LANG.ipvd.count, this.LANG.ipvd.resolutionArea];
         this.serviceParams = ['count', 'resolutionArea'];
@@ -104,10 +126,20 @@ export class CamTableComponent implements OnChanges, OnInit {
             this.LANG.ipvd.resolutionArea
         ];
 
+        this.elementWidth = '100%';
         this.pagedItems = [];
         this.pagerMaxSize = this.CONFIG.ipvd.pagerMaxSize;
         this.currentPage = 1;
         this.pageSize = this.CONFIG.layout.tableLarge.rows;
+
+        this.uriSubscription = new Subscription();
+    }
+
+    trackPagedItem(index, item) {
+        if (!item) {
+            return undefined;
+        }
+        return item.sortKey;
     }
 
     private setDebugAndBetaMode () {
@@ -287,62 +319,9 @@ export class CamTableComponent implements OnChanges, OnInit {
                 this.selectedCamera = changes.activeCamera.currentValue.sortKey;
             }
         }
-
-        if (changes.params) {
-
-            this.setDebugAndBetaMode();
-
-            if (!this.debug && !this.beta) {
-                this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
-            }
-
-            this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
-            this.showHeaders = this.cameraHeaders;
-
-            if (!changes.params.firstChange &&
-                    changes.params.currentValue.page === changes.params.previousValue.page &&
-                    changes.params.currentValue.camera === changes.params.previousValue.camera) {
-                // Params changed - reset the pagination
-                this.setPage(1, true);
-
-            } else if (changes.params.currentValue.page) {
-                this.setPage(+changes.params.currentValue.page, true);
-            }
-
-            if (this.params.sortBy) {
-                const sortBy = this.params.sortBy.split(',');
-                const direction = (sortBy[1] === 'ASC');
-                const column = this.cameraHeaders.find(x => {
-                    return x === this.LANG.ipvd[sortBy[0]];
-                });
-
-                if (this.sortOrderASC === direction && column === this.selectedHeader) {
-                    return; // do not sort if sorted
-                }
-
-                this.sortOrderASC = direction;
-                this.toggleSort(sortBy[0], true);
-
-                if (this.params.page) {
-                    this.setPage(+this.params.page, true);
-                } else {
-                    this.setPage(1, true);
-                }
-            }
-
-            if (this.params.camera) {
-                const row = this.pagedItems.findIndex((camera) => {
-                    return camera.model === this.params.camera;
-                });
-
-                const camera = this.pagedItems.find((camera) => {
-                    return camera.model === this.params.camera;
-                });
-
-                this.setClickedRow(camera);
-            }
-        }
     }
+
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.setDebugAndBetaMode();
@@ -354,6 +333,86 @@ export class CamTableComponent implements OnChanges, OnInit {
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
         if (!this.showAnalytics) {
             this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
+        }
+
+        this.uriSubscription = this.uri
+            .getURI()
+            .subscribe(params => {
+                this.params = params;
+                this.setDebugAndBetaMode();
+
+                if (!this.params.debug && !this.params.beta) {
+                    this.filterAllowedParams(this.serviceHeaders, this.serviceParams);
+                }
+
+                this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.params.debug || this.params.beta;
+                this.showHeaders = this.cameraHeaders;
+
+                if (this.params.sortBy) {
+                    const sortBy = this.params.sortBy.split(',');
+                    const direction = (sortBy[1] === 'ASC');
+                    const column = this.cameraHeaders.find(x => {
+                        return x === this.LANG.ipvd[sortBy[0]];
+                    });
+
+                    if (this.sortOrderASC === direction && column === this.selectedHeader) {
+                        return; // do not sort if sorted
+                    }
+
+                    this.sortOrderASC = direction;
+                    this.toggleSort(sortBy[0], true);
+
+                }
+
+                this.setPage(this.params.page || 1, true);
+
+                if (this.params.camera) {
+                    const row = this.pagedItems.findIndex((camera) => {
+                        return camera.model === this.params.camera;
+                    });
+
+                    const camera = this.pagedItems.find((camera) => {
+                        return camera.model === this.params.camera;
+                    });
+
+                    this.setClickedRow(camera);
+                }
+            });
+    }
+
+    ngAfterViewInit(): void {
+        this.calcElementScrollMechanics();
+
+        this.scrollMechanicsService
+            .windowScrollSubject
+            .subscribe(() => {
+                this.calcElementScrollMechanics();
+            });
+
+        this.scrollMechanicsService
+            .elementTableWidthSubject
+            .subscribe(() => {
+                const width = this.scrollMechanicsService.elementTableWidthSubject.getValue();
+                this.elementWidth = (width > 0) ? width + 'px' : '100%';
+            });
+
+        this.scrollMechanicsService
+            .offsetSubject
+            .subscribe(() => {
+                setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
+            });
+    }
+
+    calcElementScrollMechanics() {
+        this.windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
+        this.windowScroll = this.scrollMechanicsService.windowScrollSubject.getValue();
+
+        this.clientHeight = this.camerasTable.nativeElement.clientHeight;
+
+        if (this.clientHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
+            this.tableScrollFixed = true;
+        } else {
+            this.tableScrollFixed = false;
         }
     }
 
@@ -377,6 +436,8 @@ export class CamTableComponent implements OnChanges, OnInit {
         const startIndex = (this.currentPage - 1) * this.pageSize;
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this._elements.slice(startIndex, endIndex);
+
+        setTimeout(() => this.scrollHeight = this.scrollMechanicsService.getElementOffset(this.camerasTable.nativeElement));
 
         if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
             const queryParams: Params = {};
@@ -409,5 +470,19 @@ export class CamTableComponent implements OnChanges, OnInit {
 
     isBoolean(x: any): boolean {
         return !(typeof x === 'string' || typeof x === 'number');
+    }
+
+    // Element with position 'fixed' is loosing the focus when page bottom is reached and cursor is moved (not 'mousewheel')
+    // this ensures scroll wrapper will get the event... but content is not clickable during scroll. -- TT
+    @HostListener("mousewheel", ["$event"])
+    onMouseWheel(event) {
+        if (this.tableScrollFixed) {
+            this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '-1');
+            clearTimeout(this.revert);
+            this.revert = setTimeout(() => {
+                this.renderer.setStyle(this.scrollWrapper.nativeElement, 'z-index', '1');
+                clearTimeout(this.revert);
+            }, 100);
+        }
     }
 }

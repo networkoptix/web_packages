@@ -132,9 +132,10 @@ Validate IPVD Device Table Column contains Desired Value in all Rows on all Page
 Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
+    Sleep    1
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
     :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
-    \    Element should be Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
+    \    Wait Until Element is Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
 
 IPVD Select Device from Table Column by Value
     [Arguments]    ${column}    ${SearchString}
@@ -189,13 +190,13 @@ Validate on IPVD Page
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
-    Run keyword and continue on failure    Title should be    Supported Devices
+    Run keyword and continue on failure    Title should be    ${IPVD TITLE TEXT} - ${PRODUCT_NAME}
     Elements should Not be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD DEVICE DETAILS}
     ...    ${IPVD PAGINATION}
     ...    ${IPVD EXPORT TO CSV}
-    Validate Manufacturer More Count
+   # Validate Manufacturer More Count
 
 
 Verify IPVD Advanced Search is Closed
@@ -263,10 +264,7 @@ Open New Browser on Failure
     Go To IPVD page
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}=   Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
+    Common Restart Logout    ${url}
     # Go To    ${url}/ipvd
 
 Validate Request Form Initial State

@@ -103,7 +103,7 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
     notification_object = PushNotification.objects.get(id=notification_id)
 
     try:
-        if not notification_object.subscriptions.all():
+        if not notification_object.devices.all():
             if not set_subscriptions_from_targets(notification_object, request_data):
                 log_push_result(notification_object, 'No matching subscriptions found')
                 return
@@ -133,6 +133,8 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             )
         else:
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR)
+
+        raise exception
 
 
 # For testing we dont want to send emails to everyone so we need to set

@@ -78,7 +78,7 @@ Text search correctly finds Manufacturers
     IPVD Text Search    hanwha
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
     ...    1
-    ...    Hanwha Techwin (Samsung)
+    ...    Hanwha    #used to be "Hanwha Techwin (Samsung)" but last entry in the table is "Hanwha techwin" and it would fail.
 
 
 #Text search correctly finds models
@@ -195,14 +195,14 @@ Text search
     Validate IPVD Device Table Not Empty
     ${lastPage1}=   Get Text    ${IPVD LAST PAGE BUTTON}
     IPVD Text Search    hi
-    Location should be    ${baseurl}?search=hi
+    Wait Until Location Is    ${baseurl}?search=hi
     Validate IPVD Device Table Not Empty
     ${lastPage2}=   Get Text    ${IPVD LAST PAGE BUTTON}
     Should be True
     ...    ${lastPage2} < ${lastPage1}
     ...    Page 2 results should be fewer than Page 1 results
     IPVD Text Search    hik
-    Location should be    ${baseurl}?search=hik
+    Wait Until Location Is    ${baseurl}?search=hik
     Validate IPVD Device Table Not Empty
     ${lastPage3}=   Get Text    ${IPVD LAST PAGE BUTTON}
     Should be True
@@ -216,14 +216,14 @@ Text search
 
     Log    Step 10
     IPVD Text Search Expecting No Results    aaaaaaaa
-    Location should be    ${baseurl}?search=aaaaaaaa
+    Wait Until Location Is    ${baseurl}?search=aaaaaaaa
     Element should be Visible    ${NOTHING FOUND PLACEHOLDER}
 
     Log    Step 11
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    Dahua
     IPVD Text Search    ${desiredText}
-    Location should be    ${baseurl}?search=${desiredText}
+    Wait Until Location Is    ${baseurl}?search=${desiredText}
     IPVD Select Device from Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     Should be Equal As Strings
@@ -235,7 +235,7 @@ Text search
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    SNC-CH120
     IPVD Text Search    ${desiredText}
-    Location should be    ${baseurl}?search=${desiredText}
+    Wait Until Location Is   ${baseurl}?search=${desiredText}
     IPVD Select Device from Table Column by Value    2    ${desiredText}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
     Should be Equal As Strings
@@ -248,7 +248,7 @@ Text search
     ${desiredText}=   Set Variable    Digital Watchdog DWCA
     IPVD Text Search    ${desiredText}
     ${t}=   Replace String Using Regexp    ${desiredText}    \(\\ \)    %20
-    Location should be    ${baseurl}?search=${t}
+    Wait Until Location Is    ${baseurl}?search=${t}
     IPVD Select Device from Table Randomly
     ${make}=   Get Text    ${IPVD DEVICE MAKE}
     ${model}=   Get Text    ${IPVD DEVICE MODEL}
@@ -261,7 +261,7 @@ Text search
     Click Element    ${IPVD CLEAR TEXT SEARCH BUTTON}
     ${desiredText}=   Set Variable    1920x1080
     IPVD Text Search    ${desiredText}
-    Location should be    ${baseurl}?search=${desiredText}
+    Wait Until Location Is    ${baseurl}?search=${desiredText}
     IPVD Select Device from Table by Row Number    1
     ${make1}=   Get Text    ${IPVD DEVICE MAKE}
     Elements should Not be Visible
@@ -307,6 +307,7 @@ Text in Search Input is kept after clicking X on Applied Features filter indicat
     Log    Step 2
     Click Element    ${IPVD ADV SEARCH BUTTON}
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
+    Sleep    .5
     ${numberOfFiltersApplied}=   Get Text    ${IPVD FILTERS APPLIED BUTTON}
     Should be Equal As Strings
     ...    ${numberOfFiltersApplied}
@@ -322,6 +323,7 @@ Advanced search
     Go To IPVD Page
     Verify IPVD Advanced Search is Closed
     Click Element    ${IPVD ADV SEARCH BUTTON}
+    Wait Until Element Has Style    ${IPVD ADV SEARCH BUTTON}    color    rgba(255, 255, 255, 1)
     Verify IPVD Advanced Search is Open
 
     Log    Step 2
@@ -330,6 +332,10 @@ Advanced search
     ...    ${IPVD ADV FEATURES PTZ}/div
     ...    background-color
     ...    ${COLOR LIGHT16 RGB}
+    Wait Until Element Has Style
+    ...    ${IPVD ADV FEATURES PTZ}/div
+    ...    color
+    ...    rgba(255, 255, 255, 1)
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element has Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
 
@@ -346,23 +352,25 @@ Advanced search
     Verify Button Arrow Direction    ${IPVD ADV FILTERS MIN RES}    Down
     Element Text should be    ${IPVD ADV FILTERS MIN RES}    1080p
     Wait until Element is Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be     ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
     Log    Step 4
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
-    Element Should Contain    ${IPVD FILTERS APPLIED BUTTON}    ${IPVD ADV FILTER MIN RES}
-    Element Should Contain    ${IPVD FILTERS APPLIED BUTTON}    1080p
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    ${IPVD ADV FILTER MIN RES}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    1080p
 
     Log    Step 5
     Click Element    ${IPVD ADV FILTERS MFRS}
     Click Element
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Axis']
     Click Element    ${IPVD ADV FILTERS MFRS}
-    Element Text should be    ${IPVD ADV FILTERS MFRS}    Axis
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD ADV FILTERS MFRS}    Axis
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    1    Axis
 
     Log    Step 6
@@ -373,8 +381,9 @@ Advanced search
     ...    ${IPVD ADV FILTERS MFRS}${IPVD ADV FILTERS DROPDOWN MENU ITEMS}/div/label[text()='Hikvision']
     Click Element    ${IPVD ADV FILTERS MFRS}
     Verify Button Arrow Direction    ${IPVD ADV FILTERS MFRS}    Down
-    Element Text should be    ${IPVD ADV FILTERS MFRS}    2 ${IPVD FILTERS SELECTED TEXT}
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD ADV FILTERS MFRS}    2 ${IPVD FILTERS SELECTED TEXT}
+    Wait Until Element Contains   ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 7
@@ -393,7 +402,8 @@ Advanced search
     Click Element    ${IPVD ADV FILTERS TYPES}
     Verify Button Arrow Direction    ${IPVD ADV FILTERS TYPES}    Down
     Element Text should be    ${IPVD ADV FILTERS TYPES}    3 ${IPVD FILTERS SELECTED TEXT}
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    6 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Not Empty
 
     Log    Step 8
@@ -414,20 +424,23 @@ Advanced search
     Click Element    ${IPVD ADV FEATURES 2-WAY AUDIO}
     Click Element    ${IPVD ADV FEATURES PTZ}
     Wait until Elements are Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains   ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be   ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    7    2-way
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    ●
 
     Log    Step 11
     Click Element    ${IPVD ADV FEATURES ADV PTZ}
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be    ${IPVD FILTERS APPLIED BUTTON}    3 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.
 
     Log    Step 12
     Click Element    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element is Not Visible    ${IPVD ADV FEATURES PTZ}${IPVD ADV FEATURES CLOSE BUTTON}
     Wait until Element does Not have Class    ${IPVD ADV FEATURES PTZ}/div    badge-selected
-    Element Text should be    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Wait Until Element Contains    ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
+    Element Text Should Be        ${IPVD FILTERS APPLIED BUTTON}    2 ${IPVD FILTERS APPLIED TEXT}
     Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages    8    Adv.
 
 # I have commented these out as they are causing errors on a part of the code that is

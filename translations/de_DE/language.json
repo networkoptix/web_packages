@@ -2,99 +2,6 @@
   "language": "de_DE",
   "language_name": "Deutsch",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Willkommen bei",
-    "register": "Account erstellen bei",
-    "changePassword": "Passwort ändern -",
-    "account": "Accounteinstellungen -",
-    "systems": "Systeme -",
-    "system": "System -",
-    "systemShare": "System freigeben -",
-    "activate": "Account aktivieren -",
-    "activateSent": "Account aktivieren -",
-    "activateSuccess": "Account aktiviert -",
-    "activateCode": "Account aktivieren -",
-    "restorePassword": "Passwort zurücksetzen -",
-    "restorePasswordSuccess": "Passwort gespeichert -",
-    "restorePasswordCode": "Passwort zurücksetzen -",
-    "view": "Kameras ansehen - ",
-    "debug": "Debug",
-    "login": "Anmelden -",
-    "download": "%VMS_NAME% herunterladen",
-    "downloadPlatform": "Download %VMS_NAME% für ",
-    "pageNotFound": "Seite nicht gefunden"
-  },
-  "systemStatuses": {
-    "activated": "aktiviert",
-    "incompatible": "inkompatibel",
-    "merging": "zusammenführen",
-    "notActivated": "nicht aktiviert",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "nicht verfügbar"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Deaktiviert",
-      "description": "Benutzer ist deaktiviert und kann sich in das System nicht anmelden"
-    },
-    "Owner": {
-      "label": "Besitzer",
-      "description": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen und Systeme von der Cloud zu verbinden/trennen"
-    },
-    "Viewer": {
-      "label": "Betrachter",
-      "description": "Kann Livevideos ansehen und das Archiv durchsuchen"
-    },
-    "Live Viewer": {
-      "label": "Live-Betrachter",
-      "description": "Kann nur Livevideos ansehen"
-    },
-    "Advanced Viewer": {
-      "label": "Erweiterter Betrachter",
-      "description": "Kann Livevideo ansehen, das Archiv durchsuchen, PTZ steuern usw"
-    },
-    "Administrator": {
-      "label": "Administrator",
-      "description": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen"
-    },
-    "Custom": {
-      "label": "Benutzerdefiniert",
-      "description": "Um benutzerdefinierte Berechtigungen zu erstellen, verwenden Sie die %VMS_NAME% Clientanwendung"
-    },
-    "cloudAdmin": {
-      "label": "Administrator",
-      "description": "Kann System konfigurieren und es freigeben"
-    },
-    "customRole": {
-      "label": "Benutzerdefinierte Rolle",
-      "description": "Benutzerdefinierte Benutzerrolle im System festgelegt"
-    },
-    "owner": {
-      "label": "Besitzer",
-      "description": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen und Systeme von der Cloud zu verbinden/trennen"
-    },
-    "viewer": {
-      "label": "Betrachter",
-      "description": "Kann Livevideos ansehen und das Archiv durchsuchen"
-    },
-    "liveViewer": {
-      "label": "Live-Betrachter",
-      "description": "Kann nur Livevideos ansehen"
-    },
-    "advancedViewer": {
-      "label": "Erweiterter Betrachter",
-      "description": "Kann Livevideos ansehen, das Archiv durchsuchen, Kameras konfigurieren, PTZ steuern, etc"
-    },
-    "custom": {
-      "label": "Benutzerdefiniert",
-      "description": "Um benutzerdefinierte Berechtigungen zu erstellen, verwenden Sie die %VMS_NAME% Clientanwendung"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Bestätigungsmail konnte nicht gesendet werden",
@@ -128,7 +35,7 @@
     "passwordMismatch": "Falsches Passwort",
     "cantEditYourself": "Eigene Berechtigungen zu ändern ist nicht erlaubt",
     "cantEditAdmin": "Dieser Benutzer hat Administratorberechtigungen",
-    "cantOpenClient": "Die Anwendung %VMS_NAME% wurde nicht gefunden. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "%VMS_NAME% wurde nicht gefunden. <a href=\"/download\">Download</a>",
     "lostConnection": "Verbindung zu {{systemName}} verloren",
     "thisSystem": "das System",
     "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
@@ -138,41 +45,6 @@
     "FAIL": "System <strong>{{failedSystem}}</strong> ist derzeit nicht erreichbar.<br>Versuchen Sie es in ein paar Minuten erneut oder kontaktieren Sie den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
     "unknownMergeError": "Unbekannter Fehler. Sie können versuchen, die Seite zu aktualisieren und den Versuch zu wiederholen. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>."
   },
-  "system": {
-    "yourSystem": "Ihr System",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "System ist nicht erreichbar",
-    "offline": "System ist offline",
-    "openClient": "In %VMS_NAME% öffnen",
-    "openClientNoSystem": "Öffnen Sie %VMS_NAME%",
-    "confirmMergeAction": "Zusammenführen",
-    "mergeSystemTitle": "Systeme zusammenführen",
-    "confirmRenameTitle": "Systemname",
-    "confirmRenameAction": "Speichern",
-    "successRename": "Systemname wurde gespeichert",
-    "confirmDisconnectTitle": "System von %CLOUD_NAME% trennen?",
-    "confirmDisconnectAction": "Trennen",
-    "confirmUnshareFromMe": "Sie können sich nicht mehr in dieses System einloggen.",
-    "confirmUnshareFromMeTitle": "System von Ihrem Konto trennen?",
-    "confirmUnshareFromMeAction": "Trennen",
-    "confirmUnshareTitle": "Nutzer entfernen?",
-    "confirmUnshareAction": "Löschen",
-    "successDisconnected": "Das System wurde erfolgreich von %CLOUD_NAME% getrennt",
-    "successDeleted": "Das System {{systemName}} wurde erfolgreich von Ihrem Account gelöscht",
-    "mergeFailed": "Systemzusammenführung fehlgeschlagen",
-    "mergeStart": "Systeme haben mit dem Zusammenführen begonnen",
-    "mergeSuccess": "Systemzusammenführung abgeschlossen",
-    "permissionsRemoved": "Berechtigungen wurden von {{email}} entfernt",
-    "unknownName": "Unbekannter Name für das System (verursacht durch Cloud-Merge)"
-  },
-  "regActions": {
-    "passwordLabel": "Passwort",
-    "createAccount": "Account erstellen"
-  },
-  "header": {
-    "allSystems": "Alle Systeme",
-    "systems": "Systeme"
-  },
   "common": {
     "cameraLinks": {
       "highStream": "Hoher Stream",
@@ -180,7 +52,7 @@
       "transcoding": "Umkodierung",
       "unknown": "Unbekannt",
       "copyToClipboard": "in zwischenablage kopieren",
-      "copyDefaultText": "kopieren",
+      "copyDefaultText": "copieren",
       "copyActiveText": "in die zwischenablage kopiert"
     },
     "systemOffline": "System offline",
@@ -211,21 +83,20 @@
     "voiceCommands": {
       "play": "Abspielen",
       "pause": "Pause",
-      "live": "Live gehen | Live anzeigen",
-      "view": "Ansicht + [Kameraname]",
-      "search": "Finden + [Text für Suchleiste]",
-      "clear search": "Suche zurücksetzen",
-      "expand server": "Server erweitern + [Servername]",
-      "collapse server": "Server zusammenklappen + [Servername]",
-      "expand all servers": "Alle Server erweitern",
-      "collapse all servers": "Alle Server zusammenklappen",
-      "stop listening": "Abhören stoppen",
-      "help": "Hilfe | Befehle anzeigen"
+      "live": "live gehen | live anzeigen",
+      "view": "ansicht + [kameraname]",
+      "search": "finden + [text für suchleiste]",
+      "clear search": "suche zurücksetzen",
+      "expand server": "server erweitern + [Servername]",
+      "collapse server": "server zusammenklappen + [Servername]",
+      "expand all servers": "alle Server erweitern",
+      "collapse all servers": "alle server zusammenklappen",
+      "stop listening": "abhören stoppen",
+      "help": "hilfe | befehle anzeigen"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Wir empfehlen die Beratung mit",
-    "b_support": "support",
-    "c_proceeding": "bevor Sie fortfahren."
+  "system": {
+    "offline": "System ist offline",
+    "unavailable": "System ist nicht erreichbar"
   }
 }

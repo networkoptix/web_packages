@@ -100,6 +100,7 @@ class NoptixImapLibrary(object):
         Examples:
         | Delete All Emails |
         """
+        self._mails = self._check_emails()
         for mail in self._mails:
             self.delete_email(mail)
         self._imap.expunge()
@@ -322,7 +323,7 @@ class NoptixImapLibrary(object):
         | Wait For Email | sender=noreply@domain.com |
         | Wait For Email | sender=noreply@domain.com | folder=OUTBOX
         """
-        poll_frequency = float(kwargs.pop('poll_frequency', 10))
+        poll_frequency = float(kwargs.pop('poll_frequency', 44))
         timeout = int(kwargs.pop('timeout', 60))
         end_time = time() + timeout
         while time() < end_time:

@@ -9,26 +9,22 @@ Force Tags        system
 *** Variables ***
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
+@{auth}        ${EMAIL OWNER}    ${BASE PASSWORD}
 
 *** Keywords ***
 Log in to Autotests 2 System
-    [arguments]    ${email}
+    [Arguments]    ${email}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${email}    ${password}    None
-    Validate Log In
+    Log In    ${email}    ${password}    button=None
     Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${SYSTEM ADMINISTRATION LINK}
-    Run Keyword If    '${email}' == '${EMAIL OWNER}'    Wait Until Elements Are Visible
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${MERGE BUTTON SYSTEM DISABLED}
-    Run Keyword If    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}' == '${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Run Keyword If    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Element Is Visible    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}'    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Restart
-    Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
-    Register Keyword To Run On Failure    Failure Tasks
-    Run Keyword If    ${status}    Log Out
-    Go To    ${url}
+    Common Restart Logout    ${url}
 
 Open New Browser On Failure
     Close Browser
@@ -44,7 +40,7 @@ The page is opened and shows the user list to owner
     [Tags]    C41881    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Title Should Be    Systems - ${PRODUCT_NAME}
+    # Title Should Be    Systems - ${PRODUCT_NAME}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
     Wait Until Element Is Visible    ${USERS LIST}
@@ -115,13 +111,12 @@ Should open System page by link to not authorized user and redirect to homepage,
 Should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL OWNER}   ${password}    None
+    Log In    ${EMAIL OWNER}   ${password}    button=None
     Verify In System    Auto Tests 2
 
 Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded
     Log In    ${EMAIL NOPERM}    ${password}
-    Validate Log In
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${AVAILABLE SYSTEMS LIST}
     Click Link    ${AVAILABLE SYSTEMS LIST}
@@ -133,7 +128,7 @@ Should open System page by link to user without permission and show alert (Syste
 Should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
-    Log In    ${EMAIL NOPERM}   ${password}    None
+    Log In    ${EMAIL NOPERM}   ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 Rename button opens dialog and clicking cancel closes rename dialog without rename
@@ -158,7 +153,7 @@ Clicking save with no input in rename dialog throws error
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Open Rename System Dialog
     Input Text    ${RENAME INPUT}    ${SPACE}
-    Press Key    ${RENAME INPUT}    ${BACKSPACE}
+    Press Keys    ${RENAME INPUT}    BACKSPACE
     Click Button    ${RENAME SAVE}
     Wait Until Elements Are Visible    ${RENAME INPUT WITH ERROR}    ${SYSTEM NAME IS REQUIRED}
     Click Button    ${RENAME CANCEL}
@@ -172,23 +167,17 @@ Owner is able to rename offline system via Cloud
     Input Text    ${RENAME INPUT}    ${new name}
     Click button    ${RENAME SAVE}
     Log Out
-    Validate Log Out
 
     # Make sure new name is saved
-    Log in to Autotests 2 System    ${EMAIL OWNER}
-    Verify In System   ${new name}
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    &{system info}[name]     ${new name}
 
     # Return to initial name
-    Open Rename System Dialog
-    Input Text    ${RENAME INPUT}    ${current name}
-    Click Button    ${RENAME SAVE}
-    Log Out
-    Validate Log Out
+    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${current name}
 
     # Make sure old name is saved
-    Log in to Autotests 2 System    ${EMAIL VIEWER}
-    Verify In System    ${current name}
-    Log Out
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    &{system info}[name]     ${current name}
 
 Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]    Threaded
@@ -206,16 +195,17 @@ Your permissions is shown for non-owners
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
         Log in to Auto Tests 2 System    ${user}
-        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/span[contains(text(),"${text}")]
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),"${text}")]
         Log Out
     END
 
 Should show (you) for owner and (owner's name & email) for non-owners
     [Tags]    C41881    Threaded
     Log in to AutoTests 2 System    ${EMAIL OWNER}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    you
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Element Is Visible    ${current owner name}
     Log Out
     Log in to Autotests 2 System    ${EMAIL VIEWER}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}
+

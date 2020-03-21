@@ -29,9 +29,13 @@ export class IpvdSearchService {
         this._vendors = list;
     }
 
-    ipvdSearch(camerasData, filter): Observable<any> {
+    ipvdSearch(camerasData, filter) {
         const query = filter.query.toLowerCase();
-        const queryTerms = query.trim().split(' ');
+        const queryTerms = query.trim()
+                                .split(/[\s\+]+/)
+                                .filter((elm) => {
+                                    return elm !== '';
+                                });
         const preferredVendors = '';
 
         function filterCamera(c, query) {
@@ -39,12 +43,21 @@ export class IpvdSearchService {
                 return str.replace(/-/g, '').toLowerCase();
             }
 
-            const queryLowerNoDashes = lowerNoDashes(query);
+            let result;
 
-            return (query.length === 0
-                    || lowerNoDashes(c.vendor).includes(queryLowerNoDashes)
-                    || lowerNoDashes(c.model).includes(queryLowerNoDashes)
-                    || c.maxResolution.includes(query));
+            if (query.indexOf('-') > -1) {
+                // If dash in query -> perform exact match
+                result = (c.vendor.toLowerCase().indexOf(query) > -1 ||
+                    c.model.toLowerCase().indexOf(query) > -1);
+
+            } else {
+                // If no dash in query -> include results with and without dash
+                const queryLowerNoDashes = lowerNoDashes(query);
+                result = (lowerNoDashes(c.vendor).indexOf(queryLowerNoDashes) > -1 ||
+                    lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
+            }
+
+            return (query.length === 0 || result || c.maxResolution.indexOf(query) > -1);
         }
 
         let resolution;
@@ -108,19 +121,23 @@ export class IpvdSearchService {
             }
 
             // Filter by query
-            return queryTerms.every(term => {
-                return filterCamera(camera, term);
-            });
-        }).sort(camera => {
-            const key = (camera.vendor + camera.model).toLowerCase();
-
-            if (preferredVendors.indexOf(camera.vendor.toLowerCase()) !== -1) {
-                return '!' + key;
+            if (!queryTerms.length) {
+                return true;
+            } else {
+                return queryTerms.every(term => {
+                    return filterCamera(camera, term);
+                });
             }
-
-            return key;
+        }).sort((cameraA: any, cameraB: any) => {
+            if (preferredVendors.indexOf(cameraA.vendor.toLowerCase()) !== -1) {
+                return -1;
+            }
+            if (preferredVendors.indexOf(cameraB.vendor.toLowerCase()) !== -1) {
+                return 1;
+            }
+            return cameraA.sortKey < cameraB.sortKey ? -1 : 1;
         });
 
-        return of(cameras);
+        return cameras;
     }
 }

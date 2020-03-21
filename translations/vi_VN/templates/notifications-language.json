@@ -8,11 +8,11 @@
   "cloud_notification": {
     "emailSubject": "{{message.subject}}"
   },
-  "contact_sales": {
+  "sales_inquiry": {
     "emailSubject": "Yêu cầu bán hàng cho {{message.asset}}"
   },
-  "contact_support": {
-    "emailSubject": "Yêu cầu hỗ trợ cho {{message.asset}}"
+  "technical_inquiry": {
+    "emailSubject": "Technical inquiry for {{message.asset}}"
   },
   "integration_feedback": {
     "emailSubject": "Phản hồi cho {{message.asset}}"

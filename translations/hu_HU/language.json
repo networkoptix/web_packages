@@ -2,99 +2,6 @@
   "language": "hu_HU",
   "language_name": "Magyar",
   "cloudName": "%CLOUD_NAME%",
-  "vmsName": "%VMS_NAME%",
-  "clientProtocol": "%CLIENT_PROTOCOL%:",
-  "pageTitles": {
-    "template": "{{title}} %CLOUD_NAME%",
-    "default": "%CLOUD_NAME%",
-    "registerSuccess": "Üdvözöljük",
-    "register": "Fiók létrehozása itt",
-    "changePassword": "Jelszó módosítása -",
-    "account": "Fiókbeállítások -",
-    "systems": "Rendszerek -",
-    "system": "Rendszer -",
-    "systemShare": "Rendszer megosztása -",
-    "activate": "Fiók aktiválása -",
-    "activateSent": "Fiók aktiválása -",
-    "activateSuccess": "Fiók aktiválva -",
-    "activateCode": "Fiók aktiválása -",
-    "restorePassword": "Jelszó visszaállítása -",
-    "restorePasswordSuccess": "Jelszó elmentve -",
-    "restorePasswordCode": "Jelszó visszaállítása -",
-    "view": "Kamerák megtekintése - ",
-    "debug": "Hibakeresés",
-    "login": "Bejelentkezés -",
-    "download": "%VMS_NAME% letöltése",
-    "downloadPlatform": "%VMS_NAME% letöltése ",
-    "pageNotFound": "Az oldal nem található"
-  },
-  "systemStatuses": {
-    "activated": "aktiválva",
-    "incompatible": "inkompatibilis",
-    "merging": "egyesülő",
-    "notActivated": "nincs aktiválva",
-    "online": "online",
-    "offline": "offline",
-    "unavailable": "nem elérhető"
-  },
-  "accessRoles": {
-    "disabled": {
-      "label": "Letiltva",
-      "description": "Felhasználó le van tiltva, és nem tud bejelentkezni a rendszerbe"
-    },
-    "Owner": {
-      "label": "Tulajdonos",
-      "description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást"
-    },
-    "Viewer": {
-      "label": "Felhasználó",
-      "description": "Élő videó megtekintése és rögzített visszajátszása"
-    },
-    "Live Viewer": {
-      "label": "Felhasználó (élő)",
-      "description": "Csak élőkép megtekintése"
-    },
-    "Advanced Viewer": {
-      "label": "Speciális felhasználó",
-      "description": "Élőkép megtekintése, keresés archívban, PTZ vezérlés, stb"
-    },
-    "Administrator": {
-      "label": "Adminisztrátor",
-      "description": "Korlátlan hozzáférést biztosít, beleértve a megosztást"
-    },
-    "Custom": {
-      "label": "Egyéni",
-      "description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst"
-    },
-    "cloudAdmin": {
-      "label": "Adminisztrátor",
-      "description": "Rendszerkonfigurálás és megosztás"
-    },
-    "customRole": {
-      "label": "Egyéni szerepkör",
-      "description": "Rendszerben megadott egyéni szerepkör"
-    },
-    "owner": {
-      "label": "Tulajdonos",
-      "description": "Korlátlan jog, mely tartalmazza a felhőhöz való csatlakozást, megosztást, leválasztást"
-    },
-    "viewer": {
-      "label": "Felhasználó",
-      "description": "Élő videó megtekintése és rögzített visszajátszása"
-    },
-    "liveViewer": {
-      "label": "Felhasználó (élő)",
-      "description": "Csak élőkép megtekintése"
-    },
-    "advancedViewer": {
-      "label": "Speciális felhasználó",
-      "description": "Élőkép, rögzített kép, kamerák konfigurálása, PTZ vezérlés, stb"
-    },
-    "custom": {
-      "label": "Egyéni",
-      "description": "Egyéni engedélyek konfigurálásához használja a %VMS_NAME% klienst"
-    }
-  },
   "errorCodes": {
     "ok": "ok",
     "cantSendActivationPrefix": "Megerősítő e-mailt nem lehet elküldeni",
@@ -128,7 +35,7 @@
     "passwordMismatch": "Hibás jelszó",
     "cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",
     "cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
-    "cantOpenClient": "%VMS_NAME% nincs törölve. <a href=\"/download\">Letöltés</a>",
+    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
     "lostConnection": "{{systemName}} kapcsolat megszakadt",
     "thisSystem": "a rendszer",
     "oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",
@@ -137,41 +44,6 @@
     "INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
     "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
     "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
-  },
-  "system": {
-    "yourSystem": "Az Ön rendszere",
-    "mySystemSearch": "IMeMyMine",
-    "unavailable": "Rendszer nem elérhető",
-    "offline": "A rendszer offline",
-    "openClient": "%VMS_NAME% Megnyitása",
-    "openClientNoSystem": "%VMS_NAME% Megnyitása",
-    "confirmMergeAction": "Összefésülés",
-    "mergeSystemTitle": "Rendszerek összevonása",
-    "confirmRenameTitle": "Rendszer neve",
-    "confirmRenameAction": "Mentés",
-    "successRename": "Rendszer neve mentve",
-    "confirmDisconnectTitle": "Megszünteti a kapcsolatot %CLOUD_NAME% felhővel?",
-    "confirmDisconnectAction": "Szétkapcsolás",
-    "confirmUnshareFromMe": "You will not be able to lgo into this System anymore.",
-    "confirmUnshareFromMeTitle": "Disconnect System from your Account?",
-    "confirmUnshareFromMeAction": "Szétkapcsolás",
-    "confirmUnshareTitle": "Remove user?",
-    "confirmUnshareAction": "Törlés",
-    "successDisconnected": "Rendszer sikeresen bontotta %CLOUD_NAME% kapcsolatát",
-    "successDeleted": "{{systemName}} rendszer sikeresen törölve a fiókból",
-    "mergeFailed": "A rendszeregyesítés sikertelen",
-    "mergeStart": "A rendszerek egyesülnek",
-    "mergeSuccess": "A rendszer egyesítése befejeződött",
-    "permissionsRemoved": "{{email}} engedélyei vissavonva",
-    "unknownName": "Ismeretlen név a rendszerhez (felhő egyesítése okozta)"
-  },
-  "regActions": {
-    "passwordLabel": "Jelszó",
-    "createAccount": "Fiók létrehozása"
-  },
-  "header": {
-    "allSystems": "Minden rendszer",
-    "systems": "Rendszerek"
   },
   "common": {
     "cameraLinks": {
@@ -203,15 +75,15 @@
     },
     "searchCamPlaceholder": "Keresés",
     "resolution": {
-      "auto": "Autómatikus",
-      "high": "Magas",
+      "auto": "Auto",
+      "high": "Elsődleges",
       "low": "Alacsony"
     },
     "chromeCastWarning": "A Chromecast erőforrás-igényes, és problémákat okozhat a kiszolgálón.",
     "voiceCommands": {
       "play": "letjátszás",
       "pause": "szünet",
-      "live": "go to live | show me live",
+      "live": "élőbe menni | mutatsd élőben",
       "view": "nézet + [kamera neve]",
       "search": "keresés + [szöveg a keresősávhoz]",
       "clear search": "keresés törlése",
@@ -223,9 +95,8 @@
       "help": "súgó | parancsok megjelenítése"
     }
   },
-  "recommendSupport": {
-    "a_recommend": "Javasoljuk, hogy konzultáljon erről",
-    "b_support": "támogatás",
-    "c_proceeding": "mielőtt folytatná."
+  "system": {
+    "offline": "A rendszer offline",
+    "unavailable": "Rendszer nem elérhető"
   }
 }

@@ -50,7 +50,7 @@
 .results tr {
     height: 40px !important;
 }
-.results tr > td, tr > th{
+.results tr > td, tr > th {
     vertical-align: middle;
     padding: 8px !important;
 }
@@ -192,4 +192,21 @@ img.light {
 
 .tooltip-inner {
   max-width: 500px;
+}
+
+.mce-placeholder {
+    pointer-events: none;
+    position: absolute;
+    top: 2px;
+    left: 0;
+    padding: .25% !important;
+    margin: 5px !important;
+    width: 80% !important;
+    overflow: hidden;
+    white-space: pre-wrap !important;
+    float: unset !important;
+}
+
+.defaultSkin * {
+    color: #aaaaaa !important;
 }

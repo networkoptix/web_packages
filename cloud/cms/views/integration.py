@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from django.core.cache import caches
 from django.db.models import Q
 
 from cloud import settings
@@ -17,7 +18,25 @@ ACCEPTED = AssetCustomizationReview.REVIEW_STATES.accepted
 PENDING = AssetCustomizationReview.REVIEW_STATES.pending
 
 
+class IntegrationsCache(object):
+    def __init__(self):
+        self.cache = caches['integrations']
+
+    def __getitem__(self, key):
+        return self.cache.get(key, None)
+
+    def __setitem__(self, key, integration):
+        self.cache.set(key, integration)
+
+    def clear_cache(self):
+        self.cache.clear()
+
+
+INTEGRATION_CACHE = IntegrationsCache()
+
+
 def make_integrations_json(integrations, contexts=None, show_pending=False, show_drafts=False, user=None):
+    global INTEGRATION_CACHE
     user_assets = user.assets if user and user.is_authenticated else []
     integrations_json = []
 
@@ -27,13 +46,18 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
     cloud_portal = get_cloud_portal_asset()
 
     if cloud_portal:
+        state = 'release'
+        if show_pending:
+            state = 'review'
+        elif show_drafts:
+            state = 'draft'
+
         global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
         for integration in integrations:
-            integration_dict = {}
             current_version = integration.version_id()
-            integration_dict['mine'] = integration.id in user_assets
+            customization_id_state_key = f"{settings.CUSTOMIZATION}-{integration.id}-{state}"
 
             if show_pending:
                 pending_version = AssetCustomizationReview.objects.filter(version__id__gt=current_version,
@@ -50,47 +74,62 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                     continue
                 current_version = None
 
-            if show_drafts or show_pending:
-                integration_dict['pending'] = show_pending
-                integration_dict['draft'] = show_drafts
-
             if current_version == 0:
                 continue
 
-            for context in contexts:
-                # Make context json friendly
-                context_name = context.name
+            integration_dict = INTEGRATION_CACHE[customization_id_state_key]
+            # If the integration doesnt exist or the version is wrong recalculate it
+            if not integration_dict or integration_dict['version'] != current_version or show_drafts:
+                integration_dict = dict()
+                for context in contexts:
+                    # Make context json friendly
+                    context_name = context.name
 
-                context_dict = {}
-                for datastructure in context.datastructure_set.all():
-                    ds_name = datastructure.name
-                    if not datastructure.public:
-                        continue
+                    context_dict = {}
+                    for datastructure in context.datastructure_set.all():
+                        ds_name = datastructure.name
+                        if not datastructure.public:
+                            continue
 
-                    record_value = datastructure.find_actual_value(asset=integration,
-                                                                   version_id=current_version,
-                                                                   draft=show_pending or show_drafts)
+                        record_value = datastructure.find_actual_value(asset=integration,
+                                                                       version_id=current_version,
+                                                                       draft=show_pending or show_drafts)
 
-                    if not record_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
-                        continue
+                        if not record_value and datastructure.type != DataStructure.DATA_TYPES.multiselect:
+                            continue
 
-                    context_dict[ds_name] = record_value
+                        context_dict[ds_name] = record_value
 
-                if context_dict:
-                    integration_dict[context_name] = context_dict
-                    if context.name == "downloadFiles":
-                        downloads_order = {}
-                        for datastructure in context.datastructure_set.all():
-                            downloads_order[datastructure.name] = datastructure.order
-                        integration_dict[f"{context_name}Order"] = downloads_order
+                    if context_dict:
+                        integration_dict[context_name] = context_dict
+                        if context.name == "downloadFiles":
+                            downloads_order = {}
+                            for datastructure in context.datastructure_set.all():
+                                downloads_order[datastructure.name] = datastructure.order
+                            integration_dict[f"{context_name}Order"] = downloads_order
 
-            if not integration_dict:
-                continue
+                if not integration_dict:
+                    continue
 
-            process_global_contexts(cloud_portal, integration_dict, current_version, False,
-                                    global_contexts, global_contexts_dict)
-            integration_dict['id'] = integration.id
-            integrations_json.append(integration_dict)
+                process_global_contexts(cloud_portal, integration_dict, current_version, False,
+                                        global_contexts, global_contexts_dict)
+
+                integration_dict['mine'] = integration.id in user_assets
+                if show_drafts or show_pending:
+                    integration_dict['pending'] = show_pending
+                    integration_dict['draft'] = show_drafts
+                else:
+                    integration_dict['lastModified'] = integration.last_modified
+                integration_dict['version'] = current_version
+                integration_dict['id'] = integration.id
+                if not show_drafts:
+                    INTEGRATION_CACHE[customization_id_state_key] = integration_dict
+
+            # Create a copy to remove the version key.
+            # Version key is used to check if the internal version has been changed for a specific state of the asset.
+            integration_dict_copy = integration_dict.copy()
+            del integration_dict_copy['version']
+            integrations_json.append(integration_dict_copy)
 
     return integrations_json
 
@@ -174,6 +213,7 @@ def get_integrations(request):
 
     is_portal_manager = UserGroupsToAssetPermissions. \
                 check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+    own_integrations = []
 
     if not request.user.is_anonymous:
         own_integrations = integrations.filter(Q(id__in=request.user.assets) | Q(created_by=request.user)).distinct()
