@@ -38,7 +38,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systems: any;
-    peerSystems: any[];
+    peerSystems: any[] = [];
 
     userDisconnectSystem: any;
     deletingSystem: any;
@@ -152,7 +152,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .pipe(filter((system) => system !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.updateSettings();
                 this.applyService.setVisible(false);
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                 if (this.system.isAvailable) {

@@ -213,6 +213,7 @@ export class MergeModalContent {
 
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
+                // for use case when password gets changed
                 if (this.serverUrl.indexOf('//admin:') >= 0) {
                     const startIndex = this.serverUrl.indexOf('//admin') + 2;
                     const endIndex = this.serverUrl.indexOf('@', startIndex + 1) + 1;
@@ -227,7 +228,9 @@ export class MergeModalContent {
                         } else if (res.errorString === 'UNAUTHORIZED') {
                             this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordWrong' });
                         } else if (res.errorString === 'DUPLICATE_MEDIASERVER_FOUND') {
-                            this.goBack('duplicateServers');
+                            this.machine.history = [];
+                            this.machine.transition('checkMerge');
+                            this.updateShow('serverUrlMergeError', { checkingErrorText: 'duplicateServers' });
                         }
                     });
             });
@@ -340,6 +343,9 @@ export class MergeModalContent {
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if ((/^https?:\/\//).test(this.serverUrl) === false) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
+            }
+            if ((/:\d{1,5}$/).test(this.serverUrl) === false) {
+                this.serverUrl += ':7001';
             }
             return this.system.mergeSystems(this.serverUrl, true).toPromise()
                 .then(res => {
