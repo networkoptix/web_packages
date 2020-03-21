@@ -38,20 +38,20 @@ def get_mobile_compatible_customization():
 
 class CloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
-        try:
-            ip = get_client_ip(request)
-            # System credentials should fail account.get and raise an exception
-            Clouddb_Account.get(user, password, ip)
-            raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
-        except (APINotAuthorisedException, APILogicException):
-            try:
-                system_response = Clouddb_System.get(user, password, user)
-                if 'systems' in system_response and system_response['systems'][0]:
-                    request.data['system'] = system_response['systems'][0]
-                else:
-                    raise exceptions.AuthenticationFailed('Invalid system credentials')
-            except APINotAuthorisedException:
-                raise exceptions.AuthenticationFailed('Invalid system credentials')
+        # try:
+        #     ip = get_client_ip(request)
+        #     # System credentials should fail account.get and raise an exception
+        #     Clouddb_Account.get(user, password, ip)
+        #     raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+        # except (APINotAuthorisedException, APILogicException):
+        #     try:
+        #         system_response = Clouddb_System.get(user, password, user)
+        #         if 'systems' in system_response and system_response['systems'][0]:
+        #             request.data['system'] = system_response['systems'][0]
+        #         else:
+        #             raise exceptions.AuthenticationFailed('Invalid system credentials')
+        #     except APINotAuthorisedException:
+        #         raise exceptions.AuthenticationFailed('Invalid system credentials')
 
         request.data['username'] = user
         request.data['password'] = password
