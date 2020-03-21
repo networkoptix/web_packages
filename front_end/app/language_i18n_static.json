@@ -185,6 +185,7 @@
             "mergeFailedTitle": "System merge failed",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner.",
             "passwordRequired": "Password is required.",
             "passwordWrong": "Wrong password.",

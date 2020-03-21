@@ -193,6 +193,7 @@ export interface DialogsMerge {
     mergeFailedTitle:           string;
     noServerFound:              string;
     newSystemDisplayName:       string;
+    otherSystem:                string;
     ownerCanMergeText:          string;
     passwordRequired:           string;
     passwordWrong:              string;
@@ -974,6 +975,7 @@ const typeMap: any = {
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "" },
         { json: "noServerFound", js: "noServerFound", typ: "" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "" },
+        { json: "otherSystem", js: "otherSystem", typ: "" },
         { json: "ownerCanMergeText", js: "ownerCanMergeText", typ: "" },
         { json: "passwordRequired", js: "passwordRequired", typ: "" },
         { json: "passwordWrong", js: "passwordWrong", typ: "" },
