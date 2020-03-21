@@ -172,12 +172,12 @@ def process_push_response(responses, notification_object, dry_run=False):
 def set_subscriptions_from_targets(notification_object, request_data):
     targets = set(json.loads(notification_object.raw_targets))
     system_id = notification_object.raw_system_id
-    # system = get_system_with_users(notification_object, request_data)
+    system = get_system_with_users(notification_object, request_data)
 
-    # if not system:
-    #     return False
+    if not system:
+        return False
 
-    # targets = targets.intersection(system['users'])
+    targets = targets.intersection(system['users'])
     target_accounts = Account.objects.filter(email__in=targets).distinct()
 
     for account in target_accounts:

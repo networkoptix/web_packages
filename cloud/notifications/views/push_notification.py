@@ -97,7 +97,7 @@ class CloudSessionAuthentication(SessionAuthentication):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-# @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
+@authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
     if request.data.get('process'):
         serializer = NotificationSerializer(data=request.data)
