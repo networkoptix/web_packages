@@ -5,6 +5,7 @@
             class="form form-horizontal row"
             role="form"
             name="storageSettings"
+            (change)="handleChange()"
             novalidate
         >
             <ng-container *ngFor="let storage of storages; index as i">

@@ -1,6 +1,6 @@
 import {
     Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy, LOCALE_ID
+    ViewContainerRef, OnDestroy, LOCALE_ID, Input
 }                                     from '@angular/core';
 import {
     filter, map, delay,
@@ -13,44 +13,12 @@ import { IConfig, NxConfigService } from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 import { NxSystem } from '../../../../../services/system.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxApplyService } from '../../../../../services/apply.service';
+import { NxApplyService, Watcher } from '../../../../../services/apply.service';
 import { NxProcessService } from '../../../../../services/process.service';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService } from '../../settings.service';
 import { NxMenuService } from '../../../../../components/menu/menu.service';
 import { NxUriService } from '../../../../../services/uri.service';
-
-export class BitConverter {
-    constructor(public bits: number, public uom?: 'GB' | 'TB') {}
-
-    private bitsGb = 1073741824;
-    private bitsTb = 1073741824 * 1024
-
-    get GB(): number { return this.bits / this.bitsGb; }
-    set GB(gb: number) { this.bits = gb * this.bitsGb; }
-
-    get TB(): number { return this.bits / this.bitsTb; }
-    set TB(tb: number) { this.bits = tb * this.bitsTb; }
-
-    get unitsInCurrentUom() { return this[this.uom]; }
-    set unitsInCurrentUom(units) { this[this.uom] = units; }
-}
-
-export class FreeSpace {
-    private freeExcludeReserved: BitConverter
-
-    constructor(free: number, private reserved: BitConverter) {
-        this.freeExcludeReserved = new BitConverter(free + reserved.bits);
-    }
-
-    get bits() {
-        return this.freeExcludeReserved.bits - this.reserved.bits;
-    }
-
-    set bits(value) {
-        this.reserved.bits = value;
-    }
-}
 
 @AutoUnsubscribe()
 @Component({
@@ -59,62 +27,11 @@ export class FreeSpace {
     styleUrls   : ['storage.component.scss']
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy {
-    // TODO: Replace with request to system
-    response = {
-        error       : '0',
-        errorString : '',
-        reply       : {
-            storageProtocols: [
-                'smb'
-            ],
-            storages: [
-                {
-                    freeSpace        : 1837679546368,
-                    isBackup         : false,
-                    isExternal       : false,
-                    isOnline         : true,
-                    isUsedForWriting : true,
-                    isWritable       : true,
-                    reservedSpace    : 32212254720,
-                    storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                    storageStatus    : 'used|system',
-                    storageType      : 'local',
-                    totalSpace       : 1964203130880,
-                    url              : '/opt/networkoptix/mediaserver/var/data'
-                },
-                {
-                    freeSpace        : 183767954636 * 3,
-                    isBackup         : false,
-                    isExternal       : false,
-                    isOnline         : true,
-                    isUsedForWriting : false,
-                    isWritable       : true,
-                    reservedSpace    : 32212254720,
-                    storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                    storageStatus    : 'used|system',
-                    storageType      : 'local',
-                    totalSpace       : 1964203130880,
-                    url              : '/opt/networkoptix/mediaserver/var/second'
-                },
-                {
-                    freeSpace        : 183767954636 * 2,
-                    isBackup         : false,
-                    isExternal       : false,
-                    isOnline         : true,
-                    isUsedForWriting : false,
-                    isWritable       : false,
-                    reservedSpace    : 32212254720,
-                    storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                    storageStatus    : 'used|system',
-                    storageType      : 'local',
-                    totalSpace       : 1964203130880,
-                    url              : '/opt/networkoptix/mediaserver/var/third'
-                }
-            ]
-        }
-    }
+    @Input()
+    storageSettings: Watcher<Object>
 
-    storages = this.response.reply.storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, ...storage }) => {
+    // eslint-disable-next-line no-use-before-define
+    storages = response.reply.storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, ...storage }) => {
         const reservedSpace = new BitConverter(reserved, 'GB');
         const totalSpace = new BitConverter(total);
         const freeSpace = new FreeSpace(free, reservedSpace);
@@ -122,27 +39,18 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
         return { ...storage, freeSpace, reservedSpace, totalSpace, maxReserve };
     });
 
-    units = [
-        // 'B',
-        // 'kB',
-        // 'MB',
-        'GB',
-        'TB'
-        // 'PB',
-        // 'EB',
-        // 'ZB',
-        // 'YB'
-    ];
 
-    constructor(@Inject(LOCALE_ID) private locale: string) {}
+    constructor(@Inject(LOCALE_ID) private locale: string) {
+    }
+
+    handleChange() {
+        this.storageSettings.value = this.storages;
+        console.log(JSON.stringify(this.storageSettings.value));
+    }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
         const { locale } = this;
         return fromBits(bits, { locale, roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824 });
-    }
-
-    log(event) {
-        console.log(event);
     }
 
     ngOnDestroy() {}
@@ -291,3 +199,89 @@ type Bps =
     | 'Ebps'
     | 'Zbps'
     | 'Ybps';
+
+export class BitConverter {
+    constructor(public bits: number, public uom?: 'GB' | 'TB') {}
+
+        private bitsGb = 1073741824;
+        private bitsTb = 1073741824 * 1024
+
+        get GB(): number { return this.bits / this.bitsGb; }
+        set GB(gb: number) { this.bits = gb * this.bitsGb; }
+
+        get TB(): number { return this.bits / this.bitsTb; }
+        set TB(tb: number) { this.bits = tb * this.bitsTb; }
+
+        get unitsInCurrentUom() { return this[this.uom]; }
+        set unitsInCurrentUom(units) { this[this.uom] = units; }
+}
+
+export class FreeSpace {
+        private freeExcludeReserved: BitConverter
+
+        constructor(free: number, private reserved: BitConverter) {
+            this.freeExcludeReserved = new BitConverter(free + reserved.bits);
+        }
+
+        get bits() {
+            return this.freeExcludeReserved.bits - this.reserved.bits;
+        }
+
+        set bits(value) {
+            this.reserved.bits = value;
+        }
+}
+
+export const response = {
+    error       : '0',
+    errorString : '',
+    reply       : {
+        storageProtocols: [
+            'smb'
+        ],
+        storages: [
+            {
+                freeSpace        : 1837679546368,
+                isBackup         : false,
+                isExternal       : false,
+                isOnline         : true,
+                isUsedForWriting : true,
+                isWritable       : true,
+                reservedSpace    : 32212254720,
+                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
+                storageStatus    : 'used|system',
+                storageType      : 'local',
+                totalSpace       : 1964203130880,
+                url              : '/opt/networkoptix/mediaserver/var/data'
+            },
+            {
+                freeSpace        : 183767954636 * 3,
+                isBackup         : false,
+                isExternal       : false,
+                isOnline         : true,
+                isUsedForWriting : false,
+                isWritable       : true,
+                reservedSpace    : 32212254720,
+                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
+                storageStatus    : 'used|system',
+                storageType      : 'local',
+                totalSpace       : 1964203130880,
+                url              : '/opt/networkoptix/mediaserver/var/second'
+            },
+            {
+                freeSpace        : 183767954636 * 2,
+                isBackup         : false,
+                isExternal       : false,
+                isOnline         : true,
+                isUsedForWriting : false,
+                isWritable       : false,
+                reservedSpace    : 32212254720,
+                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
+                storageStatus    : 'used|system',
+                storageType      : 'local',
+                totalSpace       : 1964203130880,
+                url              : '/opt/networkoptix/mediaserver/var/third'
+            }
+        ]
+    }
+};
