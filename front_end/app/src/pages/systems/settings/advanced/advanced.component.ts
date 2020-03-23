@@ -6,7 +6,7 @@ import {
     filter, map, delay,
     retryWhen, take
 } from 'rxjs/operators';
-import { Subscription }               from 'rxjs';
+import { Subscription, Observable }               from 'rxjs';
 import { ActivatedRoute }             from '@angular/router';
 import { NxConfigService, IConfig }   from '../../../../services/nx-config';
 import { NxDialogsService }           from '../../../../dialogs/dialogs.service';
@@ -35,6 +35,7 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
     selectedServer: any;
+    system$: Observable<NxSystem>
 
     systemSettings: any = {
         additionalLocalFsTypes                          : new Watcher<any>(),
@@ -172,39 +173,39 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.systemSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
-            .subscribe((system) => {
-                this.settingsService.footerSubject.next(true);
-                this.system = system;
-                this.applyService.setVisible(false);
-                this.initApplyService();
+        this.system$ = this.settingsService.systemSubject
+            .pipe(filter(data => data !== undefined));
+        this.systemSubscription = this.system$.subscribe((system) => {
+            this.settingsService.footerSubject.next(true);
+            this.system = system;
+            this.applyService.setVisible(false);
+            this.initApplyService();
 
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
-                    .pipe(
-                        map(system => {
-                            if (!system.servers || system.servers.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .pipe(take(1))
-                    .subscribe(() => {
-                        this.settingsService.footerSubject.next(true);
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
-                                this.getAdvancedSettings();
-                            }
-                            if (!this.applyService.locked) {
-                                this.setServer();
-                            }
+            if (this.serverSubscription) {
+                this.serverSubscription.unsubscribe();
+            }
+            this.serverSubscription = this.system.infoSubject
+                .pipe(
+                    map(system => {
+                        if (!system.servers || system.servers.length === 0) {
+                            throw system;
                         }
-                    });
-            });
+                    }),
+                    retryWhen(err => err.pipe(delay(1000)))
+                )
+                .pipe(take(1))
+                .subscribe(() => {
+                    this.settingsService.footerSubject.next(true);
+                    if (this.system.currentServerNotBusy) {
+                        if (this.system && this.system.servers && this.system.servers.length) {
+                            this.getAdvancedSettings();
+                        }
+                        if (!this.applyService.locked) {
+                            this.setServer();
+                        }
+                    }
+                });
+        });
     }
 
     ngOnDestroy(): void {

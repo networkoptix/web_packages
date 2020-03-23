@@ -12,7 +12,7 @@
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">Url</div>
+                        <div class="w-100" translate>Url</div>
                     </div>
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
@@ -26,7 +26,7 @@
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">Free Space</div>
+                        <div class="w-100" translate>Free Space</div>
                     </div>
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
@@ -60,7 +60,7 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">Reserved Space</div>
+                        <div class="w-100" translate>Reserved Space</div>
                     </div>
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
@@ -92,7 +92,7 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                     <div
                         class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
                     >
-                        <div class="w-100">Used for writing</div>
+                        <div class="w-100" translate>Used for writing</div>
                     </div>
                     <div
                         class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
@@ -104,8 +104,8 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                                 [(ngModel)]="storage.isUsedForWriting.value"
                             >
                             </nx-checkbox>
-                            <span *ngIf="storage.isUsedForWriting" class="pl-3">Writing is enabled for this storage</span>
-                            <span *ngIf="!storage.isUsedForWriting" class="pl-3">Writing is disabled for this storage</span>
+                            <span *ngIf="storage.isUsedForWriting" class="pl-3" translate>Writing is enabled for this storage</span>
+                            <span *ngIf="!storage.isUsedForWriting" class="pl-3" translate>Writing is disabled for this storage</span>
                         </div>
                     </div>
                 </div>

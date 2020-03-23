@@ -1,12 +1,13 @@
 import {
     Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy, LOCALE_ID, Input
+    ViewContainerRef, OnDestroy, LOCALE_ID, Input, OnChanges
 }                                     from '@angular/core';
 import {
     filter, map, delay,
-    retryWhen
+    retryWhen,
+    take
 }                                     from 'rxjs/operators';
-import { Subscription }               from 'rxjs';
+import { Subscription, Observable }               from 'rxjs';
 import { ActivatedRoute }             from '@angular/router';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService } from '../../../../../services/nx-config';
@@ -27,6 +28,13 @@ import { NxUriService } from '../../../../../services/uri.service';
     styleUrls   : ['storage.component.scss']
 })
 export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
+    @Input()
+    system$: Observable<NxSystem>;
+
+    system: NxSystem;
+    systemSubscription: Subscription;
+    serverSubscription: Subscription;
+
     // eslint-disable-next-line no-use-before-define
     storages = [];
     watchers: Watcher<any>[] = [];
@@ -39,11 +47,42 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        const { storages, watchers } = mapStorages(response.reply.storages);
-        this.storages = storages;
+        this.systemSubscription = this.system$.subscribe((system) => {
+            this.system = system;
 
-        this.watchers = watchers;
-        this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => { console.log('apply for storage working'); }, () => { console.log('discard for storage working'); });
+            if (this.serverSubscription) {
+                this.serverSubscription.unsubscribe();
+            }
+            this.serverSubscription = this.system.infoSubject
+                .pipe(
+                    map(system => {
+                        if (!system.servers || system.servers.length === 0) {
+                            throw system;
+                        }
+                    }),
+                    retryWhen(err => err.pipe(delay(1000))),
+                    take(1)
+                )
+                .subscribe(() => {
+                    this.getStorage();
+                    if (this.system.currentServerNotBusy) {
+                        if (this.system && this.system.servers && this.system.servers.length) {
+                            this.getStorage();
+                        }
+                    }
+                });
+        });
+    }
+
+    getStorage() {
+        this.system.updateOrGetSystemStorage().toPromise().then(response => {
+            const storagesFromResponse =  response.reply.storages; // Use this once server is back up
+            const { storages, watchers } = mapStorages(mockResponse.reply.storages);
+            this.storages = storages;
+
+            this.watchers = watchers;
+            this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => { console.log('apply for storage working'); }, () => { console.log('discard for storage working'); });
+        });
     }
 
     buildUpdateParams() {
@@ -292,7 +331,7 @@ export class FreeSpace {
         }
 }
 
-export const response = {
+export const mockResponse = {
     error       : '0',
     errorString : '',
     reply       : {

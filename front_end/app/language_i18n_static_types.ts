@@ -38,6 +38,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    settingsConfig:        { [key: string]: string };
 }
 
 export interface AccessRole {
@@ -835,6 +836,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "settingsConfig", js: "settingsConfig", typ: m("") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "" },
