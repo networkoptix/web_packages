@@ -795,6 +795,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
+    updateOrGetSystemStorage(updateParams = {}) {
+        return this.mediaserver.updateOrGetStorage(updateParams);
+    }
+
     initSystemMediaServers() {
         return this.serverManager.initSystemMediaServers();
     }
