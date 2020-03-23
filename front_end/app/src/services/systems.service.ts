@@ -18,7 +18,7 @@ export class NxSystemsService implements OnDestroy {
     LANG: LanguageI18NStaticTypes;
     activeSubscription: Subscription;
     currentUser: string;
-    mergingSystems: { [key: string]: { primary: any, secondary: any }; };
+    mergingSystems: Set<string>;
     // TODO: Having trouble creating type for systems and systemPoll
     systems: any;
     systemsPoll: any;
@@ -38,16 +38,21 @@ export class NxSystemsService implements OnDestroy {
         this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
-        this.mergingSystems = {};
+        this.mergingSystems = new Set();
     }
 
-    addToMergeList(systemId: string, mergeInfo: any) {
-        this.mergingSystems[systemId] = mergeInfo;
+    processMerge(mergeInfo: any) {
+        this.systemsMerging.primary = mergeInfo.primary;
+        this.systemsMerging.secondary = mergeInfo.secondary;
+    }
+
+    addToMergeList(systemId: string) {
+        this.mergingSystems.add(systemId);
     }
 
     removeFromMergeList(systemId: string) {
-        if (systemId in this.mergingSystems) {
-            delete this.mergingSystems[systemId];
+        if (this.mergingSystems.has(systemId)) {
+            this.mergingSystems.delete(systemId);
             const options = {
                 autoHide  : true,
                 classname : this.CONFIG.toast.success,
@@ -153,20 +158,13 @@ export class NxSystemsService implements OnDestroy {
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {
-                const mergeInfo: any = {
-                    primary   : {},
-                    secondary : {}
-                };
-                if (system.mergeInfo.role === 'master') {
-                    mergeInfo.primary.id = system.id;
-                    mergeInfo.secondary.id = system.mergeInfo.anotherSystemId;
-                } else {
-                    mergeInfo.primary.id = system.mergeInfo.anotherSystemId;
-                    mergeInfo.secondary.id = system.id;
-                }
-                this.addToMergeList(system.id, mergeInfo);
-            } else if (system.id in this.mergingSystems) {
+                this.addToMergeList(system.id);
+            } else if (this.mergingSystems.has(system.id)) {
                 setTimeout(() => {
+                    this.systemsMerging = {
+                        primary   : undefined,
+                        secondary : undefined
+                    };
                     this.removeFromMergeList(system.id);
                 }, 500);
             }

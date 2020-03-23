@@ -231,63 +231,17 @@
                                             [form]="restorePassword"
                                             #newPassword="ngModel">
                                     </nx-password-input>
+                                    <nx-password-input-tag-validation
+                                            [forElement]="newPassword"
+                                            [value]="data.newPassword">
+                                    </nx-password-input-tag-validation>
                                 </div>
 
                                 <div class="col-md-4">
-                                    <span class="help-block" *ngIf="!newPassword.valid && !newPassword.touched">
-                                        <nx-tag type="danger"
-                                                *ngIf="newPassword.errors &&
-                                                     newPassword.errors.weak &&
-                                                     !newPassword.errors.common &&
-                                                     !newPassword.errors.pattern &&
-                                                     !newPassword.errors.minlength"
-                                                title="Weak">Weak</nx-tag>
-                                        <nx-tag type="danger"
-                                                *ngIf="newPassword.errors &&
-                                                     newPassword.errors.common &&
-                                                     !newPassword.errors.pattern &&
-                                                     !newPassword.errors.minlength &&
-                                                     !newPassword.errors.required"
-                                                title="Too common">Too common</nx-tag>
-                                        <nx-tag type="danger"
-                                                *ngIf="newPassword.errors &&
-                                                     newPassword.errors.minlength &&
-                                                     !newPassword.errors.pattern"
-                                                title="short">Short</nx-tag>
-                                        <nx-tag type="danger"
-                                                *ngIf="newPassword.errors &&
-                                                     newPassword.errors.pattern &&
-                                                     !newPassword.errors.minlength"
-                                                title="required">Required</nx-tag>
-                                    </span>
-
-                                    <span class="help-block" *ngIf="!newPassword.valid && newPassword.touched">
-                                    <span class="input-error"
-                                          *ngIf="newPassword.errors &&
-                                                 newPassword.errors.weak &&
-                                                 !newPassword.errors.common &&
-                                                 !newPassword.errors.pattern &&
-                                                 !newPassword.errors.required &&
-                                                 !newPassword.errors.minlength">Weak</span>
-
-                                    <span class="input-error"
-                                          *ngIf="newPassword.errors &&
-                                                 newPassword.errors.common &&
-                                                 !newPassword.errors.required">Too common</span>
-
-                                    <span class="input-error"
-                                          *ngIf="newPassword.errors &&
-                                                 newPassword.errors.minlength">Short
-                                    </span>
-                                    <span class="input-error"
-                                          *ngIf="newPassword.errors &&
-                                                 newPassword.errors.pattern &&
-                                                 !newPassword.errors.minlength">Invalid
-                                    </span>
-                                    <span class="input-error"
-                                          *ngIf="newPassword.errors &&
-                                                 newPassword.errors.required">Required</span>
-                                    </span>
+                                    <nx-password-input-validation
+                                            [forElement]="newPassword"
+                                            [value]="data.newPassword">
+                                    </nx-password-input-validation>
                                 </div>
                             </div>
 

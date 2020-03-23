@@ -28,7 +28,7 @@
                         </div>
                         <div class="float-left mr-2" *ngIf="settings.showMerge">
                             <button class="btn btn-default"
-                                    [disabled]="settings.mergeDisabled"
+                                    [disabled]="settings.mergeDisabled || peerSystems.length === 0"
                                     (click)="mergeSystems()">
                                 <span class="ellipsis" translate>Merge with Another System</span>
                             </button>

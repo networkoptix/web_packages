@@ -12,7 +12,7 @@
     "TERMS AND CONDITIONS LINK TEXT"       :    "Terms and Conditions",
     "RESEND ACTIVATION LINK BUTTON TEXT"   :    "Resend activation email",
 
-    "SYSTEM NO ACCESS TEXT"                :    "Failed to access System",
+    "SYSTEM NO ACCESS TEXT"                :    "Failed to access system",
     "DISCONNECT FROM CLOUD TEXT"           :    "Disconnect from %PRODUCT_NAME%",
     "RENAME"                               :    "Rename",
     "DISCONNECT MODAL WARNING TEXT"        :    "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
@@ -111,8 +111,6 @@
     "GO TO MAIN PAGE TEXT"                 :    "Go to Main Page",
     "OPEN NX WITNESS BUTTON TEXT"          :    "Open %VMS_NAME%",
 
-    "PASSWORD TOO SHORT BADGE TEXT"        :    "too short",
-    "PASSWORD TOO COMMON BADGE TEXT"       :    "too common",
     "PASSWORD IS WEAK BADGE TEXT"          :    "WEAK",
     "PASSWORD IS FAIR BADGE TEXT"          :    "FAIR",
     "PASSWORD IS GOOD BADGE TEXT"          :    "GOOD",

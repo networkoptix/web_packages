@@ -38,7 +38,6 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
-    settingsConfig:        { [key: string]: string };
 }
 
 export interface AccessRole {
@@ -194,6 +193,7 @@ export interface DialogsMerge {
     mergeFailedTitle:           string;
     noServerFound:              string;
     newSystemDisplayName:       string;
+    otherSystem:                string;
     ownerCanMergeText:          string;
     passwordRequired:           string;
     passwordWrong:              string;
@@ -350,49 +350,50 @@ export interface ReleasesTypes {
 }
 
 export interface ErrorCodes {
-    DUPLICATE_MEDIASERVER_FOUND:   string;
-    EmailAlreadyExists:            string;
-    FAIL:                          string;
-    INCOMPATIBLE:                  string;
-    accountAlreadyActivated:       string;
-    accountBlocked:                string;
-    accountNotActivated:           string;
-    alreadyExists:                 string;
-    brokenAccount:                 string;
-    cantActivatePrefix:            string;
-    cantAddYourOwnEmail:           string;
-    cantChangeAccountPrefix:       string;
-    cantChangePasswordPrefix:      string;
-    cantDisconnectSystemPrefix:    string;
-    cantEditAdmin:                 string;
-    cantEditYourself:              string;
-    cantGetSystemInfoPrefix:       string;
-    cantGetSystemsListPrefix:      string;
-    cantGetUsersListPrefix:        string;
-    cantOpenClient:                string;
-    cantRegisterPrefix:            string;
-    cantSendActivationPrefix:      string;
-    cantSendConfirmationPrefix:    string;
-    cantSharePrefix:               string;
-    cantUnshareWithMeSystemPrefix: string;
-    emailNotFound:                 string;
-    failedToAccessSystem:          string;
-    forbidden:                     string;
-    lostConnection:                string;
-    mergedSystemIsOffline:         string;
-    notAuthorized:                 string;
-    notFound:                      string;
-    ok:                            string;
-    oldPasswordMistmatch:          string;
-    oldSafariNotSupported:         string;
-    passwordMismatch:              string;
-    thisSystem:                    string;
-    unknownError:                  string;
-    unknownMergeError:             string;
-    wrongAuthCode:                 string;
-    wrongCode:                     string;
-    wrongCodeRestore:              string;
-    wrongParameters:               string;
+    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: string;
+    DUPLICATE_MEDIASERVER_FOUND:         string;
+    EmailAlreadyExists:                  string;
+    FAIL:                                string;
+    INCOMPATIBLE:                        string;
+    accountAlreadyActivated:             string;
+    accountBlocked:                      string;
+    accountNotActivated:                 string;
+    alreadyExists:                       string;
+    brokenAccount:                       string;
+    cantActivatePrefix:                  string;
+    cantAddYourOwnEmail:                 string;
+    cantChangeAccountPrefix:             string;
+    cantChangePasswordPrefix:            string;
+    cantDisconnectSystemPrefix:          string;
+    cantEditAdmin:                       string;
+    cantEditYourself:                    string;
+    cantGetSystemInfoPrefix:             string;
+    cantGetSystemsListPrefix:            string;
+    cantGetUsersListPrefix:              string;
+    cantOpenClient:                      string;
+    cantRegisterPrefix:                  string;
+    cantSendActivationPrefix:            string;
+    cantSendConfirmationPrefix:          string;
+    cantSharePrefix:                     string;
+    cantUnshareWithMeSystemPrefix:       string;
+    emailNotFound:                       string;
+    failedToAccessSystem:                string;
+    forbidden:                           string;
+    lostConnection:                      string;
+    mergedSystemIsOffline:               string;
+    notAuthorized:                       string;
+    notFound:                            string;
+    ok:                                  string;
+    oldPasswordMistmatch:                string;
+    oldSafariNotSupported:               string;
+    passwordMismatch:                    string;
+    thisSystem:                          string;
+    unknownError:                        string;
+    unknownMergeError:                   string;
+    wrongAuthCode:                       string;
+    wrongCode:                           string;
+    wrongCodeRestore:                    string;
+    wrongParameters:                     string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -834,7 +835,6 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
-        { json: "settingsConfig", js: "settingsConfig", typ: m("") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "" },
@@ -975,6 +975,7 @@ const typeMap: any = {
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "" },
         { json: "noServerFound", js: "noServerFound", typ: "" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "" },
+        { json: "otherSystem", js: "otherSystem", typ: "" },
         { json: "ownerCanMergeText", js: "ownerCanMergeText", typ: "" },
         { json: "passwordRequired", js: "passwordRequired", typ: "" },
         { json: "passwordWrong", js: "passwordWrong", typ: "" },
@@ -1113,6 +1114,7 @@ const typeMap: any = {
         { json: "releases", js: "releases", typ: "" },
     ], false),
     "ErrorCodes": o([
+        { json: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", js: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", typ: "" },
         { json: "DUPLICATE_MEDIASERVER_FOUND", js: "DUPLICATE_MEDIASERVER_FOUND", typ: "" },
         { json: "EmailAlreadyExists", js: "EmailAlreadyExists", typ: "" },
         { json: "FAIL", js: "FAIL", typ: "" },

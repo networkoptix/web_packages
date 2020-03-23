@@ -242,6 +242,7 @@ USE_L10N = True
 
 USE_TZ = False
 
+LOG_LEVEL = 'INFO' if DEBUG else 'WARNING'
 
 LOGGING = {
     'version': 1,
@@ -275,37 +276,37 @@ LOGGING = {
     },
     'loggers': {
         '': {  # default settings for all django loggers
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': True,
             'handlers': ['console']
         },
         'api.views.utils': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
         'api.helpers.exceptions': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
         'api.controllers.cloud_gateway': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
         'notifications.tasks': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
         'api.account_backend': {  # explicitly mention all modules with loogers
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
         'api.controller.cloud_api': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         },
@@ -315,7 +316,7 @@ LOGGING = {
             'handlers': ['console']
         },
         'cms.controllers.filldata': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'propagate': False,
             'handlers': ['console']
         }

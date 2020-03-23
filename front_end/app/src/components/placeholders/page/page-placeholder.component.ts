@@ -33,7 +33,7 @@ export class NxPagePlaceholderComponent implements OnInit {
     @Input() condition: boolean;
     @Input() withFooter: any;
     @Input() constrainWidth: boolean;
-    @Input() passedProps: string;
+    @Input() data: any;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -109,11 +109,11 @@ export class NxPagePlaceholderComponent implements OnInit {
                     break;
                 case 'MERGE':
                     this.placeholderTitle = this.LANG.placeholderTexts.merge.title
-                        .replace('{{systemName}}', this.passedProps);
+                        .replace('{{systemName}}', this.data.systemName);
                     this.message =
                         `<p>${this.LANG.placeholderTexts.merge.message.dependingOnSize}</p>
                         <p class="mt-2">${this.LANG.placeholderTexts.merge.message.untilFinished}</p>
-                        <p class="mt-2">${this.LANG.placeholderTexts.merge.message.whenFinished.replace('{{systemName}}', this.passedProps)}`;
+                        <p class="mt-2">${this.LANG.placeholderTexts.merge.message.whenFinished.replace('{{systemName}}', this.data.systemName)}`;
                     this.iconName = 'Merge';
                     break;
             }

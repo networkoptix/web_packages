@@ -29,9 +29,7 @@
         <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
         <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
             [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
-            <label class="server-url-label" for="serverUrl" translate>
-                Server URL
-            </label>
+            <label class="server-url-label" for="serverUrl" translate>Server URL</label>
             <input 
                 class="mb-2 form-control"
                 #serverUrlInput="ngModel"
