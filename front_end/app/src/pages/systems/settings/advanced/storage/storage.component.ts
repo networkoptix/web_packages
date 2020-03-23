@@ -43,8 +43,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
         this.storages = storages;
 
         this.watchers = watchers;
-        console.log(this.watchers);
-        this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => null, () => null);
+        this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => { console.log('apply for storage working'); }, () => { console.log('discard for storage working'); });
     }
 
     buildUpdateParams() {

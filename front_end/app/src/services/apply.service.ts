@@ -96,7 +96,7 @@ export class ObjWatcher<Object> {
  */
 export class NxApplyService {
     applyComponentRef: ComponentRef<NxApplyComponent>;
-    applyFunction: (any) => any;
+    applyFunction: () => any;
     component: ViewContainerRef;
     discardFunction: () => void;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
@@ -231,7 +231,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
 
-    private setSaveFunction(func: (any) => any) {
+    private setSaveFunction(func: () => any) {
         this.applyFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
@@ -277,6 +277,25 @@ export class NxApplyService {
 
     public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: () => any, discardFunction) {
         this.addWatchers([...this.watchers, ...watchers]);
-        // Handle apply and discard functions
+        this.extendApplyFunction(applyFunction);
+        this.extendDiscardFunction(discardFunction);
+    }
+
+    private extendApplyFunction(applyFunction: () => any) {
+        // TODO: Need to think about this
+        // this.setSaveFunction(() => {
+        //     const prevFunction = this.applyFunction;
+        //     prevFunction();
+        //     applyFunction();
+        // });
+    }
+
+    private extendDiscardFunction(discardFunction: () => void) {
+        // TODO: Need to think about this
+        // this.setSaveFunction(() => {
+        //     const prevFunction = this.discardFunction;
+        //     prevFunction();
+        //     discardFunction();
+        // });
     }
 }
