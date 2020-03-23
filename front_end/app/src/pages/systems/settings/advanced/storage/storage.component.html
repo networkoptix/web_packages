@@ -72,7 +72,7 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                                 name="reservedSpace{{ i }}"
                                 min="0"
                                 [max]="storage.maxReserve[storage.reservedSpace.uom]"
-                                [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.009765625"
+                                [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.01"
                                 [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
                                 class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"
                             />

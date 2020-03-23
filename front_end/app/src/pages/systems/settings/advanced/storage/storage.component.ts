@@ -238,14 +238,28 @@ export class BitConverter {
         private bitsGb = 1073741824;
         private bitsTb = 1073741824 * 1024
 
-        get GB(): number { return this.bits / this.bitsGb; }
+        get GB(): number {
+            const roundBy = this.bitsGb;
+            const rounded = Math.round(this.bits / roundBy) * roundBy;
+            this.bits = rounded;
+            return Math.round(this.bits / this.bitsGb);
+        }
+
         set GB(gb: number) { this.bits = gb * this.bitsGb; }
 
-        get TB(): number { return this.bits / this.bitsTb; }
+        get TB(): number {
+            const roundBy = this.bitsTb / 100;
+            const rounded = Math.round(this.bits / roundBy) * roundBy;
+            this.bits = rounded;
+            return Math.round(this.bits / this.bitsTb * 100) / 100;
+        }
+
         set TB(tb: number) { this.bits = tb * this.bitsTb; }
 
         get unitsInCurrentUom() { return this[this.uom]; }
-        set unitsInCurrentUom(units) { this[this.uom] = units; }
+        set unitsInCurrentUom(units) {
+            this[this.uom] = units;
+        }
 }
 
 export class FreeSpace {
