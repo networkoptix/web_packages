@@ -33,13 +33,18 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
 
     update: () => void; // Process for updating storages need to bind with advanced settings page
 
-    constructor(@Inject(LOCALE_ID) private locale: string) {
+    constructor(@Inject(LOCALE_ID) private locale: string,
+    private applyService: NxApplyService
+    ) {
     }
 
     ngOnInit() {
         const { storages, watchers } = mapStorages(response.reply.storages);
         this.storages = storages;
-        this.watchers = watchers; // This works, now need to find a way to bind with advanced settings page
+
+        this.watchers = watchers;
+        console.log(this.watchers);
+        this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => null, () => null);
     }
 
     buildUpdateParams() {
@@ -60,7 +65,7 @@ export const mapStorages = (storages) => storages.map(({ freeSpace: free, reserv
     const freeSpace = new FreeSpace(free, reservedSpace);
     const maxReserve = new BitConverter(free + reservedSpace.bits);
     const isUsedForWriting = new Watcher<boolean>();
-    isUsedForWriting.valueSubject.next(ufw);
+    isUsedForWriting.value = ufw;
     return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, watchers: [reservedSpace.watcher, isUsedForWriting] };
 }).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => ({
     storages : [...storages, storage],

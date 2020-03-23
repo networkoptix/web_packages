@@ -274,4 +274,9 @@ export class NxApplyService {
             this.touched();
         });
     }
+
+    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: () => any, discardFunction) {
+        this.addWatchers([...this.watchers, ...watchers]);
+        // Handle apply and discard functions
+    }
 }
