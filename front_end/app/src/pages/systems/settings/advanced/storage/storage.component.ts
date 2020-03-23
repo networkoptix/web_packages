@@ -15,7 +15,7 @@ import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_
 import { NxSystem } from '../../../../../services/system.service';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxApplyService, Watcher } from '../../../../../services/apply.service';
-import { NxProcessService } from '../../../../../services/process.service';
+import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService } from '../../settings.service';
 import { NxMenuService } from '../../../../../components/menu/menu.service';
@@ -31,19 +31,23 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
     @Input()
     system$: Observable<NxSystem>;
 
+    LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systemSubscription: Subscription;
     serverSubscription: Subscription;
+    saveSettings: Process;
 
     // eslint-disable-next-line no-use-before-define
     storages = [];
     watchers: Watcher<any>[] = [];
 
-    update: () => void; // Process for updating storages need to bind with advanced settings page
-
-    constructor(@Inject(LOCALE_ID) private locale: string,
-    private applyService: NxApplyService
+    constructor(languageService: NxLanguageProviderService,
+    @Inject(LOCALE_ID) private locale: string,
+    private applyService: NxApplyService,
+    private processService: NxProcessService,
+    private dialogsService: NxDialogsService
     ) {
+        this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {
@@ -64,29 +68,61 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
                     take(1)
                 )
                 .subscribe(() => {
-                    this.getStorage();
                     if (this.system.currentServerNotBusy) {
                         if (this.system && this.system.servers && this.system.servers.length) {
-                            this.getStorage();
+                            this.updateAndGetStorage();
                         }
                     }
                 });
         });
     }
 
-    getStorage() {
+    updateAndGetStorage() {
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
             const storagesFromResponse =  response.reply.storages; // Use this once server is back up
             const { storages, watchers } = mapStorages(mockResponse.reply.storages);
             this.storages = storages;
 
             this.watchers = watchers;
-            this.applyService.addWatchersAndFunctionsFromChild(this.watchers, () => { console.log('apply for storage working'); }, () => { console.log('discard for storage working'); });
+            this.updateSaveProcess();
+            this.applyService.addWatchersAndFunctionsFromChild(this.watchers, this.saveSettings, () => {});
+        });
+    }
+
+    updateSaveProcess() {
+        this.saveSettings = this.processService.createProcess(() => {
+            return this.system
+                .updateOrGetSystemStorage(this.buildUpdateParams())
+                .toPromise()
+                .then(response => {
+                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                        const errorToShow = response.errorString;
+                        this.dialogsService
+                            .alert(errorToShow, this.LANG.dialogs.titles.error)
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    } else {
+                        this.dialogsService
+                            .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+                }, () => {
+                    this.dialogsService
+                        .alert(this.LANG.dialogs.message.settingsNotSaved, this.LANG.dialogs.titles.error)
+                        .catch(error => {
+                            console.error(error);
+                        });
+                });
         });
     }
 
     buildUpdateParams() {
         // Need to create method to map storages as params for update request
+
+        return {};
     }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {

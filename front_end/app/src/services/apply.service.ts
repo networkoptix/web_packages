@@ -8,6 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
+import { Process } from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -275,7 +276,7 @@ export class NxApplyService {
         });
     }
 
-    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: () => any, discardFunction) {
+    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
         this.addWatchers([...this.watchers, ...watchers]);
         this.extendApplyFunction(applyFunction);
         this.extendDiscardFunction(discardFunction);

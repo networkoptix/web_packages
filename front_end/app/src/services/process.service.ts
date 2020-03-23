@@ -17,7 +17,7 @@ interface ProcessSettings {
     ignoreError?: boolean;
 }
 
-class Process {
+export class Process {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     cloudApiService: NxCloudApiService;
