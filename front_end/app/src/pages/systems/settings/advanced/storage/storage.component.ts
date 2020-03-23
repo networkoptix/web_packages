@@ -26,26 +26,24 @@ import { NxUriService } from '../../../../../services/uri.service';
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemAdvancedStorageComponent implements OnDestroy {
-    @Input()
-    storageSettings: Watcher<Object>
-
+export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
     // eslint-disable-next-line no-use-before-define
-    storages = response.reply.storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, ...storage }) => {
-        const reservedSpace = new BitConverter(reserved, 'GB');
-        const totalSpace = new BitConverter(total);
-        const freeSpace = new FreeSpace(free, reservedSpace);
-        const maxReserve = new BitConverter(free + reservedSpace.bits);
-        return { ...storage, freeSpace, reservedSpace, totalSpace, maxReserve };
-    });
+    storages = [];
+    watchers: Watcher<any>[] = [];
 
+    update: () => void; // Process for updating storages need to bind with advanced settings page
 
     constructor(@Inject(LOCALE_ID) private locale: string) {
     }
 
-    handleChange() {
-        this.storageSettings.value = this.storages;
-        console.log(JSON.stringify(this.storageSettings.value));
+    ngOnInit() {
+        const { storages, watchers } = mapStorages(response.reply.storages);
+        this.storages = storages;
+        this.watchers = watchers; // This works, now need to find a way to bind with advanced settings page
+    }
+
+    buildUpdateParams() {
+        // Need to create method to map storages as params for update request
     }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
@@ -55,6 +53,19 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy {
 
     ngOnDestroy() {}
 }
+
+export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, isUsedForWriting: ufw, ...storage }) => {
+    const reservedSpace = new BitConverter(reserved, 'GB');
+    const totalSpace = new BitConverter(total);
+    const freeSpace = new FreeSpace(free, reservedSpace);
+    const maxReserve = new BitConverter(free + reservedSpace.bits);
+    const isUsedForWriting = new Watcher<boolean>();
+    isUsedForWriting.valueSubject.next(ufw);
+    return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, watchers: [reservedSpace.watcher, isUsedForWriting] };
+}).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => ({
+    storages : [...storages, storage],
+    watchers : [...watchers, ...moreWatchers]
+}), { storages: [], watchers: [] });
 
 // Everything below this line copied from a utility on the cloud storage branch, remove once merged and import from transform utils
 
@@ -201,7 +212,23 @@ type Bps =
     | 'Ybps';
 
 export class BitConverter {
-    constructor(public bits: number, public uom?: 'GB' | 'TB') {}
+    _bits = new Watcher<number>()
+
+    get watcher() {
+        return this._bits;
+    }
+
+    set bits(value) {
+        this._bits.value = value;
+    }
+
+    get bits() {
+        return this._bits.value;
+    }
+
+    constructor(initialBits: number, public uom?: 'GB' | 'TB') {
+        this._bits.value = initialBits;
+    }
 
         private bitsGb = 1073741824;
         private bitsTb = 1073741824 * 1024

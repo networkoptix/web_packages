@@ -5,7 +5,6 @@
             class="form form-horizontal row"
             role="form"
             name="storageSettings"
-            (change)="handleChange()"
             novalidate
         >
             <ng-container *ngFor="let storage of storages; index as i">
@@ -102,7 +101,7 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                             <nx-checkbox
                                 componentId="isUsedForWriting{{ i }}"
                                 name="isUsedForWriting{{ i }}"
-                                [(ngModel)]="storage.isUsedForWriting"
+                                [(ngModel)]="storage.isUsedForWriting.value"
                             >
                             </nx-checkbox>
                             <span *ngIf="storage.isUsedForWriting" class="pl-3">Writing is enabled for this storage</span>

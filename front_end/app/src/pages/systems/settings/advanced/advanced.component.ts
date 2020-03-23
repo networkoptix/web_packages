@@ -36,8 +36,6 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
     serverIdFromParams: any;
     selectedServer: any;
 
-    storageSettings = new Watcher<Object>()
-
     systemSettings: any = {
         additionalLocalFsTypes                          : new Watcher<any>(),
         arecontRtspEnabled                              : new Watcher<boolean>(),
@@ -326,7 +324,7 @@ export class NxSystemServerAdvancedComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
             },
             // @ts-ignore
-            [...Object.values(this.systemSettings), this.storageSettings]);
+            [...Object.values(this.systemSettings)/* Find a way to get watchers from strorage to here */]);
 
         this.applyService.setVisible(false);
     }
