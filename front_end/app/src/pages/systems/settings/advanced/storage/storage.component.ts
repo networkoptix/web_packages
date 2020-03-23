@@ -103,11 +103,13 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
                                 console.error(error);
                             });
                     } else {
-                        this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
-                            .catch(error => {
-                                console.error(error);
-                            });
+                        // TODO: Find a way to trigger suggess only when all succeed
+
+                        // this.dialogsService
+                        //     .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
+                        //     .catch(error => {
+                        //         console.error(error);
+                        //     });
                     }
                 }, () => {
                     this.dialogsService
