@@ -59,13 +59,13 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
 }
 
 export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, isUsedForWriting: ufw, ...storage }) => {
-    const reservedSpace = new BitConverter(reserved, 'GB');
+    const reservedSpace = new BitConverter(reserved);
     const totalSpace = new BitConverter(total);
     const freeSpace = new FreeSpace(free, reservedSpace);
     const maxReserve = new BitConverter(free + reservedSpace.bits);
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
-    return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, watchers: [reservedSpace.watcher, isUsedForWriting] };
+    return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, watchers: [...reservedSpace.watcher, isUsedForWriting] };
 }).reduce(({ storages, watchers }, { watchers: moreWatchers, ...storage }) => ({
     storages : [...storages, storage],
     watchers : [...watchers, ...moreWatchers]
@@ -217,9 +217,10 @@ type Bps =
 
 export class BitConverter {
     _bits = new Watcher<number>()
+    _uom = new Watcher<string>()
 
     get watcher() {
-        return this._bits;
+        return [this._bits, this._uom];
     }
 
     set bits(value) {
@@ -230,8 +231,17 @@ export class BitConverter {
         return this._bits.value;
     }
 
-    constructor(initialBits: number, public uom?: 'GB' | 'TB') {
+    set uom(value) {
+        this._uom.value = value;
+    }
+
+    get uom() {
+        return this._uom.value;
+    }
+
+    constructor(initialBits: number) {
         this._bits.value = initialBits;
+        this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
     }
 
         private bitsGb = 1073741824;
@@ -247,10 +257,10 @@ export class BitConverter {
         set GB(gb: number) { this.bits = gb * this.bitsGb; }
 
         get TB(): number {
-            const roundBy = this.bitsTb / 100;
+            const roundBy = this.bitsTb / 1000;
             const rounded = Math.round(this.bits / roundBy) * roundBy;
             this.bits = rounded;
-            return Math.round(this.bits / this.bitsTb * 100) / 100;
+            return Math.round(this.bits / this.bitsTb * 1000) / 1000;
         }
 
         set TB(tb: number) { this.bits = tb * this.bitsTb; }
@@ -306,7 +316,7 @@ export const response = {
                 isOnline         : true,
                 isUsedForWriting : false,
                 isWritable       : true,
-                reservedSpace    : 32212254720,
+                reservedSpace    : 322122547200,
                 storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
                 storageStatus    : 'used|system',
                 storageType      : 'local',
