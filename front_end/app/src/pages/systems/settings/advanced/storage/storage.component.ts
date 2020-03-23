@@ -240,8 +240,13 @@ export class BitConverter {
     }
 
     constructor(initialBits: number) {
-        this._bits.value = initialBits;
         this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
+
+        if (this._uom.value === 'GB') {
+            this._bits.value = Math.round((Math.round(initialBits / this.bitsGb)) * this.bitsGb);
+        } else {
+            this._bits.value = (Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb) / 1000;
+        }
     }
 
         private bitsGb = 1073741824;
