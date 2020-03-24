@@ -1,25 +1,14 @@
 import {
-    Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
-} from '@angular/core';
-import {
-    filter, map, delay,
-    retryWhen,
-    take
-}                                     from 'rxjs/operators';
-import { Subscription, Observable }               from 'rxjs';
-import { ActivatedRoute }             from '@angular/router';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { IConfig, NxConfigService } from '../../../../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
-import { NxSystem } from '../../../../../services/system.service';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxApplyService, Watcher } from '../../../../../services/apply.service';
-import { NxProcessService, Process } from '../../../../../services/process.service';
-import { NxDialogsService } from '../../../../../dialogs/dialogs.service';
-import { NxSettingsService } from '../../settings.service';
-import { NxMenuService } from '../../../../../components/menu/menu.service';
-import { NxUriService } from '../../../../../services/uri.service';
+    Component, OnInit, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
+}                                       from '@angular/core';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { NxSystem }                     from '../../../../../services/system.service';
+import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
+import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
+import { Watcher }                      from '../../../../../services/apply.service';
+import { NxProcessService, Process }    from '../../../../../services/process.service';
+import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -43,7 +32,6 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     constructor(
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string,
-        private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
@@ -67,6 +55,14 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
         }
     }
 
+    resetWatchers() {
+        this.watchers.forEach(watcher => watcher.reset());
+    }
+
+    get watchersChanged() {
+        return this.watchers.reduce((changed, watcher) => changed || watcher.originalValue !== watcher.value, false);
+    }
+
     updateAndGetStorage() {
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
             const { storages, watchers } = mapStorages(response.reply.storages);
@@ -74,7 +70,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
 
             this.watchers = watchers;
             this.updateSaveProcess();
-            this.applyService.addWatchersAndFunctionsFromChild(this.watchers, this.saveSettings, () => {});
+            // this.applyService.addWatchersAndFunctionsFromChild(this.watchers, this.saveSettings, () => {}); Remove for now.
         });
     }
 
@@ -113,18 +109,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     buildUpdateParams() {
         // Need to create method to map storages as params for update request
         // const example = [{ addParams: [{ name: 'space', value: '1964203130880' }], id: '{301a17be-003c-7302-b28a-ccdc1a4c4a63}', isBackup: false, name: 'Initial', parentId: '{a17fbfac-762c-080e-04e8-80a49f15a687}', spaceLimit: 32212254720, storageType: 'local', typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}', url: '/opt/networkoptix/mediaserver/var/data', usedForWriting: true }];
-        return this.storages.map(({totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, ...storage}) => ({
-            addParams      : [{ name: 'space', value: totalSpace.bits }],
-            id             : storageId,
-            isBackup       : isBackup,
-            name           : 'Initial',
-            parentId       : `{${this.serverId}}`,
-            spaceLimit     : reservedSpace.bits,
-            storageType    : storageType,
-            typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
-            url            : url,
-            usedForWriting : isUsedForWriting.value
-        }));
+        return this.storages.map(toParams);
     }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
@@ -134,6 +119,19 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
 
     ngOnDestroy() {}
 }
+
+export const toParams = ({ totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, ...storage }) => ({
+    addParams      : [{ name: 'space', value: totalSpace.bits }],
+    id             : storageId,
+    isBackup       : isBackup,
+    name           : 'Initial',
+    parentId       : `{${this.serverId}}`,
+    spaceLimit     : reservedSpace.bits,
+    storageType    : storageType,
+    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
+    url            : url,
+    usedForWriting : isUsedForWriting.value
+});
 
 export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, isUsedForWriting: ufw, ...storage }) => {
     const reservedSpace = new BitConverter(reserved);
@@ -368,57 +366,3 @@ export class FreeSpace {
             this.reserved.bits = value;
         }
 }
-
-export const mockResponse = {
-    error       : '0',
-    errorString : '',
-    reply       : {
-        storageProtocols: [
-            'smb'
-        ],
-        storages: [
-            {
-                freeSpace        : 1837679546368,
-                isBackup         : false,
-                isExternal       : false,
-                isOnline         : true,
-                isUsedForWriting : true,
-                isWritable       : true,
-                reservedSpace    : 32212254720,
-                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                storageStatus    : 'used|system',
-                storageType      : 'local',
-                totalSpace       : 1964203130880,
-                url              : '/opt/networkoptix/mediaserver/var/data'
-            },
-            {
-                freeSpace        : 183767954636 * 3,
-                isBackup         : false,
-                isExternal       : false,
-                isOnline         : true,
-                isUsedForWriting : false,
-                isWritable       : true,
-                reservedSpace    : 322122547200,
-                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                storageStatus    : 'used|system',
-                storageType      : 'local',
-                totalSpace       : 1964203130880,
-                url              : '/opt/networkoptix/mediaserver/var/second'
-            },
-            {
-                freeSpace        : 183767954636 * 2,
-                isBackup         : false,
-                isExternal       : false,
-                isOnline         : true,
-                isUsedForWriting : false,
-                isWritable       : false,
-                reservedSpace    : 32212254720,
-                storageId        : '{301a17be-003c-7302-b28a-ccdc1a4c4a63}',
-                storageStatus    : 'used|system',
-                storageType      : 'local',
-                totalSpace       : 1964203130880,
-                url              : '/opt/networkoptix/mediaserver/var/third'
-            }
-        ]
-    }
-};

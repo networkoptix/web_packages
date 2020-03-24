@@ -127,6 +127,10 @@ Total: {{friendlyBytes(storage.totalSpace.bits)}}">
                 </div>
                 <div *ngIf="i !== storages.length - 1" class="border-top w-100 mb-3"></div>
             </ng-container>
+            <div *ngIf="watchersChanged" class="col-12 p-0 pt-3 d-flex">
+                <nx-process-button [process]="saveSettings" [buttonText]="'Save' | translate"></nx-process-button>
+                <button class="btn btn-default ml-2" (click)="resetWatchers()" translate>Cancel</button>
+            </div>
         </form>
     </nx-section>
 </nx-block>
