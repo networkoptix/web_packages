@@ -1,70 +1,45 @@
 <nx-block type="mt-3">
     <header><h4 translate>Storages</h4></header>
     <nx-section>
-        <form
-            class="form form-horizontal row"
-            role="form"
-            name="storageSettings"
-            novalidate
-        >
+        <form class="form form-horizontal row" role="form" name="storageSettings" novalidate>
             <ng-container *ngFor="let storage of storages; index as i">
                 <div class="form-group col-12 row">
-                    <div
-                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100" translate>Url</div>
                     </div>
-                    <div
-                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100">
                             <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">{{storage.url}}</p>
                         </div>
                     </div>
                 </div>
                 <div class="form-group col-12 row">
-                    <div
-                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100" translate>Free Space</div>
                     </div>
-                    <div
-                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100">
-                            <!-- This is weird, how to I make a newline in title??? -->
                             <div class="progress progress-custom" 
 title="Reserved: {{friendlyBytes(storage.reservedSpace.bits)}}, 
 Free: {{friendlyBytes(storage.freeSpace.bits)}}, 
 Occupied: {{friendlyBytes(storage.totalSpace - storage.freeSpace.bits)}}, 
 Total: {{friendlyBytes(storage.totalSpace)}}">
-                                <div class="progress-bar bg-info" 
-                                    role="progressbar" 
+                                <div class="progress-bar bg-info" role="progressbar" 
                                     [style.width]="storage.freeSpace.bits / storage.totalSpace | percent" 
-                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace)"></div>
+                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" 
+                                    aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace)"></div>
                                 <div class="progress-label d-flex justify-content-center align-items-center progress-text">
                                     {{ friendlyBytes(storage.freeSpace.bits) }} of {{ friendlyBytes(storage.totalSpace) }}
                                 </div>
-                              </div>
-                            <!-- <input
-                                type="text"
-                                id="freeSpace{{ i }}"
-                                name="freeSpace{{ i }}"
-                                [(ngModel)]="storage.freeSpace"
-                                class="form-control input-sm"
-                            /> -->
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div *ngIf="storage.isWritable" class="form-group col-12 row">
-                    <div
-                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100" translate>Reserved Space</div>
                     </div>
-                    <div
-                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100 input-group d-flex">
                             <input
                                 type="number"
@@ -76,12 +51,8 @@ Total: {{friendlyBytes(storage.totalSpace)}}">
                                 [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
                                 class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"
                             />
-                            <select
-                            id="reservedSpaceUnit{{ i }}"
-                            name="reservedSpaceUnit{{ i }}"
-                            [(ngModel)]="storage.reservedSpace.uom"
-                            class="form-control input-sm w-50"
-                            >
+                            <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}" [(ngModel)]="storage.reservedSpace.uom" 
+                                class="form-control input-sm w-50">
                             <option selected value="GB">GB</option>
                             <option value="TB">TB</option>
                             </select>
@@ -89,20 +60,13 @@ Total: {{friendlyBytes(storage.totalSpace)}}">
                     </div>
                 </div>
                 <div *ngIf="storage.isWritable" class="form-group col-12 row">
-                    <div
-                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100" translate>Used for writing</div>
                     </div>
-                    <div
-                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100 d-flex justify-content-center align-items-center">
-                            <nx-checkbox
-                                componentId="isUsedForWriting{{ i }}"
-                                name="isUsedForWriting{{ i }}"
-                                [(ngModel)]="storage.isUsedForWriting.value"
-                            >
+                            <nx-checkbox componentId="isUsedForWriting{{ i }}" name="isUsedForWriting{{ i }}"
+                                [(ngModel)]="storage.isUsedForWriting.value">
                             </nx-checkbox>
                             <span *ngIf="storage.isUsedForWriting" class="pl-3" translate>Writing is enabled for this storage</span>
                             <span *ngIf="!storage.isUsedForWriting" class="pl-3" translate>Writing is disabled for this storage</span>
@@ -110,14 +74,10 @@ Total: {{friendlyBytes(storage.totalSpace)}}">
                     </div>
                 </div>
                 <div class="form-group col-12 row">
-                    <div
-                        class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100">StorageType</div>
                     </div>
-                    <div
-                        class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item"
-                    >
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100">
                             <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">
                                 {{ storage.storageType }}

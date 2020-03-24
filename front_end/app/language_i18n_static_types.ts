@@ -225,13 +225,15 @@ export interface RecommendSupport {
 }
 
 export interface DialogsMessage {
-    settingsSaved:    string;
-    settingsNotSaved: string;
-    failedToSend:     string;
-    placeholders:     Placeholders;
-    sent:             string;
-    subject:          Subject;
-    title:            Title;
+    storageSettingsSaved:    string;
+    storageSettingsNotSaved: string;
+    settingsSaved:           string;
+    settingsNotSaved:        string;
+    failedToSend:            string;
+    placeholders:            Placeholders;
+    sent:                    string;
+    subject:                 Subject;
+    title:                   Title;
 }
 
 export interface Placeholders {
@@ -1006,6 +1008,8 @@ const typeMap: any = {
         { json: "c_proceeding", js: "c_proceeding", typ: "" },
     ], false),
     "DialogsMessage": o([
+        { json: "storageSettingsSaved", js: "storageSettingsSaved", typ: "" },
+        { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "" },
         { json: "settingsSaved", js: "settingsSaved", typ: "" },
         { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },

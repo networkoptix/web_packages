@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
+    Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
 }                                       from '@angular/core';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
@@ -16,7 +16,7 @@ import { NxDialogsService }             from '../../../../../dialogs/dialogs.ser
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnChanges {
+export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
 
     @Input() serverId: string;
@@ -24,8 +24,6 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     LANG: LanguageI18NStaticTypes;
     systemSubscription: Subscription;
     saveSettings: Process;
-
-    // eslint-disable-next-line no-use-before-define
     storages = [];
     watchers: Watcher<any>[] = [];
 
@@ -36,9 +34,6 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
         private dialogsService: NxDialogsService
     ) {
         this.LANG = languageService.getTranslations();
-    }
-
-    ngOnInit() {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -73,10 +68,8 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
             const { storages, watchers } = mapStorages(response.reply.storages);
             this.storages = storages;
-            console.log(JSON.stringify(response.reply.storages, null, 4));
             this.watchers = watchers;
             this.updateSaveProcess();
-            // this.applyService.addWatchersAndFunctionsFromChild(this.watchers, this.saveSettings, () => {}); Remove for now.
         });
     }
 
@@ -94,17 +87,15 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
                                 console.error(error);
                             });
                     } else {
-                        // TODO: Find a way to trigger suggess only when all succeed
-
-                        // this.dialogsService
-                        //     .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
-                        //     .catch(error => {
-                        //         console.error(error);
-                        //     });
+                        this.dialogsService
+                            .alert(this.LANG.dialogs.message.storageSettingsSaved, this.LANG.dialogs.titles.success)
+                            .catch(error => {
+                                console.error(error);
+                            });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved, this.LANG.dialogs.titles.error)
+                        .alert(this.LANG.dialogs.message.storageSettingsNotSaved, this.LANG.dialogs.titles.error)
                         .catch(error => {
                             console.error(error);
                         });
@@ -116,8 +107,6 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     }
 
     buildUpdateParams() {
-        // Need to create method to map storages as params for update request
-        // const example = [{ addParams: [{ name: 'space', value: '1964203130880' }], id: '{301a17be-003c-7302-b28a-ccdc1a4c4a63}', isBackup: false, name: 'Initial', parentId: '{a17fbfac-762c-080e-04e8-80a49f15a687}', spaceLimit: 32212254720, storageType: 'local', typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}', url: '/opt/networkoptix/mediaserver/var/data', usedForWriting: true }];
         return this.storages.map(toParams(this.serverId));
     }
 
@@ -137,7 +126,7 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
     parentId       : `{${serverId}}`,
     spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
     storageType    : storageType,
-    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
+    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}', // I couldn't find where the typeId comes from
     url            : url,
     usedForWriting : isUsedForWriting.value
 });
@@ -153,6 +142,83 @@ export const mapStorages = (storages) => storages.map(({ freeSpace: free, reserv
     storages : [...storages, storage],
     watchers : [...watchers, ...moreWatchers]
 }), { storages: [], watchers: [] });
+
+export class BitConverter {
+    _bits = new Watcher<number>()
+    _uom = new Watcher<string>()
+
+    get watcher() {
+        return [this._bits, this._uom];
+    }
+
+    set bits(value) {
+        this._bits.value = value;
+    }
+
+    get bits() {
+        return this._bits.value;
+    }
+
+    set uom(value) {
+        this._uom.value = value;
+    }
+
+    get uom() {
+        return this._uom.value;
+    }
+
+    constructor(initialBits: number) {
+        this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
+
+        if (this._uom.value === 'GB') {
+            this._bits.value = Math.round((Math.round(initialBits / this.bitsGb)) * this.bitsGb);
+        } else {
+            this._bits.value = (Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb) / 1000;
+        }
+    }
+
+        private bitsGb = 1073741824;
+        private bitsTb = 1073741824 * 1024
+
+        get GB(): number {
+            const roundBy = this.bitsGb;
+            const rounded = Math.round(this.bits / roundBy) * roundBy;
+            this.bits = rounded;
+            return Math.round(this.bits / this.bitsGb);
+        }
+
+        set GB(gb: number) { this.bits = gb * this.bitsGb; }
+
+        get TB(): number {
+            const roundBy = this.bitsTb / 1000;
+            const rounded = Math.round(this.bits / roundBy) * roundBy;
+            this.bits = rounded;
+            return Math.round(this.bits / this.bitsTb * 1000) / 1000;
+        }
+
+        set TB(tb: number) { this.bits = tb * this.bitsTb; }
+
+        get unitsInCurrentUom() { return this[this.uom]; }
+        set unitsInCurrentUom(units) {
+            this[this.uom] = units;
+        }
+}
+
+export class FreeSpace {
+        private freeExcludeReserved: BitConverter
+
+        constructor(free: BitConverter, private reserved: BitConverter) {
+            this.freeExcludeReserved = new BitConverter(free.bits + reserved.bits);
+        }
+
+        get bits() {
+            return this.freeExcludeReserved.bits - this.reserved.bits;
+        }
+
+        set bits(value) {
+            this.reserved.bits = new BitConverter(value).bits;
+        }
+}
 
 // Everything below this line copied from a utility on the cloud storage branch, remove once merged and import from transform utils
 
@@ -297,80 +363,3 @@ type Bps =
     | 'Ebps'
     | 'Zbps'
     | 'Ybps';
-
-export class BitConverter {
-    _bits = new Watcher<number>()
-    _uom = new Watcher<string>()
-
-    get watcher() {
-        return [this._bits, this._uom];
-    }
-
-    set bits(value) {
-        this._bits.value = value;
-    }
-
-    get bits() {
-        return this._bits.value;
-    }
-
-    set uom(value) {
-        this._uom.value = value;
-    }
-
-    get uom() {
-        return this._uom.value;
-    }
-
-    constructor(initialBits: number) {
-        this._uom.value = initialBits > 1073741824 * 1024 / 4 ? 'TB' : 'GB';
-
-        if (this._uom.value === 'GB') {
-            this._bits.value = Math.round((Math.round(initialBits / this.bitsGb)) * this.bitsGb);
-        } else {
-            this._bits.value = (Math.round(initialBits / (this.bitsTb / 1000)) * this.bitsTb) / 1000;
-        }
-    }
-
-        private bitsGb = 1073741824;
-        private bitsTb = 1073741824 * 1024
-
-        get GB(): number {
-            const roundBy = this.bitsGb;
-            const rounded = Math.round(this.bits / roundBy) * roundBy;
-            this.bits = rounded;
-            return Math.round(this.bits / this.bitsGb);
-        }
-
-        set GB(gb: number) { this.bits = gb * this.bitsGb; }
-
-        get TB(): number {
-            const roundBy = this.bitsTb / 1000;
-            const rounded = Math.round(this.bits / roundBy) * roundBy;
-            this.bits = rounded;
-            return Math.round(this.bits / this.bitsTb * 1000) / 1000;
-        }
-
-        set TB(tb: number) { this.bits = tb * this.bitsTb; }
-
-        get unitsInCurrentUom() { return this[this.uom]; }
-        set unitsInCurrentUom(units) {
-            this[this.uom] = units;
-        }
-}
-
-export class FreeSpace {
-        private freeExcludeReserved: BitConverter
-
-        constructor(free: BitConverter, private reserved: BitConverter) {
-            this.freeExcludeReserved = new BitConverter(free.bits + reserved.bits);
-        }
-
-        get bits() {
-            return this.freeExcludeReserved.bits - this.reserved.bits;
-        }
-
-        set bits(value) {
-            this.reserved.bits = new BitConverter(value).bits;
-        }
-}

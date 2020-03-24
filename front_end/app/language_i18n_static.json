@@ -213,6 +213,8 @@
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
         "message": {
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
             "settingsSaved": "Settings saved.",
             "settingsNotSaved": "Couldn't save settings.",
             "failedToSend": "Message has failed to send.",
