@@ -203,5 +203,9 @@ class PushSubscriptionAdmin(admin.ModelAdmin):
     form = PushSubscriptionForm
 
 
+@admin.register(PushNotification)
+class PushNotificationAdmin(admin.ModelAdmin):
+    readonly_fields = ('devices',)
+
+
 admin.site.register(PushDevice, GCMDeviceAdmin)
-admin.site.register(PushNotification)
