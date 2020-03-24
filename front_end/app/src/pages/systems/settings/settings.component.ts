@@ -396,7 +396,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id    : this.CONFIG.menus.systemSettings.cameras.id,
                     svg   : this.CONFIG.menus.systemSettings.cameras.icon,
                     label : 'Cameras',
-                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                    path  : '' // this.CONFIG.menus.systemSettings.cameras.path
                 };
                 this.content.level1.push(camerasNode);
             }
@@ -406,20 +406,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 }, NxUtilsService.sortASC);
                 this.system.cameras.sort(byParam);
                 camerasNode.level3 = this.system.cameras.map(camera => ({
-                    id              : camera.id,
-                    icon            : '',
+                    id              : camera.id.replace(/\s|\{|\}/g, ''),
+                    svgIcon         : this.getCameraStatusIcon(camera),
                     label           : camera.name,
-                    path            : `cameras/${camera.id}`,
-                    additionalLabel : camera.url
+                    path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/) // This might not
                 }));
 
-                console.log(JSON.stringify(camerasNode.level3, null, 4));
+                console.log(JSON.stringify(this.system.cameras, null, 4));
             }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
 
         this.content = { ...this.content };
+    }
+
+    getCameraStatusIcon({ status }) {
+        // I think that we should have an image for online but not recording
+        return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
     /**

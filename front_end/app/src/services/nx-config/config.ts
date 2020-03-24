@@ -252,7 +252,15 @@ export const nxConfig: IConfig = {
             cameras: {
                 id  : 'cameras',
                 icon: 'cameras',
-                path: 'cameras'
+                path: 'cameras',
+                statusIcons: {
+                    archive: 'camera_archive',
+                    offline: 'camera_offline',
+                    recording: 'camera_recording',
+                    scheduled: 'camera_scheduled',
+                    unauthorized: 'camera_unauthorized',
+                    online: ''
+                }
             },
             buttons: {
                 id: 'buttons'

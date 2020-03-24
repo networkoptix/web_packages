@@ -378,7 +378,7 @@ export interface SystemSettings {
     users: Admin;
     servers: Admin;
     buttons: Buttons;
-    cameras: Admin;
+    cameras: Cameras;
 }
 
 export interface Admin {
@@ -387,6 +387,17 @@ export interface Admin {
     path: string;
 }
 
+export interface Cameras extends Admin {
+    statusIcons: {
+        archive: string;
+        offline: string;
+        recording: string;
+        scheduled: string;
+        unauthorized: string;
+        online: string;
+    }
+
+}
 export interface Buttons {
     id: string;
 }
