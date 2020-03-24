@@ -46,8 +46,8 @@ def usage_stats(request):
     require_params(request, ['systemId'])
     storage = cloud_api.Storage.list_system_storages(request.session['login'],
                                                      request.session['password'],
-                                                     request.data.get('systemId'))
-    storage_id = storage.get('id')
+                                                     request.query_params.get('systemId'))
+    storage_id = storage[0].get('id') if storage else None
     if not storage_id:
         raise APINotFoundException({'message': 'System does not cloud storage.'})
     storage_info = cloud_api.Storage.statistics(request.session['login'],
