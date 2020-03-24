@@ -368,6 +368,7 @@ class ServerManager {
     };
 
     servers: NxSystemServer[];
+    cameras: any[]; // Need to make cameras class
 
     constructor(private mediaserver: NxSystemAPI,
                 private systemApiService: NxSystemAPIService,
@@ -406,6 +407,17 @@ class ServerManager {
                 }
                 this.servers = result;
                 return this.servers;
+            });
+    }
+
+    getCameras() {
+        return this.mediaserver.getCameras().toPromise()
+            .then((result: any) => {
+                if (!result) {
+                    return Promise.reject(new Error(`Request to server has failed ${result}`));
+                }
+                this.cameras = result;
+                return this.cameras;
             });
     }
 
@@ -529,6 +541,10 @@ export class NxSystem extends System implements OnDestroy {
 
     get users() {
         return this.userManager.users;
+    }
+
+    get cameras() {
+        return this.serverManager.cameras;
     }
 
     // End of userManager get functions
@@ -779,6 +795,7 @@ export class NxSystem extends System implements OnDestroy {
             return this.getInfo(true, false)
                 .then(() => this.getSystem())
                 .then(() => this.getServers())
+                .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch(() => {
                     this.isAvailable = false;
@@ -793,6 +810,10 @@ export class NxSystem extends System implements OnDestroy {
 
     initSystemMediaServers() {
         return this.serverManager.initSystemMediaServers();
+    }
+
+    getCameras() {
+        return this.serverManager.getCameras();
     }
 
     getServers() {

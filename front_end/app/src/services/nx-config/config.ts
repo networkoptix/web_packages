@@ -249,6 +249,11 @@ export const nxConfig: IConfig = {
                 icon: 'servers',
                 path: 'servers'
             },
+            cameras: {
+                id  : 'cameras',
+                icon: 'cameras',
+                path: 'cameras'
+            },
             buttons: {
                 id: 'buttons'
             }

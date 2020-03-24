@@ -378,6 +378,7 @@ export interface SystemSettings {
     users: Admin;
     servers: Admin;
     buttons: Buttons;
+    cameras: Admin;
 }
 
 export interface Admin {

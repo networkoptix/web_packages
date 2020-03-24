@@ -389,6 +389,36 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
 
+        if (this.system.permissions.isAdmin) {
+            let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
+            if (!camerasNode) {
+                camerasNode = {
+                    id    : this.CONFIG.menus.systemSettings.cameras.id,
+                    svg   : this.CONFIG.menus.systemSettings.cameras.icon,
+                    label : 'Cameras',
+                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                };
+                this.content.level1.push(camerasNode);
+            }
+            if (this.system.cameras) {
+                const byParam = NxUtilsService.byParam((camera) => {
+                    return camera.name;
+                }, NxUtilsService.sortASC);
+                this.system.cameras.sort(byParam);
+                camerasNode.level3 = this.system.cameras.map(camera => ({
+                    id              : camera.id,
+                    icon            : '',
+                    label           : camera.name,
+                    path            : `cameras/${camera.id}`,
+                    additionalLabel : camera.url
+                }));
+
+                console.log(JSON.stringify(camerasNode.level3, null, 4));
+            }
+        } else {
+            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
+        }
+
         this.content = { ...this.content };
     }
 
