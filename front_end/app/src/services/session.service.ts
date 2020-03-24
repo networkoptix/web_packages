@@ -10,8 +10,10 @@ export class NxSessionService {
     loginStateSubject = new ReplaySubject(0);
     session: LocalStorageService;
 
-    constructor(private localStorageService: LocalStorageService,
-                @Inject(WINDOW) private window: Window) {
+    constructor(
+        private localStorageService: LocalStorageService,
+        @Inject(WINDOW) private window: Window
+    ) {
         this.session = this.localStorageService;
         this.loginStateSubject.next(this.loginState || '');
 
