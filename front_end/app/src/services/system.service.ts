@@ -1,4 +1,3 @@
-import * as _                              from 'underscore';
 import { NxConfigService, IConfig }        from './nx-config';
 import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
@@ -169,9 +168,9 @@ class UserManager {
     checkPermissions() {
         const isMine                         = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins: isMine,
-            editUsers : isMine,
-            isAdmin   : isMine
+            editAdmins : isMine,
+            editUsers  : isMine,
+            isAdmin    : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
@@ -301,8 +300,10 @@ class UserManager {
         let userCreated = false;
         if (user.email === this.currentUserEmail) {
             if (user.isCloud) {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'cantEditYourself' });
             } else {
+                // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
             }
         }
@@ -319,6 +320,7 @@ class UserManager {
         }
 
         if (!user.canBeEdited && !this.isMine) {
+            // eslint-disable-next-line prefer-promise-reject-errors
             return Promise.reject({ resultCode: 'cantEditAdmin' });
         }
 
@@ -651,7 +653,7 @@ export class NxSystem extends System implements OnDestroy {
                     return Promise.reject({ data: { resultCode: 'forbidden' } });
                 }
                 if (this.info) {
-                    _.extend(this.info, response); // Update
+                    Object.assign(this.info, response); // Update
                 } else {
                     this.info = response;
                 }
@@ -840,6 +842,10 @@ export class NxSystem extends System implements OnDestroy {
     restoreFactorySettings(serverId, currentPassword) {
         this.currentServerNotBusy = false;
         return this.serverManager.restoreFactorySettings(serverId, currentPassword);
+    }
+
+    mergeSystems(url, dryRun, currentPassword?) {
+        return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
     }
 
     getPeerSystems() {

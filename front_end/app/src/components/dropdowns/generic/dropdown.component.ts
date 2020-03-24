@@ -39,6 +39,10 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
 
+    ngOnInit(): void {
+        this.id = this.id || 'genericSelect';
+    }
+
     change(item) {
         this._selected = item;
         this.onSelected.emit(item);

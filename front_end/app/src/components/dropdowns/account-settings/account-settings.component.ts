@@ -53,12 +53,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     }
 
     logout(): void {
-        const url  = this.router.url;
-        const stay = url.startsWith('/systems') ||
-            url.startsWith('/account') ||
-            url.startsWith('/push-notifications') ||
-            url.startsWith('/download') && !this.CONFIG.cloudCapabilities.publicDownloads ||
-            url.startsWith('/downloads') && !this.CONFIG.cloudCapabilities.publicReleases;
-        this.accountService.logout(!stay);
+        this.accountService.logout(false);
     }
 }

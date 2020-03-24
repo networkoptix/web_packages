@@ -15,14 +15,14 @@ import { first }                     from 'rxjs/operators';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-account-password-component',
-    templateUrl: 'password.component.html',
-    styleUrls  : ['password.component.scss']
+    selector : 'nx-account-password-component',
+    templateUrl : 'password.component.html',
+    styleUrls : ['password.component.scss']
 })
 
 export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
-    @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
-    @ViewChildren('passwordForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
+    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
+    @ViewChildren('passwordForm', { read: NgForm }) formQueryList: QueryList<NgForm>;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -34,33 +34,35 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     changePassword: any;
 
     watchers: any = {
-        password: new Watcher<string>(),
-        newPassword: new Watcher<string>()
+        password    : new Watcher<string>(),
+        newPassword : new Watcher<string>()
     };
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-
+    private setupDefaults() {
         this.pass = {
-            password   : '',
-            newPassword: ''
+            password    : '',
+            newPassword : ''
         };
         this.menuService.setDetailsSection('password');
     }
 
-    constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private systemsService: NxSystemsService,
-                private accountService: NxAccountService,
-                private dialogs: NxDialogsService,
-                private menuService: NxMenuService,
-                private applyService: NxApplyService,
-                private pageService: NxPageService) {
-        this.setupDefaults(configService);
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
+        private dialogs: NxDialogsService,
+        private menuService: NxMenuService,
+        private applyService: NxApplyService,
+        private pageService: NxPageService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
@@ -68,14 +70,14 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
 
         this.changePassword = this.processService.createProcess(() => {
             return this.cloudApiService
-                       .changePassword(this.pass.newPassword, this.pass.password);
+                .changePassword(this.pass.newPassword, this.pass.password);
         }, {
-            errorCodes        : {
-                notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
-                wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
+            errorCodes: {
+                notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch,
+                wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch
             },
-            errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix,
-            ignoreUnauthorized: true
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix,
+            ignoreUnauthorized : true
         }).then(() => {
             this.form.reset();
             this.setOriginal();
@@ -119,4 +121,3 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.watchers.newPassword.value = newPassword;
     }
 }
-

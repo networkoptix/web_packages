@@ -97,7 +97,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private router: Router,
                 private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService,
+                private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.setupDefaults(configService);
     }
@@ -261,20 +261,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     updateAlert() {
-        const { primary, secondary } = this.systemsService.systemsMerging;
+        const { primary, secondary } = this.systemsService.systemsMerging || {};
         if (!this.system.isOnline) {
             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
         } else if (primary && primary.id === this.system.id) {
             this.secondaryMerge = false;
+            const secondarySystem = this.systemsService.systems
+                .find((system) => secondary.id === system.id);
+            const secondaryName = secondarySystem && secondarySystem.name || this.LANG.system.mergeUnknownName;
             const template =
                 `<div class="my-1">
-                    <div class="larger"><strong>${secondary.name}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                    <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
                     <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                 </div>`;
             this.ribbonService.show(template, '', '', 'alert');
         } else if (secondary && secondary.id === this.system.id) {
             this.mergeTargetSystem = this.systemsService.systems
-                .find((system) => primary.id === system.id) || this.LANG.system.mergeUnknownName;
+                .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
             this.secondaryMerge = true;
         } else {
             this.secondaryMerge = false;
@@ -423,18 +426,20 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         const addr = server.networkAddresses.split(';');
         const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
-        let mainAddr = '';
 
         if (addresses.ipv4.length > 0) {
-            mainAddr = addresses.ipv4[0];
-            const index = mainAddr.lastIndexOf(':');
-            server.ip = index !== -1 ? mainAddr.substring(0, index) : mainAddr;
-            server.port = index !== -1 ? mainAddr.substring(index + 1) : '';
+            const [ip, port] = addresses.ipv4[0].split(':');
+            server.ip = ip;
+            server.port = port || '';
         } else if (addresses.ipv6.length > 0) {
-            mainAddr = addresses.ipv6[0];
-            const index = mainAddr.lastIndexOf(']:');
-            server.ip = index !== -1 ? mainAddr.substring(0, index) : mainAddr;
-            server.port = index !== -1 ? mainAddr.substring(index + 2) : '';
+            if (addresses.ipv6[0].indexOf('[') === 0) {
+                const [ip, port] = addresses.ipv6[0].split(']:');
+                server.ip = ip.substring(1);
+                server.port = port || '';
+            } else {
+                server.ip = addresses.ipv6[0];
+                server.port = '';
+            }
         } else {
             server.ip = 'N/A';
             server.port = '';

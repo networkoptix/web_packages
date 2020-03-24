@@ -55,34 +55,46 @@
             </div>
         </div>
 
-        <h1 *ngIf="!change.success && !changeSuccess" class="heading mb-4" translate>
-            Set New Password
-        </h1>
-        <form
-            name="restorePasswordWithCode"
-            #restorePasswordWithCode="ngForm"
-            class="form"
-            *ngIf="!change.success && !changeSuccess"
-            novalidate>
-            <label for="newPassword" class="" translate>New Password</label>
-            <nx-password-input
-                class="mb-3"
-                name="newPassword"
-                componentId="newPassword"
-                [(ngModel)]="data.newPassword"
-                [form]="restorePasswordWithCode"
-                #newPassword="ngModel"></nx-password-input>
+        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm"
+              class="form-horizontal" *ngIf="!change.success && !changeSuccess"
+              novalidate>
 
-            <nx-password-input-validation
-                class="mb-3"
-                *ngIf="newPassword.errors && !newPassword.errors.required"
-                [forElement]="newPassword"></nx-password-input-validation>
+            <h1 translate>Set New Password</h1>
+
+            <div class="form-group row">
+                <div class="col-md-4 justify-content-start justify-content-md-end">
+                    <label for="newPassword" class="text-left text-md-right control-label" translate>New Password</label>
+                </div>
+                <div class="col-md-4">
+                    <nx-password-input
+                            class="form-component"
+                            name="newPassword"
+                            componentId="newPassword"
+                            [(ngModel)]="data.newPassword"
+                            [form]="restorePasswordWithCode"
+                            #newPassword="ngModel">
+                    </nx-password-input>
+                    <nx-password-input-tag-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-tag-validation>
+                </div>
+
+                <div class="col-md-4">
+                    <nx-password-input-validation
+                            [forElement]="newPassword"
+                            [value]="data.newPassword">
+                    </nx-password-input-validation>
+                </div>
+            </div>
+
             <nx-process-button
                 [customButtonClass]="'full-width'"
                 [customClass]="'full-width'"
                 [process]="change"
                 [form]="restorePasswordWithCode"
-                [buttonText]="'OK' | translate"></nx-process-button>
+                [buttonText]="LANG.dialogs.buttons.ok">
+            </nx-process-button>
         </form>
     </div>
 

@@ -169,12 +169,14 @@ export interface Dialogs {
     removeSystem: RemoveSystem;
     sharing:      Sharing;
     titles:       DialogsTitles;
+    tooltips:     Tooltips;
 }
 
 export interface Buttons {
     cancel:           string;
     createAccount:    string;
     delete:           string;
+    deleteAccount:    string;
     download:         string;
     logoutAuthorised: string;
     ok:               string;
@@ -230,6 +232,7 @@ export interface DialogsMerge {
     mergeFailedTitle:           string;
     noServerFound:              string;
     newSystemDisplayName:       string;
+    otherSystem:                string;
     ownerCanMergeText:          string;
     passwordRequired:           string;
     passwordWrong:              string;
@@ -243,9 +246,10 @@ export interface DialogsMerge {
     serverNotYours:             string;
     serverVersionOld:           string;
     serverVersionNew:           string;
+    systemOffline:              string;
+    systemsIncompatible:        string;
     systemVersionOld:           string;
     systemVersionNew:           string;
-    systemOffline:              string;
     urlEmpty:                   string;
     urlNotValid:                string;
     unknownError:               string;
@@ -259,11 +263,13 @@ export interface RecommendSupport {
 }
 
 export interface DialogsMessage {
-    failedToSend: string;
-    placeholders: Placeholders;
-    sent:         string;
-    subject:      Subject;
-    title:        Title;
+    settingsSaved:    string;
+    settingsNotSaved: string;
+    failedToSend:     string;
+    placeholders:     Placeholders;
+    sent:             string;
+    subject:          Subject;
+    title:            Title;
 }
 
 export interface Placeholders {
@@ -299,6 +305,8 @@ export interface Sharing {
 }
 
 export interface DialogsTitles {
+    error:                  string;
+    success:                string;
     changeAccount:          string;
     deleteUser:             string;
     loggedFromOtherAccount: string;
@@ -307,6 +315,10 @@ export interface DialogsTitles {
     serversDetach:          string;
     serversReset:           string;
     serversRestart:         string;
+}
+
+export interface Tooltips {
+    deleteAccount: string;
 }
 
 export interface Downloads {
@@ -381,49 +393,50 @@ export interface ReleasesTypes {
 }
 
 export interface ErrorCodes {
-    DUPLICATE_MEDIASERVER_FOUND:   string;
-    EmailAlreadyExists:            string;
-    FAIL:                          string;
-    INCOMPATIBLE:                  string;
-    accountAlreadyActivated:       string;
-    accountBlocked:                string;
-    accountNotActivated:           string;
-    alreadyExists:                 string;
-    brokenAccount:                 string;
-    cantActivatePrefix:            string;
-    cantAddYourOwnEmail:           string;
-    cantChangeAccountPrefix:       string;
-    cantChangePasswordPrefix:      string;
-    cantDisconnectSystemPrefix:    string;
-    cantEditAdmin:                 string;
-    cantEditYourself:              string;
-    cantGetSystemInfoPrefix:       string;
-    cantGetSystemsListPrefix:      string;
-    cantGetUsersListPrefix:        string;
-    cantOpenClient:                string;
-    cantRegisterPrefix:            string;
-    cantSendActivationPrefix:      string;
-    cantSendConfirmationPrefix:    string;
-    cantSharePrefix:               string;
-    cantUnshareWithMeSystemPrefix: string;
-    emailNotFound:                 string;
-    failedToAccessSystem:          string;
-    forbidden:                     string;
-    lostConnection:                string;
-    mergedSystemIsOffline:         string;
-    notAuthorized:                 string;
-    notFound:                      string;
-    ok:                            string;
-    oldPasswordMistmatch:          string;
-    oldSafariNotSupported:         string;
-    passwordMismatch:              string;
-    thisSystem:                    string;
-    unknownError:                  string;
-    unknownMergeError:             string;
-    wrongAuthCode:                 string;
-    wrongCode:                     string;
-    wrongCodeRestore:              string;
-    wrongParameters:               string;
+    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: string;
+    DUPLICATE_MEDIASERVER_FOUND:         string;
+    EmailAlreadyExists:                  string;
+    FAIL:                                string;
+    INCOMPATIBLE:                        string;
+    accountAlreadyActivated:             string;
+    accountBlocked:                      string;
+    accountNotActivated:                 string;
+    alreadyExists:                       string;
+    brokenAccount:                       string;
+    cantActivatePrefix:                  string;
+    cantAddYourOwnEmail:                 string;
+    cantChangeAccountPrefix:             string;
+    cantChangePasswordPrefix:            string;
+    cantDisconnectSystemPrefix:          string;
+    cantEditAdmin:                       string;
+    cantEditYourself:                    string;
+    cantGetSystemInfoPrefix:             string;
+    cantGetSystemsListPrefix:            string;
+    cantGetUsersListPrefix:              string;
+    cantOpenClient:                      string;
+    cantRegisterPrefix:                  string;
+    cantSendActivationPrefix:            string;
+    cantSendConfirmationPrefix:          string;
+    cantSharePrefix:                     string;
+    cantUnshareWithMeSystemPrefix:       string;
+    emailNotFound:                       string;
+    failedToAccessSystem:                string;
+    forbidden:                           string;
+    lostConnection:                      string;
+    mergedSystemIsOffline:               string;
+    notAuthorized:                       string;
+    notFound:                            string;
+    ok:                                  string;
+    oldPasswordMistmatch:                string;
+    oldSafariNotSupported:               string;
+    passwordMismatch:                    string;
+    thisSystem:                          string;
+    unknownError:                        string;
+    unknownMergeError:                   string;
+    wrongAuthCode:                       string;
+    wrongCode:                           string;
+    wrongCodeRestore:                    string;
+    wrongParameters:                     string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -983,11 +996,13 @@ const typeMap: any = {
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "sharing", js: "sharing", typ: r("Sharing") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
+        { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
     ], false),
     "Buttons": o([
         { json: "cancel", js: "cancel", typ: "" },
         { json: "createAccount", js: "createAccount", typ: "" },
         { json: "delete", js: "delete", typ: "" },
+        { json: "deleteAccount", js: "deleteAccount", typ: "" },
         { json: "download", js: "download", typ: "" },
         { json: "logoutAuthorised", js: "logoutAuthorised", typ: "" },
         { json: "ok", js: "ok", typ: "" },
@@ -1037,6 +1052,7 @@ const typeMap: any = {
         { json: "mergeFailedTitle", js: "mergeFailedTitle", typ: "" },
         { json: "noServerFound", js: "noServerFound", typ: "" },
         { json: "newSystemDisplayName", js: "newSystemDisplayName", typ: "" },
+        { json: "otherSystem", js: "otherSystem", typ: "" },
         { json: "ownerCanMergeText", js: "ownerCanMergeText", typ: "" },
         { json: "passwordRequired", js: "passwordRequired", typ: "" },
         { json: "passwordWrong", js: "passwordWrong", typ: "" },
@@ -1050,9 +1066,10 @@ const typeMap: any = {
         { json: "serverNotYours", js: "serverNotYours", typ: "" },
         { json: "serverVersionOld", js: "serverVersionOld", typ: "" },
         { json: "serverVersionNew", js: "serverVersionNew", typ: "" },
+        { json: "systemOffline", js: "systemOffline", typ: "" },
+        { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },
         { json: "systemVersionOld", js: "systemVersionOld", typ: "" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "" },
-        { json: "systemOffline", js: "systemOffline", typ: "" },
         { json: "urlEmpty", js: "urlEmpty", typ: "" },
         { json: "urlNotValid", js: "urlNotValid", typ: "" },
         { json: "unknownError", js: "unknownError", typ: "" },
@@ -1064,6 +1081,8 @@ const typeMap: any = {
         { json: "c_proceeding", js: "c_proceeding", typ: "" },
     ], false),
     "DialogsMessage": o([
+        { json: "settingsSaved", js: "settingsSaved", typ: "" },
+        { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },
@@ -1098,6 +1117,8 @@ const typeMap: any = {
         { json: "shareTitle", js: "shareTitle", typ: "" },
     ], false),
     "DialogsTitles": o([
+        { json: "error", js: "error", typ: "" },
+        { json: "success", js: "success", typ: "" },
         { json: "changeAccount", js: "changeAccount", typ: "" },
         { json: "deleteUser", js: "deleteUser", typ: "" },
         { json: "loggedFromOtherAccount", js: "loggedFromOtherAccount", typ: "" },
@@ -1106,6 +1127,9 @@ const typeMap: any = {
         { json: "serversDetach", js: "serversDetach", typ: "" },
         { json: "serversReset", js: "serversReset", typ: "" },
         { json: "serversRestart", js: "serversRestart", typ: "" },
+    ], false),
+    "Tooltips": o([
+        { json: "deleteAccount", js: "deleteAccount", typ: "" },
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },
@@ -1170,6 +1194,7 @@ const typeMap: any = {
         { json: "releases", js: "releases", typ: "" },
     ], false),
     "ErrorCodes": o([
+        { json: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", js: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", typ: "" },
         { json: "DUPLICATE_MEDIASERVER_FOUND", js: "DUPLICATE_MEDIASERVER_FOUND", typ: "" },
         { json: "EmailAlreadyExists", js: "EmailAlreadyExists", typ: "" },
         { json: "FAIL", js: "FAIL", typ: "" },

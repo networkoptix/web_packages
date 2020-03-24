@@ -51,7 +51,7 @@ export class NxLandingComponent implements OnInit {
             this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
         } else {
             this.accountService
-                .get()
+                .get(/* forceUpdate */true)
                 .then(account => {
                     if (account) {
                         this.accountService.redirectAuthorised();

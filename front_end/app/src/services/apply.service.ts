@@ -7,6 +7,7 @@ import { distinctUntilChanged, filter, skip }   from 'rxjs/operators';
 import { NxDialogsService }                     from '../dialogs/dialogs.service';
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
+import { NxUtilsService }                       from './utils.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -35,6 +36,29 @@ export class Watcher<T> {
             this.originalValue = data;
         }
         if (this.value !== data) {
+            this.valueSubject.next(data);
+        }
+    }
+
+    // Resets the value of the watcher to the first value that was not undefined.
+    reset() {
+        this.valueSubject.next(this.originalValue);
+    }
+}
+
+export class ObjWatcher<Object> {
+    originalValue: any = {};
+    valueSubject = new BehaviorSubject({});
+
+    get value() {
+        return this.valueSubject.getValue();
+    }
+
+    set value(data) {
+        if (this.value === {}) {
+            this.originalValue = {};
+        }
+        if (!NxUtilsService.isEqual(this.value, data)) {
             this.valueSubject.next(data);
         }
     }

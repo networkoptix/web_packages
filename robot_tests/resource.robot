@@ -17,7 +17,7 @@ ${directory}    ${SCREENSHOTDIRECTORY}
 ${variables_file}    variables-env.robot
 ${options}    true
 ${headless}    true
-@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3   
+@{chrome_arguments}    --disable-gpu    --no-sandbox    --log-level=3
 @{chrome_arguments_headless}    --disable-infobars    --disable-gpu    --no-sandbox    --log-level=3     --headless
 ${speed}    0
 ${selenium_timeout}    30
@@ -43,7 +43,7 @@ Regular Open Browser
 
 Open Browser With Options
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
-    ${chrome_options}=    Set Chrome Options Headless    
+    ${chrome_options}=    Set Chrome Options Headless
     Create Webdriver    Chrome    chrome_options=${chrome_options}
     Set Window Size    1920    1080
    # Go to    ${ENV}
@@ -67,7 +67,7 @@ Set Chrome Options Headless
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
     FOR    ${option}    IN    @{chrome_arguments_headless}
         Call Method    ${options}    add_argument    ${option}
-    END    
+    END
     [Return]    ${options}
 
 Check Language Anonymous
@@ -205,7 +205,9 @@ Activate
     [arguments]    ${email}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     Go To    ${ENV}/activate/${code}
-    Wait Until Element Is Visible    ${ACTIVATION SUCCESS}
+    Wait Until Elements Are Visible
+    ...    ${ACTIVATION SUCCESS}
+    ...    ${ACTIVATION SUCCESS ICON}
     Location Should Be    ${ENV}/activate/success
 
 Register And Activate Account

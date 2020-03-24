@@ -1,5 +1,6 @@
 from django.contrib import admin, messages
 from django.contrib.admin import SimpleListFilter, AdminSite
+from django.contrib.admin.views.main import SEARCH_VAR
 from django.conf.urls import url
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Case, When, Value, BooleanField
@@ -78,7 +79,6 @@ class AssetTypeFilter(SimpleListFilter):
         return queryset
 
 
-
 class ContextFilter(SimpleListFilter):
     title = 'Show Hidden Pages'
     parameter_name = 'hidden'
@@ -134,7 +134,7 @@ class CustomizationFilter(SimpleListFilter):
         for lookup, title in self.lookup_choices:
             lookup = str(lookup)
             yield {
-                'selected': self.value() == lookup if self.value() else lookup == self.default_customization,
+                'selected': self.value() == lookup if self.value() else lookup == str(self.default_customization),
                 'query_string': cl.get_query_string({self.parameter_name: lookup}, []),
                 'display': title,
             }
@@ -302,6 +302,7 @@ class AssetAdmin(CMSAdmin):
     search_fields = ('name', 'created_by__email',)
     form = AssetForm
     change_form_template = 'cms/asset_change_form.html'
+    change_list_template = 'cms/asset_list_view.html'
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         AssetForm = super().get_form(request, obj, change, **kwargs)
@@ -331,11 +332,16 @@ class AssetAdmin(CMSAdmin):
 
     def changelist_view(self, request, extra_context=None):
         filters_dict = caches['filters'].get(request.user.id) or {}
-        if not request.META['QUERY_STRING'] and request.path_info in filters_dict:
-            return redirect(f'{request.path_info}?{filters_dict[request.path_info]}')
+        cached_path = filters_dict.get(request.path_info, None)
+        if not request.META['QUERY_STRING'] and cached_path:
+            return redirect(f'{request.path_info}?{cached_path}')
         else:
             # If an exception is raised, clear the saved filter
             try:
+                # Extra context for search form
+                if not extra_context:
+                    extra_context = {}
+                extra_context['search_var'] = SEARCH_VAR
                 response = super(AssetAdmin, self).changelist_view(request, extra_context)
                 filters_dict[request.path_info] = request.META['QUERY_STRING']
                 caches['filters'].set(request.user.id, filters_dict)

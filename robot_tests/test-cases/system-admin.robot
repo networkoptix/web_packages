@@ -10,12 +10,12 @@ Force Tags        system
 ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
-@{checkboxes}    
-...    ${ENABLE AUTO DISCOVERY CHECKBOX REAL} 
-...    ${SEND ANONYMOUS USAGE CHECKBOX REAL} 
+@{checkboxes}
+...    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+...    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
 ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
-...    ${ENABLE AUDIT TRAIL CHECKBOX REAL} 
-...    ${ALLOW ONLY SECURE CHECKBOX REAL} 
+...    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+...    ${ALLOW ONLY SECURE CHECKBOX REAL}
 ...    ${LIMIT SESSION DURATION CHECKBOX REAL}
 
 *** Keywords ***
@@ -46,31 +46,32 @@ Restart
 
 Settings on page should match settings on server
     Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled     
+    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled
     Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed    
+    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed
     Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization   
+    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization
     Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled   
+    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled
     Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced   
+    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced
     Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced  
+    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced
     Log    Limit session duration to
     ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit 
-       
+    ...    ELSE     Evaluate Session Limit
+
 Setting on page matches server
     [Arguments]    ${setting}    ${id}
     ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
     ${string}=   Convert To String    ${status}
     ${selected}=   Convert To Lowercase    ${string}
     Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     ${id}    ${selected}
-    
+
 Evaluate Session Limit
     ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Sleep    5
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
     ${multiplier}=   Set Variable If    "${interval}"=="hours"    60
     ...    "${interval}"=="minutes"    1
@@ -81,43 +82,43 @@ Changing setting changes it on server
     [Arguments]    ${setting}    ${id}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
     ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
+    ...    ${status}==False    true
     Set Checkbox Value    ${setting}    ${selected}
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Evaluate Auto System Settings via API     ${id}    ${selected}
-    
+
 Change Setting and Save
     [Arguments]    ${setting}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
     ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
+    ...    ${status}==False    true
     Set Checkbox Value    ${setting}    ${selected}
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    
+
 Just Change Setting
     [Arguments]    ${setting}
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
     ${selected} =    Set Variable If    ${status}==True    false
-    ...    ${status}==False    true   
+    ...    ${status}==False    true
     Set Checkbox Value    ${setting}    ${selected}
 
 Set Hidden Checkbox
-     Log    BOTH CHECKBOXES ARE UNCHECKED TO START        
-     Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true   
-     Sleep    1   
-     Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true    
-     Sleep    2    
-     Capture Page Screenshot 
-     
+     Log    BOTH CHECKBOXES ARE UNCHECKED TO START
+     Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true
+     Sleep    1
+     Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
+     Sleep    2
+     Capture Page Screenshot
+
 Change Setting Encrypt video traffic
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
     ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
     ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
-    ...    ${status}==True and ${status2}==True     false   
+    ...    ${status}==True and ${status2}==True     false
     Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
     ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
     ...    ELSE    Set Hidden Checkbox
@@ -125,33 +126,33 @@ Change Setting Encrypt video traffic
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     [Return]    ${selected}
-    
+
 Changing Several Settings at Random
     [Arguments]     ${action}
     ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
     FOR    ${idx}    IN RANGE   ${random}
         ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
         Log    ${checkbox}
-        Just Change Setting    ${checkbox} 
-    END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action} 
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Sleep    2
-    Settings on page should match settings on server
-    
-Changing All Settings
-    [Arguments]    ${action}
-    FOR    ${checkbox}    IN   @{checkboxes}
-        Log    ${checkbox}
-        Just Change Setting    ${checkbox} 
+        Just Change Setting    ${checkbox}
     END
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
     Sleep    2
     Settings on page should match settings on server
-    
+
+Changing All Settings
+    [Arguments]    ${action}
+    FOR    ${checkbox}    IN   @{checkboxes}
+        Log    ${checkbox}
+        Just Change Setting    ${checkbox}
+    END
+    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${action}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Sleep    2
+    Settings on page should match settings on server
+
 Change Duration Time Interval
     [Arguments]    ${action}
     ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
@@ -164,20 +165,20 @@ Change Duration Time Interval
     END
     FOR    ${i}    IN RANGE    9
            ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
-           Run Keyword If    ${status}==False    Run Keywords    
+           Run Keyword If    ${status}==False    Run Keywords
            ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
            ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
            ...    Click Link    ${TIME DURATION NEW SELECTION}
-           ...    ELSE    Exit For Loop 
+           ...    ELSE    Exit For Loop
     END
-    
-    Click Button    ${TIME DURATION INTERVAL BUTTON}    
+
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
     Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
     Click Link    ${TIME DURATION NEW SELECTION}
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-     
+
 *** Test Cases ***
 Systems dropdown should allow you to go back to the systems page
     [Tags]    Threaded
@@ -322,67 +323,67 @@ Should show (your system) for owner and (owner's name) for non-owners
     FOR    ${user}    IN    @{EMAILS LIST}
         Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check System Text    ${user}
     END
-    
+
 Should open a system page in anonymous state
     [Tags]    anonymous
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Location should be    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Wait Until Element Is Visible    ${LOG IN MODAL} 
+    Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
-    
+
 Should show system settings and security settings and they should match settings on server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
-    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
     ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
     ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
     ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
     ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}    
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Element Text Should Be    //label[@for="autoDiscoveryEnabled"]//span    ${ENABLE AUTO DISCOVERY TEXT}
     Element Text Should Be    //label[@id="autoDiscoveryEnabledHelpBlock"]    ${ENABLE AUTO DISCOVERY DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="statisticsAllowed"]//span    ${SEND ANONYMOUS USAGE TEXT}
     Element Text Should Be    //label[@id="statisticsAllowedHelpBlock"]    ${SEND ANONYMOUS USAGE DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="cameraSettingsOptimization"]//span    ${ALLOW SYSTEM OPTIMIZE TEXT}
-    
+
     Element Text Should Be    //label[@for="auditTrailEnabled"]//span    ${ENABLE AUDIT TRAIL TEXT}
     Element Text Should Be    //label[@id="auditTrailEnabledHelpBlock"]    ${ENABLE AUDIT TRAIL DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="trafficEncryptionForced"]//span    ${ALLOW ONLY SECURE TEXT}
     Element Text Should Be    //label[@for="videoTrafficEncryptionForced"]//span    ${ENCRYPT VIDEO TRAFFIC TEXT}
     Element Text Should Be    //label[@id="videoTrafficEncryptionForcedHelpBlock"]    ${ENCRYPT VIDEO TRAFFIC DESCRIPTION TEXT}
     Element Text Should Be    //label[@for="sessionLimitMinutes"]//span    ${LIMIT SESSION DURATION TEXT}
-    
+
     Settings on page should match settings on server
-        
+
 Changing the Setting "Enable auto discovery of cameras and servers" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled  
+    Changing setting changes it on server     ${ENABLE AUTO DISCOVERY CHECKBOX REAL}    autoDiscoveryEnabled
 
 Changing the Setting "Send anonymous usage and crash statistics to developers" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed    
+    Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX REAL}    statisticsAllowed
 
 Changing the Setting "Allow system to optimize camera settings" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization  
+    Changing setting changes it on server     ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}    cameraSettingsOptimization
 
 Changing the Setting "Enable audit trail" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled    
+    Changing setting changes it on server     ${ENABLE AUDIT TRAIL CHECKBOX REAL}     auditTrailEnabled
 
 Changing the Setting "Allow only secure connections" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced 
+    Changing setting changes it on server     ${ALLOW ONLY SECURE CHECKBOX REAL}     trafficEncryptionForced
 
-Changing the Setting "Encrypt video traffic" changes it on the server 
+Changing the Setting "Encrypt video traffic" changes it on the server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
     ${selected}=   Change Setting Encrypt video traffic
@@ -395,21 +396,21 @@ Changing the Setting "Limit session duration to" changes it on the server
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
     Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
     ...    ELSE     Evaluate Session Limit
-    
+
 Change Time Interval And Verify on Server
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX REAL}
     Run Keyword If    ${status}==False    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
     Change Duration Time Interval    ${SYSTEM SAVE}
     Evaluate Session Limit
     Reload Page
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
     Change Duration Time Interval    ${SYSTEM SAVE}
     Evaluate Session Limit
@@ -417,24 +418,23 @@ Change Time Interval And Verify on Server
 Changing Several Random Checkboxes Works
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing Several Settings at Random    ${SYSTEM SAVE}
     Changing Several Settings at Random    ${SYSTEM CANCEL}
-    
-Changing All Checkboxes Works    
+
+Changing All Checkboxes Works
     [Tags]    checkbox settings testing
     Log in to Auto Tests System    ${EMAIL OWNER}
-    Wait Until Elements Are Visible    
-    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
-    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL} 
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing All Settings    ${SYSTEM SAVE}
     Changing All Settings    ${SYSTEM CANCEL}
 
 
 
 
-    

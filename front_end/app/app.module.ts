@@ -58,7 +58,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
             cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken',
+            headerName: 'X-CSRFToken'
         }),
         WebStorageModule,
         OrderModule,
@@ -102,7 +102,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         CloudStorageGuard
     ],
     declarations   : [
-        AppComponent,
+        AppComponent
     ],
     exports        : [
     ],

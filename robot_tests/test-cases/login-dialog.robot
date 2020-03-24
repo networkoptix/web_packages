@@ -108,7 +108,10 @@ Shows non-activated user message when not activated at login; Resend activation 
     Go To    ${url}/register
     ${random email}    get random email    ${BASE EMAIL}
     Register    'mark'    'hamill'    ${random email}    ${password}
-    Wait Until Element is Visible    //h1[contains(@class,'process-success')]
+    Wait Until Elements are Visible
+    ...    ${ACCOUNT CREATION SUCCESS}
+    ...    ${ACCOUNT CREATION SUCCESS ICON}
+    ...    ${ACCOUNT CREATION CONFIRMATION}
     Log In    ${random email}    ${BASE PASSWORD}    validate=${False}
     Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
     Validate Register Email Received    ${random email}

@@ -167,6 +167,7 @@
             "cancel": "Cancel",
             "createAccount": "Create New Account",
             "delete": "Delete",
+            "deleteAccount": "Delete Account",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
             "ok": "OK",
@@ -218,6 +219,7 @@
             "mergeFailedTitle": "System merge failed",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner.",
             "passwordRequired": "Password is required.",
             "passwordWrong": "Wrong password.",
@@ -235,15 +237,18 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one.",
             "urlEmpty": "Enter server address.",
             "urlNotValid": "Enter valid URL.",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
         "message": {
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
             "failedToSend": "Message has failed to send.",
             "placeholders": {
                 "feedback": "Make sure you include your camera model and manufacturer..."
@@ -275,6 +280,8 @@
             "shareTitle": "Add"
         },
         "titles": {
+            "error": "Error",
+            "success": "Success",
             "changeAccount": "You are already logged in as {email}",
             "deleteUser": "Delete user?",
             "loggedFromOtherAccount": "You will be logged in with a different account",
@@ -283,6 +290,9 @@
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         }
     },
     "downloads": {
@@ -358,6 +368,7 @@
         }
     },
     "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems \u2013 in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
         "EmailAlreadyExists": "This Email is already registered",
         "FAIL": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few moments or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -524,7 +535,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this sytem.",
+            "to": "is being merged to this system.",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
         "finishingMerge": "Finishing systems merge",

@@ -1,5 +1,5 @@
 import {
-    Component, Input, Renderer2,
+    Component, Input,
     ViewChild, ElementRef
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
@@ -9,13 +9,14 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
-import StateMachine                  from './stateMachine';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import StateMachine                  from './stateMachine';
+import State                         from './stateForMergeDialog';
 
 @Component({
-    selector   : 'nx-modal-merge-content',
-    templateUrl: 'merge.component.html',
-    styleUrls  : ['merge.component.scss']
+    selector    : 'nx-modal-merge-content',
+    templateUrl : 'merge.component.html',
+    styleUrls   : ['merge.component.scss']
 })
 export class MergeModalContent {
     @Input() system;
@@ -31,17 +32,37 @@ export class MergeModalContent {
     checkMergeabilityProcess: any;
     checkPasswordProcess: any;
     mergingProcess: any;
-    multipleSystems: boolean;
     primarySystem: any;
     processedSystems = [];
     secondarySystem: any;
-    serverUrl: string; // candidate for removal
+    serverUrl: string;
     serverUrlInputExists: boolean;
     systemMergeable: string;
     targetSystem: any;
     targetSystemDropdown: any;
     targetSystemService: any;
     tooManyServers: boolean;
+    nonCloudMerge = false;
+
+    // static variables
+    readonly checkMerge: string = 'checkMerge';
+    readonly checkMergeDefault: string = 'checkMergeDefault';
+    readonly checkMergeError: string = 'checkMergeError';
+    readonly serverUrlState: string = 'serverUrl';
+    readonly serverUrlMergeError: string = 'serverUrlMergeError';
+    readonly serverUrlValidationError: string = 'serverUrlValidationError';
+    readonly confirmPasswordError: string = 'confirmPasswordError';
+
+    readonly otherSystem: string = 'otherSystem';
+    readonly duplicateServers: string = 'duplicateServers';
+    readonly systemOffline: string = 'systemOffline';
+    readonly noServerFound: string = 'noServerFound';
+    readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
+    readonly passwordWrong: string = 'passwordWrong';
+    readonly passwordRequired: string = 'passwordRequired';
+    readonly unknownError: string = 'unknownError';
+
+    machine = new StateMachine(this.checkMerge, State);
 
     @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
     @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
@@ -50,7 +71,6 @@ export class MergeModalContent {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
-        public renderer: Renderer2,
         private cloudApi: NxCloudApiService,
         private processService: NxProcessService,
         private systemService: NxSystemService,
@@ -60,134 +80,60 @@ export class MergeModalContent {
         this.LANG = languageService.getTranslations();
     }
 
-    stateMachine = {
-        thisSystemHasOutdatedServerError: {
-            show: {}, template: {}, errorText: {}
-        },
-        checkMerge: {
-            show: {
-                systemDropdown                   : true,
-                helpText                         : true,
-                serverUrlInput                   : false,
-                serverUrlInputValidationErrorText: false,
-                checkingErrorText                : false
-            },
-            showUpdates: {
-                checkMergeDefault: {
-                    systemDropdown: true,
-                    helpText      : true
-                },
-                checkMergeError: {
-                    systemDropdown   : true,
-                    checkingErrorText: true
-                },
-                serverUrl: {
-                    systemDropdown: true,
-                    serverUrlInput: true
-                },
-                serverUrlValidationError: {
-                    systemDropdown                   : true,
-                    serverUrlInput                   : true,
-                    serverUrlInputValidationErrorText: true
-                },
-                serverUrlMergeError: {
-                    systemDropdown   : true,
-                    serverUrlInput   : true,
-                    checkingErrorText: true
-                },
-                noOtherSystemServerUrl: {
-                    serverUrlInput: true
-                },
-                noOtherSystemValidationError: {
-                    serverUrlInput                   : true,
-                    serverUrlInputValidationErrorText: true
-                },
-                noOtherSystemMergeError: {
-                    serverUrlInput   : true,
-                    checkingErrorText: true
+    ngOnInit() {
+        if (this.system.canMerge) {
+            this.primarySystem = this.system;
+            if (this.systems.length === 0) {
+                this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
+                this.updateShow('noOtherSystemServerUrl');
+            } else {
+                if (this.systems.length) {
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.systems),
+                        { name: 'horizontal' }
+                    );
                 }
-            },
-            template: {
-                bodyTitle                        : '',
-                checkingErrorText                : '',
-                helpText                         : '',
-                selectedTarget                   : '',
-                serverUrlInputValue              : '',
-                serverUrlInputValidationErrorText: ''
-            },
-            errorText: {
-                duplicateServers          : '',
-                noServerFound             : '',
-                primarySystemOffline      : '',
-                primarySystemUnavailable  : '',
-                secondaryCannotMerge      : '',
-                secondarySystemUnavailable: '',
-                serverNotAvailable        : '',
-                serverNotYours            : '',
-                serverVersionOld          : '',
-                serverVersionNew          : '',
-                systemOffline             : '',
-                systemVersionOld          : '',
-                systemVersionNew          : '',
-                unknownError              : '',
-                urlEmpty                  : '',
-                urlNotValid               : ''
-            }
-        },
-        adminPassword: {
-            show: {
-                passwordError: false
-            },
-            showUpdates: {
-                default: {
-                    passwordError: false
-                },
-                confirmPasswordError: {
-                    passwordError: true
+                if (this.peerSystems.length) {
+                    this.processedSystems.push(
+                        ...this.makeSelectorList(this.peerSystems),
+                        { name: 'horizontal' }
+                    );
                 }
-            },
-            template: {
-                passwordErrorText: '',
-                passwordValue    : ''
-            },
-            errorText: {
-                passwordRequired: '',
-                passwordWrong   : ''
-                // serverNotAvailable: ''
-            }
-        },
-        choosePrimary: {
-            template: {
-                selectedPrimarySystem: ''
-            }
-        },
-        confirmMerge: {
-            show: {
-                passwordError: false
-            },
-            showUpdates: {
-                default: {
-                    passwordError: false
-                },
-                confirmPasswordError: {
-                    passwordError: true
+                this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
+                this.targetSystem = this.selectDefaultSystem();
+                this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+                this.systemMergeable = this.checkMergeability(this.targetSystem);
+                let show = this.checkMergeDefault;
+                const templateUpdates: any = {
+                    helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
+                    selectedTarget : this.targetSystemDropdown.value
+                };
+                if (this.targetSystemDropdown.peer === true) {
+                    show = this.serverUrlState;
+                    templateUpdates.serverUrlInputValue = this.targetSystem.url;
+                    delete templateUpdates.helpText;
                 }
-            },
-            template: {
-                passwordErrorText: '',
-                passwordValue    : ''
-            },
-            errorText: {
-                passwordRequired: '',
-                passwordWrong   : ''
+                this.updateShow(show, templateUpdates);
             }
-        }
-    };
+            this.secondarySystem = this.targetSystem;
+            if (this.systemMergeable) {
+                this.updateShow(
+                    this.checkMergeError,
+                    { checkingErrorText: this.systemMergeable }
+                );
+            }
 
-    machine = new StateMachine('checkMerge', this.stateMachine);
+            this.user.get().then((account) => {
+                this.account = account;
+            });
+
+            this.initProcesses();
+        } else {
+            this.machine.transition('thisSystemHasOutdatedServerError');
+        }
+    }
 
     updateShow(newShow?, templateVariable: any = {}) {
-        console.log('newShow/templateVariable in updateShow', newShow, templateVariable);
         const { showUpdates, show, template } = this.machine.state;
         if (newShow) {
             if (newShow.includes('Error')) {
@@ -196,14 +142,13 @@ export class MergeModalContent {
             Object.keys(show).forEach(e => {
                 show[e] = !!showUpdates[newShow][e];
             });
-            if (this.machine.currentState === 'checkMerge') {
+            if (this.machine.currentState === this.checkMerge) {
                 const newBodyTitle = newShow.includes('noOtherSystem')
                     ? this.LANG.dialogs.merge.enterSystemAddressTitle
                     : this.LANG.dialogs.merge.mergeSystemsTitle;
                 if (newBodyTitle !== template.bodyTitle) {
                     templateVariable.bodyTitle = newBodyTitle;
                 }
-                // templateVariable.serverUrlInputValue = '';
             }
         }
 
@@ -221,88 +166,105 @@ export class MergeModalContent {
                     template[clearText] = '';
                 });
         }
-        console.log('machine state on update', this.machine.state);
     }
 
-    // still need to test whether serverUrl is reset when going back
-    goBack() {
-        this.machine.goBack();
-        if (this.machine.currentState === 'checkMerge') {
-            this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem({ value: this.machine.state.template.selectedTarget });
-        }
-    }
-
-    // call this when dropdown changes
-    insertErrorMessages() {
-        const { errorText }       = this.machine.state;
-        const targetSystemName  = this.targetSystem.name || this.targetSystem.info.name;
-        const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
-        for (const error in errorText) {
-            errorText[error] = this.LANG.dialogs.merge[error]
-                .replace(/{{primarySystem}}|{{targetSystem}}/g, found => {
-                    return found === '{{primarySystem}}' ? primarySystemName : targetSystemName;
-                });
-        }
-    }
-
-    ngOnInit() {
-        if (this.system.canMerge) {
-            this.primarySystem = this.system;
-            if (this.systems.length === 0) {
-                this.targetSystem = { name: 'Other System' };
-                this.updateShow('noOtherSystemServerUrl');
-            } else {
-                if (this.systems.length) {
-                    this.processedSystems.push(
-                        ...this.makeSelectorList(this.systems),
-                        { name: 'horizontal' }
-                    );
-                }
-                if (this.peerSystems.length) {
-                    // eventually need to sort the peerSystem
-                    this.processedSystems.push(
-                        ...this.makeSelectorList(this.peerSystems),
-                        { name: 'horizontal' }
-                    );
-                }
-                this.processedSystems.push({ value: 'otherSystem', name: 'Other System...' });
-                this.targetSystem = this.selectDefaultSystem();
-                this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-                this.systemMergeable = this.checkMergeability(this.targetSystem);
-                this.updateShow('checkMergeDefault', {
-                    helpText      : this.LANG.dialogs.merge.ownerCanMergeText,
-                    selectedTarget: this.targetSystemDropdown.value
-                });
-            }
-            this.secondarySystem = this.targetSystem; // target Other System?
-            // FUTURE: when switching states, clear error state/messages
-            if (this.systemMergeable) {
-                this.updateShow(
-                    'checkMergeError',
-                    { checkingErrorText: this.systemMergeable }
-                );
-            }
-
-            this.user.get().then((account) => {
-                this.account = account;
-            });
-
-            this.initProcesses();
+    setTargetSystem(targetSystem, serverUrlInputValue = '') {
+        if (targetSystem.value === this.otherSystem) {
+            this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
+            this.targetSystem = targetSystem;
+            this.updateShow(this.serverUrlState, { serverUrlInputValue, selectedTarget: this.otherSystem });
         } else {
-            this.machine.transition('thisSystemHasOutdatedServerError');
+            this.targetSystem = this.systems.find(system => system.id === targetSystem.value) ||
+                this.peerSystems.find(system => system.id === targetSystem.value);
+            this.targetSystem.value = this.targetSystem.id;
+            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+            this.systemMergeable = this.checkMergeability(this.targetSystem);
+            let showUpdate             = this.checkMergeDefault;
+            const templateUpdates: any = {
+                helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
+                selectedTarget : this.targetSystem.value
+            };
+            if (this.targetSystem.systemName) {
+                showUpdate = this.serverUrlState;
+                templateUpdates.serverUrlInputValue = this.targetSystem.url;
+                delete templateUpdates.helpText;
+            }
+            if (this.systemMergeable) {
+                showUpdate = this.targetSystem.systemName ? this.serverUrlMergeError : this.checkMergeError;
+                templateUpdates.checkingErrorText = this.systemMergeable;
+                delete templateUpdates.helpText;
+            }
+            this.updateShow(showUpdate, templateUpdates);
         }
+        this.setSystems();
     }
 
     initProcesses() {
+        this.checkMergeabilityProcess = this.processService
+            .createProcess(() => {
+                this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
+                this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+                return this.precheckSystemMerge();
+            }, { ignoreError: true })
+            .then(
+                res => {
+                    if (!res.system && this.systemMergeable === '') {
+                        this.serverUrlInputExists
+                            ? this.machine.transition('adminPassword')
+                            : this.machine.transition('choosePrimary');
+                    } else {
+                        this.targetSystem.value = this.machine.state.template.selectedTarget;
+                        this.setTargetSystem(this.targetSystem);
+                    }
+                },
+                err => {
+                    if (err.message === 'Timeout has occurred') {
+                        err.message = this.noServerFound;
+                    }
+                    const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
+                    this.updateShow(
+                        this.targetSystem.systemName || this.targetSystem.value === this.otherSystem ? this.serverUrlMergeError : this.checkMergeError,
+                        { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
+                    );
+                }
+            );
+
+        this.checkPasswordProcess = this.processService
+            .createProcess(() => {
+                // for use case when password gets changed
+                if (this.serverUrl.indexOf('//admin:') >= 0) {
+                    const startIndex = this.serverUrl.indexOf('//admin') + 2;
+                    const endIndex = this.serverUrl.indexOf('@', startIndex + 1) + 1;
+                    this.serverUrl = this.serverUrl.slice(0, startIndex) + this.serverUrl.slice(endIndex);
+                }
+                const index = this.serverUrl.indexOf('//') + 2;
+                this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
+                return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                    .then(res => {
+                        if (res.error === '0') {
+                            this.machine.transition('confirmMerge');
+                        } else if (res.errorString === 'UNAUTHORIZED') {
+                            this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                        } else if (res.errorString === 'DUPLICATE_MEDIASERVER_FOUND') {
+                            this.machine.history = [];
+                            this.machine.transition(this.checkMerge);
+                            this.updateShow(this.serverUrlMergeError, { checkingErrorText: this.duplicateServers });
+                        }
+                    });
+            });
+
         this.mergingProcess = this.processService
             .createProcess(() => {
                 const password = this.machine.state.template.passwordValue;
-
                 if (!password) {
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
-                return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
+
+                if (this.nonCloudMerge === true) {
+                    return this.system.mergeSystems(this.serverUrl, false, password).toPromise();
+                } else {
+                    return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
+                }
             }, {
                 errorCodes: {
                     mergedSystemIsOffline: () => {
@@ -312,16 +274,16 @@ export class MergeModalContent {
                         return this.LANG.toastMessage.system.merge.failed;
                     },
                     missingPassword: () => {
-                        this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordRequired' });
+                        this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordRequired });
                     },
                     wrongPassword: () => {
-                        this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordWrong', passwordValue: '' });
+                        this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
                     }
                 },
                 successMessage: this.LANG.toastMessage.system.merge.start
             })
-            .then(res => {
-                console.log('then from cloudapi merge', res);
+            .then(() => {
+                // handles telling the app which systems are getting merged and the proper messaging
                 this.systemsService.forceUpdateSystems();
                 this.activeModal.close({
                     secondary: {
@@ -338,7 +300,7 @@ export class MergeModalContent {
                         : this.CONFIG.system.status.slave
                 });
             }, (error) => {
-                console.log('error from cloudapi merge', error);
+                // for errors that pop up during the merge
                 const errorCode = error.resultCode || (error.data && error.data.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
@@ -385,52 +347,111 @@ export class MergeModalContent {
                 }
                 this.activeModal.dismiss(error.data);
             });
+    }
 
-        this.checkMergeabilityProcess = this.processService
-            .createProcess(() => {
-                this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
-                this.updateShow('checkMergeDefault', { helpText: this.LANG.dialogs.merge.checking });
-                return this.precheckSystemMerge();
-            })
-            .then(
-                res => {
-                    console.log('res from precheckSystemMerge', res);
-                    if (!res.system && this.systemMergeable === '') {
-                        this.serverUrlInputExists
-                            ? this.machine.transition('adminPassword')
-                            : this.machine.transition('choosePrimary');
-                    } else {
-                        this.targetSystem.value = this.machine.state.template.selectedTarget;
-                        this.setTargetSystem(this.targetSystem);
-                    }
-                },
-                err => {
-                    console.log('catch called from precheck?', err);
-                    console.log('this.targetSystem in err', this.targetSystem);
-                    const errorMessageExists = Object.prototype.hasOwnProperty.call(this.machine.state.errorText, err.message);
-                    this.updateShow(
-                        this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError',
-                        { checkingErrorText: errorMessageExists ? err.message : 'unknownError' }
-                    );
-                }
-            );
-
-        this.checkPasswordProcess = this.processService
-            .createProcess(() => {
-                return this.targetSystemService.checkLocalAdminPassword(this.machine.state.template.passwordValue)
-                    .subscribe(
-                        () => {
-                        },
-                        err => {
-                            if (err.status === 404) {
-                                this.machine.transition('choosePrimary');
-                                this.targetSystemService.stopPoll();
-                            } else if (err.status === 401) {
-                                this.updateShow('confirmPasswordError', { passwordErrorText: 'passwordWrong' });
-                            }
+    async precheckSystemMerge() {
+        /**
+         * targetSystem
+         * no id = Other System
+         * localSystemId = auto-discovered system
+         * else = cloud-connected merge check
+         */
+        if (!this.targetSystem.id || this.targetSystem.localSystemId) {
+            this.nonCloudMerge = true;
+            this.serverUrl = this.machine.state.template.serverUrlInputValue;
+            if ((/^https?:\/\//).test(this.serverUrl) === false) {
+                this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
+            }
+            if ((/:\d{1,5}$/).test(this.serverUrl) === false) {
+                this.serverUrl += ':7001';
+            }
+            return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                .then(res => {
+                    if (res.error !== '0') {
+                        switch (res.errorString) {
+                            case 'FAIL':
+                                throw Error(this.noServerFound);
+                            case 'INCOMPATIBLE':
+                                throw Error('systemsIncompatible');
+                            case 'DUPLICATE_MEDIASERVER_FOUND':
+                                throw Error(this.duplicateServers);
+                            default:
+                                throw Error(this.unknownError);
                         }
-                    );
+                    }
+                    this.systemMergeable = '';
+                    return res;
+                });
+        } else {
+            this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
+            const targetSystem = await this.targetSystemService.getInfo(true, false);
+            if (targetSystem.isOnline === false) {
+                throw Error(this.systemOffline);
+            } else if (targetSystem.isAvailable === false) {
+                throw Error(this.secondarySystemUnavailable);
+            }
+
+            let systems;
+            try {
+                systems = await Promise.all([
+                    this.system.mediaserver.getModuleInfo().toPromise(),
+                    this.targetSystemService.mediaserver.getModuleInfo().toPromise()
+                ]);
+            } catch (err) {
+                if (err.status === 502) {
+                    throw Error(this.systemOffline);
+                }
+            }
+
+            const [sys1, sys2] = systems;
+            if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
+                const [servers, target] = await Promise.all([
+                    this.system.mediaserver.getMediaServers().toPromise(),
+                    this.targetSystemService.mediaserver.getMediaServers().toPromise()
+                ]);
+                const serverIds = {};
+                servers.forEach(server => {
+                    serverIds[server.id] = true;
+                });
+                if (target.some(server => serverIds[server.id]) === true) {
+                    throw Error(this.duplicateServers);
+                }
+                this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
+            } else {
+                const param1 = this.targetSystem.systemName ? 'server' : 'system';
+                const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';
+                throw Error(`${param1}Version${param2}`);
+            }
+            this.targetSystemService.stopPoll();
+        }
+        return Promise.resolve({});
+    }
+
+    goBack(serverUrlError?) {
+        this.machine.goBack();
+        const { template } = this.machine.state;
+        if (serverUrlError) {
+            this.updateShow(this.serverUrlMergeError, {
+                serverUrlInputValue : template.serverUrlInputValue,
+                checkingErrorText   : serverUrlError
             });
+            this.setTargetSystem({ value: template.selectedTarget });
+        } else if (this.machine.currentState === this.checkMerge) {
+            this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
+            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
+        }
+    }
+
+    insertErrorMessages() {
+        const { errorText }       = this.machine.state;
+        const targetSystemName  = this.targetSystem.name || this.targetSystem.info.name;
+        const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
+        for (const error in errorText) {
+            errorText[error] = this.LANG.dialogs.merge[error]
+                .replace(/{{primarySystem}}|{{targetSystem}}/g, found => {
+                    return found === '{{primarySystem}}' ? primarySystemName : targetSystemName;
+                });
+        }
     }
 
     addStatus(system) {
@@ -440,7 +461,6 @@ export class MergeModalContent {
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
         const stateOfHealth      = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
-        // need to refactor to handle auto-discovered systems
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
                 if (!system.canMerge) {
@@ -466,7 +486,6 @@ export class MergeModalContent {
                 }
         }
 
-        // might not work for auto-discovered servers
         let systemName;
         if (system.systemName) {
             systemName = system.systemName;
@@ -479,16 +498,14 @@ export class MergeModalContent {
         return `<span>${systemName}</span><span class="text-muted">${status}</span>`;
     }
 
-    // Add system can merge where added to systems form api call
     checkMergeability(system) {
-        // add something for incompatible version?
         const stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
-            return 'systemOffline';
+            return this.systemOffline;
         }
         if ((Object.prototype.hasOwnProperty.call(system, 'isAvailable') && !system.isAvailable) || stateOfHealth.indexOf('unavailable') > -1) {
-            return 'secondarySystemUnavailable';
+            return this.secondarySystemUnavailable;
         }
         if (Object.prototype.hasOwnProperty.call(system, 'canMerge') && !system.canMerge) {
             return 'secondaryCannotMerge';
@@ -510,90 +527,21 @@ export class MergeModalContent {
         return '';
     }
 
-    async precheckSystemMerge() {
-        console.log('system in prechecksystemmerge', this.system);
-        console.log('targetSystem', this.targetSystem);
-        this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
-        let url: string;
-        if (!this.targetSystem.id || this.targetSystem.localSystemId) {
-            url = this.machine.state.template.serverUrlInputValue;
-            if ((/^https?:\/\//).test(url) === false) {
-                url = `${window.location.protocol}//${url}`;
-            }
-            this.targetSystemService = this.system;
-        } else {
-            const system = await this.targetSystemService.getInfo(true, false);
-            console.log('res from getInfo', system);
-            if (system.isOnline === false) {
-                throw Error('systemOffline');
-            } else if (system.isAvailable === false) {
-                throw Error('secondarySystemUnavailable');
-            }
-            const userData = await this.targetSystemService.getUsersDataFromTheSystem();
-            console.log('res from getUsersData', userData);
-            // happens if user inputs url for an existing cloud system
-            if (this.targetSystem.value === 'otherSystem') {
-                // check users for whether the owners are the same or not
-            }
-        }
-        let systems;
-        try {
-            systems = await Promise.all([
-                this.system.mediaserver.getModuleInfo().toPromise(),
-                this.targetSystemService.mediaserver.getModuleInfo(url).toPromise()
-            ]);
-        } catch (err) {
-            if (err.status === 502) {
-                throw Error('systemOffline');
-            }
-        }
-        const [sys1, sys2] = systems;
-        // happens if server offline when user inputs url
-        if (url && sys2.reply.cloudSystemId) {
-            this.targetSystem.id = sys2.reply.id;
-            return this.precheckSystemMerge();
-        }
-        if (sys1.reply.protoVersion === sys2.reply.protoVersion) {
-            const [servers, target] = await Promise.all([
-                this.system.mediaserver.getMediaServers().toPromise(),
-                this.targetSystemService.mediaserver.getMediaServers(url).toPromise()
-            ]);
-            const serverIds = {};
-            servers.forEach(server => {
-                serverIds[server.id] = true;
-            });
-            if (target.some(server => serverIds[server.id]) === true) {
-                throw Error('duplicateServers');
-            }
-            this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
-        } else {
-            const param1 = this.targetSystem.systemName ? 'server' : 'system';
-            const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';
-            throw Error(`${param1}Version${param2}`);
-        }
-        // keeps targetSystem poll for adminPassword state
-        if (this.serverUrlInputExists === false) {
-            this.targetSystemService.stopPoll();
-        }
-        return Promise.resolve({});
-    }
-
     makeSelectorList(systems) {
         return systems.map(system => {
-            return { value: system.id, name: this.addStatus(system) };
+            return {
+                value : system.id,
+                name  : this.addStatus(system),
+                peer  : Boolean(system.localSystemId)
+            };
         });
-    }
-
-    primaryPicked() {
-        this.machine.transition('confirmMerge');
-        return Promise.resolve();
     }
 
     selectDefaultSystem() {
         const systems = [...this.systems, ...this.peerSystems];
         for (const system of systems) {
             if (this.checkMergeability(system) === '') {
-                return { ...system };
+                return { ...system, value: system.id };
             }
         }
         return { ...systems[0], value: systems[0].id };
@@ -604,54 +552,20 @@ export class MergeModalContent {
         this.secondarySystem = this.primarySystem.id === this.system.id ? this.targetSystem : this.system;
     }
 
-    setTargetSystem(targetSystem, serverUrlInputValue = '') {
-        console.log('targetSystem to be set', targetSystem);
-        if (targetSystem.value === 'otherSystem') {
-            // need to figure out how to check for mergeability for serverUrl ones
-            this.targetSystemDropdown = targetSystem;
-            // need to figure out what to set targetSystem as here for otherSystem
-            this.targetSystem = targetSystem;
-            this.updateShow('serverUrl', { serverUrlInputValue, selectedTarget: 'otherSystem' });
-        } else {
-            this.targetSystem = this.systems.find(system => system.id === targetSystem.value) ||
-                this.peerSystems.find(system => system.id === targetSystem.value);
-            this.targetSystem.value = this.targetSystem.id;
-            this.systemMergeable = this.checkMergeability(this.targetSystem);
-
-            let showUpdate             = 'checkMergeDefault';
-            const templateUpdates: any = {
-                helpText      : this.LANG.dialogs.merge.ownerCanMergeText,
-                selectedTarget: this.targetSystem.value
-            };
-            if (this.targetSystem.systemName) {
-                showUpdate = 'serverUrl';
-                templateUpdates.serverUrlInputValue = this.targetSystem.url;
-                delete templateUpdates.helpText;
-            }
-            if (this.systemMergeable) {
-                showUpdate = this.targetSystem.systemName ? 'serverUrlMergeError' : 'checkMergeError';
-                templateUpdates.checkingErrorText = this.systemMergeable;
-                delete templateUpdates.helpText;
-            }
-            this.updateShow(showUpdate, templateUpdates);
-        }
-        this.setSystems();
-    }
-
     serverUrlChange(input) {
         // handles changing auto-discovered to Other System if url changed
         const { serverUrlInputValue } = this.machine.state.template;
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
-            this.setTargetSystem({ value: 'otherSystem', name: 'Other System...' });
+            this.setTargetSystem({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
         }
         // handles validation error messages
-        let showUpdate             = 'serverUrl';
+        let showUpdate             = this.serverUrlState;
         const templateUpdates: any = { serverUrlInputValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
-            showUpdate = 'serverUrlValidationError';
+            showUpdate = this.serverUrlValidationError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlEmpty';
         } else if (input.touched && input.invalid) {
-            showUpdate = 'serverUrlValidationError';
+            showUpdate = this.serverUrlValidationError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlNotValid';
         }
         this.updateShow(showUpdate, templateUpdates);
@@ -662,8 +576,8 @@ export class MergeModalContent {
         let showUpdate        = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
-            showUpdate = 'confirmPasswordError';
-            templateUpdates.passwordErrorText = 'passwordRequired';
+            showUpdate = this.confirmPasswordError;
+            templateUpdates.passwordErrorText = this.passwordRequired;
         } else {
             showUpdate = 'default';
             delete templateUpdates.passwordErrorText;

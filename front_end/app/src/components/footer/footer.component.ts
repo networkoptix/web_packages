@@ -37,10 +37,10 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.companyLink = this.CONFIG.company.link;
+        this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
-        this.footerItems = this.CONFIG.footerItems;
+        this.footerItems = this.CONFIG.footerItems.filter((item) => item.enabled);
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;

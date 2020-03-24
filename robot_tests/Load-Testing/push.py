@@ -8,117 +8,52 @@ from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 import string
 import uuid
 import os
+import math
 
 env = "https://test3.cloud.hdw.mx/"
-email = "noptixautoqa+owner@gmail.com"
-password = "qweasd 123"  
-
-
 
 class UserBehavior(TaskSet):
     def order(self):
-        time.sleep(random.uniform(1, 2))
+        time.sleep(random.uniform(0, 1))
         txtFile = os.environ['LOCUSTTEXT']
         f= open(f'{txtFile}.txt', 'r')
 #        if f.mode == 'r':
 #            contents = f.read()
         lines = f.readlines()
-        self.currentProc = len(lines)-1
-        if self.currentProc <= 10:
-            self.minEmail = 0 
-            self.maxEmail = int(os.environ['MAXLOCUST'])
-        elif self.currentProc > 10 and self.currentProc <=20:
-            self.minEmail = int(os.environ['MAXLOCUST'])
-            self.maxEmail = int(os.environ['MAXLOCUST02'])
-        elif self.currentProc > 20 and self.currentProc <=30:
-            self.minEmail = int(os.environ['MAXLOCUST02'])
-            self.maxEmail = int(os.environ['MAXLOCUST03'])
-        elif self.currentProc > 30 and self.currentProc <=40:
-            self.minEmail = int(os.environ['MAXLOCUST03'])
-            self.maxEmail = int(os.environ['MAXLOCUST04'])
-        elif self.currentProc > 40 and self.currentProc <=50:
-            self.minEmail = int(os.environ['MAXLOCUST04'])
-            self.maxEmail = int(os.environ['MAXLOCUST05'])
-        elif self.currentProc > 50 and self.currentProc <=60:
-            self.minEmail = int(os.environ['MAXLOCUST05'])
-            self.maxEmail = int(os.environ['MAXLOCUST06'])
-        elif self.currentProc > 60 and self.currentProc <=70:
-            self.minEmail = int(os.environ['MAXLOCUST06'])
-            self.maxEmail = int(os.environ['MAXLOCUST07'])
-        elif self.currentProc > 70 and self.currentProc <=80:
-            self.minEmail = int(os.environ['MAXLOCUST07'])
-            self.maxEmail = int(os.environ['MAXLOCUST08'])           
-        print(str(self.minEmail)+" to "+str(self.maxEmail))
+        self.currentProc = math.ceil(len(lines)/2)
         f= open(f'{txtFile}.txt', 'a')
         f.write(f"{self.currentProc+1}\n")
         f.close()
+#         self.delay = int(200 - (self.currentProc/5))
+#         print(self.delay) 
+        
            
     def get_systems(self):
-#         self.client.headers.update({'X-CSRFToken': self.client.cookies['csrftoken']})
-#        self.check_cookies()
-        r = self.client.get(env+"cdb/system/get", auth=HTTPDigestAuth(email, password))
-        print(r)
-#        print(r.json())
-        self.systemsDict = r.json()
+        with open('systems.json') as f:
+            self.systemsJson = json.load(f)
+        self.authKey = self.systemsJson[str(self.currentProc)]['authKey']
+        self.id = self.systemsJson[str(self.currentProc)]['id']
+        self.body = self.systemsJson[str(self.currentProc)]['body']
   
     def on_start(self):
- #       self.log_in(email)
-        
+        self.order()
         self.get_systems()
         
 
     @task()
     def push(self):
-        self.order()
-        #delay = randint(0, 1)
-        #time.sleep(delay)
-        uid = self.minEmail
-        self.locust.userId = str(uuid.uuid1())
-        
-        for system in self.systemsDict['systems']:
-#            print(system)
-            authKey = system["authKey"]
-            id = system["id"]
-            name = system["name"]
-            
-            title = str(self.currentProc)+" "+str(uid)+"_"+self.locust.userId
-#            print(authKey, id, name)
- #           print(system)
-                      
-            emailIntStart = (int(name.strip(string.ascii_letters)))*10
- #           print(name+" stripped number "+str(emailIntStart)+" minEmail "+str(self.minEmail))
-            emailIntEnd = emailIntStart+10
-            
-            if  emailIntStart == self.maxEmail:
-                break
-            elif emailIntStart >= self.minEmail:
-                targetList = []
-                for x in range(emailIntStart, emailIntEnd):
-                    targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
-                body = {
-                    "systemId":id,
-                    "targets":targetList,
-                    "notification":{
-                        "title": title,
-                        "body": name,
-                        "payload": {
-                            "url": "nx-vms://test3.cloud.hdw.mx/client/"+id+"/view",
-                            "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"
-                            }
-                        }
-                    }         
- # to test script comment out the post and write to file instead
- #               f= open("posts.txt", "w+")
- #               f.write(f'{name} {title}\n')
-                r = self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(id, authKey), headers={'Content-Type':'application/json'}, data=json.dumps(body))
-                print (r.text, title)
-            uid += 1
-            
-        #delay2 = 60-delay
-        time.sleep(60)
-        #print(delay, delay2)    
+#         f= open("responses.txt", 'w+')
+#         time.sleep(self.delay)
+        print(str(self.currentProc)+" proc started push")
+        for x in range(5): 
+            r = self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
+            time.sleep(random.uniform(0, 5))
+            print(f'{self.currentProc}_{x}')
+#             f.write(f'{self.currentProc} {x} {r.text}\n\n')
+        print(str(self.currentProc)+" proc ended push")
+#         f.close()
             
         
 class WebsiteUser(HttpLocust):
     task_set = UserBehavior
-    wait_time = between(5, 6)
+    wait_time = between(200, 300)
