@@ -11,7 +11,6 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 })
 export class DeleteCloudUserModalContent {
     @Input() cloudApi;
-    @Input() account;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
@@ -32,7 +31,7 @@ export class DeleteCloudUserModalContent {
 
     ngOnInit() {
         this.deleteCloudUser = this.processService
-            .createProcess(() => this.cloudApi.deleteCloudUser(this.account.email, this.passwordForUser),
+            .createProcess(() => this.cloudApi.deleteCloudUser(this.passwordForUser),
                 {
                     errorCodes: {
                         missingPassword: () => {

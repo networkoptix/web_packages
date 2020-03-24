@@ -354,7 +354,7 @@ export class NxDialogsService {
         return this.createModal(EmbedModalContent, options, params);
     }
 
-    deleteCloudUser(cloudApi, account) {
+    deleteCloudUser(cloudApi) {
         const options: any = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
@@ -362,7 +362,6 @@ export class NxDialogsService {
 
         const params: any = {
             cloudApi,
-            account,
             closable: true
         };
 

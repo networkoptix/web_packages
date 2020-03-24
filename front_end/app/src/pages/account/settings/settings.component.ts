@@ -171,7 +171,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     deleteUser() {
-        this.dialogs.deleteCloudUser(this.cloudApiService, this.account)
+        this.dialogs.deleteCloudUser(this.cloudApiService)
             .then(res => {
                 if (res && res.error === '0') {
                     this.accountService.logout();
