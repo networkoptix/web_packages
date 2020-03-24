@@ -100,12 +100,12 @@ export class NxApplyService {
     applyFunction: Process;
     component: ViewContainerRef;
     discardFunction: () => void;
-    private lockedSubject = new BehaviorSubject<boolean>(undefined);
-    private lockedSubscription: Subscription;
+    lockedSubject = new BehaviorSubject<boolean>(undefined);
     popupActive = false;
+    form: NgForm;
+    private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
-    form: NgForm;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
@@ -159,7 +159,8 @@ export class NxApplyService {
      *     if a value on the page has been changed.
      * @param {NgForm=} form Optional form to pass to the process-button
      */
-    initPageWatcher(component: ViewContainerRef,
+    initPageWatcher(
+        component: ViewContainerRef,
         saveFunction: any,
         discardFunction: () => void,
         watchers: Watcher<any>[],

@@ -7,6 +7,8 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+import { Watcher } from '../apply.service';
+
 export interface BaseConfig {
     commonPasswordsList?: string[];
     capabilities?: Capabilities;
@@ -58,6 +60,7 @@ export interface BaseConfig {
     updateInterval: number;
     webclient: Webclient;
     settingsConfig: SettingsConfig;
+    // loggersConfig: LoggersConfig;
 }
 
 export interface Capabilities {
@@ -554,6 +557,14 @@ export interface SettingsConfig {
     maxEventLogRecords:Setting,
     forceLiveCacheForPrimaryStream: Setting
 }
+
+// export interface LoggersConfig {
+//     EC2_TRAN: string,
+//     HTTP: string,
+//     HWID: string,
+//     MAIN: string,
+//     PERMISSIONS: string
+// }
 
 // Converts JSON strings to/from your types
 // and asserts the results of JSON.parse at runtime
@@ -1156,4 +1167,11 @@ const typeMap: any = {
         { json: 'maxEventLogRecords', js: 'maxEventLogRecords', typ: r('Setting') },
         { json: 'forceLiveCacheForPrimaryStream', js: 'forceLiveCacheForPrimaryStream', typ: r('Setting') }
     ], false)
+    // LoggersConfig: o([
+    //     { json: 'EC2_TRAN', js: 'EC2_TRAN', typ: r('') },
+    //     { json: 'HTTP', js: 'HTTP', typ: r('') },
+    //     { json: 'HWID', js: 'HWID', typ: r('') },
+    //     { json: 'MAIN', js: 'MAIN', typ: r('') },
+    //     { json: 'PERMISSIONS', js: 'PERMISSIONS', typ: r('') }
+    // ], false)
 };

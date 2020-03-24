@@ -1,7 +1,7 @@
 import {
     Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy, LOCALE_ID, Input, OnChanges
-}                                     from '@angular/core';
+    ViewContainerRef, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
+} from '@angular/core';
 import {
     filter, map, delay,
     retryWhen,
@@ -27,54 +27,42 @@ import { NxUriService } from '../../../../../services/uri.service';
     templateUrl : 'storage.component.html',
     styleUrls   : ['storage.component.scss']
 })
-export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy {
-    @Input()
-    system$: Observable<NxSystem>;
+export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnChanges {
+    @Input() system: NxSystem;
 
     LANG: LanguageI18NStaticTypes;
-    system: NxSystem;
     systemSubscription: Subscription;
-    serverSubscription: Subscription;
     saveSettings: Process;
 
     // eslint-disable-next-line no-use-before-define
     storages = [];
     watchers: Watcher<any>[] = [];
 
-    constructor(languageService: NxLanguageProviderService,
-    @Inject(LOCALE_ID) private locale: string,
-    private applyService: NxApplyService,
-    private processService: NxProcessService,
-    private dialogsService: NxDialogsService
+    constructor(
+        languageService: NxLanguageProviderService,
+        @Inject(LOCALE_ID) private locale: string,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
+        private dialogsService: NxDialogsService
     ) {
         this.LANG = languageService.getTranslations();
     }
 
     ngOnInit() {
-        this.systemSubscription = this.system$.subscribe((system) => {
-            this.system = system;
+    }
 
-            if (this.serverSubscription) {
-                this.serverSubscription.unsubscribe();
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.system) {
+            this.init();
+        }
+    }
+
+    init() {
+        if (this.system.currentServerNotBusy) {
+            if (this.system && this.system.servers && this.system.servers.length) {
+                this.updateAndGetStorage();
             }
-            this.serverSubscription = this.system.infoSubject
-                .pipe(
-                    map(system => {
-                        if (!system.servers || system.servers.length === 0) {
-                            throw system;
-                        }
-                    }),
-                    retryWhen(err => err.pipe(delay(1000))),
-                    take(1)
-                )
-                .subscribe(() => {
-                    if (this.system.currentServerNotBusy) {
-                        if (this.system && this.system.servers && this.system.servers.length) {
-                            this.updateAndGetStorage();
-                        }
-                    }
-                });
-        });
+        }
     }
 
     updateAndGetStorage() {
