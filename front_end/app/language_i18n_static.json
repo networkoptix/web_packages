@@ -166,6 +166,7 @@
             "cancel": "Cancel",
             "createAccount": "Create New Account",
             "delete": "Delete",
+            "deleteAccount": "Delete Account",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
             "ok": "OK",
@@ -256,6 +257,9 @@
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         }
     },
     "downloads": {

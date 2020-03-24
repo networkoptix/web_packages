@@ -168,6 +168,10 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
+    deleteCloudUser(email, password): Promise<any> {
+        return Promise.resolve({ error: '0', errorCode: '' });
+    }
+
     account() {
         return this.http.get(this.CONFIG.apiBase + '/account');
     }

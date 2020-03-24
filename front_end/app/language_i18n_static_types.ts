@@ -167,12 +167,14 @@ export interface Dialogs {
     removeSystem: RemoveSystem;
     sharing:      Sharing;
     titles:       DialogsTitles;
+    tooltips:     Tooltips;
 }
 
 export interface Buttons {
     cancel:           string;
     createAccount:    string;
     delete:           string;
+    deleteAccount:    string;
     download:         string;
     logoutAuthorised: string;
     ok:               string;
@@ -276,6 +278,10 @@ export interface DialogsTitles {
     serversDetach:          string;
     serversReset:           string;
     serversRestart:         string;
+}
+
+export interface Tooltips {
+    deleteAccount: string;
 }
 
 export interface Downloads {
@@ -951,11 +957,13 @@ const typeMap: any = {
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
         { json: "sharing", js: "sharing", typ: r("Sharing") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
+        { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
     ], false),
     "Buttons": o([
         { json: "cancel", js: "cancel", typ: "" },
         { json: "createAccount", js: "createAccount", typ: "" },
         { json: "delete", js: "delete", typ: "" },
+        { json: "deleteAccount", js: "deleteAccount", typ: "" },
         { json: "download", js: "download", typ: "" },
         { json: "logoutAuthorised", js: "logoutAuthorised", typ: "" },
         { json: "ok", js: "ok", typ: "" },
@@ -1050,6 +1058,9 @@ const typeMap: any = {
         { json: "serversDetach", js: "serversDetach", typ: "" },
         { json: "serversReset", js: "serversReset", typ: "" },
         { json: "serversRestart", js: "serversRestart", typ: "" },
+    ], false),
+    "Tooltips": o([
+        { json: "deleteAccount", js: "deleteAccount", typ: "" },
     ], false),
     "Downloads": o([
         { json: "appTypes", js: "appTypes", typ: r("AppTypes") },

@@ -58,6 +58,20 @@
                     </div>
                 </form>
             </nx-section>
+            <nx-section>
+                <div class="float-right">
+                    <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount : ''">
+                        <button class="btn btn-default"
+                                [disabled]="isSystemOwner"
+                                (click)="deleteUser()">
+                            <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
+                                [svgStyle]="{'width.px': '24', 'height.px': '24'}"
+                                class="ml-n2 mr-1"></svg-icon>
+                            {{ LANG.dialogs.buttons.deleteAccount }}
+                        </button>
+                    </div>
+                </div>
+            </nx-section>
         </nx-block>
     </div>
 

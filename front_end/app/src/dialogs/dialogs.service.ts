@@ -1,30 +1,31 @@
-import { Inject, Injectable }         from '@angular/core';
-import { DOCUMENT, Location }         from '@angular/common';
-import { DomSanitizer }               from '@angular/platform-browser';
-import { NgbModal }                   from '@ng-bootstrap/ng-bootstrap';
-import { Router }                     from '@angular/router';
-import { NxToastService }             from './toast.service';
-import { NxConfigService, IConfig }   from '../services/nx-config';
-import { NxLanguageProviderService }  from '../services/nx-language-provider';
-import { NxAccountService }           from '../services/account.service';
-import { LoginModalContent }          from './login/login.component';
-import { GenericModalContent }        from './generic/generic.component';
-import { AddUserModalContent }        from './add-user/add-user.component';
-import { DisconnectModalContent }     from './disconnect/disconnect.component';
-import { RenameModalContent }         from './rename/rename.component';
-import { MessageModalContent }        from './message/message.component';
-import { EmbedModalContent }          from './embed/embed.component';
-import { MergeModalContent }          from './merge/merge.component';
-import { ApplyModalContent }          from './apply/apply.component';
-import { RemoveUserModalContent }     from './remove-user/remove-user.component';
-import { RenameServerModalContent }   from './rename-server/rename-server.component';
-import { RestartServerModalContent }  from './restart-server/restart-server.component';
-import { DetachServerModalContent }   from './detach-server/detach-server.component';
-import { ResetServerModalContent }    from './reset-server/reset-server.component';
-import { ChangePasswordModalContent } from './change-password/change-password.component';
-import { LanguageI18NStaticTypes }    from '../../language_i18n_static_types';
-import { SubscriptionLike }           from 'rxjs';
-import { AutoUnsubscribe }            from 'ngx-auto-unsubscribe';
+import { Inject, Injectable }          from '@angular/core';
+import { DOCUMENT, Location }          from '@angular/common';
+import { DomSanitizer }                from '@angular/platform-browser';
+import { NgbModal }                    from '@ng-bootstrap/ng-bootstrap';
+import { Router }                      from '@angular/router';
+import { NxToastService }              from './toast.service';
+import { NxConfigService, IConfig }    from '../services/nx-config';
+import { NxLanguageProviderService }   from '../services/nx-language-provider';
+import { NxAccountService }            from '../services/account.service';
+import { LoginModalContent }           from './login/login.component';
+import { GenericModalContent }         from './generic/generic.component';
+import { AddUserModalContent }         from './add-user/add-user.component';
+import { DisconnectModalContent }      from './disconnect/disconnect.component';
+import { RenameModalContent }          from './rename/rename.component';
+import { MessageModalContent }         from './message/message.component';
+import { EmbedModalContent }           from './embed/embed.component';
+import { MergeModalContent }           from './merge/merge.component';
+import { ApplyModalContent }           from './apply/apply.component';
+import { RemoveUserModalContent }      from './remove-user/remove-user.component';
+import { RenameServerModalContent }    from './rename-server/rename-server.component';
+import { RestartServerModalContent }   from './restart-server/restart-server.component';
+import { DetachServerModalContent }    from './detach-server/detach-server.component';
+import { ResetServerModalContent }     from './reset-server/reset-server.component';
+import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
+import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
+import { SubscriptionLike }            from 'rxjs';
+import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 
 import './../dialogs/dialogs.scss';
 
@@ -351,5 +352,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(EmbedModalContent, options, params);
+    }
+
+    deleteCloudUser(cloudApi, account) {
+        const options: any = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: any = {
+            cloudApi,
+            account,
+            closable: true
+        };
+
+        return this.createModal(DeleteCloudUserModalContent, options, params);
     }
 }

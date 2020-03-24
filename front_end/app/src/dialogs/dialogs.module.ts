@@ -19,6 +19,7 @@ import { RestartServerModalContent }   from './restart-server/restart-server.com
 import { DetachServerModalContent }    from './detach-server/detach-server.component';
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
@@ -54,6 +55,7 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
+        DeleteCloudUserModalContent,
         NxModalGenericComponent
     ],
     entryComponents: [
@@ -73,6 +75,7 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
+        DeleteCloudUserModalContent,
         NxModalGenericComponent
     ],
     providers: [
