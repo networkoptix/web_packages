@@ -59,6 +59,12 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
         this.watchers.forEach(watcher => watcher.reset());
     }
 
+    updateWatchers() {
+        this.watchers.forEach(watcher => {
+            watcher.originalValue = watcher.value;
+        });
+    }
+
     get watchersChanged() {
         return this.watchers.reduce((changed, watcher) => changed || watcher.originalValue !== watcher.value, false);
     }
@@ -67,7 +73,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
             const { storages, watchers } = mapStorages(response.reply.storages);
             this.storages = storages;
-
+            console.log(JSON.stringify(response.reply.storages, null, 4));
             this.watchers = watchers;
             this.updateSaveProcess();
             // this.applyService.addWatchersAndFunctionsFromChild(this.watchers, this.saveSettings, () => {}); Remove for now.
@@ -102,6 +108,9 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
                         .catch(error => {
                             console.error(error);
                         });
+                }).then((res) => {
+                    this.updateWatchers();
+                    Promise.resolve(res);
                 });
         });
     }
@@ -109,7 +118,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     buildUpdateParams() {
         // Need to create method to map storages as params for update request
         // const example = [{ addParams: [{ name: 'space', value: '1964203130880' }], id: '{301a17be-003c-7302-b28a-ccdc1a4c4a63}', isBackup: false, name: 'Initial', parentId: '{a17fbfac-762c-080e-04e8-80a49f15a687}', spaceLimit: 32212254720, storageType: 'local', typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}', url: '/opt/networkoptix/mediaserver/var/data', usedForWriting: true }];
-        return this.storages.map(toParams);
+        return this.storages.map(toParams(this.serverId));
     }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
@@ -120,24 +129,23 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     ngOnDestroy() {}
 }
 
-export const toParams = ({ totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, ...storage }) => ({
-    addParams      : [{ name: 'space', value: totalSpace.bits }],
+export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, maxReserve, ...storage }) => ({
+    addParams      : [{ name: 'space', value: `${totalSpace}` }],
     id             : storageId,
     isBackup       : isBackup,
     name           : 'Initial',
-    parentId       : `{${this.serverId}}`,
-    spaceLimit     : reservedSpace.bits,
+    parentId       : `{${serverId}}`,
+    spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
     storageType    : storageType,
     typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
     url            : url,
     usedForWriting : isUsedForWriting.value
 });
 
-export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace: total, isUsedForWriting: ufw, ...storage }) => {
+export const mapStorages = (storages) => storages.map(({ freeSpace: free, reservedSpace: reserved, totalSpace, isUsedForWriting: ufw, ...storage }) => {
     const reservedSpace = new BitConverter(reserved);
-    const totalSpace = new BitConverter(total);
-    const freeSpace = new FreeSpace(free, reservedSpace);
-    const maxReserve = new BitConverter(free + reservedSpace.bits);
+    const freeSpace = new FreeSpace(new BitConverter(free), reservedSpace);
+    const maxReserve = new BitConverter(freeSpace.bits + reservedSpace.bits);
     const isUsedForWriting = new Watcher<boolean>();
     isUsedForWriting.value = ufw;
     return { ...storage, freeSpace, reservedSpace, totalSpace, isUsedForWriting, maxReserve, watchers: [...reservedSpace.watcher, isUsedForWriting] };
@@ -354,8 +362,8 @@ export class BitConverter {
 export class FreeSpace {
         private freeExcludeReserved: BitConverter
 
-        constructor(free: number, private reserved: BitConverter) {
-            this.freeExcludeReserved = new BitConverter(free + reserved.bits);
+        constructor(free: BitConverter, private reserved: BitConverter) {
+            this.freeExcludeReserved = new BitConverter(free.bits + reserved.bits);
         }
 
         get bits() {
@@ -363,6 +371,6 @@ export class FreeSpace {
         }
 
         set bits(value) {
-            this.reserved.bits = value;
+            this.reserved.bits = new BitConverter(value).bits;
         }
 }

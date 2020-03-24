@@ -36,14 +36,14 @@
                             <div class="progress progress-custom" 
 title="Reserved: {{friendlyBytes(storage.reservedSpace.bits)}}, 
 Free: {{friendlyBytes(storage.freeSpace.bits)}}, 
-Occupied: {{friendlyBytes(storage.totalSpace.bits - storage.freeSpace.bits)}}, 
-Total: {{friendlyBytes(storage.totalSpace.bits)}}">
+Occupied: {{friendlyBytes(storage.totalSpace - storage.freeSpace.bits)}}, 
+Total: {{friendlyBytes(storage.totalSpace)}}">
                                 <div class="progress-bar bg-info" 
                                     role="progressbar" 
-                                    [style.width]="storage.freeSpace.bits / storage.totalSpace.bits | percent" 
-                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace.bits)"></div>
+                                    [style.width]="storage.freeSpace.bits / storage.totalSpace | percent" 
+                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace)"></div>
                                 <div class="progress-label d-flex justify-content-center align-items-center progress-text">
-                                    {{ friendlyBytes(storage.freeSpace.bits) }} of {{ friendlyBytes(storage.totalSpace.bits) }}
+                                    {{ friendlyBytes(storage.freeSpace.bits) }} of {{ friendlyBytes(storage.totalSpace) }}
                                 </div>
                               </div>
                             <!-- <input
