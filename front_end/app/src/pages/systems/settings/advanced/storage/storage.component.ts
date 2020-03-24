@@ -30,6 +30,8 @@ import { NxUriService } from '../../../../../services/uri.service';
 export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnChanges {
     @Input() system: NxSystem;
 
+    @Input() serverId: string;
+
     LANG: LanguageI18NStaticTypes;
     systemSubscription: Subscription;
     saveSettings: Process;
@@ -52,7 +54,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.system) {
+        if (changes.system || changes.serverId) {
             this.init();
         }
     }
@@ -67,8 +69,7 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
 
     updateAndGetStorage() {
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
-            const storagesFromResponse =  response.reply.storages; // Use this once server is back up
-            const { storages, watchers } = mapStorages(mockResponse.reply.storages);
+            const { storages, watchers } = mapStorages(response.reply.storages);
             this.storages = storages;
 
             this.watchers = watchers;
@@ -111,8 +112,19 @@ export class NxSystemAdvancedStorageComponent implements OnInit, OnDestroy, OnCh
 
     buildUpdateParams() {
         // Need to create method to map storages as params for update request
-
-        return {};
+        // const example = [{ addParams: [{ name: 'space', value: '1964203130880' }], id: '{301a17be-003c-7302-b28a-ccdc1a4c4a63}', isBackup: false, name: 'Initial', parentId: '{a17fbfac-762c-080e-04e8-80a49f15a687}', spaceLimit: 32212254720, storageType: 'local', typeId: '{f8544a40-880e-9442-b78a-9da6db6862b4}', url: '/opt/networkoptix/mediaserver/var/data', usedForWriting: true }];
+        return this.storages.map(({totalSpace, isBackup, reservedSpace, isUsedForWriting, url, storageType, storageId, ...storage}) => ({
+            addParams      : [{ name: 'space', value: totalSpace.bits }],
+            id             : storageId,
+            isBackup       : isBackup,
+            name           : 'Initial',
+            parentId       : `{${this.serverId}}`,
+            spaceLimit     : reservedSpace.bits,
+            storageType    : storageType,
+            typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
+            url            : url,
+            usedForWriting : isUsedForWriting.value
+        }));
     }
 
     friendlyBytes(bits, gbTb?: 'GB' | 'TB') {
