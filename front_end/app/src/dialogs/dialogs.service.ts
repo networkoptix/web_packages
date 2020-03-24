@@ -24,17 +24,19 @@ import { ResetServerModalContent }     from './reset-server/reset-server.compone
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
 import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
-import { SubscriptionLike }            from 'rxjs';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
+import { CloudStorageDeleteModalContent, CloudStorageMoveModalContent } from './cloud-storage';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 
 import './../dialogs/dialogs.scss';
+import { NxSystem, NxSystemUser } from '../services/system.service';
 
 @AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    location: any;
+    location: Location;
     closeResult: any;
 
     languageSubscription: SubscriptionLike;
@@ -88,8 +90,6 @@ export class NxDialogsService {
             windowClass: 'modal-holder',
             backdrop   : 'static'
         };
-
-        console.log('LANG2 ->', this.LANG);
 
         const params: any = {
             message    : this.domSanitizer.bypassSecurityTrustHtml(message),
@@ -183,6 +183,38 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddUserModalContent, options, params);
+    }
+
+    cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+        // WIP still need to implement
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system$,
+            closable: true,
+            updateCallback
+        };
+
+        return this.createModal(CloudStorageDeleteModalContent, options, params);
+    }
+
+    cloudStorageMove(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+        // WIP still need to implement
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system$,
+            closable: true,
+            updateCallback
+        };
+
+        return this.createModal(CloudStorageMoveModalContent, options, params);
     }
 
     disconnect(systemId) {

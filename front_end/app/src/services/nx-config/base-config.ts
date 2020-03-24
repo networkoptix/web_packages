@@ -60,6 +60,8 @@ export interface BaseConfig {
 }
 
 export interface Capabilities {
+    cloudMerge?: boolean;
+    cloudStorageEnabled?: boolean;
     feedbackEnabled: boolean;
     healthMonitor?: boolean;
     // TODO One of these  two is incorrect, need to find out which one
@@ -114,6 +116,7 @@ export interface CloudCapabilities {
     integrationStore: string;
     publicDownloads: string;
     publicReleases: string;
+    cloudStorageEnabled: string;
 }
 
 export interface Company {
@@ -375,6 +378,7 @@ export interface SystemHealth {
 export interface SystemSettings {
     baseUrl: string;
     admin: Admin;
+    cloudStorage: Admin;
     users: Admin;
     servers: Admin;
     buttons: Buttons;
@@ -382,7 +386,7 @@ export interface SystemSettings {
 
 export interface Admin {
     id: string;
-    icon: string;
+    icon?: string;
     path: string;
 }
 

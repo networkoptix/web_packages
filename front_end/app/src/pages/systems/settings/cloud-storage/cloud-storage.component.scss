@@ -1,0 +1,133 @@
+@import "../../../../styles/theme/variables";
+@import "../../../../styles/typography";
+
+.initial-state {
+    position: relative;
+    padding: 0 16px 40px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-self: center;
+    align-items: center;
+
+    h2 {
+        @extend #medium24;
+        margin: 16px;
+    }
+
+    p {
+        @extend #regular13;
+        max-width: 480px;
+        text-align: center;
+    }
+
+    button {
+        margin-top: 24px;
+    }
+}
+
+.header-svg {
+    background: $additional_light1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.normal-state {
+    padding: 16px;
+    background-color: $additional_light1;
+    border-bottom: 1px dotted $light3;
+
+    h2 {
+        @extend #medium24;
+        text-align: left;
+    }
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &-footer {
+        padding: 16px;
+        div {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 8px 0 0 0;
+
+    &-section {
+        margin-right: 40px;
+        display: flex;
+        div {
+            display: flex;
+            flex-direction: column;
+            white-space: nowrap;
+
+            p {
+                margin-bottom: 4px;
+            }
+        }
+        &-keys {
+            p {
+                position: relative;
+                display: flex;
+                justify-content: stretch;
+                & > * {
+                    flex-basis: 0;
+                    flex-grow: 0;
+                }
+                &:after {
+                    content: "";
+                    position: relative;
+                    display: inline-block;
+                    margin: 0 8px 4px 4px;
+                    border-bottom: 1px dotted $light3;
+                    z-index: 1;
+                    min-width: 16px;
+                    flex-basis: 1;
+                    flex-grow: 1;
+                }
+            }
+        }
+        // &-values {
+        // Might use this later
+        // }
+    }
+}
+
+.server-buttons {
+    height: 18px;
+    padding: -1px inherit; // This is kind of hacky, need to figure out what's going on
+    &:hover {
+        color: $dark15;
+        fill: $dark15;
+    }
+    @extend #regular13;
+    background-color: inherit;
+    color: $light16;
+    display: flex;
+    align-items: center;
+    fill: $light16;
+    white-space: nowrap;
+    svg-icon {
+        svg {
+            height: 20px;
+            g {
+                fill: inherit;
+            }
+        }
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}

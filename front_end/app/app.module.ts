@@ -30,6 +30,7 @@ import { initializeApp }     from './src/pages/push-notifications/push-notificat
 import { AuthGuard }         from './src/routeGuards/authGuard';
 import { HMGuard }           from './src/routeGuards/hmGuard';
 import { UserGuard }         from './src/routeGuards/userGuard';
+import { CloudStorageGuard } from './src/routeGuards/cloudStorageGuard';
 
 // AoT requires an exported function for factories
 
@@ -97,7 +98,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         },
         AuthGuard,
         HMGuard,
-        UserGuard
+        UserGuard,
+        CloudStorageGuard
     ],
     declarations   : [
         AppComponent
