@@ -244,9 +244,13 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', updateParams);
     }
 
-    updateOrGetStorage(updateParams) {
+    getStorages() {
         // TODO: Need to implement for storage component in advanced settigns
-        return this.get('/api/storageSpace', updateParams);
+        return this.get('/api/storageSpace');
+    }
+
+    updateStorages(updateParams) {
+        return this.post('/ec2/saveStorages', updateParams);
     }
 
     changePort(port) {
