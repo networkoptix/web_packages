@@ -396,7 +396,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     id    : this.CONFIG.menus.systemSettings.cameras.id,
                     svg   : this.CONFIG.menus.systemSettings.cameras.icon,
                     label : 'Cameras',
-                    path  : '' // this.CONFIG.menus.systemSettings.cameras.path
+                    path  : this.CONFIG.menus.systemSettings.cameras.path
                 };
                 this.content.level1.push(camerasNode);
             }
@@ -412,8 +412,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                     additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/) // This might not
                 }));
-
-                console.log(JSON.stringify(this.system.cameras, null, 4));
             }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
@@ -423,7 +421,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ status }) {
-        // I think that we should have an image for online but not recording
+        // I think that we should have an icons for online, on the spec only have icons for archive, offline, recording, scheduled, and unauthorized
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 

@@ -368,7 +368,7 @@ class ServerManager {
     };
 
     servers: NxSystemServer[];
-    cameras: any[]; // Need to make cameras class
+    cameras: ICamera[];
 
     constructor(private mediaserver: NxSystemAPI,
                 private systemApiService: NxSystemAPIService,
@@ -903,4 +903,45 @@ export class NxSystemService {
         system.startPoll();
         return system;
     }
+}
+
+export interface IAddParam {
+    name: string;
+    value: string;
+}
+
+export interface ICamera {
+    addParams: IAddParam[];
+    audioEnabled: boolean;
+    backupType: string;
+    controlEnabled: boolean;
+    dewarpingParams: string;
+    disableDualStreaming: boolean;
+    failoverPriority: string;
+    groupId: string;
+    groupName: string;
+    id: string;
+    licenseUsed: boolean;
+    logicalId: string;
+    mac: string;
+    manuallyAdded: boolean;
+    maxArchiveDays: number;
+    minArchiveDays: number;
+    model: string;
+    motionMask: string;
+    motionType: string;
+    name: string;
+    parentId: string;
+    physicalId: string;
+    preferredServerId: string;
+    recordAfterMotionSec: number;
+    recordBeforeMotionSec: number;
+    scheduleEnabled: boolean;
+    scheduleTasks: any[];
+    status: string;
+    statusFlags: string;
+    typeId: string;
+    url: string;
+    userDefinedGroupName: string;
+    vendor: string;
 }
