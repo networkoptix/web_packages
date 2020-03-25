@@ -395,7 +395,7 @@
         "cantSharePrefix": "Cannot share System",
         "cantUnshareWithMeSystemPrefix": "Cannot delete System",
         "emailNotFound": "Account does not exist.",
-        "failedToAccessSystem": "No system cannot be accessed by this link. It may happen if system has been disconnected from %CLOUD_NAME%, or access to this system may be revoked, or if you are logged in with a different account.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
         "forbidden": "You do not have permissions to perform this action",
         "lostConnection": "Connection to {{systemName}} lost",
         "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> is offline.",
