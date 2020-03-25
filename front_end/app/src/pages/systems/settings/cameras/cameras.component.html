@@ -8,7 +8,7 @@
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
                         <!-- TODO: Will replaced with editable text component in CLOUD-4617 -->
-                        <h2>{{selectedCamera.name}}</h2>  
+                        <h2 NxEditable [(ngModel)]="selectedCamera.name"></h2> 
                     </div>
                     <button class="camera-buttons pr-0"
                         [routerLink]="cameraViewPath"
@@ -16,7 +16,7 @@
                         >
                         <span [ngClass]="{ 'animate-rotation': false }">
                             <!-- TODO: Need proper SVG -->
-                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'"
                                 [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>View</span>
