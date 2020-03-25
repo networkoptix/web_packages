@@ -396,8 +396,8 @@ export interface Cameras extends Admin {
         unauthorized: string;
         online: string;
     }
-
 }
+
 export interface Buttons {
     id: string;
 }

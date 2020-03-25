@@ -410,7 +410,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     svgIcon         : this.getCameraStatusIcon(camera),
                     label           : camera.name,
                     path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/) // This might not
+                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/) // Regex to parse IPV4 address, might need to update if we support IPV6 addressses
                 }));
             }
         } else {
@@ -421,7 +421,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     getCameraStatusIcon({ status }) {
-        // I think that we should have an icons for online, on the spec only have icons for archive, offline, recording, scheduled, and unauthorized
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
