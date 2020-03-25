@@ -85,19 +85,17 @@
 
     .camera-view {
         width: 100%;
-        height: 200px !important;
+        height: 200px;
         color: white;
         background: #444;
-        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;;
     }
 
     .header-table {
-        width: 100%;
         font-size: $font-size-base;
-        padding-left: 0;
+        padding: 16px;
         .header-table-cell {
             display: flex;
             height: 20px;

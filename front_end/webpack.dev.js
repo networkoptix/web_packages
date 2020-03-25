@@ -9,7 +9,7 @@ const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
 const host = '0.0.0.0';
 const port = 9000;
-const cloudInstance =  process.env.CLOUD_INSTANCE || 'https://dev2.cloud.hdw.mx';
+const cloudInstance =  'https://cloud-test.hdw.mx';
 const localStatic = `https://${host}:${port}`;
 
 module.exports = merge( common, {

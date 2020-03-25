@@ -1,13 +1,13 @@
 <div class="row auth-visible">
-    <div class="col-12 loader-div" *ngIf="!system">
+    <div class="col-12 loader-div" *ngIf="!selectedCamera">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
-    <div class="col-12 camera-settings-info" *ngIf="system">
+    <div class="col-12 camera-settings-info" *ngIf="selectedCamera">
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
-                        <h2>Camera name</h2>
+                        <h2>{{selectedCamera.name}}</h2>
                         <!-- <span
                             *ngIf="selectedServer.internalStatus"
                             [ngClass]="{
@@ -46,22 +46,22 @@
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Vendor</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ 'camera.vendor' || '-' }}</span>
+                            <span class="col-9">{{ selectedCamera.vendor || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Model</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ 'camera.model' || '-' }}</span>
+                            <span class="col-9">{{ selectedCamera.model || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>IP Address</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ 'camera.ip' || '-' }}</span>
+                            <span class="col-9">{{ selectedCamera.url || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Server</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ 'camera.server' || '-' }}</span>
+                            <span class="col-9">{{ selectedCamera.parentId || '-' }}</span>
                         </div>
                     </div>
                 </div>

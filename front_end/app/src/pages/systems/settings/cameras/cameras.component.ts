@@ -7,7 +7,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { NxSystem } from '../../../../services/system.service';
+import { NxSystem, ICamera } from '../../../../services/system.service';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -30,6 +30,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     routeSubscription: Subscription;
     cameraIdFromParams: string;
     parsedCameraId: string;
+    selectedCamera: ICamera;
 
     constructor(
         configService: NxConfigService,
@@ -46,7 +47,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initSettingsAndSystem();
-
         this.routeSubscription = this.route.params.subscribe(params => {
             if (params.cameraId) {
                 this.cameraIdFromParams = params.cameraId;
@@ -72,12 +72,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         });
     }
 
-    setCamera() {
-        this.menuService.setDetailsSection(this.parsedCameraId);
-        this.uriService
-            .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
-            .catch(error => {
-                console.error(error);
-            });
+    setCamera(): void {
+        if (this.system && this.system.cameras && this.system.cameras.length > 0) {
+            let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+
+            if (cameraIndex === -1) {
+                cameraIndex = 0;
+                this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+            this.menuService.setDetailsSection(this.parsedCameraId);
+            this.selectedCamera = this.system.cameras[cameraIndex];
+        }
     }
 }
