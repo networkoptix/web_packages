@@ -283,8 +283,9 @@ Share To
     Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Run Keyword if    '${alert}'=='success'    Check For Alert    ${NEW PERMISSIONS SAVED}
     Run Keyword if    '${alert}'=='fail'    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
+    Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
@@ -362,7 +363,6 @@ Remove User Permissions
     Wait Until Element Is Visible    ${REMOVE BUTTON}
     Click Button    ${REMOVE BUTTON}
     ${PERMISSIONS WERE REMOVED FROM EMAIL}    Replace String    ${PERMISSIONS WERE REMOVED FROM}    %email%    ${user email address}
-    Check For Alert    ${PERMISSIONS WERE REMOVED FROM EMAIL}
     Wait Until Element Is Not Visible    ${User In List}
 
 Select user in Users List

@@ -74,7 +74,7 @@ password can be changed
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
 
 password is actually changed, so login works with new password
     [tags]    C41576
@@ -82,7 +82,7 @@ password is actually changed, so login works with new password
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${ALT PASSWORD}
     Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
@@ -96,7 +96,7 @@ password with symbols pass!@#$%^&*()_-+=;:'"`~,./\|?[]{} is valid
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${symbol password}
     Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
@@ -110,7 +110,7 @@ password with space in the middle is valid
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${space password}
     Click Button    ${CHANGE PASSWORD BUTTON}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
     Log Out
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    button=None    validate=${False}
@@ -132,7 +132,7 @@ pressing Enter key saves data
     Input Text    ${CURRENT PASSWORD INPUT}    ${password}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Press Keys    ${NEW PASSWORD INPUT}    ENTER
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Wait Until Element is Visible    ${CHANGE PASS NO CHANGES}
 
 pressing Tab key moves focus to the next element
     [tags]    C41841
