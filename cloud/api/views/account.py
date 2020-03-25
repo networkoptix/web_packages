@@ -160,6 +160,18 @@ def auth_key(request):
 
 
 @api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+@handle_exceptions
+def delete_user(request):
+    require_params(request, ('password',))
+    user = request.user
+
+    Account.delete(user.email, request.data.get('password'))
+    user.delete()
+    return api_success()
+
+
+@api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
 def change_password(request):

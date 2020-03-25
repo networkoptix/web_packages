@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^account/authKey$',            account.auth_key),
     url(r'^account/checkCode$',          account.check_code_in_portal),
     url(r'^account/checkAuthCode$',      account.check_auth_code),
+    url(r'^account/delete$',             account.delete_user),
     url(r'^account/?$',                  account.index),
 
     url(r'^storage/create',     storage.enable),

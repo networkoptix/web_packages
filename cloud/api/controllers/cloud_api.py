@@ -327,6 +327,17 @@ class Account(object):
     @staticmethod
     @validate_response
     @lower_case_email
+    def delete(email, password):
+        params = {
+            'email': email,
+            'password': password
+        }
+        request = CLOUD_DB_URL + '/account/self'
+        return delete_wrapper(request, json=params, auth=HTTPDigestAuth(email, password))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
     def update(email, password, first_name, last_name):
         params = {
             'fullName': ' '.join((first_name, last_name))
