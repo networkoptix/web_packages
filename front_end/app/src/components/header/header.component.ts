@@ -48,7 +48,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     getUrlSystemId: any;
     untilHaveID: any;
     private headerSubscription: Subscription;
-    private infoSubscription: Subscription;
     private loginSubscription: Subscription;
     private routerSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -111,8 +110,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     private stopActiveSubscription() {
-        if (this.infoSubscription && !this.infoSubscription.closed) {
-            this.infoSubscription.unsubscribe();
+        if (this.system) {
             this.system.stopPoll();
             this.system = undefined;
         }
