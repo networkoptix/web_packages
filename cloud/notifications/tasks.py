@@ -11,10 +11,9 @@ from django.utils import timezone
 from api.models import Account
 from notifications import notifications_api
 from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
-from notifications.models import Message, PushSubscription, PushNotification
+from notifications.models import Message, PushNotification
 from util.helpers import get_language_for_email
 
-import json
 import traceback
 import logging
 logger = logging.getLogger(__name__)
@@ -115,26 +114,28 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             send_push_notification.apply_async(
                 countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
                 args=[notification_object.id],
-                kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1}
+                kwargs={'request_data': request_data, 'device_tokens': resend_tokens, 'count': count + 1},
+                queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
             )
 
     except Exception as exception:
         if 'responses' not in locals() or not responses:
-            log_push_result(notification_object, f'Exception: {exception}.', logging.ERROR)
+            print('here')
+            log_push_result(notification_object, f'Exception: {exception}.', logging.ERROR, stack_trace=True)
             if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
                 send_push_notification.apply_async(
                     countdown=settings.PUSH_NOTIFICATIONS_SETTINGS['RETRY_INTERVAL'],
                     args=[notification_object.id],
-                    kwargs={'request_data': request_data, 'device_tokens': device_tokens, 'count': count + 1}
+                    kwargs={'request_data': request_data, 'device_tokens': device_tokens, 'count': count + 1},
+                    queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
                 )
         elif 'resend_tokens' not in locals():
             log_push_result(
-                notification_object, f'{type(exception)}: {exception},\nResponse: {responses}.', logging.ERROR
+                notification_object, f'{type(exception)}: {exception},\nResponse: {responses}.', logging.ERROR,
+                stack_trace=True
             )
         else:
-            log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR)
-
-        raise exception
+            log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR, stack_trace=True)
 
 
 # For testing we dont want to send emails to everyone so we need to set

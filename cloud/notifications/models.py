@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
-from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
+from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
@@ -268,9 +268,17 @@ class PushNotification(models.Model):
         notification_devices = devices.filter(type=PushDevice.TYPES.notification)
         data_devices = devices.filter(type=PushDevice.TYPES.data)
 
-        notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+        try:
+            notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+        except GCMError as gcm_error:
+            notification_response = gcm_error.args[0]
+
         payload['caption'] = title or ''
         payload['description'] = body or ''
-        data_response = data_devices.send_message(None, title=None, extra=payload, **options)
+
+        try:
+            data_response = data_devices.send_message(None, title=None, extra=payload, **options)
+        except GCMError as gcm_error:
+            data_response = gcm_error.args[0]
 
         return notification_response, data_response
