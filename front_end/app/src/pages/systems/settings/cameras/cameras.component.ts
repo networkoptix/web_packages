@@ -46,11 +46,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initSettingsAndSystem();
-        
+
         this.routeSubscription = this.route.params.subscribe(params => {
             if (params.cameraId) {
                 this.cameraIdFromParams = params.cameraId;
-                this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '') || this.system.cameras[0].id;
+                this.parsedCameraId = (params.cameraId !== 'undefined' ? params.cameraId : this.system.cameras[0].id).replace(/\s|\{|\}/g, '');
             }
             this.setCamera();
         });
