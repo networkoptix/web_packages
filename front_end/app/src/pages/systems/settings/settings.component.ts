@@ -408,6 +408,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 camerasNode.level3 = this.system.cameras.map(camera => ({
                     id              : camera.id.replace(/\s|\{|\}/g, ''),
                     svgIcon         : this.getCameraStatusIcon(camera),
+                    isEnabled       : camera.status !== 'Offline' && camera.status !== 'Unauthorized',
                     label           : camera.name,
                     path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                     additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/) // Regex to parse IPV4 address, might need to update if we support IPV6 addressses
