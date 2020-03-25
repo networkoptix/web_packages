@@ -29,7 +29,7 @@ Total: {{friendlyBytes(storage.totalSpace)}}">
                                     [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" 
                                     aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace)"></div>
                                 <div class="progress-label d-flex justify-content-center align-items-center progress-text">
-                                    {{ friendlyBytes(storage.freeSpace.bits) }} of {{ friendlyBytes(storage.totalSpace) }}
+                                    {{ friendlyBytes(storage.freeSpace.bits) }} {{'of' | translate}} {{ friendlyBytes(storage.totalSpace) }}
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ Total: {{friendlyBytes(storage.totalSpace)}}">
                 </div>
                 <div class="form-group col-12 row">
                     <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
-                        <div class="w-100">StorageType</div>
+                        <div class="w-100" translate>Storage Type</div>
                     </div>
                     <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
                         <div class="w-100">

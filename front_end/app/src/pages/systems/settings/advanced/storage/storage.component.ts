@@ -122,11 +122,11 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
     addParams      : [{ name: 'space', value: `${totalSpace}` }],
     id             : storageId,
     isBackup       : isBackup,
-    name           : 'Initial',
     parentId       : `{${serverId}}`,
     spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
     storageType    : storageType,
-    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}', // I couldn't find where the typeId comes from
+    // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
+    typeId         : '{f8544a40-880e-9442-b78a-9da6db6862b4}',
     url            : url,
     usedForWriting : isUsedForWriting.value
 });

@@ -245,7 +245,6 @@ export class NxSystemAPI {
     }
 
     getStorages() {
-        // TODO: Need to implement for storage component in advanced settigns
         return this.get('/api/storageSpace');
     }
 

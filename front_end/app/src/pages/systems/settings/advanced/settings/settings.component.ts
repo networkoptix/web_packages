@@ -280,8 +280,7 @@ export class NxSystemAdvancedSettingsComponent implements OnInit, OnChanges, OnD
             .initPageWatcher(this.viewContainerRef, this.saveSettings, () => {
                 this.applyService.reset();
             },
-            // @ts-ignore
-            [...Object.values(this.systemSettings)/* Find a way to get watchers from storage to here */]);
+            Object.values(this.systemSettings));
 
         this.applyService.setVisible(false);
     }

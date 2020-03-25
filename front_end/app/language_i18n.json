@@ -167,6 +167,7 @@
     "Settings": "Settings",
     "Show All": "Show All",
     "Some of the servers in this System have outdated software versions and can not be merged.": "Some of the servers in this System have outdated software versions and can not be merged.",
+    "Storage Type": "Storage Type",
     "Storages": "Storages",
     "Subject": "Subject",
     "Support": "Support",
@@ -218,5 +219,6 @@
     "Your browser is not supported": "Your browser is not supported",
     "devices": "devices",
     "manufacturers": "manufacturers",
+    "of": "of",
     "you": "you"
 }
