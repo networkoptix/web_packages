@@ -10,7 +10,7 @@
                 [src]="CONFIG.icons.dir + item.svgIcon + '.svg'"
                 [applyCss]="true"
                 class=" ml-n1 menu-level-3-svg-icon"></svg-icon>
-        <span [innerHTML]="item.label" class="user"></span>
+        <span [innerHTML]="item.label" class="user {{item.indent && !item.icon && !item.svgIcon && 'indent'}}"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalLabel"
               [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalLabel"></span>
