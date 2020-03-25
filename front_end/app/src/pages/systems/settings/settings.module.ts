@@ -17,6 +17,8 @@ import { NxNoSystemsComponent }            from '../no-systems/no-systems.compon
 import { ApplyGuard }                      from '../../../routeGuards/applyGuard';
 import { AuthGuard }                       from '../../../routeGuards/authGuard';
 import { UserGuard }                       from '../../../routeGuards/userGuard';
+import { NxCamerasComponent } from './cameras/cameras.component';
+import { NxCamerasModule } from './cameras/cameras.module';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -51,6 +53,16 @@ const appRoutes: Routes = [
                 path          : 'servers/:serverId',
                 component     : NxSystemServersComponent,
                 canDeactivate : [ApplyGuard]
+            },
+            {
+                path          : 'cameras',
+                component     : NxCamerasComponent,
+                canDeactivate : [ApplyGuard]
+            },
+            {
+                path          : 'cameras/:cameraId',
+                component     : NxCamerasComponent,
+                canDeactivate : [ApplyGuard]
             }
         ]
     }
@@ -68,7 +80,7 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-
+        NxCamerasModule,
         RouterModule.forChild(appRoutes)
     ],
     providers       : [
