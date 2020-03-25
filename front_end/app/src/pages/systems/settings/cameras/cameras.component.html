@@ -7,31 +7,24 @@
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
-                        <h2>{{selectedCamera.name}}</h2>
-                        <!-- <span
-                            *ngIf="selectedServer.internalStatus"
-                            [ngClass]="{
-                                tag: true,
-                                offline: serverOffline,
-                                online: selectedServer.internalStatus === CONFIG.servers.status.restarting
-                                    || selectedServer.internalStatus === CONFIG.servers.status.reseting,
-                                checking: checking
-                            }">
-                            {{ selectedServer.shownStatus }}
-                        </span> -->
+                        <!-- TODO: Will replaced with editable text component in CLOUD-4617 -->
+                        <h2>{{selectedCamera.name}}</h2> 
                     </div>
                     <button class="camera-buttons pr-0"
+                        [routerLink]="cameraViewPath"
                         *ngIf="true"
                         >
                         <span [ngClass]="{ 'animate-rotation': false }">
+                            <!-- TODO: Need proper SVG -->
                             <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                                 [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>View</span>
                     </button>
-                    <button class="camera-buttons pr-0"
-                        [routerLink]="'fullInfoPath'"
-                        [queryParams]="{id: 'parsedServerId'}"
+                    <button *ngIf="canSeeInfo"
+                        class="camera-buttons pr-0"
+                        [routerLink]="fullInfoPath"
+                        [queryParams]="{id: parsedCameraId}"
                         >
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
@@ -67,7 +60,7 @@
                 </div>
             </header>
             <nx-section>
-                the stuff
+                TODO: Will add basic settings here as part of CLOUD-4618
             </nx-section>
         </nx-block>
     </div>

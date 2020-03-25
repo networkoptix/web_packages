@@ -31,6 +31,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraIdFromParams: string;
     parsedCameraId: string;
     selectedCamera: ICamera;
+    canSeeInfo: boolean;
+    fullInfoPath: string;
+    cameraViewPath: string;
 
     constructor(
         configService: NxConfigService,
@@ -62,6 +65,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     // init methods
 
     initSettingsAndSystem() {
+        this.canSeeInfo = false;
         if (this.settingsSubscription) {
             this.settingsSubscription.unsubscribe();
         }
@@ -70,6 +74,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .pipe(filter((system) => system !== undefined));
         this.settingsSubscription = this.settings$.subscribe((system) => {
             this.system = system;
+            if (this.system) {
+                this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
+                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                    if (this.canSeeInfo) {
+                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                    }
+                });
+            }
         });
     }
 
