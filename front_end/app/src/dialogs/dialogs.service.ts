@@ -1,39 +1,42 @@
-import { Inject, Injectable }         from '@angular/core';
-import { DOCUMENT, Location }         from '@angular/common';
-import { DomSanitizer }               from '@angular/platform-browser';
-import { NgbModal }                   from '@ng-bootstrap/ng-bootstrap';
-import { Router }                     from '@angular/router';
-import { NxToastService }             from './toast.service';
-import { NxConfigService, IConfig }   from '../services/nx-config';
-import { NxLanguageProviderService }  from '../services/nx-language-provider';
-import { NxAccountService }           from '../services/account.service';
-import { LoginModalContent }          from './login/login.component';
-import { GenericModalContent }        from './generic/generic.component';
-import { AddUserModalContent }        from './add-user/add-user.component';
-import { DisconnectModalContent }     from './disconnect/disconnect.component';
-import { RenameModalContent }         from './rename/rename.component';
-import { MessageModalContent }        from './message/message.component';
-import { EmbedModalContent }          from './embed/embed.component';
-import { MergeModalContent }          from './merge/merge.component';
-import { ApplyModalContent }          from './apply/apply.component';
-import { RemoveUserModalContent }     from './remove-user/remove-user.component';
-import { RenameServerModalContent }   from './rename-server/rename-server.component';
-import { RestartServerModalContent }  from './restart-server/restart-server.component';
-import { DetachServerModalContent }   from './detach-server/detach-server.component';
-import { ResetServerModalContent }    from './reset-server/reset-server.component';
-import { ChangePasswordModalContent } from './change-password/change-password.component';
-import { LanguageI18NStaticTypes }    from '../../language_i18n_static_types';
-import { SubscriptionLike }           from 'rxjs';
-import { AutoUnsubscribe }            from 'ngx-auto-unsubscribe';
+import { Inject, Injectable }          from '@angular/core';
+import { DOCUMENT, Location }          from '@angular/common';
+import { DomSanitizer }                from '@angular/platform-browser';
+import { NgbModal }                    from '@ng-bootstrap/ng-bootstrap';
+import { Router }                      from '@angular/router';
+import { NxToastService }              from './toast.service';
+import { NxConfigService, IConfig }    from '../services/nx-config';
+import { NxLanguageProviderService }   from '../services/nx-language-provider';
+import { NxAccountService }            from '../services/account.service';
+import { LoginModalContent }           from './login/login.component';
+import { GenericModalContent }         from './generic/generic.component';
+import { AddUserModalContent }         from './add-user/add-user.component';
+import { DisconnectModalContent }      from './disconnect/disconnect.component';
+import { RenameModalContent }          from './rename/rename.component';
+import { MessageModalContent }         from './message/message.component';
+import { EmbedModalContent }           from './embed/embed.component';
+import { MergeModalContent }           from './merge/merge.component';
+import { ApplyModalContent }           from './apply/apply.component';
+import { RemoveUserModalContent }      from './remove-user/remove-user.component';
+import { RenameServerModalContent }    from './rename-server/rename-server.component';
+import { RestartServerModalContent }   from './restart-server/restart-server.component';
+import { DetachServerModalContent }    from './detach-server/detach-server.component';
+import { ResetServerModalContent }     from './reset-server/reset-server.component';
+import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
+import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
+import { CloudStorageDeleteModalContent, CloudStorageMoveModalContent } from './cloud-storage';
+import { BehaviorSubject, SubscriptionLike } from 'rxjs';
+import { AutoUnsubscribe }                   from 'ngx-auto-unsubscribe';
 
 import './../dialogs/dialogs.scss';
+import { NxSystem, NxSystemUser } from '../services/system.service';
 
 @AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    location: any;
+    location: Location;
     closeResult: any;
 
     languageSubscription: SubscriptionLike;
@@ -180,6 +183,38 @@ export class NxDialogsService {
         };
 
         return this.createModal(AddUserModalContent, options, params);
+    }
+
+    cloudStorageDelete(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+        // WIP still need to implement
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system$,
+            closable: true,
+            updateCallback
+        };
+
+        return this.createModal(CloudStorageDeleteModalContent, options, params);
+    }
+
+    cloudStorageMove(system$: BehaviorSubject<NxSystem>, updateCallback: () => void) {
+        // WIP still need to implement
+        const options: any = {
+            windowClass: 'modal-holder',
+            backdrop   : 'static'
+        };
+
+        const params: any = {
+            system$,
+            closable: true,
+            updateCallback
+        };
+
+        return this.createModal(CloudStorageMoveModalContent, options, params);
     }
 
     disconnect(systemId) {
@@ -349,5 +384,19 @@ export class NxDialogsService {
         };
 
         return this.createModal(EmbedModalContent, options, params);
+    }
+
+    deleteCloudUser(cloudApi) {
+        const options: any = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        const params: any = {
+            cloudApi,
+            closable: true
+        };
+
+        return this.createModal(DeleteCloudUserModalContent, options, params);
     }
 }

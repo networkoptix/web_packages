@@ -1,7 +1,8 @@
-import { Inject, Injectable }       from '@angular/core';
+import { Inject, Injectable, LOCALE_ID }       from '@angular/core';
 import { NxConfigService, IConfig } from './nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
+import * as moment from 'moment';
 
 export interface Array {
     move(arr: Array, oldIndex: number, newIndex: number): void;
@@ -15,12 +16,15 @@ export class NxUtilsService {
 
     public static sortASC = true;
     public static sortDESC = false;
+    public momentWithLocale = moment
 
     constructor(configService: NxConfigService,
                 private deviceService: DeviceDetectorService,
+                @Inject(LOCALE_ID) private locale: string,
                 @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
+        this.momentWithLocale(locale);
     }
 
     static move(arr, oldIndex, newIndex): Array {
@@ -146,6 +150,18 @@ export class NxUtilsService {
         // revokeObjectURL breaks download on MSEdge and Firefox
         // URL.revokeObjectURL(objectUrl);
     }
+
+    // static timestamp methods
+    public msFromNowToString(input: number, suffix = false): string {
+        return this.momentWithLocale().subtract(input).fromNow(!suffix);
+    }
+
+    // TODO static string methods, still need to implmement pluralize and translate
+    public pluralize(qty: number, single, plural, zero = plural) {
+        return `${qty} ${qty === 0 ? zero : qty === single ? single : plural}`;
+    }
+
+    public translate = (str: string) => str // TODO: Need to figure out how to do translate pipe within function
 
     public isTablet() {
         return this.deviceService.isTablet();

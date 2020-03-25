@@ -28,6 +28,7 @@ export class NxSandboxComponent {
     ipvdEmbedUrl: SafeResourceUrl;
     // cameraEmbedUrl: SafeResourceUrl;
     data: any = {};
+    theme: string;
     change: any;
     restore: any;
 
@@ -36,11 +37,10 @@ export class NxSandboxComponent {
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
     private setupDefaults() {
-
         this.data = {
             newPassword : '',
-            email : ''
-        }
+            email       : ''
+        };
 
         let host = '//' + window.location.hostname;
         if (host === '//localhost' || host === '//127.0.0.1') {
@@ -60,6 +60,8 @@ export class NxSandboxComponent {
         this.group = 'Tsanko';
         this.agree = false;
         this.edit = false;
+
+        this.theme = 'default';
 
         this.filter = {
             query  : '',
@@ -193,6 +195,10 @@ export class NxSandboxComponent {
 
     notify(msg: string, type: string) {
         this.dialogs.notify(msg, type, this.autohide);
+    }
+
+    changeTheme(isEnabled, theme) {
+
     }
 }
 

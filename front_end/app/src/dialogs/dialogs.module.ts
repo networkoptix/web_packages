@@ -19,12 +19,22 @@ import { RestartServerModalContent }   from './restart-server/restart-server.com
 import { DetachServerModalContent }    from './detach-server/detach-server.component';
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
-
-import { GenericModalContent, NxModalGenericComponent } from './generic/generic.component';
-import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.component';
+import {
+    GenericModalContent,
+    NxModalGenericComponent
+}                                     from './generic/generic.component';
+import {
+    ApplyModalContent,
+    NxModalApplyComponent
+}                                     from './apply/apply.component';
+import {
+    CloudStorageMoveModalContent,
+    CloudStorageDeleteModalContent
+}                                     from './cloud-storage';
 
 @NgModule({
     imports: [
@@ -54,7 +64,10 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
-        NxModalGenericComponent
+        DeleteCloudUserModalContent,
+        NxModalGenericComponent,
+        CloudStorageDeleteModalContent,
+        CloudStorageMoveModalContent
     ],
     entryComponents: [
         LoginModalContent,
@@ -73,7 +86,10 @@ import { ApplyModalContent, NxModalApplyComponent }     from './apply/apply.comp
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
-        NxModalGenericComponent
+        DeleteCloudUserModalContent,
+        NxModalGenericComponent,
+        CloudStorageDeleteModalContent,
+        CloudStorageMoveModalContent
     ],
     providers: [
         NxDialogsService,

@@ -22,9 +22,9 @@ import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -43,6 +43,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     account: any = {};
     save: any;
     langCode: string;
+    isSystemOwner = true;
 
     watchers: any = {
         firstName: new Watcher<string>(),
@@ -52,33 +53,32 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
 
     private formSubscription: Subscription;
 
-
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-
+    private setupDefaults() {
         this.menuService.setDetailsSection('settings');
     }
 
-    constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private localStorage: LocalStorageService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private systemsService: NxSystemsService,
-                private accountService: NxAccountService,
-                private dialogs: NxDialogsService,
-                private menuService: NxMenuService,
-                private applyService: NxApplyService,
-                private pageService: NxPageService) {
-        this.setupDefaults(configService);
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private localStorage: LocalStorageService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
+        private dialogs: NxDialogsService,
+        private menuService: NxMenuService,
+        private applyService: NxApplyService,
+        private pageService: NxPageService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+        this.setupDefaults();
     }
 
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
 
-    ngOnInit()  {
+    ngOnInit() {
         this.pageService.setPageTitle(this.LANG.pageTitles.account);
 
         this.save = this.processService.createProcess(() => {
@@ -117,8 +117,14 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         this.accountService
             .get()
             .then((account) => {
-                this.account = account;
-                this.setOriginal();
+                if (account) {
+                    this.account = account;
+                    this.setOriginal();
+                    if (!this.systemsService.systemsPoll.destination.observers.length) {
+                        this.systemsService.getSystems(account.email);
+                    }
+                    this.isUserASystemOwner();
+                }
             });
 
         if (this.localStorage && this.localStorage.get('langChanged')) {
@@ -155,5 +161,21 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         this.account.last_name = lastName;
         this.watchers.lastName.value = lastName;
     }
-}
 
+    isUserASystemOwner() {
+        this.systemsService.systemsSubject.subscribe((systems: any[]) => {
+            this.isSystemOwner = systems.some(system => {
+                return system.accessRole === 'owner';
+            });
+        });
+    }
+
+    deleteUser() {
+        this.dialogs.deleteCloudUser(this.cloudApiService)
+            .then(res => {
+                if (res && res.error === '0') {
+                    this.accountService.logout();
+                }
+            });
+    }
+}

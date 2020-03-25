@@ -203,26 +203,6 @@ Admin cannot delete or edit self
     Select user in Users List    ${EMAIL ADMIN}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
-Admin and owner cannot edit self via share
-    [Tags]    C41904    Threaded
-    @{admins}=   Create List    ${EMAIL OWNER}    ${EMAIL ADMIN}
-    FOR    ${user}    IN    @{admins}
-        Log    Step 1
-        Log in to Auto Tests System    ${user}
-        Select user in users list    ${user}
-        Elements should not be visible    ${REMOVE USER BUTTON}    ${ACCESS LEVEL DROPDOWN}
-
-        Log    Step 2
-        Share To    ${user}    ${VIEWER TEXT}    fail
-
-        Log    Step 3
-        Click Button    ${SHARE CANCEL}
-        ${role}=   Get Cloud User Role    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Run Keyword If    '${user}'=='${EMAIL OWNER}'    Should be equal as strings    ${role}    owner
-        Run Keyword If    '${user}'=='${EMAIL ADMIN}'    Should be equal as strings    ${role}    cloudAdmin
-        Log Out
-    END
-
 Admin cannot delete or edit other admins
     [Tags]    C41905
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
@@ -339,41 +319,6 @@ Share with unregistered user - brings them to registration page with code with c
     Click Button    ${CREATE ACCOUNT BUTTON}
     # New user gets logged in right away
     Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
-
-Sharing system with a user who is already in the list updates their permissions
-    [Tags]    C41892
-    ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
-    Append To List    ${TMP USERS}    ${random email}
-    Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
-
-    Open Mailbox
-    ...    host=${BASE HOST}
-    ...    password=${BASE EMAIL PASSWORD}
-    ...    port=${BASE PORT}
-    ...    user=${BASE EMAIL}
-    ...    is_secure=True
-    ${email}=   Wait For Email    recipient=${random email}    timeout=120
-    Delete Email    ${email}
-    Close Mailbox
-
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
-
-    Log in to Auto Tests System    ${EMAIL OWNER}
-    Share To    ${random email}   ${VIEWER TEXT}
-#    Permanently false-negative
-#    Open Mailbox
-#    ...    host=${BASE HOST}
-#    ...    password=${BASE EMAIL PASSWORD}
-#    ...    port=${BASE PORT}
-#    ...    user=${BASE EMAIL}
-#    ...    is_secure=True
-#  # TODO Fix the next line intermittently failing.
-#    Run Keyword And Expect Error    *    Wait For Email    recipient=${EMAIL ADMIN}    timeout=60
-
-    ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[viewer]
 
 Check share email for registered user
     [Tags]    C47297

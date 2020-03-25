@@ -1,27 +1,25 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-import { FormsModule }                       from '@angular/forms';
-import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
-
+import { NgModule }               from '@angular/core';
+import { CommonModule }           from '@angular/common';
+import { BrowserModule }          from '@angular/platform-browser';
+import { UpgradeModule }          from '@angular/upgrade/static';
+import { RouterModule, Routes }   from '@angular/router';
+import { FormsModule }            from '@angular/forms';
+import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }        from '@ngx-translate/core';
 import { DirectivesModule }       from '../../../directives/directives.module';
+import { ComponentsModule }       from '../../../components/components.module';
+import { AuthGuard }              from '../../../routeGuards/authGuard';
+import { NxSettingsModule }       from '../settings/settings.module';
 import { NxSystemsListComponent } from './list.component';
-
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../components/components.module';
-import { NxSettingsModule }    from '../settings/settings.module';
-import { AuthGuard }           from '../../../routeGuards/authGuard';
 
 const appRoutes: Routes = [
     {
-        path    : 'systems', component: NxSystemsListComponent, canActivate: [AuthGuard]
+        path: 'systems', component: NxSystemsListComponent, canActivate: [AuthGuard]
     }
 ];
 
 @NgModule({
-    imports: [
+    imports         : [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -35,15 +33,13 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         NxSettingsModule
     ],
-    providers      : [
-    ],
-    declarations   : [
+    providers       : [],
+    declarations    : [
         NxSystemsListComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
-    ],
-    exports        : [
+    bootstrap       : [],
+    entryComponents : [],
+    exports         : [
         NxSystemsListComponent
     ]
 })

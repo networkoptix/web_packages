@@ -89,6 +89,7 @@ ${CANCEL CHANGES BUTTON}              //nx-account-password-component//nx-apply/
 ${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
+${CHANGE PASS NO CHANGES}             //div[contains(@class, "placeholder-text-no-changes")]
 
 #Register Form Elements
 ${REGISTER FORM}                      //form[@id='registerForm']

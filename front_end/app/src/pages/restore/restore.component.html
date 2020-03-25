@@ -55,17 +55,13 @@
             </div>
         </div>
 
-        <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm"
-              class="form-horizontal" *ngIf="!change.success && !changeSuccess"
-              novalidate>
+        <div *ngIf="!change.success && !changeSuccess" >
+            <h1 class="heading mb-4" translate>Set New Password</h1>
 
-            <h1 translate>Set New Password</h1>
+            <form name="restorePasswordWithCode" #restorePasswordWithCode="ngForm" class="form" novalidate>
+                <label for="newPassword" translate>New Password</label>
 
-            <div class="form-group row">
-                <div class="col-md-4 justify-content-start justify-content-md-end">
-                    <label for="newPassword" class="text-left text-md-right control-label" translate>New Password</label>
-                </div>
-                <div class="col-md-4">
+                <div class="position-relative mb-3">
                     <nx-password-input
                             class="form-component"
                             name="newPassword"
@@ -74,28 +70,28 @@
                             [form]="restorePasswordWithCode"
                             #newPassword="ngModel">
                     </nx-password-input>
+
                     <nx-password-input-tag-validation
                             [forElement]="newPassword"
                             [value]="data.newPassword">
                     </nx-password-input-tag-validation>
                 </div>
 
-                <div class="col-md-4">
-                    <nx-password-input-validation
-                            [forElement]="newPassword"
-                            [value]="data.newPassword">
-                    </nx-password-input-validation>
-                </div>
-            </div>
+                <nx-password-input-validation
+                        [customClass]="'mb-3'"
+                        [forElement]="newPassword"
+                        [value]="data.newPassword">
+                </nx-password-input-validation>
 
-            <nx-process-button
-                [customButtonClass]="'full-width'"
-                [customClass]="'full-width'"
-                [process]="change"
-                [form]="restorePasswordWithCode"
-                [buttonText]="LANG.dialogs.buttons.ok">
-            </nx-process-button>
-        </form>
+                <nx-process-button
+                    [customButtonClass]="'full-width'"
+                    [customClass]="'full-width'"
+                    [process]="change"
+                    [form]="restorePasswordWithCode"
+                    [buttonText]="LANG.dialogs.buttons.ok">
+                </nx-process-button>
+            </form>
+        </div>
     </div>
 
     <nx-footer center="true"></nx-footer>

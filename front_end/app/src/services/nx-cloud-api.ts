@@ -54,8 +54,8 @@ export class NxCloudApiService {
 
     merge(masterSystemId: string, slaveSystemId: string, password: string): Promise<any> {
         return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
-            master_system_id: masterSystemId,
-            slave_system_id : slaveSystemId,
+            master_system_id : masterSystemId,
+            slave_system_id  : slaveSystemId,
             password
         }).toPromise();
     }
@@ -85,8 +85,8 @@ export class NxCloudApiService {
                 {
                     email,
                     password,
-                    first_name: firstName,
-                    last_name : lastName,
+                    first_name : firstName,
+                    last_name  : lastName,
                     subscribe,
                     code
                 })
@@ -132,8 +132,8 @@ export class NxCloudApiService {
 
     unshare(systemId: string, userEmail: string): Observable<any> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
-            user_email: userEmail,
-            role      : this.CONFIG.accessRoles.unshare
+            user_email : userEmail,
+            role       : this.CONFIG.accessRoles.unshare
         });
     }
 
@@ -168,6 +168,10 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
+    deleteCloudUser(password): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
+    }
+
     account() {
         return this.http.get(this.CONFIG.apiBase + '/account');
     }
@@ -193,21 +197,21 @@ export class NxCloudApiService {
     accountPost(account: Account): Promise<any> {
         // strip unnecessary account info
         const accountInfo = {
-            email       : account.email,
-            first_name  : account.first_name,
-            last_name   : account.last_name,
-            is_staff    : account.is_staff,
-            is_superuser: account.is_superuser || false,
-            language    : account.language,
-            permissions : account.permissions
+            email        : account.email,
+            first_name   : account.first_name,
+            last_name    : account.last_name,
+            is_staff     : account.is_staff,
+            is_superuser : account.is_superuser || false,
+            language     : account.language,
+            permissions  : account.permissions
         };
         return this.http.post(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
-            new_password: newPassword,
-            old_password: oldPassword
+            new_password : newPassword,
+            old_password : oldPassword
         }).toPromise();
     }
 
@@ -239,6 +243,47 @@ export class NxCloudApiService {
     acceptAgreement(reviewId: string): Promise<any> {
         return this.http.post(this.CONFIG.apiBase + '/accept_agreement', {
             review_id: reviewId
+        }).toPromise();
+    }
+
+    // Cloud Storage
+
+    enableCloudStorage(systemId: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/create', {
+            systemId
+        }).toPromise();
+    }
+
+    deleteCloudStorage(systemId: string, password: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
+            systemId,
+            password
+        }).toPromise();
+    }
+
+    moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
+        return this.http.post(this.CONFIG.apiBase + '/storage/move', {
+            sourceSystemId,
+            destinationSystemId
+        }).toPromise();
+    }
+
+    getCloudStorageUsage(systemId: string): Promise<any> {
+        // return Promise.resolve({
+        //     enabled           : true,
+        //     cloudCapacity     : 53687091200,
+        //     currentRecordings : 7457136000, // ms, rounded to the hour
+        //     whenFullyUsed     : 1209600000, // ms, rounded to the hour
+        //     amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
+        //     archiveFrom       : 11, // number of cameras represented by integer
+        //     recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
+        //     delayFromLive     : 1200000 // ms, rounded to 0.1s}
+        // });
+
+        return this.http.get(this.CONFIG.apiBase + '/storage/usageStats', {
+            params: {
+                systemId
+            }
         }).toPromise();
     }
 }

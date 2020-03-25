@@ -35,7 +35,7 @@ import { BaseDropdown }      from '../injDropdown';
 export class NxGenericDropdown extends BaseDropdown {
     // items should have at least name ex [{name: 'a', id: 1}, {name: 'b', id:3}]
     @Input() id: any;
-    @Input() items: any;
+    @Input() items: DropdownItem[];
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
 
@@ -58,3 +58,11 @@ export class NxGenericDropdown extends BaseDropdown {
         }
     }
 }
+
+export class DropdownItem {
+    constructor(
+        public name: string,
+        public value?: string,
+        public state?: string
+    ) {}
+};

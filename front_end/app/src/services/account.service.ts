@@ -52,20 +52,21 @@ export class NxAccountService implements OnDestroy {
     private dialogs: NxDialogsService;
     private applyService: NxApplyService;
 
-    constructor(@Inject(DOCUMENT) private document: Document,
-                @Inject(WINDOW) private window: Window,
-                configService: NxConfigService,
-                languageService: NxLanguageProviderService,
-                locationService: Location,
-                private cloudApi: NxCloudApiService,
-                private sessionService: NxSessionService,
-                private uriService: NxUriService,
-                private localStorageService: LocalStorageService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute,
-                private appStateService: NxAppStateService,
-                private pollService: NxPollService,
-                injector: Injector
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        locationService: Location,
+        @Inject(DOCUMENT) private document: Document,
+        @Inject(WINDOW) private window: Window,
+        private cloudApi: NxCloudApiService,
+        private sessionService: NxSessionService,
+        private uriService: NxUriService,
+        private localStorageService: LocalStorageService,
+        private router: Router,
+        private activatedRoute: ActivatedRoute,
+        private appStateService: NxAppStateService,
+        private pollService: NxPollService,
+        injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -313,6 +314,8 @@ export class NxAccountService implements OnDestroy {
     }
 
     logout(doNotRedirect?: boolean) {
+        this.account = undefined;
+
         if (this.loggingOut) {
             return;
         }
@@ -414,7 +417,7 @@ export class NxAccountService implements OnDestroy {
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
                 if (!doNotRedirect) {
-                    return this.router
+                    this.router
                         .navigate([this.CONFIG.redirect.unauthorised])
                         .finally(() => {
                             setTimeout(() => this.window.location.reload());
@@ -422,7 +425,7 @@ export class NxAccountService implements OnDestroy {
                 }
 
                 setTimeout(() => {
-                    return this.window.location.reload();
+                    this.window.location.reload();
                 });
             });
     }
