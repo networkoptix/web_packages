@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit
+    Component, OnDestroy, OnInit, OnChanges
 }                                    from '@angular/core';
 import { NxConfigService, IConfig }           from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
@@ -10,6 +10,8 @@ import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_typ
 import { NxSystem } from '../../../../services/system.service';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { ActivatedRoute, Params } from '@angular/router';
+import { NxUriService } from '../../../../services/uri.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -24,12 +26,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     system: NxSystem;
     settings$: Observable<any>;
     settingsSubscription: Subscription;
+    params$: Observable<Params>;
+    routeSubscription: Subscription;
+    cameraIdFromParams: string;
+    parsedCameraId: string;
 
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private menuService: NxMenuService,
-        private settingsService: NxSettingsService
+        private settingsService: NxSettingsService,
+        private route: ActivatedRoute,
+        private uriService: NxUriService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
@@ -37,6 +45,22 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.initSettingsAndSystem();
+        
+        this.routeSubscription = this.route.params.subscribe(params => {
+            if (params.cameraId) {
+                this.cameraIdFromParams = params.cameraId;
+                this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '') || this.system.cameras[0].id;
+            }
+            this.setCamera();
+        });
+    }
+
+    ngOnDestroy() {}
+
+    // init methods
+
+    initSettingsAndSystem() {
         if (this.settingsSubscription) {
             this.settingsSubscription.unsubscribe();
         }
@@ -48,5 +72,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {}
+    setCamera() {
+        this.menuService.setDetailsSection(this.parsedCameraId);
+        this.uriService
+            .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
+            .catch(error => {
+                console.error(error);
+            });
+    }
 }
