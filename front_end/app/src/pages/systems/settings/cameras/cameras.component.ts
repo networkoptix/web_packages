@@ -48,6 +48,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initSettingsAndSystem();
         this.routeSubscription = this.route.params.subscribe(params => {
+            // TODO: Need to find out how to get params when someone visits page directly
             if (params.cameraId) {
                 this.cameraIdFromParams = params.cameraId;
                 this.parsedCameraId = (params.cameraId !== 'undefined' ? params.cameraId : this.system.cameras[0].id).replace(/\s|\{|\}/g, '');

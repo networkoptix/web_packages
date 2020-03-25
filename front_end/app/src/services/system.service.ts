@@ -384,12 +384,12 @@ class ServerManager {
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
-                                                              `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
-                                                              undefined,
-                                                              () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                                                                  this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                                                                  return Promise.resolve(true);
-                                                              }));
+                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
+                        undefined,
+                        () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                            return Promise.resolve(true);
+                        }));
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
@@ -416,7 +416,11 @@ class ServerManager {
                 if (!result) {
                     return Promise.reject(new Error(`Request to server has failed ${result}`));
                 }
-                this.cameras = result;
+                this.cameras = result.map(({ parentId, id, ...camera }: ICamera) => {
+                    const parentName = this.servers.find(server => server.id === parentId).name;
+                    const previewUrl = this.mediaserver.previewUrl(id);
+                    return { ...camera, id, parentId, parentName, previewUrl };
+                });
                 return this.cameras;
             });
     }
@@ -932,6 +936,7 @@ export interface ICamera {
     motionType: string;
     name: string;
     parentId: string;
+    parentName: string;
     physicalId: string;
     preferredServerId: string;
     recordAfterMotionSec: number;
@@ -944,4 +949,5 @@ export interface ICamera {
     url: string;
     userDefinedGroupName: string;
     vendor: string;
+    previewUrl: string;
 }

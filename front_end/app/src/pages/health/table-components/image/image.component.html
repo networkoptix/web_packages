@@ -1,4 +1,4 @@
-<div class="header">{{time}}</div>
+<div *ngIf="time" class="header">{{time}}</div>
 <div class="thumbnail-preview" [ngClass]="{mini: !isPrimary}">
     <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
          (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>

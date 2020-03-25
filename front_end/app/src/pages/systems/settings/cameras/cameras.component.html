@@ -41,7 +41,7 @@
                     </button>
                 </div>
                 <div class="d-flex justify-content-stretch align-items-start">
-                    <div class="camera-view">Image Here</div>
+                    <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl"></nx-health-image>
                     <div class="header-table col-7">
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Vendor</span>
@@ -61,7 +61,7 @@
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Server</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ selectedCamera.parentId || '-' }}</span>
+                            <span class="col-9">{{ selectedCamera.parentName || '-' }}</span>
                         </div>
                     </div>
                 </div>

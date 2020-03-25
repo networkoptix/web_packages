@@ -12,6 +12,7 @@ import { NxCamerasComponent } from './cameras.component';
 
 import { TranslateModule }     from '@ngx-translate/core';
 import { ComponentsModule }    from '../../../../components/components.module';
+import { NxHealthModule } from '../../../health/health.module';
 
 @NgModule({
     imports: [
@@ -24,7 +25,8 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        NxHealthModule
     ],
     providers : [],
     declarations : [
