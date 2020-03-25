@@ -12,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 # Session to use the same TCP connection and prevent extra handshake and slow-start
+adapter = requests.adapters.HTTPAdapter(pool_maxsize=40, pool_connections=5, pool_block=True)
 cloud_api_session = requests.Session()
+cloud_api_session.mount('https://', adapter)
 
 
 def lower_case_email(func):
