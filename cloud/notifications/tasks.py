@@ -107,7 +107,7 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
                 log_push_result(notification_object, 'No matching subscriptions found')
                 return
 
-        responses = notification_object.send_notifications()
+        responses = notification_object.send_notifications(device_tokens=device_tokens)
         resend_tokens = notifications_api.process_push_response(responses, notification_object)
 
         if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
