@@ -11,10 +11,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
-# Session to use the same TCP connection and prevent extra handshake and slow-start
-adapter = requests.adapters.HTTPAdapter(pool_maxsize=40, pool_connections=5, pool_block=True)
-cloud_api_session = requests.Session()
-cloud_api_session.mount('https://', adapter)
 
 
 def lower_case_email(func):
@@ -36,7 +32,7 @@ def get_wrapper(url, params=None, auth=None, headers=None):
 
     logger.info('\nGET: {}\n Query Parameters: {}'.format(url, default_params))
 
-    return cloud_api_session.get(url, params=default_params, auth=auth, headers=headers)
+    return requests.get(url, params=default_params, auth=auth, headers=headers)
 
 
 def post_wrapper(url, params=None, auth=None, json=None, headers=None):
@@ -47,7 +43,7 @@ def post_wrapper(url, params=None, auth=None, json=None, headers=None):
 
     logger.info('\nPOST: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
 
-    return cloud_api_session.post(url, params=default_params, auth=auth, json=json, headers=headers)
+    return requests.post(url, params=default_params, auth=auth, json=json, headers=headers)
 
 
 @validate_response
