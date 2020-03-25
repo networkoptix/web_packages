@@ -61,7 +61,7 @@ const appRoutes: Routes = [
             {
                 path          : 'servers/:serverId/advanced',
                 component     : NxSystemServerAdvancedComponent,
-                canActivate   : [AdminGuard],
+                canActivate   : [AdminGuard]
             },
             {
                 path          : 'cloud-storage',

@@ -503,11 +503,4 @@ export const nxConfig: IConfig = {
 
         forceLiveCacheForPrimaryStream: { type: 'text' }
     }
-    // loggersConfig: {
-    //     EC2_TRAN    : '',
-    //     HTTP        : '',
-    //     HWID        : '',
-    //     MAIN        : '',
-    //     PERMISSIONS : ''
-    // }
 };

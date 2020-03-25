@@ -5,7 +5,7 @@
               translate>Warning! Any changes on this page may cause server to work incorrectly.</span>
     </header>
     <nx-section *ngIf="(systemSettings | keyvalue)?.length > 0">
-        <form class="form form-horizontal row" role="form" name="systemSettings" novalidate>
+        <form class="form form-horizontal row" role="form" name="systemSettingsForm" #systemSettingsForm="ngForm" novalidate>
             <div class="form-group col-12 row p-0 mx-0"
                  *ngFor="let setting of systemSettings | keyvalue">
 
@@ -53,6 +53,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="col-12 pt-3">
+                <nx-process-button [process]="saveSettings"
+                                   [form]="systemSettingsForm"
+                                   [actionType]="'primary'"
+                                   buttonText="{{ 'Save' | translate }}"></nx-process-button>
             </div>
         </form>
     </nx-section>

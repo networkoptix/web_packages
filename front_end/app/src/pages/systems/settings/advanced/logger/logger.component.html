@@ -3,7 +3,7 @@
         <h4 translate>Log settings</h4>
     </header>
     <nx-section>
-        <form class="form" role="form" name="logLevels" novalidate>
+        <form class="form" role="form" name="logLevelsForm" #logLevelsForm='ngForm' novalidate>
             <div *ngFor="let log of systemLoggers | keyvalue" class="form-group row">
                 <label class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">{{log.key}} log level</label>
                 <div class="col-11 col-md-7">
@@ -17,7 +17,10 @@
                 </div>
             </div>
             <div class="col-12 p-0 pt-3">
-                <button class="btn btn-primary" ng-click="changeLogLevels()">Save</button>
+                <nx-process-button [process]="saveLoggers"
+                                   [form]="logLevelsForm"
+                                   [actionType]="'primary'"
+                                   buttonText="{{ 'Save' | translate }}"></nx-process-button>
             </div>
         </form>
     </nx-section>
