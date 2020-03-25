@@ -33,23 +33,23 @@
                             <span class="ml-1" translate>Detailed Info</span>
                     </button>
                 </div>
-                <div class="d-flex justify-content-stretch align-items-start">
+                <div class="d-flex justify-content-stretch align-items-start flex-wrap">
                     <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl"></nx-health-image>
                     <div class="header-table col-7">
                         <div class="header-table-cell">
-                            <span class="mr-2 cell-title" translate>Vendor</span>
+                            <span class="mr-2 cell-title text-nowrap" translate>Vendor</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ selectedCamera.vendor || '-' }}</span>
+                            <span class="col-9 text-nowrap">{{ selectedCamera.vendor || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
-                            <span class="mr-2 cell-title" translate>Model</span>
+                            <span class="mr-2 cell-title text-nowrap" translate>Model</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ selectedCamera.model || '-' }}</span>
+                            <span class="col-9  text-nowrap">{{ selectedCamera.model || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
-                            <span class="mr-2 cell-title" translate>IP Address</span>
+                            <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ selectedCamera.url || '-' }}</span>
+                            <span class="col-9 text-nowrap">{{ selectedCamera.url || '-' }}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Server</span>
