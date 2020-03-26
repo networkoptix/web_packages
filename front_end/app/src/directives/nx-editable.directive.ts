@@ -1,43 +1,37 @@
 import {
-    Directive,
-    ElementRef,
-    Renderer2,
-    HostListener,
-    HostBinding,
-    forwardRef,
-    Input
-} from '@angular/core';
-
+    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit
+}                                                  from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Directive({
-    // tslint:disable-next-line:directive-selector
-    selector : '[NxEditable]',
+    selector  : '[NxEditable]',
     providers : [
         {
-            provide : NG_VALUE_ACCESSOR,
+            provide     : NG_VALUE_ACCESSOR,
             useExisting : forwardRef(() => NxEditableDirective),
-            multi : true
+            multi       : true
         }
     ]
 })
-export class NxEditableDirective implements ControlValueAccessor {
+export class NxEditableDirective implements ControlValueAccessor, OnInit {
     /*
         This directive makes any text field editable and binds value.
 
         Example usage:
-            <h2 NxEditable [(ngModel)]="selectedCamera.name" [editClass]="editClass" class="normal"></h2>
+            <h2 NxEditable [(ngModel)]="bound.model" class="nothing-special-here" initialClass ="initial-class-here" editClass="edit-class-here"></h2>
 
         Instructions:
             Add NxEditable directive to component.
             Use ngModel to bind elements value to model.
-            Use editClass add classes when the component is in edit mode.
+            Use initialClass to add class for when component is in initial mode.
+            Use editClass to add class for when the component is in edit mode.
             Use class and and other attributes like normal.
 
     */
     @Input() propValueAccessor = 'textContent';
     @HostBinding('attr.contenteditable') @Input() nxEditable = true;
     @Input('editClass') editClass = '';
+    @Input('initialClass') initialClass = '';
 
     private _elementClass: string[] = [];
 
@@ -53,10 +47,29 @@ export class NxEditableDirective implements ControlValueAccessor {
 
     private onChange: (value: string) => void;
     private onTouched: () => void;
+    private onFocus: () => void;
     private removeDisabledState: () => void;
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2) {
     }
+
+    ngOnInit() {
+        this.editOff();
+    }
+
+    // toggle mode handlers
+
+    editOn() {
+        this.addEditClass();
+        this.removeInitialClass();
+    }
+
+    editOff() {
+        this.removeEditClass();
+        this.addInitialClass();
+    }
+
+    // Helper methods for updating classes
 
     removeEditClass() {
         this.elementClass = this._elementClass.filter(currentClass => currentClass !== this.editClass).join(' ');
@@ -65,6 +78,30 @@ export class NxEditableDirective implements ControlValueAccessor {
     addEditClass() {
         this.elementClass = `${this.elementClass} ${this.editClass}`;
     }
+
+    removeInitialClass() {
+        this.elementClass = this._elementClass.filter(currentClass => currentClass !== this.initialClass).join(' ');
+    }
+
+    addInitialClass() {
+        this.elementClass = `${this.elementClass} ${this.initialClass}`;
+    }
+
+    // Save a reference of event handlers from DOM element that are  being over-ridden by directive to "this"
+
+    registerOnChange(fn: () => void): void {
+        this.onChange = fn;
+    }
+
+    registerOnTouched(fn: () => void): void {
+        this.onTouched = fn;
+    }
+
+    registerOnFocus(fn: () => void): void {
+        this.onFocus = fn;
+    }
+
+    // Updated event handlers: Add event handling used by directive here then call event handler from DOM element
 
     @HostListener('input')
     callOnChange() {
@@ -77,7 +114,7 @@ export class NxEditableDirective implements ControlValueAccessor {
 
     @HostListener('blur')
     callOnTouched() {
-        this.removeEditClass();
+        this.editOff();
         if (typeof this.onTouched === 'function') {
             this.onTouched();
         }
@@ -85,16 +122,14 @@ export class NxEditableDirective implements ControlValueAccessor {
 
     @HostListener('focus')
     callOnFocus() {
-        this.addEditClass();
+        this.editOn();
+        if (typeof this.onFocus === 'function') {
+            this.onFocus();
+        }
     }
 
-    /**
-     * Writes a new value to the element.
-     * This method will be called by the forms API to write
-     * to the view when programmatic (model -> view) changes are requested.
-     *
-     * See: [ControlValueAccessor](https://angular.io/api/forms/ControlValueAccessor#members)
-     */
+    // Other methods
+
     writeValue(value: any): void {
         const normalizedValue = value == null ? '' : value;
         this.renderer.setProperty(
@@ -104,29 +139,6 @@ export class NxEditableDirective implements ControlValueAccessor {
         );
     }
 
-    /**
-     * Registers a callback function that should be called when
-     * the control's value changes in the UI.
-     *
-     * This is called by the forms API on initialization so it can update
-     * the form model when values propagate from the view (view -> model).
-     */
-    registerOnChange(fn: () => void): void {
-        this.onChange = fn;
-    }
-
-    /**
-     * Registers a callback function that should be called when the control receives a blur event.
-     * This is called by the forms API on initialization so it can update the form model on blur.
-     */
-    registerOnTouched(fn: () => void): void {
-        this.onTouched = fn;
-    }
-
-    /**
-     * This function is called by the forms API when the control status changes to or from "DISABLED".
-     * Depending on the value, it should enable or disable the appropriate DOM element.
-     */
     setDisabledState(isDisabled: boolean): void {
         if (isDisabled) {
             this.renderer.setAttribute(
