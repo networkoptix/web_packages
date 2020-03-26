@@ -1,15 +1,18 @@
 <div class="container h-100">
-    <div class="page-placeholder" [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}">
+    <div class="page-placeholder"
+         [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}"
+         [ngStyle]="{'padding-top': (withFooter && iconVisible) ? '16px': undefined}">
         <div class="placeholder-content {{constrainWidth ? 'constrain-width' : ''}}">
             <div *ngIf="preloader && !condition" class="placeholder-preloader">
                 <div class="circleG circleG_1"></div>
                 <div class="circleG circleG_2"></div>
                 <div class="circleG circleG_3"></div>
             </div>
-            <div *ngIf="condition">
+            <div *ngIf="condition" class="mx-2">
                 <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
-                <div *ngIf="!iconClass" [attr.name]="type" class="placeholder-icon">
-                    <svg-icon [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"></svg-icon>
+                <div *ngIf="!iconClass && iconVisible" [attr.name]="type" class="placeholder-icon">
+                    <svg-icon [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
+                              [svgStyle]="{ 'width.px': iconSize }"></svg-icon>
                 </div>
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
                      [innerHTML]="placeholderTitle"></h2>

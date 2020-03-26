@@ -1,30 +1,34 @@
 import {
-    Component, Input, OnInit,
+    Component, Input, OnDestroy, OnInit,
     ViewEncapsulation
-}                                    from '@angular/core';
+} from '@angular/core';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { SubscriptionLike }          from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 /* Usage
  <nx-page-placeholder
- type?="500 | 404 | NO_ALERTS | OFFLINE | NO_CAMS..."
- -- OR ---
- iconClass?='server-offline'
- placeholderTitle?='SERVER OFFLINE'
- message?='Warning! Dragons ahead!'
- preloader?=BOOLEAN
- [condition]= WHEN_TO_SHOW >
+         type?="500 | 404 | NO_ALERTS | OFFLINE | NO_CAMS..."
+         -- OR ---
+         iconClass?='server-offline'
+         placeholderTitle?='SERVER OFFLINE'
+         message?='Warning! Dragons ahead!'
+         preloader?=BOOLEAN
+         [condition]= WHEN_TO_SHOW >
  </nx-page-placeholder>
  */
 
+@AutoUnsubscribe()
 @Component({
-    selector     : 'nx-ajs-page-placeholder',
-    templateUrl  : 'page-placeholder.component.html',
-    styleUrls    : ['page-placeholder.component.scss']
-    // encapsulation: ViewEncapsulation.None
+    selector      : 'nx-ajs-page-placeholder',
+    templateUrl   : 'page-placeholder.component.html',
+    styleUrls     : ['page-placeholder.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
-export class NxAjsPagePlaceholderComponent implements OnInit {
+export class NxAjsPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() type: string;
     @Input() iconClass: string;
     @Input() placeholderTitle: string;
@@ -38,14 +42,28 @@ export class NxAjsPagePlaceholderComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     iconName: string;
+    iconSize: number;
+    iconVisible: boolean;
+
+    windowSizeSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService
+        languageService: NxLanguageProviderService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
+
+        this.windowSizeSubscription = this.scrollMechanicsService
+            .windowSizeSubject
+            .subscribe(({ height, width }) => {
+                this.iconSize = (width <= 768) ? 200 : 400; // $collapse-second-width : 768px;
+                this.iconVisible = (height > 580);
+            });
     }
+
+    ngOnDestroy(): void {}
 
     ngOnInit() {
         this.withFooter = (this.withFooter !== undefined);
