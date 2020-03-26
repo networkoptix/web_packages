@@ -7,54 +7,43 @@
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
-                        <!-- TODO: Will replaced with editable text component in CLOUD-4617 -->
-                        <h2 NxEditable [(ngModel)]="selectedCamera.name"></h2> 
+                        <h2 NxEditable [(ngModel)]="selectedCamera.name"></h2>
                     </div>
-                    <button class="camera-buttons pr-0"
-                        [routerLink]="cameraViewPath"
-                        *ngIf="true"
-                        >
-                        <span [ngClass]="{ 'animate-rotation': false }">
-                            <!-- TODO: Need proper SVG -->
-                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'"
-                                [applyCss]="true"></svg-icon>
+                    <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
+                        <span>
+                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>View</span>
                     </button>
-                    <button *ngIf="canSeeInfo"
-                        class="camera-buttons pr-0"
-                        [routerLink]="fullInfoPath"
-                        [queryParams]="{id: parsedCameraId}"
-                        >
-                            <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
-                                    [applyCss]="true"></svg-icon>
-                            </span>
-                            <span class="ml-1" translate>Detailed Info</span>
+                    <button *ngIf="canSeeInfo" class="camera-buttons pr-0" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                        <span>
+                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
+                        </span>
+                        <span class="ml-1" translate>Detailed Info</span>
                     </button>
                 </div>
-                <div class="d-flex justify-content-stretch align-items-start flex-wrap">
+                <div class="d-flex flex-column justify-content-stretch align-items-start flex-wrap">
                     <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" style="margin-right: 8px;"></nx-health-image>
                     <div class="header-table col-7">
                         <div class="header-table-cell">
-                            <span class="mr-2 cell-title text-nowrap" translate>Vendor</span>
+                            <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9 text-nowrap">{{ selectedCamera.vendor || '-' }}</span>
+                            <span class="col-9 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title text-nowrap" translate>Model</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9  text-nowrap">{{ selectedCamera.model || '-' }}</span>
+                            <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9 text-nowrap">{{ selectedCamera.url || '-' }}</span>
+                            <span class="col-9 text-nowrap">{{selectedCamera.url || "-"}}</span>
                         </div>
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title" translate>Server</span>
                             <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{ selectedCamera.parentName || '-' }}</span>
+                            <span class="col-9">{{selectedCamera.parentName || "-"}}</span>
                         </div>
                     </div>
                 </div>
