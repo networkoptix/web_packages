@@ -169,16 +169,14 @@ export class NxDialogsService {
             });
     }
 
-    addUser(account, system, user?) {
+    addUser(system) {
         const options: any = {
-            windowClass: 'modal-holder',
-            backdrop   : 'static'
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
         };
 
         const params: any = {
-            account,
             system,
-            user,
             closable: true
         };
 

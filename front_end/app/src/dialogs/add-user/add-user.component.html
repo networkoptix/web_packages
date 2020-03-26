@@ -3,35 +3,33 @@
         <h1 class="modal-title" translate>Add User</h1>
         <button type="button" class="close"
                 data-dismiss="modal" aria-label="Close"
-                (click)="close()" *ngIf="closable">
+                (click)="activeModal.close()" *ngIf="closable">
             <div class="close-content"><span class="close-icon"></span></div>
         </button>
     </div>
-
     <div class="modal-body">
         <div class="form-group">
-            <label *ngIf="!isNewShare" for="lockedEmail" translate>User</label>
-            <label *ngIf="isNewShare" for="email" translate>Email</label>
-
-            <input [hidden]="!isNewShare" type="email"
-                   class="form-control"
-                   (ngModelChange)="changeEmail($event)"
-                   [ngModel]="user.email"
-                   id="email"
-                   name="email"
-                   pattern="{{ CONFIG.credentialsValidation.emailRegex }}" maxlength="255"
-                   required nxFocusMe>
+            <label for="addUserEmail" translate>Email</label>
+            <nx-email-input
+                class="form-component"
+                id="addUserEmail"
+                name="addUserEmail"
+                componentId="addUserEmail"
+                [(ngModel)]="user.email"
+                [form]="addUserForm"
+                #addUserEmail="ngModel">
+            </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
-                <span class="input-error" *ngIf="userExists"
-                      translate>This user already exists</span>
+                <span *ngIf="addUserEmail.touched && addUserEmail.errors && addUserEmail.errors.required"
+                    class="input-error" translate>Email is required</span>
+                <span *ngIf="addUserEmail.touched && addUserEmail.errors && addUserEmail.errors.pattern"
+                    class="input-error" translate>Please enter a valid Email</span>
+                <span *ngIf="addUserEmail.errors && addUserEmail.errors.alreadyExists"
+                    class="input-error" translate>This Email has been already registered in %CLOUD_NAME%</span>
             </div>
-
-            <input type="text" *ngIf="!isNewShare" name="email" id="lockedEmail"
-                   class="form-control" [value]="formatUserName()" readonly>
         </div>
         <div class="form-group">
             <label for="permissionsSelect" translate>Access Level</label>
-
             <nx-permissions-select
                     id="permissionsSelect"
                     [user]="user"
@@ -40,16 +38,14 @@
                     [selected]="user.role"
                     (onSelected)="setPermission($event)">
             </nx-permissions-select>
-
             <span class="help-block" [innerHtml]="accessDescription"></span>
         </div>
     </div>
-
     <div class="modal-footer">
-        <nx-process-button [process]="sharing"
-                           [form]="addUserForm"
-                           [buttonText]="buttonText"></nx-process-button>
-
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+        <nx-process-button
+            [process]="addUser"
+            [form]="addUserForm"
+            [buttonText]="'Add' | translate"></nx-process-button>
+        <button type="button" class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
     </div>
 </form>

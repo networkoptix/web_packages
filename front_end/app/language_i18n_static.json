@@ -272,13 +272,6 @@
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
         },
-        "sharing": {
-            "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-            "editShareConfirmButton": "Save",
-            "editShareTitle": "Edit Permissions",
-            "shareConfirmButton": "Add",
-            "shareTitle": "Add"
-        },
         "titles": {
             "error": "Error",
             "success": "Success",
@@ -631,10 +624,6 @@
             },
             "rename": {
                 "success": "System name saved"
-            },
-            "share": {
-                "offline": "Cannot share system while it is offline",
-                "unauthorized": "You do not have permission to share this system"
             }
         }
     }
