@@ -1,7 +1,5 @@
 <nx-block first-element *ngIf="plugin.information || plugin.overview" name="howItWorks">
-    <header translate>
-        How it works
-    </header>
+    <header translate>How it works</header>
 
     <nx-section *ngIf="plugin.overview && plugin.overview.overviewVideo">
         <nx-external-video [src]="plugin.overview.overviewVideo"></nx-external-video>
@@ -18,9 +16,7 @@
 
 <nx-block *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew" name="whatsNew"
           class="d-block mt-3">
-    <header translate>
-        What's New?
-    </header>
+    <header translate>What's New?</header>
 
     <nx-section *ngIf="plugin.versionDetails && plugin.versionDetails.whatsNew">
         <div [innerHtml]="plugin.versionDetails.whatsNew"></div>

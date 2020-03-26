@@ -13,8 +13,7 @@
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <span translate>The server will be detached from this system into a new one.
-                    Database, local users, configuration, and video archive will remain intact.</span>
+                <span translate>The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.</span>
                 <br>
                 <span translate>Cloud users will not be transferred to the new system.</span>
                 <br><br>
@@ -27,10 +26,7 @@
                    required nxFocusMe>
             <p class="help-block"
                *ngIf="!detachServerForm.controls['password']?.valid && detachServerForm.controls['password']?.touched">
-                    <span class="input-error"
-                          translate>
-                        Password is required
-                    </span>
+                    <span class="input-error" translate>Password is required</span>
             </p>
         </div>
     </div>
@@ -39,7 +35,6 @@
                            [form]="detachServerForm"
                            [actionType]="'danger'"
                            buttonText="{{ 'Detach' | translate }}"></nx-process-button>
-
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
     </div>
 </form>

@@ -15,9 +15,9 @@
 
     <div *ngIf="reactivating" class="text-center">
         <div *ngIf='accountInfo.email'>
-            <h1><span translate>You have registered in</span> {{CONFIG.cloudName}}</h1>
+            <h1><span translate>You have registered in</span><span>&nbsp;{{CONFIG.cloudName}}</span></h1>
             <p>
-                <span translate>We've sent you a letter with activation link to</span> {{accountInfo.email}}.<br>
+                <span translate>We've sent you a letter with activation link to</span><span>&nbsp;{{accountInfo.email}}.</span><br>
                 <span translate>Please activate your account by visiting this link.</span>
             </p>
         </div>
@@ -50,24 +50,24 @@
                                      !reactivateAccountEmail.errors.common &&
                                      !reactivateAccountEmail.errors.pattern &&
                                      !reactivateAccountEmail.errors.minlength"
-                              title="{{ LANG.passwordRequirements.weakMessage}}">{{LANG.passwordRequirements.weak}}</nx-tag>
+                              title="{{ LANG.passwordRequirements.weakMessage}}"><span>{{LANG.passwordRequirements.weak}}</span></nx-tag>
                         <nx-tag type="danger"
                               *ngIf="reactivateAccountEmail.errors &&
                                      reactivateAccountEmail.errors.common &&
                                      !reactivateAccountEmail.errors.pattern &&
                                      !reactivateAccountEmail.errors.minlength &&
                                      !reactivateAccountEmail.errors.required"
-                              title="{{ LANG.passwordRequirements.commonMessage}}">{{LANG.passwordRequirements.common}}</nx-tag>
+                              title="{{ LANG.passwordRequirements.commonMessage}}"><span>{{LANG.passwordRequirements.common}}</span></nx-tag>
                         <nx-tag type="danger"
                               *ngIf="reactivateAccountEmail.errors &&
                                      reactivateAccountEmail.errors.minlength &&
                                      !reactivateAccountEmail.errors.pattern"
-                              title="{{ LANG.passwordRequirements.minLengthMessage}}">{{LANG.passwordRequirements.minLength}}</nx-tag>
+                              title="{{ LANG.passwordRequirements.minLengthMessage}}"><span>{{LANG.passwordRequirements.minLength}}</span></nx-tag>
                         <nx-tag type="danger"
                               *ngIf="reactivateAccountEmail.errors &&
                                      reactivateAccountEmail.errors.pattern &&
                                      !reactivateAccountEmail.errors.minlength"
-                              title="{{ LANG.passwordRequirements.requiredMessage}}">{{LANG.passwordRequirements.incorect}}</nx-tag>
+                              title="{{ LANG.passwordRequirements.requiredMessage}}"><span>{{LANG.passwordRequirements.incorect}}</span></nx-tag>
                     </span>
 
                     <span class="help-block" *ngIf="!reactivateAccountEmail.valid && reactivateAccountEmail.touched">

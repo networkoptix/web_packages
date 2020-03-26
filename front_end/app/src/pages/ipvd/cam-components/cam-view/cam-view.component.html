@@ -175,14 +175,14 @@
             </div>
             <div class="row">
                 <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                    {{event}}
+                    <span>{{event}}</span>
                 </div>
             </div>
 
             <div class="row" *ngIf="!showAllEvents && activeCamera.analyticsEvents.length > analyticsToShow">
                 <div class="col-12">
                     <a href (click)="showAllEvents = true; analyticsToShow = activeCamera.analyticsEvents.length; false"
-                       translate>Show All</a>
+                        translate>Show All</a>
                 </div>
             </div>
 
@@ -192,7 +192,7 @@
                 </div>
                 <div class="col-12">
                     <a href (click)="showAllEvents = false; analyticsToShow = CONFIG.ipvd.analyticsToShow; false"
-                       translate>Collapse</a>
+                        translate>Collapse</a>
                 </div>
             </div>
 
@@ -245,12 +245,9 @@
 
         <nx-section>
             <div class="camview-link">
-                <a href translate
-                   (click)="sendFeedback()">Send feedback about this device
-                </a>
+                <a href translate (click)="sendFeedback()">Send feedback about this device</a>
             </div>
-            <div style="color: gray;"><span translate>Updated</span> {{ activeCamera.timestamp | date:'fullDate'}}</div>
-
+            <div style="color: gray;"><span translate>Updated</span><span>&nbsp;{{ activeCamera.timestamp | date:'fullDate'}}</span></div>
         </nx-section>
     </nx-block>
 </div>

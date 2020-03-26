@@ -109,7 +109,7 @@
                                             [(ngModel)]="tag.value"
                                             (ngModelChange)="onModelChange(true)"
                                             [value]="tag.value">
-                                        {{ tag.label }}
+                                        <ng-container>{{ tag.label }}</ng-container>
                                     </nx-tag>
                                 </li>
                             </ul>

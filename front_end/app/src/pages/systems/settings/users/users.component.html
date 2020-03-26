@@ -98,9 +98,7 @@
                 </div>
                 <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited"
                     class="float-left">
-                    <button class="btn btn-default" (click)="changePassword()" translate>
-                        Change Password
-                    </button>
+                    <button class="btn btn-default" (click)="changePassword()" translate>Change Password</button>
                 </div>
                 <div class="float-right"
                     *ngIf="selectedUser.canBeEdited">
@@ -111,7 +109,7 @@
                             [applyCss]="true"
                             [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                             class="ml-n2 mr-1"></svg-icon>
-                        {{deleteMessage}}
+                        <span>{{deleteMessage}}</span>
                     </button>
                 </div>
             </nx-section>
