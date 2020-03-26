@@ -9,8 +9,10 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { NxSystem, ICamera }         from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
-import { filter, map,
-    retryWhen, delay }               from 'rxjs/operators';
+import {
+    filter, map,
+    retryWhen, delay
+}               from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
 
@@ -66,15 +68,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.settingsService.footerSubject.next(true);
                 this.system = system;
-                if (this.system) {
-                    this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
-                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
-                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                        if (this.canSeeInfo) {
-                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
-                        }
-                    });
-                }
+                this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
+                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                    if (this.canSeeInfo) {
+                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                    }
+                });
+
                 if (this.cameraSubscription) {
                     this.cameraSubscription.unsubscribe();
                 }
