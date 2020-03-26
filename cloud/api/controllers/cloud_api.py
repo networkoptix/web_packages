@@ -328,12 +328,8 @@ class Account(object):
     @validate_response
     @lower_case_email
     def delete(email, password):
-        params = {
-            'email': email,
-            'password': password
-        }
         request = CLOUD_DB_URL + '/account/self'
-        return delete_wrapper(request, json=params, auth=HTTPDigestAuth(email, password))
+        return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
