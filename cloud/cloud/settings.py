@@ -207,7 +207,9 @@ CACHES = {
         "TIMEOUT": None
     },
     "push_authentication": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
         "TIMEOUT": 60 * 60 * 24  # 1 day
     },
     "push_config": {
