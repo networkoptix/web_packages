@@ -14,3 +14,43 @@
     max-width     : 100%;
     line-height   : initial;
 }
+
+.process-loading {
+    border     : none;
+    box-shadow : none;
+}
+
+.border-left {
+    border-left : 1px solid $common-border-color;
+}
+
+.border-right {
+    border-right : 1px solid $common-border-color;
+}
+
+.border-top {
+    border-top : 1px solid $common-border-color;
+}
+
+.border-bottom {
+    border-bottom : 1px solid $common-border-color;
+}
+
+.light-color {
+    color : $gray-light;
+}
+
+.preloader {
+    display : none;
+}
+
+@include media-breakpoint-up(md) {
+    .flex-md {
+        display     : flex;
+        align-items : stretch;
+    }
+
+    .border-left-md {
+        border-left : 1px solid $common-border-color;
+    }
+}

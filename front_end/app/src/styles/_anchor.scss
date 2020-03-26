@@ -3,9 +3,16 @@
 a {
     color           : $brand_core;
     text-decoration : underline;
-    
+
     &:hover {
         color           : $brand_l1;
         text-decoration : underline;
+    }
+
+    &.disabled {
+        /* Make the disabled links grayish*/
+        color          : gray;
+        /* And disable the pointer events */
+        pointer-events : none;
     }
 }
