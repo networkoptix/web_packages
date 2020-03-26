@@ -11,7 +11,8 @@
         margin-bottom: 16px;
         .header-title {
             display: flex;
-            align-items: center;
+            align-items: start;
+            flex-direction: column;
             flex-grow: 1;
             h2 {
                 font-family: $font-family-regular;
@@ -102,35 +103,5 @@
                 }
             }
         }
-    }
-}
-
-.initial-style {
-    position: relative;
-    cursor: pointer;
-    &:after {
-        content: "edit";
-        position: relative;
-        padding-left: 12px;
-        padding-right: 8px;
-        font-size: 0.5em;
-    }
-}
-
-.edit-style {
-    position: relative;
-    margin: -8px;
-    padding: 8px;
-    background: #999;
-    &:after {
-        pointer-events: none;
-        cursor: pointer;
-        content: "close";
-        position: absolute;
-        right: 0;
-        padding-left: 4px;
-        padding-right: 16px;
-        transform: translateX(100%);
-        font-size: 0.5em;
     }
 }

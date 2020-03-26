@@ -7,7 +7,8 @@
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
-                        <h2 NxEditable [(ngModel)]="selectedCamera.name" class="test" initialClass ="initial-style" editClass="edit-style"></h2>
+                        <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="!selectedCamera.name"></h2>
+                        <span *ngIf="!selectedCamera.name" class="input-error" translate>Name cannot be empty</span>
                     </div>
                     <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
                         <span>

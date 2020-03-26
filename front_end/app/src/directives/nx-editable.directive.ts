@@ -15,23 +15,33 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class NxEditableDirective implements ControlValueAccessor, OnInit {
     /*
-        This directive makes any text field editable and binds value.
+        This directive makes any text field editable and binds value. Applies default styling if none specified.
 
         Example usage:
-            <h2 NxEditable [(ngModel)]="bound.model" class="nothing-special-here" initialClass ="initial-class-here" editClass="edit-class-here"></h2>
+            <h2 NxEditable
+                [(ngModel)]="bound.model"
+                [hasError]="booleanIfError"
+                class="nothing-special-here"
+                initialClass ="optional-initial-class"
+                editClass="optional-edit-class"
+                errorClass="optional-error-class"
+            ></h2>
 
         Instructions:
             Add NxEditable directive to component.
             Use ngModel to bind elements value to model.
-            Use initialClass to add class for when component is in initial mode.
-            Use editClass to add class for when the component is in edit mode.
+            Use hasError to toggle errorClass.
             Use class and and other attributes like normal.
-
+            Use initialClass to over-ride default styling in initial mode.
+            Use editClass to over-ride default styling in edit mode.
+            Use errorClass over-ride default styling  in edit mode.
     */
     @Input() propValueAccessor = 'textContent';
     @HostBinding('attr.contenteditable') @Input() nxEditable = true;
-    @Input('editClass') editClass = '';
-    @Input('initialClass') initialClass = '';
+    @Input('editClass') editClass = 'editable-directive-edit';
+    @Input('initialClass') initialClass = 'editable-directive-initial';
+    @Input('errorClass') errorClass = 'editable-directive-error';
+    @Input('hasError') hasError: boolean;
 
     private _elementClass: string[] = [];
 
@@ -60,31 +70,33 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     // toggle mode handlers
 
     editOn() {
-        this.addEditClass();
-        this.removeInitialClass();
+        this.addClass(this.editClass);
+        this.removeClass(this.initialClass);
     }
 
     editOff() {
-        this.removeEditClass();
-        this.addInitialClass();
+        this.removeClass(this.editClass, this.errorClass);
+        this.addClass(this.initialClass);
+    }
+
+    checkError() {
+        setTimeout(() => {
+            if (this.hasError) {
+                this.addClass(this.errorClass);
+            } else {
+                this.removeClass(this.errorClass);
+            }
+        });
     }
 
     // Helper methods for updating classes
 
-    removeEditClass() {
-        this.elementClass = this._elementClass.filter(currentClass => currentClass !== this.editClass).join(' ');
+    addClass(...classToAdd: string[]) {
+        this.elementClass = `${this.elementClass} ${classToAdd.join(' ')}`;
     }
 
-    addEditClass() {
-        this.elementClass = `${this.elementClass} ${this.editClass}`;
-    }
-
-    removeInitialClass() {
-        this.elementClass = this._elementClass.filter(currentClass => currentClass !== this.initialClass).join(' ');
-    }
-
-    addInitialClass() {
-        this.elementClass = `${this.elementClass} ${this.initialClass}`;
+    removeClass(...classToRemove: string[]) {
+        this.elementClass = this._elementClass.filter(currentClass => !classToRemove.find(toRemove => toRemove === currentClass)).join(' ');
     }
 
     // Save a reference of event handlers from DOM element that are  being over-ridden by directive to "this"
@@ -105,6 +117,7 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
 
     @HostListener('input')
     callOnChange() {
+        this.checkError();
         if (typeof this.onChange === 'function') {
             this.onChange(
                 this.elementRef.nativeElement[this.propValueAccessor]
@@ -126,6 +139,12 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
         if (typeof this.onFocus === 'function') {
             this.onFocus();
         }
+    }
+
+    @HostListener('keyup.enter')
+    callOnEnter() {
+        this.callOnTouched();
+        this.elementRef.nativeElement.blur();
     }
 
     // Other methods
