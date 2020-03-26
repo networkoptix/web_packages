@@ -20,7 +20,10 @@ class UserBehavior(TaskSet):
 #        if f.mode == 'r':
 #            contents = f.read()
         lines = f.readlines()
-        self.currentProc = math.ceil(len(lines)/2)
+        self.currentProc = len(lines)
+        self.minSys = (self.currentProc-1)*20
+        self.maxSys = self.currentProc * 20
+#         print(self.minSys, self.maxSys)
         f= open(f'{txtFile}.txt', 'a')
         f.write(f"{self.currentProc+1}\n")
         f.close()
@@ -31,9 +34,9 @@ class UserBehavior(TaskSet):
     def get_systems(self):
         with open('systems.json') as f:
             self.systemsJson = json.load(f)
-        self.authKey = self.systemsJson[str(self.currentProc)]['authKey']
-        self.id = self.systemsJson[str(self.currentProc)]['id']
-        self.body = self.systemsJson[str(self.currentProc)]['body']
+#         self.authKey = self.systemsJson[str(self.currentProc)]['authKey']
+#         self.id = self.systemsJson[str(self.currentProc)]['id']
+#         self.body = self.systemsJson[str(self.currentProc)]['body']
   
     def on_start(self):
         self.order()
@@ -44,13 +47,26 @@ class UserBehavior(TaskSet):
     def push(self):
 #         f= open("responses.txt", 'w+')
 #         time.sleep(self.delay)
+        notificationSent = []
         print(str(self.currentProc)+" proc started push")
-        for x in range(5): 
-            r = self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
-            time.sleep(random.uniform(0, 5))
-            print(f'{self.currentProc}_{x}')
+        n = 0
+        for x in self.systemsJson[self.minSys:self.maxSys]:
+#       for x in self.systemsJson[0:2]:
+            self.authKey = x['authKey']
+            self.id = x['id']
+            self.body = x['body']
+            self.title = x['title']
+            for y in range(10): 
+                self.client.post(f'{env}api/notifications/push_notification', auth=HTTPBasicAuth(self.id, self.authKey), headers={'Content-Type':'application/json'}, data=self.body)
+                notificationSent.append({"Process": self.currentProc, "notification": n, "copy": y, "title": self.title})
+#            time.sleep(random.uniform(0, 1))
+#               print(f'{self.currentProc}_{n}_{y}')
 #             f.write(f'{self.currentProc} {x} {r.text}\n\n')
+            n += 1
         print(str(self.currentProc)+" proc ended push")
+        f= open(f'{self.currentProc}_sent.json', 'w')
+        f.write(json.dumps(notificationSent))
+        f.close()
 #         f.close()
             
         
