@@ -607,7 +607,15 @@
             "cloudDelete": "Remove User",
             "localDelete": "Delete User"
         },
-        "yourSystem": "Your System"
+        "yourSystem": "Your System",
+        "loggers": {
+            "none": "None: Log disabled",
+            "error": "Error: Log errors only",
+            "warning": "Warning: Log warnings and errors",
+            "info": "Info: Warning: Log warnings, errors and all messages",
+            "debug": "Debug: Log every System message and debug information",
+            "verbose": "Verbose:  Log all information available"
+        }
     },
     "systemStatuses": {
         "activated": "activated",

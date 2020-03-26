@@ -643,6 +643,16 @@ export interface LanguageI18NStaticTypesSystem {
     status:           SystemStatus;
     users:            Users;
     yourSystem:       string;
+    loggers:          Loggers;
+}
+
+export interface Loggers {
+    none:    string;
+    error:   string;
+    warning: string;
+    info:    string;
+    debug:   string;
+    verbose: string;
 }
 
 export interface Settings {
@@ -1428,6 +1438,15 @@ const typeMap: any = {
         { json: "status", js: "status", typ: r("SystemStatus") },
         { json: "users", js: "users", typ: r("Users") },
         { json: "yourSystem", js: "yourSystem", typ: "" },
+        { json: "loggers", js: "loggers", typ: r("Loggers") },
+    ], false),
+    "Loggers": o([
+        { json: "none", js: "none", typ: "" },
+        { json: "error", js: "error", typ: "" },
+        { json: "warning", js: "warning", typ: "" },
+        { json: "info", js: "info", typ: "" },
+        { json: "debug", js: "debug", typ: "" },
+        { json: "verbose", js: "verbose", typ: "" },
     ], false),
     "Settings": o([
         { json: "notAbleToLoadSecurity", js: "notAbleToLoadSecurity", typ: "" },

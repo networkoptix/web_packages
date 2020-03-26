@@ -30,15 +30,7 @@ export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
     @Input() serverId: any;
 
     systemLoggers: any = {};
-
-    loggerOptions: any = [
-        { value: 'none', name: 'None: Log disabled' },
-        { value: 'error', name: 'Error: Log errors only' },
-        { value: 'warning', name: 'Warning: Log warnings and errors' },
-        { value: 'info', name: 'Info: Warning: Log warnings, errors and all messages' },
-        { value: 'debug', name: 'Debug: Log every System message and debug information' },
-        { value: 'verbose', name: 'Verbose:  Log all information available' }
-    ]
+    loggerOptions: any = [];
 
     constructor(
         configService: NxConfigService,
@@ -48,6 +40,15 @@ export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
+
+        this.loggerOptions = [
+            { value: 'none', name: this.LANG.system.loggers.none },
+            { value: 'error', name: this.LANG.system.loggers.error },
+            { value: 'warning', name: this.LANG.system.loggers.warning },
+            { value: 'info', name: this.LANG.system.loggers.info },
+            { value: 'debug', name: this.LANG.system.loggers.debug },
+            { value: 'verbose', name: this.LANG.system.loggers.verbose }
+        ];
     }
 
     ngOnChanges(changes: SimpleChanges): void {
