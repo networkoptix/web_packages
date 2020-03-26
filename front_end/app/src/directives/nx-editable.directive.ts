@@ -22,21 +22,48 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
     ]
 })
 export class NxEditableDirective implements ControlValueAccessor {
+    /*
+        This directive makes any text field editable and binds value.
+
+        Example usage:
+            <h2 NxEditable [(ngModel)]="selectedCamera.name" [editClass]="editClass" class="normal"></h2>
+
+        Instructions:
+            Add NxEditable directive to component.
+            Use ngModel to bind elements value to model.
+            Use editClass add classes when the component is in edit mode.
+            Use class and and other attributes like normal.
+
+    */
     @Input() propValueAccessor = 'textContent';
     @HostBinding('attr.contenteditable') @Input() nxEditable = true;
-    @HostBinding('style.background') @Input() background;
-    @HostBinding('style.padding') @Input() padding;
+    @Input('editClass') editClass = '';
 
-    initialBackground: string;
-    initialPadding: string;
+    private _elementClass: string[] = [];
+
+    @Input('class')
+    @HostBinding('class')
+    get elementClass(): string {
+        return this._elementClass.join(' ');
+    }
+
+    set elementClass(val: string) {
+        this._elementClass = val.split(' ');
+    }
 
     private onChange: (value: string) => void;
     private onTouched: () => void;
     private removeDisabledState: () => void;
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-        this.initialBackground = this.background;
-        this.initialPadding = this.padding;
+    }
+
+    removeEditClass() {
+        this.elementClass = this._elementClass.filter(currentClass => currentClass !== this.editClass).join(' ');
+    }
+
+    addEditClass() {
+        this.elementClass = `${this.elementClass} ${this.editClass}`;
     }
 
     @HostListener('input')
@@ -50,17 +77,15 @@ export class NxEditableDirective implements ControlValueAccessor {
 
     @HostListener('blur')
     callOnTouched() {
+        this.removeEditClass();
         if (typeof this.onTouched === 'function') {
             this.onTouched();
-            this.background = 'inherit';
-            this.padding = 'inherit';
         }
     }
 
     @HostListener('focus')
     callOnFocus() {
-        this.background = '#ddd';
-        this.padding = '16px';
+        this.addEditClass();
     }
 
     /**
