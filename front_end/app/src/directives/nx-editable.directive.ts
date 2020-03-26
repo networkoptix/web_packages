@@ -38,14 +38,14 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     */
     @Input() propValueAccessor = 'textContent';
     @HostBinding('attr.contenteditable') @Input() nxEditable = true;
-    @Input('editClass') editClass = 'editable-directive-edit';
-    @Input('initialClass') initialClass = 'editable-directive-initial';
-    @Input('errorClass') errorClass = 'editable-directive-error';
-    @Input('hasError') hasError: boolean;
+    @Input() editClass = 'editable-directive-edit';
+    @Input() initialClass = 'editable-directive-initial';
+    @Input() errorClass = 'editable-directive-error';
+    @Input() hasError: boolean;
 
     private _elementClass: string[] = [];
 
-    @Input('class')
+    @Input()
     @HostBinding('class')
     get elementClass(): string {
         return this._elementClass.join(' ');
