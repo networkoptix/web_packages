@@ -46,7 +46,11 @@ img {
 }
 
 .light-thumbnail-preview {
-    @extend .thumbnail-preview;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px !important;
+    min-width: 210px;
     background: $light2;
     border: 1px solid $light4;
 }

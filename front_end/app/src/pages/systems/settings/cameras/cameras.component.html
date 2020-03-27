@@ -23,11 +23,8 @@
                         <span class="ml-1" translate>Detailed Info</span>
                     </button>
                 </div>
-                <nx-pre-loader *ngIf="!ready" [type]="'hm-camera-preview'" class="w-100"></nx-pre-loader>
-                <div [ngClass]="{'d-none': !ready}">
-                    <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
-                    style="margin-right: 8px;" [lightBackground]="true" (loaded)="updatePreloader($event)"></nx-health-image>
-                </div>
+                <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
+                    style="margin-right: 8px;" [lightBackground]="true"></nx-health-image>
                 <div class="d-flex flex-row justify-content-stretch align-items-start flex-wrap">
                     <div class="header-table col-3">
                         <div class="header-table-cell">

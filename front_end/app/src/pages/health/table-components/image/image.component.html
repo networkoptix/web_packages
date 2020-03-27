@@ -1,5 +1,6 @@
-<div *ngIf="time" class="header">{{time}}</div>
-<div [ngClass]="lightBackground ? 'light-thumbnail-preview' : 'thumbnail-preview'" [ngClass]="{mini: !isPrimary}">
+<nx-pre-loader *ngIf="!show" [type]="'generic-camera-preview'"></nx-pre-loader>
+<div *ngIf="time && !show" class="header">{{time}}</div>
+<div [ngClass]="{mini: !isPrimary, 'd-none': !show,'light-thumbnail-preview': lightBackground, 'thumnail-preview': !lightBackground}">
     <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
          (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
