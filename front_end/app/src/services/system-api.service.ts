@@ -4,7 +4,6 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError }                from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { RequestOptions }                      from '@angular/http';
 
 interface User {
     canBeEdited: boolean;
