@@ -10,15 +10,18 @@ import { ComponentsModule }                 from '../../../components/components
 import { NxSystemAdminModule }              from './admin/admin.module';
 import { NxSystemUsersModule }              from './users/users.module';
 import { NxSystemServersModule }            from './servers/servers.module';
-import { NxCloudStorageModule }             from './cloud-storage/cloud-storage.module';
 import { NxSystemAdminComponent }           from './admin/admin.component';
 import { NxSystemUsersComponent }           from './users/users.component';
 import { NxSystemServersComponent }         from './servers/servers.component';
-import { NxCloudStorageComponent }          from './cloud-storage/cloud-storage.component';
 import { NxNoSystemsComponent }             from '../no-systems/no-systems.component';
 import { ApplyGuard }                       from '../../../routeGuards/applyGuard';
 import { AuthGuard }                        from '../../../routeGuards/authGuard';
 import { UserGuard }                        from '../../../routeGuards/userGuard';
+import { NxSystemServerAdvancedComponent }  from './advanced/advanced.component';
+import { NxSystemServerAdvancedModule }     from './advanced/advanced.module';
+import { AdminGuard }                       from '../../../routeGuards/adminGuard';
+import { NxCloudStorageModule }             from './cloud-storage/cloud-storage.module';
+import { NxCloudStorageComponent }          from './cloud-storage/cloud-storage.component';
 import { CloudStorageGuard }                from '../../../routeGuards/cloudStorageGuard';
 import { NxCamerasComponent } from './cameras/cameras.component';
 import { NxCamerasModule } from './cameras/cameras.module';
@@ -68,6 +71,11 @@ const appRoutes: Routes = [
                 canDeactivate : [ApplyGuard]
             },
             {
+                path          : 'servers/:serverId/advanced',
+                component     : NxSystemServerAdvancedComponent,
+                canActivate   : [AdminGuard]
+            },
+            {
                 path          : 'cloud-storage',
                 component     : NxCloudStorageComponent,
                 canActivate   : [CloudStorageGuard],
@@ -90,6 +98,7 @@ const appRoutes: Routes = [
         NxSystemUsersModule,
         NxSystemServersModule,
         NxCamerasModule,
+        NxSystemServerAdvancedModule,
         NxCloudStorageModule,
         RouterModule.forChild(appRoutes)
     ],

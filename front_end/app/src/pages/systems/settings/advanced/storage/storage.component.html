@@ -1,0 +1,96 @@
+<nx-block type="mt-3">
+    <header><h4 translate>Storages</h4></header>
+    <nx-section>
+        <form class="form form-horizontal row" role="form" name="storageSettings" novalidate>
+            <ng-container *ngFor="let storage of storages; index as i">
+                <div class="form-group col-12 row">
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100" translate>Url</div>
+                    </div>
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100">
+                            <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">{{storage.url}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100" translate>Free Space</div>
+                    </div>
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100">
+                            <div class="progress progress-custom" 
+title="Reserved: {{friendlyBytes(storage.reservedSpace.bits)}}, 
+Free: {{friendlyBytes(storage.freeSpace.bits)}}, 
+Occupied: {{friendlyBytes(storage.totalSpace - storage.freeSpace.bits)}}, 
+Total: {{friendlyBytes(storage.totalSpace)}}">
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                    [style.width]="storage.freeSpace.bits / storage.totalSpace | percent" 
+                                    [attr.aria-valuenow]="friendlyBytes(storage.freeSpace.bits)" 
+                                    aria-valuemin="0" [attr.aria-valuemax]="friendlyBytes(storage.totalSpace)"></div>
+                                <div class="progress-label d-flex justify-content-center align-items-center progress-text">
+                                    {{ friendlyBytes(storage.freeSpace.bits) }} {{'of' | translate}} {{ friendlyBytes(storage.totalSpace) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="storage.isWritable" class="form-group col-12 row">
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100" translate>Reserved Space</div>
+                    </div>
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100 input-group d-flex">
+                            <input
+                                type="number"
+                                id="reservedSpace{{ i }}"
+                                name="reservedSpace{{ i }}"
+                                min="0"
+                                [max]="storage.maxReserve[storage.reservedSpace.uom]"
+                                [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
+                                [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
+                                class="w-100 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"
+                            />
+                            <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}" [(ngModel)]="storage.reservedSpace.uom" 
+                                class="form-control input-sm w-50">
+                            <option selected value="GB">GB</option>
+                            <option value="TB">TB</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="storage.isWritable" class="form-group col-12 row">
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100" translate>Used for writing</div>
+                    </div>
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100 d-flex justify-content-center align-items-center">
+                            <nx-checkbox componentId="isUsedForWriting{{ i }}" name="isUsedForWriting{{ i }}"
+                                [(ngModel)]="storage.isUsedForWriting.value">
+                            </nx-checkbox>
+                            <span *ngIf="storage.isUsedForWriting" class="pl-3" translate>Writing is enabled for this storage</span>
+                            <span *ngIf="!storage.isUsedForWriting" class="pl-3" translate>Writing is disabled for this storage</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group col-12 row">
+                    <div class="col-12 col-md-5 m-0 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100" translate>Storage Type</div>
+                    </div>
+                    <div class="col-12 col-md-7 d-flex align-items-start justify-content-center flex-column item">
+                        <div class="w-100">
+                            <p class="form-control-static input-sm m-0 d-flex align-items-center justify-content-center">
+                                {{ storage.storageType }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="i !== storages.length - 1" class="border-top w-100 mb-3"></div>
+            </ng-container>
+            <div *ngIf="watchersChanged" class="col-12 p-0 pt-3 d-flex">
+                <nx-process-button [process]="saveSettings" [buttonText]="'Save' | translate"></nx-process-button>
+                <button class="btn btn-default ml-2" (click)="resetWatchers()" translate>Cancel</button>
+            </div>
+        </form>
+    </nx-section>
+</nx-block>

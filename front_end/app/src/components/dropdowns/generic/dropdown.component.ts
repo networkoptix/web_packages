@@ -53,7 +53,7 @@ export class NxGenericDropdown extends BaseDropdown {
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected.currentValue) {
             this._selected = changes.selected.currentValue;
-        } else if (!this.selected) {
+        } else if (!this.selected && !changes.selected.firstChange) {
             this._selected = { name: this.message, value: '0' };
         }
     }

@@ -6,6 +6,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { ControlValueAccessor }      from '@angular/forms';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { Watcher }                   from '../../services/apply.service';
 
 const noop = () => {
 };
@@ -53,8 +54,13 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
      * Write a new (model) value to the element.
      */
     writeValue(value: any) {
-        if (value !== null && typeof value !== 'undefined') {
-            this._selected = value;
+        let _value = value;
+        if (value instanceof Watcher) {
+            _value = value.value;
+        }
+
+        if (_value !== null && _value !== undefined) {
+            this._selected = _value;
         }
     }
 

@@ -444,5 +444,76 @@ export const nxConfig: IConfig = {
         updateArchiveRecordsTimeout : 2 * 1000,
         useServerTime               : true,
         useSystemTime               : true
+    },
+    settingsConfig: {
+        auditTrailEnabled          : { type: 'checkbox' },
+        cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
+        disabledVendors            : { type: 'text' },
+        ec2AliveUpdateIntervalSec  : {
+            type  : 'number',
+            alert : 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"'
+        },
+        ec2ConnectionKeepAliveTimeoutSec : { type: 'number' },
+        ec2KeepAliveProbeCount           : { type: 'number' },
+        emailFrom                        : { type: 'text' },
+        emailSignature                   : { type: 'text' },
+        emailSupportEmail                : { type: 'text' },
+        ldapAdminDn                      : { type: 'text' },
+        ldapAdminPassword                : { type: 'password' },
+        ldapSearchBase                   : { type: 'text' },
+        ldapSearchFilter                 : { type: 'text' },
+        ldapUri                          : { type: 'text' },
+        autoDiscoveryEnabled             : { type: 'checkbox', setupWizard: true },
+        smtpConnectionType               : { type: 'text' },
+        smtpHost                         : { type: 'text' },
+        smtpPort                         : { type: 'number' },
+        smtpSimple                       : { type: 'checkbox' },
+        smtpTimeout                      : { type: 'number' },
+        smtpPassword                     : { type: 'password' },
+        smtpUser                         : { type: 'text' },
+        updateNotificationsEnabled       : { type: 'checkbox' },
+        arecontRtspEnabled               : { type: 'checkbox' },
+        backupNewCamerasByDefault        : { type: 'checkbox' },
+        statisticsAllowed                : { type: 'checkbox', setupWizard: true },
+        backupQualities                  : { type: 'text' },
+        serverDiscoveryPingTimeoutSec    : { type: 'number' },
+
+        cloudAccountName : { type: 'static' },
+        cloudHost        : { type: 'static' },
+        cloudAuthKey     : { type: 'static' },
+        cloudSystemID    : { type: 'static' },
+
+        systemName: { type: 'text' },
+
+        newSystem                 : { type: 'static' },
+        proxyConnectTimeoutSec    : { type: 'number' },
+        crossdomainEnabled        : { type: 'checkbox' },
+        maxRtspConnectDurationSec : { label: 'Maximum duration for RTSP connection (seconds)', type: 'number' },
+
+        statisticsReportLastNumber     : { type: 'static' },
+        statisticsReportLastTime       : { type: 'static' },
+        statisticsReportServerApi      : { type: 'text' },
+        statisticsReportTimeCycle      : { type: 'number' },
+        localSystemId                  : { type: 'static' },
+        systemId                       : { type: 'static' },
+        systemNameForId                : { type: 'text' },
+        takeCameraOwnershipWithoutLock : { type: 'checkbox' },
+        upnpPortMappingEnabled         : { type: 'checkbox' },
+
+        trafficEncryptionForced      : { type: 'checkbox' },
+        videoTrafficEncryptionForced : { type: 'checkbox' },
+        updateStatus                 : { type: 'static' },
+        watermarkSettings            : { type: 'static' },
+
+        timeSynchronizationEnabled : { type: 'checkbox' },
+        primaryTimeServer          : { type: 'static' },
+        osTimeChangeCheckPeriodMs  : { type: 'number' },
+        syncTimeExchangePeriod     : { type: 'number' },
+        syncTimeEpsilon            : { type: 'number' },
+
+        maxWearableArchiveSynchronizationThreads : { type: 'number' },
+        maxEventLogRecords                       : { type: 'number' },
+
+        forceLiveCacheForPrimaryStream: { type: 'text' }
     }
 };

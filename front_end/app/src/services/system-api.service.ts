@@ -4,6 +4,7 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError }                from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
+import { RequestOptions }                      from '@angular/http';
 
 interface User {
     canBeEdited: boolean;
@@ -243,6 +244,14 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', updateParams);
     }
 
+    getStorages() {
+        return this.get('/api/storageSpace');
+    }
+
+    updateStorages(updateParams) {
+        return this.post('/ec2/saveStorages', updateParams);
+    }
+
     changePort(port) {
         return this.post('/api/configure', { port }).toPromise()
             .catch(err => Promise.reject(err));
@@ -275,6 +284,16 @@ export class NxSystemAPI {
 
     restoreFactorySettings(currentPassword) {
         return this.post('/api/restoreState', { currentPassword });
+    }
+
+    logLevel(serverId) {
+        if (this.authGet) {
+            const headers = new HttpHeaders().set('X-Runtime-Guid', serverId);
+            const fullUrl = `${this.urlBase}/api/logLevel?auth=${this.authGet}`;
+            return this.http.get(fullUrl, { headers });
+        }
+
+        return false;
     }
 
     /* End of Server settings */
