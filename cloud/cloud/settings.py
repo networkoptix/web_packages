@@ -229,7 +229,7 @@ DEPLOYMENT_READY = 'ready'
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
 
-    # BROKER_URL = 'sqs://...'
+    # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
     # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
     # Or go through file history in source control to find the last time it was here
@@ -379,26 +379,26 @@ HOOK_EVENTS = {
 
 # Configure AWS SQS
 # Broker_url = 'sqs://{aws_access_key_id}:{aws_secret_access_key}@'
-# BROKER_TRANSPORT_OPTIONS
+# CELERY_BROKER_TRANSPORT_OPTIONS
 #   queue_name_prefix allows you to name the queue for sqs
 #   region allows you to specify the aws region
 
 
-BROKER_URL = os.getenv('QUEUE_BROKER_URL')
-BROKER_CONNECTION_MAX_RETRIES = 1
-if not BROKER_URL:
-    BROKER_URL = 'sqs://'
+CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
+if not CELERY_BROKER_URL:
+    CELERY_BROKER_URL = 'sqs://'
 
-BROKER_TRANSPORT_OPTIONS = {
+CELERY_BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
 }
 
-RESULT_PERSISTENT = True
+CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_SEND_EVENTS = False
-CELERY_PREFETCH_MULTIPLIER = 30  # Allows worker to consume as many messages it wants
-BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+CELERY_WORKER_SEND_TASK_EVENTS = False
+CELERY_PREFETCH_MULTIPLIER = 30  # Allows worker to consume (30 * concurrency slots) messages at a time
+CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 
 # / End of Celery settings section
 
