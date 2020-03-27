@@ -35,7 +35,6 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        alert('destroyed');
         this.loadedSubscription.unsubscribe();
     }
 }
