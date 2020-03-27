@@ -1,12 +1,14 @@
 <div *ngIf="time" class="header">{{time}}</div>
-<div class="thumbnail-preview" [ngClass]="{mini: !isPrimary}">
+<div [ngClass]="lightBackground ? 'light-thumbnail-preview' : 'thumbnail-preview'" [ngClass]="{mini: !isPrimary}">
     <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
          (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
-        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="state" class="hm-camera-preview">
-            <div *ngSwitchCase="'Offline'">OFFLINE</div>
-            <div *ngSwitchCase="'Unauthorized'">AUTHENTICATION REQUIRED</div>
-            <div *ngSwitchDefault>UNAVAILABLE</div>
+        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground ? 'No Image' : state" class="lightBackground ? 'light-camera-preview' : 'hm-camera-preview">
+            <div *ngSwitchCase="'No Image'" translate>NO IMAGE</div>
+            <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
+            <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
+            <div *ngSwitchCase="'Unauthorized'" translate>AUTHENTICATION REQUIRED</div>
+            <div *ngSwitchDefault translate>UNAVAILABLE</div>
         </div>
         <ng-template #noMiniPreview>
              <div class="camera-preview-offline"></div>

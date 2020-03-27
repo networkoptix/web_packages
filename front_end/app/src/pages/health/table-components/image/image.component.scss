@@ -17,6 +17,11 @@ img {
     text-align: center;
 }
 
+.light-camera-preview {
+    @extend .hm-camera-preview;
+    color: $light10;
+}
+
 .header {
     color: $dark9;
     font-size: 13px;
@@ -38,4 +43,10 @@ img {
         width: 84px !important;
         margin-bottom: 8px;
     }
+}
+
+.light-thumbnail-preview {
+    @extend .thumbnail-preview;
+    background: $light2;
+    border: 1px solid $light4;
 }

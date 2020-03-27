@@ -7,7 +7,7 @@
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
                     <div class="header-title">
-                        <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="!selectedCamera.name"></h2>
+                        <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="selectedCamera.name"></h2>
                         <span *ngIf="!selectedCamera.name" class="input-error" translate>Name cannot be empty</span>
                     </div>
                     <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
@@ -23,9 +23,13 @@
                         <span class="ml-1" translate>Detailed Info</span>
                     </button>
                 </div>
-                <div class="d-flex flex-column justify-content-stretch align-items-start flex-wrap">
-                    <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" style="margin-right: 8px;"></nx-health-image>
-                    <div class="header-table col-7">
+                <nx-pre-loader *ngIf="!ready" [type]="'hm-camera-preview'" class="w-100"></nx-pre-loader>
+                <div [ngClass]="{'d-none': !ready}">
+                    <nx-health-image [isPrimary]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
+                    style="margin-right: 8px;" [lightBackground]="true" (loaded)="updatePreloader($event)"></nx-health-image>
+                </div>
+                <div class="d-flex flex-row justify-content-stretch align-items-start flex-wrap">
+                    <div class="header-table col-3">
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
                             <span class="cell-ellipsis"></span>
@@ -36,6 +40,8 @@
                             <span class="cell-ellipsis"></span>
                             <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
                         </div>
+                    </div>
+                    <div class="header-table col-3">
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
                             <span class="cell-ellipsis"></span>

@@ -37,6 +37,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraViewPath: string;
 
     canSeeInfo = false;
+    ready: boolean;
 
     constructor(
         configService: NxConfigService,
@@ -49,6 +50,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
         this.menuService.setSection('cameras');
+        this.ready = false;
     }
 
     ngOnInit() {
@@ -117,5 +119,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
         }
+    }
+
+    updatePreloader(event) {
+        this.ready = event;
     }
 }

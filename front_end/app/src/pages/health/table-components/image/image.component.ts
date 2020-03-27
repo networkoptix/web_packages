@@ -10,6 +10,7 @@ export class NxImageComponent implements OnChanges {
     @Input() state: string;
     @Input() time: string;
     @Input() url: string;
+    @Input() lightBackground = false;
     @Output() loaded = new EventEmitter<boolean>();
 
     ngOnChanges(changes) {
