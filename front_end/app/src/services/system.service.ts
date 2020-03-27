@@ -154,11 +154,9 @@ class UserManager {
     }
 
     isEmptyGuid(guid?: string) {
-        if (!guid) {
-            return true;
-        }
-        guid = guid.replace(/[{}0-]/gi, '');
-        return guid === '';
+        return guid
+            ? guid.replace(/[{}0-]/gi, '') === ''
+            : true;
     }
 
     isOwner(user: NxSystemUser) {
@@ -183,12 +181,13 @@ class UserManager {
     }
 
     deleteUser(removedUser: NxSystemUser): string {
-        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(data => {
-            this.users = this.users.filter((user) => {
-                return user.id !== data.id;
-            });
-        }).catch(() => {
-        });
+        return this.mediaserver.deleteUser(removedUser.id).toPromise()
+            .then(data => {
+                this.users = this.users.filter((user) => {
+                    return user.id !== data.id;
+                });
+            })
+            .catch(() => {});
     }
 
     findAccessRole(user: NxSystemUser) {
@@ -283,13 +282,13 @@ class UserManager {
         }).sort((userA, userB) => {
             // sorts local before cloud users --> then by email for cloud & name for local
             if (userA.isCloud === userB.isCloud) {
-                if (userA.isCloud === true) {
+                if (userA.isCloud) {
                     return userA.email < userB.email ? -1 : 1;
                 } else {
                     return userA.name < userB.name ? -1 : 1;
                 }
             }
-            return userA.isCloud === true ? 1 : -1;
+            return userA.isCloud ? 1 : -1;
         });
 
         return this.users;

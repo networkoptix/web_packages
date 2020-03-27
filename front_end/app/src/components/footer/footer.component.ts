@@ -48,9 +48,6 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.url;
+        return item ? item.url : undefined;
     }
 }

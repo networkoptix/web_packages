@@ -22,9 +22,9 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-header',
-    templateUrl: 'header.component.html',
-    styleUrls  : ['header.component.scss']
+    selector    : 'nx-header',
+    templateUrl : 'header.component.html',
+    styleUrls   : ['header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -222,15 +222,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     onClick(event) {
-        if (this.systemId && this.isActive(event.target.id) && !this.isActive('view') && !this.isActive('health')) {
+        if (
+            this.systemId && this.isActive(event.target.id) && !this.isActive('view') && !this.isActive('health') ||
+            this.isActive(event.target.id)
+        ) {
             event.stopPropagation();
             return false;
         } else if (event.target.id === 'systems') {
             return true;
-        }
-        if (this.isActive(event.target.id)) {
-            event.stopPropagation();
-            return false;
         }
     }
 

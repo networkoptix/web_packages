@@ -148,8 +148,6 @@ export class NxSandboxComponent {
         ];
 
         this.itemsSelected = ['qwerty2', 'qwerty3'];
-
-
     }
 
     constructor(private dialogs: NxDialogsService,
@@ -170,7 +168,7 @@ export class NxSandboxComponent {
 
     private touchForm(form) {
         for (const ctrl in form.form.controls) {
-            if (form.form.controls.hasOwnProperty(ctrl)) {
+            if (Object.prototype.hasOwnProperty.call(form.form.controls, ctrl)) {
                 form.form.get(ctrl).markAsTouched();
             }
         }
@@ -197,8 +195,5 @@ export class NxSandboxComponent {
         this.dialogs.notify(msg, type, this.autohide);
     }
 
-    changeTheme(isEnabled, theme) {
-
-    }
+    changeTheme(isEnabled, theme) {}
 }
-

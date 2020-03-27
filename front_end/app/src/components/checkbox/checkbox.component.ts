@@ -109,7 +109,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      */
     writeValue(value: any) {
         if (value !== null && !this.disabled ||
-            this.disabled && value === false) {
+            this.disabled && !value) {
             this.value = value;
             this.state = this.cbxStates[this.value];
         }

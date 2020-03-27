@@ -226,10 +226,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     ngOnChanges(changes: SimpleChanges) {

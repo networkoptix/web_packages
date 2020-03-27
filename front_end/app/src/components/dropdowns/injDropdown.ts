@@ -46,10 +46,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.value;
+        return item ? item.value : undefined;
     }
 
     /**

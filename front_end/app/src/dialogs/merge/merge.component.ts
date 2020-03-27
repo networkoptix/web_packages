@@ -108,7 +108,7 @@ export class MergeModalContent {
                     helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
                     selectedTarget : this.targetSystemDropdown.value
                 };
-                if (this.targetSystemDropdown.peer === true) {
+                if (this.targetSystemDropdown.peer) {
                     show = this.serverUrlState;
                     templateUpdates.serverUrlInputValue = this.targetSystem.url;
                     delete templateUpdates.helpText;
@@ -260,7 +260,7 @@ export class MergeModalContent {
                     return Promise.reject({ error: { data: { resultCode: 'missingPassword' } } });
                 }
 
-                if (this.nonCloudMerge === true) {
+                if (this.nonCloudMerge) {
                     return this.system.mergeSystems(this.serverUrl, false, password).toPromise();
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
@@ -359,10 +359,10 @@ export class MergeModalContent {
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             this.nonCloudMerge = true;
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
-            if ((/^https?:\/\//).test(this.serverUrl) === false) {
+            if (!(/^https?:\/\//).test(this.serverUrl)) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
             }
-            if ((/:\d{1,5}$/).test(this.serverUrl) === false) {
+            if (!(/:\d{1,5}$/).test(this.serverUrl)) {
                 this.serverUrl += ':7001';
             }
             return this.system.mergeSystems(this.serverUrl, true).toPromise()
@@ -385,9 +385,9 @@ export class MergeModalContent {
         } else {
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
             const targetSystem = await this.targetSystemService.getInfo(true, false);
-            if (targetSystem.isOnline === false) {
+            if (!targetSystem.isOnline) {
                 throw Error(this.systemOffline);
-            } else if (targetSystem.isAvailable === false) {
+            } else if (!targetSystem.isAvailable) {
                 throw Error(this.secondarySystemUnavailable);
             }
 
@@ -413,7 +413,7 @@ export class MergeModalContent {
                 servers.forEach(server => {
                     serverIds[server.id] = true;
                 });
-                if (target.some(server => serverIds[server.id]) === true) {
+                if (target.some(server => serverIds[server.id])) {
                     throw Error(this.duplicateServers);
                 }
                 this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
@@ -512,7 +512,7 @@ export class MergeModalContent {
         }
 
         if (stateOfHealth === 'Incompatible') {
-            return system.olderProtocol === true ? 'serverVersionOld' : 'serverVersionNew';
+            return system.olderProtocol ? 'serverVersionOld' : 'serverVersionNew';
         }
 
         if (!this.system.canMerge) {

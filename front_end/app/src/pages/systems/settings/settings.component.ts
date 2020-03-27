@@ -335,7 +335,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path            : 'users/' + id,
                         svgIcon         : 'user'
                     };
-                    if (user.isCloud === true) {
+                    if (user.isCloud) {
                         node.svgIcon = '';
                         node.icon = 'glyphicon-cloud';
                         node.label = user.email;

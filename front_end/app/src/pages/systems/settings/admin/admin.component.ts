@@ -242,7 +242,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.resetVideoEncryptionIfDisabled = () => {
             const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
             const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
-            if (encryptVideo === true) {
+            if (encryptVideo) {
                 this.applyService.setWarn('');
             }
             if (!encryptTraffic && encryptVideo) {
@@ -251,7 +251,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
 
         this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers.videoTrafficEncryptionForced.value === true) {
+            if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
                 this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
             } else {
                 this.applyService.setWarn('');
@@ -372,7 +372,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.buttons.cancel
             )
                 .then((result) => {
-                    if (result === true) {
+                    if (result) {
                         return this.deletingSystem.run();
                     }
                 });
@@ -496,7 +496,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle() {
-        if (this.sessionLimitToggle === true) {
+        if (this.sessionLimitToggle) {
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
             this.timeValue = this.selectedTimeUnit.default;
             this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;

@@ -206,10 +206,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.entity;
+        return item ? item.entity : undefined;
     }
 
     ngOnDestroy() {

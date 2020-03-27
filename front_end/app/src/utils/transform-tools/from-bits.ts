@@ -44,7 +44,7 @@ Formats the given number using `Number#toLocaleString`.
 const toLocaleString = (number: number, locale): string | number =>
     typeof locale === 'string'
         ? number.toLocaleString(locale)
-        : locale === true
+        : locale
             ? number.toLocaleString()
             : number;
 

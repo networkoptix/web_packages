@@ -38,10 +38,7 @@ export class NxSystemsDropdown extends BaseDropdown {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     updateURI(sid) {
