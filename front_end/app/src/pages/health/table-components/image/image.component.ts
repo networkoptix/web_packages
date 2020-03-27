@@ -26,7 +26,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges) {
         const firstChange = Object.values(changes).reduce((noChanges, { firstChange }) => noChanges && firstChange, true);
         if (!firstChange) {
-            this.show = value || !this.preloader;
+            this.show = false;
         }
         if (this.state !== 'Online' && this.state !== 'Recording') {
             this.url = '';
