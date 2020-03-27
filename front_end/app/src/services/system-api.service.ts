@@ -353,9 +353,6 @@ export class NxSystemAPI {
 
     /* Cameras and Servers */
     getCameras(id?) {
-        this.get('/ec2/getLayouts').toPromise().then(res => {
-            console.log(JSON.stringify(res, null, 2));
-        });
         const params = id ? { id: this.cleanId(id) } : {};
         return this.get('/ec2/getCamerasEx', params);
     }
