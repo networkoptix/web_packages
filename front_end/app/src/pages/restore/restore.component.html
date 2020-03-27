@@ -18,17 +18,19 @@
                 [(ngModel)]="data.email"
                 [form]="restorePassword"
                 #email="ngModel"></nx-email-input>
-            <span
-                class="input-error mb-3"
-                *ngIf="email.touched && email.errors && email.errors.required"
-                translate>
-                Email is required
-            </span>
-            <span
-                class="input-error mb-3"
-                *ngIf="email.touched && email.errors && email.errors.pattern"
-                translate>
-                Please enter a valid Email</span>
+            <ng-container *ngIf="email.touched && email.errors">
+                <span
+                    class="input-error mb-3"
+                    *ngIf="email.errors.required"
+                    translate>
+                    Email is required
+                </span>
+                <span
+                    class="input-error mb-3"
+                    *ngIf="email.errors.pattern"
+                    translate>
+                    Please enter a valid Email</span>
+            </ng-container>
             <nx-process-button
                 [customButtonClass]="'full-width'"
                 [customClass]="'full-width'"

@@ -201,11 +201,10 @@
                                             </nx-email-input>
                                         </div>
                                         <div class="col-sm-4">
-                                            <span class="help-block input-error"
-                                                  *ngIf="email.touched && email.errors && email.errors.required"
-                                                  translate>Email is required</span>
-                                            <span class="help-block input-error"
-                                                  *ngIf="email.touched && email.errors && email.errors.pattern" translate>Please enter a valid Email</span>
+                                            <ng-container *ngIf="email.touched && email.errors">
+                                                <span class="help-block input-error" *ngIf="email.errors.required" translate>Email is required</span>
+                                                <span class="help-block input-error" *ngIf="email.errors.pattern" translate>Please enter a valid Email</span>
+                                            </ng-container>
                                         </div>
                                     </div>
                                     <div class="form-group">

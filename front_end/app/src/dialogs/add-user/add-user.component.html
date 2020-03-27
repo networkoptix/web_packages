@@ -20,12 +20,16 @@
                 #addUserEmail="ngModel">
             </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
-                <span *ngIf="addUserEmail.touched && addUserEmail.errors && addUserEmail.errors.required"
-                    class="input-error" translate>Email is required</span>
-                <span *ngIf="addUserEmail.touched && addUserEmail.errors && addUserEmail.errors.pattern"
-                    class="input-error" translate>Please enter a valid Email</span>
-                <span *ngIf="addUserEmail.errors && addUserEmail.errors.alreadyExists"
-                    class="input-error" translate>This Email has been already registered in %CLOUD_NAME%</span>
+                <ng-container *ngIf="addUserEmail.errors">
+                    <span *ngIf="addUserEmail.errors.alreadyExists"
+                        class="input-error" translate>This Email has been already registered in %CLOUD_NAME%</span>
+                    <ng-container *ngIf="addUserEmail.touched">
+                        <span *ngIf="addUserEmail.errors.required"
+                            class="input-error" translate>Email is required</span>
+                        <span *ngIf="addUserEmail.errors.pattern"
+                            class="input-error" translate>Please enter a valid Email</span>
+                    </ng-container>
+                </ng-container>
             </div>
         </div>
         <div class="form-group">

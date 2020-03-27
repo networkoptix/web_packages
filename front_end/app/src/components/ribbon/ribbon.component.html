@@ -1,24 +1,26 @@
-<div class="clearfix ribbon" *ngIf="showRibbon && !type">
-    <div class="message">{{message}}</div>
-    <div class="action"><a [routerLink]="actionUrl" target="_blank">{{action}}</a></div>
-</div>
-
-<div class="clearfix alert-ribbon ribbon" *ngIf="showRibbon && type === 'alert'">
-    <div class="message">
-        <div class="message-content">
-            <div class="message-content-wrapper">
-                <div [innerHTML]="message"></div>
-                <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
-                    <svg-icon
-                        *ngIf="action === 'Refresh'"
-                        [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                        [svgStyle]="{'width.px': '20'}" title="Reload"></svg-icon>
-                    <span>{{action}}</span>
-                </a>
-            </div>
-        </div>
-        <ng-container *ngIf="action">
-            <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank" class="ml-2">{{action}}</a>
-        </ng-container>
+<ng-container *ngIf="showRibbon">
+    <div class="clearfix ribbon" *ngIf="!type">
+        <div class="message">{{message}}</div>
+        <div class="action"><a [routerLink]="actionUrl" target="_blank">{{action}}</a></div>
     </div>
-</div>
+
+    <div class="clearfix alert-ribbon ribbon" *ngIf="type === 'alert'">
+        <div class="message">
+            <div class="message-content">
+                <div class="message-content-wrapper">
+                    <div [innerHTML]="message"></div>
+                    <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
+                        <svg-icon
+                            *ngIf="action === 'Refresh'"
+                            [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                            [svgStyle]="{'width.px': '20'}" title="Reload"></svg-icon>
+                        <span>{{action}}</span>
+                    </a>
+                </div>
+            </div>
+            <ng-container *ngIf="action">
+                <a *ngIf="!updateFunction" [href]="actionUrl" target="_blank" class="ml-2">{{action}}</a>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>
