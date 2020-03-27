@@ -1,7 +1,7 @@
-import { Injectable }                      from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { NxConfigService, IConfig }        from '../../services/nx-config';
-import { NxScrollMechanicsService }        from '../../services/scroll-mechanics.service';
+import { Injectable }               from '@angular/core';
+import { BehaviorSubject }          from 'rxjs';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
 
 @Injectable({
     providedIn: 'root'
@@ -25,8 +25,8 @@ export class NxHealthService {
 
     alertsValues: any;
     alertsCount = {
-        warning: 0,
-        error: 0
+        warning : 0,
+        error   : 0
     };
 
     resourceNames = {};
@@ -36,10 +36,10 @@ export class NxHealthService {
     CONFIG: IConfig;
 
     constructor(
-        private configService: NxConfigService,
+        configService: NxConfigService,
         private scrollMechanicsService: NxScrollMechanicsService,
     ) {
-        this.CONFIG = this.configService.getConfig();
+        this.CONFIG = configService.getConfig();
         this.importedData = false;
     }
 
@@ -98,8 +98,8 @@ export class NxHealthService {
 
     secondsToTime(seconds, format = 'duration') {
         const timeUnits = ['d', 'h', 'm', 's'];
-        const timeDivisors = {d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1};
-        const timeValues = {d: 0, h: 0, m: 0, s: 0};
+        const timeDivisors = { d: 60 * 60 * 24, h: 60 * 60, m: 60, s: 1 };
+        const timeValues = { d: 0, h: 0, m: 0, s: 0 };
         let time = '';
 
         for (const unit of timeUnits) {
@@ -163,9 +163,9 @@ export class NxHealthService {
         }
 
         return {
-            text: retValue,
-            format: header.format || '',
-            formatClass: this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
+            text        : retValue,
+            format      : header.format || '',
+            formatClass : this.CONFIG.healthMonitoring.classFormats[header.format] || 'no-format',
             value
         };
     }
@@ -190,10 +190,10 @@ export class NxHealthService {
         } else {
             const query = filter.query.toLowerCase();
             const queryTerms = query.trim()
-                                    .split(/[\s\+]+/)
-                                    .filter((elm) => {
-                                        return elm !== '';
-                                    });
+                .split(/[\s\+]+/)
+                .filter((elm) => {
+                    return elm !== '';
+                });
 
             Object.entries(values).forEach(([metric, value]) => {
                 if (filterItem(value, queryTerms)) {
