@@ -18,6 +18,7 @@ import { filter, throttleTime }      from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { NxCloudApiService } from '../../../../services/nx-cloud-api';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -121,7 +122,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private systemsService: NxSystemsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
-        private router: Router
+        private router: Router,
+        private cloudApiService: NxCloudApiService
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
@@ -240,7 +242,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.resetVideoEncryptionIfDisabled = () => {
             const encryptTraffic = this.settingsWatchers.trafficEncryptionForced.value;
             const encryptVideo = this.settingsWatchers.videoTrafficEncryptionForced.value;
-            if (encryptVideo === true) {
+            if (encryptVideo) {
                 this.applyService.setWarn('');
             }
             if (!encryptTraffic && encryptVideo) {
@@ -249,7 +251,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         };
 
         this.setWarningMessageThroughApplyService = () => {
-            if (this.settingsWatchers.videoTrafficEncryptionForced.value === true) {
+            if (this.settingsWatchers.videoTrafficEncryptionForced.value) {
                 this.applyService.setWarn(this.LANG.system.settings.warningMessages.videoEncryption);
             } else {
                 this.applyService.setWarn('');
@@ -302,14 +304,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     disconnect() {
         if (this.system.isMine) {
-            // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-            // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-            this.dialogs.disconnect(this.system.id)
-                .then((result) => {
-                    if (result) {
-                        this.updateAndGoToSystems();
-                    }
-                });
+            this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
+                // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
+                const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
+                this.dialogs.confirm(message, title, ok);
+            }).catch(() => {
+                // User is the owner. Deleting system means unbinding it and disconnecting all accounts
+                // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
+                this.dialogs.disconnect(this.system.id)
+                    .then((result) => {
+                        if (result) {
+                            this.updateAndGoToSystems();
+                        }
+                    });
+            });
         }
     }
 
@@ -364,7 +372,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.buttons.cancel
             )
                 .then((result) => {
-                    if (result === true) {
+                    if (result) {
                         return this.deletingSystem.run();
                     }
                 });
@@ -488,7 +496,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     // handles showing default value on open and clearing to 0 on close
     handleSessionLimitToggle() {
-        if (this.sessionLimitToggle === true) {
+        if (this.sessionLimitToggle) {
             this.selectedTimeUnit = this.limitSessionTimeUnits.hours;
             this.timeValue = this.selectedTimeUnit.default;
             this.settingsWatchers.sessionLimitMinutes.value = this.selectedTimeUnit.default * 60;

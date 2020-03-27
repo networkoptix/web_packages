@@ -139,7 +139,7 @@ export class NxDebugComponent {
         }).then((res) => {
             console.log(res);
         }, (error) => {
-            console.log(error);
+            console.error(error);
         });
 
         this.debugProcess = {

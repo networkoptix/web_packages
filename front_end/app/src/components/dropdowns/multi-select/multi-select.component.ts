@@ -102,10 +102,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     updateItems() {

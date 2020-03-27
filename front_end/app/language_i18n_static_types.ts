@@ -81,6 +81,7 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     resolution:                Resolution;
+    general:                   string;
     maintenanceInProgress:     string;
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
@@ -162,10 +163,10 @@ export interface VoiceCommands {
 
 export interface Dialogs {
     buttons:      Buttons;
+    cloudStorage: CloudStorage;
     merge:        DialogsMerge;
     message:      DialogsMessage;
     removeSystem: RemoveSystem;
-    sharing:      Sharing;
     titles:       DialogsTitles;
     tooltips:     Tooltips;
 }
@@ -181,6 +182,41 @@ export interface Buttons {
     remove:           string;
     stayAs:           string;
     stayLoggedIn:     string;
+}
+
+export interface CloudStorage {
+    title:                 string;
+    enableStorage:         string;
+    otherSystem:           string;
+    initial:               string;
+    available:             string;
+    camera:                string;
+    cameras:               string;
+    remove:                Remove;
+    activationError:       Created;
+    systemDisconnectError: Created;
+    moveCloudStorage:      MoveCloudStorage;
+    noOtherSystemsError:   NoOtherSystemsError;
+}
+
+export interface MoveCloudStorage {
+    title:       string;
+    success:     string;
+    errorPrefix: string;
+    status:      MoveCloudStorageStatus;
+}
+
+export interface MoveCloudStorageStatus {
+    offline: string;
+}
+
+export interface NoOtherSystemsError {
+    message: string;
+}
+
+export interface Remove {
+    success:     string;
+    errorPrefix: string;
 }
 
 export interface DialogsMerge {
@@ -257,14 +293,6 @@ export interface RemoveSystem {
     action:  string;
     message: string;
     title:   string;
-}
-
-export interface Sharing {
-    confirmOwner:           string;
-    editShareConfirmButton: string;
-    editShareTitle:         string;
-    shareConfirmButton:     string;
-    shareTitle:             string;
 }
 
 export interface DialogsTitles {
@@ -650,7 +678,6 @@ export interface ToastMessageSystem {
     disconnected: Deleted;
     merge:        SystemMerge;
     rename:       Deleted;
-    share:        Share;
 }
 
 export interface Deleted {
@@ -661,11 +688,6 @@ export interface SystemMerge {
     failed:  string;
     start:   string;
     success: string;
-}
-
-export interface Share {
-    offline:      string;
-    unauthorized: string;
 }
 
 // Converts JSON strings to/from your types
@@ -879,6 +901,7 @@ const typeMap: any = {
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
+        { json: "general", js: "general", typ: "" },
         { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
@@ -952,10 +975,10 @@ const typeMap: any = {
     ], false),
     "Dialogs": o([
         { json: "buttons", js: "buttons", typ: r("Buttons") },
+        { json: "cloudStorage", js: "cloudStorage", typ: r("CloudStorage") },
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
-        { json: "sharing", js: "sharing", typ: r("Sharing") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
     ], false),
@@ -970,6 +993,36 @@ const typeMap: any = {
         { json: "remove", js: "remove", typ: "" },
         { json: "stayAs", js: "stayAs", typ: "" },
         { json: "stayLoggedIn", js: "stayLoggedIn", typ: "" },
+    ], false),
+    "CloudStorage": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "enableStorage", js: "enableStorage", typ: "" },
+        { json: "otherSystem", js: "otherSystem", typ: "" },
+        { json: "initial", js: "initial", typ: "" },
+        { json: "available", js: "available", typ: "" },
+        { json: "camera", js: "camera", typ: "" },
+        { json: "cameras", js: "cameras", typ: "" },
+        { json: "remove", js: "remove", typ: r("Remove") },
+        { json: "activationError", js: "activationError", typ: r("Created") },
+        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },
+        { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
+        { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
+    ], false),
+    "MoveCloudStorage": o([
+        { json: "title", js: "title", typ: "" },
+        { json: "success", js: "success", typ: "" },
+        { json: "errorPrefix", js: "errorPrefix", typ: "" },
+        { json: "status", js: "status", typ: r("MoveCloudStorageStatus") },
+    ], false),
+    "MoveCloudStorageStatus": o([
+        { json: "offline", js: "offline", typ: "" },
+    ], false),
+    "NoOtherSystemsError": o([
+        { json: "message", js: "message", typ: "" },
+    ], false),
+    "Remove": o([
+        { json: "success", js: "success", typ: "" },
+        { json: "errorPrefix", js: "errorPrefix", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
@@ -1039,13 +1092,6 @@ const typeMap: any = {
         { json: "action", js: "action", typ: "" },
         { json: "message", js: "message", typ: "" },
         { json: "title", js: "title", typ: "" },
-    ], false),
-    "Sharing": o([
-        { json: "confirmOwner", js: "confirmOwner", typ: "" },
-        { json: "editShareConfirmButton", js: "editShareConfirmButton", typ: "" },
-        { json: "editShareTitle", js: "editShareTitle", typ: "" },
-        { json: "shareConfirmButton", js: "shareConfirmButton", typ: "" },
-        { json: "shareTitle", js: "shareTitle", typ: "" },
     ], false),
     "DialogsTitles": o([
         { json: "error", js: "error", typ: "" },
@@ -1392,7 +1438,6 @@ const typeMap: any = {
         { json: "disconnected", js: "disconnected", typ: r("Deleted") },
         { json: "merge", js: "merge", typ: r("SystemMerge") },
         { json: "rename", js: "rename", typ: r("Deleted") },
-        { json: "share", js: "share", typ: r("Share") },
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "" },
@@ -1401,9 +1446,5 @@ const typeMap: any = {
         { json: "failed", js: "failed", typ: "" },
         { json: "start", js: "start", typ: "" },
         { json: "success", js: "success", typ: "" },
-    ], false),
-    "Share": o([
-        { json: "offline", js: "offline", typ: "" },
-        { json: "unauthorized", js: "unauthorized", typ: "" },
     ], false),
 };

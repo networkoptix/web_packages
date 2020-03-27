@@ -126,7 +126,7 @@
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <button class="btn btn-primary svg-icon next-button" (click)="machine.transition('confirmMerge')">
-            {{ 'Next' | translate }}
+            <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_right.svg'"
                 class="white-svg ml-2" [applyCss]="true"></svg-icon>
         </button>
@@ -142,9 +142,9 @@
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
             <p translate>Systems of such size can work, but may be unstable and have troubles with updates and synchronization.</p>
             <p>
-                {{LANG.dialogs.merge.recommendSupport.a_recommend}} 
+                <span>{{LANG.dialogs.merge.recommendSupport.a_recommend}}</span>
                 <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> 
-                {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
+                <span>{{LANG.dialogs.merge.recommendSupport.c_proceeding}}</span>
             </p>
         </div>
         <div class="form-group"

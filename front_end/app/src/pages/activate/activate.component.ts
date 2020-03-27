@@ -51,20 +51,20 @@ export class NxActivateComponent implements OnInit {
             this.loading = true;
             return this.cloudApiService.activate(this.accountInfo.activateCode);
         }, {
-            errorCodes : {
-                notFound : () => {
+            errorCodes: {
+                notFound: () => {
                     this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
-                notAuthorized : () => {
+                notAuthorized: () => {
                     this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
                     return false;
                 },
-                accountActivated : () => {
+                accountActivated: () => {
                     this.sessionStorage.set('activationSuccess', '');
                     this.activationSuccess = false;
                     this.loading = false;
@@ -89,12 +89,12 @@ export class NxActivateComponent implements OnInit {
         this.reactivate = this.processService.createProcess(() => {
             return this.cloudApiService.reactivate(this.accountInfo.email);
         }, {
-            errorCodes : {
-                forbidden: this.LANG.errorCodes.accountAlreadyActivated,
-                notFound : this.LANG.errorCodes.emailNotFound
+            errorCodes: {
+                forbidden : this.LANG.errorCodes.accountAlreadyActivated,
+                notFound  : this.LANG.errorCodes.emailNotFound
             },
-            holdAlerts : true,
-            errorPrefix: this.LANG.errorCodes.cantSendConfirmationPrefix
+            holdAlerts  : true,
+            errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
             this.dialogs.notify(this.LANG.account.activationLinkSent, 'success');
@@ -123,9 +123,9 @@ export class NxActivateComponent implements OnInit {
         this.uriParamCode = this.route.snapshot.params.code;
 
         this.accountInfo = {
-            newPassword : '',
-            email       : '', // moved to init()
-            activateCode: this.uriParamCode
+            newPassword  : '',
+            email        : '', // moved to init()
+            activateCode : this.uriParamCode
         };
 
         this.reactivating = (this.uriParam === 'reactivating');

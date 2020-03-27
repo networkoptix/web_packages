@@ -28,14 +28,14 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-account-settings-component',
-    templateUrl: 'settings.component.html',
-    styleUrls  : ['settings.component.scss']
+    selector    : 'nx-account-settings-component',
+    templateUrl : 'settings.component.html',
+    styleUrls   : ['settings.component.scss']
 })
 
 export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild('applyContainer', {read: ViewContainerRef, static: true}) applyContainer;
-    @ViewChildren('accountForm', {read: NgForm}) formQueryList: QueryList<NgForm>;
+    @ViewChild('applyContainer', { read: ViewContainerRef, static: true }) applyContainer;
+    @ViewChildren('accountForm', { read: NgForm }) formQueryList: QueryList<NgForm>;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -46,9 +46,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     isSystemOwner = true;
 
     watchers: any = {
-        firstName: new Watcher<string>(),
-        lastName: new Watcher<string>(),
-        langCode: new Watcher<string>(),
+        firstName : new Watcher<string>(),
+        lastName  : new Watcher<string>(),
+        langCode  : new Watcher<string>()
     };
 
     private formSubscription: Subscription;
@@ -97,9 +97,9 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 this.accountService.get(true);
             });
         }, {
-            successMessage: this.LANG.account.accountSavedSuccess,
-            errorPrefix: this.LANG.errorCodes.cantChangeAccountPrefix,
-            logoutForbidden: true
+            successMessage  : this.LANG.account.accountSavedSuccess,
+            errorPrefix     : this.LANG.errorCodes.cantChangeAccountPrefix,
+            logoutForbidden : true
         }).then((result) => {
             this.applyService.hardReset();
             this.setOriginal();
@@ -171,7 +171,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     }
 
     deleteUser() {
-        this.dialogs.deleteCloudUser(this.cloudApiService, this.account)
+        this.dialogs.deleteCloudUser(this.cloudApiService)
             .then(res => {
                 if (res && res.error === '0') {
                     this.accountService.logout();

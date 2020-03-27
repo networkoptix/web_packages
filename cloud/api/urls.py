@@ -2,7 +2,7 @@ __author__ = 'noptix'
 
 from django.conf.urls import url
 from cloud import settings
-from api.views import account, systems, common, utils, robot
+from api.views import account, systems, common, utils, robot, storage
 from notifications.views import send
 
 urlpatterns = [
@@ -26,8 +26,13 @@ urlpatterns = [
     url(r'^account/authKey$',            account.auth_key),
     url(r'^account/checkCode$',          account.check_code_in_portal),
     url(r'^account/checkAuthCode$',      account.check_auth_code),
+    url(r'^account/delete$',             account.delete_user),
     url(r'^account/?$',                  account.index),
 
+    url(r'^storage/create',     storage.enable),
+    url(r'^storage/delete',     storage.delete),
+    url(r'^storage/move',       storage.move),
+    url(r'^storage/usageStats', storage.usage_stats),
 
     url(r'^systems/disconnect$',                     systems.disconnect),
     url(r'^systems/connect$',                        systems.connect),

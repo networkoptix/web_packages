@@ -131,6 +131,7 @@
             "high": "High",
             "low": "Low"
         },
+        "general": "General",
         "maintenanceInProgress": "Maintenance is in progress",
         "searchCamPlaceholder": "Search",
         "systemHasNoCameras": "No Cameras",
@@ -173,6 +174,38 @@
             "remove": "Remove",
             "stayAs": "Stay logged as {email} ",
             "stayLoggedIn": "Stay Logged In"
+        },
+        "cloudStorage": {
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
+            "activationError": {
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+            },
+            "systemDisconnectError": {
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
+                "status": {
+                    "offline": "Cloud storage cannot be moved to offline systems."
+                }
+            },
+            "noOtherSystemsError": {
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+            }
         },
         "merge": {
             "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
@@ -238,13 +271,6 @@
             "action": "Disconnect",
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
-        },
-        "sharing": {
-            "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-            "editShareConfirmButton": "Save",
-            "editShareTitle": "Edit Permissions",
-            "shareConfirmButton": "Add",
-            "shareTitle": "Add"
         },
         "titles": {
             "error": "Error",
@@ -362,7 +388,7 @@
         "cantSharePrefix": "Cannot share System",
         "cantUnshareWithMeSystemPrefix": "Cannot delete System",
         "emailNotFound": "Account does not exist.",
-        "failedToAccessSystem": "No system cannot be accessed by this link. It may happen if system has been disconnected from %CLOUD_NAME%, or access to this system may be revoked, or if you are logged in with a different account.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
         "forbidden": "You do not have permissions to perform this action",
         "lostConnection": "Connection to {{systemName}} lost",
         "mergedSystemIsOffline": "System <strong>{{failedSystem}}</strong> is offline.",
@@ -598,10 +624,6 @@
             },
             "rename": {
                 "success": "System name saved"
-            },
-            "share": {
-                "offline": "Cannot share system while it is offline",
-                "unauthorized": "You do not have permission to share this system"
             }
         }
     }

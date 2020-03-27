@@ -146,13 +146,14 @@ export class AppComponent {
             name: companyName
         };
         // @ts-ignore
-        const { feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases } = window.SETTINGS;
+        const { feedbackEnabled, integrationStore, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled } = window.SETTINGS;
         this.CONFIG.cloudCapabilities = {
             feedbackEnabled,
             healthMonitor,
             integrationStore,
             publicDownloads,
-            publicReleases
+            publicReleases,
+            cloudStorageEnabled
         };
         // @ts-ignore
         const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;

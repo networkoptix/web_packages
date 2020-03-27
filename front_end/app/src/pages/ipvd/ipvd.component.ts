@@ -425,7 +425,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     filterEmpty() {
         let tags = false;
         if (this.filterModel.tags) {
-            tags = this.filterModel.tags.find(tag => tag.value === true);
+            tags = this.filterModel.tags.find(tag => tag.value);
         }
 
         let multiselect = false;

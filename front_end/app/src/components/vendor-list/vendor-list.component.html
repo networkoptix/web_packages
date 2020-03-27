@@ -26,7 +26,7 @@
 
 <nx-block *ngIf="cameras" id="cameras">
     <header>
-        {{ cameras }} <span translate>devices</span>
+        <span>{{ cameras }} </span><span translate>devices</span>
     </header>
 
     <nx-section>
@@ -35,7 +35,7 @@
                     size="large"
                     (click)="setFilter(filter)"
                     [value]="null">
-                {{filter.label | translate}}
+                <ng-container>{{filter.label | translate}}</ng-container>
             </nx-tag>
         </div>
     </nx-section>

@@ -57,7 +57,7 @@ Support leads to the proper support site
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
     Select Window    @{tabs}[1]
-    Wait Until Location Is    ${SUPPORT URL}
+    Wait Until Location Contains    ${SUPPORT URL}
 
 Terms leads to the proper EULA site
     [tags]    C41545    Threaded    C30824    smoke

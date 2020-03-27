@@ -262,10 +262,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     }
 
     trackPagedItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.sortKey;
+        return item ? item.sortKey : undefined;
     }
 
     toggleHeaderSort(param) {
@@ -314,7 +311,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 if (elm[param]) {
                     return 0;
                 }
-                if (elm[param] === false) {
+                if (!elm[param]) {
                     return 2;
                 }
                 if (elm[param] === null) {
@@ -329,7 +326,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 if (elm.isPtzSupported) {
                     return 1;
                 }
-                if (elm.isPtzSupported === false) {
+                if (!elm.isPtzSupported) {
                     return 2;
                 }
                 if (elm.isPtzSupported === null) {
@@ -341,7 +338,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 if (elm.isAudioSupported === null) {
                     return 3;
                 }
-                if (elm.isAudioSupported === false) {
+                if (!elm.isAudioSupported) {
                     return 2;
                 }
                 if (elm.isTwAudioSupported) {

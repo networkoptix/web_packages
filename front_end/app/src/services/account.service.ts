@@ -390,7 +390,7 @@ export class NxAccountService implements OnDestroy {
                             undefined,
                             this.LANG.dialogs.buttons.stayAs.replace('{email}', account.email),
                             'long-cancel-button');
-                    if (response === true) {
+                    if (response) {
                         return this.cloudApi
                             .logout()
                             .finally(() => {

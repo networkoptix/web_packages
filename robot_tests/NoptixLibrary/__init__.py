@@ -25,7 +25,6 @@ from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
-from psutil import users
 
 class NoptixLibrary(object):
 
@@ -444,6 +443,7 @@ class NoptixLibrary(object):
         users = int(users)
         ramp = int(ramp)
         slaves = int(slaves)
+        seconds = int(seconds)
 #        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
 #        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
         cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"

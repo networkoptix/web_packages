@@ -48,9 +48,7 @@ export class NxSettingsService implements OnDestroy {
     }
 
     addUser() {
-        // Call share dialog, run process inside
-        return this.dialogs
-            .addUser(this.accountService, this.system)
+        return this.dialogs.addUser(this.system)
             .then((userId) => {
                 if (userId) {
                     userId = this.system.mediaserver.cleanId(userId);
@@ -58,15 +56,10 @@ export class NxSettingsService implements OnDestroy {
 
                     this.uriService
                         .updateURI(`systems/${this.system.id}/users/${userId}`)
-                        .catch(error => {
-                            console.error(error);
-                        });
+                        .catch(error => console.error(error));
                 }
-            }, (reason) => {
-                // dialog was dismissed ... this handler is required if dialog is dismissible
-                // if we don't handle it will raise a JS error
-                // ERROR Error: Uncaught (in promise): [object Number]
-            });
+            })
+            .catch(err => console.error(err));
     }
 
     ngOnDestroy() {

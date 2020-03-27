@@ -20,7 +20,7 @@
     </button>
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="!cancellable"
-            (click)="ok()">{{actionLabel}}
+            (click)="ok()"><span>{{actionLabel}}</span>
     </button>
     <button type="button" class="btn btn-default"
             *ngIf="!cancellable && cancelLabel"

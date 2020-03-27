@@ -106,10 +106,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     getSystemOwnerName(system, currentEmail) {

@@ -30,7 +30,7 @@ import { NxScrollMechanicsService }  from './scroll-mechanics.service';
         NxAccountService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService
+        NxScrollMechanicsService,
     ],
     exports: []
 })

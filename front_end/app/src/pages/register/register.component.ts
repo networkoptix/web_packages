@@ -13,9 +13,9 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-register-component',
-    templateUrl: 'register.component.html',
-    styleUrls  : ['register.component.scss']
+    selector    : 'nx-register-component',
+    templateUrl : 'register.component.html',
+    styleUrls   : ['register.component.scss']
 })
 
 export class NxRegisterComponent implements OnInit {
@@ -104,12 +104,12 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email    : this.accountInfo.email || this.accountService.email,
-            password : '',
-            firstName: '',
-            lastName : '',
-            accept   : false,
-            code     : this.code
+            email     : this.accountInfo.email || this.accountService.email,
+            password  : '',
+            firstName : '',
+            lastName  : '',
+            accept    : false,
+            code      : this.code
         };
 
         if (this.registerSuccess && this.context.process !== 'registerSuccess') {
@@ -141,8 +141,8 @@ export class NxRegisterComponent implements OnInit {
                 },
                 portalError: this.LANG.errorCodes.brokenAccount
             },
-            holdAlerts : true,
-            errorPrefix: this.LANG.errorCodes.cantRegisterPrefix
+            holdAlerts  : true,
+            errorPrefix : this.LANG.errorCodes.cantRegisterPrefix
         })
             .then((response) => {
                 if (response.resultCode === 'alreadyExists') {

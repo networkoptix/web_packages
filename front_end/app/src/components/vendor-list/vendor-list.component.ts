@@ -170,10 +170,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.name;
+        return item ? item.name : undefined;
     }
 
     /**

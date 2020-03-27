@@ -24,8 +24,10 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 
 @AutoUnsubscribe()
 @Component({
+    // eslint-disable-next-line no-multi-spaces
     selector    : 'nx-system-settings-component',
     templateUrl : 'settings.component.html',
+    // eslint-disable-next-line no-multi-spaces
     styleUrls   : ['settings.component.scss']
 })
 
@@ -133,10 +135,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             base               : this.CONFIG.menus.systemSettings.baseUrl + this.systemId,
             level1             : [
                 {
-                    id    : this.CONFIG.menus.systemSettings.admin.id,
-                    svg   : this.CONFIG.menus.systemSettings.admin.icon,
-                    label : this.LANG.menu.titles.systemAdministration,
-                    path  : this.CONFIG.menus.systemSettings.admin.path
+                    id     : this.CONFIG.menus.systemSettings.admin.id,
+                    svg    : this.CONFIG.menus.systemSettings.admin.icon,
+                    label  : this.LANG.menu.titles.systemAdministration,
+                    path   : this.CONFIG.menus.systemSettings.admin.path,
+                    level2 : []
                 }
             ]
         };
@@ -332,7 +335,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path            : 'users/' + id,
                         svgIcon         : 'user'
                     };
-                    if (user.isCloud === true) {
+                    if (user.isCloud) {
                         node.svgIcon = '';
                         node.icon = 'glyphicon-cloud';
                         node.label = user.email;
@@ -387,6 +390,22 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
+        }
+        // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
+        // eslint-disable-next-line no-constant-condition
+        if (!this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
+            const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
+            const generalNode = {
+                id    : this.CONFIG.menus.systemSettings.admin.id,
+                label : this.LANG.common.general,
+                path  : this.CONFIG.menus.systemSettings.admin.path
+            };
+            const cloudStorageNode = {
+                id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
+                label : this.LANG.dialogs.cloudStorage.title,
+                path  : this.CONFIG.menus.systemSettings.cloudStorage.path
+            };
+            adminNode.level2 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
         if (this.system.permissions.isAdmin) {

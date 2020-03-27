@@ -20,7 +20,6 @@ import { NxUtilsService }                       from './utils.service';
  * >
  * });
  * someVar.value = {data: 'test'};
- * console.log(someVar.value);
  * @class
  */
 export class Watcher<T> {
@@ -185,17 +184,18 @@ export class NxApplyService {
             return Promise.resolve(false);
         }
         this.popupActive = true;
-        return this.dialogsService.apply(this.applyFunction, this.discardFunction, this.form).then((status) => {
-            if (status !== 'applied' && status !== 'discarded') {
-                return false;
-            }
-            this.reset();
-            return true;
-        }, () => {
-            return false;
-        }).finally(() => {
-            this.popupActive = false;
-        });
+        return this.dialogsService.apply(this.applyFunction, this.discardFunction, this.form)
+            .then(
+                status => {
+                    if (status !== 'applied' && status !== 'discarded') {
+                        return false;
+                    }
+                    this.reset();
+                    return true;
+                },
+                () => false
+            )
+            .finally(() => { this.popupActive = false; });
     }
 
     canMove() {
@@ -270,7 +270,7 @@ export class NxApplyService {
                 filter((watcher) => watcher !== undefined));
         })).pipe(
             skip(this.watchers.length)
-        ).subscribe((res) => {
+        ).subscribe(() => {
             this.touched();
         });
     }
