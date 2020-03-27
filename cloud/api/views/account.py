@@ -166,7 +166,7 @@ def delete_user(request):
     require_params(request, ('password',))
     user = request.user
 
-    logout(request)
+    kill_session(request)
 
     Account.delete(user.email, request.data.get('password'))
     user.delete()
