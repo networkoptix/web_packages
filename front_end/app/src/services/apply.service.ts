@@ -20,7 +20,6 @@ import { NxUtilsService }                       from './utils.service';
  * >
  * });
  * someVar.value = {data: 'test'};
- * console.log(someVar.value);
  * @class
  */
 export class Watcher<T> {
