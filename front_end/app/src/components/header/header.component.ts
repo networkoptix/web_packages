@@ -222,14 +222,16 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     onClick(event) {
-        if (
-            this.systemId && this.isActive(event.target.id) && !this.isActive('view') && !this.isActive('health') ||
-            this.isActive(event.target.id)
-        ) {
+        if (this.systemId && this.isActive(event.target.id) && !this.isActive('view') && !this.isActive('health')) {
             event.stopPropagation();
             return false;
         } else if (event.target.id === 'systems') {
             return true;
+        }
+
+        if (this.isActive(event.target.id)) {
+            event.stopPropagation();
+            return false;
         }
     }
 
