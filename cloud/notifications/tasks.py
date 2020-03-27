@@ -120,7 +120,6 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
 
     except Exception as exception:
         if 'responses' not in locals() or not responses:
-            print('here')
             log_push_result(notification_object, f'Exception: {exception}.', logging.ERROR, stack_trace=True)
             if count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:
                 send_push_notification.apply_async(
