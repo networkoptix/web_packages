@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit
+    Component, OnDestroy, OnInit, Inject
 }                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
@@ -12,29 +12,34 @@ import { Subscription }              from 'rxjs';
 import {
     filter, map,
     retryWhen, delay
-}               from 'rxjs/operators';
+}                                    from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
 
+import { NxHealthService }           from '../../../health/health.service';
+import { WINDOW }                    from '../../../../services/window-provider';
+import { NxRibbonService }           from '../../../../components/ribbon/ribbon.service';
+
 @AutoUnsubscribe()
 @Component({
-    selector    : 'nx-cameras-component',
+    selector : 'nx-cameras-component',
     templateUrl : 'cameras.component.html',
-    styleUrls   : ['cameras.component.scss']
+    styleUrls : ['cameras.component.scss']
 })
-
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     settingsSubscription: Subscription;
     routeParamsSubscription: Subscription;
+    healthReportSubscription: Subscription;
     cameraSubscription: Subscription;
     cameraIdFromParams: string;
     parsedCameraId: string;
     selectedCamera: ICamera;
     fullInfoPath: string;
     cameraViewPath: string;
+    alerts: Alert[];
 
     canSeeInfo = false;
 
@@ -44,7 +49,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private settingsService: NxSettingsService,
         private route: ActivatedRoute,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private healthService: NxHealthService,
+        private ribbonService: NxRibbonService,
+        @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
@@ -65,7 +73,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         this.settingsSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
-            .subscribe((system) => {
+            .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 this.system = system;
                 this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
@@ -93,6 +101,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
                             }
+                            this.updateValues();
                             this.setCamera();
                         }
                     });
@@ -116,10 +125,62 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
+            this.ribbonService.hide();
+            const currentAlerts = (this.alerts || []).find(
+                ({ cameraId }) => cameraId === this.parsedCameraId
+            );
+            if (currentAlerts) {
+                currentAlerts.warnings.forEach(
+                    warning =>
+                        warning &&
+                        this.ribbonService.show(warning, '', '', 'alert')
+                );
+                currentAlerts.errors.forEach(
+                    error =>
+                        error && this.ribbonService.show(error, '', '', 'error')
+                );
+            }
         }
+    }
+
+    updateValues() {
+        this.healthService.ready = false;
+        this.healthReportSubscription = this.system.mediaserver
+            .getAggregateHealthReport()
+            .subscribe(
+                result => {
+                    const alerts =
+                        result.reply['ec2/metrics/alarms'].reply.cameras;
+                    this.alerts = Object.entries(alerts).map(
+                        ([cameraId, alertInfo]) =>
+                            new Alert(cameraId, alertInfo, 'Camera')
+                    );
+                },
+                () => {
+                    if (!this.system.id) {
+                        !this.window.parent
+                            ? this.window.location.reload()
+                            : this.window.parent.location.reload();
+                    }
+                }
+            );
     }
 
     toggle(property: string) {
         this.selectedCamera[property] = !this.selectedCamera[property];
+    }
+}
+
+export class Alert {
+    errors: string[] = [];
+    warnings: string[] = [];
+    constructor(public cameraId: string, alertInfo, prefix: string) {
+        Object.values(alertInfo.availability).forEach((_: any[]) =>
+            _.forEach(item => {
+                if (item.level && item.text && this[`${item.level}s`]) {
+                    this[`${item.level}s`].push(`${prefix} ${item.text}`);
+                }
+            })
+        );
     }
 }
