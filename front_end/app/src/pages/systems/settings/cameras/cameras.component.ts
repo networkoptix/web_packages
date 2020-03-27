@@ -118,4 +118,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
         }
     }
+
+    toggle(property: string) {
+        this.selectedCamera[property] = !this.selectedCamera[property];
+    }
 }

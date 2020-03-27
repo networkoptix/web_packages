@@ -34,6 +34,5 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
 }
