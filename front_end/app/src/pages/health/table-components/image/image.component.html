@@ -4,9 +4,9 @@
     <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
          (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
-        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground ? 'No Image' : state" class="lightBackground ? 'light-camera-preview' : 'hm-camera-preview">
+        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground ? 'No Image' : state" 
+            [ngClass]="{'light-camera-preview': lightBackground, 'hm-camera-preview': !lightBackground}">
             <div *ngSwitchCase="'No Image'" translate>NO IMAGE</div>
-            <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
             <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
             <div *ngSwitchCase="'Unauthorized'" translate>AUTHENTICATION REQUIRED</div>
             <div *ngSwitchDefault translate>UNAVAILABLE</div>

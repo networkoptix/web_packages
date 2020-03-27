@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output, OnDestroy, SimpleChanges, SimpleChange } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Component({
     selector : 'nx-health-image',
     templateUrl : './image.component.html',
@@ -14,13 +16,11 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() lightBackground = false;
     @Input() preloader = false;
     @Output() loaded = new EventEmitter<boolean>();
-    loadedSubscription: Subscription;
-    urlSubscription: Subscription;
     show: boolean
 
     constructor() {
         this.show = false;
-        this.loadedSubscription = this.loaded.asObservable().subscribe(value => { this.show = value || !this.preloader; });
+        this.loaded.asObservable().subscribe(value => { this.show = value || !this.preloader; });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -35,6 +35,5 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.loadedSubscription.unsubscribe();
     }
 }
