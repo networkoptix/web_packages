@@ -417,10 +417,11 @@ class ServerManager {
                 if (!result) {
                     return Promise.reject(new Error(`Request to server has failed ${result}`));
                 }
-                this.cameras = result.map(({ parentId, id, ...camera }: ICamera) => {
+                this.cameras = result.map(({ addParams: params, parentId, id, ...camera }: ICamera) => {
+                    const { rotation, overrideAr, ...addParams }: any = params.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {});
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const previewUrl = this.mediaserver.previewUrl(id);
-                    return { ...camera, id, parentId, parentName, previewUrl };
+                    return { ...camera, id, parentId, parentName, previewUrl, rotation, overrideAr, addParams };
                 });
                 return this.cameras;
             });
@@ -938,6 +939,8 @@ export interface IAddParam {
 
 export interface ICamera {
     addParams: IAddParam[];
+    rotation?: number;
+    overrideAr?: number;
     audioEnabled: boolean;
     backupType: string;
     controlEnabled: boolean;

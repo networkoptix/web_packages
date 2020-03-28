@@ -38,7 +38,7 @@
                             <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
                         </div>
                     </div>
-                    <div class="header-table col-3">
+                    <div class="header-table col-6">
                         <div class="header-table-cell">
                             <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
                             <span class="cell-ellipsis"></span>
@@ -53,7 +53,38 @@
                 </div>
             </header>
             <ng-container  *ngIf="system.isAdmin">
-                TODO: Will add basic settings here as part of CLOUD-4618
+                <nx-section>
+                    <!-- <div *ngIf="selectedUser.canBeEdited; else roleName;"
+                        class="mr-2 my-2" style="width: 300px">
+
+                        <label for="permissionsSelect" translate>Access level</label>
+                        <nx-permissions-select
+                                id="permissionsSelect"
+                                [disabled]="!systemAvailable"
+                                [user]="selectedUser"
+                                [system]="system"
+                                [roles]="system.accessRoles"
+                                [selected]="selectedUser.role"
+                                (onSelected)="setPermission($event);">
+                        </nx-permissions-select>
+                    </div> -->
+                        <h4 class="mb-3">Image</h4>
+                        <span translate>Aspect Ratio</span>
+                        <span>{{selectedCamera.overrideAr}}</span>
+                        <span translate>Rotation</span>
+                        <span>{{selectedCamera.rotation}}</span>
+                        <!-- <nx-select id="aspectRatio" [items]="['one', 'two', 'three']"></nx-select> -->
+                </nx-section>
+                <nx-section>
+                    <h4 class="mb-3">Audio</h4>
+                    <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="selectedCamera.audioEnabled"></nx-checkbox>
+                    <span (click)="toggle('audioEnabled')">Enable Audio</span>
+                </nx-section>
+                <nx-section>
+                    <h4 class="mb-3">Authentication</h4>
+                    <button class="btn btn-default"><span translate>Edit Credentials</span></button>
+                </nx-section>
+            </ng-container>
         </nx-block>
     </div>
 </div>
