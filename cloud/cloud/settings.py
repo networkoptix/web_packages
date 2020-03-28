@@ -398,7 +398,7 @@ CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_WORKER_SEND_TASK_EVENTS = False
 CELERY_WORKER_PREFETCH_MULTIPLIER = 100  # Allows worker to consume (100 * concurrency slots) messages at a time
-CELERY_WORKER_CONCURRENCY = 2
+CELERY_WORKER_CONCURRENCY = 4
 CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 
 # / End of Celery settings section
