@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
+CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
 CLOUD_STORAGE_SPACE = settings.CLOUD_STORAGE_SIZE
 
 
@@ -63,10 +64,6 @@ def put_wrapper(url, params=None, auth=None, json=None, headers=None):
 
     logger.info('\nPUT: {}\nQuery Parameters: {}\nJson: {}'.format(url, default_params, json))
     return requests.put(url, params=default_params, auth=auth, json=json, headers=headers)
-
-
-def get_ip_of_system(email, password, system_id):
-    pass
 
 
 @validate_response
@@ -403,7 +400,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def create(email, password, system_id):
-        request = f"{CLOUD_STORAGE_URL}/"
+        request = f"{CLOUD_STORAGES_URL}/"
         body = {
             "systems": [system_id],
             "totalSpace": CLOUD_STORAGE_SPACE
@@ -423,7 +420,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def list_system_storages(email, password, system_id):
-        request = f"{CLOUD_STORAGE_URL}/"
+        request = f"{CLOUD_STORAGES_URL}/"
         params = {
             "system-id": system_id
         }
