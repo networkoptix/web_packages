@@ -381,7 +381,7 @@ class NoptixLibrary(object):
     def build_image(self, env):
         version = ""
         if env == "https://cloud-test.hdw.mx":
-            version = "4.1.0.30149"
+            version = "4.1.0.30618"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
         elif env == "https://test4.cloud.hdw.mx":
@@ -449,8 +449,7 @@ class NoptixLibrary(object):
         cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"
         print(cmd)
         os.system(cmd)
-        
-        
+
     def push_notification_pabot_command(self, max):
         txtFile = str(uuid.uuid1())    
         f= open(f"{txtFile}.txt","w+")
