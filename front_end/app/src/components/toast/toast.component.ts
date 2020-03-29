@@ -1,33 +1,13 @@
-import { Component, TemplateRef }              from '@angular/core';
+import { Component, TemplateRef, Input, HostBinding, OnInit }              from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NxToastService }                      from '../../dialogs/toast.service';
 
 @Component({
-    selector: 'app-toasts',
-    template: `
-        <div *ngFor="let toast of toastService.toasts;" @fadeInOut>
-            <ngb-toast
-                    class="alert alert-{{toast.classname}} fade"
-                    [ngClass]="{'alert-dismissible': !toast.autohide}"
-                    [autohide]="toast.autohide"
-                    [delay]="toast.delay"
-                    (hide)="remove(toast)">
-                <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-                    <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
-                </ng-template>
-
-                <ng-template #text>
-                    <span class="toast-content" [innerHTML]="toast.textOrTpl"></span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                            *ngIf="!toast.autohide" (click)="remove(toast)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </ng-template>
-            </ngb-toast>
-        </div>`,
+    selector  : 'app-toasts',
+    templateUrl  : 'toast.component.html',
     styleUrls : ['toast.component.scss'],
     host      : { '[class.nx-toasts]': 'true' },
-    animations: [
+    animations : [
         trigger('fadeInOut', [
             transition(':enter', [
                 style({ opacity: 0 }),
@@ -39,8 +19,16 @@ import { NxToastService }                      from '../../dialogs/toast.service
         ])
     ]
 })
-export class ToastsContainer {
-    constructor(public toastService: NxToastService) {
+export class ToastsContainer implements OnInit {
+    @Input() inset = false;
+    @HostBinding() class = '';
+    @HostBinding('@.disabled') animationDisabled = false;
+
+    constructor(public toastService: NxToastService) {}
+
+    ngOnInit() {
+        this.class = this.inset ? 'inset-toasts' : 'nx-toasts';
+        this.animationDisabled = this.inset;
     }
 
     isTemplate(toast) {

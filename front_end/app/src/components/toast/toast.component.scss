@@ -10,62 +10,91 @@
     left     : 50%;
     transform: translateX(-50%);
     z-index: 1100;
+}
+
+.inset-toasts {
+    width: 100%;
+    padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    display: flex;
+    justify-content: stretch;
+}
+
+.toast {
+    transition : .5s linear all;
+    max-width  : 600px;
+    min-width  : 300px;
     
-    .toast {
-        transition : .5s linear all;
-        max-width  : 600px;
-        min-width  : 300px;
+    &.hide {
+        opacity    : 0;
+        display: block;
+    }
+    
+    &-body {
+        padding : 0;
         
-        &.hide {
-            opacity    : 0;
-            display: block;
-        }
-        
-        &-body {
-            padding : 0;
+        .close {
+            height: 100%;
             
-            .close {
-                height: 100%;
-                
-                span {
-                    line-height : .5;
-                }
+            span {
+                line-height : .5;
             }
         }
     }
-    
-    .close-button {
-        position : absolute;
-        right    : 1rem;
-        top      : .5rem;
-    }
-    
-    .alert {
-        margin-bottom : 8px;
-    }
+}
 
-    // Todo: Add these colors to a variables
-    .alert-success {
-        color            : #155724;
-        background-color : #d4edda;
-        border-color     : #c3e6cb;
+.close-button {
+    position : absolute;
+    right    : 1rem;
+    top      : .5rem;
+}
+
+.alert {
+    margin-bottom : 8px;
+}
+
+// Todo: Add these colors to a variables
+.alert-success {
+    color            : #155724;
+    background-color : #d4edda;
+    border-color     : #c3e6cb;
+}
+
+.alert-warning {
+    color            : #856404;
+    background-color : #fff3cd;
+    border-color     : #ffeeba;
+}
+
+.alert-danger {
+    color            : #721c24;
+    background-color : #f8d7da;
+    border-color     : #f5c6cb;
+}
+
+.alert-info {
+    color            : #0c5460;
+    background-color : #d1ecf1;
+    border-color     : #bee5eb;
+}
+
+.alert-inset-unauthorized {
+    width: 100%;
+    color            : #721c24;
+    background-color : #f8d7da;
+    border-color     : #f5c6cb;
+    & .toast-body {
+        width: 100%;
     }
-    
-    .alert-warning {
-        color            : #856404;
-        background-color : #fff3cd;
-        border-color     : #ffeeba;
-    }
-    
-    .alert-danger {
-        color            : #721c24;
-        background-color : #f8d7da;
-        border-color     : #f5c6cb;
-    }
-    
-    .alert-info {
-        color            : #0c5460;
-        background-color : #d1ecf1;
-        border-color     : #bee5eb;
+}
+
+.alert-inset-warning {
+    width: 100%;
+    color            : #856404;
+    background-color : #fff3cd;
+    border-color     : #ffeeba;
+    & .toast-body {
+        width: 100%;
     }
 }
