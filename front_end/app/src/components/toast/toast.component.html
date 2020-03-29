@@ -10,10 +10,15 @@
             <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
         </ng-template>
         <ng-template #text>
+            <svg-icon *ngIf="inset" [svgStyle]="{'width.px': '20', 'margin-left.px': '10', 'margin-right.px': '10'}" [src]="toast.classname === 'inset-unauthorized' ? errorSvgPath : warningSvgPath"></svg-icon>
             <span class="toast-content" [innerHTML]="toast.textOrTpl"></span>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                    *ngIf="!toast.autohide" (click)="remove(toast)">
+                    *ngIf="!toast.autohide && !inset" (click)="remove(toast)">
                 <span aria-hidden="true">&times;</span>
+            </button>
+            <button *ngIf="toast.action" type="button" class="edit-credentials" (click)="toast.action.callback()">
+                <svg-icon *ngIf="inset" [svgStyle]="{'width.px': '20', 'margin-left.px': '10', 'margin-right.px': '10'}" [src]="toast.action.icon"></svg-icon>
+                <span aria-hidden="true">{{toast.action.text}}</span>
             </button>
         </ng-template>
     </ngb-toast>

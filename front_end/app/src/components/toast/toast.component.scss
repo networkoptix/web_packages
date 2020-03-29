@@ -2,6 +2,7 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
 @import '../../styles/mixins';
+@import '../../styles/typography';
 
 .nx-toasts {
     position : absolute;
@@ -79,22 +80,35 @@
     border-color     : #bee5eb;
 }
 
-.alert-inset-unauthorized {
+.alert-inset {
+    @extend #regular13;
     width: 100%;
-    color            : #721c24;
-    background-color : #f8d7da;
-    border-color     : #f5c6cb;
+    max-width: 100%;
+    box-shadow: none;
+    padding: 8px 16px 8px 0px;
+    border-radius: 2px;
     & .toast-body {
         width: 100%;
     }
 }
 
+.alert-inset-unauthorized {
+    @extend .alert-inset;
+    background-color : rgba($red_l2, .1);
+    border-color     : rgba($red_l2, .3);
+}
+
 .alert-inset-warning {
-    width: 100%;
-    color            : #856404;
-    background-color : #fff3cd;
-    border-color     : #ffeeba;
-    & .toast-body {
-        width: 100%;
-    }
+    @extend .alert-inset;
+    background-color : rgba($yellow_main, .1);
+    border-color     : rgba($yellow_main, .3);
+}
+
+.edit-credentials {
+    position   : absolute;
+    top        : 0;
+    right      : 0;
+    height     : 100%;
+    background : transparent;
+    color      : $light16
 }

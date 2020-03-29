@@ -1,6 +1,7 @@
 import { Component, TemplateRef, Input, HostBinding, OnInit }              from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NxToastService }                      from '../../dialogs/toast.service';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
     selector  : 'app-toasts',
@@ -20,11 +21,19 @@ import { NxToastService }                      from '../../dialogs/toast.service
     ]
 })
 export class ToastsContainer implements OnInit {
+    CONFIG: IConfig;
+    warningSvgPath = ''
+    errorSvgPath = ''
+
     @Input() inset = false;
     @HostBinding() class = '';
     @HostBinding('@.disabled') animationDisabled = false;
 
-    constructor(public toastService: NxToastService) {}
+    constructor(configService: NxConfigService, public toastService: NxToastService) {
+        this.CONFIG = configService.getConfig();
+        this.warningSvgPath = `${this.CONFIG.icons.dirNonStandard}warning.svg`;
+        this.errorSvgPath = `${this.CONFIG.icons.dirNonStandard}error.svg`;
+    }
 
     ngOnInit() {
         this.class = this.inset ? 'inset-toasts' : 'nx-toasts';
