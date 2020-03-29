@@ -2,6 +2,7 @@
     <div class="col-12 loader-div" *ngIf="!selectedCamera">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
+    <app-toasts [inset]="true"></app-toasts>
     <div class="col-12 camera-settings-info" *ngIf="selectedCamera">
         <nx-block header-style="extended">
             <header>
@@ -54,26 +55,15 @@
             </header>
             <ng-container  *ngIf="system.isAdmin">
                 <nx-section>
-                    <!-- <div *ngIf="selectedUser.canBeEdited; else roleName;"
-                        class="mr-2 my-2" style="width: 300px">
-
-                        <label for="permissionsSelect" translate>Access level</label>
-                        <nx-permissions-select
-                                id="permissionsSelect"
-                                [disabled]="!systemAvailable"
-                                [user]="selectedUser"
-                                [system]="system"
-                                [roles]="system.accessRoles"
-                                [selected]="selectedUser.role"
-                                (onSelected)="setPermission($event);">
-                        </nx-permissions-select>
-                    </div> -->
                         <h4 class="mb-3">Image</h4>
                         <span translate>Aspect Ratio</span>
-                        <span>{{selectedCamera.overrideAr}}</span>
+                        <nx-select [selected]="selectedAspect"
+                            [(ngModel)]="selectedAspect"
+                            [items]="aspectRatios"></nx-select>
                         <span translate>Rotation</span>
-                        <span>{{selectedCamera.rotation}}</span>
-                        <!-- <nx-select id="aspectRatio" [items]="['one', 'two', 'three']"></nx-select> -->
+                        <nx-select [selected]="selectedRotation"
+                        [(ngModel)]="selectedRotation"
+                        [items]="rotations"></nx-select>
                 </nx-section>
                 <nx-section>
                     <h4 class="mb-3">Audio</h4>

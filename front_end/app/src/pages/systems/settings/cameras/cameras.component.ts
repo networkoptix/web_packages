@@ -11,14 +11,14 @@ import { NxSystem, ICamera }         from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     filter, map,
-    retryWhen, delay
+    retryWhen, delay, distinctUntilChanged
 }                                    from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
 
 import { NxHealthService }           from '../../../health/health.service';
 import { WINDOW }                    from '../../../../services/window-provider';
-import { NxRibbonService }           from '../../../../components/ribbon/ribbon.service';
+import { NxToastService } from '../../../../dialogs/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -40,6 +40,23 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     cameraViewPath: string;
     alerts: Alert[];
+    aspectRatios = [
+        { name: 'Auto', id: '' },
+        { name: '4:3', id: '1.33333' },
+        { name: '16:9', id: '1.77778' },
+        { name: '1:1', id: '1' }
+    ]
+
+    rotations = [
+        { name: 'Auto', id: '' },
+        { name: '90 degrees', id: '90' },
+        { name: '180 degrees', id: '180' },
+        { name: '270 degrees', id: '270' }
+    ]
+
+    selectedAspect = { name: 'Auto', id: '' };
+
+    selectedRotation = { name: 'Auto', id: '' }
 
     canSeeInfo = false;
 
@@ -51,7 +68,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private uriService: NxUriService,
         private healthService: NxHealthService,
-        private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -62,6 +79,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeParamsSubscription = this.route
             .params
+            .pipe(distinctUntilChanged())
             .subscribe(params => {
                 if (params.cameraId) {
                     this.menuService.setDetailsSection(params.cameraId);
@@ -89,6 +107,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
+                        distinctUntilChanged(),
                         map(system => {
                             if (!system.cameras || system.cameras.length === 0) {
                                 throw system;
@@ -111,6 +130,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     setCamera() {
+        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
+            return;
+        }
         if (this.system && this.system.cameras && this.system.cameras.length > 0) {
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
 
@@ -125,20 +147,39 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             }
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
-            this.ribbonService.hide();
+            this.selectedAspect = this.aspectRatios.find(({ id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
+            this.selectedRotation = this.rotations.find(({ id }) => id === this.selectedCamera.rotation) || this.rotations[0];
+            console.log(this.selectedCamera.overrideAr);
             const currentAlerts = (this.alerts || []).find(
                 ({ cameraId }) => cameraId === this.parsedCameraId
             );
+
             if (currentAlerts) {
-                currentAlerts.warnings.forEach(
-                    warning =>
-                        warning &&
-                        this.ribbonService.show(warning, '', '', 'alert')
-                );
-                currentAlerts.errors.forEach(
-                    error =>
-                        error && this.ribbonService.show(error, '', '', 'error')
-                );
+                const other = currentAlerts.warnings[0];
+                const showOther = currentAlerts.warnings.some(warning => warning === other) &&
+                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== other);
+                if (showOther) {
+                    setTimeout(() => this.toastService.show(other, { inset: true, classname: 'inset-warning' }), currentAlerts.warnings.length);
+                } else {
+                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === other)]);
+                }
+                const unauthorizedMessage = 'Camera is Unauthorized';
+                const showUnauthorized = currentAlerts.errors.some(error => error === unauthorizedMessage) &&
+                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== unauthorizedMessage);
+                if (showUnauthorized) {
+                    setTimeout(() => this.toastService.show('Camera unauthorized',
+                        {
+                            inset     : true,
+                            classname : 'inset-unauthorized',
+                            action    : {
+                                text     : 'Edit Credentials',
+                                icon     : this.CONFIG.icons.dirNonStandard + 'warning.svg',
+                                callback : () => alert('edit credentials called')
+                            }
+                        }), currentAlerts.warnings.length);
+                } else {
+                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === unauthorizedMessage)]);
+                }
             }
         }
     }
@@ -175,9 +216,9 @@ export class Alert {
     errors: string[] = [];
     warnings: string[] = [];
     constructor(public cameraId: string, alertInfo, prefix: string) {
-        Object.values(alertInfo.availability).forEach((_: any[]) =>
+        Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
             _.forEach(item => {
-                if (item.level && item.text && this[`${item.level}s`]) {
+                if (item && item.level && item.text && this[`${item.level}s`]) {
                     this[`${item.level}s`].push(`${prefix} ${item.text}`);
                 }
             })

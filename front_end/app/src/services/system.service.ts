@@ -411,20 +411,44 @@ class ServerManager {
             });
     }
 
-    getCameras() {
+    async getCameras() {
+        const { reply: servers }: any = await this.mediaserver.getServerTimes().toPromise();
         return this.mediaserver.getCameras().toPromise()
             .then((result: any) => {
                 if (!result) {
                     return Promise.reject(new Error(`Request to server has failed ${result}`));
                 }
                 this.cameras = result.map(({ addParams: params, parentId, id, ...camera }: ICamera) => {
+                    const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
+                    const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
+                    const vmsDate = new Date(serverTime);
+                    const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+                    const secondsToday = Math.round((serverTime % 86400000) / 1000);
                     const { rotation, overrideAr, ...addParams }: any = params.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {});
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const previewUrl = this.mediaserver.previewUrl(id);
-                    return { ...camera, id, parentId, parentName, previewUrl, rotation, overrideAr, addParams };
+                    const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+                    return { ...camera, id, parentId, dayOfWeek, secondsToday, parentName, previewUrl, rotation, status, overrideAr, addParams };
                 });
                 return this.cameras;
             });
+    }
+
+    private parseCameraStatus({ status, scheduleEnabled, scheduleTasks }: Partial<ICamera>, { dayOfWeek, secondsToday }) {
+        if (status !== 'Online' || !scheduleEnabled) {
+            return status;
+        }
+        const recording = scheduleTasks.some(({ dayOfWeek: day, startTime, endTime, recordingType }) => (
+            recordingType !== 'RT_Never' &&
+            day === dayOfWeek &&
+            startTime < secondsToday &&
+            secondsToday < endTime
+        ));
+        if (recording) {
+            return 'recording';
+        } else {
+            return 'scheduled';
+        }
     }
 
     getModuleInfo(serverId?) {
@@ -939,8 +963,8 @@ export interface IAddParam {
 
 export interface ICamera {
     addParams: IAddParam[];
-    rotation?: number;
-    overrideAr?: number;
+    rotation?: string;
+    overrideAr?: string;
     audioEnabled: boolean;
     backupType: string;
     controlEnabled: boolean;
