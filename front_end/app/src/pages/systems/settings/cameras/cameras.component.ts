@@ -49,9 +49,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     rotations = [
         { name: 'Auto', id: '' },
-        { name: '90 degrees', id: '90' },
-        { name: '180 degrees', id: '180' },
-        { name: '270 degrees', id: '270' }
+        { name: '90˚', id: '90' },
+        { name: '180˚', id: '180' },
+        { name: '270˚', id: '270' }
     ]
 
     selectedAspect = { name: 'Auto', id: '' };
@@ -207,8 +207,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             );
     }
 
-    toggle(property: string) {
+    toggle(property: string, disabled = false) {
+        if (disabled) return;
         this.selectedCamera[property] = !this.selectedCamera[property];
+    }
+
+    toggleRecording() {
+        this.selectedCamera.recordingSettings.recording = !this.selectedCamera.recordingSettings.recording;
     }
 }
 

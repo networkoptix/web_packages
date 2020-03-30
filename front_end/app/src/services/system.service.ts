@@ -10,6 +10,7 @@ import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { recursiveJson } from '../utils/recursive-json';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -418,20 +419,38 @@ class ServerManager {
                 if (!result) {
                     return Promise.reject(new Error(`Request to server has failed ${result}`));
                 }
-                this.cameras = result.map(({ addParams: params, parentId, id, ...camera }: ICamera) => {
+                this.cameras = result.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
                     const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
                     const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
                     const vmsDate = new Date(serverTime);
                     const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
                     const secondsToday = Math.round((serverTime % 86400000) / 1000);
-                    const { rotation, overrideAr, ...addParams }: any = params.reduce((obj, { name, value }) => ({ ...obj, [name]: value }), {});
+                    const { rotation, overrideAr, mediaCapabilities, isAudioSupported: audioSupported, ...parsedAddParams }: any = addParamsRaw.reduce((obj, { name, value }) => ({ ...obj, [name]: recursiveJson(value) }), {});
                     const parentName = this.servers.find(server => server.id === parentId).name;
+                    const isAudioSupported = audioSupported === '1';
                     const previewUrl = this.mediaserver.previewUrl(id);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
-                    return { ...camera, id, parentId, dayOfWeek, secondsToday, parentName, previewUrl, rotation, status, overrideAr, addParams };
+                    const recordingSettings: IRecordingSettings = {
+                        recording: this.parseRecordingMode(camera, 'RT_MotionOnly') || this.parseRecordingMode(camera, 'RT_Always'),
+                        modes: [
+                            { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always') },
+                            { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly') },
+                            { name: 'Record Never', id: 'RT_Never', 
+                                value: !this.parseRecordingMode(camera, 'RT_Always') && !this.parseRecordingMode(camera, 'RT_MotionOnly') }
+                        ]
+                    }
+                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
                 });
                 return this.cameras;
             });
+    }
+    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, id: RecordingType) {
+        return scheduleTasks.some(({recordingType, startTime, endTime, fps}) => (
+            recordingType === id &&
+            fps > 0 &&
+            startTime < endTime
+        ));
+
     }
 
     private parseCameraStatus({ status, scheduleEnabled, scheduleTasks }: Partial<ICamera>, { dayOfWeek, secondsToday }) {
@@ -956,15 +975,17 @@ export class NxSystemService {
     }
 }
 
-export interface IAddParam {
+export interface IAddParamsRaw {
     name: string;
     value: string;
 }
 
 export interface ICamera {
-    addParams: IAddParam[];
+    addParams: IAddParamsRaw[];
+    parsedAddParams: IParsedAddParams;
     rotation?: string;
     overrideAr?: string;
+    isAudioSupported: boolean;
     audioEnabled: boolean;
     backupType: string;
     controlEnabled: boolean;
@@ -983,6 +1004,7 @@ export interface ICamera {
     model: string;
     motionMask: string;
     motionType: string;
+    mediaCapabilities: IMediaCapabilities;
     name: string;
     parentId: string;
     parentName: string;
@@ -991,7 +1013,7 @@ export interface ICamera {
     recordAfterMotionSec: number;
     recordBeforeMotionSec: number;
     scheduleEnabled: boolean;
-    scheduleTasks: any[];
+    scheduleTasks: ITask[];
     status: string;
     statusFlags: string;
     typeId: string;
@@ -999,4 +1021,180 @@ export interface ICamera {
     userDefinedGroupName: string;
     vendor: string;
     previewUrl: string;
+    recordingSettings: IRecordingSettings;
 }
+
+export interface IMediaCapabilities {
+    hasAudio: boolean;
+}
+
+export interface ITask {
+    bitrateKbps: number;
+    dayOfWeek: number;
+    endTime: number;
+    fps: number;
+    recordingType: RecordingType;
+    startTime: number;
+    streamQuality: StreamQuality
+}
+
+export interface IRecordingSettings {
+    recording: boolean,
+    modes: IRecordingModes[]
+}
+
+export interface IRecordingModes {
+    name: string;
+    id: RecordingType;
+    value: boolean
+}
+
+export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_Never'
+export type StreamQuality = 'low' | 'normal' | 'high' | 'highest'
+
+export interface Condition {
+    paramId: string;
+    type: string;
+    value: string;
+}
+
+export interface Dependency {
+    conditions: Condition[];
+    id: string;
+    internalRange: string;
+    range: string;
+    type: string;
+    valuesToAddToRange: any[];
+    valuesToRemoveFromRange: any[];
+}
+
+export interface Param {
+    aux: string;
+    availableInOffline: boolean;
+    bindDefaultToMinimum: boolean;
+    compact: boolean;
+    confirmation: string;
+    dataType: string;
+    dependencies: Dependency[];
+    description: string;
+    group: string;
+    id: string;
+    internalRange: string;
+    keepInitialValue: boolean;
+    name: string;
+    notes: string;
+    range: string;
+    readCmd: string;
+    readOnly: boolean;
+    resync: boolean;
+    showRange: boolean;
+    tag: string;
+    unit: string;
+    writeCmd: string;
+}
+
+export interface Group2 {
+    aux: string;
+    description: string;
+    groups: any[];
+    name: string;
+    params: Param[];
+}
+
+export interface Group {
+    aux: string;
+    description: string;
+    groups: Group2[];
+    name: string;
+    params: any[];
+}
+
+export interface CameraAdvancedParams {
+    groups: Group[];
+    name: string;
+    packet_mode: boolean;
+    unique_id: string;
+    version: string;
+}
+
+export interface IoSetting {
+    autoResetTimeoutMs: number;
+    iDefaultState: string;
+    id: number;
+    inputName: string;
+    oDefaultState: string;
+    outputName: string;
+    portType: string;
+    supportedPortTypes: string;
+}
+
+export interface CustomStreamParams {
+}
+
+export interface Stream {
+    codec: number;
+    customStreamParams: CustomStreamParams;
+    encoderIndex: number;
+    resolution: string;
+    transcodingRequired: boolean;
+    transports: string[];
+}
+
+export interface MediaStreams {
+    streams: Stream[];
+}
+
+export interface StreamUrls {
+    1?: string;
+    2?: string;
+}
+
+export interface BitrateInfoStreams {
+    actualBitrate: number;
+    actualFps: number;
+    averageGopSize: number;
+    bitrateFactor: number;
+    bitratePerGop: boolean;
+    encoderIndex: string;
+    fps: number;
+    isConfigured: boolean;
+    numberOfChannels: number;
+    rawSuggestedBitrate: number;
+    resolution: string;
+    suggestedBitrate: number;
+    timestamp: Date;
+}
+
+export interface BitrateInfos {
+    streams: BitrateInfoStreams[];
+}
+
+interface _ParsedAddParams {
+    DeviceUrl: string;
+    VideoLayout: string;
+    cameraAdvancedParams: CameraAdvancedParams;
+    cameraCapabilities: number;
+    compatibleAnalyticsEngines: any[];
+    defaultCredentials: string;
+    driverClass: string;
+    firmware: string;
+    hasDualStreaming: number;
+    ioSettings: IoSetting[];
+    mediaStreams: MediaStreams;
+    ptzCapabilities: number;
+    streamUrls: StreamUrls;
+    bitrateInfos: BitrateInfos;
+    bitratePerGOP: number;
+    dontRecordPrimaryStream: number;
+    dontRecordSecondaryStream: number;
+    mediaPort: string;
+    rtpTransport: string;
+    trustCameraTime: number;
+    userEnabledAnalyticsEngines: any[];
+    motionStream: string;
+    streamFpsSharing: string;
+    supportedMotion: string;
+    defaultPreferredPtzPresetType: string;
+}
+
+export type IParsedAddParams = Partial<_ParsedAddParams>

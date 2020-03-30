@@ -2,79 +2,124 @@
     <div class="col-12 loader-div" *ngIf="!selectedCamera">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
-    <app-toasts [inset]="true"></app-toasts>
-    <div class="col-12 camera-settings-info" *ngIf="selectedCamera">
-        <nx-block header-style="extended">
-            <header>
-                <div class="header-top-bar d-flex justify-content-start">
-                    <div class="header-title">
-                        <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="selectedCamera.name"></h2>
-                        <span *ngIf="!selectedCamera.name" class="input-error" translate>Name cannot be empty</span>
+    <ng-container *ngIf="selectedCamera">
+        <app-toasts [inset]="true"></app-toasts>
+        <div class="col-12 camera-settings-info">
+            <nx-block header-style="extended">
+                <header>
+                    <div class="header-top-bar d-flex justify-content-start">
+                        <div class="header-title">
+                            <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="selectedCamera.name"></h2>
+                            <span *ngIf="!selectedCamera.name" class="input-error" translate>Name cannot be empty</span>
+                        </div>
+                        <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
+                            <span>
+                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
+                            </span>
+                            <span class="ml-1" translate>View</span>
+                        </button>
+                        <button *ngIf="canSeeInfo" class="camera-buttons pr-0" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                            <span>
+                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
+                            </span>
+                            <span class="ml-1" translate>Detailed Info</span>
+                        </button>
                     </div>
-                    <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
-                        <span>
-                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
-                        </span>
-                        <span class="ml-1" translate>View</span>
-                    </button>
-                    <button *ngIf="canSeeInfo" class="camera-buttons pr-0" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
-                        <span>
-                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
-                        </span>
-                        <span class="ml-1" translate>Detailed Info</span>
-                    </button>
-                </div>
-                <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
-                    style="margin-right: 8px;" [lightBackground]="true"></nx-health-image>
-                <div class="d-flex flex-row justify-content-stretch align-items-start flex-wrap">
-                    <div class="header-table col-3">
-                        <div class="header-table-cell">
-                            <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
-                            <span class="cell-ellipsis"></span>
-                            <span class="col-9 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
+                    <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
+                        style="margin-right: 8px;" [lightBackground]="true"></nx-health-image>
+                    <div class="d-flex flex-row justify-content-stretch align-items-start flex-wrap">
+                        <div class="header-table col-3">
+                            <div class="header-table-cell">
+                                <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
+                                <span class="cell-ellipsis"></span>
+                                <span class="col-9 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
+                            </div>
+                            <div class="header-table-cell">
+                                <span class="mr-2 cell-title text-nowrap" translate>Model</span>
+                                <span class="cell-ellipsis"></span>
+                                <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
+                            </div>
                         </div>
-                        <div class="header-table-cell">
-                            <span class="mr-2 cell-title text-nowrap" translate>Model</span>
-                            <span class="cell-ellipsis"></span>
-                            <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
-                        </div>
-                    </div>
-                    <div class="header-table col-6">
-                        <div class="header-table-cell">
-                            <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
-                            <span class="cell-ellipsis"></span>
-                            <span class="col-9 text-nowrap">{{selectedCamera.url || "-"}}</span>
-                        </div>
-                        <div class="header-table-cell">
-                            <span class="mr-2 cell-title" translate>Server</span>
-                            <span class="cell-ellipsis"></span>
-                            <span class="col-9">{{selectedCamera.parentName || "-"}}</span>
+                        <div class="header-table col-6">
+                            <div class="header-table-cell">
+                                <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
+                                <span class="cell-ellipsis"></span>
+                                <span class="col-9 text-nowrap">{{selectedCamera.url || "-"}}</span>
+                            </div>
+                            <div class="header-table-cell">
+                                <span class="mr-2 cell-title" translate>Server</span>
+                                <span class="cell-ellipsis"></span>
+                                <span class="col-9">{{selectedCamera.parentName || "-"}}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </header>
-            <ng-container  *ngIf="system.isAdmin">
-                <nx-section>
-                        <h4 class="mb-3">Image</h4>
-                        <span translate>Aspect Ratio</span>
-                        <nx-select [selected]="selectedAspect"
-                            [(ngModel)]="selectedAspect"
-                            [items]="aspectRatios"></nx-select>
-                        <span translate>Rotation</span>
-                        <nx-select [selected]="selectedRotation"
-                        [(ngModel)]="selectedRotation"
-                        [items]="rotations"></nx-select>
-                </nx-section>
-                <nx-section>
-                    <h4 class="mb-3">Audio</h4>
-                    <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="selectedCamera.audioEnabled"></nx-checkbox>
-                    <span (click)="toggle('audioEnabled')">Enable Audio</span>
-                </nx-section>
-                <nx-section>
-                    <h4 class="mb-3">Authentication</h4>
-                    <button class="btn btn-default"><span translate>Edit Credentials</span></button>
-                </nx-section>
-            </ng-container>
-        </nx-block>
-    </div>
+                </header>
+                <ng-container  *ngIf="system.isAdmin">
+                    <nx-section>
+                            <h4 class="mb-3">Image</h4>
+                            <div class="d-flex justify-content-start col-6 align-items-center mb-2">
+                                <span class="col-3 text-nowrap text-right" translate>Aspect Ratio</span>
+                                <nx-select [selected]="false"
+                                    [(ngModel)]="selectedAspect"
+                                    [items]="aspectRatios"></nx-select>
+                            </div>
+                            <div class="d-flex justify-content-start col-6 align-items-center">
+                                <span class="col-3 text-nowrap text-right" translate>Rotation</span>
+                                <nx-select [selected]="false"
+                                    [(ngModel)]="selectedRotation"
+                                    [items]="rotations"></nx-select>
+                            </div>
+                    </nx-section>
+                    <nx-section>
+                        <h4 class="mb-3">Audio</h4>
+                        <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="selectedCamera.audioEnabled" [disabled]="!selectedCamera.isAudioSupported"></nx-checkbox>
+                        <span [ngClass]="!selectedCamera.isAudioSupported && 'text-muted'" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)">Enable Audio</span>
+                    </nx-section>
+                    <nx-section>
+                        <h4 class="mb-3">Authentication</h4>
+                        <button class="btn btn-default"><span translate>Edit Credentials</span></button>
+                    </nx-section>
+                </ng-container>
+            </nx-block>
+        </div>
+        <div class="col-12 camera-settings-info mt-3">
+            <nx-block header-style="extended">
+                <header>
+                    <div class="d-flex">
+                        <div class="d-flex justify-content-center align-items-center"  [style.width.px]="64">
+                            <nx-switch [ngModel]="selectedCamera.recordingSettings.recording"(ngModelChange)="toggleRecording();"></nx-switch>
+                        </div>
+                        <span translate>Recording</span>
+                    </div>
+                </header>
+                <ng-container  *ngIf="selectedCamera.recordingSettings.recording">
+                    <nx-section>
+                        <h4 class="mb-3">Mode</h4>
+                        <div *ngFor="let mode of selectedCamera.recordingSettings.modes" class="d-flex">
+                            <nx-radio
+                                [name]="mode.name" [componentId]="mode.name"
+                                [value]="mode.value"
+                                [(ngModel)]="mode.value"></nx-radio>
+                            <label [for]="mode.name">{{mode.name}} {{mode.value}}</label>
+                        </div>
+                    </nx-section>
+                    <nx-section>
+                            <h4 class="mb-3">Quality</h4>
+                            <div class="d-flex justify-content-start col-4 align-items-center mb-2">
+                                <span class="col-3 text-nowrap text-right" translate>FPS</span>
+                                <nx-select [selected]="false"
+                                    [(ngModel)]="selectedAspect"
+                                    [items]="aspectRatios"></nx-select>
+                            </div>
+                            <div class="d-flex justify-content-start col-4 align-items-center">
+                                <span class="col-3 text-nowrap text-right" translate>Quality</span>
+                                <nx-select [selected]="false"
+                                    [(ngModel)]="selectedRotation"
+                                    [items]="rotations"></nx-select>
+                            </div>
+                    </nx-section>
+                </ng-container>
+            </nx-block>
+        </div>
+    </ng-container>
 </div>
