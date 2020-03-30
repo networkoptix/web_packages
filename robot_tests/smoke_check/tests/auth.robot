@@ -3,8 +3,8 @@ Resource         ../resources/vars.robot
 Resource         ../../resource.robot
 Resource         ../../APIresource.robot
 
-Suite Setup      Open Browser    ${URL}    headlesschrome
-Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Authorization
+Suite Setup      Open Browser    ${ENV}    headlesschrome
+#Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Authorization
 Suite Teardown   Close Browser
 
 
@@ -20,7 +20,7 @@ Log Out
 Create Account
     [Tags]    T169275    auth
     ${random email}=    Get Random Email    ${email base}
-    Go To    ${url}/register
+    Go To    ${ENV}/register
     Register    SmokeCheck    NewUser    ${random email}    ${base password}
     Validate Register Success
     CloudPortalAPI.Log In    ${ENV}    ${random email}    ${base password}
