@@ -75,7 +75,7 @@ class NoptixLibrary(object):
 
     def get_random_email(self, email):
         index = email.find('@')
-        email = email[:index] + '+' + str(randint(1, 100)) + str(time.time()) + email[index:]
+        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + email[index:]
         return email
 
     def get_many_random_emails(self, how_many, email):

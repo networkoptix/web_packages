@@ -236,7 +236,7 @@ ${DISCONNECT FORM}                    //form[@name='disconnectForm']
 ${DISCONNECT FORM CANCEL}             ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
 ${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
 ${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]
+${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button/span[contains(text(),"${DISCONNECT BUTTON TEXT}")]
 
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
