@@ -105,8 +105,7 @@
     "APPLY CHANGES BUTTON TEXT"			   :	"Apply",
     "CANCEL CHANGES BUTTON TEXT"		   :	"Cancel",
 
-    "THIS LINK IS BROKEN TEXT"             :    "This link is broken,System may be disconnected from %PRODUCT_NAME%,Access to this System may be revoked, or you may be logged into a different account.",
-
+    "THIS LINK IS BROKEN TEXT"             :    "No system can be accessed by this link. This may happen when a system has been disconnected from %PRODUCT_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
     "PAGE NOT FOUND TEXT"                  :    "Page not found",
     "GO TO MAIN PAGE TEXT"                 :    "Go to Main Page",
     "OPEN NX WITNESS BUTTON TEXT"          :    "Open %VMS_NAME%",
