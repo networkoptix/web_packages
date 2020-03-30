@@ -96,6 +96,14 @@ def send_email(msg_id, queue="", attempt=1):
 
 @shared_task
 def send_push_notification(notification_id, request_data, device_tokens=None, count=1):
+    notification_object = PushNotification.objects.get(id=notification_id)
+    # Prevent duplicate notification processing
+    if notification_object.count >= count:
+        return
+    else:
+        notification_object.count = count
+        notification_object.save()
+
     if count == 1:
         logger.info('Start processing push notification: {}'.format(notification_id))
 

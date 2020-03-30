@@ -231,6 +231,7 @@ class PushNotification(models.Model):
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
+    count = models.IntegerField(default=0)
 
     def clean(self):
         if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:

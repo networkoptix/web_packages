@@ -41,6 +41,7 @@ SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
+PUSH_WORKER = 'push-notification' in sys.argv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
@@ -167,6 +168,7 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+CONN_MAX_AGE = None
 cloud_db = conf['cloud_database']
 
 if cloud_db and cloud_db['host'] != '$DB_HOST':
@@ -388,7 +390,7 @@ CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
 CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
 if not CELERY_BROKER_URL:
     CELERY_BROKER_URL = 'sqs://'
-
+CELERY_BROKER_POOL_LIMIT = 20
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
@@ -397,9 +399,12 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_WORKER_SEND_TASK_EVENTS = False
-CELERY_WORKER_PREFETCH_MULTIPLIER = 100  # Allows worker to consume (100 * concurrency slots) messages at a time
-CELERY_WORKER_CONCURRENCY = 4
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages as it wants
 CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+if PUSH_WORKER:
+    CELERY_WORKER_CONCURRENCY = 2
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 30
+
 
 # / End of Celery settings section
 
