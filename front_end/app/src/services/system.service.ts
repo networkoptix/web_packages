@@ -983,8 +983,8 @@ export interface IAddParamsRaw {
 export interface ICamera {
     addParams: IAddParamsRaw[];
     parsedAddParams: IParsedAddParams;
-    rotation?: string;
-    overrideAr?: string;
+    rotation?: number | '';
+    overrideAr?: number | '';
     isAudioSupported: boolean;
     audioEnabled: boolean;
     backupType: string;

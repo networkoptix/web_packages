@@ -40,23 +40,23 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     cameraViewPath: string;
     alerts: Alert[];
-    aspectRatios = [
+    aspectRatios: ISelect[] = [
         { name: 'Auto', id: '' },
-        { name: '4:3', id: '1.33333' },
-        { name: '16:9', id: '1.77778' },
-        { name: '1:1', id: '1' }
+        { name: '4:3', id: 1.33333 },
+        { name: '16:9', id: 1.77778 },
+        { name: '1:1', id: 1 }
     ]
 
-    rotations = [
+    rotations: ISelect[] = [
         { name: 'Auto', id: '' },
-        { name: '90˚', id: '90' },
-        { name: '180˚', id: '180' },
-        { name: '270˚', id: '270' }
+        { name: '90˚', id: 90 },
+        { name: '180˚', id: 180 },
+        { name: '270˚', id: 270 }
     ]
 
-    selectedAspect = { name: 'Auto', id: '' };
+    selectedAspect: ISelect = { name: 'Auto', id: '' };
 
-    selectedRotation = { name: 'Auto', id: '' }
+    selectedRotation: ISelect = { name: 'Auto', id: '' }
 
     canSeeInfo = false;
 
@@ -149,7 +149,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.selectedAspect = this.aspectRatios.find(({ id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ id }) => id === this.selectedCamera.rotation) || this.rotations[0];
-            console.log(this.selectedCamera.overrideAr);
+            console.log(this.selectedCamera.overrideAr)
+            console.log(this.selectedCamera.rotation)
             const currentAlerts = (this.alerts || []).find(
                 ({ cameraId }) => cameraId === this.parsedCameraId
             );
@@ -229,4 +230,9 @@ export class Alert {
             })
         );
     }
+}
+
+export interface ISelect {
+    name: string;
+    id: number | ''
 }
