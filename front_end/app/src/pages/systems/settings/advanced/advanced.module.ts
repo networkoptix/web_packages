@@ -11,7 +11,6 @@ import { NxSystemServerAdvancedComponent }   from './advanced.component';
 import { TranslateModule }                   from '@ngx-translate/core';
 import { ComponentsModule }                  from '../../../../components/components.module';
 import { NxSystemAdvancedStorageComponent }  from './storage/storage.component';
-import { NxSystemAdvancedSettingsComponent } from './settings/settings.component';
 import { NxSystemAdvancedLoggerComponent }   from './logger/logger.component';
 
 @NgModule({
@@ -31,18 +30,15 @@ import { NxSystemAdvancedLoggerComponent }   from './logger/logger.component';
     declarations    : [
         NxSystemServerAdvancedComponent,
         NxSystemAdvancedStorageComponent,
-        NxSystemAdvancedSettingsComponent,
         NxSystemAdvancedLoggerComponent
     ],
     bootstrap       : [],
     entryComponents : [
         NxSystemServerAdvancedComponent,
-        NxSystemAdvancedSettingsComponent,
         NxSystemAdvancedLoggerComponent
     ],
     exports         : [
         NxSystemServerAdvancedComponent,
-        NxSystemAdvancedSettingsComponent,
         NxSystemAdvancedLoggerComponent
     ]
 })

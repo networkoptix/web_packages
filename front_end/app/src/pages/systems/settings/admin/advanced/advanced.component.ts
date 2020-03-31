@@ -19,17 +19,16 @@ import { NxMenuService }             from '../../../../../components/menu/menu.s
 
 @AutoUnsubscribe()
 @Component({
-    selector    : 'nx-server-advanced-settings-component',
-    templateUrl : 'settings.component.html',
-    styleUrls   : ['settings.component.scss']
+    selector    : 'nx-system-advanced-admin-component',
+    templateUrl : 'advanced.component.html',
+    styleUrls   : ['advanced.component.scss']
 })
 
-export class NxSystemAdvancedSettingsComponent implements OnChanges, OnDestroy {
+export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     @Input() system: any;
-    @Input() serverId: any;
 
     private saveSettings: any;
     private serverSubscription: Subscription;
@@ -79,8 +78,6 @@ export class NxSystemAdvancedSettingsComponent implements OnChanges, OnDestroy {
                     if (this.system && this.system.servers && this.system.servers.length) {
                         this.getAdvancedSettings();
                     }
-
-                    this.setServer();
                 }
             });
 
@@ -115,10 +112,8 @@ export class NxSystemAdvancedSettingsComponent implements OnChanges, OnDestroy {
         });
     }
 
-    setServer(): void {
-        if (this.system && this.system.servers && this.system.servers.length > 0 && this.serverId) {
-            this.menuService.setDetailsSection(this.serverId);
-        }
+    canSee(key) {
+        return ['number', 'text', 'password'].includes(this.CONFIG.settingsConfig[key].type);
     }
 
     getAdvancedSettings() {
