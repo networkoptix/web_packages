@@ -8,6 +8,9 @@
         height    : 30px;
         display   : flex;
         transform : translateY(-50%);
+        &.wrapper {
+            transform: translateY(+50%);
+        }
     }
 
     &.small {

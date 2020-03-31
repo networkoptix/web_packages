@@ -21,7 +21,6 @@ import State                         from './stateForMergeDialog';
 export class MergeModalContent {
     @Input() system;
     @Input() systems;
-    @Input() peerSystems;
     @Input() systemName;
     @Input() closable;
     @Input() user;
@@ -33,6 +32,7 @@ export class MergeModalContent {
     checkPasswordProcess: any;
     mergingProcess: any;
     primarySystem: any;
+    peerSystems = [];
     processedSystems = [];
     secondarySystem: any;
     serverUrl: string;
@@ -43,6 +43,7 @@ export class MergeModalContent {
     targetSystemService: any;
     tooManyServers: boolean;
     nonCloudMerge = false;
+    peerSystemsLoaded = false;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -80,7 +81,7 @@ export class MergeModalContent {
         this.LANG = languageService.getTranslations();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
             if (this.systems.length === 0) {
@@ -93,6 +94,7 @@ export class MergeModalContent {
                         { name: 'horizontal' }
                     );
                 }
+                await this.getPeerSystems();
                 if (this.peerSystems.length) {
                     this.processedSystems.push(
                         ...this.makeSelectorList(this.peerSystems),
@@ -197,6 +199,31 @@ export class MergeModalContent {
             this.updateShow(showUpdate, templateUpdates);
         }
         this.setSystems();
+    }
+
+    getPeerSystems() {
+        return this.system.getPeerSystems().toPromise()
+            .then(res => {
+                this.peerSystems = res.reply
+                    .filter(peer => !peer.cloudSystemId)
+                    .map(peer => {
+                        const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                        const system: any = {
+                            ...peer,
+                            id         : peer.id.replace(/[{}]/g, ''),
+                            url        : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            systemName : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
+                            ip         : peer.remoteAddresses[0],
+                            name       : peer.name,
+                            isNew
+                        };
+                        if (this.system && this.system.moduleInfo && peer.status === 'Incompatible') {
+                            system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
+                        }
+                        return system;
+                    });
+                this.peerSystemsLoaded = true;
+            });
     }
 
     initProcesses() {

@@ -34,7 +34,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systems: any;
-    peerSystems: any[] = [];
 
     userDisconnectSystem: any;
     deletingSystem: any;
@@ -111,13 +110,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         .pipe(throttleTime(this.CONFIG.system.throttleTime))
                         .subscribe(() => {
                             this.settingsService.footerSubject.next(true);
+                            this.updateSettings(this.currentlyMerging);
                             if (this.settingsSubscription) {
                                 this.settingsSubscription.unsubscribe();
                             }
                             this.settingsSubscription = this.system.updateOrGetSystemSettings()
                                 .subscribe((res: any) => {
                                     this.settingsForSystem = res.reply.settings;
-                                    this.updatePeerSystems();
                                 });
                         });
                 }
@@ -168,31 +167,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    updatePeerSystems() {
-        return this.system.getPeerSystems().toPromise()
-            .then(res => {
-                this.peerSystems = res.reply
-                    .filter(peer => !peer.cloudSystemId)
-                    .map(peer => {
-                        const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                        const system: any = {
-                            ...peer,
-                            id         : peer.id.replace(/[{}]/g, ''),
-                            url        : `${peer.remoteAddresses[0]}:${peer.port}`,
-                            systemName : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
-                            ip         : peer.remoteAddresses[0],
-                            name       : peer.name,
-                            isNew
-                        };
-                        if (this.system && this.system.moduleInfo && peer.status === 'Incompatible') {
-                            system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
-                        }
-                        return system;
-                    });
-                this.updateSettings(this.currentlyMerging);
-            });
-    }
-
     delete() {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
@@ -230,7 +204,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         return this.dialogs
-            .merge(this.system, this.systems, this.peerSystems, this.accountService)
+            .merge(this.system, this.systems, this.accountService)
             .then((mergeInfo) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
