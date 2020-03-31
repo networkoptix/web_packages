@@ -1,26 +1,27 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Location } from '@angular/common';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService } from '../../services/nx-config';
-import { NxPageService } from '../../services/page.service';
+import { ActivatedRoute, Router }                                                     from '@angular/router';
+import { HttpClient, HttpParams }                                                     from '@angular/common/http';
+import { Location }                                                                   from '@angular/common';
+import { NxLanguageProviderService }                                                  from '../../services/nx-language-provider';
+import { NxConfigService }                                                            from '../../services/nx-config';
+import { NxPageService }                                                              from '../../services/page.service';
 import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
-import { ComponentsModule } from '../../components/components.module';
-import { SessionStorageService } from 'ngx-store';
-import { WINDOW } from '../../services/window-provider';
-import { NxAccountService } from '../../services/account.service';
-import { NxProcessService } from '../../services/process.service';
-import { NxCloudApiService } from '../../services/nx-cloud-api';
+import { ComponentsModule }                                                           from '../../components/components.module';
+import { SessionStorageService }                                                      from 'ngx-store';
+import { WINDOW }                                                                     from '../../services/window-provider';
+import { NxAccountService }                                                           from '../../services/account.service';
+import { NxProcessService }                                                           from '../../services/process.service';
+import { NxCloudApiService }      from '../../services/nx-cloud-api';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-    selector : 'content-component',
+    selector   : 'content-component',
     templateUrl: 'content.component.html',
-    styleUrls: ['content.component.scss']
+    styleUrls  : ['content.component.scss']
 })
 
 export class NxContentComponent implements OnInit {
     private title: string;
-    private body: string;
+    private body: SafeHtml;
     private staticHTML: string;
     private articleParam: string;
     private state: string;
@@ -46,23 +47,25 @@ export class NxContentComponent implements OnInit {
         this.staticHTML = '';
     }
 
-    constructor(@Inject(WINDOW) private window: Window,
-                private route: ActivatedRoute,
-                private router: Router,
-                private http: HttpClient,
-                private location: Location,
-                private language: NxLanguageProviderService,
-                private config: NxConfigService,
-                private pageService: NxPageService,
-                private _compiler: Compiler,
-                private sessionStorage: SessionStorageService,
-                private accountService: NxAccountService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                languageService: NxLanguageProviderService) {
+    constructor(
+        languageService: NxLanguageProviderService,
+        config: NxConfigService,
+        @Inject(WINDOW) private window: Window,
+        private route: ActivatedRoute,
+        private router: Router,
+        private http: HttpClient,
+        private location: Location,
+        private pageService: NxPageService,
+        private _compiler: Compiler,
+        private sessionStorage: SessionStorageService,
+        private accountService: NxAccountService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private sanitizer: DomSanitizer
+    ) {
         this.setupDefaults();
-        this.langCode = this.language.getLang();
         this.CONFIG = config.getConfig();
+        this.langCode = languageService.getLang();
         this.LANG = languageService.getTranslations();
     }
 
@@ -127,10 +130,10 @@ export class NxContentComponent implements OnInit {
         const state = (this.state) ? this.state : '';
         const id = (this.id) ? this.id : '';
         const params = new HttpParams().set('state', state).set('id', id);
-        this.http.get(uri, {params}).subscribe(
+        this.http.get(uri, { params }).subscribe(
             (data: any) => {
                 this.title = data.title;
-                this.body = data.body;
+                this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.setPageTitle(this.title);
                 this.loaded = true;
                 if (data.id) {
@@ -158,13 +161,14 @@ export class NxContentComponent implements OnInit {
     }
 
     compileStaticArticle(templateUrl) {
-        @Component({templateUrl})
+        @Component({ templateUrl })
         class TemplateComponent {
             @ViewChild('title', { static: true }) title;
         }
 
-        @NgModule({declarations: [TemplateComponent], imports: [ComponentsModule]})
-        class TemplateModule {}
+        @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
+        class TemplateModule {
+        }
 
         this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
             const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
