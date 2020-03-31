@@ -218,6 +218,28 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     ngOnDestroy() {}
 
+    findVendorForCamera(name) {
+        const camera = this.cameras.find((camera) => {
+            if (camera.model === name) {
+                return camera;
+            }
+        });
+
+        if (camera) {
+            const queryParams: Params = {};
+            queryParams['vendors'] = camera.vendor;
+            this.uri
+                .updateURI(this.uri.getURL(), queryParams, true)
+                .catch(error => {
+                    console.error(error);
+                });
+
+            return camera.vendor;
+        }
+
+        return '';
+    }
+
     updateFilterModel() {
         this.filterModel.query = '';
 
@@ -263,7 +285,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     if (this.params[select.id]) {
                         select.selected = isArray(this.params[select.id]) ? this.params[select.id] : this.params[select.id].split(',');
                     } else {
-                        select.selected = [];
+                        if (select.id === 'vendors' && this.params.camera) { // direct navigation to camera
+                            select.selected = this.findVendorForCamera(this.params.camera);
+                        } else {
+                            select.selected = [];
+                        }
                     }
                 });
         }
