@@ -3,7 +3,7 @@
     <h4 class="m-0 ml-3 subtitle">{{release.productDescription}}</h4>
 </div>
 
-<h4 class="mb-3 subtitle">PUBLISHED<span>&nbsp;{{release.date}}</span></h4>
+<h4 class="mb-3 subtitle">PUBLISHED {{release.date}}</h4>
 
 <div *ngIf="release.releaseNotes">
     <h4 translate>Release Notes</h4>
@@ -30,7 +30,7 @@
 
     <ul [ngbCollapse]="!card.expanded">
         <li *ngFor="let file of platform.files">
-            <span>{{file.niceName}}</span>
+            <ng-container>{{file.niceName}}</ng-container>
             <a [routerLink]="[linkbase, release.buildNumber, file.path]">{{file.fileName}}</a>
         </li>
     </ul>

@@ -143,9 +143,9 @@
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
             <p translate>Systems of such size can work, but may be unstable and have troubles with updates and synchronization.</p>
             <p>
-                <span>{{LANG.dialogs.merge.recommendSupport.a_recommend}}</span>
-                <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a> 
-                <span>{{LANG.dialogs.merge.recommendSupport.c_proceeding}}</span>
+                {{LANG.dialogs.merge.recommendSupport.a_recommend}}&nbsp;
+                <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
+                {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
             </p>
         </div>
         <div class="form-group"

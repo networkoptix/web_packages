@@ -175,7 +175,7 @@
             </div>
             <div class="row">
                 <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                    <span>{{event}}</span>
+                    <ng-container>{{event}}</ng-container>
                 </div>
             </div>
 
@@ -247,7 +247,7 @@
             <div class="camview-link">
                 <a href translate (click)="sendFeedback()">Send feedback about this device</a>
             </div>
-            <div style="color: gray;"><span translate>Updated</span><span>&nbsp;{{ activeCamera.timestamp | date:'fullDate'}}</span></div>
+            <div style="color: gray;"><ng-container translate>Updated</ng-container> {{ activeCamera.timestamp | date:'fullDate'}}</div>
         </nx-section>
     </nx-block>
 </div>
