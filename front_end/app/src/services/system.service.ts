@@ -431,10 +431,11 @@ class ServerManager {
                     const previewUrl = this.mediaserver.previewUrl(id);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
                     const motionEnabled = camera.motionType !== '8';
-                    const recordingSettings: Partial<IRecordingSettings> = {
-                        quality : this.parseRecordingQuality(camera.scheduleTasks),
+                    const recordingSettings: IRecordingSettings = {
+                        recording : !!camera.scheduleTasks.length,
+                        quality   : this.parseRecordingQuality(camera.scheduleTasks),
                         motionEnabled,
-                        modes   : [
+                        modes     : [
                             { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
                             { name: 'Record Motion', id: 'RT_MotionOnly', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                             {
@@ -445,7 +446,6 @@ class ServerManager {
                             }
                         ]
                     };
-                    recordingSettings.recording = recordingSettings.modes.some(({ value }) => value !== 0);
                     return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
                 });
                 return this.cameras;
@@ -489,9 +489,9 @@ class ServerManager {
             secondsToday < endTime
         ));
         if (recording) {
-            return 'recording';
+            return 'Recording';
         } else {
-            return 'scheduled';
+            return 'Scheduled';
         }
     }
 

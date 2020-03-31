@@ -28,7 +28,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
         if (!firstChange) {
             this.show = false;
         }
-        if (this.state !== 'Online' && this.state !== 'Recording') {
+        if (this.state !== 'Online' && this.state !== 'Recording' && this.state !== 'Scheduled') {
             this.url = '';
             this.loaded.emit(true);
         }
