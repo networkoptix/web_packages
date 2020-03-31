@@ -17,7 +17,7 @@
 </form>
 <form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
     <div class="modal-body">
-        <nx-pre-loader type="wrapper" *ngIf="!peerSystemsLoaded; else checkMergeBody"></nx-pre-loader>
+        <nx-pre-loader type="merge-wrapper" *ngIf="!peerSystemsLoaded; else checkMergeBody"></nx-pre-loader>
         <ng-template #checkMergeBody>
             <p>{{machine.state.template.bodyTitle}}</p>
             <nx-select
@@ -64,6 +64,7 @@
             [process]="checkMergeabilityProcess"
             [form]="checkMergeForm"
             actionType="primary"
+            [buttonDisabled]="!peerSystemsLoaded"
             [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
     </div>
