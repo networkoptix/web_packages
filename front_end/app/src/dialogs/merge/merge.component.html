@@ -22,6 +22,7 @@
             *ngIf="machine.state.show.systemDropdown"
             class="mb-2"
             id="system"
+            merge="true"
             [items]="processedSystems" 
             [selected]="targetSystemDropdown" 
             (onSelected)="setTargetSystem($event)"
