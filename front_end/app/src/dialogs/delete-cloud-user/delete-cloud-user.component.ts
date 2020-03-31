@@ -43,7 +43,11 @@ export class DeleteCloudUserModalContent {
                     },
                     ignoreError: true
                 })
-            .then(res => this.activeModal.close(res));
+            .then(res => {
+                if (res.resultCode === 'ok') {
+                    this.activeModal.close(res);
+                }
+            });
     }
 
     setPassword(input) {

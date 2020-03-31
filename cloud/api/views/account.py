@@ -166,7 +166,12 @@ def delete_user(request):
     require_params(request, ('password',))
     user = request.user
 
-    Account.delete(user.email, request.data.get('password'))
+    try:
+        Account.delete(user.email, request.data.get('password'))
+    except APINotAuthorisedException as error:
+        raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
+            error_data={'password': error.error_data})
+
     kill_session(request)
     user.delete()
     return api_success()
