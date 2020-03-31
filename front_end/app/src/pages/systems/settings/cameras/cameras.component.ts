@@ -7,7 +7,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxSystem, ICamera }         from '../../../../services/system.service';
+import { NxSystem, ICamera, StreamQuality, IRecordingSettings }         from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     filter, map,
@@ -54,9 +54,22 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         { name: '270˚', id: 270 }
     ]
 
+    streamQualities: ISelect[] = [
+        { name: 'Best', id: 'highest' },
+        { name: 'High', id: 'high' },
+        { name: 'Medium', id: 'normal' },
+        { name: 'Low', id: 'low' }
+    ]
+
+    maxFps: number = 30;
+    fps: number = this.maxFps;
+
     selectedAspect: ISelect = { name: 'Auto', id: '' };
 
-    selectedRotation: ISelect = { name: 'Auto', id: '' }
+    selectedRotation: ISelect = { name: 'Auto', id: '' };
+    selectedQuality: ISelect = { name: 'High', id: 'high' }
+
+    recordingSettings: IRecordingSettings;
 
     canSeeInfo = false;
 
@@ -149,8 +162,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.selectedAspect = this.aspectRatios.find(({ id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ id }) => id === this.selectedCamera.rotation) || this.rotations[0];
-            console.log(this.selectedCamera.overrideAr)
-            console.log(this.selectedCamera.rotation)
+            this.selectedQuality = this.rotations.find(({ id }) => id === this.selectedCamera.recordingSettings.quality) || this.streamQualities[1];
+            this.recordingSettings = this.selectedCamera.recordingSettings;
+            // this.maxFps = this.selectedCamera.parsedAddParams.mediaStreams.streams[0].
             const currentAlerts = (this.alerts || []).find(
                 ({ cameraId }) => cameraId === this.parsedCameraId
             );
@@ -214,7 +228,17 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     toggleRecording() {
-        this.selectedCamera.recordingSettings.recording = !this.selectedCamera.recordingSettings.recording;
+        this.recordingSettings.recording = !this.recordingSettings.recording;
+        if (this.selectedCamera.recordingSettings.modes.every(({ value }) => value === 0)) {
+            this.toggleMode(this.selectedCamera.recordingSettings.modes[0].name);
+        }
+    }
+
+    toggleMode(toggledName, disabled = false) {
+        if (disabled) return;
+        this.selectedCamera.recordingSettings.modes = this.selectedCamera.recordingSettings.modes.map(({ name, id, enabled }) => ({
+            name, id, enabled, value: name === toggledName ? 2 : 0
+        }));
     }
 }
 
@@ -234,5 +258,5 @@ export class Alert {
 
 export interface ISelect {
     name: string;
-    id: number | ''
+    id: number | '' | StreamQuality;
 }

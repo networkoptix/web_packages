@@ -87,21 +87,25 @@
                 <header>
                     <div class="d-flex">
                         <div class="d-flex justify-content-center align-items-center"  [style.width.px]="64">
-                            <nx-switch [ngModel]="selectedCamera.recordingSettings.recording"(ngModelChange)="toggleRecording();"></nx-switch>
+                            <nx-switch [ngModel]="recordingSettings.recording"(ngModelChange)="toggleRecording();"></nx-switch>
                         </div>
                         <span translate>Recording</span>
                     </div>
                 </header>
-                <ng-container  *ngIf="selectedCamera.recordingSettings.recording">
+                <ng-container  *ngIf="recordingSettings.recording">
                     <nx-section>
                         <h4 class="mb-3">Mode</h4>
-                        <div *ngFor="let mode of selectedCamera.recordingSettings.modes" class="d-flex">
+                        <div *ngFor="let mode of recordingSettings.modes" class="d-flex">
                             <nx-radio
                                 [name]="mode.name" [componentId]="mode.name"
                                 [value]="mode.value"
-                                [(ngModel)]="mode.value"></nx-radio>
-                            <label [for]="mode.name">{{mode.name}} {{mode.value}}</label>
+                                [disabled]="!mode.enabled"
+                                [(ngModel)]="mode.value"
+                                (click)="toggleMode(mode.name, !mode.enabled)"
+                                ></nx-radio>
+                            <label [for]="mode.name" [ngClass]="mode.enabled ? '' : 'text-muted'">{{mode.name}}</label>
                         </div>
+                        <span *ngIf="!selectedCamera.motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
                     <nx-section>
                             <h4 class="mb-3">Quality</h4>
@@ -114,8 +118,8 @@
                             <div class="d-flex justify-content-start col-4 align-items-center">
                                 <span class="col-3 text-nowrap text-right" translate>Quality</span>
                                 <nx-select [selected]="false"
-                                    [(ngModel)]="selectedRotation"
-                                    [items]="rotations"></nx-select>
+                                    [(ngModel)]="selectedQuality"
+                                    [items]="streamQualities"></nx-select>
                             </div>
                     </nx-section>
                 </ng-container>

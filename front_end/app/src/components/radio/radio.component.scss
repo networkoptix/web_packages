@@ -97,6 +97,7 @@ nx-radio {
     &.checked {
         svg {
             circle {
+                fill    : $brand_core;
                 display : block;
             }
         }
@@ -104,7 +105,10 @@ nx-radio {
 
     &.tristate {
         svg {
-            // add when it's needed
+            circle {
+                fill    : rgba($brand_core, .5);
+                display : block;
+            }
         }
     }
 
@@ -112,12 +116,7 @@ nx-radio {
         height : 16px;
         width  : 20px;
 
-        & path.circle {
-            fill : $dark9;
-        }
-
         & circle {
-            fill    : $brand_core;
             display : none;
         }
     }

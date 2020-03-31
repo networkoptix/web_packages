@@ -2,8 +2,8 @@
     <input type="radio"
            [id]="componentId"
            [value]="value"
-           [attr.disabled]="disabled ? '' : null"
-           (click)="changeState()">
+           [disabled]="disabled"
+           (click)="!disabled && changeState()">
 
     <span class="check"
           [ngClass]="state">

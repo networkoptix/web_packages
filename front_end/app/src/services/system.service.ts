@@ -430,27 +430,52 @@ class ServerManager {
                     const isAudioSupported = audioSupported === '1';
                     const previewUrl = this.mediaserver.previewUrl(id);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
-                    const recordingSettings: IRecordingSettings = {
-                        recording: this.parseRecordingMode(camera, 'RT_MotionOnly') || this.parseRecordingMode(camera, 'RT_Always'),
-                        modes: [
-                            { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always') },
-                            { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly') },
-                            { name: 'Record Never', id: 'RT_Never', 
-                                value: !this.parseRecordingMode(camera, 'RT_Always') && !this.parseRecordingMode(camera, 'RT_MotionOnly') }
+                    const motionEnabled = camera.motionType !== '8';
+                    const recordingSettings: Partial<IRecordingSettings> = {
+                        quality : this.parseRecordingQuality(camera.scheduleTasks),
+                        motionEnabled,
+                        modes   : [
+                            { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                            { name: 'Record Motion', id: 'RT_MotionOnly', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                            {
+                                name    : 'Record Motion + Low Quality',
+                                id      : 'RT_MotionAndLowQuality',
+                                value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
+                                enabled : motionEnabled
+                            }
                         ]
-                    }
-                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+                    };
+                    recordingSettings.recording = recordingSettings.modes.some(({ value }) => value !== 0);
+                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
                 });
                 return this.cameras;
             });
     }
+
+    private parseRecordingQuality(schedule: ITask[]): StreamQuality {
+        const streamQualities: StreamQuality[] = ['low', 'normal', 'high', 'highest'];
+        let quality: StreamQuality = 'high';
+        for (const stream of streamQualities) {
+            if (schedule.every(({ streamQuality }) => streamQuality === stream)) {
+                quality = stream;
+            }
+        }
+        return quality;
+    }
+
     private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, id: RecordingType) {
-        return scheduleTasks.some(({recordingType, startTime, endTime, fps}) => (
+        const partialSchedule = scheduleTasks.some(({ recordingType, startTime, endTime, fps }) => (
             recordingType === id &&
             fps > 0 &&
             startTime < endTime
         ));
 
+        const fullSchedule = scheduleTasks.length && scheduleTasks.every(({ recordingType, startTime, endTime, fps }) => (
+            recordingType === id &&
+            fps > 0 &&
+            startTime < endTime
+        ));
+        return fullSchedule ? 2 : partialSchedule ? 1 : 0;
     }
 
     private parseCameraStatus({ status, scheduleEnabled, scheduleTasks }: Partial<ICamera>, { dayOfWeek, secondsToday }) {
@@ -1004,6 +1029,7 @@ export interface ICamera {
     model: string;
     motionMask: string;
     motionType: string;
+    motionEnabled: boolean;
     mediaCapabilities: IMediaCapabilities;
     name: string;
     parentId: string;
@@ -1039,17 +1065,20 @@ export interface ITask {
 }
 
 export interface IRecordingSettings {
-    recording: boolean,
-    modes: IRecordingModes[]
+    recording: boolean;
+    quality: StreamQuality;
+    motionEnabled: boolean;
+    modes: IRecordingModes[];
 }
 
 export interface IRecordingModes {
     name: string;
     id: RecordingType;
-    value: boolean
+    value: 0 | 1 | 2; // 0: None scheduled, 1: Some scheduled, 2: All scheduled
+    enabled: boolean;
 }
 
-export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_Never'
+export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_MotionAndLowQuality' | 'RT_Never'
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest'
 
 export interface Condition {
