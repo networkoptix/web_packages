@@ -412,7 +412,7 @@ class ServerManager {
             });
     }
 
-    async getCameras() {
+    async getCameras(): Promise<ICamera[]> {
         const { reply: servers }: any = await this.mediaserver.getServerTimes().toPromise();
         return this.mediaserver.getCameras().toPromise()
             .then((result: any) => {
@@ -451,6 +451,26 @@ class ServerManager {
                 });
                 return this.cameras;
             });
+    }
+
+    updateRecordingSettings(task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'>, cameraId, cameraName, audioEnabled, scheduleEnabled) {
+        const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = scheduleEnabled ? {
+            bitrateKbps   : 0,
+            endTime       : 86400,
+            startTime     : 0,
+            recordingType : task.recordingType
+        } : {
+            bitrateKbps   : 0,
+            endTime       : 0,
+            startTime     : 0,
+            recordingType : 'RT_Never'
+        };
+
+        const scheduleTasks: ITask[] = [];
+        for (let dayOfWeek = 1; dayOfWeek < 8; dayOfWeek++) {
+            scheduleTasks.push({ ...task, ...baseTask, dayOfWeek });
+        }
+        return this.mediaserver.updateRecordingSettings({ cameraId, cameraName, audioEnabled, scheduleTasks });
     }
 
     private parseFps(schedule: ITask[]): number | 'various' {
@@ -915,6 +935,10 @@ export class NxSystem extends System implements OnDestroy {
 
     getCameras() {
         return this.serverManager.getCameras();
+    }
+
+    updateRecordingSettings(task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'>, cameraId, cameraName, audioEnabled, scheduleEnabled = true) {
+        return this.serverManager.updateRecordingSettings(task, cameraId, cameraName, audioEnabled, scheduleEnabled);
     }
 
     getServers() {

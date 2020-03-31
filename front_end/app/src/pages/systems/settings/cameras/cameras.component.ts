@@ -1,5 +1,5 @@
 import {
-    Component, OnDestroy, OnInit, Inject
+    Component, OnDestroy, OnInit, Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
@@ -19,7 +19,8 @@ import { NxUriService }              from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import { WINDOW }                    from '../../../../services/window-provider';
 import { NxToastService } from '../../../../dialogs/toast.service';
-import { Watcher } from '../../../../services/apply.service';
+import { Watcher, NxApplyService } from '../../../../services/apply.service';
+import { Process, NxProcessService } from '../../../../services/process.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,6 +31,7 @@ import { Watcher } from '../../../../services/apply.service';
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+    viewContainerRef: ViewContainerRef;
     system: NxSystem;
     settingsSubscription: Subscription;
     routeParamsSubscription: Subscription;
@@ -41,6 +43,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     fullInfoPath: string;
     cameraViewPath: string;
     alerts: Alert[];
+    saveSettings: Process
     aspectRatios: ISelect[] = [
         { name: 'Auto', id: '' },
         { name: '4:3', id: 1.33333 },
@@ -66,7 +69,107 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     maxFps: number = 30;
     fps: number = this.maxFps;
 
-    // Methods for watchers
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private menuService: NxMenuService,
+        private settingsService: NxSettingsService,
+        private route: ActivatedRoute,
+        private uriService: NxUriService,
+        private healthService: NxHealthService,
+        private toastService: NxToastService,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
+        @Inject(WINDOW) private window: Window,
+        @Inject(ViewContainerRef) viewContainerRef
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+        this.viewContainerRef = viewContainerRef;
+        this.menuService.setSection('cameras');
+    }
+
+    ngOnInit() {
+        this.routeParamsSubscription = this.route
+            .params
+            .pipe(distinctUntilChanged())
+            .subscribe(params => {
+                if (params.cameraId) {
+                    this.menuService.setDetailsSection(params.cameraId);
+                    this.cameraIdFromParams = params.cameraId;
+                    this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
+                    this.setCamera();
+                }
+            });
+
+        this.settingsSubscription = this.settingsService.systemSubject
+            .pipe(filter(data => data !== undefined))
+            .subscribe(system => {
+                this.settingsService.footerSubject.next(true);
+                this.system = system;
+                this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
+                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                    this.initUpdateProcess();
+                    if (this.canSeeInfo) {
+                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                    }
+                });
+
+                if (this.cameraSubscription) {
+                    this.cameraSubscription.unsubscribe();
+                }
+                this.cameraSubscription = this.system.infoSubject
+                    .pipe(
+                        distinctUntilChanged(),
+                        map(system => {
+                            if (!system.cameras || system.cameras.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.cameras && this.system.cameras.length) {
+                                this.system.initSystemMediaServers();
+                            }
+                            this.updateValues();
+                            this.setCamera();
+                        }
+                    });
+            });
+        this.initUpdateProcess();
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.saveSettings,
+            () => this.applyService.reset(),
+            [
+                this.audioEnabledWatcher,
+                this.cameraNameWatcher,
+                this.recordingModesWatcher,
+                this.recordingWatcher,
+                this.selectedAspectWatcher,
+                this.selectedFpsWatcher,
+                this.selectedQualityWatcher,
+                this.selectedRotationWatcher
+            ]);
+    }
+
+    // Process for apply service
+    initUpdateProcess() {
+        console.log('init process');
+        this.saveSettings = this.processService.createProcess(() => {
+            console.log('running process with', this.cameraNameWatcher.value);
+            // TODO: Having issues with building params to post update
+            return Promise.resolve(this.system.updateRecordingSettings({
+                fps           : this.selectedFpsWatcher.value,
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id,
+                streamQuality : this.selectedQualityWatcher.value
+            }, this.selectedCamera.id, this.cameraNameWatcher.value, this.audioEnabled.value, this.recording.value)
+            );
+        });
+    }
 
     // Basic Settings
     selectedAspectWatcher = new Watcher()
@@ -153,80 +256,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     canSeeInfo = false;
 
-    constructor(
-        configService: NxConfigService,
-        language: NxLanguageProviderService,
-        private menuService: NxMenuService,
-        private settingsService: NxSettingsService,
-        private route: ActivatedRoute,
-        private uriService: NxUriService,
-        private healthService: NxHealthService,
-        private toastService: NxToastService,
-        @Inject(WINDOW) private window: Window
-    ) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
-        this.menuService.setSection('cameras');
-    }
-
-    ngOnInit() {
-        this.routeParamsSubscription = this.route
-            .params
-            .pipe(distinctUntilChanged())
-            .subscribe(params => {
-                if (params.cameraId) {
-                    this.menuService.setDetailsSection(params.cameraId);
-                    this.cameraIdFromParams = params.cameraId;
-                    this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    this.setCamera();
-                }
-            });
-
-        this.settingsSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
-            .subscribe(system => {
-                this.settingsService.footerSubject.next(true);
-                this.system = system;
-                this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
-                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
-                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                    if (this.canSeeInfo) {
-                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
-                    }
-                });
-
-                if (this.cameraSubscription) {
-                    this.cameraSubscription.unsubscribe();
-                }
-                this.cameraSubscription = this.system.infoSubject
-                    .pipe(
-                        distinctUntilChanged(),
-                        map(system => {
-                            if (!system.cameras || system.cameras.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .subscribe(() => {
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.cameras && this.system.cameras.length) {
-                                this.system.initSystemMediaServers();
-                            }
-                            this.updateValues();
-                            this.setCamera();
-                        }
-                    });
-            });
-    }
-
     ngOnDestroy() {}
 
     setCamera() {
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
             return;
         }
-        if (this.system && this.system.cameras && this.system.cameras.length > 0) {
+        if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
+            this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
 
             if (cameraIndex === -1) {
@@ -281,6 +318,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === unauthorizedMessage)]);
                 }
             }
+            this.applyService.reset();
+            this.applyService.setVisible(true);
         }
     }
 

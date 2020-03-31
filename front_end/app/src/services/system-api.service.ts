@@ -5,6 +5,7 @@ import { from, of, throwError }                from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { RequestOptions }                      from '@angular/http';
+import { ICamera } from './system.service';
 
 interface User {
     canBeEdited: boolean;
@@ -355,6 +356,12 @@ export class NxSystemAPI {
     getCameras(id?) {
         const params = id ? { id: this.cleanId(id) } : {};
         return this.get('/ec2/getCamerasEx', params);
+    }
+
+    updateRecordingSettings(params: Partial<ICamera | any>) {
+        console.log(JSON.stringify(params, null, 2));
+        return 'updated';
+        // return this.post('/ec2/saveCameraUserAttributesList', params);
     }
 
     getMediaServers(id?, url?) {
