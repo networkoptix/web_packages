@@ -9,8 +9,8 @@
                 <header>
                     <div class="header-top-bar d-flex justify-content-start">
                         <div class="header-title">
-                            <h2 NxEditable [(ngModel)]="selectedCamera.name" [hasError]="selectedCamera.name"></h2>
-                            <span *ngIf="!selectedCamera.name" class="input-error" translate>Name cannot be empty</span>
+                            <h2 NxEditable [(ngModel)]="cameraName" [hasError]="cameraName"></h2>
+                            <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
                             <span>
@@ -72,7 +72,7 @@
                     </nx-section>
                     <nx-section>
                         <h4 class="mb-3">Audio</h4>
-                        <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="selectedCamera.audioEnabled" [disabled]="!selectedCamera.isAudioSupported"></nx-checkbox>
+                        <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="audioEnabled" [disabled]="!selectedCamera.isAudioSupported"></nx-checkbox>
                         <span [ngClass]="!selectedCamera.isAudioSupported && 'text-muted'" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)">Enable Audio</span>
                     </nx-section>
                     <nx-section>
@@ -87,15 +87,15 @@
                 <header>
                     <div class="d-flex">
                         <div class="d-flex justify-content-center align-items-center"  [style.width.px]="64">
-                            <nx-switch [ngModel]="recordingSettings.recording"(ngModelChange)="toggleRecording();"></nx-switch>
+                            <nx-switch [(ngModel)]="recording"></nx-switch>
                         </div>
                         <span translate>Recording</span>
                     </div>
                 </header>
-                <ng-container  *ngIf="recordingSettings.recording">
+                <ng-container  *ngIf="recording">
                     <nx-section>
                         <h4 class="mb-3">Mode</h4>
-                        <div *ngFor="let mode of recordingSettings.modes" class="d-flex">
+                        <div *ngFor="let mode of recordingModes" class="d-flex">
                             <nx-radio
                                 [name]="mode.name" [componentId]="mode.name"
                                 [value]="mode.value"
@@ -111,9 +111,15 @@
                             <h4 class="mb-3">Quality</h4>
                             <div class="d-flex justify-content-start col-4 align-items-center mb-2">
                                 <span class="col-3 text-nowrap text-right" translate>FPS</span>
-                                <nx-select [selected]="false"
-                                    [(ngModel)]="selectedAspect"
-                                    [items]="aspectRatios"></nx-select>
+                                <input type="number"
+                                   id="fps"
+                                   name="fps"
+                                   min="1"
+                                   step="1"
+                                   max="30"
+                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps"
+                                   [(ngModel)]="selectedFps"
+                                   class="form-control input-sm"/>
                             </div>
                             <div class="d-flex justify-content-start col-4 align-items-center">
                                 <span class="col-3 text-nowrap text-right" translate>Quality</span>

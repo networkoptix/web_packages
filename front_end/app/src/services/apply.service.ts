@@ -25,7 +25,11 @@ import { Process, NxProcessService } from './process.service';
  */
 export class Watcher<T> {
     originalValue: T;
-    valueSubject = new BehaviorSubject<T>(undefined);
+    valueSubject = new BehaviorSubject<any>(undefined);
+
+    constructor(value?: T) {
+        this.originalValue = value;
+    }
 
     get value() {
         return this.valueSubject.getValue();

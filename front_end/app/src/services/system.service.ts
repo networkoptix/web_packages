@@ -434,6 +434,7 @@ class ServerManager {
                     const recordingSettings: IRecordingSettings = {
                         recording : !!camera.scheduleTasks.length,
                         quality   : this.parseRecordingQuality(camera.scheduleTasks),
+                        fps       : this.parseFps(camera.scheduleTasks),
                         motionEnabled,
                         modes     : [
                             { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
@@ -452,11 +453,16 @@ class ServerManager {
             });
     }
 
+    private parseFps(schedule: ITask[]): number | 'various' {
+        const currentFps = Array.from(new Set(schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps)));
+        return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
+    }
+
     private parseRecordingQuality(schedule: ITask[]): StreamQuality {
         const streamQualities: StreamQuality[] = ['low', 'normal', 'high', 'highest'];
-        let quality: StreamQuality = 'high';
+        let quality: StreamQuality = schedule.length ? 'various' : 'high';
         for (const stream of streamQualities) {
-            if (schedule.every(({ streamQuality }) => streamQuality === stream)) {
+            if (schedule.length && schedule.every(({ streamQuality }) => streamQuality === stream)) {
                 quality = stream;
             }
         }
@@ -1067,6 +1073,7 @@ export interface ITask {
 export interface IRecordingSettings {
     recording: boolean;
     quality: StreamQuality;
+    fps: number | 'various' | any;
     motionEnabled: boolean;
     modes: IRecordingModes[];
 }
@@ -1079,7 +1086,7 @@ export interface IRecordingModes {
 }
 
 export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_MotionAndLowQuality' | 'RT_Never'
-export type StreamQuality = 'low' | 'normal' | 'high' | 'highest'
+export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various'
 
 export interface Condition {
     paramId: string;
