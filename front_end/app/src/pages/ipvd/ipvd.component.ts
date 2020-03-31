@@ -195,7 +195,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.addFilterTypes();
         this.addFilterResolutions();
 
-        this.activate();
+        this.getIPVDData();
 
         this.breakpointSubscription = this.breakpointObserver
             .observe([this.breakpoint])
@@ -364,14 +364,22 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.searchVendor();
     }
 
-    reset() {
-        this.cameraReloadSubscription = this.cloudApi
-            .reloadIPVD()
-            .subscribe();
+    getIPVDData() {
+        if (this.debug) {
+            this.cameraReloadSubscription = this.cloudApi
+                .reloadIPVD()
+                .subscribe(() => {
+                    this.activate();
+                },
+                ex => console.error(ex));
+            return;
+        }
+
+        this.activate();
     }
 
     activate() {
-        this.cameraGetSubscription = this.cloudApi
+        this.cloudApi
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
@@ -405,7 +413,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 this.searchVendor();
                 // Trigger model change for search component
                 this.filterModel = { ...this.filterModel };
-            });
+            },
+            ex => console.error(ex));
     }
 
     // restrict the parameters to be passed and viewed for to cam-table (based on allowedParameters)
