@@ -56,6 +56,7 @@ export class MergeModalContent {
 
     readonly otherSystem: string = 'otherSystem';
     readonly duplicateServers: string = 'duplicateServers';
+    readonly differentOwners: string = 'differentOwners';
     readonly systemOffline: string = 'systemOffline';
     readonly noServerFound: string = 'noServerFound';
     readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
@@ -268,14 +269,20 @@ export class MergeModalContent {
                 this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
                 return this.system.mergeSystems(this.serverUrl, true).toPromise()
                     .then(res => {
+                        const newCheckMergeErrors = {
+                            DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
+                            CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners
+                        };
                         if (res.error === '0') {
                             this.machine.transition('confirmMerge');
                         } else if (res.errorString === 'UNAUTHORIZED') {
                             this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
-                        } else if (res.errorString === 'DUPLICATE_MEDIASERVER_FOUND') {
+                        } else if (res.errorString) {
                             this.machine.history = [];
                             this.machine.transition(this.checkMerge);
-                            this.updateShow(this.serverUrlMergeError, { checkingErrorText: this.duplicateServers });
+                            this.updateShow(this.serverUrlMergeError, {
+                                checkingErrorText: newCheckMergeErrors[res.errorString] || this.unknownError
+                            });
                         }
                     });
             });
