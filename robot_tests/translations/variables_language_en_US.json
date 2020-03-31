@@ -53,6 +53,7 @@
     "ACCOUNT TEXT"                         :    "Account",
     "ACCOUNT INFORMATION"                  :    "Account Information",
     "ACCOUNT SETTINGS TEXT"                :    "Account settings",
+    "DELETE ACCOUNT TEXT"                  :    "Delete Account",
 
     "EDIT USER BUTTON TEXT"                :    "Edit",
     "REMOVE USER BUTTON TEXT"              :    "Remove User",

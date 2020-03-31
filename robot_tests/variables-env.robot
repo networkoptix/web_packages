@@ -71,5 +71,5 @@ ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owne
 #AUTO TESTS 2 is an offline system used for testing offline status on the systems page and offline status on the system page
 ${AUTO TESTS 2}                       Auto Tests 2
 ${AUTO TESTS OFFLINE TITLE}           ${SYSTEMS TILE}//h2[text()='${AUTO TESTS 2}']
-${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibling::nx-tag/div[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
+${AUTOTESTS OFFLINE}                  ${AUTO TESTS OFFLINE TITLE}/following-sibling::nx-tag/div/span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
 ${AUTOTESTS OFFLINE OPEN NX}          ${AUTO TESTS OFFLINE TITLE}/..//nx-client-button

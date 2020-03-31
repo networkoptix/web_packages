@@ -179,6 +179,8 @@ Should respond to tab and go in the correct order
     Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LAST NAME}
     Press Keys    None    TAB
+    Element Should Be Focused    ${DELETE ACCOUNT BUTTON}
+    Press Keys    None    TAB
     Element Should Be Focused    ${ACCOUNT LANGUAGE DROPDOWN}
     Press Keys    None    ENTER
     Press Keys    None    TAB
