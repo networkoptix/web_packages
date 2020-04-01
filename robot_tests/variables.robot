@@ -86,7 +86,7 @@ ${CURRENT PASSWORD INPUT}             ${CHANGE PASSWORD FORM}//input[@id='passwo
 ${NEW PASSWORD INPUT}                 ${CHANGE PASSWORD FORM}//input[@id='newPassword']
 ${CHANGE PASSWORD BUTTON}             //nx-account-password-component//nx-apply//nx-process-button//button
 ${CANCEL CHANGES BUTTON}              //nx-account-password-component//nx-apply//button[contains(text(), "${CANCEL CHANGES BUTTON TEXT}")]
-${PASSWORD IS REQUIRED}               //span[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
+${PASSWORD IS REQUIRED}               //div[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
 ${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
 ${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
 ${CHANGE PASS NO CHANGES}             //div[contains(@class, "placeholder-text-no-changes")]
@@ -167,7 +167,7 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FRO
 
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
-${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button/span[contains(text(),'${REMOVE USER BUTTON TEXT}')]/parent::button
+${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
 ${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//input[@id='undefined']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
@@ -244,7 +244,7 @@ ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button/span[contains
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
 ${DISCONNECT MODAL CANCEL}               ${MODAL DIALOG}//button/span[contains(text(),'${CANCEL BUTTON TEXT}')]/..
-${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button/span[contains(text(),'${DISCONNECT BUTTON TEXT}')]/..
+${DISCONNECT MODAL DISCONNECT BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${DISCONNECT BUTTON TEXT}')]
 
 ${JUMBOTRON}                          //div[@class='jumbotron']
 ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and not(contains(@class, 'col-sm-4'))]
@@ -278,7 +278,7 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
-${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button/span[contains(text(), "${DELETE ACCOUNT TEXT}")]/..
+${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[contains(text(), "${DELETE ACCOUNT TEXT}")]
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[text()='${NO UNSAVED CHANGES TEXT}']
@@ -558,7 +558,7 @@ ${PASSWORD IS GOOD BADGE}             //nx-tag//div[contains(@class,"badge") and
 ${PASSWORD INCORRECT BADGE}           //nx-tag//div[contains(@class,"badge") and contains(text(),"${PASSWORD INCORRECT BADGE TEXT}")]
 
 #Already logged in modal
-${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button/span[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]/..
+${LOGGED IN STAY LOGGED IN BUTTON}    ${MODAL DIALOG}//button[contains(text(),'${STAY LOGGED IN BUTTON TEXT}')]
 ${LOGGED IN OK BUTTON}                ${MODAL DIALOG}//button[contains(text(),'${OK TEXT}')]
 ${LOGGED IN LOG OUT BUTTON}           ${MODAL DIALOG}//button/span[contains(text(),'${LOG OUT BUTTON TEXT}')]/..
 ${LOGGED IN NEW ACCOUNT BUTTON}       ${MODAL DIALOG}//button/span[contains(text(),'${CREATE NEW ACCOUNT BUTTON TEXT}')]/..

@@ -14,8 +14,6 @@ ${common password}      qweasd123
 ${weak password}        asqwerdf
 ${fair password}        qweasd1234
 
-${PASSWORD IS REQUIRED}
-...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
 ${PASSWORD SPECIAL CHARS}
 ...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
 ${PASSWORD TOO SHORT}
