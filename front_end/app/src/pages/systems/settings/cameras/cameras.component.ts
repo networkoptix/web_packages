@@ -7,7 +7,7 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxSystem, ICamera, StreamQuality, IRecordingSettings }         from '../../../../services/system.service';
+import { NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes }         from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
     filter, map,
@@ -158,16 +158,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     // Process for apply service
     initUpdateProcess() {
-        console.log('init process');
         this.saveSettings = this.processService.createProcess(() => {
-            console.log('running process with', this.cameraNameWatcher.value);
-            // TODO: Having issues with building params to post update
-            return Promise.resolve(this.system.updateRecordingSettings({
-                fps           : this.selectedFpsWatcher.value,
-                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id,
-                streamQuality : this.selectedQualityWatcher.value
-            }, this.selectedCamera.id, this.cameraNameWatcher.value, this.audioEnabled.value, this.recording.value)
-            );
+            const task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> = {
+                fps           : this.selectedFpsWatcher.value === '- -' ? null : this.selectedFpsWatcher.value,
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
+                streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
+            };
+            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'> = {
+                id              : this.selectedCamera.id,
+                name            : this.cameraNameWatcher.value,
+                audioEnabled    : this.audioEnabled.value,
+                scheduleEnabled : this.recordingWatcher.value,
+                overrideAr      : this.selectedAspectWatcher.value || null,
+                rotation        : this.selectedRotationWatcher.value || null
+            };
+            return this.system.updateRecordingSettings(task, cameraSettings);
         });
     }
 
@@ -175,7 +180,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     selectedAspectWatcher = new Watcher()
     get selectedAspect() {
         return this.aspectRatios.find(({ id }) => this.selectedAspectWatcher.value === id);
-    };
+    }
 
     set selectedAspect(value) {
         this.selectedAspectWatcher.value = value.id;
@@ -184,7 +189,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     selectedRotationWatcher = new Watcher()
     get selectedRotation() {
         return this.rotations.find(({ id }) => this.selectedRotationWatcher.value === id);
-    };
+    }
 
     set selectedRotation(value) {
         this.selectedRotationWatcher.value = value.id;
@@ -203,7 +208,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraNameWatcher = new Watcher()
     get cameraName() {
         return this.cameraNameWatcher.value;
-    };
+    }
 
     set cameraName(value) {
         this.cameraNameWatcher.value = value;
@@ -212,19 +217,23 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     recordingWatcher = new Watcher()
     get recording() {
         return this.recordingWatcher.value;
-    };
+    }
 
     set recording(value) {
         this.recordingWatcher.value = value;
     }
 
-    recordingModesWatcher = new Watcher()
-    get recordingModes() {
+    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher()
+    get recordingModes(): IRecordingModes[] {
         return this.recordingModesWatcher.value;
-    };
+    }
 
-    set recordingModes(value) {
+    set recordingModes(value: IRecordingModes[]) {
         this.recordingModesWatcher.value = value;
+    }
+
+    get existingModesSelected() {
+        return this.recordingModes.some(({ value }) => value === 1);
     }
 
     toggleMode(toggledName, disabled = false) {
@@ -237,19 +246,27 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     selectedFpsWatcher = new Watcher()
     get selectedFps() {
         return this.selectedFpsWatcher.value;
-    };
+    }
 
     set selectedFps(value) {
         this.selectedFpsWatcher.value = value;
     }
 
+    get variousFps() {
+        return this.selectedFps === '- -';
+    }
+
     selectedQualityWatcher = new Watcher()
     get selectedQuality() {
         return [...this.streamQualities, this.various].find(({ id }) => this.selectedQualityWatcher.value === id);
-    };
+    }
 
     set selectedQuality(value) {
         this.selectedQualityWatcher.value = value.id;
+    }
+
+    get variousQualities() {
+        return this.selectedQuality.id === this.various.id;
     }
 
     recordingSettings: IRecordingSettings;

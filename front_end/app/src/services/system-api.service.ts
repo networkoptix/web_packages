@@ -358,10 +358,8 @@ export class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    updateRecordingSettings(params: Partial<ICamera | any>) {
-        console.log(JSON.stringify(params, null, 2));
-        return 'updated';
-        // return this.post('/ec2/saveCameraUserAttributesList', params);
+    updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera | any>) {
+        return this.post('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
     getMediaServers(id?, url?) {
