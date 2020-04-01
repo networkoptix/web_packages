@@ -1,4 +1,5 @@
 from django.core.cache import caches
+from django.db import transaction
 from django.http import Http404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
@@ -106,36 +107,27 @@ class CloudSessionAuthentication(SessionAuthentication):
 @permission_classes((AllowAny,))
 @authentication_classes((CloudSystemBasicAuthentication, CloudSessionAuthentication))
 def push_notification(request):
-    if request.data.get('process'):
-        serializer = NotificationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        data = serializer.validated_data
+    serializer = NotificationSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data = serializer.validated_data
 
-        payload = data['notification'].get('payload', None)
-        payload_str = json.dumps(payload) if payload else ''
-        options = data['notification'].get('options', None)
-        options_str = json.dumps(options) if options else ''
+    payload = data['notification'].get('payload', None)
+    payload_str = json.dumps(payload) if payload else ''
+    options = data['notification'].get('options', None)
+    options_str = json.dumps(options) if options else ''
 
-        customization = None
-        customization_param = request.data.get('customization')
-        if customization_param:
-            customization = Customization.objects.get(name=customization_param)
+    notification_object = PushNotification.objects.create(
+        title=data['notification']['title'], body=data['notification']['body'],
+        payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
+        raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
+    )
 
-        if request.data.get('object'):
-            notification_object = PushNotification.objects.create(
-                title=data['notification']['title'], body=data['notification']['body'],
-                payload=payload_str, options=options_str, raw_targets=json.dumps(data['targets']),
-                raw_system_id=data['systemId'], customization=customization or get_mobile_compatible_customization()
-            )
+    transaction.on_commit(lambda: send_push_notification.apply_async(
+        args=[notification_object.id], kwargs={'request_data': request.data},
+        queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
+    ))
 
-            if request.data.get('queue'):
-                send_push_notification.apply_async(
-                    args=[notification_object.id], kwargs={'request_data': request.data},
-                    queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-                )
-
-            return api_success({'notificationId': notification_object.id})
-    return api_success()
+    return api_success({'notificationId': notification_object.id})
 
 
 # @api_view(['GET', 'POST'])

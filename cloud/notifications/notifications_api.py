@@ -191,10 +191,10 @@ def set_subscriptions_from_targets(notification_object, request_data):
     for target in targets:
         log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
 
-    matching_devices = PushDevice.objects.filter(
+    return PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        active=True, user__is_active=True, application_id=notification_object.customization.name
+        application_id=notification_object.customization.name
     ).distinct()
-    notification_object.devices.set(matching_devices)
+    # notification_object.devices.set(matching_devices)
 
-    return notification_object.devices.exists()
+    # return matching_devices.values_list('id', flat=True)

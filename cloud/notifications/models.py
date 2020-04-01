@@ -250,11 +250,11 @@ class PushNotification(models.Model):
             url = url.replace(system_id, relay_host)
         return url
 
-    def send_notifications(self, device_tokens=None):
+    def send_notifications(self, device_tokens=None, devices=None):
         if device_tokens:
-            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
-        else:
-            devices = self.devices.all()
+            devices = PushDevice.objects.filter(id__in=device_tokens)
+        # else:
+        #     devices = self.devices.all()
 
         title = self.title or None
         body = self.body or None

@@ -107,15 +107,15 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
     if count == 1:
         logger.info('Start processing push notification: {}'.format(notification_id))
 
-    notification_object = PushNotification.objects.get(id=notification_id)
-
     try:
-        if not notification_object.devices.all():
-            if not set_subscriptions_from_targets(notification_object, request_data):
+        if device_tokens is None:
+            devices = set_subscriptions_from_targets(notification_object, request_data)
+            if not devices:
                 log_push_result(notification_object, 'No matching subscriptions found')
                 return
-
-        responses = notification_object.send_notifications(device_tokens=device_tokens)
+            responses = notification_object.send_notifications(devices=devices)
+        else:
+            responses = notification_object.send_notifications(device_tokens=device_tokens)
         resend_tokens = notifications_api.process_push_response(responses, notification_object)
 
         if resend_tokens and count < settings.PUSH_NOTIFICATIONS_SETTINGS['MAX_RETRIES']:

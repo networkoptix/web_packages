@@ -390,7 +390,7 @@ CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
 CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
 if not CELERY_BROKER_URL:
     CELERY_BROKER_URL = 'sqs://'
-CELERY_BROKER_POOL_LIMIT = 20
+
 CELERY_BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
@@ -402,8 +402,9 @@ CELERY_WORKER_SEND_TASK_EVENTS = False
 CELERY_WORKER_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages as it wants
 CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 if PUSH_WORKER:
-    CELERY_WORKER_CONCURRENCY = 2
+    CELERY_WORKER_CONCURRENCY = 3
     CELERY_WORKER_PREFETCH_MULTIPLIER = 30
+    CELERY_RESULT_BACKEND = None
 
 
 # / End of Celery settings section
