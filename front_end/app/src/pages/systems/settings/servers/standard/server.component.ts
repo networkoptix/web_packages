@@ -3,11 +3,8 @@ import {
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
 } from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
-import { Subscription, of, interval }  from 'rxjs';
-import {
-    filter, map, delay,
-    retryWhen, delayWhen, catchError
-}                                      from 'rxjs/operators';
+import { of, interval }                from 'rxjs';
+import { delayWhen, catchError }       from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 import { NxConfigService, IConfig }    from '../../../../../services/nx-config';
 import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
@@ -33,13 +30,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    // system: NxSystem;
+
     viewContainerRef: ViewContainerRef;
     serverIdFromParams: any;
-
-    private serverSubscription: Subscription;
-    private systemSubscription: Subscription;
-    private routeParamsSubscription: Subscription;
 
     saveSettings: any;
     ipPortWatcher: any = new Watcher<number>();
@@ -90,53 +83,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     ngOnInit(): void {
-        // this.systemSubscription = this.settingsService.systemSubject
-        //     .pipe(filter(data => data !== undefined))
-        //     .subscribe((system) => {
-        //         this.settingsService.footerSubject.next(true);
-        //         this.system = system;
-        //         // Route guard did not worked :( ... so doing it the old way ...was done in users.component, so replicating
-        //         if (!this.system.permissions || !this.system.permissions.editUsers) {
-        //             this.uriService
-        //                 .updateURI('systems/' + this.system.id, {})
-        //                 .catch(error => {
-        //                     console.error(error);
-        //                 });
-        //
-        //             return;
-        //         }
-        //         if (this.system) {
-        //             this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
-        //                 this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-        //                 if (this.canSeeInfo) {
-        //                     this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.servers.path;
-        //                 }
-        //             });
-        //         }
-        // if (this.serverSubscription) {
-        //     this.serverSubscription.unsubscribe();
-        // }
-        // this.serverSubscription = this.system.infoSubject
-        //     .pipe(
-        //         map(system => {
-        //             if (!system.servers || system.servers.length === 0) {
-        //                 throw system;
-        //             }
-        //         }),
-        //         retryWhen(err => err.pipe(delay(1000)))
-        //     )
-        //     .subscribe(() => {
-        //         if (this.system.currentServerNotBusy) {
-        //             if (this.system && this.system.servers && this.system.servers.length) {
-        //                 this.system.initSystemMediaServers();
-        //             }
-        //             if (!this.applyService.locked) {
-        //                 this.setServer();
-        //             }
-        //         }
-        //     });
-        // });
-
         this.initForApplyService();
 
         this.applyService.initPageWatcher(
@@ -168,38 +114,15 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy(): void {}
 
     setServer(): void {
-        // if (this.system && this.system.servers && this.system.servers.length > 0) {
-        // let server;
-        // if (this.serverIdFromParams) {
-        //     server = this.system.servers.find((server: any) => {
-        //         return server.id === this.serverIdFromParams;
-        //     });
-        // }
-        // if (typeof server === 'undefined') {
-        //     if (this.system.servers.length > 0) {
-        //         server = this.system.servers[0];
-        //
-        //         this.uriService
-        //             .updateURI(`systems/${this.system.id}/servers/${server.id}`)
-        //             .catch(error => {
-        //                 console.error(error);
-        //             });
-        //     } else {
-        //         return;
-        //     }
-        // }
-
         this.applyService.hardReset();
-        // const { ip, port } = server;
-        // this.ipPortWatcher.value = port;
-        // server.ip = ip;
-        // server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
-        // this.selectedServer = server;
+        const { ip, port } = this.selectedServer;
+        this.ipPortWatcher.value = port;
+        this.selectedServer.ip = ip;
+        this.selectedServer.osName = this.selectedServer.osInfo !== '' ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
 
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error));
 
-        // this.menuService.setDetailsSection(this.selectedServer.id);
         this.renameDisabled = !this.system.permissions.editAdmins;
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
