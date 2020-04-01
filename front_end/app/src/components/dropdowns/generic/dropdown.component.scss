@@ -1,4 +1,5 @@
 @import '../../../../styles/theme_palette';
+@import '../../../styles/typography';
 
 nx-select {
     width: 100%;
@@ -7,5 +8,15 @@ nx-select {
         width: 95%;
         margin: 6px auto;
         border-color: $light6;
+    }
+
+    .additional-help {
+        @extend #regular13;
+        margin-left: 0.25rem;
+        color : $light16;
+    }
+
+    .selected .additional-help {
+        color : $light1;
     }
 }

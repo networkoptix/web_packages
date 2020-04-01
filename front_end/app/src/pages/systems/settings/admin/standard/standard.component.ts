@@ -1,9 +1,9 @@
 import {
     Component, OnDestroy, OnInit, Inject,
     ViewChild, ElementRef, ViewContainerRef, Input
-} from '@angular/core';
+}                                         from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { filter, throttleTime }           from 'rxjs/operators';
+import { throttleTime }                   from 'rxjs/operators';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { Subscription }                   from 'rxjs';
 import { LanguageI18NStaticTypes }        from '../../../../../../language_i18n_static_types';
@@ -15,10 +15,10 @@ import { NxMenuService }                  from '../../../../../components/menu/m
 import { NxSystemsService }               from '../../../../../services/systems.service';
 import { NxAccountService }               from '../../../../../services/account.service';
 import { NxProcessService }               from '../../../../../services/process.service';
-import { NxSystem }                       from '../../../../../services/system.service';
 import { NxApplyService, Watcher }        from '../../../../../services/apply.service';
 import { NxCloudApiService }              from '../../../../../services/nx-cloud-api';
 import { NxSettingsService }              from '../../settings.service';
+import { NxSystem }                       from '../../../../../services/system.service';
 
 interface Settings {
     advanced : boolean;
@@ -30,18 +30,16 @@ interface Settings {
 
 @AutoUnsubscribe()
 @Component({
-    selector    : 'nx-system-basic-admin-component',
-    templateUrl : 'basic.component.html',
-    styleUrls   : ['basic.component.scss']
+    selector    : 'nx-system-standard-admin-component',
+    templateUrl : 'standard.component.html',
+    styleUrls   : ['standard.component.scss']
 })
 
-export class NxSystemBasicAdminComponent implements OnInit, OnDestroy {
-
-    @Input() system: any;
+export class NxSystemStandardAdminComponent implements OnInit, OnDestroy {
+    @Input() system: NxSystem;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    // system: NxSystem;
     systems: any;
     peerSystems: any[] = [];
     params: Params;

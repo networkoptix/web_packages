@@ -19,21 +19,22 @@ import { BaseDropdown }      from '../injDropdown';
  */
 
 @Component({
-    selector     : 'nx-select',
-    templateUrl  : 'dropdown.component.html',
-    styleUrls    : ['dropdown.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers    : [
+    selector      : 'nx-select',
+    templateUrl   : 'dropdown.component.html',
+    styleUrls     : ['dropdown.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxGenericDropdown),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxGenericDropdown),
+            multi       : true
         }
     ]
 })
 
 export class NxGenericDropdown extends BaseDropdown {
-    // items should have at least name ex [{name: 'a', id: 1}, {name: 'b', id:3}]
+    // items should have at least "name"
+    // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
     @Input() id: any;
     @Input() items: DropdownItem[];
     @Input() selected: any;
@@ -41,6 +42,12 @@ export class NxGenericDropdown extends BaseDropdown {
 
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';
+
+        this.items.forEach((item) => {
+            if (item.help && !item.name.includes(item.help)) {
+                item.name += `<span class="additional-help">${item.help}</span>`;
+            }
+        });
     }
 
     change(item) {
@@ -52,7 +59,11 @@ export class NxGenericDropdown extends BaseDropdown {
     ngOnChanges(changes: SimpleChanges) {
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected.currentValue) {
+            if (changes.selected.currentValue.help) {
+                changes.selected.currentValue.name += `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
+            }
             this._selected = changes.selected.currentValue;
+
         } else if (!this.selected && !changes.selected.firstChange) {
             this._selected = { name: this.message, value: '0' };
         }
@@ -62,7 +73,8 @@ export class NxGenericDropdown extends BaseDropdown {
 export class DropdownItem {
     constructor(
         public name: string,
+        public help?: string,
         public value?: string,
         public state?: string
     ) {}
-};
+}

@@ -1,9 +1,9 @@
 import {
     Component, OnInit, Inject,
     ViewContainerRef, OnDestroy
-}                                      from '@angular/core';
-import { ActivatedRoute }              from '@angular/router';
-import { NxConfigService, IConfig }    from '../../../../services/nx-config';
+}                                   from '@angular/core';
+import { ActivatedRoute, Params }   from '@angular/router';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
 import { NxDialogsService }            from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }           from '../settings.service';
 import { NxLanguageProviderService }   from '../../../../services/nx-language-provider';
@@ -35,6 +35,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     serverIdFromParams: any;
     selectedServer: any;
 
+    advanced: boolean;
+    params: Params;
+
     private serverSubscription: Subscription;
     private systemSubscription: Subscription;
     private routeParamsSubscription: Subscription;
@@ -55,6 +58,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     parsedServerId: string;
 
     private setupDefaults() {
+        this.params = this.route.snapshot.queryParams;
+        this.advanced = true; // (this.params.advanced !== undefined);
+
         this.checking = false;
         this.serverOffline = false;
         this.renameDisabled = true;
@@ -71,7 +77,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     constructor(
         configService: NxConfigService,
         language: NxLanguageProviderService,
-        @Inject(ViewContainerRef) viewContainerRef,
+        // @Inject(ViewContainerRef) viewContainerRef,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private route: ActivatedRoute,
@@ -80,7 +86,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService,
         private uriService: NxUriService
     ) {
-        this.viewContainerRef = viewContainerRef;
+        // this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
 
@@ -103,9 +109,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.settingsService.footerSubject.next(true);
-                this.system = system;
+                // this.system = system;
                 // Route guard did not worked :( ... so doing it the old way ...was done in users.component, so replicating
-                if (!this.system.permissions || !this.system.permissions.editUsers) {
+                if (!system.permissions || !system.permissions.editUsers) {
                     this.uriService
                         .updateURI('systems/' + this.system.id, {})
                         .catch(error => {
@@ -114,13 +120,17 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
                     return;
                 }
-                if (this.system) {
-                    this.system.getInfoAndPermissions(false).catch(() => {}).then(system => {
-                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                        if (this.canSeeInfo) {
-                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.servers.path;
-                        }
-                    });
+                if (system) {
+                    this.system = system;
+                    this.system
+                        .getInfoAndPermissions(false)
+                        .catch(() => {});
+                        // .then(system => {
+                        //     this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                        //     if (this.canSeeInfo) {
+                        //         this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.servers.path;
+                        //     }
+                        // });
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
@@ -137,25 +147,39 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                     .subscribe(() => {
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system.initSystemMediaServers();
+                                this.system
+                                    .initSystemMediaServers()
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
                             }
-                            if (!this.applyService.locked) {
-                                this.setServer();
-                            }
+
+                            this.setServer();
                         }
                     });
             });
 
-        this.initForApplyService();
+        // this.initForApplyService();
 
-        this.applyService.initPageWatcher(
-            this.viewContainerRef,
-            this.saveSettings,
-            () => this.applyService.reset(),
-            [this.ipPortWatcher]);
+        // this.applyService.initPageWatcher(
+        //     this.viewContainerRef,
+        //     this.saveSettings,
+        //     () => this.applyService.reset(),
+        //     [this.ipPortWatcher]);
     }
 
     ngOnDestroy(): void {}
+
+    hideAdvancedSettings() {
+        const queryParams: Params = {};
+        queryParams.advanced = undefined;
+
+        this.uriService
+            .updateURI(this.uriService.getURL(), queryParams, true)
+            .then(() => {
+                this.advanced = false;
+            });
+    }
 
     setServer(): void {
         if (this.system && this.system.servers && this.system.servers.length > 0) {
@@ -179,43 +203,43 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this.applyService.hardReset();
+            // this.applyService.hardReset();
             const { ip, port } = server;
             this.ipPortWatcher.value = port;
             server.ip = ip;
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
             this.selectedServer = server;
 
-            this.checkIfOnline(this.selectedServer.id)
-                .catch(error => console.error(error));
+            // this.checkIfOnline(this.selectedServer.id)
+            //     .catch(error => console.error(error));
 
             this.menuService.setDetailsSection(this.selectedServer.id);
-            this.renameDisabled = !this.system.permissions.editAdmins;
-            this.restartDisabled = !this.system.permissions.isAdmin;
-            this.detachDisabled = !this.system.permissions.editAdmins;
-            this.resetDisabled = !this.system.permissions.editAdmins;
-            this.portChangeDisabled = !this.system.permissions.editAdmins;
-            this.applyService.reset();
-            this.applyService.setVisible(true);
+            // this.renameDisabled = !this.system.permissions.editAdmins;
+            // this.restartDisabled = !this.system.permissions.isAdmin;
+            // this.detachDisabled = !this.system.permissions.editAdmins;
+            // this.resetDisabled = !this.system.permissions.editAdmins;
+            // this.portChangeDisabled = !this.system.permissions.editAdmins;
+            // this.applyService.reset();
+            // this.applyService.setVisible(true);
         }
     }
 
-    initForApplyService(): void {
-        this.saveSettings = this.processService.createProcess(() => {
-            const port = this.ipPortWatcher;
-            const serverId = this.selectedServer.id;
-            if (!port.value) {
-                port.value = port.originalValue;
-                this.applyService.reset();
-            } else if (port.value !== port.originalValue) {
-                return this.system.changeServerPort(port.value, serverId)
-                    .then(() => {
-                        port.originalValue = port.value;
-                        this.applyService.reset();
-                    });
-            }
-        });
-    }
+    // initForApplyService(): void {
+    //     this.saveSettings = this.processService.createProcess(() => {
+    //         const port = this.ipPortWatcher;
+    //         const serverId = this.selectedServer.id;
+    //         if (!port.value) {
+    //             port.value = port.originalValue;
+    //             this.applyService.reset();
+    //         } else if (port.value !== port.originalValue) {
+    //             return this.system.changeServerPort(port.value, serverId)
+    //                 .then(() => {
+    //                     port.originalValue = port.value;
+    //                     this.applyService.reset();
+    //                 });
+    //         }
+    //     });
+    // }
 
     setStatus(status) {
         this.selectedServer.internalStatus = status ? this.CONFIG.servers.status[status] : '';
@@ -230,87 +254,87 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             .catch(() => this.setStatus(this.CONFIG.servers.status.offline));
     }
 
-    checkStatus() {
-        this.checking = true;
-        this.setStatus(this.CONFIG.servers.status.checking);
-        const now = new Date().getTime();
-        this.system.getModuleInfo(this.selectedServer.id)
-            .pipe(
-                catchError(() => of('error')),
-                delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
-            )
-            .subscribe(res => {
-                this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
-                this.checking = false;
-            });
-    }
+    // checkStatus() {
+    //     this.checking = true;
+    //     this.setStatus(this.CONFIG.servers.status.checking);
+    //     const now = new Date().getTime();
+    //     this.system.getModuleInfo(this.selectedServer.id)
+    //         .pipe(
+    //             catchError(() => of('error')),
+    //             delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
+    //         )
+    //         .subscribe(res => {
+    //             this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
+    //             this.checking = false;
+    //         });
+    // }
 
-    renameServer() {
-        const { id, name } = this.selectedServer;
-        return this.dialogs.renameServer(this.system, id, name)
-            .then(newName => { this.selectedServer.name = newName; });
-    }
+    // renameServer() {
+    //     const { id, name } = this.selectedServer;
+    //     return this.dialogs.renameServer(this.system, id, name)
+    //         .then(newName => { this.selectedServer.name = newName; });
+    // }
 
-    restartServer() {
-        const { id, name } = this.selectedServer;
-        return this.dialogs
-            .restartServer(this.system, id, name)
-            .then(res => this.setStatus(res));
-    }
+    // restartServer() {
+    //     const { id, name } = this.selectedServer;
+    //     return this.dialogs
+    //         .restartServer(this.system, id, name)
+    //         .then(res => this.setStatus(res));
+    // }
 
-    detachServer() {
-        const { id, name } = this.selectedServer;
-        const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
-        const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
-        const nextServerId = this.system.servers[nextServerIndex].id;
-        return this.dialogs
-            .detachServer(this.system, id, name)
-            .then(detach => {
-                if (detach === 'success') {
-                    this.uriService
-                        .updateURI(`systems/${this.system.id}/servers/${nextServerId}`)
-                        .catch(error => {
-                            console.error(error);
-                        });
+    // detachServer() {
+    //     const { id, name } = this.selectedServer;
+    //     const currentServerIndex = this.system.servers.findIndex((server) => server.id === id);
+    //     const nextServerIndex = currentServerIndex + 1 !== this.system.servers.length ? currentServerIndex + 1 : currentServerIndex - 1;
+    //     const nextServerId = this.system.servers[nextServerIndex].id;
+    //     return this.dialogs
+    //         .detachServer(this.system, id, name)
+    //         .then(detach => {
+    //             if (detach === 'success') {
+    //                 this.uriService
+    //                     .updateURI(`systems/${this.system.id}/servers/${nextServerId}`)
+    //                     .catch(error => {
+    //                         console.error(error);
+    //                     });
+    //
+    //                 this.menuService.setDetailsSection(nextServerId);
+    //             }
+    //         });
+    // }
 
-                    this.menuService.setDetailsSection(nextServerId);
-                }
-            });
-    }
+    // resetServer() {
+    //     const { id, name } = this.selectedServer;
+    //     return this.dialogs
+    //         .resetServer(this.system, id, name)
+    //         // will take some time to reset and then restart the server
+    //         .then(() => this.setStatus('reseting'));
+    // }
+    //
+    // storePreviousValue(e) {
+    //     // prevents [.+-e] from being input
+    //     if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
+    //         e.preventDefault();
+    //     }
+    //     this.previousInputValue = this.ipPortWatcher.value;
+    // }
 
-    resetServer() {
-        const { id, name } = this.selectedServer;
-        return this.dialogs
-            .resetServer(this.system, id, name)
-            // will take some time to reset and then restart the server
-            .then(() => this.setStatus('reseting'));
-    }
-
-    storePreviousValue(e) {
-        // prevents [.+-e] from being input
-        if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === 'e') {
-            e.preventDefault();
-        }
-        this.previousInputValue = this.ipPortWatcher.value;
-    }
-
-    validationCheckForInput() {
-        // checks if entering a value less than min or greater than max
-        // null exception for less than since it gets cast to 0
-        if (
-            (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null) ||
-            this.ipPortWatcher.value > this.CONFIG.servers.port.max
-        ) {
-            this.ipPortWatcher.value = this.previousInputValue;
-        }
-        this.onPortChange();
-    }
-
-    onPortChange() {
-        if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
-            this.applyService.setWarn(this.LANG.servers.portWarning);
-        } else {
-            this.applyService.setWarn('');
-        }
-    }
+    // validationCheckForInput() {
+    //     // checks if entering a value less than min or greater than max
+    //     // null exception for less than since it gets cast to 0
+    //     if (
+    //         (this.ipPortWatcher.value < this.CONFIG.servers.port.min && this.ipPortWatcher.value !== null) ||
+    //         this.ipPortWatcher.value > this.CONFIG.servers.port.max
+    //     ) {
+    //         this.ipPortWatcher.value = this.previousInputValue;
+    //     }
+    //     this.onPortChange();
+    // }
+    //
+    // onPortChange() {
+    //     if (this.ipPortWatcher.value < this.CONFIG.servers.port.restrictedMax && this.ipPortWatcher.value !== null) {
+    //         this.applyService.setWarn(this.LANG.servers.portWarning);
+    //     } else {
+    //         this.applyService.setWarn('');
+    //     }
+    // }
 }

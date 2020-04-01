@@ -10,7 +10,7 @@ import { DirectivesModule }               from '../../../../directives/directive
 import { NxSystemAdminComponent }         from './admin.component';
 import { TranslateModule }                from '@ngx-translate/core';
 import { ComponentsModule }               from '../../../../components/components.module';
-import { NxSystemBasicAdminComponent }    from './basic/basic.component';
+import { NxSystemStandardAdminComponent } from './standard/standard.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
 
 @NgModule({
@@ -29,7 +29,7 @@ import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
     providers       : [],
     declarations    : [
         NxSystemAdminComponent,
-        NxSystemBasicAdminComponent,
+        NxSystemStandardAdminComponent,
         NxSystemAdvancedAdminComponent
     ],
     bootstrap       : [],

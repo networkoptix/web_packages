@@ -66,7 +66,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .systemSubject
             .pipe(filter((system) => system !== undefined))
             .subscribe((system) => {
-                // this.applyService.setVisible(false);
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', system.info.name));
                 if (system.isAvailable) {
                     system.updateOrGetSystemSettings().subscribe((res: any) => {

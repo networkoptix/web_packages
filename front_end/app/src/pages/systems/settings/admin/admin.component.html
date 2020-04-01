@@ -1,9 +1,9 @@
 <nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
-<nx-system-basic-admin-component
+<nx-system-standard-admin-component
         *ngIf="system"
         [system]="system">
-</nx-system-basic-admin-component>
+</nx-system-standard-admin-component>
 
 <nx-block type="simple-alert" class="d-block mt-3"
           *ngIf="system && advanced">
@@ -15,7 +15,7 @@
                           [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                 </div>
                 <div class="ml-2">
-                    <span translate>Settings displayed below are advanced.</span>
+                    <span translate>Settings displayed below are advanced.</span><br>
                     <span translate>Changing them may cause server to work incorrectly.</span>
                 </div>
             </div>
