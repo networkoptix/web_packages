@@ -131,6 +131,24 @@
         }
     }
 
+    &.simple-alert {
+        background-color : $red2;
+        border           : 1px solid $red1;
+
+        .card--header {
+            display : none;
+        }
+
+        .card--body {
+            background-color : $red2;
+            border-top       : 1px solid $red1;
+        }
+
+        .card--footer {
+            background-color : $red2;
+        }
+    }
+
     &.menu {
         background-color : $light5;
         border           : 1px solid $light5;

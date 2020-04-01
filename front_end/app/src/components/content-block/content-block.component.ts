@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 /* Usage
- <nx-block type?="gray | ...more to come" fixed-height? hoverable? header-style="extended | slim"?>
+ <nx-block type?="gray | simple-alert ...more to come" fixed-height? hoverable? header-style="extended | slim"?>
      <header>
         TITLE
      </header>
