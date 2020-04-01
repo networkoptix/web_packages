@@ -71,13 +71,11 @@
                 <span [translate]="'ipvd.disclaimer'"
                       [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
                 </span>
-                <span>
-                    <span>{{LANG.ipvd.feedback.a_Please}}&nbsp;</span>
-                    <a href (click)="openFeedback('page')"><span>{{LANG.ipvd.feedback.b_Link}}</span></a>
-                    <span>&nbsp;{{LANG.ipvd.feedback.c_Info}}</span>
-                </span>
+                <ng-container>
+                    {{LANG.ipvd.feedback.a_Please}}&nbsp;
+                    <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a>&nbsp;
+                    {{LANG.ipvd.feedback.c_Info}}</ng-container>
             </p>
-            <button *ngIf="debug" (click)="reset()">reset</button>
         </div>
         <div class="row p-0 m-0">
             <nx-footer></nx-footer>

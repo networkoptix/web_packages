@@ -17,11 +17,11 @@ ${fair password}               qweasd1234
 
 ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]/input
 
-${PASSWORD IS REQUIRED}        //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
-${PASSWORD SPECIAL CHARS}      //span[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
-${PASSWORD TOO SHORT}          //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
-${PASSWORD TOO COMMON}         //span[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
-${PASSWORD IS WEAK}            //span[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
+${PASSWORD IS REQUIRED}        //div[contains(@class,'input-error') and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
+${PASSWORD SPECIAL CHARS}      //div[contains(@class,'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
+${PASSWORD TOO SHORT}          //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
+${PASSWORD TOO COMMON}         //div[contains(@class,'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+${PASSWORD IS WEAK}            //div[contains(@class,'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 
 *** Test Cases ***                                    NEW PW
 Empty New Password                                    ${EMPTY}

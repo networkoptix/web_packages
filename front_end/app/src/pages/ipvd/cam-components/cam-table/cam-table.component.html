@@ -78,9 +78,9 @@
                       [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
                 </span>
                 <span>
-                    <span>{{LANG.ipvd.feedback.a_Please}}&nbsp;</span>
-                    <a href (click)="onFeedbackClick.emit('page'); false;"><span>{{LANG.ipvd.feedback.b_Link}}</span></a>
-                    <span>&nbsp;{{LANG.ipvd.feedback.c_Info}}</span>
+                    <ng-container>{{LANG.ipvd.feedback.a_Please}}&nbsp;</ng-container>
+                    <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvd.feedback.b_Link}}</a>
+                    <ng-container>&nbsp;{{LANG.ipvd.feedback.c_Info}}</ng-container>
                 </span>
             </p>
             <button *ngIf="debug">reset</button>

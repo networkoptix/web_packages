@@ -223,7 +223,8 @@ DEPLOYMENT_READY = 'ready'
 if LOCAL_ENVIRONMENT:
     _HOST = 'https://dev3.cloud.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/storages"
+    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
+    conf["cloud_storages"]["url"] = f"{_HOST}/storages"
 
     # BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
@@ -557,4 +558,5 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 
 # Cloud storage settings
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
+CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 CLOUD_STORAGE_SIZE = 50 * 1073741824

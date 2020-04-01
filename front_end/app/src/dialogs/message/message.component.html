@@ -13,10 +13,10 @@
             <div *ngIf="data.email" class="form-group">
                 <label for="to_email" translate>To</label>
                 <div id="to_email" class="form-control-plaintext">
-                    <span>{{data.to}}&nbsp;</span>
+                    <ng-container>{{data.to}}&nbsp;</ng-container>
                     <a href="mailto:{{data.email}}?subject={{subjectMessage}}&body=I have a question about {{data.asset}}%0D%0A%0D%0A Link: {{url}}"
                        target="_blank">
-                        <span>{{data.email}}</span>
+                        <ng-container>{{data.email}}</ng-container>
                     </a>
                 </div>
             </div>

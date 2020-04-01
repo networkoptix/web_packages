@@ -16,11 +16,10 @@
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="cancellable"
             (click)="close('CANCEL')"
-            translate>Close
-    </button>
+            translate>Close</button>
     <button type="button" class="btn"
             [ngClass]="buttonClass" *ngIf="!cancellable"
-            (click)="ok()"><span>{{actionLabel}}</span>
+            (click)="ok()"><ng-container>{{actionLabel}}</ng-container>
     </button>
     <button type="button" class="btn btn-default"
             *ngIf="!cancellable && cancelLabel"

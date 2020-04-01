@@ -17,7 +17,7 @@ ${system name}    vpc2ub18
 
 *** Keywords ***
 Setup System and Attach to Cloud
-    &{bind data}=   Bind System    ${cloud auth}    ${URL}    ${system name}
+    &{bind data}=   Bind System    ${cloud auth}    ${ENV}    ${system name}
     Sleep    10s
     Log Dictionary    ${bind data}
     &{setup system data}=   Setup Cloud System

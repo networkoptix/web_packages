@@ -4,8 +4,8 @@ Resource         ../resources/vars.robot
 Resource         ../../resource.robot
 Resource         ../../APIresource.robot
 
-Suite Setup      Open Browser    ${URL}   headlesschrome
-Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Cloud Pages
+Suite Setup      Open Browser    ${ENV}   headlesschrome
+#Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Cloud Pages
 Suite Teardown   Close Browser
 
 
@@ -29,8 +29,8 @@ Download Page
     ...    ${DOWNLOADS HEADER}
     ...    ${WINDOWS TAB}
     ...    ${${os} TAB}
-    ...    ${DOWNLOAD ANDROID LINK}
-    ...    ${DOWNLOAD IOS LINK}
+    ...    ${PLAY STORE DOWNLOAD BUTTON}
+    ...    ${ITUNES STORE DOWNLOAD BUTTON}
 
     Click Link    ${${os} TAB}
     Wait Until Element Is Visible    ${DOWNLOAD ${os} VMS LINK}

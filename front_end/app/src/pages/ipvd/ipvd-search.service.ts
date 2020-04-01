@@ -1,4 +1,4 @@
-import { Injectable }     from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
@@ -10,9 +10,14 @@ export class IpvdSearchService {
     private static ANALYTICS = 'analytics';
 
     private _vendors: any;
+    private _showAnalytics: any;
 
     constructor() {
         this._vendors = [];
+    }
+
+    set showAnalytics(show: boolean){
+        this._showAnalytics = show;
     }
 
     public get vendors(): any {
@@ -79,7 +84,7 @@ export class IpvdSearchService {
             }
         }
 
-        const cameras = camerasData.filter(camera => {
+        return camerasData.filter(camera => {
             if (filter.tags.some(key => {
                 return key.value && !camera[key.id];
             })) {
@@ -101,11 +106,16 @@ export class IpvdSearchService {
             }
 
             if (events &&
-                    events.length > 0 &&
-                    !events.some(event => {
-                        return camera.analyticsEvents.indexOf(event.label) >= 0;
-                    })) {
+                events.length > 0 &&
+                !events.some(event => {
+                    return camera.analyticsEvents.indexOf(event.label) >= 0;
+                })) {
                 return false;
+            }
+
+            if (this._showAnalytics && query.length) {
+                const matches = camera.analyticsEvents.filter(analytic => analytic.toLowerCase().includes(query));
+                return matches.length;
             }
 
             // Filter by query
@@ -121,7 +131,5 @@ export class IpvdSearchService {
             }
             return cameraA.sortKey < cameraB.sortKey ? -1 : 1;
         });
-
-        return cameras;
     }
 }

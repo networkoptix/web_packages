@@ -21,7 +21,6 @@ import State                         from './stateForMergeDialog';
 export class MergeModalContent {
     @Input() system;
     @Input() systems;
-    @Input() peerSystems;
     @Input() systemName;
     @Input() closable;
     @Input() user;
@@ -33,6 +32,7 @@ export class MergeModalContent {
     checkPasswordProcess: any;
     mergingProcess: any;
     primarySystem: any;
+    peerSystems = [];
     processedSystems = [];
     secondarySystem: any;
     serverUrl: string;
@@ -43,6 +43,7 @@ export class MergeModalContent {
     targetSystemService: any;
     tooManyServers: boolean;
     nonCloudMerge = false;
+    peerSystemsLoaded = false;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -55,6 +56,7 @@ export class MergeModalContent {
 
     readonly otherSystem: string = 'otherSystem';
     readonly duplicateServers: string = 'duplicateServers';
+    readonly differentOwners: string = 'differentOwners';
     readonly systemOffline: string = 'systemOffline';
     readonly noServerFound: string = 'noServerFound';
     readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
@@ -80,7 +82,7 @@ export class MergeModalContent {
         this.LANG = languageService.getTranslations();
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
             if (this.systems.length === 0) {
@@ -93,6 +95,7 @@ export class MergeModalContent {
                         { name: 'horizontal' }
                     );
                 }
+                await this.getPeerSystems();
                 if (this.peerSystems.length) {
                     this.processedSystems.push(
                         ...this.makeSelectorList(this.peerSystems),
@@ -149,6 +152,15 @@ export class MergeModalContent {
                 if (newBodyTitle !== template.bodyTitle) {
                     templateVariable.bodyTitle = newBodyTitle;
                 }
+                // clears serverUrl if going back to a checkMerge state
+                if (
+                    newShow.includes('checkMerge') &&
+                    // skips when in "checking" state
+                    templateVariable.helpText !== this.LANG.dialogs.merge.checking &&
+                    template.serverUrlInputValue
+                ) {
+                    template.serverUrlInputValue = '';
+                }
             }
         }
 
@@ -199,6 +211,31 @@ export class MergeModalContent {
         this.setSystems();
     }
 
+    getPeerSystems() {
+        return this.system.getPeerSystems().toPromise()
+            .then(res => {
+                this.peerSystems = res.reply
+                    .filter(peer => !peer.cloudSystemId)
+                    .map(peer => {
+                        const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                        const system: any = {
+                            ...peer,
+                            id         : peer.id.replace(/[{}]/g, ''),
+                            url        : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            systemName : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
+                            ip         : peer.remoteAddresses[0],
+                            name       : peer.name,
+                            isNew
+                        };
+                        if (this.system && this.system.moduleInfo && peer.status === 'Incompatible') {
+                            system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
+                        }
+                        return system;
+                    });
+                this.peerSystemsLoaded = true;
+            });
+    }
+
     initProcesses() {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
@@ -241,14 +278,20 @@ export class MergeModalContent {
                 this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
                 return this.system.mergeSystems(this.serverUrl, true).toPromise()
                     .then(res => {
+                        const newCheckMergeErrors = {
+                            DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
+                            CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners
+                        };
                         if (res.error === '0') {
                             this.machine.transition('confirmMerge');
                         } else if (res.errorString === 'UNAUTHORIZED') {
                             this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
-                        } else if (res.errorString === 'DUPLICATE_MEDIASERVER_FOUND') {
+                        } else if (res.errorString) {
                             this.machine.history = [];
                             this.machine.transition(this.checkMerge);
-                            this.updateShow(this.serverUrlMergeError, { checkingErrorText: this.duplicateServers });
+                            this.updateShow(this.serverUrlMergeError, {
+                                checkingErrorText: newCheckMergeErrors[res.errorString] || this.unknownError
+                            });
                         }
                     });
             });

@@ -100,6 +100,10 @@ header {
                 max-width : 236px;
             }
         }
+        .ellipsis-merge {
+            @include ellipsis;
+            max-width: 95%;
+        }
     }
     
     .dropdown-menu > ul:last-of-type {

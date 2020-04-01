@@ -176,34 +176,37 @@ Reset state
     Prune Containers
     Close Browser
     Open Browser and go to URL    ${url}
-    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
-    Log In    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
-    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
-    FOR    ${idx}    IN RANGE   ${count}[1]-1
-        Exit For Loop If    "${state[0]}"=="PASS"
-        Click Element    ${SYSTEMS TILE}
-        Disconnect from cloud
-    END
-    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
-    Log Out
-    Log In    ${EMAIL MERGE OWNER 2}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
-    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
-    FOR    ${idx}    IN RANGE   ${count}[1]-1
-        Click Element    ${SYSTEMS TILE}
-        Disconnect from cloud
-    END
-    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
-    Log Out
-    Validate Log Out
-    Log In    ${EMAIL MERGE OWNER 3.0}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]    10
-    Run Keyword If    "${state[0]}"=="PASS"    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Run Keyword If    "${state[0]}"=="PASS"    Disconnect from cloud
+#    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
+#    Log In    ${EMAIL MERGE OWNER 1}    ${password}
+#    Validate Log In
+#    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
+#    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
+#    FOR    ${idx}    IN RANGE   ${count}[1]-1
+#        Exit For Loop If    "${state[0]}"=="PASS"
+#        Click Element    ${SYSTEMS TILE}
+#        Disconnect from cloud
+#    END
+#    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
+#    Log Out
+#
+#
+#    Log In    ${EMAIL MERGE OWNER 2}    ${password}
+#    Validate Log In
+#    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
+#    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
+#    FOR    ${idx}    IN RANGE   ${count}[1]-1
+#        Click Element    ${SYSTEMS TILE}
+#        Disconnect from cloud
+#    END
+#    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
+#    Log Out
+#    Validate Log Out
+#
+#    Log In    ${EMAIL MERGE OWNER 3.0}    ${password}
+#    Validate Log In
+#    ${state}    Run Keyword And Ignore Error    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]    10
+#    Run Keyword If    "${state[0]}"=="PASS"    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
+#    Run Keyword If    "${state[0]}"=="PASS"    Disconnect from cloud
 
 
 *** Test Cases ***
@@ -213,8 +216,7 @@ Wrong and empty password
     @{auth}=    Create List    ${user}    ${password}
     ${api made system 1 id}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
     ${api made system 2 id}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
-    log in    ${user}    ${password}
-    Validate Log in
+    Log In    ${user}    ${password}
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
@@ -238,7 +240,8 @@ Wrong and empty password
     Wait Until Elements Are Visible
     ...    ${MERGE BUTTON MODAL}
     ...    ${MERGE PASSWORD INPUT}
-    ...    ${MERGE CANCEL BUTTON}
+#    ...    ${MERGE CANCEL BUTTON}
+    ...    ${MERGE GO BACK BUTTON}
     Click Button    ${MERGE BUTTON MODAL}
     Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
     Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
@@ -254,15 +257,15 @@ Wrong and empty password
 Only one system connected to Cloud Account
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    log in    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log in
+    Log In    ${EMAIL MERGE OWNER 1}    ${password}
     Run keyword and expect error    *    Wait until element is visible    ${MERGE BUTTON SYSTEM}    5
-    Disconnect from cloud
+    Unbind System    ${auth}    ${url}    ${system id}
+
 
 2 Systems: 1 as Owner & 1 as non-Owner
     Create system and attach to cloud

@@ -14,16 +14,14 @@ ${common password}      qweasd123
 ${weak password}        asqwerdf
 ${fair password}        qweasd1234
 
-${PASSWORD IS REQUIRED}
-...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS REQUIRED TEXT}')]
 ${PASSWORD SPECIAL CHARS}
-...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
+...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
 ${PASSWORD TOO SHORT}
-...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
+...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD TOO SHORT TEXT}')]
 ${PASSWORD TOO COMMON}
-...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
+...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD TOO COMMON TEXT}')]
 ${PASSWORD IS WEAK}
-...    //span[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
+...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD IS WEAK TEXT}')]
 ${CURRENT PASSWORD IS REQUIRED}
 ...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 

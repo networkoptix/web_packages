@@ -225,6 +225,7 @@ export interface DialogsMerge {
     checking:                   string;
     commonText:                 string;
     connectToCloud:             string;
+    differentOwners:            string;
     duplicateServers:           string;
     enterSystemAddressTitle:    string;
     mergeConfirmation:          string;
@@ -1043,6 +1044,7 @@ const typeMap: any = {
         { json: "checking", js: "checking", typ: "" },
         { json: "commonText", js: "commonText", typ: "" },
         { json: "connectToCloud", js: "connectToCloud", typ: "" },
+        { json: "differentOwners", js: "differentOwners", typ: "" },
         { json: "duplicateServers", js: "duplicateServers", typ: "" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "" },

@@ -12,16 +12,17 @@ import { NxAccountService } from '../../services/account.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxCloudApiService } from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-    selector : 'content-component',
+    selector   : 'content-component',
     templateUrl: 'content.component.html',
     styleUrls : ['content.component.scss']
 })
 
 export class NxContentComponent implements OnInit {
     private title: string;
-    private body: string;
+    private body: SafeHtml;
     private staticHTML: string;
     private articleParam: string;
     private state: string;
@@ -60,7 +61,8 @@ export class NxContentComponent implements OnInit {
         private sessionStorage: SessionStorageService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
+        private sanitizer: DomSanitizer
     ) {
         this.setupDefaults();
         this.langCode = this.language.getLang();
@@ -132,7 +134,7 @@ export class NxContentComponent implements OnInit {
         this.http.get(uri, { params }).subscribe(
             (data: any) => {
                 this.title = data.title;
-                this.body = data.body;
+                this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
                 this.pageService.setPageTitle(this.title);
                 this.loaded = true;
                 if (data.id) {

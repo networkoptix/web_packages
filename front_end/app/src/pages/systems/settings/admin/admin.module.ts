@@ -9,6 +9,7 @@ import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
 
 import { DirectivesModule }       from '../../../../directives/directives.module';
 import { NxSystemAdminComponent } from './admin.component';
+import { NxSystemSettingsComponent } from './system-settings/system-settings.component';
 
 import { TranslateModule }     from '@ngx-translate/core';
 import { ComponentsModule }    from '../../../../components/components.module';
@@ -24,11 +25,12 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
     ],
     providers      : [],
     declarations   : [
-        NxSystemAdminComponent
+        NxSystemAdminComponent,
+        NxSystemSettingsComponent
     ],
     bootstrap      : [],
     entryComponents: [

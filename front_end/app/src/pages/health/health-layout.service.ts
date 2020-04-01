@@ -193,10 +193,29 @@ export class NxHealthLayoutService {
     }
 
     setTableDimensions() {
+        const tableHeader = this.tableHeaderElement && this.tableHeaderElement.nativeElement;
+        const table = this.tableElement && this.tableElement.nativeElement;
+
+        // table not visible - no need to calculate
+        if (table && table.offsetLeft < 0) {
+            this.healthService.tableReady = true;
+            return;
+        }
+
+        // "tableReady" was quite unreliable since we don't recreate the table - fixed.
+        // ... have a feeling that making the table off screen causes table header and table title
+        // to report 0 height initially and screw pageSize calc.
+        //
+        if (!table || table.offsetLeft === 0 && tableHeader.innerText.length && !tableHeader.offsetHeight) {
+            setTimeout(() => this.setTableDimensions());
+            this.healthService.tableReady = false;
+            return;
+        }
+
         const windowSize = this.scrollMechanicsService.windowSizeSubject.getValue();
 
         const ELEMENTS_HEIGHT = this.dimensions.reduce((prev, curr) => prev + curr, 0);
-        const THEAD_HEIGHT = this.tableHeaderElement ? this.tableHeaderElement.nativeElement.offsetHeight : 0;
+        const THEAD_HEIGHT = this.tableHeaderElement ? tableHeader.offsetHeight : 0;
         const PADDING = 16;
         const PAGINATION_HEIGHT = 64;
         const RIBBON_HEIGHT = 34;
@@ -218,8 +237,8 @@ export class NxHealthLayoutService {
             pageSize = 5;
         }
         this.pageSize = pageSize;
-        if (this.tableElement && this.tableElement.nativeElement.offsetWidth !== 0) {
-            this.tableWidth = this.tableElement.nativeElement.offsetWidth;
+        if (this.tableElement && table.offsetWidth !== 0) {
+            this.tableWidth = table.offsetWidth;
         }
         this.healthService.tableReady = true;
     }
