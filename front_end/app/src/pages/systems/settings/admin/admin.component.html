@@ -9,7 +9,7 @@
           *ngIf="system && advanced">
     <nx-section>
         <div class="row p-0">
-            <div class="col12 col-md-6 d-flex flex-row">
+            <div class="col-12 col-md-6 d-flex flex-row">
                 <div>
                     <svg-icon [src]="CONFIG.icons.dirNonStandard + 'error.svg'"
                           [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
@@ -19,7 +19,7 @@
                     <span translate>Changing them may cause server to work incorrectly.</span>
                 </div>
             </div>
-            <div class="col12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
+            <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
                 <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
                         (click)="hideAdvancedSettings()">
                     <span class="glyphicon glyphicon-eye-close"></span>
