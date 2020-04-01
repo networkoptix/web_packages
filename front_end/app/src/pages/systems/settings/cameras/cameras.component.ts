@@ -18,8 +18,8 @@ import { NxUriService }              from '../../../../services/uri.service';
 
 import { NxHealthService }           from '../../../health/health.service';
 import { WINDOW }                    from '../../../../services/window-provider';
-import { NxToastService } from '../../../../dialogs/toast.service';
-import { Watcher, NxApplyService } from '../../../../services/apply.service';
+import { NxToastService }            from '../../../../dialogs/toast.service';
+import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 
 @AutoUnsubscribe()
@@ -44,28 +44,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     cameraViewPath: string;
     alerts: Alert[];
     saveSettings: Process
-    aspectRatios: ISelect[] = [
-        { name: 'Auto', id: '' },
-        { name: '4:3', id: 1.33333 },
-        { name: '16:9', id: 1.77778 },
-        { name: '1:1', id: 1 }
-    ]
-
-    rotations: ISelect[] = [
-        { name: 'Auto', id: '' },
-        { name: '90˚', id: 90 },
-        { name: '180˚', id: 180 },
-        { name: '270˚', id: 270 }
-    ]
-
-    streamQualities: ISelect[] = [
-        { name: 'Best', id: 'highest' },
-        { name: 'High', id: 'high' },
-        { name: 'Medium', id: 'normal' },
-        { name: 'Low', id: 'low' }
-    ]
-
-    various: ISelect = { name: '– Different Values –', id: 'various' }
+    various: ISelect;
+    auto: ISelect;
+    aspectRatios: ISelect[];
+    rotations: ISelect[];
+    streamQualities: ISelect[];
     maxFps: number = 30;
     fps: number = this.maxFps;
 
@@ -85,6 +68,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
+        this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.setSection('cameras');
     }
@@ -156,43 +140,67 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ]);
     }
 
+    // Update menu options after language is loaded
+    updateSelects() {
+        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
+        this.auto = { name: this.LANG.common.resolution.auto, value: '' };
+        this.aspectRatios = [
+            this.auto,
+            { name: '4:3', value: 1.33333 },
+            { name: '16:9', value: 1.77778 },
+            { name: '1:1', value: 1 }
+        ];
+        this.rotations = [
+            this.auto,
+            { name: '90˚', value: 90 },
+            { name: '180˚', value: 180 },
+            { name: '270˚', value: 270 }
+        ];
+        this.streamQualities = [
+            { name: this.LANG.common.resolution.best, value: 'highest' },
+            { name: this.LANG.common.resolution.high, value: 'high' },
+            { name: this.LANG.common.resolution.medium, value: 'normal' },
+            { name: this.LANG.common.resolution.low, value: 'low' }
+        ];
+    }
+
     // Process for apply service
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
-            const task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> = {
-                fps           : this.selectedFpsWatcher.value === '- -' ? null : this.selectedFpsWatcher.value,
+            const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
+                fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
-            };
+            } : false;
             const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
                 audioEnabled    : this.audioEnabled.value,
-                scheduleEnabled : this.recordingWatcher.value,
                 overrideAr      : this.selectedAspectWatcher.value || null,
-                rotation        : this.selectedRotationWatcher.value || null
+                rotation        : this.selectedRotationWatcher.value || null,
+                scheduleEnabled : this.recordingWatcher.value
             };
-            return this.system.updateRecordingSettings(task, cameraSettings);
+            return this.system.updateRecordingSettings(updatedTask, cameraSettings);
         });
     }
 
     // Basic Settings
     selectedAspectWatcher = new Watcher()
     get selectedAspect() {
-        return this.aspectRatios.find(({ id }) => this.selectedAspectWatcher.value === id);
+        return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
     }
 
     set selectedAspect(value) {
-        this.selectedAspectWatcher.value = value.id;
+        this.selectedAspectWatcher.value = value.value;
     }
 
     selectedRotationWatcher = new Watcher()
     get selectedRotation() {
-        return this.rotations.find(({ id }) => this.selectedRotationWatcher.value === id);
+        return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
     }
 
     set selectedRotation(value) {
-        this.selectedRotationWatcher.value = value.id;
+        this.selectedRotationWatcher.value = value.value;
     }
 
     audioEnabledWatcher = new Watcher()
@@ -205,6 +213,23 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     // Recording Settings
+    get recordingSettingsChanged() {
+        return this.recordingModesWatcher.changed ||
+                this.selectedFpsWatcher.changed ||
+                this.selectedQualityWatcher.changed;
+    }
+
+    get recordingSwitchedOn() {
+        return !this.recordingWatcher.originalValue && this.recordingWatcher.value;
+    }
+
+    get existingRecordingsScheduled() {
+        return !this.recordingSettingsChanged &&
+            this.recordingSwitchedOn &&
+            this.selectedCamera.scheduleTasks.length &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never');
+    }
+
     cameraNameWatcher = new Watcher()
     get cameraName() {
         return this.cameraNameWatcher.value;
@@ -253,20 +278,20 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get variousFps() {
-        return this.selectedFps === '- -';
+        return this.selectedFps === '- -' || !this.selectedFps;
     }
 
     selectedQualityWatcher = new Watcher()
     get selectedQuality() {
-        return [...this.streamQualities, this.various].find(({ id }) => this.selectedQualityWatcher.value === id);
+        return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
     }
 
     set selectedQuality(value) {
-        this.selectedQualityWatcher.value = value.id;
+        this.selectedQualityWatcher.value = value.value;
     }
 
     get variousQualities() {
-        return this.selectedQuality.id === this.various.id;
+        return this.selectedQuality.value === this.various.value;
     }
 
     recordingSettings: IRecordingSettings;
@@ -295,11 +320,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.cameraName = this.selectedCamera.name;
-            this.selectedAspect = this.aspectRatios.find(({ id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
-            this.selectedRotation = this.rotations.find(({ id }) => id === this.selectedCamera.rotation) || this.rotations[0];
+            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
+            this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
             this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
             this.recordingModes = this.selectedCamera.recordingSettings.modes;
-            this.selectedQuality = [...this.streamQualities, this.various].find(({ id }) => id === this.selectedCamera.recordingSettings.quality) || this.streamQualities[1];
+            this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.streamQualities[1];
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
@@ -309,6 +334,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             );
 
             if (currentAlerts) {
+                // TODO: Maybe change this to what Transko is using with advanced settings
                 const other = currentAlerts.warnings[0];
                 const showOther = currentAlerts.warnings.some(warning => warning === other) &&
                     this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== other);
@@ -385,5 +411,5 @@ export class Alert {
 
 export interface ISelect {
     name: string;
-    id: number | '' | StreamQuality;
+    value: number | '' | StreamQuality;
 }

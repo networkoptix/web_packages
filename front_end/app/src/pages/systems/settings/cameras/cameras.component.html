@@ -1,4 +1,4 @@
-<div class="row auth-visible">
+<div *ngIf="system" class="row auth-visible">
     <div class="col-12 loader-div" *ngIf="!selectedCamera">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
@@ -56,7 +56,7 @@
                 </header>
                 <ng-container  *ngIf="system.isAdmin">
                     <nx-section>
-                            <h4 class="mb-3">Image</h4>
+                            <h4 class="mb-3" translate>Image</h4>
                             <div class="d-flex justify-content-start col-6 align-items-center mb-2">
                                 <span class="col-3 text-nowrap text-right" translate>Aspect Ratio</span>
                                 <nx-select [selected]="false"
@@ -71,12 +71,12 @@
                             </div>
                     </nx-section>
                     <nx-section>
-                        <h4 class="mb-3">Audio</h4>
+                        <h4 class="mb-3" translate>Audio</h4>
                         <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="audioEnabled" [disabled]="!selectedCamera.isAudioSupported"></nx-checkbox>
-                        <span [ngClass]="!selectedCamera.isAudioSupported && 'text-muted'" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)">Enable Audio</span>
+                        <span [ngClass]="!selectedCamera.isAudioSupported && 'text-muted'" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)" translate>Enable Audio</span>
                     </nx-section>
                     <nx-section>
-                        <h4 class="mb-3">Authentication</h4>
+                        <h4 class="mb-3" translate>Authentication</h4>
                         <button class="btn btn-default"><span translate>Edit Credentials</span></button>
                     </nx-section>
                 </ng-container>
@@ -89,7 +89,12 @@
                         <div class="d-flex justify-content-center align-items-center"  [style.width.px]="64">
                             <nx-switch [(ngModel)]="recording"></nx-switch>
                         </div>
-                        <span translate>Recording</span>
+                        <div class="d-flex flex-column">
+                            <span translate>Recording</span>
+                            <span *ngIf="existingRecordingsScheduled" class="input-error" translate>
+                                Existing recordings scheduled. Changing the settings below will override those recordings.
+                            </span>
+                        </div>
                     </div>
                 </header>
                 <ng-container  *ngIf="recording">
@@ -105,11 +110,11 @@
                                 ></nx-radio>
                             <label [for]="mode.name" [ngClass]="mode.enabled ? '' : 'text-muted'">{{mode.name}}</label>
                         </div>
-                        <span *ngIf="existingModesSelected" class="input-error" translate>Please select a recording mode.</span>
+                        <span *ngIf="recordingSwitchedOn && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
                         <span *ngIf="!selectedCamera.motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
                     <nx-section>
-                            <h4 class="mb-3">Quality</h4>
+                            <h4 class="mb-3" translate>Quality</h4>
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
                                 <input type="number"
@@ -118,18 +123,18 @@
                                    min="1"
                                    step="1"
                                    max="30"
-                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps"
+                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - original'"
                                    [(ngModel)]="selectedFps"
                                    class="form-control input-sm col-3"/>
-                                   <span *ngIf="variousFps" class="input-error col-8" translate>Please select FPS.</span>
+                                   <span *ngIf="recordingSwitchedOn && variousFps" class="input-error col-8" translate>Please select FPS.</span>
                             </div>
                             <div class="d-flex justify-content-start col-12 align-items-center">
                                 <span class="col-1 text-nowrap text-right" translate>Quality</span>
-                                <nx-select [selected]="false"
+                                <nx-select [selected]="selectedQuality"
                                     [(ngModel)]="selectedQuality"
                                     [items]="streamQualities"
                                     class="col-3 pl-0 pr-0"></nx-select>
-                                    <span *ngIf="variousQualities" class="input-error col-8" translate>Please select recording quality</span>
+                                    <span *ngIf="recordingSwitchedOn && recordingSettingsChanged && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
                             </div>
                     </nx-section>
                 </ng-container>

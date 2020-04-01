@@ -44,6 +44,10 @@ export class Watcher<T> {
         }
     }
 
+    get changed() {
+        return this.originalValue !== this.value;
+    }
+
     // Resets the value of the watcher to the first value that was not undefined.
     reset() {
         this.valueSubject.next(this.originalValue);

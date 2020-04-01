@@ -453,13 +453,13 @@ class ServerManager {
             });
     }
 
-    updateRecordingSettings(task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'>,
-        { overrideAr, rotation, ...cameraSettings}: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
-        const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = cameraSettings.scheduleEnabled ? {
+    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
+        { overrideAr, rotation, ...cameraSettings }: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = updatedTask && cameraSettings.scheduleEnabled ? {
             bitrateKbps   : 0,
             endTime       : 86400,
             startTime     : 0,
-            recordingType : task.recordingType
+            recordingType : updatedTask.recordingType
         } : {
             bitrateKbps   : 0,
             endTime       : 0,
@@ -467,17 +467,21 @@ class ServerManager {
             recordingType : 'RT_Never'
         };
 
-        const scheduleTasks: ITask[] = [];
-        for (let dayOfWeek = 1; dayOfWeek < 8; dayOfWeek++) {
-            scheduleTasks.push({ ...task, ...baseTask, dayOfWeek });
-        }
-
         const addParams = [
             { name: 'overrideAr', value: `${overrideAr}` },
             { name: 'rotation', value: `${rotation}` }
         ];
 
-        return this.mediaserver.updateRecordingSettings({ ...cameraSettings, scheduleTasks, addParams }).toPromise();
+        const updateParams: Partial<ICamera> = { ...cameraSettings, addParams };
+
+        const scheduleTasks: ITask[] = [];
+        if (updatedTask && cameraSettings.scheduleEnabled) {
+            for (let dayOfWeek = 1; dayOfWeek < 8; dayOfWeek++) {
+                scheduleTasks.push({ ...updatedTask, ...baseTask, dayOfWeek });
+            }
+            updateParams.scheduleTasks = scheduleTasks;
+        }
+        return this.mediaserver.updateRecordingSettings(updateParams).toPromise();
     }
 
     private parseFps(schedule: ITask[]): number | 'various' {
@@ -944,8 +948,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getCameras();
     }
 
-    updateRecordingSettings(task: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'>, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
-        return this.serverManager.updateRecordingSettings(task, cameraSettings);
+    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        return this.serverManager.updateRecordingSettings(updatedTask, cameraSettings);
     }
 
     getServers() {
@@ -1179,7 +1183,9 @@ export interface Group {
 export interface CameraAdvancedParams {
     groups: Group[];
     name: string;
+    // eslint-disable-next-line camelcase
     packet_mode: boolean;
+    // eslint-disable-next-line camelcase
     unique_id: string;
     version: string;
 }

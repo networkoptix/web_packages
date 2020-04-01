@@ -142,9 +142,12 @@ export interface CameraStates {
 }
 
 export interface Resolution {
-    auto: string;
-    high: string;
-    low:  string;
+    various: string;
+    auto:    string;
+    best:    string;
+    high:    string;
+    medium:  string;
+    low:     string;
 }
 
 export interface VoiceCommands {
@@ -970,8 +973,11 @@ const typeMap: any = {
         { json: "unauthorized", js: "unauthorized", typ: "" },
     ], false),
     "Resolution": o([
+        { json: "various", js: "various", typ: "" },
         { json: "auto", js: "auto", typ: "" },
+        { json: "best", js: "best", typ: "" },
         { json: "high", js: "high", typ: "" },
+        { json: "medium", js: "medium", typ: "" },
         { json: "low", js: "low", typ: "" },
     ], false),
     "VoiceCommands": o([

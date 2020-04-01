@@ -127,8 +127,11 @@
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Auto",
+            "best": "Best",
             "high": "High",
+            "medium": "Medium",
             "low": "Low"
         },
         "general": "General",
