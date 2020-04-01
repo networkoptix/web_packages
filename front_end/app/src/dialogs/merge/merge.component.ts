@@ -152,6 +152,15 @@ export class MergeModalContent {
                 if (newBodyTitle !== template.bodyTitle) {
                     templateVariable.bodyTitle = newBodyTitle;
                 }
+                // clears serverUrl if going back to a checkMerge state
+                if (
+                    newShow.includes('checkMerge') &&
+                    // skips when in "checking" state
+                    templateVariable.helpText !== this.LANG.dialogs.merge.checking &&
+                    template.serverUrlInputValue
+                ) {
+                    template.serverUrlInputValue = '';
+                }
             }
         }
 
