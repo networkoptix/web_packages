@@ -367,6 +367,34 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 ({ cameraId }) => cameraId === this.parsedCameraId
             );
 
+            if (currentAlerts) {
+                // TODO: Maybe change this in CLOUD-4620 to what Tsanko is using with advanced settings
+                const other = currentAlerts.warnings[0];
+                const showOther = currentAlerts.warnings.some(warning => warning === other) &&
+                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== other);
+                if (showOther) {
+                    setTimeout(() => this.toastService.show(other, { inset: true, classname: 'inset-warning' }), currentAlerts.warnings.length);
+                } else {
+                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === other)]);
+                }
+                const unauthorizedMessage = 'Camera is Unauthorized';
+                const showUnauthorized = currentAlerts.errors.some(error => error === unauthorizedMessage) &&
+                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== unauthorizedMessage);
+                if (showUnauthorized) {
+                    setTimeout(() => this.toastService.show('Camera unauthorized',
+                        {
+                            inset     : true,
+                            classname : 'inset-unauthorized',
+                            action    : {
+                                text     : 'Edit Credentials',
+                                icon     : this.CONFIG.icons.dirNonStandard + 'warning.svg',
+                                callback : () => alert('edit credentials called')
+                            }
+                        }), currentAlerts.warnings.length);
+                } else {
+                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === unauthorizedMessage)]);
+                }
+            }
             this.applyService.reset();
             this.applyService.setVisible(true);
         }
