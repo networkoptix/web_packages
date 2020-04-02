@@ -427,8 +427,13 @@ export class MergeModalContent {
                 });
         } else {
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
-            const targetSystem = await this.targetSystemService.getInfo(true, false);
-            await this.targetSystemService.getUsers(true);
+            let targetSystem;
+            try {
+                targetSystem = await this.targetSystemService.getInfo(true, false);
+            } catch (err) {
+                throw Error(this.systemOffline);
+            }
+            await this.targetSystemService.getUsers(true, true);
             if (!targetSystem.isOnline) {
                 throw Error(this.systemOffline);
             } else if (!targetSystem.isAvailable) {
