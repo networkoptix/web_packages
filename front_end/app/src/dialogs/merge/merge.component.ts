@@ -66,8 +66,8 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
-    @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
-    @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
+    @ViewChild('confirmMergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
 
     constructor(
         configService: NxConfigService,
@@ -481,6 +481,8 @@ export class MergeModalContent {
     }
 
     goBack(serverUrlError?) {
+        this.mergeForm && this.mergeForm.form.markAsUntouched();
+        this.adminPassword && this.adminPassword.form.markAsUntouched();
         this.machine.goBack();
         const { template } = this.machine.state;
         if (serverUrlError) {
