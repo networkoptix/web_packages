@@ -109,7 +109,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.systemSubscription = system.infoSubject
                         .pipe(throttleTime(this.CONFIG.system.throttleTime))
                         .subscribe(() => {
-                            console.log('system isAvailable?', this.system.isAvailable);
                             this.settingsService.footerSubject.next(true);
                             this.updateSettings(this.currentlyMerging);
                             if (this.settingsSubscription) {
