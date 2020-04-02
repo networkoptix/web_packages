@@ -1,7 +1,7 @@
 import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
-import { from, of, throwError }                from 'rxjs';
+import { from, of, throwError, Observable }                from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { RequestOptions }                      from '@angular/http';
@@ -358,7 +358,16 @@ export class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera | any>) {
+    getResourceParams(id): Observable<any> {
+        const params = { id: this.cleanId(id) };
+        return this.get('/ec2/getResourceParams', params);
+    }
+
+    setResourceParams(params: ResourceParam[]) {
+        return this.post('/ec2/setResourceParams', params);
+    }
+
+    updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera>) {
         return this.post('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
@@ -402,6 +411,7 @@ export class NxSystemAPI {
         if (height) {
             data.height = height;
         }
+
         if (this.systemId) {
             data.auth = this.authGet;
         }
@@ -560,4 +570,10 @@ export class NxSystemAPIService {
         // }
         return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
+}
+
+export interface ResourceParam {
+    value: string;
+    name: string;
+    resourceId?: string;
 }

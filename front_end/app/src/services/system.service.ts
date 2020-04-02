@@ -3,14 +3,14 @@ import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
 import { NxSystemsService }                from './systems.service';
 import { Injectable, OnDestroy }           from '@angular/core';
-import { NxSystemAPIService, NxSystemAPI } from './system-api.service';
+import { NxSystemAPIService, NxSystemAPI, ResourceParam } from './system-api.service';
 import { BehaviorSubject, from, of }       from 'rxjs';
-import { flatMap, tap }                    from 'rxjs/operators';
+import { flatMap, tap, filter }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
-import { recursiveJson } from '../utils/recursive-json';
+import { recursiveJson }                   from '../utils/recursive-json';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -428,7 +428,7 @@ class ServerManager {
                     const { rotation, overrideAr, mediaCapabilities, isAudioSupported: audioSupported, ...parsedAddParams }: any = addParamsRaw.reduce((obj, { name, value }) => ({ ...obj, [name]: recursiveJson(value) }), {});
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const isAudioSupported = audioSupported === '1';
-                    const previewUrl = this.mediaserver.previewUrl(id);
+                    const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
                     const motionEnabled = camera.motionType !== '8';
                     const recordingSettings: IRecordingSettings = {
@@ -453,8 +453,17 @@ class ServerManager {
             });
     }
 
+    async updateCameraSettings(id: string, params: Object) {
+        const paramsWithId: ResourceParam[] = await this.mediaserver.getResourceParams(id).toPromise();
+        const filteredParams: ResourceParam[] = Object.entries(params).map(([name, value]) => (
+            { name, value, resourceId: paramsWithId.find(({ name: paramName }) => name === paramName).resourceId }
+        ));
+        debugger;
+        return this.mediaserver.setResourceParams(filteredParams).toPromise();
+    }
+
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
-        { overrideAr, rotation, ...cameraSettings }: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = updatedTask && cameraSettings.scheduleEnabled ? {
             bitrateKbps   : 0,
             endTime       : 86400,
@@ -467,12 +476,7 @@ class ServerManager {
             recordingType : 'RT_Never'
         };
 
-        const addParams = [
-            { name: 'overrideAr', value: `${overrideAr}` },
-            { name: 'rotation', value: `${rotation}` }
-        ];
-
-        const updateParams: Partial<ICamera> = { ...cameraSettings, addParams };
+        const updateParams: Partial<ICamera> | any = cameraSettings;
 
         const scheduleTasks: ITask[] = [];
         if (updatedTask && cameraSettings.scheduleEnabled) {
@@ -948,6 +952,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getCameras();
     }
 
+    updateCameraSettings(id: string, params: Object) {
+        return this.serverManager.updateCameraSettings(id, params);
+    }
+
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
         return this.serverManager.updateRecordingSettings(updatedTask, cameraSettings);
     }
@@ -1049,8 +1057,8 @@ export interface IAddParamsRaw {
 export interface ICamera {
     addParams: IAddParamsRaw[];
     parsedAddParams: IParsedAddParams;
-    rotation?: number | '';
-    overrideAr?: number | '';
+    rotation?: number | string;
+    overrideAr?: number | string;
     isAudioSupported: boolean;
     audioEnabled: boolean;
     backupType: string;

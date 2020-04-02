@@ -91,7 +91,7 @@
                         </div>
                         <div class="d-flex flex-column">
                             <span translate>Recording</span>
-                            <span *ngIf="existingRecordingsScheduled" class="input-error" translate>
+                            <span *ngIf="recording && existingRecordingsScheduled" class="input-error" translate>
                                 Existing recordings scheduled. Changing the settings below will override those recordings.
                             </span>
                         </div>

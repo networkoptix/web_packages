@@ -180,16 +180,20 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
                 audioEnabled    : this.audioEnabled.value,
-                overrideAr      : this.selectedAspectWatcher.value || null,
-                rotation        : this.selectedRotationWatcher.value || null,
+                overrideAr      : `${this.selectedAspectWatcher.value}` || '',
+                rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value
             };
-            return this.system.updateRecordingSettings(updatedTask, cameraSettings).then(_ => {
-                return this.system.getCameras().then(res => {
+            
+            return this.system.updateRecordingSettings(updatedTask, cameraSettings)
+                .then(_ => this.system.updateCameraSettings(cameraSettings.id, { 
+                    overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation 
+                }).then(_ => this.system.getCameras().then(res => {
                     this.applyService.reset();
+                    this.setCamera();
                     return res;
-                });
-            });
+                }))
+            );
         });
     }
 
