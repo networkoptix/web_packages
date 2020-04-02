@@ -1,6 +1,6 @@
 <nx-standard-server-component [system]="system" [selectedServer]="this.selectedServer"></nx-standard-server-component>
 
-<nx-block type="simple-alert" class="d-block mt-3"
+<nx-alert-block class="d-block mt-3"
           *ngIf="system && advanced">
     <nx-section>
         <div class="row p-0">
@@ -17,13 +17,14 @@
             <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
                 <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
                         (click)="hideAdvancedSettings()">
-                    <span class="glyphicon glyphicon-eye-close"></span>
-                    <span translate>Hide Advanced Settings</span>
+                    <svg-icon [src]="CONFIG.icons.dir + 'eye_closed.svg'"
+                              [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                    <span class="ml-1" translate>Hide Advanced Settings</span>
                 </button>
             </div>
         </div>
     </nx-section>
-</nx-block>
+</nx-alert-block>
 
 <nx-server-logger-component
         *ngIf="system && advanced"

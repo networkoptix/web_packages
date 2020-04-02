@@ -308,6 +308,12 @@ button, .btn {
     &.has-icon {
         padding-left : 25px;
         position: relative;
+
+        svg {
+            path {
+                fill: $light16;
+            }
+        }
     }
 
     span {
