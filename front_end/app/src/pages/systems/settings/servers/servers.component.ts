@@ -44,7 +44,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.params = this.route.snapshot.queryParams;
-        this.advanced = true; // (this.params.advanced !== undefined);
+        this.advanced = (this.params.advanced !== undefined);
 
         this.menuService.setSection('servers');
     }

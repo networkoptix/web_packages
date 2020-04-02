@@ -4,6 +4,7 @@
     </header>
     <nx-section>
         <form class="form" role="form" name="logLevelsForm" #logLevelsForm="ngForm" novalidate>
+            <nx-pre-loader *ngIf="!showLoggers"></nx-pre-loader>
             <div *ngFor="let log of systemLoggers | keyvalue" class="form-group row">
                 <label class="col-12 col-md-4 m-0 pr-0 d-flex align-items-center justify-content-end">{{log.key}} log level</label>
                 <div class="col-11 col-md-8">

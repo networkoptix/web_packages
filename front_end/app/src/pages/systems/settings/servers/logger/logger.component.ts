@@ -23,6 +23,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    showLoggers: boolean;
     saveLoggers: any;
     lockedSubscription: SubscriptionLike;
 
@@ -33,6 +34,8 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     readonly loggerOptions: any = [];
 
     private setupDefaults() {
+        this.showLoggers = false;
+
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
                 .updateOrGetSystemSettings(this.settingsToBeSaved())
@@ -99,6 +102,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
                 .toPromise()
                 .then(response => {
                     this.settingsToBeDisplayedOrUpdated(response.reply);
+                    this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
                 });
         }
     }

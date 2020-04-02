@@ -1,3 +1,24 @@
 <div class="card simple-alert">
-    <ng-content></ng-content>
+    <nx-section>
+        <div class="row p-0">
+            <div class="col-12 col-md-6 d-flex flex-row">
+                <div>
+                    <svg-icon [src]="iconSrc"
+                              [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                </div>
+                <div class="ml-2">
+                    <span [innerHTML]="line1"></span><br>
+                    <span [innerHTML]="line2"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
+                <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
+                        (click)="onClick()">
+                    <svg-icon [src]="btnIconSrc"
+                              [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                    <span class="ml-1" [innerText]="btnCaption"></span>
+                </button>
+            </div>
+        </div>
+    </nx-section>
 </div>

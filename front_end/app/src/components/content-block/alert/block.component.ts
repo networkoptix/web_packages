@@ -1,27 +1,18 @@
 import {
-    Component, ElementRef, Input, OnInit,
-    ViewChild, ViewEncapsulation
+    Component, EventEmitter, Input, OnInit, Output,
+    ViewEncapsulation
 } from '@angular/core';
+import { IConfig, NxConfigService } from '../../../services/nx-config';
 
 /* Usage
- <nx-alert-block>
-     <nx-section>
-        BODY
-     </nx-section>
-
-     <!-- ngFor -->
-     <nx-section>
-         <header>
-            Section title
-         </header>
-        Section body
-     </nx-section>
-
-     <nx-section>
-        SECTION without header
-     </nx-section>
-     <!-- ngFor -->
- </nx-block>
+ <nx-alert-block
+    [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+    [line1]="'Settings displayed below are advanced.' | translate"
+    [line2]="'Changing them may cause server to work incorrectly.' | translate"
+    [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+    [btnCaption]="'Settings displayed below are advanced.' | translate"
+    (onAction)="hideAdvancedSettings()">
+ </nx-alert-block>
  */
 
 @Component({
@@ -31,10 +22,27 @@ import {
     encapsulation : ViewEncapsulation.None
 })
 export class NxAlertBlockComponent implements OnInit {
+    CONFIG: IConfig;
 
-    constructor() {
+    @Input() iconSrc: string;
+    @Input() line1: string;
+    @Input() line2: string;
+
+    @Input() btnIconSrc: string;
+    @Input() btnCaption: string;
+
+    @Output() onAction = new EventEmitter<boolean>();
+
+    constructor(
+        configService: NxConfigService
+    ) {
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {
+    }
+
+    onClick() {
+        this.onAction.emit();
     }
 }
