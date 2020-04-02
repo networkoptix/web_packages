@@ -427,7 +427,15 @@ class ServerManager {
                     const vmsDate = new Date(serverTime);
                     const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
                     const secondsToday = Math.round((serverTime % 86400000) / 1000);
-                    const { rotation, overrideAr, mediaCapabilities, isAudioSupported: audioSupported, ...parsedAddParams }: any = addParamsRaw.reduce((obj, { name, value }) => ({ ...obj, [name]: recursiveJson(value) }), {});
+                    const {
+                        rotation,
+                        overrideAr,
+                        mediaCapabilities,
+                        isAudioSupported: audioSupported,
+                        ...parsedAddParams
+                    }: any = addParamsRaw.reduce((params, { name, value }) => (
+                        { ...params, [name]: recursiveJson(value) }
+                    ), {});
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const isAudioSupported = audioSupported === '1';
                     const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
@@ -487,7 +495,9 @@ class ServerManager {
     }
 
     private parseFps(schedule: ITask[]): number | 'various' {
-        const currentFps = Array.from(new Set(schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps)));
+        const schedulesWithFps = schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps);
+        const uniqueFps = new Set(schedulesWithFps);
+        const currentFps = Array.from(uniqueFps);
         return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
     }
 
