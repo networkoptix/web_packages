@@ -22,6 +22,7 @@ import { WINDOW }                    from '../../../../services/window-provider'
 import { NxToastService }            from '../../../../dialogs/toast.service';
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -64,6 +65,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
+        private dialogService: NxDialogsService,
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef
     ) {
@@ -211,6 +213,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
+    updateCredentials() {
+        this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, this.setCamera);
+    }
+
     selectedAspectWatcher = new Watcher()
     get selectedAspect() {
         return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
@@ -335,7 +341,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {}
 
-    setCamera() {
+    setCamera = () => {
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
             return;
         }
