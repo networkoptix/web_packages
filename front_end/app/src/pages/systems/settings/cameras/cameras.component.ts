@@ -7,11 +7,12 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes }         from '../../../../services/system.service';
+import { 
+    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes 
+}                                    from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
-    filter, map,
-    retryWhen, delay, distinctUntilChanged
+    filter, map, retryWhen, delay, distinctUntilChanged
 }                                    from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
@@ -184,16 +185,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value
             };
-            
             return this.system.updateRecordingSettings(updatedTask, cameraSettings)
-                .then(_ => this.system.updateCameraSettings(cameraSettings.id, { 
-                    overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation 
+                .then(_ => this.system.updateCameraSettings(cameraSettings.id, {
+                    overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 }).then(_ => this.system.getCameras().then(res => {
                     this.applyService.reset();
                     this.setCamera();
                     return res;
                 }))
-            );
+                );
         });
     }
 
@@ -261,6 +261,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     set cameraName(value) {
         this.cameraNameWatcher.value = value;
+    }
+
+    handleBlankName() {
+        if (!this.cameraName) {
+            this.cameraName = this.cameraNameWatcher.originalValue;
+        }
     }
 
     recordingWatcher = new Watcher()

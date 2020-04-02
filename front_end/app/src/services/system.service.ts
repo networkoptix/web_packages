@@ -3,9 +3,11 @@ import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
 import { NxSystemsService }                from './systems.service';
 import { Injectable, OnDestroy }           from '@angular/core';
-import { NxSystemAPIService, NxSystemAPI, ResourceParam } from './system-api.service';
+import { 
+    NxSystemAPIService, NxSystemAPI, ResourceParam
+}                                          from './system-api.service';
 import { BehaviorSubject, from, of }       from 'rxjs';
-import { flatMap, tap, filter }                    from 'rxjs/operators';
+import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
@@ -453,13 +455,9 @@ class ServerManager {
             });
     }
 
-    async updateCameraSettings(id: string, params: Object) {
-        const paramsWithId: ResourceParam[] = await this.mediaserver.getResourceParams(id).toPromise();
-        const filteredParams: ResourceParam[] = Object.entries(params).map(([name, value]) => (
-            { name, value, resourceId: paramsWithId.find(({ name: paramName }) => name === paramName).resourceId }
-        ));
-        debugger;
-        return this.mediaserver.setResourceParams(filteredParams).toPromise();
+    updateCameraSettings(resourceId: string, params: Object) {
+        const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
+        return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
 
     updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,

@@ -9,7 +9,7 @@
                 <header>
                     <div class="header-top-bar d-flex justify-content-start">
                         <div class="header-title">
-                            <h2 NxEditable [(ngModel)]="cameraName" [hasError]="cameraName"></h2>
+                            <h2 NxEditable [(ngModel)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
@@ -77,6 +77,7 @@
                     </nx-section>
                     <nx-section>
                         <h4 class="mb-3" translate>Authentication</h4>
+                        <!-- Functionality for edit credentials button will be added in CLOUD-4619  -->
                         <button class="btn btn-default"><span translate>Edit Credentials</span></button>
                     </nx-section>
                 </ng-container>

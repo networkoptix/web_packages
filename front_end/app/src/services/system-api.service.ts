@@ -1,7 +1,7 @@
 import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
-import { from, of, throwError, Observable }                from 'rxjs';
+import { from, of, throwError, Observable }    from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { RequestOptions }                      from '@angular/http';
