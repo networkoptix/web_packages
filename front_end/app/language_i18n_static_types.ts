@@ -81,6 +81,7 @@ export interface Common {
     cameraLinks:               CameraLinks;
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
+    recordingSettingsWarning:  string;
     resolution:                Resolution;
     general:                   string;
     maintenanceInProgress:     string;
@@ -918,6 +919,7 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
+        { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
         { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },

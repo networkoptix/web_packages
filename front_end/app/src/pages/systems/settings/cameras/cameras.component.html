@@ -110,7 +110,7 @@
                                 ></nx-radio>
                             <label [for]="mode.name" [ngClass]="mode.enabled ? '' : 'text-muted'">{{mode.name}}</label>
                         </div>
-                        <span *ngIf="recordingSwitchedOn && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
+                        <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
                         <span *ngIf="!selectedCamera.motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
                     <nx-section>
@@ -126,7 +126,7 @@
                                    [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - original'"
                                    [(ngModel)]="selectedFps"
                                    class="form-control input-sm col-3"/>
-                                   <span *ngIf="recordingSwitchedOn && variousFps" class="input-error col-8" translate>Please select FPS.</span>
+                                   <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
                             </div>
                             <div class="d-flex justify-content-start col-12 align-items-center">
                                 <span class="col-1 text-nowrap text-right" translate>Quality</span>
@@ -134,7 +134,7 @@
                                     [(ngModel)]="selectedQuality"
                                     [items]="streamQualities"
                                     class="col-3 pl-0 pr-0"></nx-select>
-                                    <span *ngIf="recordingSwitchedOn && recordingSettingsChanged && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
+                                    <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
                             </div>
                     </nx-section>
                 </ng-container>

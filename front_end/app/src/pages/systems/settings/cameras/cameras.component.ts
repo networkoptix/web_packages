@@ -167,6 +167,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     // Process for apply service
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
+            if (!this.safeToUpdateRecordingSettings) {
+                return this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
+            }
+
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
@@ -180,7 +184,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation        : this.selectedRotationWatcher.value || null,
                 scheduleEnabled : this.recordingWatcher.value
             };
-            return this.system.updateRecordingSettings(updatedTask, cameraSettings);
+            return this.system.updateRecordingSettings(updatedTask, cameraSettings).then(_ => {
+                return this.system.getCameras().then(res => {
+                    this.applyService.reset();
+                    return res;
+                });
+            });
         });
     }
 
@@ -224,10 +233,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get existingRecordingsScheduled() {
+        let type;
+        let fps;
+        let quality;
         return !this.recordingSettingsChanged &&
-            this.recordingSwitchedOn &&
             this.selectedCamera.scheduleTasks.length &&
-            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never');
+            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never') &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType, fps: currentFps, streamQuality }, index) => {
+                if (index === 0) {
+                    type = recordingType;
+                    fps = currentFps;
+                    quality = streamQuality;
+                    return true;
+                }
+                return recordingType === type && fps === currentFps && quality === streamQuality;
+            });
     }
 
     cameraNameWatcher = new Watcher()
@@ -261,6 +281,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingModes.some(({ value }) => value === 1);
     }
 
+    get safeToUpdateRecordingSettings() {
+        return !this.recordingSettingsChanged ||
+        (!this.selectedCamera.scheduleTasks.length ||
+            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never')) ||
+            !this.variousQualities && !this.variousFps && !this.existingModesSelected;
+    }
+
     toggleMode(toggledName, disabled = false) {
         if (disabled) return;
         this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
@@ -278,7 +305,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get variousFps() {
-        return this.selectedFps === '- -' || !this.selectedFps;
+        return this.selectedFps === 'various' || !this.selectedFps;
     }
 
     selectedQualityWatcher = new Watcher()
@@ -324,7 +351,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
             this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
             this.recordingModes = this.selectedCamera.recordingSettings.modes;
-            this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.streamQualities[1];
+            this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
