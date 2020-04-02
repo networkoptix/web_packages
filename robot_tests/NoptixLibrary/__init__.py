@@ -380,16 +380,20 @@ class NoptixLibrary(object):
 
     def build_image(self, env):
         version = ""
+        suffix = "test"
         if env == "https://cloud-test.hdw.mx":
             version = "4.1.0.30618"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
         elif env == "https://test4.cloud.hdw.mx":
             version = "4.1.0.30298"
+        elif env == "https://dev2.cloud.hdw.mx":
+            version = "4.1.0.30308"
+            suffix = "dev"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mergemediaserver",
-                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}

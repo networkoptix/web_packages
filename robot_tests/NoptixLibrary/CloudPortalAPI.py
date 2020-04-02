@@ -55,6 +55,14 @@ class CloudPortalAPI(object):
             r = s.get(f'{env}/api/account/')
             return r.json()
 
+    def get_account_systems(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            data = s.get(f'{env}/api/systems/')
+            systems = []
+            for system in data.json():
+                systems.append(system['id'])
+            return systems
+
     def set_account_language(self, env, email, password, new_language='en_US'):
         with self.log_in(env, email, password) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
