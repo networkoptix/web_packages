@@ -32,12 +32,12 @@
                             <div class="header-table-cell">
                                 <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
                                 <span class="cell-ellipsis"></span>
-                                <span class="col-9 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
+                                <span class="col-8 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
                             </div>
                             <div class="header-table-cell">
                                 <span class="mr-2 cell-title text-nowrap" translate>Model</span>
                                 <span class="cell-ellipsis"></span>
-                                <span class="col-9  text-nowrap">{{selectedCamera.model || "-"}}</span>
+                                <span class="col-8 text-nowrap">{{selectedCamera.model || "-"}}</span>
                             </div>
                         </div>
                         <div class="header-table col-6">
@@ -88,7 +88,9 @@
                         <div class="d-flex flex-column">
                             <span translate>Recording</span>
                             <span *ngIf="recording && existingRecordingsScheduled" class="input-error" translate>
-                                Existing recordings scheduled. Changing the settings below will override those recordings.
+                                <ng-container>
+                                    Existing recordings scheduled. Changing the settings below will override those recordings.
+                                </ng-container>
                             </span>
                         </div>
                     </div>
