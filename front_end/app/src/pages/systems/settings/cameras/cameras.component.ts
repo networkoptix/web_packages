@@ -7,8 +7,8 @@ import { NxLanguageProviderService } from '../../../../services/nx-language-prov
 import { NxMenuService }             from '../../../../components/menu/menu.service';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { 
-    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes 
+import {
+    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes
 }                                    from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
@@ -25,9 +25,9 @@ import { Process, NxProcessService } from '../../../../services/process.service'
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-cameras-component',
+    selector    : 'nx-cameras-component',
     templateUrl : 'cameras.component.html',
-    styleUrls : ['cameras.component.scss']
+    styleUrls   : ['cameras.component.scss']
 })
 export class NxCamerasComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -100,7 +100,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
                     }
                 });
-
                 if (this.cameraSubscription) {
                     this.cameraSubscription.unsubscribe();
                 }
@@ -171,7 +170,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             if (!this.safeToUpdateRecordingSettings) {
                 return this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
             }
-
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
@@ -198,6 +196,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     // Basic Settings
+    cameraNameWatcher = new Watcher()
+    get cameraName() {
+        return this.cameraNameWatcher.value;
+    }
+
+    set cameraName(value) {
+        this.cameraNameWatcher.value = value;
+    }
+
+    handleBlankName() {
+        if (!this.cameraName) {
+            this.cameraName = this.cameraNameWatcher.originalValue;
+        }
+    }
+
     selectedAspectWatcher = new Watcher()
     get selectedAspect() {
         return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
@@ -252,21 +265,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
                 return recordingType === type && fps === currentFps && quality === streamQuality;
             });
-    }
-
-    cameraNameWatcher = new Watcher()
-    get cameraName() {
-        return this.cameraNameWatcher.value;
-    }
-
-    set cameraName(value) {
-        this.cameraNameWatcher.value = value;
-    }
-
-    handleBlankName() {
-        if (!this.cameraName) {
-            this.cameraName = this.cameraNameWatcher.originalValue;
-        }
     }
 
     recordingWatcher = new Watcher()
@@ -365,13 +363,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
-            // this.maxFps = this.selectedCamera.parsedAddParams.mediaStreams.streams[0].
             const currentAlerts = (this.alerts || []).find(
                 ({ cameraId }) => cameraId === this.parsedCameraId
             );
 
             if (currentAlerts) {
-                // TODO: Maybe change this to what Transko is using with advanced settings
+                // TODO: Maybe change this in CLOUD-4620 to what Tsanko is using with advanced settings
                 const other = currentAlerts.warnings[0];
                 const showOther = currentAlerts.warnings.some(warning => warning === other) &&
                     this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== other);

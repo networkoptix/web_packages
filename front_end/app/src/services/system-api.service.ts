@@ -358,11 +358,6 @@ export class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
-    getResourceParams(id): Observable<any> {
-        const params = { id: this.cleanId(id) };
-        return this.get('/ec2/getResourceParams', params);
-    }
-
     setResourceParams(params: ResourceParam[]) {
         return this.post('/ec2/setResourceParams', params);
     }

@@ -54,20 +54,16 @@
                         </div>
                     </div>
                 </header>
-                <ng-container  *ngIf="system.isAdmin">
+                <ng-container *ngIf="system.isAdmin">
                     <nx-section>
                             <h4 class="mb-3" translate>Image</h4>
                             <div class="d-flex justify-content-start col-6 align-items-center mb-2">
                                 <span class="col-3 text-nowrap text-right" translate>Aspect Ratio</span>
-                                <nx-select [selected]="false"
-                                    [(ngModel)]="selectedAspect"
-                                    [items]="aspectRatios"></nx-select>
+                                <nx-select [selected]="false" [(ngModel)]="selectedAspect" [items]="aspectRatios"></nx-select>
                             </div>
                             <div class="d-flex justify-content-start col-6 align-items-center">
                                 <span class="col-3 text-nowrap text-right" translate>Rotation</span>
-                                <nx-select [selected]="false"
-                                    [(ngModel)]="selectedRotation"
-                                    [items]="rotations"></nx-select>
+                                <nx-select [selected]="false" [(ngModel)]="selectedRotation" [items]="rotations"></nx-select>
                             </div>
                     </nx-section>
                     <nx-section>
@@ -98,9 +94,9 @@
                         </div>
                     </div>
                 </header>
-                <ng-container  *ngIf="recording">
+                <ng-container *ngIf="recording">
                     <nx-section>
-                        <h4 class="mb-3">Mode</h4>
+                        <h4 class="mb-3" translate>Mode</h4>
                         <div *ngFor="let mode of recordingModes" class="d-flex">
                             <nx-radio
                                 [name]="mode.name" [componentId]="mode.name"
@@ -118,13 +114,8 @@
                             <h4 class="mb-3" translate>Quality</h4>
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
-                                <input type="number"
-                                   id="fps"
-                                   name="fps"
-                                   min="1"
-                                   step="1"
-                                   max="30"
-                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - original'"
+                                <input type="number" id="fps" name="fps" min="1" step="1" max="30"
+                                   [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + 'current' | translate"
                                    [(ngModel)]="selectedFps"
                                    class="form-control input-sm col-3"/>
                                    <span *ngIf="!existingRecordingsScheduled && variousFps" class="input-error col-8" translate>Please select FPS.</span>
