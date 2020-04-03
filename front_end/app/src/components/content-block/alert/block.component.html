@@ -1,4 +1,4 @@
-<div class="card simple-alert">
+<div class="card simple-{{type}}">
     <nx-section>
         <div class="row p-0">
             <div class="col-12 col-md-6 d-flex flex-row">
@@ -12,11 +12,11 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
-                <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
+                <button *ngIf="btnCaption || btnIconSrc" class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
                         (click)="onClick()">
                     <svg-icon [src]="btnIconSrc"
                               [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
-                    <span class="ml-1" [innerText]="btnCaption"></span>
+                    <span class="ml-1" [innerText]="btnCaption || ''"></span>
                 </button>
             </div>
         </div>
