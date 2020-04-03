@@ -1,5 +1,5 @@
 import {
-    Component, Inject,
+    Component,
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewEncapsulation
 }                                    from '@angular/core';
@@ -13,16 +13,17 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 
 @AutoUnsubscribe()
 @Component({
-    selector      : 'nx-server-advanced-logger-component',
+    selector      : 'nx-server-logger-component',
     templateUrl   : 'logger.component.html',
     styleUrls     : ['logger.component.scss'],
     encapsulation : ViewEncapsulation.None
 })
 
-export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
+export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    showLoggers: boolean;
     saveLoggers: any;
     lockedSubscription: SubscriptionLike;
 
@@ -30,62 +31,16 @@ export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
     @Input() serverId: any;
 
     systemLoggers: any = {};
-    loggerOptions: any = [];
+    readonly loggerOptions: any = [];
 
-    constructor(
-        configService: NxConfigService,
-        language: NxLanguageProviderService,
-        private processService: NxProcessService,
-        private dialogsService: NxDialogsService
-    ) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
-
-        this.loggerOptions = [
-            { value: 'none', name: this.LANG.system.loggers.none },
-            { value: 'error', name: this.LANG.system.loggers.error },
-            { value: 'warning', name: this.LANG.system.loggers.warning },
-            { value: 'info', name: this.LANG.system.loggers.info },
-            { value: 'debug', name: this.LANG.system.loggers.debug },
-            { value: 'verbose', name: this.LANG.system.loggers.verbose }
-        ];
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        if (changes.serverId) {
-            this.init();
-        }
-    }
-
-    ngOnDestroy(): void {
-    }
-
-    init() {
-        const mockResponse = {
-            error       : '0',
-            errorString : '',
-            reply       : {
-                EC2_TRAN    : 'none',
-                HTTP        : 'none',
-                HWID        : 'info',
-                MAIN        : 'info',
-                PERMISSIONS : 'none'
-            }
-        };
-
-        this.system
-            .logLevel(this.serverId)
-            .toPromise()
-            .then(response => {
-                this.settingsToBeDisplayedOrUpdated(mockResponse.reply);
-            });
+    private setupDefaults() {
+        this.showLoggers = false;
 
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
                 .updateOrGetSystemSettings(this.settingsToBeSaved())
                 .toPromise()
                 .then(response => {
-                    // this.applyService.reset();
                     this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
@@ -111,6 +66,50 @@ export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
         });
     }
 
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private processService: NxProcessService,
+        private dialogsService: NxDialogsService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+
+        this.loggerOptions = [
+            { value : 'none', name: this.LANG.system.loggers.none.text, help: this.LANG.system.loggers.none.help },
+            { value : 'error', name: this.LANG.system.loggers.error.text, help: this.LANG.system.loggers.error.help },
+            {
+                value : 'warning',
+                name  : this.LANG.system.loggers.warning.text,
+                help  : this.LANG.system.loggers.warning.help
+            },
+            { value: 'info', name: this.LANG.system.loggers.info.text, help: this.LANG.system.loggers.info.help },
+            { value: 'debug', name: this.LANG.system.loggers.debug.text, help: this.LANG.system.loggers.debug.help },
+            {
+                value : 'verbose',
+                name  : this.LANG.system.loggers.verbose.text,
+                help  : this.LANG.system.loggers.verbose.help
+            }
+        ];
+
+        this.setupDefaults();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes.serverId && changes.serverId.currentValue) {
+            this.system
+                .logLevel(changes.serverId.currentValue.slice(1, -1))
+                .toPromise()
+                .then(response => {
+                    this.settingsToBeDisplayedOrUpdated(response.reply);
+                    this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
+                });
+        }
+    }
+
+    ngOnDestroy(): void {
+    }
+
     changeLog(selected, key) {
         this.systemLoggers[key].value = selected.value;
         this.systemLoggers[key].selected = selected;
@@ -119,13 +118,13 @@ export class NxSystemAdvancedLoggerComponent implements OnChanges, OnDestroy {
     settingsToBeDisplayedOrUpdated(loggers) {
         Object.keys(loggers).forEach((key) => {
             const value = loggers[key];
-            const name = this.loggerOptions.filter(level => {
+            const { name, help } = this.loggerOptions.filter(level => {
                 return level.value === value;
-            })[0].name;
+            })[0];
 
             this.systemLoggers[key] = {};
-            this.systemLoggers[key].selected = { name, value };
             this.systemLoggers[key].name = name;
+            this.systemLoggers[key].help = help;
             this.systemLoggers[key].value = value;
             this.systemLoggers[key].originalValue = value;
         });

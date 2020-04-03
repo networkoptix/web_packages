@@ -643,12 +643,17 @@ export interface LanguageI18NStaticTypesSystem {
 }
 
 export interface Loggers {
-    none:    string;
-    error:   string;
-    warning: string;
-    info:    string;
-    debug:   string;
-    verbose: string;
+    none:    Debug;
+    error:   Debug;
+    warning: Debug;
+    info:    Debug;
+    debug:   Debug;
+    verbose: Debug;
+}
+
+export interface Debug {
+    text: string;
+    help: string;
 }
 
 export interface Settings {
@@ -1428,12 +1433,16 @@ const typeMap: any = {
         { json: "loggers", js: "loggers", typ: r("Loggers") },
     ], false),
     "Loggers": o([
-        { json: "none", js: "none", typ: "" },
-        { json: "error", js: "error", typ: "" },
-        { json: "warning", js: "warning", typ: "" },
-        { json: "info", js: "info", typ: "" },
-        { json: "debug", js: "debug", typ: "" },
-        { json: "verbose", js: "verbose", typ: "" },
+        { json: "none", js: "none", typ: r("Debug") },
+        { json: "error", js: "error", typ: r("Debug") },
+        { json: "warning", js: "warning", typ: r("Debug") },
+        { json: "info", js: "info", typ: r("Debug") },
+        { json: "debug", js: "debug", typ: r("Debug") },
+        { json: "verbose", js: "verbose", typ: r("Debug") },
+    ], false),
+    "Debug": o([
+        { json: "text", js: "text", typ: "" },
+        { json: "help", js: "help", typ: "" },
     ], false),
     "Settings": o([
         { json: "notAbleToLoadSecurity", js: "notAbleToLoadSecurity", typ: "" },

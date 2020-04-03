@@ -23,19 +23,19 @@ import {
 })
 export class NxContentBlockSectionComponent implements OnInit {
     @Input() type: string;
+    @Input() nonPadded: any;
 
     haveSubheader: boolean;
 
     @ViewChild('subHeaderWrapper', { static: true }) subHeaderWrapper: ElementRef;
 
     constructor() {
-        this.haveSubheader = true;
+        // this.haveSubheader = true;
     }
 
     ngOnInit() {
-        if (!this.type) {
-            this.type = '';
-        }
+        this.type = this.type || '';
+        this.nonPadded = (this.nonPadded !== undefined);
         this.haveSubheader = (this.subHeaderWrapper.nativeElement.childNodes[0].childNodes.length > 0);
     }
 }
