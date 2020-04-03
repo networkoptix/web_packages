@@ -1,5 +1,6 @@
 <!-- Initial State -->
-<nx-block *ngIf="!cloudStorageSystemEnabled" type="mt-3 mb-3">
+<nx-pre-loader *ngIf="cloudStorageStateLoading"></nx-pre-loader>
+<nx-block *ngIf="cloudStorageSystemEnabled === false" type="mt-3 mb-3">
     <header><h4 translate>Cloud Storage</h4></header>
     <div class="header-svg">
         <svg-icon [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
@@ -15,7 +16,7 @@
 </nx-block>
 
 <!-- Empty and Regular State -->
-<nx-block *ngIf="cloudStorageSystemEnabled" type="mt-3 mb-3">
+<nx-block *ngIf="cloudStorageSystemEnabled === true" type="mt-3 mb-3">
     <header class="normal-state-header">
         <h4 translate>Cloud Storage</h4>
     </header>
