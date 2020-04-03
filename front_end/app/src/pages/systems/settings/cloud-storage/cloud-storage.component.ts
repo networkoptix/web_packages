@@ -28,6 +28,7 @@ export class NxCloudStorageComponent implements OnInit {
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
     updateEnabledUsageAndStats: Process;
+    cloudEnabled = false;
 
     // Constructor and class initialization methods
 
@@ -42,6 +43,7 @@ export class NxCloudStorageComponent implements OnInit {
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
+        this.cloudEnabled = !!this.CONFIG.cloudCapabilities.cloudStorageEnabled;
     }
 
     private setupDefaults({ configService, languageService }) {

@@ -26,6 +26,11 @@ class StateMachine {
     }
 
     goBack() {
+        for (const variable in this.state.template) {
+            if (variable.includes('Error')) {
+                this.state.template[variable] = '';
+            }
+        }
         if (this.history.length > 0) {
             this.transition(this.history.pop(), true);
         } else {

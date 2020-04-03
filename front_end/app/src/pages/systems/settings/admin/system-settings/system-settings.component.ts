@@ -84,12 +84,14 @@ export class NxSystemSettingsComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const { previousValue, currentValue } = changes.settings;
-        if (previousValue === undefined && currentValue) {
-            this.cleanUpWatchers(currentValue);
-        }
-        if (JSON.stringify(previousValue) !== JSON.stringify(currentValue)) {
-            this.setWatcherValues(currentValue);
+        if (changes.settings) {
+            const { previousValue, currentValue } = changes.settings;
+            if (previousValue === undefined && currentValue) {
+                this.cleanUpWatchers(currentValue);
+            }
+            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue)) {
+                this.setWatcherValues(currentValue);
+            }
         }
     }
 

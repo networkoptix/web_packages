@@ -235,6 +235,7 @@
     "Tracks and logs all user actions.": "Tracks and logs all user actions.",
     "UNAVAILABLE": "UNAVAILABLE",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>",
+    "Update your system to the latest build to enable Cloud Storage.": "Update your system to the latest build to enable Cloud Storage.",
     "Updated": "Updated",
     "Url": "Url",
     "Use Shift + Wheel for horizontal scrolling.": "Use Shift + Wheel for horizontal scrolling.",

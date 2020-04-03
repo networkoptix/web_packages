@@ -55,10 +55,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     private updateSettings(forceMergeState?: boolean) {
         const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
-        const available = this.system && (!this.system.isOnline || !this.system.isAvailable);
+        const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
             disconnectDisabled : merging,
-            mergeDisabled      : (merging || available) && !(this.debugMode || this.betaMode),
+            mergeDisabled      : (merging || notAvailable) && !(this.debugMode || this.betaMode),
             renameDisabled     : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
             showMerge          : this.system && this.system.isMine && this.systemsService.systems.length > 1
         };

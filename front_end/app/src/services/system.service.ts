@@ -94,6 +94,7 @@ class System implements SystemInterface {
     protected _isAvailable: boolean;
     canMerge: boolean;
     cloudStorageCapable: boolean;
+    cloudStorageSystemEnabled = false;
     id: string;
     info: any;
     isOnline: boolean;
@@ -583,7 +584,7 @@ class ServerManager {
 export class NxSystem extends System implements OnDestroy {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private cloudApi: any;
+    private cloudApi: NxCloudApiService;
     private systemApiService: any;
     private pollService: any;
     private systemsService: any;
@@ -730,8 +731,15 @@ export class NxSystem extends System implements OnDestroy {
         this.currentServerNotBusy = true;
         this.info = { name: '' };
         this.mergeInfo = {};
+        this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
+        this.cloudApi.getCloudStorageUsage(this.id)
+            .then(() => {
+                this.cloudStorageSystemEnabled = true;
+            }, () => {
+                this.cloudStorageSystemEnabled = false;
+            });
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
              Some options here:
@@ -772,8 +780,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        const userAccess =  this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
-        return userAccess && (this.cloudStorageCapable || this.CONFIG.cloudCapabilities.cloudStorageEnabled);
+        return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
     }
 
     getInfoAndPermissions(useCache = true) {
@@ -799,6 +806,11 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
+                this.cloudApi.getCloudStorageUsage(this.systemApiService.id).then(() => {
+                    this.cloudStorageSystemEnabled = true;
+                }, () => {
+                    this.cloudStorageSystemEnabled = false;
+                })
                 this.systemInfo = this;
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;

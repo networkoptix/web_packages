@@ -15,6 +15,9 @@
     "SYSTEM NO ACCESS TEXT"                :    "Failed to access system",
     "DISCONNECT FROM CLOUD TEXT"           :    "Disconnect from %PRODUCT_NAME%",
     "RENAME"                               :    "Rename",
+    "RESTART"                              :    "Restart",
+    "RESET TO DEFAULTS TEXT"               :    "Reset to Defaults",
+    "FULL INFO TEXT"                       :    "Full Info",
     "DISCONNECT MODAL WARNING TEXT"        :    "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
     "SUCCESSFULLY DISCONNECTED"            :    "System is successfully disconnected from %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT"               :    "Account is already activated or confirmation code is incorrect",
@@ -239,5 +242,8 @@
     "SYSTEM CANNOT BE ACCESSED TEXT"       :    "This system is offline and cannot be accessed right now.",
     "VIEWING IMPORTED REPORT TEXT"         :    "You are viewing an imported report, refresh the page to get a fresh report",
     "NO ALERTS TEXT"                       :    "No Alerts",
-    "SYSTEM DOING WELL TEXT"               :    "Your system must be doing well!"
+    "SYSTEM DOING WELL TEXT"               :    "Your system must be doing well!",
+
+    "PORT TEXT"                            :    "Port",
+    "CHECK STATUS TEXT"                    :    "Check Status"
 }

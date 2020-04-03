@@ -66,8 +66,8 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
-    @ViewChild('confirmMergeForm', { static: false }) mergeForm: HTMLFormElement;
-    @ViewChild('mergePassword', { static: false }) mergePassword: ElementRef;
+    @ViewChild('confirmMergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
 
     constructor(
         configService: NxConfigService,
@@ -82,48 +82,52 @@ export class MergeModalContent {
         this.LANG = languageService.getTranslations();
     }
 
-    async ngOnInit() {
+    ngOnInit() {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
             if (this.systems.length === 0) {
                 this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
+                this.secondarySystem = this.targetSystem;
                 this.updateShow('noOtherSystemServerUrl');
             } else {
-                if (this.systems.length) {
-                    this.processedSystems.push(
-                        ...this.makeSelectorList(this.systems),
-                        { name: 'horizontal' }
-                    );
-                }
-                await this.getPeerSystems();
-                if (this.peerSystems.length) {
-                    this.processedSystems.push(
-                        ...this.makeSelectorList(this.peerSystems),
-                        { name: 'horizontal' }
-                    );
-                }
-                this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
-                this.targetSystem = this.selectDefaultSystem();
-                this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-                this.systemMergeable = this.checkMergeability(this.targetSystem);
-                let show = this.checkMergeDefault;
-                const templateUpdates: any = {
-                    helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
-                    selectedTarget : this.targetSystemDropdown.value
-                };
-                if (this.targetSystemDropdown.peer) {
-                    show = this.serverUrlState;
-                    templateUpdates.serverUrlInputValue = this.targetSystem.url;
-                    delete templateUpdates.helpText;
-                }
-                this.updateShow(show, templateUpdates);
-            }
-            this.secondarySystem = this.targetSystem;
-            if (this.systemMergeable) {
-                this.updateShow(
-                    this.checkMergeError,
-                    { checkingErrorText: this.systemMergeable }
-                );
+                this.getPeerSystems()
+                    .then(() => {
+                        if (this.systems.length) {
+                            this.processedSystems.push(
+                                ...this.makeSelectorList(this.systems),
+                                { name: 'horizontal' }
+                            );
+                        }
+                        if (this.peerSystems.length) {
+                            this.processedSystems.push(
+                                ...this.makeSelectorList(this.peerSystems),
+                                { name: 'horizontal' }
+                            );
+                        }
+                        this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
+                        this.targetSystem = this.selectDefaultSystem();
+                        this.secondarySystem = this.targetSystem;
+                        this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+                        this.systemMergeable = this.checkMergeability(this.targetSystem);
+                        if (this.systemMergeable) {
+                            this.updateShow(
+                                this.checkMergeError,
+                                { checkingErrorText: this.systemMergeable }
+                            );
+                        } else {
+                            let show = this.checkMergeDefault;
+                            const templateUpdates: any = {
+                                helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
+                                selectedTarget : this.targetSystemDropdown.value
+                            };
+                            if (this.targetSystemDropdown.peer) {
+                                show = this.serverUrlState;
+                                templateUpdates.serverUrlInputValue = this.targetSystem.url;
+                                delete templateUpdates.helpText;
+                            }
+                            this.updateShow(show, templateUpdates);
+                        }
+                    });
             }
 
             this.user.get().then((account) => {
@@ -427,7 +431,13 @@ export class MergeModalContent {
                 });
         } else {
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
-            const targetSystem = await this.targetSystemService.getInfo(true, false);
+            let targetSystem;
+            try {
+                targetSystem = await this.targetSystemService.getInfo(true, false);
+            } catch (err) {
+                throw Error(this.systemOffline);
+            }
+            await this.targetSystemService.getUsers(true, true);
             if (!targetSystem.isOnline) {
                 throw Error(this.systemOffline);
             } else if (!targetSystem.isAvailable) {
@@ -471,6 +481,8 @@ export class MergeModalContent {
     }
 
     goBack(serverUrlError?) {
+        this.mergeForm && this.mergeForm.form.markAsUntouched();
+        this.adminPassword && this.adminPassword.form.markAsUntouched();
         this.machine.goBack();
         const { template } = this.machine.state;
         if (serverUrlError) {
