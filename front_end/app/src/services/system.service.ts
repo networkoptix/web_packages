@@ -596,12 +596,14 @@ export class NxSystem extends System implements OnDestroy {
         this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
-        this.cloudApi.getCloudStorageUsage(this.id)
-            .then(() => {
-                this.cloudStorageSystemEnabled = true;
-            }, () => {
-                this.cloudStorageSystemEnabled = false;
-            });
+        if (systemId) {
+            this.cloudApi.getCloudStorageUsage(systemId)
+                .then(() => {
+                    this.cloudStorageSystemEnabled = true;
+                }, () => {
+                    this.cloudStorageSystemEnabled = false;
+                });
+        }
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
              Some options here:
@@ -668,11 +670,13 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
-                this.cloudApi.getCloudStorageUsage(this.systemApiService.id).then(() => {
-                    this.cloudStorageSystemEnabled = true;
-                }, () => {
-                    this.cloudStorageSystemEnabled = false;
-                })
+                if (this.id) {
+                    this.cloudApi.getCloudStorageUsage(this.id).then(() => {
+                        this.cloudStorageSystemEnabled = true;
+                    }, () => {
+                        this.cloudStorageSystemEnabled = false;
+                    });
+                }
                 this.systemInfo = this;
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;
