@@ -1,15 +1,20 @@
 @import "../../../styles/_theme_variables";
 
 .switch {
-    position: relative;
-    display: inline-block;
-    width: 33px;
-    height: 17px;
+    width : 33px;
 
-    & input {
-        opacity: 0;
-        width: 0;
-        height: 0;
+    &-element {
+        position : relative;
+        display  : inline-block;
+        width    : 100%;
+        height   : 17px;
+        margin   : 0;
+
+        & input {
+            opacity : 0;
+            width   : 0;
+            height  : 0;
+        }
     }
 }
 
@@ -71,13 +76,13 @@ input.selected + .slider:before {
 .slider-icon {
     position: absolute;
     pointer-events: None;
-    user-select: none;
     -moz-user-select: none;
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
+    user-select: none;
     height: 9px;
-    bottom: 12px;
+    bottom: 5px;
 }
 
 .bar {

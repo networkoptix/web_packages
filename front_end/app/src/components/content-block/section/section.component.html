@@ -1,9 +1,9 @@
-<div class="card--body section clearfix" [ngClass]="type">
+<div class="card--body section clearfix" [ngClass]="type" [ngStyle]="{'padding': nonPadded ? '0': '1rem'}">
     <div class="card--body-subheader" #subHeaderWrapper [hidden]="!haveSubheader">
         <h3>
             <ng-content select="header"></ng-content>
         </h3>
     </div>
-    <div [ngClass]="{'card--body-spacer' : !haveSubheader}"></div>
+    <div *ngIf="(!nonPadded && haveSubheader) || haveSubheader" class="card--body-spacer"></div>
     <ng-content></ng-content>
 </div>

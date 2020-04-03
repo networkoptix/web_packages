@@ -17,8 +17,6 @@ import { NxNoSystemsComponent }             from '../no-systems/no-systems.compo
 import { ApplyGuard }                       from '../../../routeGuards/applyGuard';
 import { AuthGuard }                        from '../../../routeGuards/authGuard';
 import { UserGuard }                        from '../../../routeGuards/userGuard';
-import { NxSystemServerAdvancedComponent }  from './advanced/advanced.component';
-import { NxSystemServerAdvancedModule }     from './advanced/advanced.module';
 import { AdminGuard }                       from '../../../routeGuards/adminGuard';
 import { NxCloudStorageModule }             from './cloud-storage/cloud-storage.module';
 import { NxCloudStorageComponent }          from './cloud-storage/cloud-storage.component';
@@ -59,11 +57,6 @@ const appRoutes: Routes = [
                 canDeactivate : [ApplyGuard]
             },
             {
-                path          : 'servers/:serverId/advanced',
-                component     : NxSystemServerAdvancedComponent,
-                canActivate   : [AdminGuard]
-            },
-            {
                 path          : 'cloud-storage',
                 component     : NxCloudStorageComponent,
                 canActivate   : [CloudStorageGuard],
@@ -85,7 +78,6 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
-        NxSystemServerAdvancedModule,
         NxCloudStorageModule,
         RouterModule.forChild(appRoutes)
     ],

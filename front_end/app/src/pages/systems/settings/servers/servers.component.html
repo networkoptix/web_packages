@@ -14,6 +14,13 @@
         (onAction)="hideAdvancedSettings()">
 </nx-alert-block>
 
+<nx-server-advanced-storage-component
+        *ngIf="system && advanced"
+        [system]="system"
+        [serverId]="this.selectedServer?.id">
+</nx-server-advanced-storage-component>
+
+
 <nx-server-logger-component
         *ngIf="system && advanced"
         [system]="system"
