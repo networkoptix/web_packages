@@ -297,8 +297,12 @@ export class MergeModalContent {
                                 checkingErrorText: newCheckMergeErrors[res.errorString] || this.unknownError
                             });
                         }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        this.updateShow('confirmPasswordError', { passwordErrorText: this.unknownError });
                     });
-            });
+            }, { ignoreError: true });
 
         this.mergingProcess = this.processService
             .createProcess(() => {
