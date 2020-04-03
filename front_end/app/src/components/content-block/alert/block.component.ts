@@ -27,6 +27,7 @@ export class NxAlertBlockComponent implements OnInit {
     @Input() iconSrc: string;
     @Input() line1: string;
     @Input() line2: string;
+    @Input() type: 'error' | 'warning' | 'default' = 'default';
 
     @Input() btnIconSrc: string;
     @Input() btnCaption: string;
