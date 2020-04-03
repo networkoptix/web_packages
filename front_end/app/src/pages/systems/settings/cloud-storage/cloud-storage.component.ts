@@ -24,7 +24,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     usageStats: IUsageStats;
     _cloudCapacity: number;
-    cloudStorageSystemEnabled$ = new BehaviorSubject(false);
+    cloudStorageSystemEnabled$: BehaviorSubject<boolean | string> = new BehaviorSubject('loading');
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
     updateEnabledUsageAndStats: Process;
@@ -134,12 +134,16 @@ export class NxCloudStorageComponent implements OnInit {
         return this.system$.value.id;
     }
 
-    set cloudStorageSystemEnabled(value: boolean) {
+    set cloudStorageSystemEnabled(value: boolean | string) {
         this.cloudStorageSystemEnabled$.next(value);
     }
 
-    get cloudStorageSystemEnabled() {
+    get cloudStorageSystemEnabled(): boolean | string {
         return this.cloudStorageSystemEnabled$.value;
+    }
+
+    get cloudStorageStateLoading() {
+        return this.cloudStorageSystemEnabled$.value === 'loading';
     }
 
     set systems(value) {
@@ -169,12 +173,14 @@ export class NxCloudStorageComponent implements OnInit {
     };
 
     private updateEnabledAndUsageStats() {
-        // TODO: maybe needs to be a process
+        if (!this.systemId) return;
         this.cloudApiService.getCloudStorageUsage(this.systemId)
-            .then(({ enabled, cloudCapacity, ...usageStats }) => {
+            .then(({ resultCode = false, cloudCapacity, ...usageStats }) => {
                 this.usageStats = { ...emptyUsage, ...usageStats };
-                this.cloudStorageSystemEnabled = enabled;
+                this.cloudStorageSystemEnabled = !resultCode;
                 this._cloudCapacity = cloudCapacity;
+            }, () => {
+                this.cloudStorageSystemEnabled = false;
             });
     }
 
