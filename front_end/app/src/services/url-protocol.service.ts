@@ -150,7 +150,7 @@ export class NxUrlProtocolService {
                 };
 
                 this.window.document.onvisibilitychange = () => {
-                    if (this.window.document.hidden === true) {
+                    if (this.window.document.hidden) {
                         blurCount--;
                     }
                 };

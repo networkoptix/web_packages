@@ -44,7 +44,6 @@ export class ResetServerModalContent {
                     delay    : this.CONFIG.alertTimeout
                 };
                 return this.system.restoreFactorySettings(this.serverId, this.password).toPromise().then(res => {
-                    console.log('res in restoreFactorySettings', res);
                     this.activeModal.close();
                     let initialRuntimeId;
                     this.system.getModuleInfo(this.serverId).toPromise().then(res => {

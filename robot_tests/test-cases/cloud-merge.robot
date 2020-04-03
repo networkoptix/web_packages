@@ -88,7 +88,7 @@ Prepare System With Users
     ...    ${system name}
     ...    ${users dict}
     ...    ${network}=bridge
-    ${system id}    Create system and attach to cloud
+    ${system id}=    Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    ${port}
@@ -105,6 +105,8 @@ Prepare System With Users
     ...    ${auth}
     ...    ${port}
     ...    ${Save User role json["id"]}
+
+    [Return]    ${system id}
 
 Create system and attach to cloud
     [arguments]
@@ -176,110 +178,106 @@ Reset state
     Prune Containers
     Close Browser
     Open Browser and go to URL    ${url}
-    @{auth}=   Create List    ${EMAIL MERGE OWNER 1}    ${password}
-    Log In    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
-    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
-    FOR    ${idx}    IN RANGE   ${count}[1]-1
-        Exit For Loop If    "${state[0]}"=="PASS"
-        Click Element    ${SYSTEMS TILE}
-        Disconnect from cloud
+
+    ${systems owner 1}=   Get Account Systems   ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}
+    ${systems owner 2}=   Get Account Systems   ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}
+    FOR    ${system id}    IN    @{systems owner 1}
+        Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${systems owner 1}
     END
-    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
-    Log Out
-    Log In    ${EMAIL MERGE OWNER 2}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Element Should Be Visible    ${YOU HAVE NO SYSTEMS}
-    ${count}    Run Keyword And Ignore Error    Get Element Count    ${SYSTEMS TILE}
-    FOR    ${idx}    IN RANGE   ${count}[1]-1
-        Click Element    ${SYSTEMS TILE}
-        Disconnect from cloud
+    FOR    ${system id}    IN    @{systems owner 2}
+        Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${systems owner 2}
     END
-    Run Keyword Unless    "${state[0]}"=="PASS"    Disconnect from cloud
-    Log Out
-    Validate Log Out
-    Log In    ${EMAIL MERGE OWNER 3.0}    ${password}
-    Validate Log In
-    ${state}    Run Keyword And Ignore Error    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]    10
-    Run Keyword If    "${state[0]}"=="PASS"    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Run Keyword If    "${state[0]}"=="PASS"    Disconnect from cloud
 
 
 *** Test Cases ***
 Wrong and empty password
-    [tags]    C54685
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
+    [Tags]    C54685    deb
+    ${user}=    Set Variable    ${EMAIL MERGE OWNER 2}
     @{auth}=    Create List    ${user}    ${password}
-    ${api made system 1 id}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
-    ${api made system 2 id}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
-    log in    ${user}    ${password}
-    Validate Log in
+    ${system id 1}=   Create system and attach to cloud    ${user}    ${image}    7001    API made system 1
+    ${system id 2}=   Create system and attach to cloud    ${user}    ${image}    7003    API made system 2
+
+    Log In    ${user}    ${password}
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
-    Validate system available    API made system 1
+    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
     Go To    ${url}/systems
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Validate system available    API made system 2
-    Go to System Administration
+    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
+
+    Go To    ${url}/systems
+    Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
+    Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
+    Reload page
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
+
+#    Reload Page
+    # Merge dialog state 1
     Wait Until Elements Are Visible
     ...    ${MERGE DIALOG}
     ...    ${MERGE X BUTTON}
-    ...    ${MERGE OK BUTTON}
-    ...    ${MERGE CANCEL BUTTON}
+    ...    ${MERGE NEXT BUTTON}
     ...    ${MERGE CURRENT SYSTEM WITH}
     ...    ${MERGE ONLY AS OWNER}
-    Click Button    ${MERGE OK BUTTON}
-    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
-    Wait Until Elements Are Visible
-    ...    ${MERGE BUTTON MODAL}
-    ...    ${MERGE PASSWORD INPUT}
-    ...    ${MERGE CANCEL BUTTON}
-    Click Button    ${MERGE BUTTON MODAL}
-    Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
-    Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
-    Click Button    ${MERGE BUTTON MODAL}
-    Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
-    Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
-#    Disconnect from cloud
-#    Disconnect from cloud
-    Unbind System    ${auth}   ${url}    ${api made system 1 id}
-    Unbind System    ${auth}   ${url}    ${api made system 2 id}
 
+#    Click Button    ${MERGE NEXT BUTTON}
+#    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+#
+#    # Merge dialog state 2
+#    Wait Until Elements Are Visible
+#    ...    ${MERGE CHOOSE PRIMARY FORM}
+#    ...    ${MERGE X BUTTON}
+#    ...    ${MERGE GO BACK BUTTON}
+#    ...    ${MERGE NEXT BUTTON}
+#    Click Button    ${MERGE NEXT BUTTON}
+#
+#    # Merge dialog state 3
+#    Wait Until Elements Are Visible
+#    ...    ${MERGE PASSWORD INPUT}
+#    ...    ${MERGE X BUTTON}
+#    ...    ${MERGE GO BACK BUTTON}
+#    ...    ${MERGE NEXT BUTTON}
+#    Wait Until Element Is Visible    ${MERGE PASSWORD REQUIRED}
+#    Input Text    ${MERGE PASSWORD INPUT}    qwerasdf
+#    Click Button    ${MERGE NEXT BUTTON}
+#    Wait Until Element Is Visible    ${MERGE PASSWORD INCORRECT}
+#    Press Keys    ${MERGE BUTTON MODAL}    ESCAPE
 
-Only one system connected to Cloud Account
-    ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 1}
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
+
+Only one system connected to Cloud Account - Merge Button should be disabled
+    ${user}=    Set Variable    ${EMAIL MERGE OWNER 1}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    log in    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log in
-    Run keyword and expect error    *    Wait until element is visible    ${MERGE BUTTON SYSTEM}    5
-    Disconnect from cloud
+    Log In    ${EMAIL MERGE OWNER 1}    ${password}
+    Wait until keyword succeeds    1 min    0 sec    Wait until element is not visible    ${SYSTEM NAME OFFLINE}
+    Run keyword and expect error    *    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    5
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id}
 
 2 Systems: 1 as Owner & 1 as non-Owner
-    Create system and attach to cloud
+    ${system id 1}=   Create system and attach to cloud
     ...    ${EMAIL MERGE OWNER 1}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    Create system and attach to cloud
+    ${system id 2}=   Create system and attach to cloud
     ...    ${EMAIL MERGE OWNER 2}
     ...    ${image}
     ...    7003
     ...    API made system 2
-    log in    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log in
+    Log In    ${EMAIL MERGE OWNER 1}    ${password}
     Wait Until Elements Are Visible
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
+    #TODO switch to share via API
     Go to Users List
     Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
@@ -288,14 +286,15 @@ Only one system connected to Cloud Account
     Delete Email    ${email}
     Close Mailbox
     Log Out
+
     Log In    ${EMAIL MERGE OWNER 2}    ${password}
-    Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
     Go to System Administration
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
+
     Click Button    ${MERGE BUTTON SYSTEM}
 
     Wait Until Elements Are Visible
@@ -327,31 +326,26 @@ Only one system connected to Cloud Account
     Press Keys    ${MERGE OK BUTTON}    ESCAPE
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
-    Disconnect from cloud
-    Log Out
-    Validate Log Out
-    Log In    ${EMAIL MERGE OWNER 1}    ${password}
-    Validate Log In
-    Disconnect from cloud
+    Disconnect
+    Disconnect
 
 2 Systems: 1 online and 1 offline
     [tags]    C53960
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id 1}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
     Stop Containers
     Prune Containers
-    Create system and attach to cloud
+    ${system id 2}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7003
     ...    API made system 2
-    log in    ${user}    ${password}
-    Validate Log in
+    Log In    ${user}    ${password}
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
     Validate system available    API made system 2
@@ -371,15 +365,15 @@ Only one system connected to Cloud Account
     ...    API made system 1
     Wait Until Element Is Visible    ${MERGE FORM}//p[contains(@class,"warning-label") and contains(text(),"${error message}")]
     Click Button    ${MERGE CANCEL BUTTON}
-    Disconnect from cloud
-    Disconnect from cloud
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 2}
 
 Merge with 3.0
     Log In    ${EMAIL MERGE OWNER 3.0}    ${password}
     Validate Log In
     ${user}    Set Variable    ${EMAIL MERGE OWNER 3.0}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
@@ -410,17 +404,18 @@ Merge with 3.0
     ...    ${MERGE X BUTTON}
     Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(),"– ${INCOMPATIBLE}")]
     Click Button    ${MERGE CANCEL BUTTON}
-    Disconnect from Cloud
+
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 3.0}    ${password}    ${system id 1}
 
 2 Systems with identical servers
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id 1}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    Create system and attach to cloud
+    ${system id 2}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7003
@@ -505,12 +500,12 @@ From secondary system merge to primary with no other systems
     [tags]    C53944
     ${user}    Set Variable    ${EMAIL MERGE OWNER 1}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id 1}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    Create system and attach to cloud
+    ${system id 2}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7003
@@ -538,17 +533,17 @@ From secondary system merge to primary with no other systems
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
 
-    Disconnect from cloud
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
 
 From secondary system merge to primary with other systems
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
     ${auth}=    Create List    ${user}    ${password}
-    Create system and attach to cloud
+    ${system id 1}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7001
     ...    API made system 1
-    Create system and attach to cloud
+    ${system id 2}=   Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7003
@@ -586,9 +581,9 @@ From secondary system merge to primary with other systems
     Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 3")]
     Sleep    1
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
-    Disconnect from cloud
-    Sleep    35
-    Disconnect from cloud
+
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
+
 
 From primary system
     [tags]    C48946
@@ -599,7 +594,7 @@ From primary system
     ...    ${image}
     ...    7001
     ...    API made system 2
-    Create system and attach to cloud
+    ${system id 1}=  Create system and attach to cloud
     ...    ${user}
     ...    ${image}
     ...    7003
@@ -625,13 +620,14 @@ From primary system
     Wait Until Element Is Visible    ${USERS LIST}
     Wait Until Element Is Not Visible    ${CURRENTLY MERGING CARD}    120
     Validate system available    API made system 1
-    Disconnect from cloud
+
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
 
 Merge with different types of users
     [tags]    C53946
     ${user}    Set Variable    ${EMAIL MERGE OWNER 2}
     ${auth}=   Create List    ${user}    ${password}
-    Prepare System With Users
+    ${system id 1}=   Prepare System With Users
     ...    ${user}
     ...    ${auth}
     ...    ${image}
@@ -639,7 +635,7 @@ Merge with different types of users
     ...    API made system 1
     ...    ${users dict 1}
     ...    network=bridge
-    Prepare System With Users
+    ${system id 2}=   Prepare System With Users
     ...    ${user}
     ...    ${auth}
     ...    ${image}
@@ -648,7 +644,6 @@ Merge with different types of users
     ...    ${users dict 2}
     ...    network=bridge
     Log In    ${user}    ${password}
-    Validate Log in
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1
@@ -674,4 +669,5 @@ Merge with different types of users
     FOR    ${key}    IN    @{all users dict.keys()}
         Check User Permissions    ${all users dict["${key}"]}    ${key}    timeout=10
     END
-    Disconnect from cloud
+
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}

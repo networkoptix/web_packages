@@ -25,7 +25,6 @@ from selenium.webdriver.support.color import Color
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
-from psutil import users
 
 class NoptixLibrary(object):
 
@@ -76,7 +75,7 @@ class NoptixLibrary(object):
 
     def get_random_email(self, email):
         index = email.find('@')
-        email = email[:index] + '+' + str(randint(1, 100)) + str(time.time()) + email[index:]
+        email = email[:index] + '+' + str(time.time()) + str(randint(1, 100)) + email[index:]
         return email
 
     def get_many_random_emails(self, how_many, email):
@@ -381,16 +380,20 @@ class NoptixLibrary(object):
 
     def build_image(self, env):
         version = ""
+        suffix = "test"
         if env == "https://cloud-test.hdw.mx":
-            version = "4.1.0.30149"
+            version = "4.1.0.30618"
         elif env == "https://cloud-dev3.hdw.mx":
             version = "4.1.0.30027"
         elif env == "https://test4.cloud.hdw.mx":
             version = "4.1.0.30298"
+        elif env == "https://dev2.cloud.hdw.mx":
+            version = "4.1.0.30308"
+            suffix = "dev"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
                             tag="mergemediaserver",
-                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-test.deb"})
+                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
 
     def run_container(self, image, port, network):
         tmp = {'/run':'', '/run/lock':''}
@@ -444,13 +447,13 @@ class NoptixLibrary(object):
         users = int(users)
         ramp = int(ramp)
         slaves = int(slaves)
+        seconds = int(seconds)
 #        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
 #        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
         cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"
         print(cmd)
         os.system(cmd)
-        
-        
+
     def push_notification_pabot_command(self, max):
         txtFile = str(uuid.uuid1())    
         f= open(f"{txtFile}.txt","w+")

@@ -17,10 +17,7 @@
                    required nxFocusMe>
             <p class="help-block"
                *ngIf="!renameServerForm.controls['serverName']?.valid && renameServerForm.controls['serverName']?.touched">
-                    <span class="input-error"
-                          translate>
-                        Server name is required
-                    </span>
+                    <span class="input-error" translate>Server name is required</span>
             </p>
         </div>
     </div>
@@ -29,7 +26,6 @@
                            [form]="renameServerForm"
                            [actionType]="'primary'"
                            buttonText="{{ 'Save' | translate }}"></nx-process-button>
-
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
     </div>
 </form>

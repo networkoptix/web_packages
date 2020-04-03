@@ -39,6 +39,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() items: DropdownItem[];
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
+    @Input() merge: boolean;
 
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';

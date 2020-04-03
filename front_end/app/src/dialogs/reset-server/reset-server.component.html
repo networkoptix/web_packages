@@ -12,8 +12,7 @@
     <div class="modal-body">
         <div class="form-group">
             <div class="modal-paragraph">
-                <span translate>All settings for this server will be reverted to factory default settings,
-                    and it will be detached from this system into a new one.</span>
+                <span translate>All settings for this server will be reverted to factory default settings, and it will be detached from this system into a new one.</span>
                 <br>
                 <span translate>Video archive will remain intact.</span>
                 <br><br>
@@ -26,10 +25,7 @@
                    required nxFocusMe>
             <p class="help-block"
                *ngIf="!resetServerForm.controls['password']?.valid && resetServerForm.controls['password']?.touched">
-                    <span class="input-error"
-                          translate>
-                        Password is required
-                    </span>
+                    <span class="input-error" translate>Password is required</span>
             </p>
         </div>
     </div>
@@ -38,7 +34,6 @@
                            [form]="resetServerForm"
                            [actionType]="'danger'"
                            buttonText="{{ 'Reset' | translate }}"></nx-process-button>
-
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
     </div>
 </form>

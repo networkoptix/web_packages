@@ -168,7 +168,6 @@ export interface Dialogs {
     merge:        DialogsMerge;
     message:      DialogsMessage;
     removeSystem: RemoveSystem;
-    sharing:      Sharing;
     titles:       DialogsTitles;
     tooltips:     Tooltips;
 }
@@ -226,6 +225,7 @@ export interface DialogsMerge {
     checking:                   string;
     commonText:                 string;
     connectToCloud:             string;
+    differentOwners:            string;
     duplicateServers:           string;
     enterSystemAddressTitle:    string;
     mergeConfirmation:          string;
@@ -297,14 +297,6 @@ export interface RemoveSystem {
     action:  string;
     message: string;
     title:   string;
-}
-
-export interface Sharing {
-    confirmOwner:           string;
-    editShareConfirmButton: string;
-    editShareTitle:         string;
-    shareConfirmButton:     string;
-    shareTitle:             string;
 }
 
 export interface DialogsTitles {
@@ -705,7 +697,6 @@ export interface ToastMessageSystem {
     disconnected: Deleted;
     merge:        SystemMerge;
     rename:       Deleted;
-    share:        Share;
 }
 
 export interface Deleted {
@@ -716,11 +707,6 @@ export interface SystemMerge {
     failed:  string;
     start:   string;
     success: string;
-}
-
-export interface Share {
-    offline:      string;
-    unauthorized: string;
 }
 
 // Converts JSON strings to/from your types
@@ -1013,7 +999,6 @@ const typeMap: any = {
         { json: "merge", js: "merge", typ: r("DialogsMerge") },
         { json: "message", js: "message", typ: r("DialogsMessage") },
         { json: "removeSystem", js: "removeSystem", typ: r("RemoveSystem") },
-        { json: "sharing", js: "sharing", typ: r("Sharing") },
         { json: "titles", js: "titles", typ: r("DialogsTitles") },
         { json: "tooltips", js: "tooltips", typ: r("Tooltips") },
     ], false),
@@ -1064,6 +1049,7 @@ const typeMap: any = {
         { json: "checking", js: "checking", typ: "" },
         { json: "commonText", js: "commonText", typ: "" },
         { json: "connectToCloud", js: "connectToCloud", typ: "" },
+        { json: "differentOwners", js: "differentOwners", typ: "" },
         { json: "duplicateServers", js: "duplicateServers", typ: "" },
         { json: "enterSystemAddressTitle", js: "enterSystemAddressTitle", typ: "" },
         { json: "mergeConfirmation", js: "mergeConfirmation", typ: "" },
@@ -1129,13 +1115,6 @@ const typeMap: any = {
         { json: "action", js: "action", typ: "" },
         { json: "message", js: "message", typ: "" },
         { json: "title", js: "title", typ: "" },
-    ], false),
-    "Sharing": o([
-        { json: "confirmOwner", js: "confirmOwner", typ: "" },
-        { json: "editShareConfirmButton", js: "editShareConfirmButton", typ: "" },
-        { json: "editShareTitle", js: "editShareTitle", typ: "" },
-        { json: "shareConfirmButton", js: "shareConfirmButton", typ: "" },
-        { json: "shareTitle", js: "shareTitle", typ: "" },
     ], false),
     "DialogsTitles": o([
         { json: "error", js: "error", typ: "" },
@@ -1495,7 +1474,6 @@ const typeMap: any = {
         { json: "disconnected", js: "disconnected", typ: r("Deleted") },
         { json: "merge", js: "merge", typ: r("SystemMerge") },
         { json: "rename", js: "rename", typ: r("Deleted") },
-        { json: "share", js: "share", typ: r("Share") },
     ], false),
     "Deleted": o([
         { json: "success", js: "success", typ: "" },
@@ -1504,9 +1482,5 @@ const typeMap: any = {
         { json: "failed", js: "failed", typ: "" },
         { json: "start", js: "start", typ: "" },
         { json: "success", js: "success", typ: "" },
-    ], false),
-    "Share": o([
-        { json: "offline", js: "offline", typ: "" },
-        { json: "unauthorized", js: "unauthorized", typ: "" },
     ], false),
 };

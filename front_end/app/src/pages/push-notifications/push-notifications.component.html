@@ -170,7 +170,7 @@
                         <button [disabled]="!formNotification.valid" type="submit" class="btn btn-default"
                                 (click)="onSendNotification(formNotification)">Send Notification
                         </button>
-                        {{ sendStatus }}
+                        <ng-container>{{ sendStatus }}</ng-container>
                     </form>
                 </nx-section>
             </nx-block>

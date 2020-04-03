@@ -313,7 +313,7 @@ def log_error(request, error, log_level):
         if not isinstance(request.user, AnonymousUser):
             user_name = request.user.email
         if request.session:
-            if 'login' in request.session and request.session['login'] == request.user.email:
+            if 'login' in request.session:
                 login_type = 'email and password'
             if 'time' in request.session:
                 session_time = (time.time() - request.session['time'])/1000.0

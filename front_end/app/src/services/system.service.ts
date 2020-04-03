@@ -91,6 +91,7 @@ class System implements SystemInterface {
     protected _isAvailable: boolean;
     canMerge: boolean;
     cloudStorageCapable: boolean;
+    cloudStorageSystemEnabled = false;
     id: string;
     info: any;
     isOnline: boolean;
@@ -154,11 +155,9 @@ class UserManager {
     }
 
     isEmptyGuid(guid?: string) {
-        if (!guid) {
-            return true;
-        }
-        guid = guid.replace(/[{}0-]/gi, '');
-        return guid === '';
+        return guid
+            ? guid.replace(/[{}0-]/gi, '') === ''
+            : true;
     }
 
     isOwner(user: NxSystemUser) {
@@ -183,12 +182,13 @@ class UserManager {
     }
 
     deleteUser(removedUser: NxSystemUser): string {
-        return this.mediaserver.deleteUser(removedUser.id).toPromise().then(data => {
-            this.users = this.users.filter((user) => {
-                return user.id !== data.id;
-            });
-        }).catch(() => {
-        });
+        return this.mediaserver.deleteUser(removedUser.id).toPromise()
+            .then(data => {
+                this.users = this.users.filter((user) => {
+                    return user.id !== data.id;
+                });
+            })
+            .catch(() => {});
     }
 
     findAccessRole(user: NxSystemUser) {
@@ -283,13 +283,13 @@ class UserManager {
         }).sort((userA, userB) => {
             // sorts local before cloud users --> then by email for cloud & name for local
             if (userA.isCloud === userB.isCloud) {
-                if (userA.isCloud === true) {
+                if (userA.isCloud) {
                     return userA.email < userB.email ? -1 : 1;
                 } else {
                     return userA.name < userB.name ? -1 : 1;
                 }
             }
-            return userA.isCloud === true ? 1 : -1;
+            return userA.isCloud ? 1 : -1;
         });
 
         return this.users;
@@ -450,7 +450,7 @@ class ServerManager {
 export class NxSystem extends System implements OnDestroy {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private cloudApi: any;
+    private cloudApi: NxCloudApiService;
     private systemApiService: any;
     private pollService: any;
     private systemsService: any;
@@ -593,8 +593,17 @@ export class NxSystem extends System implements OnDestroy {
         this.currentServerNotBusy = true;
         this.info = { name: '' };
         this.mergeInfo = {};
+        this.cloudStorageSystemEnabled = false;
 
         this.currentUserEmail = currentUserEmail;
+        if (systemId) {
+            this.cloudApi.getCloudStorageUsage(systemId)
+                .then(() => {
+                    this.cloudStorageSystemEnabled = true;
+                }, () => {
+                    this.cloudStorageSystemEnabled = false;
+                });
+        }
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
              Some options here:
@@ -635,8 +644,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        const userAccess =  this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
-        return userAccess && (this.cloudStorageCapable || this.CONFIG.cloudCapabilities.cloudStorageEnabled);
+        return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
     }
 
     getInfoAndPermissions(useCache = true) {
@@ -662,6 +670,13 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
+                if (this.id) {
+                    this.cloudApi.getCloudStorageUsage(this.id).then(() => {
+                        this.cloudStorageSystemEnabled = true;
+                    }, () => {
+                        this.cloudStorageSystemEnabled = false;
+                    });
+                }
                 this.systemInfo = this;
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;

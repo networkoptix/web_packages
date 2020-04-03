@@ -212,6 +212,7 @@
             "checking": "Checking...",
             "commonText": "Failed to merge Systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
+            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
@@ -273,13 +274,6 @@
             "action": "Disconnect",
             "message": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
             "title": "Disconnect System?"
-        },
-        "sharing": {
-            "confirmOwner": "If you change System owner, you will revoke ownership from the current account. This action is irreversible. Are you sure?",
-            "editShareConfirmButton": "Save",
-            "editShareTitle": "Edit Permissions",
-            "shareConfirmButton": "Add",
-            "shareTitle": "Add"
         },
         "titles": {
             "error": "Error",
@@ -659,10 +653,6 @@
             },
             "rename": {
                 "success": "System name saved"
-            },
-            "share": {
-                "offline": "Cannot share system while it is offline",
-                "unauthorized": "You do not have permission to share this system"
             }
         }
     },

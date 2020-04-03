@@ -55,6 +55,14 @@ class CloudPortalAPI(object):
             r = s.get(f'{env}/api/account/')
             return r.json()
 
+    def get_account_systems(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            data = s.get(f'{env}/api/systems/')
+            systems = []
+            for system in data.json():
+                systems.append(system['id'])
+            return systems
+
     def set_account_language(self, env, email, password, new_language='en_US'):
         with self.log_in(env, email, password) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
@@ -174,7 +182,7 @@ class CloudPortalAPI(object):
             
         sortedList = sorted(systemsList, key = lambda i: i['registrationTime'])
         sysID = 1
-        systemsJson = {}
+        systemsJson = []
 
         for system in sortedList:
             
@@ -182,7 +190,7 @@ class CloudPortalAPI(object):
             id = system["id"]
             name = system["name"]
 
-            title = str(sysID)
+            title = str(sysID)+" "+str(uuid.uuid1())
 
                       
             emailIntStart = (int(name.strip(string.ascii_letters)))*10
@@ -196,8 +204,9 @@ class CloudPortalAPI(object):
                 "process": True,
                 "object": True,
                 "queue": True,
-                "systemId":id,
-                "targets":targetList,
+                "pre-authenticate": True,
+                "systemId": id,
+                "targets": targetList,
                 "notification":{
                     "title": title,
                     "body": name,
@@ -207,7 +216,7 @@ class CloudPortalAPI(object):
                         }
                     }
                 }         
-            systemsJson[sysID] = {"authKey": authKey, "id": id, "body": json.dumps(body)}
+            systemsJson.append({"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
             sysID += 1
         f= open('systems.json', 'w')
         f.write(json.dumps(systemsJson))

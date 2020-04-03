@@ -23,9 +23,9 @@ interface Params {
 }
 
 const ALARM_ORDER = {
-    error  : 2,
-    warning: 1,
-    ''     : 0
+    error   : 2,
+    warning : 1,
+    ''      : 0
 };
 
 const TEXT_FORMATS = ['longText', 'long-text', 'shortText', 'short-text', 'text', 'no-max-width'];
@@ -35,10 +35,10 @@ const SORT_DIR = 2;
 
 @AutoUnsubscribe()
 @Component({
-    selector     : 'nx-dynamic-table',
-    templateUrl  : './dynamic-table.component.html',
-    styleUrls    : ['./dynamic-table.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-dynamic-table',
+    templateUrl   : './dynamic-table.component.html',
+    styleUrls     : ['./dynamic-table.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit {
     @Input() tableHeader = '';
@@ -71,7 +71,6 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     serviceParams;
     serviceHeaders;
 
-    isRibbon: any;
     windowSize: any = {};
     clientHeight: number;
     offsetHeight: number;
@@ -226,10 +225,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     ngOnChanges(changes: SimpleChanges) {

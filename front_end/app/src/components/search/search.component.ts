@@ -51,13 +51,13 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector     : 'nx-search',
-    templateUrl  : './search.component.html',
-    encapsulation: ViewEncapsulation.None,
-    providers    : [{
-        provide    : NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => NxSearchComponent),
-        multi      : true
+    selector      : 'nx-search',
+    templateUrl   : './search.component.html',
+    encapsulation : ViewEncapsulation.None,
+    providers     : [{
+        provide     : NG_VALUE_ACCESSOR,
+        useExisting : forwardRef(() => NxSearchComponent),
+        multi       : true
     }],
     styleUrls: ['./search.component.scss']
 })
@@ -175,7 +175,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         }
 
         if (this.localFilter.tags && this.localFilter.tags.length) {
-            this.localFilter.tags.forEach(tag => tag.value = false);
+            this.localFilter.tags.forEach(tag => {
+                tag.value = false;
+            });
             if (this.params.tags) {
                 this.params.tags
                     .split(',')

@@ -1,10 +1,9 @@
 *** Settings ***
-Library    SeleiumLibrary
 Resource         ../resources/vars.robot
 Resource         ../../resource.robot
 Resource         ../../APIresource.robot
 
-Suite Setup      Open Browser    ${URL}    headlesschrome
+Suite Setup      Open Browser    ${ENV}    headlesschrome
 Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - User Management
 Suite Teardown   Clean Up
 

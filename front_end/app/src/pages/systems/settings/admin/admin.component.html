@@ -1,22 +1,84 @@
 <nx-pre-loader *ngIf="!system"></nx-pre-loader>
 
-<nx-system-standard-admin-component
-        *ngIf="system"
-        [system]="system">
-</nx-system-standard-admin-component>
+<div *ngIf="system" class="row d-flex align-items-start">
+    <div class="col-12 system-settings">
+        <nx-block header-style="extended">
+            <header>
+                <h2 class="system-name mb-2">{{system.info.name}}</h2>
+                <span class="system-owner">
+                    <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                    <span>
+                        <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
+                        <span *ngIf="!system.isMine">
+                            <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
+                            <span>({{system.info.ownerAccountEmail}})</span>
+                        </span>
+                    </span>
+                </span>
+            </header>
 
-<nx-alert-block
-        class="d-block mt-3"
-        *ngIf="system && advanced"
-        [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-        [line1]="'Settings displayed below are advanced.' | translate"
-        [line2]="'Changing them may cause server to work incorrectly.' | translate"
-        [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
-        [btnCaption]="'Hide Advanced Settings' | translate"
-        (onAction)="hideAdvancedSettings()">
-</nx-alert-block>
+            <nx-section *ngIf="system.permissions.isAdmin">
+                <div class="row m-0">
+                    <div class="col-xl-7 pl-0">
+                        <div class="float-left mr-2">
+                            <button class="btn btn-default"
+                                    [disabled]="settings.renameDisabled"
+                                    (click)="rename()"><span class="ellipsis" translate>Rename</span>
+                            </button>
+                        </div>
+                        <div class="float-left mr-2" *ngIf="settings.showMerge">
+                            <button class="btn btn-default"
+                                    [disabled]="settings.mergeDisabled"
+                                    (click)="mergeSystems()">
+                                <span class="ellipsis" translate>Merge with Another System</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0">
+                        <div class="float-xl-right" *ngIf="system.isMine">
+                            <button [disabled]="settings.disconnectDisabled"
+                                    class="btn btn-default"
+                                    (click)="disconnect()">
+                                <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nx-section>
+        </nx-block>
+        <nx-block type="mt-3" *ngIf="!system.isMine">
+            <nx-section>
+                <span class="system-owner"><span translate>Your access level</span><span>&nbsp;– </span>
+                    <span class="name" [innerHTML]="updateUserRole()"></span>
+                </span>
+                <div class="mt-2">
+                    <button [disabled]="settings.disconnectDisabled"
+                            class="btn btn-default"
+                            (click)="delete()" translate>Disconnect from My Account</button>
+                </div>
+            </nx-section>
+        </nx-block>
 
-<nx-system-advanced-admin-component
-        *ngIf="system && advanced"
-        [system]="system">
-</nx-system-advanced-admin-component>
+        <nx-system-standard-admin-component
+                *ngIf="system && system.permissions.isAdmin"
+                [system]="system"
+                [settings]="settingsForSystem">
+        </nx-system-standard-admin-component>
+
+        <nx-alert-block
+                class="d-block mt-3"
+                *ngIf="system && advanced"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="'Settings displayed below are advanced.' | translate"
+                [line2]="'Changing them may cause server to work incorrectly.' | translate"
+                [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+                [btnCaption]="'Hide Advanced Settings' | translate"
+                (onAction)="hideAdvancedSettings()">
+        </nx-alert-block>
+
+        <nx-system-advanced-admin-component
+                *ngIf="system && advanced"
+                [system]="system">
+        </nx-system-advanced-admin-component>
+    </div>
+</div>

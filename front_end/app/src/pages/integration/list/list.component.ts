@@ -1,56 +1,41 @@
 import {
     Component, OnDestroy,
-    Input, SimpleChanges, OnChanges, OnInit
-} from '@angular/core';
-
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
+    Input, SimpleChanges, OnChanges
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { IntegrationService }        from '../integration.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'integrations-list-component',
-    templateUrl: 'list.component.html',
-    styleUrls  : ['list.component.scss']
+    selector    : 'integrations-list-component',
+    templateUrl : 'list.component.html',
+    styleUrls   : ['list.component.scss']
 })
 
-export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges {
-
-    @Input() list;
+export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
+    @Input() list: any;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private setupDefaults(configService) {
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private ribbonService: NxRibbonService
+    ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-    }
-
-    constructor(configService: NxConfigService,
-                private integrations: IntegrationService,
-                private ribbonService: NxRibbonService,
-                private language: NxLanguageProviderService) {
-
-        this.setupDefaults(configService);
+        this.LANG = language.getTranslations();
     }
 
     ngOnDestroy() {
         this.ribbonService.hide();
     }
 
-    ngOnInit() {
-    }
-
     ngOnChanges(changes: SimpleChanges) {
-        let haveInReviewOrDraft;
         if (changes.list.currentValue) {
-            changes.list.currentValue.some(plugin => {
-                if (plugin.pending || plugin.draft) {
-                    haveInReviewOrDraft = true;
-                    return true;
-                }
-            });
+            const haveInReviewOrDraft = changes.list.currentValue
+                .some(plugin => plugin.pending || plugin.draft);
 
             if (haveInReviewOrDraft) {
                 this.showRibbon();
@@ -62,10 +47,9 @@ export class NxIntegrationsListComponent implements OnInit, OnDestroy, OnChanges
 
     private showRibbon(): void {
         this.ribbonService.show(
-                this.LANG.ribbon.integration.previewRibbon,
-                this.LANG.ribbon.integration.backToEditText,
-                this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
+            this.LANG.ribbon.integration.previewRibbon,
+            this.LANG.ribbon.integration.backToEditText,
+            this.CONFIG.integration.adminLink.replace('%ID%/pages/', '')
         );
     }
 }
-

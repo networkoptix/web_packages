@@ -1,7 +1,5 @@
 <nx-block first-element *ngIf="plugin && plugin.instructions" name="howToSetup">
-    <header translate>
-        How to setup?
-    </header>
+    <header translate>How to setup?</header>
 
     <nx-section *ngIf="plugin.instructions.instructionVideo">
         <nx-external-video [src]="plugin.instructions.instructionVideo"></nx-external-video>

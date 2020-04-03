@@ -1,13 +1,15 @@
-<div class="status-wrapper" *ngIf="registerSuccess && !activated">
-    <nx-page-placeholder type="ACCOUNT_CREATED"
-        [message]="'common.account.created.message' | translate: { email: accountInfo.email }">
-    </nx-page-placeholder>
-</div>
-<div class="status-wrapper" *ngIf="registerSuccess && activated">
-    <nx-page-placeholder type="ACCOUNT_ACTIVATED">
-        <button class="btn btn-primary login-button mx-auto" (click)="login()" translate>Log In</button>
-    </nx-page-placeholder>
-</div>
+<ng-container *ngIf="registerSuccess">
+    <div class="status-wrapper" *ngIf="!activated">
+        <nx-page-placeholder type="ACCOUNT_CREATED"
+            [message]="'common.account.created.message' | translate: { email: accountInfo.email }">
+        </nx-page-placeholder>
+    </div>
+    <div class="status-wrapper" *ngIf="activated">
+        <nx-page-placeholder type="ACCOUNT_ACTIVATED">
+            <button class="btn btn-primary login-button mx-auto" (click)="login()" translate>Log In</button>
+        </nx-page-placeholder>
+    </div>
+</ng-container>
 <div class="container auth-hidden">
     <div *ngIf="!registerSuccess && fromClient" style="max-width: 991px;" class="m-auto">
         <div class="jumbotron">
@@ -78,26 +80,26 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.required" translate>Email is required</span>
-                </div>
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.touched && registerEmail.errors && registerEmail.errors.pattern" translate>Please enter a valid Email</span>
-                </div>
-                <div>
-                    <span class="help-block input-error"
-                          *ngIf="registerEmail.errors && registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%</span>
-                </div>
+                <ng-container *ngIf="registerEmail.errors">
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.touched && registerEmail.errors.required" translate>Email is required</span>
+                    </div>
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.touched && registerEmail.errors.pattern" translate>Please enter a valid Email</span>
+                    </div>
+                    <div>
+                        <span class="help-block input-error"
+                            *ngIf="registerEmail.errors.alreadyExists" translate>This Email has been already registered in %CLOUD_NAME%</span>
+                    </div>
+                </ng-container>
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col-md-4 justify-content-start justify-content-md-end">
-                <label for="registerPassword" class="text-left text-md-right control-label" translate>
-                    Password
-                </label>
+                <label for="registerPassword" class="text-left text-md-right control-label" translate>Password</label>
             </div>
 
             <div class="col-md-4">

@@ -49,9 +49,7 @@ export class NxMenuComponent implements OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             levelItems = item.level2.filter((subSection) => {
-                if (!this.CONFIG || subSection.id !== this.CONFIG.menus.systemSettings.buttons.id) {
-                    return true;
-                }
+                return !this.CONFIG || subSection.id !== this.CONFIG.menus.systemSettings.buttons.id;
             });
         }
 
@@ -65,9 +63,7 @@ export class NxMenuComponent implements OnChanges {
         // as only level2 have complex structure
         if (item.level2) {
             buttons = item.level2.filter((subSection) => {
-                if (this.CONFIG && subSection.id === this.CONFIG.menus.systemSettings.buttons.id) {
-                    return true;
-                }
+                return this.CONFIG && subSection.id === this.CONFIG.menus.systemSettings.buttons.id;
             })[0] || [];
         }
 
@@ -79,10 +75,7 @@ export class NxMenuComponent implements OnChanges {
     }
 
     trackItem(index, item) {
-        if (!item) {
-            return undefined;
-        }
-        return item.id;
+        return item ? item.id : undefined;
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet
