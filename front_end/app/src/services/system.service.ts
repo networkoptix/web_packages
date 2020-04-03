@@ -600,7 +600,7 @@ export class NxSystem extends System implements OnDestroy {
             .then(() => {
                 this.cloudStorageSystemEnabled = true;
             }, () => {
-                this.cloudStorageSystemEnabled = true;
+                this.cloudStorageSystemEnabled = false;
             });
         this.mediaserver = this.systemApiService.createConnection(currentUserEmail, systemId, serverId, () => {
             /* Unauthorised request handler
@@ -671,7 +671,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.cloudApi.getCloudStorageUsage(this.systemApiService.id).then(() => {
                     this.cloudStorageSystemEnabled = true;
                 }, () => {
-                    this.cloudStorageSystemEnabled = true;
+                    this.cloudStorageSystemEnabled = false;
                 })
                 this.systemInfo = this;
                 if (!this.userManager.accessRole) {
