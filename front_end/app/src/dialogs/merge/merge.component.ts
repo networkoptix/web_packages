@@ -639,4 +639,13 @@ export class MergeModalContent {
         }
         this.updateShow(showUpdate, templateUpdates);
     }
+
+    close() {
+        this.updateShow('', {
+            passwordErrorText                 : '',
+            checkingErrorText                 : '',
+            serverUrlInputValidationErrorText : ''
+        });
+        this.activeModal.close();
+    }
 }
