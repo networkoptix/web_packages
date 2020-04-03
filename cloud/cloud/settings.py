@@ -199,7 +199,8 @@ REDIS_CACHE = {
 }
 
 if not LOCAL_ENVIRONMENT:
-    REDIS_CACHE['LOCATION'] = 'redis://redis:6379/1'
+    redis_host = os.getenv('REDIS_HOST', 'redis')
+    REDIS_CACHE['LOCATION'] = f'redis://{redis_host}:6379/1'
 else:
     REDIS_CACHE['LOCATION'] = 'redis://localhost:6379/1'
 
