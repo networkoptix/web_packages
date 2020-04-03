@@ -266,12 +266,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
         } else if (primary && primary.id === this.system.id) {
             this.secondaryMerge = false;
-            const secondarySystem = this.systemsService.systems
-                .find((system) => secondary.id === system.id);
-            const secondaryName = secondarySystem && secondarySystem.name || this.LANG.system.mergeUnknownName;
             const template =
                 `<div class="my-1">
-                    <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                    <div class="larger"><strong>${secondary.name}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
                     <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                 </div>`;
             this.ribbonService.show(template, '', '', 'alert');
