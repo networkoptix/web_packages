@@ -1,6 +1,6 @@
 *** Settings ***
 Variables    getvars.py
-Resource     variables/server-variables.robot
+Resource     variables/system-server-variables.robot
 Resource     variables/health-monitor-variables.robot
 
 *** Variables ***
