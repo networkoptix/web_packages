@@ -85,18 +85,19 @@ export class MergeModalContent {
     ngOnInit() {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
-            if (this.systems.length === 0) {
-                this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
-                this.secondarySystem = this.targetSystem;
-                this.updateShow('noOtherSystemServerUrl');
-            } else {
-                this.getPeerSystems()
-                    .then(() => {
+            this.getPeerSystems()
+                .then(() => {
+                    if (this.systems.length === 0 && this.peerSystems.length === 0) {
+                        this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
+                        this.secondarySystem = this.targetSystem;
+                        this.updateShow('noOtherSystemServerUrl');
+                    } else {
                         if (this.systems.length) {
                             this.processedSystems.push(
                                 ...this.makeSelectorList(this.systems),
                                 { name: 'horizontal' }
                             );
+                            this.user.get().then(account => { this.account = account; });
                         }
                         if (this.peerSystems.length) {
                             this.processedSystems.push(
@@ -127,14 +128,9 @@ export class MergeModalContent {
                             }
                             this.updateShow(show, templateUpdates);
                         }
-                    });
-            }
-
-            this.user.get().then((account) => {
-                this.account = account;
-            });
-
-            this.initProcesses();
+                    }
+                    this.initProcesses();
+                });
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
         }
