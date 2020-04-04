@@ -1,17 +1,14 @@
-import {
-    Component, Input,
-    ViewChild, ElementRef
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxSystemService }           from '../../services/system.service';
-import { NxSystemsService }          from '../../services/systems.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import StateMachine                  from './stateMachine';
-import State                         from './stateForMergeDialog';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
+import { NxCloudApiService }           from '../../services/nx-cloud-api';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService }            from '../../services/process.service';
+import { NxSystemService }             from '../../services/system.service';
+import { NxSystemsService }            from '../../services/systems.service';
+import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
+import StateMachine                    from './stateMachine';
+import State                           from './stateForMergeDialog';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -180,7 +177,7 @@ export class MergeModalContent {
         }
     }
 
-    setTargetSystem(targetSystem, serverUrlInputValue = '') {
+    setTargetSystem(targetSystem, checkOnSelect = false, serverUrlInputValue = '') {
         if (targetSystem.value === this.otherSystem) {
             this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
             this.targetSystem = targetSystem;
@@ -207,6 +204,10 @@ export class MergeModalContent {
                 delete templateUpdates.helpText;
             }
             this.updateShow(showUpdate, templateUpdates);
+
+            if (checkOnSelect) {
+                this.checkMergeabilityProcess.run();
+            }
         }
         this.setSystems();
     }
@@ -504,7 +505,7 @@ export class MergeModalContent {
             this.setTargetSystem({ value: template.selectedTarget });
         } else if (this.machine.currentState === this.checkMerge) {
             this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
+            this.setTargetSystem(this.targetSystem, false, template.serverUrlInputValue);
         }
     }
 
