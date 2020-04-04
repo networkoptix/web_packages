@@ -483,9 +483,7 @@ export class MergeModalContent {
                 }
                 this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
             } else {
-                const param1 = this.targetSystem.systemName ? 'server' : 'system';
-                const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';
-                throw Error(`${param1}Version${param2}`);
+                throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
             }
             this.targetSystemService.stopPoll();
         }
