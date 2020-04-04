@@ -231,6 +231,17 @@ export class MergeModalContent {
                             system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
                         }
                         return system;
+                    })
+                    .sort((sysA, sysB) => {
+                        const a = `${sysA.systemName.toLowerCase()}${sysA.name.toLowerCase()}`;
+                        const b = `${sysB.systemName.toLowerCase()}${sysB.name.toLowerCase()}`;
+                        if (a < b) {
+                            return -1;
+                        }
+                        if (a > b) {
+                            return 1;
+                        }
+                        return 0;
                     });
                 this.peerSystemsLoaded = true;
             });
