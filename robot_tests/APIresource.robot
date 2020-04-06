@@ -26,6 +26,35 @@ Unbind System
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+Create system and attach to cloud
+    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
+    @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
+    @{default auth}=    Create List    admin    admin
+    &{bind json}=    Bind System    ${cloud auth}    ${ENV}    name=${system name}
+    sleep    1
+    &{Setup Cloud System json}=    Setup Cloud System
+    ...    ${default auth}
+    ...    ${server url}:${server port}
+    ...    ${bind json["authKey"]}
+    ...    ${bind json["name"]}
+    ...    ${bind json["id"]}
+    ...    ${bind json["ownerAccountEmail"]}
+    [Return]    ${bind json["id"]}
+
+Connect System to Cloud
+    [Arguments]    ${auth}   ${server ip}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
+    @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
+    &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
+    Sleep    1
+    &{Setup Cloud System json}=    Save Cloud System Credentials
+    ...    ${auth}
+    ...    ${server ip}:${server port}
+    ...    ${bind json["authKey"]}
+    ...    ${bind json["name"]}
+    ...    ${bind json["id"]}
+    ...    ${bind json["ownerAccountEmail"]}
+    [Return]    ${bind json["id"]}
+
 Rename System
     [Arguments]    ${auth}    ${system id}    ${new name}
     &{data}=   Create Dictionary    systemId=${system id}    name=${new name}
@@ -68,14 +97,6 @@ Set Account Password
     @{auth}=   Create List    ${email}    ${old_password}
     Create Digest Session    Set New Password session   ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Set New Password session    /cdb/account/update    json=${params}
-    Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
-
-Setup Cloud System
-    [Arguments]    ${auth}    ${server url}    ${auth key}    ${name}    ${id}    ${owner email}
-    &{data}=   Create Dictionary    cloudAuthKey=${auth key}    systemName=${name}    cloudSystemID=${id}    cloudAccountName=${owner email}
-    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
@@ -136,6 +157,53 @@ Evaluate Auto System Settings via API
 
 
 # Keywords which use System/Server API
+Setup Local System
+    [Arguments]    ${server url}    ${new password}    ${system name}
+    @{auth}=   Create List    admin    admin
+    &{data}=    Create Dictionary    password=${new password}    systemName=${system name}
+    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Setup Cloud System
+    [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
+    &{data}=   Create Dictionary    cloudAuthKey=${auth key}    systemName=${system name}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
+    Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Save Cloud System Credentials
+    [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
+    &{data}=   Create Dictionary    cloudAuthKey=${auth key}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
+    Create Digest Session    Save Cloud Credentials session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Restart Server
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Restart Server session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Restart Server session     /api/restart
+
+Detach Server From System
+    [Arguments]    ${server url}    ${auth}
+    &{data}=    Create Dictionary    currentPassword=${auth[1]}
+    Create Digest Session    Detach From System session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Detach From System session     /api/detachFromSystem    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+Detach Server From Cloud
+    [Arguments]    ${server url}    ${auth}
+    &{data}=    Create Dictionary    currentPassword=${auth[1]}
+    Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+
+# Local user management
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}

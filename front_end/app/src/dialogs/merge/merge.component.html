@@ -27,7 +27,7 @@
                 merge="true"
                 [items]="processedSystems"
                 [selected]="targetSystemDropdown"
-                (onSelected)="setTargetSystem($event)"
+                (onSelected)="setTargetSystem($event, true)"
                 required></nx-select>
             <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
             <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
@@ -154,7 +154,7 @@
         </div>
         <div class="form-group"
             [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
-            <label for="cloudOwnerPassword" translate>Password</label>
+            <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"
                     id="cloudOwnerPassword" autocomplete="new-password"

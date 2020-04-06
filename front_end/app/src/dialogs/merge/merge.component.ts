@@ -1,17 +1,14 @@
-import {
-    Component, Input,
-    ViewChild, ElementRef
-}                                    from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxSystemService }           from '../../services/system.service';
-import { NxSystemsService }          from '../../services/systems.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import StateMachine                  from './stateMachine';
-import State                         from './stateForMergeDialog';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
+import { NxCloudApiService }           from '../../services/nx-cloud-api';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService }            from '../../services/process.service';
+import { NxSystemService }             from '../../services/system.service';
+import { NxSystemsService }            from '../../services/systems.service';
+import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
+import StateMachine                    from './stateMachine';
+import State                           from './stateForMergeDialog';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -85,18 +82,19 @@ export class MergeModalContent {
     ngOnInit() {
         if (this.system.canMerge) {
             this.primarySystem = this.system;
-            if (this.systems.length === 0) {
-                this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
-                this.secondarySystem = this.targetSystem;
-                this.updateShow('noOtherSystemServerUrl');
-            } else {
-                this.getPeerSystems()
-                    .then(() => {
+            this.getPeerSystems()
+                .then(() => {
+                    if (this.systems.length === 0 && this.peerSystems.length === 0) {
+                        this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
+                        this.secondarySystem = this.targetSystem;
+                        this.updateShow('noOtherSystemServerUrl');
+                    } else {
                         if (this.systems.length) {
                             this.processedSystems.push(
                                 ...this.makeSelectorList(this.systems),
                                 { name: 'horizontal' }
                             );
+                            this.user.get().then(account => { this.account = account; });
                         }
                         if (this.peerSystems.length) {
                             this.processedSystems.push(
@@ -127,14 +125,9 @@ export class MergeModalContent {
                             }
                             this.updateShow(show, templateUpdates);
                         }
-                    });
-            }
-
-            this.user.get().then((account) => {
-                this.account = account;
-            });
-
-            this.initProcesses();
+                    }
+                    this.initProcesses();
+                });
         } else {
             this.machine.transition('thisSystemHasOutdatedServerError');
         }
@@ -184,7 +177,7 @@ export class MergeModalContent {
         }
     }
 
-    setTargetSystem(targetSystem, serverUrlInputValue = '') {
+    setTargetSystem(targetSystem, checkOnSelect = false, serverUrlInputValue = '') {
         if (targetSystem.value === this.otherSystem) {
             this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
             this.targetSystem = targetSystem;
@@ -211,6 +204,10 @@ export class MergeModalContent {
                 delete templateUpdates.helpText;
             }
             this.updateShow(showUpdate, templateUpdates);
+
+            if (checkOnSelect) {
+                this.checkMergeabilityProcess.run();
+            }
         }
         this.setSystems();
     }
@@ -235,6 +232,17 @@ export class MergeModalContent {
                             system.olderProtocol = peer.protoVersion < this.system.moduleInfo.protoVersion;
                         }
                         return system;
+                    })
+                    .sort((sysA, sysB) => {
+                        const a = `${sysA.systemName.toLowerCase()}${sysA.name.toLowerCase()}`;
+                        const b = `${sysB.systemName.toLowerCase()}${sysB.name.toLowerCase()}`;
+                        if (a < b) {
+                            return -1;
+                        }
+                        if (a > b) {
+                            return 1;
+                        }
+                        return 0;
                     });
                 this.peerSystemsLoaded = true;
             });
@@ -475,9 +483,7 @@ export class MergeModalContent {
                 }
                 this.tooManyServers = servers.length + target.length > this.CONFIG.maxServers;
             } else {
-                const param1 = this.targetSystem.systemName ? 'server' : 'system';
-                const param2 = sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old';
-                throw Error(`${param1}Version${param2}`);
+                throw Error(`systemVersion${sys1.reply.protoVersion < sys2.reply.protoVersion ? 'New' : 'Old'}`);
             }
             this.targetSystemService.stopPoll();
         }
@@ -497,7 +503,7 @@ export class MergeModalContent {
             this.setTargetSystem({ value: template.selectedTarget });
         } else if (this.machine.currentState === this.checkMerge) {
             this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
+            this.setTargetSystem(this.targetSystem, false, template.serverUrlInputValue);
         }
     }
 
