@@ -2,11 +2,13 @@
 @import '../../../../../../styles/theme_palette';
 
 label {
-    cursor: pointer;
+    cursor : pointer;
+
     &.control-label {
-        color: $dark9;
+        color : $dark9;
+
         &:hover {
-            color: $dark1;
+            color : $dark1;
         }
     }
 }
@@ -19,19 +21,19 @@ label {
 }
 
 .disabled-helper-block, .disabled-label {
-    opacity: 0.3;
-    cursor: default;
+    opacity : 0.3;
+    cursor  : default;
 }
 
 nx-block div.checkbox-block:last-of-type + .helper-block {
-    margin-bottom: 0;
+    margin-bottom : 0;
 }
 
 .time-unit-input {
-    width: 70px;
-    margin-right: 8px;
+    width        : 70px;
+    margin-right : 8px;
 }
 
 .time-unit-select {
-    width: 110px;
+    width : 110px;
 }

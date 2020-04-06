@@ -1,21 +1,20 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { AngularSvgIconModule }              from 'angular-svg-icon';
-import { RouterModule, Routes }              from '@angular/router';
-import { FormsModule }                       from '@angular/forms';
-import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
-
-import { DirectivesModule }       from '../../../../directives/directives.module';
-import { NxSystemAdminComponent } from './admin.component';
-import { NxSystemSettingsComponent } from './system-settings/system-settings.component';
-
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../../components/components.module';
+import { NgModule }                       from '@angular/core';
+import { CommonModule }                   from '@angular/common';
+import { BrowserModule }                  from '@angular/platform-browser';
+import { UpgradeModule }                  from '@angular/upgrade/static';
+import { AngularSvgIconModule }           from 'angular-svg-icon';
+import { RouterModule }                   from '@angular/router';
+import { FormsModule }                    from '@angular/forms';
+import { NgbModule }                      from '@ng-bootstrap/ng-bootstrap';
+import { DirectivesModule }               from '../../../../directives/directives.module';
+import { NxSystemAdminComponent }         from './admin.component';
+import { TranslateModule }                from '@ngx-translate/core';
+import { ComponentsModule }               from '../../../../components/components.module';
+import { NxSystemStandardAdminComponent } from './standard/standard.component';
+import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
 
 @NgModule({
-    imports        : [
+    imports         : [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -25,18 +24,19 @@ import { ComponentsModule }    from '../../../../components/components.module';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot()
     ],
-    providers      : [],
-    declarations   : [
+    providers       : [],
+    declarations    : [
         NxSystemAdminComponent,
-        NxSystemSettingsComponent
+        NxSystemStandardAdminComponent,
+        NxSystemAdvancedAdminComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap       : [],
+    entryComponents : [
         NxSystemAdminComponent
     ],
-    exports        : [
+    exports         : [
         NxSystemAdminComponent
     ]
 })

@@ -38,6 +38,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    settingsConfig:        { [key: string]: string };
 }
 
 export interface AccessRole {
@@ -263,13 +264,17 @@ export interface RecommendSupport {
 }
 
 export interface DialogsMessage {
-    settingsSaved:    string;
-    settingsNotSaved: string;
-    failedToSend:     string;
-    placeholders:     Placeholders;
-    sent:             string;
-    subject:          Subject;
-    title:            Title;
+    storageSettingsSaved:    string;
+    storageSettingsNotSaved: string;
+    settingsSaved:           string;
+    settingsNotSaved:        string;
+    logLevelsSaved:          string;
+    logLevelsNotSaved:       string;
+    failedToSend:            string;
+    placeholders:            Placeholders;
+    sent:                    string;
+    subject:                 Subject;
+    title:                   Title;
 }
 
 export interface Placeholders {
@@ -632,6 +637,21 @@ export interface LanguageI18NStaticTypesSystem {
     status:           SystemStatus;
     users:            Users;
     yourSystem:       string;
+    loggers:          Loggers;
+}
+
+export interface Loggers {
+    none:    Debug;
+    error:   Debug;
+    warning: Debug;
+    info:    Debug;
+    debug:   Debug;
+    verbose: Debug;
+}
+
+export interface Debug {
+    text: string;
+    help: string;
 }
 
 export interface Settings {
@@ -864,6 +884,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "settingsConfig", js: "settingsConfig", typ: m("") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "" },
@@ -1067,8 +1088,12 @@ const typeMap: any = {
         { json: "c_proceeding", js: "c_proceeding", typ: "" },
     ], false),
     "DialogsMessage": o([
+        { json: "storageSettingsSaved", js: "storageSettingsSaved", typ: "" },
+        { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "" },
         { json: "settingsSaved", js: "settingsSaved", typ: "" },
         { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
+        { json: "logLevelsSaved", js: "logLevelsSaved", typ: "" },
+        { json: "logLevelsNotSaved", js: "logLevelsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },
@@ -1401,6 +1426,19 @@ const typeMap: any = {
         { json: "status", js: "status", typ: r("SystemStatus") },
         { json: "users", js: "users", typ: r("Users") },
         { json: "yourSystem", js: "yourSystem", typ: "" },
+        { json: "loggers", js: "loggers", typ: r("Loggers") },
+    ], false),
+    "Loggers": o([
+        { json: "none", js: "none", typ: r("Debug") },
+        { json: "error", js: "error", typ: r("Debug") },
+        { json: "warning", js: "warning", typ: r("Debug") },
+        { json: "info", js: "info", typ: r("Debug") },
+        { json: "debug", js: "debug", typ: r("Debug") },
+        { json: "verbose", js: "verbose", typ: r("Debug") },
+    ], false),
+    "Debug": o([
+        { json: "text", js: "text", typ: "" },
+        { json: "help", js: "help", typ: "" },
     ], false),
     "Settings": o([
         { json: "notAbleToLoadSecurity", js: "notAbleToLoadSecurity", typ: "" },

@@ -8,6 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
+import { Process, NxProcessService } from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -95,18 +96,19 @@ export class ObjWatcher<Object> {
  */
 export class NxApplyService {
     applyComponentRef: ComponentRef<NxApplyComponent>;
-    applyFunction: (any) => any;
+    applyFunction: Process;
     component: ViewContainerRef;
     discardFunction: () => void;
-    private lockedSubject = new BehaviorSubject<boolean>(undefined);
-    private lockedSubscription: Subscription;
+    lockedSubject = new BehaviorSubject<boolean>(undefined);
     popupActive = false;
+    form: NgForm;
+    private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
-    form: NgForm;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
-                private dialogsService: NxDialogsService) {
+                private dialogsService: NxDialogsService,
+                private processService: NxProcessService) {
     }
 
     get locked() {
@@ -156,7 +158,8 @@ export class NxApplyService {
      *     if a value on the page has been changed.
      * @param {NgForm=} form Optional form to pass to the process-button
      */
-    initPageWatcher(component: ViewContainerRef,
+    initPageWatcher(
+        component: ViewContainerRef,
         saveFunction: any,
         discardFunction: () => void,
         watchers: Watcher<any>[],
@@ -231,7 +234,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
 
-    private setSaveFunction(func: (any) => any) {
+    private setSaveFunction(func: Process) {
         this.applyFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).save = func;
     }
@@ -274,4 +277,26 @@ export class NxApplyService {
             this.touched();
         });
     }
+
+    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
+        this.addWatchers([...this.watchers, ...watchers]);
+        this.extendApplyFunction(applyFunction);
+        this.extendDiscardFunction(discardFunction);
+    }
+
+    private extendApplyFunction(applyFunction: Process) {
+        const prevApply: any = this.applyFunction;
+        this.setSaveFunction(this.processService.createProcess(() => {
+            applyFunction.run();
+            return prevApply.run();
+        }));
+    }
+
+    private extendDiscardFunction(discardFunction: () => void) {
+        const prevDiscard = this.discardFunction;
+        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
+            prevDiscard();
+            discardFunction();
+        };
+    };
 }

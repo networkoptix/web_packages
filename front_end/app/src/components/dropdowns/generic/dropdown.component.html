@@ -21,7 +21,7 @@
                 <hr *ngIf="item.name === 'horizontal'; else systemSelect">
                 <ng-template #systemSelect>
                     <a class="dropdown-item inset"
-                       [ngClass]="{ 'selected': _selected.value === item.value }"
+                       [ngClass]="{ 'selected': _selected && _selected.value === item.value }"
                        (click)="show = false; change(item)">
                         <span [innerHTML]="item.name"></span>
                     </a>

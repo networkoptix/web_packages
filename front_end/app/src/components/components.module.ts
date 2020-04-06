@@ -10,6 +10,7 @@ import { NxPreLoaderComponent }           from './pre-loader/pre-loader.componen
 import { NxCheckboxComponent }            from './checkbox/checkbox.component';
 import { NxRadioComponent }               from './radio/radio.component';
 import { MenuModule }                     from './menu/menu.module';
+import { NxAlertBlockComponent }          from './content-block/alert/block.component';
 import { NxContentBlockComponent }        from './content-block/content-block.component';
 import { NxContentBlockSectionComponent } from './content-block/section/section.component';
 import { NxMultiLineEllipsisComponent }   from './multi-line-ellipsis/mle.component';
@@ -71,6 +72,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
+        NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
@@ -109,6 +111,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
+        NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
@@ -139,6 +142,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
+        NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
@@ -178,6 +182,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
+        NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,

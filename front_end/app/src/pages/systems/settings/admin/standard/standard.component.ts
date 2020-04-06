@@ -10,12 +10,12 @@ import { NxApplyService, Watcher }   from '../../../../../services/apply.service
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 
 @Component({
-    selector : 'nx-system-settings-component',
-    templateUrl : 'system-settings.component.html',
-    styleUrls : ['system-settings.component.scss']
+    selector    : 'nx-system-standard-admin-component',
+    templateUrl : 'standard.component.html',
+    styleUrls   : ['standard.component.scss']
 })
 
-export class NxSystemSettingsComponent implements OnInit, OnChanges {
+export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     @Input() settings: any;
     @Input() system: NxSystem;
     CONFIG: IConfig;
@@ -37,13 +37,13 @@ export class NxSystemSettingsComponent implements OnInit, OnChanges {
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
-        autoDiscoveryEnabled         : new Watcher<boolean>(),
-        statisticsAllowed            : new Watcher<boolean>(),
-        cameraSettingsOptimization   : new Watcher<boolean>(),
-        auditTrailEnabled            : new Watcher<boolean>(),
-        trafficEncryptionForced      : new Watcher<boolean>(),
-        videoTrafficEncryptionForced : new Watcher<boolean>(),
-        sessionLimitMinutes          : new Watcher<number>()
+        autoDiscoveryEnabled        : new Watcher<boolean>(),
+        statisticsAllowed           : new Watcher<boolean>(),
+        cameraSettingsOptimization  : new Watcher<boolean>(),
+        auditTrailEnabled           : new Watcher<boolean>(),
+        trafficEncryptionForced     : new Watcher<boolean>(),
+        videoTrafficEncryptionForced: new Watcher<boolean>(),
+        sessionLimitMinutes         : new Watcher<number>()
     };
 
     readonly minutes: string = 'minutes';
@@ -76,8 +76,19 @@ export class NxSystemSettingsComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
-            hours   : { value: this.hours, name: this.LANG.system.settings.sessionLimitDuration.hours, id: 1, max: 600, default: 24 },
-            minutes : { value: this.minutes, name: this.LANG.system.settings.sessionLimitDuration.minutes, id: 2, max: 600 }
+            hours  : {
+                value  : this.hours,
+                name   : this.LANG.system.settings.sessionLimitDuration.hours,
+                id     : 1,
+                max    : 600,
+                default: 24
+            },
+            minutes: {
+                value: this.minutes,
+                name : this.LANG.system.settings.sessionLimitDuration.minutes,
+                id   : 2,
+                max  : 600
+            }
         };
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
         this.initApplyService();

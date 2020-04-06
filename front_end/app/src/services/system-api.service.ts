@@ -243,6 +243,14 @@ export class NxSystemAPI {
         return this.get('/api/systemSettings', updateParams);
     }
 
+    getStorages() {
+        return this.get('/api/storageSpace');
+    }
+
+    updateStorages(updateParams) {
+        return this.post('/ec2/saveStorages', updateParams);
+    }
+
     changePort(port) {
         return this.post('/api/configure', { port }).toPromise()
             .catch(err => Promise.reject(err));
@@ -275,6 +283,30 @@ export class NxSystemAPI {
 
     restoreFactorySettings(currentPassword) {
         return this.post('/api/restoreState', { currentPassword });
+    }
+
+    logLevel(serverId, logId, name, value) {
+        if (this.authGet) {
+            const headers = new HttpHeaders().set('X-Runtime-Guid', serverId);
+
+            let params = new HttpParams();
+            params = params.append('auth', this.authGet);
+
+            if (logId) {
+                params = params.append('id', logId);
+            }
+
+            if (name && value) {
+                params = params
+                    .append('name', name)
+                    .append('value', value);
+            }
+
+            const fullUrl = `${this.urlBase}/api/logLevel`;
+            return this.http.get(fullUrl, { headers, params });
+        }
+
+        return false;
     }
 
     /* End of Server settings */

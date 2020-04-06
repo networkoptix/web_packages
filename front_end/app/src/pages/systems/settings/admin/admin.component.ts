@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
+import { Params, Router, ActivatedRoute }               from '@angular/router';
 import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 import { NxPageService }                from '../../../../services/page.service';
 import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
@@ -15,6 +15,7 @@ import { filter, throttleTime }         from 'rxjs/operators';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
 import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
+import { NxUriService }                 from '../../../../services/uri.service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -25,16 +26,18 @@ interface Settings {
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-system-admin-component',
+    selector    : 'nx-system-admin-component',
     templateUrl : 'admin.component.html',
-    styleUrls : ['admin.component.scss']
+    styleUrls   : ['admin.component.scss']
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
     systems: any;
+    params: Params;
 
+    advanced: boolean;
     userDisconnectSystem: any;
     deletingSystem: any;
     currentlyMerging = false;
@@ -48,6 +51,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsForSystem: any;
 
     private setupDefaults() {
+        this.params = this.route.snapshot.queryParams;
+        this.advanced = (this.params.advanced !== undefined);
+
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.setSection('admin');
@@ -74,7 +80,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private systemsService: NxSystemsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
+        private uriService: NxUriService,
         private router: Router,
+        private route: ActivatedRoute,
         private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
@@ -96,6 +104,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (this.settingsServiceSubscription) {
             this.settingsServiceSubscription.unsubscribe();
         }
+
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
             .pipe(filter((system) => system !== undefined))
@@ -250,5 +259,16 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             userRole = this.LANG.accessRoles[this.system.accessRole].label;
         }
         return userRole;
+    }
+
+    hideAdvancedSettings() {
+        const queryParams: Params = {};
+        queryParams.advanced = undefined;
+
+        this.uriService
+            .updateURI(this.uriService.getURL(), queryParams, true)
+            .then(() => {
+                this.advanced = false;
+            });
     }
 }
