@@ -818,6 +818,23 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.logLevel(serverId);
     }
 
+    setLogLevels(serverId, loggers) {
+        debugger;
+        const promises = [];
+
+        loggers.forEach((logger) => {
+            promises.push(this.mediaserver.logLevel(serverId, null, logger.key, logger.value).toPromise());
+        });
+
+        return Promise.all(promises)
+            .then(() => {
+                return Promise.resolve({});
+            })
+            .catch((error) => {
+                return Promise.reject(new Error(error));
+            });
+    };
+
     updateOrGetSystemSettings(updateParams = {}) {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }

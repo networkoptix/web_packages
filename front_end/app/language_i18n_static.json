@@ -252,6 +252,8 @@
             "storageSettingsNotSaved": "Couldn't save storage settings.",
             "settingsSaved": "Settings saved.",
             "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
             "failedToSend": "Message has failed to send.",
             "placeholders": {
                 "feedback": "Make sure you include your camera model and manufacturer..."

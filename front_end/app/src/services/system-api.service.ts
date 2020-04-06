@@ -285,11 +285,25 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
-    logLevel(serverId) {
+    logLevel(serverId, logId, name, value) {
         if (this.authGet) {
             const headers = new HttpHeaders().set('X-Runtime-Guid', serverId);
-            const fullUrl = `${this.urlBase}/api/logLevel?auth=${this.authGet}`;
-            return this.http.get(fullUrl, { headers });
+
+            let params = new HttpParams();
+            params = params.append('auth', this.authGet);
+
+            if (logId) {
+                params = params.append('id', logId);
+            }
+
+            if (name && value) {
+                params = params
+                    .append('name', name)
+                    .append('value', value);
+            }
+
+            const fullUrl = `${this.urlBase}/api/logLevel`;
+            return this.http.get(fullUrl, { headers, params });
         }
 
         return false;

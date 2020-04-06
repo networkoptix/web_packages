@@ -268,6 +268,8 @@ export interface DialogsMessage {
     storageSettingsNotSaved: string;
     settingsSaved:           string;
     settingsNotSaved:        string;
+    logLevelsSaved:          string;
+    logLevelsNotSaved:       string;
     failedToSend:            string;
     placeholders:            Placeholders;
     sent:                    string;
@@ -1090,6 +1092,8 @@ const typeMap: any = {
         { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "" },
         { json: "settingsSaved", js: "settingsSaved", typ: "" },
         { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
+        { json: "logLevelsSaved", js: "logLevelsSaved", typ: "" },
+        { json: "logLevelsNotSaved", js: "logLevelsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },

@@ -19,10 +19,10 @@
             </div>
         </form>
     </nx-section>
-    <nx-section>
-        <nx-process-button [process]="saveLoggers"
-                           [form]="logLevelsForm"
-                           [actionType]="'primary'"
-                           buttonText="{{ 'Save' | translate }}"></nx-process-button>
+    <nx-section >
+        <nx-process-button
+                [process]="saveLoggers"
+                [buttonText]="'Save' | translate">
+        </nx-process-button>
     </nx-section>
 </nx-block>
