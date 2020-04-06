@@ -180,7 +180,7 @@
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT" :   "%SYSTEM NAME% is offline and cannot be merged with the current one.",
     "SYSTEMS MERGE FAILED TEXT"            :    "System merge failed",
     "SYSTEM MERGE COMPLETED TEXT"          :    "System merge completed",
-    "MERGE CURRENT SYSTEM WITH TEXT"       :    "Merge current System with",
+    "MERGE CURRENT SYSTEM WITH TEXT"       :    "Merge current system with",
     "YOU CAN ONLY MERGE AS OWNER TEXT"     :    "You can only merge Systems where you are the owner.",
     "CHECKING TEXT"                        :    "Checking...",
     "NEXT TEXT"                            :    "Next",
