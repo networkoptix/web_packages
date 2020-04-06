@@ -66,6 +66,7 @@
     "ADD BUTTON TEXT"                      :    "Add",
     "DISCONNECT BUTTON TEXT"               :    "Disconnect",
     "SEND BUTTON TEXT"                     :    "Send",
+    "DELETE BUTTON TEXT"                   :    "Delete",
 
     "OWNER TEXT"                           :    "Owner",
     "ADMIN TEXT"                           :    "Administrator",

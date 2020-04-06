@@ -284,6 +284,12 @@ ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdown
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[contains(text(), "${DELETE ACCOUNT TEXT}")]
+${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
+${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
+${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
+${CANCEL DELETE ACCOUNT BUTTON}       //nx-modal-delete-cloud-user-content//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE ACCOUNT PASSWORD INPUT}      //form[@name="deleteCloudUserForm"]//input[@id="password"]
+${DELETE ACCOUNT PASSWORD LABEL}      //form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[text()='${NO UNSAVED CHANGES TEXT}']
