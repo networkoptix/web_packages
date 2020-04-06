@@ -107,7 +107,6 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.serverId && changes.serverId.currentValue) {
-            console.log('system A ->', this.system);
             this.system
                 .logLevel(changes.serverId.currentValue.slice(1, -1))
                 .toPromise()

@@ -819,7 +819,6 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     setLogLevels(serverId, loggers) {
-        debugger;
         const promises = [];
 
         loggers.forEach((logger) => {
