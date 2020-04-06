@@ -4,7 +4,7 @@ import { Injectable, TemplateRef } from '@angular/core';
 export class NxToastService {
     toasts: any[] = [];
 
-    show(textOrTpl: string | TemplateRef<any>, options: any = { inset: false }) {
+    show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
         const toast = this.toasts.find(obj => obj.textOrTpl === textOrTpl);
         if (!toast) {
             this.toasts.push({ textOrTpl, ...options });

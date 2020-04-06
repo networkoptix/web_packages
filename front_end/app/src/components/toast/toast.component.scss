@@ -2,7 +2,6 @@
 @import '../../../styles/theme_palette';
 @import '../../../styles/theme_variables';
 @import '../../styles/mixins';
-@import '../../styles/typography';
 
 .nx-toasts {
     position : absolute;
@@ -11,104 +10,61 @@
     left     : 50%;
     transform: translateX(-50%);
     z-index: 1100;
-}
-
-.inset-toasts {
-    width: 100%;
-    padding: 0 8px;
-    display: flex;
-    flex-direction: column;
-    display: flex;
-    justify-content: stretch;
-}
-
-.toast {
-    transition : .5s linear all;
-    max-width  : 600px;
-    min-width  : 300px;
     
-    &.hide {
-        opacity    : 0;
-        display: block;
-    }
-    
-    &-body {
-        padding : 0;
+    .toast {
+        transition : .5s linear all;
+        max-width  : 600px;
+        min-width  : 300px;
         
-        .close {
-            height: 100%;
+        &.hide {
+            opacity    : 0;
+            display: block;
+        }
+        
+        &-body {
+            padding : 0;
             
-            span {
-                line-height : .5;
+            .close {
+                height: 100%;
+                
+                span {
+                    line-height : .5;
+                }
             }
         }
     }
-}
-
-.close-button {
-    position : absolute;
-    right    : 1rem;
-    top      : .5rem;
-}
-
-.alert {
-    margin-bottom : 8px;
-}
-
-// Todo: Add these colors to a variables
-.alert-success {
-    color            : #155724;
-    background-color : #d4edda;
-    border-color     : #c3e6cb;
-}
-
-.alert-warning {
-    color            : #856404;
-    background-color : #fff3cd;
-    border-color     : #ffeeba;
-}
-
-.alert-danger {
-    color            : #721c24;
-    background-color : #f8d7da;
-    border-color     : #f5c6cb;
-}
-
-.alert-info {
-    color            : #0c5460;
-    background-color : #d1ecf1;
-    border-color     : #bee5eb;
-}
-
-.alert-inset {
-    @extend #regular13;
-    width: 100%;
-    max-width: 100%;
-    box-shadow: none;
-    padding: 8px 16px 8px 0px;
-    border-radius: 2px;
-    & .toast-body {
-        width: 100%;
+    
+    .close-button {
+        position : absolute;
+        right    : 1rem;
+        top      : .5rem;
     }
-}
+    
+    .alert {
+        margin-bottom : 8px;
+    }
 
-.alert-inset-unauthorized {
-    @extend .alert-inset;
-    background-color : rgba($red_l2, .1);
-    border-color     : rgba($red_l2, .3);
-}
-
-.alert-inset-warning {
-    @extend .alert-inset;
-    background-color : rgba($yellow_main, .1);
-    border-color     : rgba($yellow_main, .3);
-}
-
-.edit-credentials {
-    position   : absolute;
-    top        : 0;
-    right      : 0;
-    height     : 100%;
-    background : transparent;
-    color      : $light16
-}
+    // Todo: Add these colors to a variables
+    .alert-success {
+        color            : #155724;
+        background-color : #d4edda;
+        border-color     : #c3e6cb;
+    }
+    
+    .alert-warning {
+        color            : #856404;
+        background-color : #fff3cd;
+        border-color     : #ffeeba;
+    }
+    
+    .alert-danger {
+        color            : #721c24;
+        background-color : #f8d7da;
+        border-color     : #f5c6cb;
+    }
+    
+    .alert-info {
+        color            : #0c5460;
+        background-color : #d1ecf1;
+        border-color     : #bee5eb;
+    }
