@@ -3,7 +3,29 @@
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
     <ng-container *ngIf="selectedCamera">
-        <app-toasts [inset]="true"></app-toasts>
+        <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info mb-2">
+            <nx-alert-block
+                *ngIf="showUnauthorized"
+                type="error"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="'Camera unauthorized' | translate"
+                [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
+                [btnCaption]="'Edit Credentials' | translate"
+                (onAction)="updateCredentials()">
+            </nx-alert-block>
+            <nx-alert-block
+                *ngFor="let error of errors"
+                type="error"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
+                [line1]="error">
+            </nx-alert-block>
+            <nx-alert-block
+                *ngFor="let warning of warnings"
+                type="warning"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
+                [line1]="warning">
+            </nx-alert-block>
+        </div>
         <div class="col-12 camera-settings-info">
             <nx-block header-style="extended">
                 <header>

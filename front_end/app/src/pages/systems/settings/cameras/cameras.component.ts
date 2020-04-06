@@ -53,6 +53,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     streamQualities: ISelect[];
     maxFps: number = 30;
     fps: number = this.maxFps;
+    warnings: string[] = [];
+    errors: string[] = [];
+    showUnauthorized = false;
 
     constructor(
         configService: NxConfigService,
@@ -62,7 +65,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private uriService: NxUriService,
         private healthService: NxHealthService,
-        private toastService: NxToastService,
         private applyService: NxApplyService,
         private processService: NxProcessService,
         private dialogService: NxDialogsService,
@@ -81,6 +83,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .params
             .pipe(distinctUntilChanged())
             .subscribe(params => {
+                this.warnings = [];
+                this.errors = [];
+                this.showUnauthorized = false;
                 if (params.cameraId) {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
@@ -96,7 +101,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.system = system;
                 this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
                     this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
-                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+                        system.info.capabilities &&
+                        system.info.capabilities.vms_metrics) &&
+                        this.system.canViewInfo();
                     this.initUpdateProcess();
                     if (this.canSeeInfo) {
                         this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
@@ -116,11 +124,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         retryWhen(err => err.pipe(delay(1000)))
                     )
                     .subscribe(() => {
+                        this.updateValues();
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
                             }
-                            this.updateValues();
                             this.setCamera();
                         }
                     });
@@ -369,40 +377,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
-            const currentAlerts = (this.alerts || []).find(
-                ({ cameraId }) => cameraId === this.parsedCameraId
-            );
-
-            if (currentAlerts) {
-                // TODO: Maybe change this in CLOUD-4620 to what Tsanko is using with advanced settings
-                const other = currentAlerts.warnings[0];
-                const showOther = currentAlerts.warnings.some(warning => warning === other) &&
-                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== other);
-                if (showOther) {
-                    setTimeout(() => this.toastService.show(other, { inset: true, classname: 'inset-warning' }), currentAlerts.warnings.length);
-                } else {
-                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === other)]);
-                }
-                const unauthorizedMessage = 'Camera is Unauthorized';
-                const showUnauthorized = currentAlerts.errors.some(error => error === unauthorizedMessage) &&
-                    this.toastService.toasts.every(({ textOrTpl }) => textOrTpl !== unauthorizedMessage);
-                if (showUnauthorized) {
-                    setTimeout(() => this.toastService.show('Camera unauthorized',
-                        {
-                            inset     : true,
-                            classname : 'inset-unauthorized',
-                            action    : {
-                                text     : 'Edit Credentials',
-                                icon     : this.CONFIG.icons.dirNonStandard + 'warning.svg',
-                                callback : () => alert('edit credentials called')
-                            }
-                        }), currentAlerts.warnings.length);
-                } else {
-                    this.toastService.remove(this.toastService.toasts[this.toastService.toasts.findIndex(({ textOrTpl }) => textOrTpl === unauthorizedMessage)]);
-                }
-            }
+            this.updateAlerts();
             this.applyService.reset();
             this.applyService.setVisible(true);
+        }
+    }
+
+    private updateAlerts() {
+        const currentAlerts = (this.alerts || []).find(({ cameraId }) => cameraId === this.parsedCameraId);
+        const unauthorizedMessage = 'camera is unauthorized';
+        if (currentAlerts) {
+            this.warnings = currentAlerts.warnings;
+            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage);
+            this.showUnauthorized = currentAlerts.errors.some(error => error.toLowerCase() === unauthorizedMessage);
         }
     }
 
@@ -412,12 +399,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .getAggregateHealthReport()
             .subscribe(
                 result => {
-                    const alerts =
-                        result.reply['ec2/metrics/alarms'].reply.cameras;
+                    const alerts = result.reply['ec2/metrics/alarms'].reply.cameras;
                     this.alerts = Object.entries(alerts).map(
                         ([cameraId, alertInfo]) =>
                             new Alert(cameraId, alertInfo, 'Camera')
                     );
+                    this.updateAlerts();
                 },
                 () => {
                     if (!this.system.id) {
