@@ -146,7 +146,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
-                this.selectedRotationWatcher
+                this.selectedRotationWatcher,
+                this.motionEnabledWatcher
             ]);
     }
 
@@ -185,13 +186,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
-            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'> = {
+            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
                 audioEnabled    : this.audioEnabled.value,
                 overrideAr      : `${this.selectedAspectWatcher.value}` || '',
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
-                scheduleEnabled : this.recordingWatcher.value
+                scheduleEnabled : this.recordingWatcher.value,
+                motionType      : this.motionType
             };
             return this.system.updateRecordingSettings(updatedTask, cameraSettings)
                 .then(_ => this.system.updateCameraSettings(cameraSettings.id, {
@@ -310,8 +312,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             !this.variousQualities && !this.variousFps && !this.existingModesSelected;
     }
 
-    toggleMode(toggledName, disabled = false) {
-        if (disabled) return;
+    toggleMode({ name: toggledName, enabled }) {
+        if (!enabled) return;
         this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
             name, id, enabled, value: name === toggledName ? 2 : 0
         }));
@@ -345,6 +347,51 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     recordingSettings: IRecordingSettings;
 
+    // Motion Detection
+    motionEnabledWatcher: Watcher<string> = new Watcher()
+    get motionEnabled() {
+        return this.motionEnabledWatcher.value !== '8';
+    }
+
+    set motionEnabled(value) {
+        this.motionEnabledWatcher.value = !value ? '8' : this.motionEnabledWatcher.originalValue !== '8'
+            ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
+
+        this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
+            ...mode, id, enabled: id === 'RT_Always' || id === 'RT_Never' ? true : this.motionEnabled
+        }));
+
+        if (!value) {
+            this.toggleMode({ name: 'RT_Always', enabled: true });
+        }
+    }
+
+    set motionType(value: string) {
+        this.motionEnabledWatcher.value = value;
+    }
+
+    get motionType(): string {
+        return this.motionEnabledWatcher.value;
+    }
+
+    toggleMotionEnabled() {
+        this.motionEnabled = !this.motionEnabled;
+    }
+
+    getSupportedMotion() {
+        const softwareGrid = {
+            id    : '2',
+            value : 'softwaregrid'
+        };
+        const hardwaregrid = {
+            id    : '1',
+            value : 'hardwaregrid'
+        };
+
+        const { selectedCamera: { parsedAddParams: { supportedMotion, motionStream } } } = this;
+        return supportedMotion === hardwaregrid.value || typeof motionStream === 'undefined' ? hardwaregrid.id : softwareGrid.id;
+    }
+
     canSeeInfo = false;
 
     ngOnDestroy() {}
@@ -377,6 +424,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
+            this.motionType = this.selectedCamera.motionType;
             this.updateAlerts();
             this.applyService.reset();
             this.applyService.setVisible(true);

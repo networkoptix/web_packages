@@ -1102,7 +1102,7 @@ export interface ICamera {
     model: string;
     motionMask: string;
     motionType: string;
-    motionEnabled: boolean;
+    motionEnabled: boolean | string;
     mediaCapabilities: IMediaCapabilities;
     name: string;
     parentId: string;
