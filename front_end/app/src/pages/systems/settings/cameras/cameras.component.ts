@@ -374,8 +374,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.motionEnabledWatcher.value;
     }
 
-    toggleMotionEnabled() {
+    toggleMotionEnabled = () => {
         this.motionEnabled = !this.motionEnabled;
+    }
+
+    disableMotion = () => {
+        this.motionType = '8';
     }
 
     getSupportedMotion() {
