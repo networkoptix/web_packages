@@ -19,7 +19,6 @@ import { NxUriService }              from '../../../../services/uri.service';
 
 import { NxHealthService }           from '../../../health/health.service';
 import { WINDOW }                    from '../../../../services/window-provider';
-import { NxToastService }            from '../../../../dialogs/toast.service';
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
@@ -394,6 +393,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         const { selectedCamera: { parsedAddParams: { supportedMotion, motionStream } } } = this;
         return supportedMotion === hardwaregrid.value || typeof motionStream === 'undefined' ? hardwaregrid.id : softwareGrid.id;
+    }
+
+    get motionPreviewUrl() {
+        return this.selectedCamera.previewUrl;
     }
 
     canSeeInfo = false;

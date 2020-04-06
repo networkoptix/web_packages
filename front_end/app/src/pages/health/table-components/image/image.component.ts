@@ -14,6 +14,7 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() time: string;
     @Input() url: string;
     @Input() lightBackground = false;
+    @Input() motionPreview = false
     @Input() preloader = false;
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean
