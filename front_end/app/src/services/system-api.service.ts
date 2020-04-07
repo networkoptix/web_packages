@@ -265,6 +265,14 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
+    getHardwareIdsOfServers() {
+        return this.get('/ec2/getHardwareIdsOfServers');
+    }
+
+    getLicenses() {
+        return this.get('/ec2/getLicenses');
+    }
+
     getModuleInfo(url?) {
         if (url) {
             return this.http.get(`${url}/api/moduleInformation`);

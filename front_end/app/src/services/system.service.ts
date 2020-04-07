@@ -897,6 +897,18 @@ export class NxSystem extends System implements OnDestroy {
     checkLocalAdminPassword(password) {
         return this.mediaserver.checkLocalAdminPassword(password);
     }
+
+    getHardwareIdsOfServers() {
+        return this.mediaserver
+            .getHardwareIdsOfServers()
+            .toPromise();
+    }
+
+    getLicenses() {
+        return this.mediaserver
+            .getLicenses()
+            .toPromise();
+    }
 }
 
 @Injectable({

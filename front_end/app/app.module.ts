@@ -1,8 +1,8 @@
 import { NgModule }                                                       from '@angular/core';
 import { BrowserModule, Title }                                           from '@angular/platform-browser';
-import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
-import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
-import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
+import { BrowserAnimationsModule }                                                  from '@angular/platform-browser/animations';
+import { Location, PathLocationStrategy, LocationStrategy, CommonModule, DatePipe } from '@angular/common';
+import { RouterModule, UrlHandlingStrategy, UrlTree }                               from '@angular/router';
 import { HttpClient, HttpClientModule, HttpClientXsrfModule }             from '@angular/common/http';
 import { FormsModule }                                                    from '@angular/forms';
 
@@ -101,7 +101,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         HMGuard,
         UserGuard,
         AdminGuard,
-        CloudStorageGuard
+        CloudStorageGuard,
+        DatePipe
     ],
     declarations   : [
         AppComponent

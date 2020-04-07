@@ -468,6 +468,7 @@
     "menu": {
         "titles": {
             "systemAdministration": "System Administration",
+            "licenses": "Licences",
             "users": "Users"
         }
     },
@@ -656,6 +657,31 @@
             "rename": {
                 "success": "System name saved"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Type",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Error",
+            "expired": "Expired",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
         }
     },
     "settingsConfig": {

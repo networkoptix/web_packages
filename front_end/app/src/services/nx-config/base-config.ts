@@ -385,6 +385,7 @@ export interface SystemSettings {
     cloudStorage: Admin;
     users: Admin;
     servers: Admin;
+    licenses: Admin;
     buttons: Buttons;
 }
 
@@ -1019,6 +1020,7 @@ const typeMap: any = {
         { json: 'admin', js: 'admin', typ: r('Admin') },
         { json: 'users', js: 'users', typ: r('Admin') },
         { json: 'servers', js: 'servers', typ: r('Admin') },
+        { json: 'licenses', js: 'licenses', typ: r('Admin') },
         { json: 'buttons', js: 'buttons', typ: r('Buttons') }
     ], false),
     Admin: o([

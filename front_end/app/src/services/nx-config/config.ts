@@ -253,6 +253,10 @@ export const nxConfig: IConfig = {
                 icon : 'servers',
                 path : 'servers'
             },
+            licenses: {
+                id  : 'licenses',
+                path: 'licenses'
+            },
             buttons: {
                 id: 'buttons'
             }
