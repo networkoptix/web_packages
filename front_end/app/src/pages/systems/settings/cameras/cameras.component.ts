@@ -247,13 +247,17 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get previewWrapperWidth() {
-        const selectedAspect: any = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id).value || 1.33333;
-        return selectedAspect * 480;
+        return (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 480;
     }
 
     get motionPreviewImage() {
-        const selectedAspect: any = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id).value || 1.33333;
-        return this.system.getPreviewUrl(this.selectedCamera.id, null, selectedAspect * 960, 960, 0);
+        return this.system.getPreviewUrl(
+            this.selectedCamera.id,
+            null,
+            (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 960,
+            960,
+            0
+        );
     }
 
     selectedRotationWatcher: Watcher<any> = new Watcher()
