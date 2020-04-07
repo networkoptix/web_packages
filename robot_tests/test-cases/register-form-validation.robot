@@ -9,90 +9,136 @@ Force Tags        form    Threaded File
 *** Variables ***
 ${url}    ${ENV}
 ${existing email}       ${EMAIL VIEWER}
-${no upper password}    adrhartjad
+
+${lowercase password}    adrhartjad
+${uppercase password}    ADRHARTJAD
+${numbers password}      13462344
 ${7char password}       asdfghj
+${symbol only password}    !@#$%^&*()_-+=
+@{weak passwords}    ${7char password}    ${uppercase password}    ${lowercase password}    ${common password}    ${7char password}    ${numbers password}    ${symbol only password}
+
+${lower upper password}    multPASS
+${lower number password}    mult1234
+${lower symbol password}    mult!@#$
+${upper number password}    MULT1234
+${upper symbol password}    MULT!@#$
+${number symbol password}    1234!@#$
+@{fair passwords}    ${lower upper password}    ${lower number password}    ${lower symbol password}    ${upper number password}    ${upper symbol password}    ${number symbol password}    ${symbol password}
+
+${lower uppper number password}    qweASD123
+${lower upper symbol password}    qweASD!@#
+${lower number symbol password}    qwe123!@#
+${upper number symbol password}   QWE123!@#
+@{good passwords}    ${lower uppper number password}    ${lower upper symbol password}    ${lower number symbol password}    ${upper number symbol password}    ${BASE PASSWORD}
+
 ${symbol password}      pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
 ${common password}      qweasd123
-${weak password}        asqwerdf
-${fair password}        qweasd1234
 ${valid email}          noptixqa+valid@gmail.com
 
-*** Test Cases ***                        FIRST       LAST        EMAIL                     PASS                        CHECKED
-Invalid Email 1 noptixqagmail.com         mark        hamill      noptixqagmail.com         ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 2 @gmail.com                mark        hamill      @gmail.com                ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 3 noptixqa@gmail..com       mark        hamill      noptixqa@gmail..com       ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 4 noptixqa@192.168.1.1.0    mark        hamill      noptixqa@192.168.1.1.0    ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 5 noptixqa.@gmail.com       mark        hamill      noptixqa.@gmail.com       ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 6 noptixq..a@gmail.c        mark        hamill      noptixq..a@gmail.c        ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 7 noptixqa@-gmail.com       mark        hamill      noptixqa@-gmail.com       ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 8 space                     mark        hamill      ${SPACE}                  ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 9 myemail@                  mark        hamill      myemail@                  ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 10 myemail@gmail            mark        hamill      myemail@gmail             ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 11 myemail@.com             mark        hamill      myemail@.com              ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 12 my@email@gmail.com       mark        hamill      my@email@gmail.com        ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 13 myemail@ gmail.com       mark        hamill      myemail@ gmail.com        ${BASE PASSWORD}            True
-    [tags]    C41557
-Invalid Email 14 myemail@gmail.com;       mark        hamill      myemail@gmail.com;        ${BASE PASSWORD}            True
-    [tags]    C41557
-Empty Email                               mark        hamill      ${EMPTY}                  ${BASE PASSWORD}            True
-    [tags]    C41556
-Registered Email                          mark        hamill      ${existing email}         ${BASE PASSWORD}            True
+@{incorrect passwords}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
-Short Password asdfghj                    mark        hamill      ${valid email}            ${7char password}           True
+*** Test Cases ***                              FIRST       LAST        EMAIL                     PASS                               CHECKED
+Invalid Email 1 noptixqagmail.com               mark        hamill      noptixqagmail.com         ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 2 @gmail.com                      mark        hamill      @gmail.com                ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 3 noptixqa@gmail..com             mark        hamill      noptixqa@gmail..com       ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 4 noptixqa@192.168.1.1.0          mark        hamill      noptixqa@192.168.1.1.0    ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 5 noptixqa.@gmail.com             mark        hamill      noptixqa.@gmail.com       ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 6 noptixq..a@gmail.c              mark        hamill      noptixq..a@gmail.c        ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 7 noptixqa@-gmail.com             mark        hamill      noptixqa@-gmail.com       ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 8 space                           mark        hamill      ${SPACE}                  ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 9 myemail@                        mark        hamill      myemail@                  ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 10 myemail@gmail                  mark        hamill      myemail@gmail             ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 11 myemail@.com                   mark        hamill      myemail@.com              ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 12 my@email@gmail.com             mark        hamill      my@email@gmail.com        ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 13 myemail@ gmail.com             mark        hamill      myemail@ gmail.com        ${BASE PASSWORD}                   True
+    [tags]    C41557
+Invalid Email 14 myemail@gmail.com;             mark        hamill      myemail@gmail.com;        ${BASE PASSWORD}                   True
+    [tags]    C41557
+Empty Email                                     mark        hamill      ${EMPTY}                  ${BASE PASSWORD}                   True
+    [tags]    C41556
+Registered Email                                mark        hamill      ${existing email}         ${BASE PASSWORD}                   True
+
+
+Short Password asdfghj                          mark        hamill      ${valid email}            ${7char password}                  True
     [tags]    C41860
-No Uppercase Password adrhartjad          mark        hamill      ${valid email}            ${no upper password}        True
+Weak 1 Lowercase Password adrhartjad            mark        hamill      ${valid email}            ${lowercase password}              True
     [tags]    C41860
-Common Password qweasd123                 mark        hamill      ${valid email}            ${common password}          True
+Weak 2 Uppercase Password ADRHARTJAD            mark        hamill      ${valid email}            ${uppercase password}              True
     [tags]    C41860
-Weak Password asqwerdf                    mark        hamill      ${valid email}            ${weak password}            True
+Weak 3 Numbers Password 13462344                mark        hamill      ${valid email}            ${numbers password}                True
     [tags]    C41860
-Cyrillic Password Кенгшщзх                mark        hamill      ${valid email}            ${CYRILLIC TEXT}            True
+Weak 4 Symbol only Password !@#$%^&*()_-+=      mark        hamill      ${valid email}            ${symbol only password}            True
     [tags]    C41860
-Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★      mark        hamill      ${valid email}            ${SMILEY TEXT}              True
+
+Fair 1 Lower and Uppercase                      mark        hamill      ${valid email}            ${lower upper password}            True
     [tags]    C41860
-Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}               True
+Fair 2 Lowercase and numbers                    mark        hamill      ${valid email}            ${lower number password}           True
     [tags]    C41860
-TM Password qweasdzxc123®™                mark        hamill      ${valid email}            ${TM TEXT}                  True
+Fair 3 Lowercase and Symbols                    mark        hamill      ${valid email}            ${lower symbol password}           True
     [tags]    C41860
-Leading Space Password                    mark        hamill      ${valid email}            ${SPACE}${BASE PASSWORD}    True
+Fair 4 Uppercase and numbers                    mark        hamill      ${valid email}            ${upper number password}           True
     [tags]    C41860
-Trailing Space Password                   mark        hamill      ${valid email}            ${BASE PASSWORD}${SPACE}    True
+Fair 5 Uppercase and Symbols                    mark        hamill      ${valid email}            ${upper symbol password}           True
     [tags]    C41860
-Fair Password                             mark        hamill      ${SPACE}                  ${symbol password}          True
+Fair 6 Numbers and Symbols                      mark        hamill      ${valid email}            ${number symbol password}          True
     [tags]    C41860
-Good Password                             mark        hamill      ${SPACE}                  ${BASE PASSWORD}            True
+
+Good 1 qweASD123                                mark        hamill      ${valid email}            ${lower uppper number password}    True
     [tags]    C41860
-Middle Space Password qweasd 123          mark        hamill      ${valid email}            ${BASE PASSWORD}            True
+Good 2 qweASD!@#                                mark        hamill      ${valid email}            ${lower upper symbol password}     True
+    [tags]    C41860
+Good 3 qwe123!@#                                mark        hamill      ${valid email}            ${lower number symbol password}    True
+    [tags]    C41860
+Good 4 QWE123!@#                                mark        hamill      ${valid email}            ${upper number symbol password}    True
+    [tags]    C41860
+
+Common Password qweasd123                       mark        hamill      ${valid email}            ${common password}                 True
+    [tags]    C41860
+Cyrillic Password Кенгшщзх                      mark        hamill      ${valid email}            ${CYRILLIC TEXT}                   True
+    [tags]    C41860
+Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★            mark        hamill      ${valid email}            ${SMILEY TEXT}                     True
+    [tags]    C41860
+Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}                      True
+    [tags]    C41860
+TM Password qweasdzxc123®™                      mark        hamill      ${valid email}            ${TM TEXT}                         True
+    [tags]    C41860
+Leading Space Password                          mark        hamill      ${valid email}            ${SPACE}${BASE PASSWORD}           True
+    [tags]    C41860
+Trailing Space Password                         mark        hamill      ${valid email}            ${BASE PASSWORD}${SPACE}           True
+    [tags]    C41860
+Middle Space Password qweasd 123                mark        hamill      ${valid email}            ${BASE PASSWORD}                   True
     [tags]    C41862
-Empty Password                            mark        hamill      ${valid email}            ${EMPTY}                    True
+Empty Password                                  mark        hamill      ${valid email}            ${EMPTY}                           True
     [tags]    C41556
-Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    mark        hamill      ${valid email}            ${symbol password}          True
+Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    mark        hamill      ${valid email}            ${symbol password}           True
     [tags]    C41861
-Invalid First Name                        ${SPACE}    hamill      ${valid email}            ${BASE PASSWORD}            True
 
-Empty First Name                          ${EMPTY}    hamill      ${valid email}            ${BASE PASSWORD}            True
-    [tags]    C41556
-Invalid Last Name                         mark        ${SPACE}    ${valid email}            ${BASE PASSWORD}            True
 
-Empty Last Name                           mark        ${EMPTY}    ${valid email}            ${BASE PASSWORD}            True
+Invalid First Name                              ${SPACE}    hamill      ${valid email}            ${BASE PASSWORD}                   True
+
+Empty First Name                                ${EMPTY}    hamill      ${valid email}            ${BASE PASSWORD}                   True
     [tags]    C41556
-Invalid All                               ${SPACE}    ${SPACE}    noptixqagmail.com         ${7char password}           True
+Invalid Last Name                               mark        ${SPACE}    ${valid email}            ${BASE PASSWORD}                   True
+
+Empty Last Name                                 mark        ${EMPTY}    ${valid email}            ${BASE PASSWORD}                   True
     [tags]    C41556
-Terms Unchecked                           mark        hamill      ${valid email}            ${BASE PASSWORD}            False
+Invalid All                                     ${SPACE}    ${SPACE}    noptixqagmail.com         ${7char password}                  True
     [tags]    C41556
-Empty All                                 ${EMPTY}    ${EMPTY}    ${SPACE}                  ${EMPTY}                    False
+Terms Unchecked                                 mark        hamill      ${valid email}            ${BASE PASSWORD}                   False
+    [tags]    C41556
+Empty All                                       ${EMPTY}    ${EMPTY}    ${SPACE}                  ${EMPTY}                           False
     [tags]    C41556
 
 *** Keywords ***
@@ -126,7 +172,7 @@ Test Register Invalid
     ...    ${LAST NAME IS REQUIRED}
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
-    Run Keyword Unless    '''${pass}'''=='''${BASE PASSWORD}''' or '''${pass}'''=='''${symbol password}'''
+    Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
     ...    Check Password Outline    ${pass}
     Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
     Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
@@ -150,13 +196,13 @@ Register Form Validation
 Check Password Badge
     [arguments]    ${pass}
     Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${7char password}''' or '''${pass}'''=='''${no upper password}''' or '''${pass}'''=='''${weak password}''' or '''${pass}'''=='''${common password}''' or '''${pass}'''=='''${7char password}'''
+    Run Keyword If    '''${pass}''' in ${weak passwords}
     ...    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}
     ...    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${symbol password}'''
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}
     ...    Move focus and check badge    ${PASSWORD IS FAIR BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${BASE PASSWORD}'''
+    ...    ELSE IF    '''${pass}''' in ${good passwords}
     ...    Move focus and check badge    ${PASSWORD IS GOOD BADGE}
 
 Check Email Outline
@@ -177,13 +223,13 @@ Check Password Outline
     Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
     ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
-    Run Keyword If    '''${pass}'''=='''${7char password}'''
+    ...    ELSE IF    '''${pass}'''=='''${7char password}'''
     ...    Element Should Be Visible    ${PASSWORD TOO SHORT}
-    Run Keyword If    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}
     ...    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
-    Run Keyword If    '''${pass}'''=='''${common password}'''
+    ...    ELSE IF    '''${pass}'''=='''${common password}'''
     ...    Element Should Be Visible    ${PASSWORD TOO COMMON}
-    Run Keyword If    '''${pass}'''=='''${weak password}'''
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}
     ...    Element Should Be Visible    ${PASSWORD IS WEAK}
 
 Check First Name Outline
