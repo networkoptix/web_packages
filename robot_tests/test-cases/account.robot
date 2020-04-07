@@ -125,20 +125,19 @@ Last name is required
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
-#First and last names are required
-#    [Tags]    C41573    Threaded
-#    Go To    ${url}/account
-#    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-#    Verify in Account Page
-#    @{names}=   Create List    ${ACCOUNT FIRST NAME}   ${ACCOUNT LAST NAME}
-#    FOR    ${name}    IN    @{names}
-#        ${locator}=   Get WebElement    ${name}
-#        Delete All Text    ${locator}
-#        Click Element    ${name}
-#        Wait Until Element Has Style    ${name}    border-color    ${ERROR COLOR}
-#        Wait Until Element Has Style   ${name}    color    ${ERROR COLOR WITH OPACITY}
-#        Element Should Be Visible    ${LAST NAME IS REQUIRED}
-#    END
+Change first and last name shows in system
+    [Tags]    C41573    Threaded
+    Go To    ${url}/account
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Input Text    ${ACCOUNT FIRST NAME}    nameChanged
+    Input Text    ${ACCOUNT LAST NAME}    nameChanged
+    Click Button    ${ACCOUNT SAVE}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Go To Users List
+    Select user in Users List    ${EMAIL LIVE VIEWER}
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'nameChanged nameChanged')]
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded
