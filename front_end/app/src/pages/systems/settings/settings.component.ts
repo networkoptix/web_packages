@@ -24,10 +24,8 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 
 @AutoUnsubscribe()
 @Component({
-    // eslint-disable-next-line no-multi-spaces
     selector    : 'nx-system-settings-component',
     templateUrl : 'settings.component.html',
-    // eslint-disable-next-line no-multi-spaces
     styleUrls   : ['settings.component.scss']
 })
 
@@ -290,6 +288,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
+
+        if (this.system.isAdmin || this.system.isOwner) {
+            const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
+
+            adminNode.level3 = [{
+                id    : this.CONFIG.menus.systemSettings.licenses.id,
+                svg   : this.CONFIG.menus.systemSettings.licenses.icon,
+                label : this.LANG.menu.titles.licenses,
+                path  : this.CONFIG.menus.systemSettings.licenses.path
+            }];
+        }
 
         if (this.system.permissions.editUsers) {
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
