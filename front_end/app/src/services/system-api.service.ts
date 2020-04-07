@@ -406,7 +406,7 @@ export class NxSystemAPI {
             data.height = height;
         }
 
-        if (rotate) {
+        if (rotate !== null) {
             data.rotate = rotate;
         }
 

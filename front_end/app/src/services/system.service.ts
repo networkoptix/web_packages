@@ -415,8 +415,8 @@ class ServerManager {
             });
     }
 
-    getPreviewUrl(cameraId, aspectRatio, height, rotate) {
-        return this.mediaserver.previewUrl(cameraId, null, aspectRatio * height, height, rotate);
+    getPreviewUrl(cameraId, time, width, height, rotate) {
+        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
     }
 
     async getCameras(): Promise<ICamera[]> {
@@ -444,7 +444,6 @@ class ServerManager {
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const isAudioSupported = audioSupported === '1';
                     const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
-                    const motionPreviewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 600, 600);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
                     // eslint-disable-next-line no-use-before-define
                     const motionEnabled = camera.motionType !== MotionType.noMotion;
@@ -464,7 +463,7 @@ class ServerManager {
                             }
                         ]
                     };
-                    return { ...camera, id, parentId, motionPreviewUrl, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
                 });
                 return this.cameras;
             });
@@ -978,8 +977,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.initSystemMediaServers();
     }
 
-    getPreviewUrl(cameraId, aspectRatio = 1.33333, height = 480, rotate = 0) {
-        return this.serverManager.getPreviewUrl(cameraId, aspectRatio, height, rotate);
+    getPreviewUrl(cameraId, time, width = 640, height = 480, rotate = 0) {
+        return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
     }
 
     getCameras() {
@@ -1130,7 +1129,6 @@ export interface ICamera {
     userDefinedGroupName: string;
     vendor: string;
     previewUrl: string;
-    motionPreviewUrl: string;
     recordingSettings: IRecordingSettings;
 }
 
