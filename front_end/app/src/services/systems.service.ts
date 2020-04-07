@@ -41,7 +41,7 @@ export class NxSystemsService implements OnDestroy {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {
-                    autoHide: true,
+                    autohide: true,
                     classname: 'success',
                     delay: this.CONFIG.alertTimeout
                 };
