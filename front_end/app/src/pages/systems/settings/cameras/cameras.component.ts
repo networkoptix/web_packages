@@ -8,7 +8,7 @@ import { NxMenuService }             from '../../../../components/menu/menu.serv
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
-    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes
+    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes, MotionType
 }                                    from '../../../../services/system.service';
 import { Subscription }              from 'rxjs';
 import {
@@ -378,11 +378,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     // Motion Detection
     motionEnabledWatcher: Watcher<string> = new Watcher()
     get motionEnabled() {
-        return this.motionEnabledWatcher.value !== '8';
+        return this.motionEnabledWatcher.value !== MotionType.noMotion;
     }
 
     set motionEnabled(value) {
-        this.motionEnabledWatcher.value = !value ? '8' : this.motionEnabledWatcher.originalValue !== '8'
+        this.motionEnabledWatcher.value = !value ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
@@ -394,11 +394,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
-    set motionType(value: string) {
+    set motionType(value: MotionType) {
         this.motionEnabledWatcher.value = value;
     }
 
-    get motionType(): string {
+    get motionType(): MotionType {
         return this.motionEnabledWatcher.value;
     }
 
@@ -407,16 +407,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     disableMotion = () => {
-        this.motionType = '8';
+        this.motionType = MotionType.noMotion;
     }
 
     getSupportedMotion() {
         const softwareGrid = {
-            id    : '2',
+            id    : MotionType.softwareGrid,
             value : 'softwaregrid'
         };
         const hardwaregrid = {
-            id    : '1',
+            id    : MotionType.hardwareGrid,
             value : 'hardwaregrid'
         };
 

@@ -446,7 +446,8 @@ class ServerManager {
                     const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
                     const motionPreviewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 600, 600);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
-                    const motionEnabled = camera.motionType !== '8';
+                    // eslint-disable-next-line no-use-before-define
+                    const motionEnabled = camera.motionType !== MotionType.noMotion;
                     const recordingSettings: IRecordingSettings = {
                         recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
                         quality   : this.parseRecordingQuality(camera.scheduleTasks),
@@ -1110,7 +1111,7 @@ export interface ICamera {
     minArchiveDays: number;
     model: string;
     motionMask: string;
-    motionType: string;
+    motionType: MotionType;
     motionEnabled: boolean | string;
     mediaCapabilities: IMediaCapabilities;
     name: string;
@@ -1131,6 +1132,13 @@ export interface ICamera {
     previewUrl: string;
     motionPreviewUrl: string;
     recordingSettings: IRecordingSettings;
+}
+
+export enum MotionType {
+    hardwareGrid = '1',
+    softwareGrid = '2',
+    motionWindow = '4',
+    noMotion = '8'
 }
 
 export interface IMediaCapabilities {
