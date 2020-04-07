@@ -235,7 +235,36 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.selectedAspectWatcher.value = value.value;
     }
 
-    selectedRotationWatcher = new Watcher()
+    get aspectClass() {
+        let aspect: ISelect;
+        if (this.selectedAspectWatcher.value) {
+            aspect = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
+        } else {
+            aspect = this.aspectRatios[1];
+        }
+        const [width, height] = (aspect.value ? aspect.name : this.selectedAspect[1].name).split(':');
+        const rotateFromOriginal = this.selectedRotationWatcher.value - this.selectedRotationWatcher.originalValue;
+        const rotated = rotateFromOriginal === 90 || rotateFromOriginal === 270;
+        return rotated ? `${height}-${width}` : `${width}-${height}`;
+    }
+
+    get previewWrapperWidth() {
+        const selectedAspect: any = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id).value || 1.33333;
+        const rotateFromOriginal = this.selectedRotationWatcher.value - this.selectedRotationWatcher.originalValue;
+        const rotated = rotateFromOriginal === 90 || rotateFromOriginal === 270;
+        const rotation = this.selectedRotationWatcher.value - this.selectedRotationWatcher.originalValue;
+        return rotated ? 1 / selectedAspect * 480 : selectedAspect * 480;
+    }
+
+    get motionPreviewImage() {
+        const selectedAspect: any = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id).value || 1.33333;
+        const rotateFromOriginal = this.selectedRotationWatcher.value - this.selectedRotationWatcher.originalValue;
+        const rotated = rotateFromOriginal === 90 || rotateFromOriginal === 270;
+        const rotation = this.selectedRotationWatcher.value - this.selectedRotationWatcher.originalValue;
+        return this.system.getPreviewUrl(this.selectedCamera.id, selectedAspect, 480, rotated ? rotation : 0);
+    }
+
+    selectedRotationWatcher: Watcher<any> = new Watcher()
     get selectedRotation() {
         return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
     }

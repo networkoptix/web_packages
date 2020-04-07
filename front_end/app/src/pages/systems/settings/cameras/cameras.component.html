@@ -168,9 +168,20 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion}]"></nx-three-dot>
                     </div>
                 </header>
-                <div class="p-3">
-                    <nx-health-image [isPrimary]="true" [motionPreview]="true" [preloader]="true" [state]="selectedCamera.status" [url]="selectedCamera.motionPreviewUrl" 
-                        [lightBackground]="true"></nx-health-image>
+                <div class="m-3 preview-wrapper">
+                    <div [style.max-width.px]="previewWrapperWidth" class="mx-auto">
+                        <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
+                            <div class="d-flex forced-aspect-content">
+                                <nx-health-image [isPrimary]="true" 
+                                    [style.width.%]="100"
+                                    [motionPreview]="true" 
+                                    [preloader]="true" 
+                                    [state]="selectedCamera.status" 
+                                    [url]="motionPreviewImage" 
+                                    [lightBackground]="true"></nx-health-image>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </nx-block>
         </div>

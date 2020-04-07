@@ -415,6 +415,10 @@ class ServerManager {
             });
     }
 
+    getPreviewUrl(cameraId, aspectRatio, height, rotate) {
+        return this.mediaserver.previewUrl(cameraId, null, aspectRatio * height, height, rotate);
+    }
+
     async getCameras(): Promise<ICamera[]> {
         const { reply: servers }: any = await this.mediaserver.getServerTimes().toPromise();
         return this.mediaserver.getCameras().toPromise()
@@ -971,6 +975,10 @@ export class NxSystem extends System implements OnDestroy {
 
     initSystemMediaServers() {
         return this.serverManager.initSystemMediaServers();
+    }
+
+    getPreviewUrl(cameraId, aspectRatio = 1.33333, height = 480, rotate = 0) {
+        return this.serverManager.getPreviewUrl(cameraId, aspectRatio, height, rotate);
     }
 
     getCameras() {

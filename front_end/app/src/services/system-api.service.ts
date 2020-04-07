@@ -385,7 +385,7 @@ export class NxSystemAPI {
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time?, width?, height?) {
+    previewUrl(cameraId, time?, width?, height?, rotate?) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
@@ -404,6 +404,10 @@ export class NxSystemAPI {
 
         if (height) {
             data.height = height;
+        }
+
+        if (rotate) {
+            data.rotate = rotate;
         }
 
         if (this.systemId) {
