@@ -395,10 +395,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return supportedMotion === hardwaregrid.value || typeof motionStream === 'undefined' ? hardwaregrid.id : softwareGrid.id;
     }
 
-    get motionPreviewUrl() {
-        return this.selectedCamera.previewUrl;
-    }
-
     canSeeInfo = false;
 
     ngOnDestroy() {}

@@ -440,6 +440,7 @@ class ServerManager {
                     const parentName = this.servers.find(server => server.id === parentId).name;
                     const isAudioSupported = audioSupported === '1';
                     const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
+                    const motionPreviewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 600, 600);
                     const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
                     const motionEnabled = camera.motionType !== '8';
                     const recordingSettings: IRecordingSettings = {
@@ -458,7 +459,7 @@ class ServerManager {
                             }
                         ]
                     };
-                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+                    return { ...camera, id, parentId, motionPreviewUrl, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
                 });
                 return this.cameras;
             });
@@ -1120,6 +1121,7 @@ export interface ICamera {
     userDefinedGroupName: string;
     vendor: string;
     previewUrl: string;
+    motionPreviewUrl: string;
     recordingSettings: IRecordingSettings;
 }
 

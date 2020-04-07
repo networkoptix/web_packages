@@ -20,6 +20,7 @@ img {
 .light-camera-preview {
     @extend .hm-camera-preview;
     color: $light10;
+    padding: 16px;
 }
 
 .header {
@@ -50,7 +51,6 @@ img {
     align-items: center;
     justify-content: center;
     height: 120px !important;
-    min-width: 210px;
     background: $light2;
     border: 1px solid $light4;
 }
@@ -58,6 +58,7 @@ img {
 .motion-preview {
     width: 100%;
     height: 100%;
+    background: black;
     img {
         width: 100%;
         height: auto;
