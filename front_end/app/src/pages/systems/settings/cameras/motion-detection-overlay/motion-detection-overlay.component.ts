@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentInit, AfterContentChecked } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentInit, AfterContentChecked, ChangeDetectionStrategy } from '@angular/core';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { BehaviorSubject, Subscription, Observable, merge } from 'rxjs';
 import { throttleTime } from 'rxjs/operators';
@@ -6,9 +6,10 @@ import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 
 @AutoUnsubscribe()
 @Component({
-    selector    : 'nx-motion-detection-overlay',
-    templateUrl : 'motion-detection-overlay.component.html',
-    styleUrls   : ['motion-detection-overlay.component.scss']
+    selector        : 'nx-motion-detection-overlay',
+    templateUrl     : 'motion-detection-overlay.component.html',
+    styleUrls       : ['motion-detection-overlay.component.scss'],
+    changeDetection : ChangeDetectionStrategy.OnPush
 })
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;
@@ -17,7 +18,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
 
     motionMask: MotionMaskState;
-    motionMaskRenderer: MotionMaskRenderer
+    motionMaskRenderer: MotionMaskRenderer;
 
     sensitivityColors: SensitivityColor[] = [
         // Color for sensitivity level is found by its index. Level 3 is sensitivityColors[3].
@@ -28,19 +29,30 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         this.initMask();
     }
 
-    ngOnChanges({ initialMask: { currentValue, previousValue } }: SimpleChanges) {
-        if (currentValue !== previousValue && this.motionMask) {
+    ngOnChanges({ initialMask, height, width }: SimpleChanges) {
+        const initialMaskChanged = initialMask && !initialMask.isFirstChange() && this.motionMask;
+        const heightChanged = height && !height.isFirstChange();
+        const widthChanged = width && !width.isFirstChange();
+        const changed = initialMaskChanged || heightChanged || widthChanged;
+        if (initialMaskChanged) {
             this.motionMask.reInitialize(this.initialMask);
         };
+
+        if (changed && this.motionMaskRenderer && this.motionMaskRenderer.canvas) {
+            this.motionMaskRenderer.initCanvas(this.motionCanvas);
+        }
     }
 
     ngAfterContentChecked() {
-        if (!this.motionMaskRenderer && this.motionCanvas && this.motionCanvas.nativeElement) {
+        const firstRender = !this.motionMaskRenderer && this.motionCanvas && this.motionCanvas.nativeElement;
+        if (firstRender) {
             this.initRenderer();
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        // this.motionMaskRenderer.renderer.unsubscribe();
+    }
 
     // Init methods
     private initMask() {
@@ -48,7 +60,9 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     }
 
     private initRenderer() {
-        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.motionCanvas, this.sensitivityColors);
+        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors);
+        this.motionMaskRenderer.initCanvas(this.motionCanvas);
+        // this.motionMaskRenderer.initCanvas(this.motionCanvas);
     }
 }
 
@@ -57,7 +71,7 @@ export class MotionMaskState {
     public maskZones: BehaviorSubject<Area[][]>;
 
     constructor(initialMask: string,
-        private canvas: ElementRef<HTMLCanvasElement>,
+        public canvas: ElementRef<HTMLCanvasElement>,
         private sensitivityColors: string[]) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
@@ -105,29 +119,58 @@ export class MotionMaskState {
 }
 
 export class MotionMaskRenderer {
-    cellWidth: number;
-    cellHeight: number;
-    columns = 44;
-    rows = 32;
+    private cellWidth: number;
+    private cellHeight: number;
+    private height: number;
+    private width: number;
+    private columns = 44;
+    private rows = 32;
+    private ctx: CanvasRenderingContext2D;
 
-    maskMatrix: Observable<Mask[]>;
-    maskZones: Observable<Area[][]>;
+    private maskMatrix: Observable<Mask[]>;
+    private maskZones: Observable<Area[][]>;
 
-    renderer: Subscription;
+    public canvas: ElementRef<HTMLCanvasElement>;
+    public renderer: Subscription;
 
     constructor(private motionMask: MotionMaskState,
-        private canvas: ElementRef<HTMLCanvasElement>,
         private sensitivityColors: SensitivityColor[]
-    ) {
-        this.cellWidth = this.canvas.nativeElement.width / this.columns;
-        this.cellHeight = this.canvas.nativeElement.height / this.rows;
+    ) {}
+
+    // Init methods
+    public initCanvas = (canvas: ElementRef<HTMLCanvasElement>) => {
+        this.cellWidth = canvas.nativeElement.width / this.columns;
+        this.cellHeight = canvas.nativeElement.height / this.rows;
+        this.width = canvas.nativeElement.width;
+        this.height = canvas.nativeElement.height;
+        this.ctx = canvas.nativeElement.getContext('2d');
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
         this.renderer = merge(this.maskMatrix, this.maskZones)
-            .pipe(throttleTime(0, animationFrame))
+            // .pipe(throttleTime(0, animationFrame))
             .subscribe(() => {
-                console.log('updated');
+                this.render();
             });
+    }
+
+    // Render methods
+    grid() {
+        this.ctx.strokeStyle = '#FFFFFF1A';
+        this.ctx.lineWidth = 1.5;
+        this.ctx.beginPath();
+        for (let x = 0; x <= this.width; x += this.cellWidth) {
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, this.height);
+        }
+        for (let y = 0; y <= this.height; y += this.cellHeight) {
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.width, y);
+        }
+        this.ctx.stroke();
+    }
+
+    render() {
+        this.grid();
     }
 }
 
