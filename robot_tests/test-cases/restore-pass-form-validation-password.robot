@@ -9,11 +9,34 @@ Force Tags        email    form    Threaded File
 *** Variables ***
 ${url}    ${ENV}
 ${password}    ${BASE PASSWORD}
-${7char password}              asdfghj
-${common password}             qweasd123
-${weak password}               asqwerdf
-${symbol password}             !@#$%^&*()_-+=;:'"`~,./\|?[]{}
-${fair password}               qweasd1234
+${existing email}       ${EMAIL VIEWER}
+
+${lowercase password}    adrhartjad
+${uppercase password}    ADRHARTJAD
+${numbers password}      13462344
+${7char password}       asdfghj
+${symbol only password}    !@#$%^&*()_-+=
+@{weak passwords}    ${7char password}    ${uppercase password}    ${lowercase password}    ${common password}    ${7char password}    ${numbers password}    ${symbol only password}
+
+${lower upper password}    multPASS
+${lower number password}    mult1234
+${lower symbol password}    mult!@#$
+${upper number password}    MULT1234
+${upper symbol password}    MULT!@#$
+${number symbol password}    1234!@#$
+@{fair passwords}    ${lower upper password}    ${lower number password}    ${lower symbol password}    ${upper number password}    ${upper symbol password}    ${number symbol password}    ${symbol password}
+
+${lower uppper number password}    qweASD123
+${lower upper symbol password}    qweASD!@#
+${lower number symbol password}    qwe123!@#
+${upper number symbol password}   QWE123!@#
+@{good passwords}    ${lower uppper number password}    ${lower upper symbol password}    ${lower number symbol password}    ${upper number symbol password}    ${BASE PASSWORD}
+
+${symbol password}      pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
+${common password}      qweasd123
+${valid email}          noptixqa+valid@gmail.com
+
+@{incorrect passwords}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
 ${FORM WITH ERROR}             //form[@name='restorePasswordWithCode']//nx-password-input[contains(@class,'ng-invalid')]/input
 
@@ -30,8 +53,6 @@ Password Too Short asdfghj                            ${7char password}
     [tags]    C41876
 Common Password qweasd123                             ${common password}
     [tags]    C41876
-Weak Password asqwerdf                                ${weak password}
-    [tags]    C41876
 Cyrillic Password Кенгшщзх                            ${CYRILLIC TEXT}
     [tags]    C41876
 Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★                  ${SMILEY TEXT}
@@ -46,10 +67,37 @@ Leading Space Password                                ${SPACE}${BASE PASSWORD}
     [tags]    C41876
 Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876
-Fair New Password                                     ${fair password}
-    [tags]    C41876
-Good New Password                                     ${BASE PASSWORD}
-    [tags]    C41876
+
+Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
+    [tags]    C41860
+Weak 2 Uppercase Password ADRHARTJAD                  ${uppercase password}
+    [tags]    C41860
+Weak 3 Numbers Password 13462344                      ${numbers password}
+    [tags]    C41860
+Weak 4 Symbol only Password !@#$%^&*()_-+=            ${symbol only password}
+    [tags]    C41860
+
+Fair 1 Lower and Uppercase                            ${lower upper password}
+    [tags]    C41860
+Fair 2 Lowercase and numbers                          ${lower number password}
+    [tags]    C41860
+Fair 3 Lowercase and Symbols                          ${lower symbol password}
+    [tags]    C41860
+Fair 4 Uppercase and numbers                          ${upper number password}
+    [tags]    C41860
+Fair 5 Uppercase and Symbols                          ${upper symbol password}
+    [tags]    C41860
+Fair 6 Numbers and Symbols                            ${number symbol password}
+    [tags]    C41860
+
+Good 1 qweASD123                                      ${lower uppper number password}
+    [tags]    C41860
+Good 2 qweASD!@#                                      ${lower upper symbol password}
+    [tags]    C41860
+Good 3 qwe123!@#                                      ${lower number symbol password}
+    [tags]    C41860
+Good 4 QWE123!@#                                      ${upper number symbol password}
+    [tags]    C41860
 
 *** Keywords ***
 Restart
@@ -78,22 +126,22 @@ Test Password Invalid
     Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}    ${SAVE PASSWORD}
     Input Text    ${RESET PASSWORD INPUT}    ${new pw}
     Check New Password Badge    ${new pw}
-    Run Keyword Unless    '''${new pw}'''=='''${fair password}''' or '''${new pw}'''=='''${BASE PASSWORD}'''    Click Button    ${SAVE PASSWORD}
-    Run Keyword Unless    '''${new pw}'''=='''${fair password}''' or '''${new pw}'''=='''${BASE PASSWORD}'''    Check New Password Outline    ${new pw}
+    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Click Button    ${SAVE PASSWORD}
+    Run Keyword Unless    '''${new pw}''' in ${good passwords} or '''${new pw}''' in ${fair passwords}    Check New Password Outline    ${new pw}
 
 Check New Password Badge
-    [arguments]    ${pass}
-    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''              Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If    '''${pass}'''=='''${weak password}''' or '''${pass}'''=='''${7char password}''' or '''${pass}'''=='''${common password}'''      Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${CYRILLIC TEXT}''' or '''${pass}'''=='''${SMILEY TEXT}''' or '''${pass}'''=='''${GLYPH TEXT}''' or '''${pass}'''=='''${TM TEXT}''' or '''${pass}'''=='''${SPACE}${BASE PASSWORD}''' or '''${pass}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${fair password}'''      Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
-    ...    ELSE IF    '''${pass}'''=='''${BASE PASSWORD}'''      Element Should Be Visible    ${PASSWORD IS GOOD BADGE}
+    [arguments]    ${new pw}
+    Run Keyword Unless    '''${new pw}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${new pw}''' in ${weak passwords}         Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${fair passwords}         Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${good passwords}         Element Should Be Visible    ${PASSWORD IS GOOD BADGE}
 
 Check New Password Outline
     [Arguments]   ${new pw}
     Wait Until Element Is Visible    ${FORM WITH ERROR}
     Run Keyword If    '''${new pw}'''=='''${EMPTY}''' or '''${new pw}'''=='''${SPACE}'''    Element Should Be Visible    ${PASSWORD IS REQUIRED}
     ...    ELSE IF    '''${new pw}'''=='''${7char password}'''    Element Should Be Visible    ${PASSWORD TOO SHORT}
-    ...    ELSE IF    '''${new pw}'''=='''${CYRILLIC TEXT}''' or '''${new pw}'''=='''${SMILEY TEXT}''' or '''${new pw}'''=='''${GLYPH TEXT}''' or '''${new pw}'''=='''${TM TEXT}''' or '''${new pw}'''=='''${SPACE}${BASE PASSWORD}''' or '''${new pw}'''=='''${BASE PASSWORD}${SPACE}'''    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
+    ...    ELSE IF    '''${new pw}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
     ...    ELSE IF    '''${new pw}'''=='''${common password}'''    Element Should Be Visible    ${PASSWORD TOO COMMON}
-    ...    ELSE IF    '''${new pw}'''=='''${weak password}'''    Element Should Be Visible    ${PASSWORD IS WEAK}
+    ...    ELSE IF    '''${new pw}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK}
