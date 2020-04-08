@@ -172,7 +172,7 @@
 	"pageTitles": {
 		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"about": "About",
+		"about": "نبذة",
 		"registerSuccess": "Welcome to",
 		"register": "Create account in",
 		"changePassword": "Change password",

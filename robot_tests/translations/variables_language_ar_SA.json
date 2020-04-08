@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "Your access level",
     "USER DISABLED TEXT": "المستخدم معطل",
     "NO UNSAVED CHANGES TEXT": "لا توجد تغييرات غير محفوظة",
-    "ABOUT": "About %PRODUCT_NAME%",
+    "ABOUT": "عن %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "Known limitations",
     "SUPPORT": "Support",
     "REMOTE CONNECTIVITY": "Remote connectivity",
@@ -211,9 +211,9 @@
     "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
     "FEEDBACK TEXT": "Feedback for integration {{integration}}",
     "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "SYSTEM OFFLINE TEXT": "النظام غير متصل",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "هذا النظام غير متصل ولا يمكن الوصول إليه الآن.",
     "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "NO ALERTS TEXT": "لا تنبيهات",
+    "SYSTEM DOING WELL TEXT": "يجب أن يكون نظامك جيدًا!"
 }
