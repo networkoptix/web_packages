@@ -179,7 +179,10 @@
                                     [state]="selectedCamera.status" 
                                     [url]="motionPreviewImage" 
                                     [lightBackground]="true"></nx-health-image>
-                                <nx-motion-detection-overlay [height]="canvasHeight" [width]="canvasWidth"></nx-motion-detection-overlay>
+                                <nx-motion-detection-overlay 
+                                    [height]="canvasHeight" 
+                                    [width]="canvasWidth"
+                                    [initialMask]="selectedCamera.motionMask"></nx-motion-detection-overlay>
                             </div>
                         </div>
                     </div>
