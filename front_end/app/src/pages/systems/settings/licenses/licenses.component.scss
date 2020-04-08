@@ -1,3 +1,15 @@
 @import "../../../../styles/theme/variables";
 @import "../../../../styles/typography";
 
+.section-table-wrapper {
+    overflow-x: scroll;
+
+    table {
+        grid-template-columns : 15% 20% 15% auto;
+        min-width             : 680px !important;
+
+        .table-row-spacer {
+            grid-column-end : span 4;
+        }
+    }
+}

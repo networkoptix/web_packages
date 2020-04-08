@@ -682,6 +682,9 @@
             "starter": "Starter",
             "iomodule": "IO Module",
             "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required"
         }
     },
     "settingsConfig": {

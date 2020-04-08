@@ -497,6 +497,11 @@ export interface Feedback {
 
 export interface License {
     info: Info;
+    messages: LicenseMessages;
+}
+
+export interface LicenseMessages {
+    required : string;
 }
 
 export interface Info {

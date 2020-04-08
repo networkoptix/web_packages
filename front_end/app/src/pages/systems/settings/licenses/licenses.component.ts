@@ -20,6 +20,8 @@ import { DatePipe }                      from '@angular/common';
 interface LicenseInfo {
     type: string,
     count: string,
+    inuse: string, // still not implemented VMS-18155 ... TODO: once done adjust var name
+    required: number, // VMS-18155 ... once done it should display warning (if negative)
     serverName: string,
     hwid: string,
     status: string,
@@ -68,6 +70,8 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
                             const info: LicenseInfo = {
                                 type       : '',
                                 count      : '',
+                                inuse      : '',
+                                required   : 0,
                                 serverName : '',
                                 hwid       : '',
                                 status     : '',
@@ -84,12 +88,18 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
 
                             item.info.status = (new Date(item.info.expiration).getTime() < new Date().getTime()) ? this.LANG.license.info.expired : this.LANG.license.info.ok;
 
+                            // Set license type
                             if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL') {
                                 item.info.type = this.LANG.license.info.trial;
                             } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
                                 item.info.type = this.classMap[item.info.class];
                             } else {
                                 item.info.type = this.LANG.license.info.time;
+                            }
+
+                            // Set license usage /Pending VMS-18155/
+                            if (item.info.inuse !== '') {
+                                item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
                             }
                         });
 
