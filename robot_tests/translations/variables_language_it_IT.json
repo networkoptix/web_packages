@@ -207,13 +207,13 @@
     "RELEASES TAB TEXT": "Versioni",
     "PATCHES TAB TEXT": "Patch",
     "BETAS TAB TEXT": "Versioni beta",
-    "SALES INQUIRY TEXT": "Sales inquiry for {{integration}}",
-    "TECHNICAL INQUIRY TEXT": "Technical inquiry for {{integration}}",
-    "FEEDBACK TEXT": "Feedback for integration {{integration}}",
-    "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "SALES INQUIRY TEXT": "Richiesta commerciale per {{integration}}",
+    "TECHNICAL INQUIRY TEXT": "Richiesta tecnica per {{integration}}",
+    "FEEDBACK TEXT": "Feedback per l'integrazione {{integration}}",
+    "INFORMATION TEXT": "Informazioni",
+    "SYSTEM OFFLINE TEXT": "Il sistema è offline",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "Questo sistema è offline e al momento non è accessibile.",
     "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "NO ALERTS TEXT": "Nessun avviso",
+    "SYSTEM DOING WELL TEXT": "Il tuo sistema sta funzionando bene!"
 }
