@@ -127,8 +127,8 @@ export class MotionMaskRenderer {
     private rows = 32;
     private ctx: CanvasRenderingContext2D;
 
-    private maskMatrix: Observable<Mask[]>;
-    private maskZones: Observable<Area[][]>;
+    private maskMatrix: BehaviorSubject<Mask[]>;
+    private maskZones: BehaviorSubject<Area[][]>;
 
     public canvas: ElementRef<HTMLCanvasElement>;
     public renderer: Subscription;
@@ -169,7 +169,20 @@ export class MotionMaskRenderer {
         this.ctx.stroke();
     }
 
+    zones() {
+        const zonesState = this.maskZones.value;
+        const currentState = zonesState[zonesState.length - 1];
+        currentState.forEach(({ sensitivity, x, y, width, height }) => {
+            this.ctx.beginPath();
+            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '26';
+            this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
+            this.ctx.fill();
+
+        });
+    }
+
     render() {
+        this.zones();
         this.grid();
     }
 }
