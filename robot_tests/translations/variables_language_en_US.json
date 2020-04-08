@@ -167,7 +167,13 @@
     "IPVD FEEDBACK ABOUT"                  :    "Feedback about {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE"       :    "Feedback for cameras page",
     "IPVD FEEDBACK MESSAGE SENT"           :    "Message has been sent.",
-
+    "IPVD SEARCH IN GOOGLE TEXT"           :    "Search in google",
+    "IPVD FIRMWARE VERSION TEXT"           :    "Firmware version",
+    "IPVD FIRMWARE VERSION POULARITY TEXT" :    "Popularity",
+    "IPVD LAST UPDATED TEXT"               :    "Updated",
+    "IPVD DEVICE SHOW ALL TEXT"            :    "Show All",
+    "IPVD DEVICE COLLAPSE TEXT"            :    "Collapse",
+    "IPVD EXPORT TO CSV TEXT"              :    "Export all to CSV",
     "PRIVACY POLICY LINK TEXT"             :    "here",
 
     "NOTHING FOUND"                        :    "Nothing Found",

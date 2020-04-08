@@ -42,7 +42,7 @@ Test Submit Request Message
     ...    ELSE IF    ${Expect Success}==False   Validate Message Not Sent
 
 On Success
-    [arguments]    ${email}
+    [Arguments]    ${email}
     Validate Message Sent
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${email}    timeout=120    status=UNSEEN

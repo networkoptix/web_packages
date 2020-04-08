@@ -1,34 +1,25 @@
 *** Settings ***
 Resource          resource.robot
 
-*** Variables ***
-
-
 *** Keywords ***
 Go To IPVD Page
-    Go To    ${url}/ipvd
+    Go To    ${ENV}/ipvd
     Validate on IPVD page
 
 Go To IPVD Page with arguments
     [Arguments]    ${urlParameters}
-    Go To    ${url}/ipvd${urlParameters}
+    Go To    ${ENV}/ipvd${urlParameters}
     Validate on IPVD page
 
 Open IPVD Page
-    Open Browser and go to URL    ${url}/ipvd
+    Open Browser and go to URL    ${ENV}/ipvd
     Validate on IPVD page
 
 Open IPVD Page and Log In
-    Open Browser and go to URL    ${url}/ipvd
+    Open Browser and go to URL    ${ENV}/ipvd
     Validate on IPVD page
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Validate Log In
     Wait until Element is Not Visible    ${LOG IN MODAL}
-    # Have to call it a 2nd time to get back onto the IPVD page after logging in until the following issue is resolved:
-    # CLOUD-3386 Logging into or out of an account should not redirect to site root
-    Go To IPVD page
-
-### Landing Page keywords - start ###
 
 Validate Landing Page Contents
     ${search_placeholder}=   Get Element Attribute   ${IPVD SEARCH BAR}    placeholder
@@ -54,7 +45,6 @@ Validate Landing Page Contents
     ...    submit a request
     ...    ignore_case=true
 
-
 Validate Filtering by Manufacturer
     ${vendor}=   Set variable   Axis
     Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
@@ -77,15 +67,12 @@ Validate Landing Page Objects are Not Visible
     ...    ${IPVD DEVICES PANE}
 
 Validate Manufacturers Pane is Not Empty
-    ${numVendors}=     Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
+    ${numVendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not be Equal As Numbers  ${numVendors}   0
 
 Validate Devices Pane is Not Empty
-    ${numDeviceTypes}=     Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
+    ${numDeviceTypes}=   Get Element Count    ${IPVD DEVICES PANE}//*[@class="float-left mr-1 mb-1"]
     Should Not be Equal As Numbers  ${numDeviceTypes}   0
-
-### Landing Page keywords - end ###
-
 
 IPVD Text Search
     [Arguments]    ${SearchString}
@@ -99,7 +86,7 @@ IPVD Text Search Expecting No Results
     Click Element    ${IPVD SEARCH BAR}
     Element should be Focused    ${IPVD SEARCH BAR}
     Input Text    ${IPVD SEARCH BAR}    ${SearchString}
-    Elements should Not be Visible    ${IPVD TABLE}    ${IPVD PAGINATION}    ${IPVD EXPORT TO CSV}
+    Elements should Not be Visible    ${IPVD TABLE}    ${IPVD PAGINATION}    ${IPVD EXPORT TO CSV LINK}
 
 IPVD Table Row Count
     [Arguments]    ${AllPages}=False
@@ -117,7 +104,7 @@ Validate IPVD Device Table Not Empty
     ...    ${IPVD FIRST PAGE BUTTON}
     ...    ${IPVD LAST PAGE BUTTON}
     ...    ${IPVD NEXT PAGE BUTTON}
-    ...    ${IPVD EXPORT TO CSV}
+    ...    ${IPVD EXPORT TO CSV LINK}
     [Return]    ${rowCount}
 
 Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages
@@ -125,25 +112,28 @@ Validate IPVD Device Table Column contains Desired Value in all Rows on all Page
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Click Element    ${IPVD FIRST PAGE BUTTON}
     ${lastPage}=   IPVD Last Page Number
-    :FOR    ${pageNumber}    IN RANGE    1    ${lastPage}+1
-    \    Validate IPVD Device Table Column Contains Desired Value in all Rows    ${column}    ${SearchString}
-    \    Run Keyword If    ${pageNumber} < ${lastPage}    Click Element    ${IPVD NEXT PAGE BUTTON}
+    FOR    ${pageNumber}    IN RANGE    1    ${lastPage}+1
+        Validate IPVD Device Table Column Contains Desired Value in all Rows    ${column}    ${SearchString}
+        Run Keyword If    ${pageNumber} < ${lastPage}    Click Element    ${IPVD NEXT PAGE BUTTON}
+    END
 
 Validate IPVD Device Table Column contains Desired Value in all Rows
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Sleep    1
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
-    :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
-    \    Wait Until Element is Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
+    FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
+        Wait Until Element is Visible    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]//div[contains(text(),'${SearchString}')]
+    END
 
 IPVD Select Device from Table Column by Value
     [Arguments]    ${column}    ${SearchString}
     ${rowCount}=   Validate IPVD Device Table Not Empty
     Table Column should Contain    ${IPVD TABLE}    ${column}    ${SearchString}
-    :FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
-    \    ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]/div
-    \    Exit For Loop If    '${curText}' == '${SearchString}'
+    FOR    ${rowNumber}    IN RANGE    1    ${rowCount}+1
+        ${curText}=   Get Text    ${IPVD TABLE ROWS}\[${rowNumber}]/td\[${column}]/div
+        Exit For Loop If    '${curText}' == '${SearchString}'
+    END
     IPVD Select Device From Table By Row Number    ${rowNumber}
     [Return]    ${rowNumber}
 
@@ -190,14 +180,30 @@ Validate on IPVD Page
     ...    ${IPVD AND MORE}
     ...    ${IPVD DEVICES PANE}
     ...    ${IPVD LANDING PAGE TEXT}
-    Run keyword and continue on failure    Title should be    ${IPVD TITLE TEXT} - ${PRODUCT_NAME}
+    Title should be    ${IPVD TITLE TEXT} - ${PRODUCT_NAME}
     Elements should Not be Visible
     ...    ${IPVD TABLE}
     ...    ${IPVD DEVICE DETAILS}
     ...    ${IPVD PAGINATION}
-    ...    ${IPVD EXPORT TO CSV}
+    ...    ${IPVD EXPORT TO CSV LINK}
    # Validate Manufacturer More Count
 
+Validate Camera Info Panel
+    Wait until elements are visible
+    ...    ${IPVD DEVICE DETAILS}
+    ...    ${IPVD DEVICE MAKE}
+    ...    ${IPVD DEVICE MODEL}
+    ...    ${IPVD CLOSE DETAILS BUTTON}
+    ...    ${IPVD DEVICE GOOGLE LINK}
+    ...    ${IPVD DEVICE INFO}
+    ...    ${IPVD DEVICE FIRMWARE INFO}
+    ...    ${IPVD DEVICE FIRMWARE VERSION}
+    ...    ${IPVD DEVICE FIRMWARE VERSION POPULARITY}
+    ...    ${IPVD SEND DEVICE FEEDBACK}
+    ...    ${IPVD DEVICE LAST UPDATED INFO}
+
+    ${number of parameters}=   Get Element Count    ${IPVD DEVICE INFO PARAMETER}
+    Should be equal as numbers  ${number of parameters}   13
 
 Verify IPVD Advanced Search is Closed
     Wait until Elements are Visible    ${IPVD ADV SEARCH BUTTON}
@@ -264,7 +270,7 @@ Open New Browser on Failure
     Go To IPVD page
 
 Restart
-    Common Restart Logout    ${url}
+    Common Restart Logout    ${ENV}
     # Go To    ${url}/ipvd
 
 Validate Request Form Initial State
@@ -290,15 +296,14 @@ Validate Privacy Policy
 
 Submit Feedback/Request Form
     [Arguments]    ${Your Name}    ${Email}    ${Message}
-    Sleep    0.25
+    Wait until element is visible    ${IPVD FEEDBACK YOUR NAME}
     Input Text    ${IPVD FEEDBACK YOUR NAME}    ${Your Name}
-    Sleep    0.25
+    Wait until element is visible    ${IPVD FEEDBACK EMAIL}
     Input Text    ${IPVD FEEDBACK EMAIL}    ${Email}
-    Sleep    0.25
+    Wait until element is visible    ${IPVD FEEDBACK MESSAGE}
     Input Text    ${IPVD FEEDBACK MESSAGE}    ${Message}
-    Sleep    0.25
+    Wait until element is visible    ${IPVD FEEDBACK SEND BUTTON}
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
-    Sleep    2
 
 Validate Message Sent
     Page should Not contain Element    ${IPVD FEEDBACK}
