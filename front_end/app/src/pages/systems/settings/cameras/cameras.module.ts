@@ -11,6 +11,7 @@ import { NxCamerasComponent }   from './cameras.component';
 import { TranslateModule }      from '@ngx-translate/core';
 import { ComponentsModule }     from '../../../../components/components.module';
 import { NxHealthModule }       from '../../../health/health.module';
+import { NxMotionDetectionOverlay } from './motion-detection-overlay/motion-detection-overlay.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { NxHealthModule }       from '../../../health/health.module';
     ],
     providers       : [],
     declarations    : [
-        NxCamerasComponent
+        NxCamerasComponent,
+        NxMotionDetectionOverlay
     ],
     bootstrap       : [],
     entryComponents : [

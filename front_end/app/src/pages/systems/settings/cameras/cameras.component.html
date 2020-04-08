@@ -169,7 +169,7 @@
                     </div>
                 </header>
                 <div class="m-3 preview-wrapper">
-                    <div [style.max-width.px]="previewWrapperWidth" class="mx-auto">
+                    <div [style.max-width.px]="previewWrapperWidth" class="mx-auto overflow-hidden">
                         <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
                             <div class="d-flex forced-aspect-content">
                                 <nx-health-image [isPrimary]="true" 
@@ -179,6 +179,7 @@
                                     [state]="selectedCamera.status" 
                                     [url]="motionPreviewImage" 
                                     [lightBackground]="true"></nx-health-image>
+                                <nx-motion-detection-overlay [height]="canvasHeight" [width]="canvasWidth"></nx-motion-detection-overlay>
                             </div>
                         </div>
                     </div>
