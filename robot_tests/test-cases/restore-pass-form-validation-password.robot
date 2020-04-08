@@ -69,35 +69,35 @@ Trailing Space Password                               ${BASE PASSWORD}${SPACE}
     [tags]    C41876
 
 Weak 1 Lowercase Password adrhartjad                  ${lowercase password}
-    [tags]    C41860
+    [tags]    C41876
 Weak 2 Uppercase Password ADRHARTJAD                  ${uppercase password}
-    [tags]    C41860
+    [tags]    C41876
 Weak 3 Numbers Password 13462344                      ${numbers password}
-    [tags]    C41860
+    [tags]    C41876
 Weak 4 Symbol only Password !@#$%^&*()_-+=            ${symbol only password}
-    [tags]    C41860
+    [tags]    C41876
 
 Fair 1 Lower and Uppercase                            ${lower upper password}
-    [tags]    C41860
+    [tags]    C41876
 Fair 2 Lowercase and numbers                          ${lower number password}
-    [tags]    C41860
+    [tags]    C41876
 Fair 3 Lowercase and Symbols                          ${lower symbol password}
-    [tags]    C41860
+    [tags]    C41876
 Fair 4 Uppercase and numbers                          ${upper number password}
-    [tags]    C41860
+    [tags]    C41876
 Fair 5 Uppercase and Symbols                          ${upper symbol password}
-    [tags]    C41860
+    [tags]    C41876
 Fair 6 Numbers and Symbols                            ${number symbol password}
-    [tags]    C41860
+    [tags]    C41876
 
 Good 1 qweASD123                                      ${lower uppper number password}
-    [tags]    C41860
+    [tags]    C41876
 Good 2 qweASD!@#                                      ${lower upper symbol password}
-    [tags]    C41860
+    [tags]    C41876
 Good 3 qwe123!@#                                      ${lower number symbol password}
-    [tags]    C41860
+    [tags]    C41876
 Good 4 QWE123!@#                                      ${upper number symbol password}
-    [tags]    C41860
+    [tags]    C41876
 
 *** Keywords ***
 Restart
