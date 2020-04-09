@@ -6,7 +6,8 @@
 		"changePassword": "Jelszómódosítás",
 		"newPasswordLabel": "Új jelszó",
 		"saveChanges": "Mentés",
-		"accountSettings": "Fiókbeállítások"
+		"accountSettings": "Fiókbeállítások",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Aktiválási link újraküldése",

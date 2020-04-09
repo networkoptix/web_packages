@@ -6,7 +6,8 @@
 		"changePassword": "Změna hesla",
 		"newPasswordLabel": "Nové heslo",
 		"saveChanges": "Uložit",
-		"accountSettings": "Nastavení účtu"
+		"accountSettings": "Nastavení účtu",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Znovu poslat aktivační odkaz",

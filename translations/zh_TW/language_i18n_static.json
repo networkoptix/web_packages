@@ -6,7 +6,8 @@
 		"changePassword": "變更密碼",
 		"newPasswordLabel": "新密碼",
 		"saveChanges": "儲存",
-		"accountSettings": "帳號設定"
+		"accountSettings": "帳號設定",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "重新發送啟動連結",

@@ -6,7 +6,8 @@
 		"changePassword": "Đổi mật khẩu",
 		"newPasswordLabel": "Mật khẩu mới",
 		"saveChanges": "Lưu",
-		"accountSettings": "Cài đặt tài khoản"
+		"accountSettings": "Cài đặt tài khoản",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Gửi lại link kích hoạt",

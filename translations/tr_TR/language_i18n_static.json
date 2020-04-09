@@ -6,7 +6,8 @@
 		"changePassword": "Parola Değiştir",
 		"newPasswordLabel": "Yeni Parola",
 		"saveChanges": "Kaydet",
-		"accountSettings": "Hesap Ayarları"
+		"accountSettings": "Hesap Ayarları",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Aktivasyon linki gönder",

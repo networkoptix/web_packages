@@ -6,7 +6,8 @@
 		"changePassword": "Cambiar contraseña",
 		"newPasswordLabel": "Nueva contraseña",
 		"saveChanges": "Guardar",
-		"accountSettings": "Ajustes de cuenta"
+		"accountSettings": "Ajustes de cuenta",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar enlace de activación",

@@ -6,7 +6,8 @@
 		"changePassword": "Змінити пароль",
 		"newPasswordLabel": "Новий пароль",
 		"saveChanges": "Зберегти",
-		"accountSettings": "Параметри Облікового Запису"
+		"accountSettings": "Параметри Облікового Запису",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Відправити посилання активації ще раз",

@@ -6,7 +6,8 @@
 		"changePassword": "패스워드 변경",
 		"newPasswordLabel": "새 패스워드",
 		"saveChanges": "저장",
-		"accountSettings": "계정 설정"
+		"accountSettings": "계정 설정",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "활성화 링크 재전송",

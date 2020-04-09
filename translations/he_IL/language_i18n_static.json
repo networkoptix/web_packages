@@ -6,7 +6,8 @@
 		"changePassword": "שנה סיסמא",
 		"newPasswordLabel": "סיסמא חדשה",
 		"saveChanges": "שמור",
-		"accountSettings": "הגדרות חשבון"
+		"accountSettings": "הגדרות חשבון",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "שלח את קישור ההפעלה שוב",

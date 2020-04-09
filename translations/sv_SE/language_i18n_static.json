@@ -6,7 +6,8 @@
 		"changePassword": "Ändra lösenord",
 		"newPasswordLabel": "Nytt lösenord",
 		"saveChanges": "Spara",
-		"accountSettings": "Kontoinställningar"
+		"accountSettings": "Kontoinställningar",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Skicka aktiveringslänk igen",

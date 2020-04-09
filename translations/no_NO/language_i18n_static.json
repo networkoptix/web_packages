@@ -6,7 +6,8 @@
 		"changePassword": "Bytt passord",
 		"newPasswordLabel": "Nytt passord",
 		"saveChanges": "Lagre",
-		"accountSettings": "Kontoinnstillinger"
+		"accountSettings": "Kontoinnstillinger",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Send aktiveringslink igjen",

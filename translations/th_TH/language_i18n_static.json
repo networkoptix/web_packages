@@ -6,7 +6,8 @@
 		"changePassword": "เปลี่ยนรหัสผ่าน",
 		"newPasswordLabel": "สร้างรหัสผ่านใหม่",
 		"saveChanges": "บันทึก",
-		"accountSettings": "การตั้งค่าบัญชี"
+		"accountSettings": "การตั้งค่าบัญชี",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",

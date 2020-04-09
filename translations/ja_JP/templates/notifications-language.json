@@ -6,30 +6,30 @@
     "emailSubject": "%CLOUD_NAME% に登録されました"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{message.asset}}販売問い合わせ"
+    "emailSubject": "Sales inquiry for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "{{message.asset}} についてのフィードバック"
+    "emailSubject": "Feedback for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "カメラのページフィードバック{{message.asset}}{{/message.asset}}の{{#message.asset}}"
+    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}： {{message.asset}} にはレビューの新しいバージョンがあります"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
   },
   "restore_password": {
     "emailSubject": "パスワードをリセット"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} さんが %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}に招待しました。ビデオシステム {{message.system_name}} が{{/message.sharer_name}}さんと共有されました。"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "ビデオ システム {{message.system_name}} が共有されました"
+    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
   }
 }

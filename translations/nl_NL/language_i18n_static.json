@@ -6,7 +6,8 @@
 		"changePassword": "Wijzig wachtwoord",
 		"newPasswordLabel": "Nieuw wachtwoord",
 		"saveChanges": "Opslaan",
-		"accountSettings": "Accountinstellingen"
+		"accountSettings": "Accountinstellingen",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Activatielink opnieuw verzenden",

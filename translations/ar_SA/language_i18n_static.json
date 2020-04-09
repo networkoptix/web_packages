@@ -6,7 +6,8 @@
 		"changePassword": "Change Password",
 		"newPasswordLabel": "New password",
 		"saveChanges": "Save",
-		"accountSettings": "Account Settings"
+		"accountSettings": "Account Settings",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "إعادة إرسال رابط التنشيط",

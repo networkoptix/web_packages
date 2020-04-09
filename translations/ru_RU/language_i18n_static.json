@@ -6,7 +6,8 @@
 		"changePassword": "Изменить пароль",
 		"newPasswordLabel": "Новый пароль",
 		"saveChanges": "Сохранить",
-		"accountSettings": "Настройки учетной записи"
+		"accountSettings": "Настройки учетной записи",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Отправить ссылку еще раз",

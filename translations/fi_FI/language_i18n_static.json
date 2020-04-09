@@ -6,7 +6,8 @@
 		"changePassword": "Vaihda salasana",
 		"newPasswordLabel": "Uusi salasana",
 		"saveChanges": "Tallenna",
-		"accountSettings": "Tilin asetukset"
+		"accountSettings": "Tilin asetukset",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Lähetä aktivointilinkki uudelleen",
