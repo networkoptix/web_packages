@@ -67,6 +67,8 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 }
 
 export class MotionMaskState {
+    private columns = 44;
+    private rows = 32;
     public maskMatrix: BehaviorSubject<Mask[]>;
     public maskZones: BehaviorSubject<Area[][]>;
 
@@ -74,6 +76,7 @@ export class MotionMaskState {
         public canvas: ElementRef<HTMLCanvasElement>,
         private sensitivityColors: string[]) {
         const parsedInitial = this.initialToMaskZones(initialMask);
+        console.log(this.groupZones(parsedInitial).length);
         this.maskZones = new BehaviorSubject([parsedInitial]);
         this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
     }
@@ -87,10 +90,12 @@ export class MotionMaskState {
 
     // Init Methods
     private initialToMaskZones(initial: string): Area[] {
-        return initial.split(';').map(area => {
+        const zones = initial.split(';').map(area => {
             const areaTuples = <AreaTuple> area.split(',').map(numString => parseInt(numString));
             return new Area(...areaTuples);
         });
+
+        return this.sortedZones(zones);
     }
 
     private zonesToMatrix(zones: Area[]): Mask {
@@ -113,8 +118,94 @@ export class MotionMaskState {
         return maskCopy;
     }
 
-    public groupZones(zones: Area[]) {
+    /**
+    * Returns zones sorted from top left to bottom right.
+    */
+    private sortedZones(zones: Area[]): Area[] {
+        return zones.sort((a, b) => a.y - b.y || a.x - b.x);
+    }
 
+    /**
+    * Returns nested array with each inner array containing indexes of contigious zones.
+    *
+    * Each inner array sorted from top left to bottom right.
+    */
+    public groupZones = (zones: Area[]): number[][] => {
+        enum Positions {
+            RIGHT = 'right',
+            BOTTOM = 'bottom',
+            LEFT = 'left'
+        }
+
+        const sorted = this.sortedZones(zones);
+        const visitedNodeIndexes: number[] = [];
+        const groupedNodes: number[][] = [];
+
+        const findNodeIndex = (position: Positions, { x: zoneStartX, y: zoneStartY, width, height, sensitivity }: Area): number => {
+            const zoneEndX = zoneStartX + width;
+            const zoneEndY = zoneStartY + height;
+            const bounding = { startX: null, startY: null, endX: null, endY: null, sensitivity };
+
+            if (position === Positions.RIGHT) {
+                if (zoneEndX === this.columns - 1) return -1;
+                bounding.startX = bounding.endX = zoneEndX + 1;
+                bounding.startY = zoneStartY;
+                bounding.endY = zoneEndY;
+            }
+
+            if (position === Positions.LEFT) {
+                if (zoneStartX === 0) return -1;
+                bounding.startX = bounding.endX = zoneStartX - 1;
+                bounding.startY = zoneStartY;
+                bounding.endY = zoneEndY;
+            }
+
+            if (position === Positions.BOTTOM) {
+                if (zoneEndY === this.rows - 1) return -1;
+                bounding.startY = bounding.endY = zoneEndY + 1;
+                bounding.startX = zoneStartX;
+                bounding.endX = zoneEndX;
+            }
+
+            const byOverlap = ({ x: startX, y: startY, width, height, sensitivity }: Area): boolean => {
+                if (bounding.sensitivity !== sensitivity) return false;
+
+                const endX = startX + width;
+                const endY = startY + height;
+                const overlapX = bounding.endX < startX || bounding.startX > endX;
+                const overlapY = bounding.endY < startY || bounding.startY > endY;
+
+                return overlapX && overlapY;
+            };
+
+            return sorted.findIndex(byOverlap);
+        };
+
+        const traverseNode = (node: Area, index: number, group = []): number[] => {
+            if (index in visitedNodeIndexes || index in group) {
+                return;
+            }
+
+            const rightNodeIndex = findNodeIndex(Positions.RIGHT, node);
+            const leftNodeIndex = findNodeIndex(Positions.LEFT, node);
+            const bottomNodeIndex = findNodeIndex(Positions.BOTTOM, node);
+
+            // Add node to current group, mark as visited, then traverse contiguous nodes
+            visitedNodeIndexes.push(index);
+            group.push(index);
+            if (rightNodeIndex !== -1) traverseNode(sorted[rightNodeIndex], rightNodeIndex, group);
+            if (leftNodeIndex !== -1) traverseNode(sorted[leftNodeIndex], leftNodeIndex, group);
+            if (bottomNodeIndex !== -1) traverseNode(sorted[bottomNodeIndex], bottomNodeIndex, group);
+
+            return group;
+        };
+
+        sorted.forEach((node, index) => {
+            const group = traverseNode(node, index);
+            if (group) groupedNodes.push(group);
+        });
+
+        return groupedNodes;
     }
 
     private maskStateEncodeToString(mask: Mask): string {
