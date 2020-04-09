@@ -138,7 +138,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.applyService.initPageWatcher(
             this.viewContainerRef,
             this.saveSettings,
-            () => this.applyService.reset(),
+            () => {
+                this.showOverlay = false;
+                this.applyService.reset();
+            },
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
