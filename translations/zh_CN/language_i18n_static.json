@@ -1,506 +1,756 @@
 {
-	"account": {
-		"accountSavedSuccess": "您的帐户已成功保存",
-		"activationLinkSent": "激活链接已发送",
-		"passwordChangedSuccess": "您的帐户已成功保存",
-		"changePassword": "更改密码",
-		"newPasswordLabel": "新密码",
-		"saveChanges": "保存",
-		"accountSettings": "帐户设置"
-	},
-	"activeActions": {
-		"sendConfirm": "重新发送激活链接",
-		"resetPassword": "重置密码",
-		"setNewPassword": "保存密码",
-		"setNewPasswordLabel": "新密码"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "搜索",
-		"search_ipvd": "按型号或制造商搜索",
-		"filter applied": "已使用的筛选项",
-		"filters applied": "已使用的筛选项",
-		"Any": "任何",
-		"selected": "已选择",
-		"vendor": "制造商",
-		"vendors": "制造商",
-		"hardwareType": "类型",
-		"hardwareTypes": "类型",
-		"minResolution": "最低分辨率",
-		"analytics": "分析",
-		"analyticsSelected": "分析事件"
-	},
-	"cameraFilters": {
-		"ptz": "PTZ摄像机",
-		"aptz": "含高级 PTZ 功能摄像机",
-		"fisheye": "鱼眼摄像机",
-		"H265": "H.265 摄像机",
-		"IO": "I/O 模块",
-		"multiSensor": "多传感器摄像机",
-		"TwWayAudio": "双向音频设备",
-		"audio": "含音频功能摄像机",
-		"encoder": "编码器",
-		"highRes": "超高分辨率摄像机"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "Windows"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "客户端和服务器",
-			"camera_sdk": "视频源SDK",
-			"client": "仅用于客户端",
-			"metadata_sdk": "Meta数据SDK",
-			"package": "数据包",
-			"server": "仅限服务器",
-			"servertool": "配置工具",
-			"storage_sdk": "存储 SDK",
-			"video_source_sdk": "视频源SDK"
-		},
-		"releasesTypes": {
-			"beta": "测试版本",
-			"betas": "测试版本",
-			"rc": "发布候选版本",
-			"release": "版本发布",
-			"releases": "版本发布",
-			"patch": "补丁",
-			"patches": "补丁"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "区域",
-		"count": "总计",
-		"vendor": "制造商",
-		"model": "型号",
-		"hardwareType": "类型",
-		"maxResolution": "<span>最大</span><br><span>分辨率</span>",
-		"maxFps": "<span>最大</span><br><span>帧数</span>",
-		"primaryCodec": "编码器",
-		"isAudioSupported": "音频",
-		"isTwAudioSupported": "双向音频",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "高级PTZ",
-		"isAptzSupportedShort": "高级PTZ",
-		"isFisheye": "鱼眼",
-		"isMdSupported": "监控",
-		"isIoSupported": "I/O",
-		"isH265": "H.265",
-		"isMultiSensor": "多传感器",
-		"isAnalyticsSupported": "分析",
-		"camera": "摄像机",
-		"multiSensorCamera": "多传感器摄像机",
-		"encoder": "编码器",
-		"dvr": "DVR",
-		"other": "其它",
-		"PTZ cameras": "PTZ摄像机",
-		"Advanced PTZ cameras": "高级 PTZ 摄像机",
-		"Fisheye Cameras": "鱼眼摄像机",
-		"Cameras supporting H.265": "支持H.265的摄像机",
-		"I / O modules": "I/O 模块",
-		"Multisensor Cameras": "多传感器摄像机",
-		"Cameras with 2-way audio": "双向音频摄像机",
-		"Extra high resolution cameras": "超高分辨率摄像机",
-		"feedback": {
-			"a_Please": "请",
-			"b_Link": "提交申请",
-			"c_Info": "有关支持设备的其他问题/疑虑。"
-		},
-		"disclaimer": "此列表仅限于在 {{vmsName}} 上找到的设备，用戶已同意将设备规格自动回报给 {{companyName}}。不会收集任何个人信息，每个用戶都将完全匿名。"
-	},
-	"integration": {
-		"myIntegrationsLabel": "我的",
-		"previewRibbonText": "此页面是最新更改的预览，不与公开版本相符。",
-		"backToEditText": "返回编辑界面",
-		"requirements": "{{name}} 要求",
-		"Access Control": "门禁管理",
-		"Connector": "连接器",
-		"Data Analytics": "数据分析",
-		"Drone": "无人机",
-		"Health Monitor": "健康状况监控器",
-		"Storage": "存储设备"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "请确保已包含您的摄像机型号和制造商..."
-	},
-	"pageTitles": {
-		"template": "{{title}} - %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "关于",
-		"registerSuccess": "欢迎来到",
-		"register": "创建帐户中",
-		"changePassword": "更改密码",
-		"account": "帐户设置",
-		"systems": "系统",
-		"system": "系统",
-		"systemName": "{{systemName}}",
-		"systemShare": "共享系统",
-		"activate": "激活帐户",
-		"activateSent": "激活帐户",
-		"activateSuccess": "帐户已激活",
-		"activateCode": "激活帐户",
-		"restorePassword": "重置密码",
-		"restorePasswordSuccess": "密码已保存。",
-		"restorePasswordCode": "重置密码",
-		"view": "查看摄像机",
-		"debug": "调试",
-		"login": "登录",
-		"download": "下载 %VMS_NAME%",
-		"downloadPlatform": "下载 %VMS_NAME% ",
-		"pageNotFound": "找不到页面",
-		"supportedDevices": "支持设备",
-		"integrations": "集成"
-	},
-	"dialogs": {
-		"okButton": "确定",
-		"cancelButton": "取消",
-		"createNewAccount": "新增帐户",
-		"changeAccountLogged": "您已经以{email} 的身份登录。",
-		"loggedFromOther": "您将使用其他帐户登录",
-		"loginTitle": "登录到 %CLOUD_NAME%",
-		"loginButton": "登录",
-		"logoutAuthorisedTitle": "您已经登录",
-		"logoutAuthorisedContinueButton": "继续",
-		"logoutAuthorisedLogoutButton": "退出登录",
-		"noClientDetectedTitle": "安装%VMS_NAME%来查看您的系统",
-		"stayAs": "以{email} 保持登录 ",
-		"stayLoggedIn": "保持登录状态",
-		"download": "下载 %VMS_NAME%",
-		"merge": {
-			"commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
-			"connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
-			"mergeConfirmation": "您即将合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。设置和名称将取自 <strong>{{primarySystem}}</strong>。",
-			"mergeFailedTitle": "系统合并失败",
-			"primaryCannotMerge": "系统 {{targetSystem}} 具有较新的软件版本，与当前系统不兼容。请将当前系统更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 将其与 {{targetSystem}} 系统合并。",
-			"primarySystemOffline": "系统 {{primarySystem}} 处于离线状态，无法合并系統{{targetSystem}}。",
-			"secondaryCannotMerge": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
-			"systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
-			"systemUnavailable": "系统 {{targetSystem}} 目前无法访问。请在几分钟后再试一次",
-			"recommendSupport": {
-				"a_recommend": "建议您进行咨询",
-				"b_support": "技术支持",
-				"c_proceeding": "在继续执行之前："
-			},
-			"warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
-		},
-		"message": {
-			"failedToSend": "訊息无法发送。",
-			"sent": "訊息已傳送。",
-			"title": {
-				"integration": "与 {{companyName}} 联系",
-				"ipvd_feedback_page": "摄像机页面反馈",
-				"ipvd_feedback_device": "关于 {{asset}} 反馈"
-			},
-			"subject": {
-				"sales_inquiry": "{{asset}} 的產品咨询",
-				"technical_inquiry": "{{asset}} 的技术咨询",
-				"integration_feedback": "集成{{asset}} 反馈",
-				"ipvd_feedback_page": "摄像机页面反馈",
-				"ipvd_feedback_device": "关于 {{asset}} 反馈"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "如果您更改系统所有者，将撤消从当前帐户的所有权。此操作是不可逆的。是否确定？",
-			"shareTitle": "添加",
-			"shareConfirmButton": "添加",
-			"editShareTitle": "编辑权限",
-			"editShareConfirmButton": "保存",
-			"permissionsSaved": "保存的新权限"
-		}
-	},
-	"errorCodes": {
-		"ok": "ok",
-		"cantSendActivationPrefix": "不能发送确认电子邮件",
-		"cantDisconnectSystemPrefix": "不能删除系统",
-		"cantUnshareWithMeSystemPrefix": "不能删除系统",
-		"cantSharePrefix": "不能共享系统",
-		"cantGetUsersListPrefix": "用户列表不可用",
-		"cantGetSystemsListPrefix": "系统列表不可用",
-		"cantRegisterPrefix": "出现错误",
-		"cantGetSystemInfoPrefix": "系统信息不可用",
-		"cantChangeAccountPrefix": "无法保存更改",
-		"cantChangePasswordPrefix": "无法保存密码",
-		"cantActivatePrefix": "无法激活您的帐户",
-		"cantSendConfirmationPrefix": "不能发送确认电子邮件",
-		"notAuthorized": "错误的密码。",
-		"brokenAccount": "帐户出现意外问题。 <a href=\"/restore_password\">恢复帐户</a>",
-		"wrongParameters": "窗体上的一些参数不正确",
-		"wrongCode": "已经激活帐户或确认码不正确",
-		"wrongCodeRestore": "确认代码已使用或不正确",
-		"wrongAuthCode": "代码已过期或不正确",
-		"forbidden": "您没有权限执行此操作",
-		"accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
-		"accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
-		"notFound": "找不到",
-		"alreadyExists": "此帐户已存在",
-		"unknownError": "发生意外的错误",
-		"accountAlreadyActivated": "此帐户已激活",
-		"emailNotFound": "帐户不存在.",
-		"EmailAlreadyExists": "此电子邮件已被注册",
-		"oldPasswordMistmatch": "当前密码不正确.",
-		"passwordMismatch": "错误的密码。",
-		"cantEditYourself": "不允许更改自己的权限",
-		"cantEditAdmin": "此用户具有管理员权限",
-		"cantOpenClient": "未检测到应用程序%VMS_NAME% 。",
-		"lostConnection": "连接到 {{systemName}} 失去了",
-		"thisSystem": "系统",
-		"oldSafariNotSupported": "不支持10岁以上的Safari版本",
-		"DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
-		"mergedSystemIsOffline": "系统 <strong>{{failedSystem}}</strong> 处于离线状态。",
-		"INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
-		"FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-		"unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。"
-	},
-	"passwordRequirements": {
-		"good": "良好",
-		"fair": "一般",
-		"fairMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
-		"minLength": "太短",
-		"minLengthMessage": "密码必须包含至少 8 个字符",
-		"required": "不正确",
-		"requiredMessage": "使用只有拉丁文字母、 数字和符号键盘，避免前导和尾随空格",
-		"weak": "弱",
-		"weakMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
-		"strongMessage": "强密码 ！",
-		"common": "太常见",
-		"commonMessage": "此密码是在世界顶级最受欢迎的密码",
-		"missingMessage": "密码为必填项"
-	},
-	"registration": {
-		"agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
-	},
-	"system": {
-		"yourSystem": "您的系统",
-		"mySystemSearch": "我的",
-		"unavailable": "系统无法访问",
-		"offline": "系统处于离线状态",
-		"offlineAlertRibbon": "系统离线。某些设置可能无法使用。",
-		"openClient": "在%VMS_NAME%中打开",
-		"openClientNoSystem": "打开 %VMS_NAME%",
-		"confirmMergeAction": "联网",
-		"mergeSystemTitle": "合并系统",
-		"confirmRenameTitle": "系统名称",
-		"confirmRenameAction": "保存",
-		"successRename": "保存的系统名称",
-		"confirmDisconnectTitle": "系统从 %CLOUD_NAME%断开 吗？",
-		"confirmDisconnectAction": "断开连接",
-		"confirmUnshareFromMe": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
-		"confirmUnshareFromMeTitle": "断开系统吗？",
-		"confirmUnshareFromMeAction": "断开连接",
-		"confirmUnshare": "此用户不能访问系统。是否确定？",
-		"confirmUnshareTitle": "是否删除用户？",
-		"confirmUnshareAction": "删除",
-		"successDisconnected": "系统已成功从 %CLOUD_NAME%断线",
-		"successDeleted": "从您的帐户成功删除系统 {{systemName}}",
-		"mergeFailed": "系统合并失败",
-		"mergeStart": "系统开始合并中",
-		"mergeSuccess": "系统合并完成",
-		"permissionsRemoved": "权限从 {{email}} 被刪除",
-		"unknownName": "未知的系统名称（由云合并引起）",
-		"shareOffline": "离线时无法共享系统",
-		"shareUnauthorized": "您没有共享此系统的权限",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "小时",
-				"minutes": "分"
-			},
-			"warningMessages": {
-				"videoEncryption": "加密视频通信量将显著增加 CPU 使用率。"
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "激活",
-		"incompatible": "不兼容",
-		"merging": "合并中",
-		"notActivated": "未激活",
-		"online": "在线",
-		"offline": "离线",
-		"unavailable": "不可用"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "禁用",
-			"description": "用户被禁用，无法登录到系统"
-		},
-		"Owner": {
-			"label": "所有者",
-			"description": "不受限制地的访问包括共享和连接断开系统从云的能力"
-		},
-		"Viewer": {
-			"label": "操作员",
-			"description": "可以查看实时视频和浏览存档"
-		},
-		"Live Viewer": {
-			"label": "实时操作员",
-			"description": "只可以查看视频直播"
-		},
-		"Advanced Viewer": {
-			"label": "高级操作员",
-			"description": "可以查看实时视频，浏览存档，控制云台等"
-		},
-		"Administrator": {
-			"label": "管理员",
-			"description": "不受限制地的访问包括共享的能力"
-		},
-		"Custom": {
-			"label": "自定义",
-			"description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限"
-		},
-		"cloudAdmin": {
-			"label": "管理员",
-			"description": "可以配置系统和共享它"
-		},
-		"customRole": {
-			"label": "自定义角色",
-			"description": "在系统中指定的自定义用户角色"
-		},
-		"owner": {
-			"label": "所有者",
-			"description": "不受限制地的访问包括共享和连接断开系统从云的能力"
-		},
-		"viewer": {
-			"label": "操作员",
-			"description": "可以查看实时视频和浏览存档"
-		},
-		"liveViewer": {
-			"label": "实时操作员",
-			"description": "只可以查看视频直播"
-		},
-		"advancedViewer": {
-			"label": "高级操作员",
-			"description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等"
-		},
-		"custom": {
-			"label": "自定义",
-			"description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在这里<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME%隐私政策<a href=\"%PRIVACY_LINK%\" target=\"_blank\">这里</a>可了解如何撤销您的同意。",
-		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "高流",
-			"lowStream": "低流",
-			"transcoding": "转码",
-			"unknown": "未知的",
-			"copyToClipboard": "复制到剪贴板",
-			"copyDefaultText": "复制",
-			"copyActiveText": "已复制到剪贴板"
-		},
-		"systemOffline": "系统处于离线状态",
-		"systemOfflineMessage": "此系统处于离线状态，现在无法登录。",
-		"systemNoAlerts": "没有警报",
-		"systemNoAlertsMessage": "您的系统必须运行良好！",
-		"systemServerError": "内部服务器错误",
-		"systemServerErrorMessage": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
-		"systemNewVersion": "更新您的系统",
-		"systemNewVersionMessage": "当前版本与此功能不兼容。请更新您的服务器到最新版本以使用此功能。",
-		"systemHasNoCameras": "无摄像机",
-		"systemUnreachable": "系统无法连接",
-		"cameraStates": {
-			"offline": "离线",
-			"error": "错误",
-			"errorLoading": "载入影片时发生错误",
-			"unauthorized": "需要身份验证",
-			"noData": "无数据",
-			"iOSVideoTooLarge": "iOS不支持大于fullHD (2MP：1920x1080) 的视频。",
-			"flashRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 播放视频。",
-			"flashOrWebmRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 或 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a> 以在 Ie 中播放视频。",
-			"noArmSupport": "此浏览器或设备不支持基于ARM的服务器的视频播放。",
-			"noFormat": "此浏览器不支持本相机的视频播放。",
-			"ieNoWebm": "请为 Ie 安装 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a>。",
-			"ieWin10": "请使用Microsoft Edge或Google Chrome浏览器。",
-			"ubuntuNX": "此浏览器不支持从基于 ARM 服务器的视频。请改为使用 Chromium 浏览器。"
-		},
-		"searchCamPlaceholder": "搜索",
-		"resolution": {
-			"auto": "自动",
-			"high": "高",
-			"low": "低"
-		},
-		"chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
-		"voiceCommands": {
-			"play": "播放",
-			"pause": "暂停",
-			"live": "实时 | 显示实时",
-			"view": "查看+ [相机名称]",
-			"search": "搜寻+ [搜索栏的文字]",
-			"clear search": "清除搜索",
-			"expand server": "展开服务器+ [服务器名称]",
-			"collapse server": "崩溃服务器 + [服务器名称]",
-			"expand all servers": "展开所有服务器",
-			"collapse all servers": "隐藏所有服务器",
-			"stop listening": "停止监听",
-			"help": "帮助|显示命令"
-		}
-	},
-	"systemAdministration": "系统管理",
-	"users": "用户",
-	"testedVersionLabel": "测试 {{vmsName}} 版本：",
-	"testedVersionsLabel": "测试 {{vmsName}} 版本：",
-	"About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
-	"Download %VMS_NAME%": "下载 %VMS_NAME%",
-	"Integrations": "集成",
-	"Privacy": "隐私政策",
-	"Support": "技术支持",
-	"Supported Devices": "支持设备",
-	"Terms": "条款",
-	"pleaseSelect": "请选择...",
-	"WHEN_MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
-	"FAILED_SYSTEM_DESCR": "此连结已损毁,<br> 系统可能会从 %CLOUD_NAME% 离线,<br>于此系统的权限可能被注销,<br>或请您用不同的帐戶登录.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "你有没有连接到 %CLOUD_NAME% 的系统",
-	"NO_SYSTEMS_LOGIN": "使用%VMS_NAME%登录到您的系统",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”",
-	"topXByVolume": "以量排名 {{value}}：",
-	"phoneNumberWithLabel": "电话： {{number}}"
+    "About %CLOUD_NAME%": "关于 %CLOUD_NAME%",
+    "Download %VMS_NAME%": "下载 %VMS_NAME%",
+    "Integrations": "集成",
+    "Privacy": "隐私政策",
+    "Support": "技术支持",
+    "Terms": "条款",
+    "accessRoles": {
+        "Administrator": {
+            "description": "不受限制地的访问包括共享的能力",
+            "label": "管理员"
+        },
+        "Advanced Viewer": {
+            "description": "可以查看实时视频，浏览存档，控制云台等",
+            "label": "高级操作员"
+        },
+        "Custom": {
+            "description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
+            "label": "自定义"
+        },
+        "Live Viewer": {
+            "description": "只可以查看视频直播",
+            "label": "实时操作员"
+        },
+        "Owner": {
+            "description": "不受限制地的访问包括共享和连接断开系统从云的能力",
+            "label": "所有者"
+        },
+        "Viewer": {
+            "description": "可以查看实时视频和浏览存档",
+            "label": "操作员"
+        },
+        "advancedViewer": {
+            "description": "可以查看实时视频，浏览存档，配置摄像头，控制云台等",
+            "label": "高级操作员"
+        },
+        "cloudAdmin": {
+            "description": "可以配置系统和共享它",
+            "label": "管理员"
+        },
+        "custom": {
+            "description": "使用 %VMS_NAME% 客户端应用程序可以设置自定义权限",
+            "label": "自定义"
+        },
+        "customRole": {
+            "description": "在系统中指定的自定义用户角色",
+            "label": "自定义角色"
+        },
+        "disabled": {
+            "description": "用户被禁用，无法登录到系统",
+            "label": "禁用"
+        },
+        "liveViewer": {
+            "description": "只可以查看视频直播",
+            "label": "实时操作员"
+        },
+        "owner": {
+            "description": "不受限制地的访问包括共享和连接断开系统从云的能力",
+            "label": "所有者"
+        },
+        "viewer": {
+            "description": "可以查看实时视频和浏览存档",
+            "label": "操作员"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "您的帐户已成功保存",
+        "accountSettings": "帐户设置",
+        "activationLinkSent": "激活链接已发送",
+        "agreementAccepted": "Agreement has been accepted",
+        "changePassword": "更改密码",
+        "newPasswordLabel": "新密码",
+        "saveChanges": "保存"
+    },
+    "activeActions": {
+        "resetPassword": "重置密码",
+        "sendConfirm": "重新发送激活链接",
+        "setNewPassword": "保存密码",
+        "setNewPasswordLabel": "新密码"
+    },
+    "cameraFilters": {
+        "H265": "H.265 摄像机",
+        "IO": "I/O 模块",
+        "TwWayAudio": "双向音频设备",
+        "aptz": "含高级 PTZ 功能摄像机",
+        "audio": "含音频功能摄像机",
+        "encoder": "编码器",
+        "fisheye": "鱼眼摄像机",
+        "highRes": "超高分辨率摄像机",
+        "multiSensor": "多传感器摄像机",
+        "ptz": "PTZ摄像机"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {{email}}"
+            },
+            "activated": {
+                "title": "Account successfully activated"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "已复制到剪贴板",
+            "copyDefaultText": "复制",
+            "copyToClipboard": "复制到剪贴板",
+            "highStream": "高流",
+            "lowStream": "低流",
+            "transcoding": "转码",
+            "unknown": "未知的"
+        },
+        "cameraStates": {
+            "error": "错误",
+            "errorLoading": "载入影片时发生错误",
+            "flashOrWebmRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 或 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a> 以在 Ie 中播放视频。",
+            "flashRequired": "请 <a href=\"https://get.adobe.com/flashplayer/\" target=\"_blank\">安装 Adobe Flash</a> 播放视频。",
+            "iOSVideoTooLarge": "iOS不支持大于fullHD (2MP：1920x1080) 的视频。",
+            "ieNoWebm": "请为 Ie 安装 <a href=\"https://tools.google.com/dlpage/webmmf/\" target=\"_blank\">WebM 编解码器</a>。",
+            "ieWin10": "请使用Microsoft Edge或Google Chrome浏览器。",
+            "noArmSupport": "此浏览器或设备不支持基于ARM的服务器的视频播放。",
+            "noData": "无数据",
+            "noFormat": "此浏览器不支持本相机的视频播放。",
+            "offline": "离线",
+            "ubuntuNX": "此浏览器不支持从基于 ARM 服务器的视频。请改为使用 Chromium 浏览器。",
+            "unauthorized": "需要身份验证"
+        },
+        "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
+        "resolution": {
+            "auto": "自动",
+            "high": "高",
+            "low": "低"
+        },
+        "general": "General",
+        "maintenanceInProgress": "Maintenance is in progress",
+        "searchCamPlaceholder": "搜索",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemNewVersion": "更新您的系统",
+        "systemNewVersionMessage": "当前版本与此功能不兼容。请更新您的服务器到最新版本以使用此功能。",
+        "systemNoAlerts": "没有警报",
+        "systemNoAlertsMessage": "您的系统必须运行良好！",
+        "systemOffline": "系统处于离线状态",
+        "systemOfflineMessage": "此系统处于离线状态，现在无法登录。",
+        "systemServerError": "内部服务器错误",
+        "systemServerErrorMessage": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
+        "systemUnreachable": "系统无法连接",
+        "unknown": "未知的",
+        "voiceCommands": {
+            "clear search": "清除搜索",
+            "collapse all servers": "隐藏所有服务器",
+            "collapse server": "崩溃服务器 + [服务器名称]",
+            "expand all servers": "展开所有服务器",
+            "expand server": "展开服务器+ [服务器名称]",
+            "help": "帮助|显示命令",
+            "live": "实时 | 显示实时",
+            "pause": "暂停",
+            "play": "播放",
+            "search": "搜寻+ [搜索栏的文字]",
+            "stop listening": "停止监听",
+            "view": "查看+ [相机名称]"
+        },
+        "viewingOutdatedReport": "You are viewing an outdated report."
+    },
+    "dialogs": {
+        "buttons": {
+            "cancel": "取消",
+            "createAccount": "新增帐户",
+            "delete": "Delete",
+            "deleteAccount": "Delete Account",
+            "download": "下载 %VMS_NAME%",
+            "logoutAuthorised": "退出登录",
+            "ok": "确定",
+            "remove": "删除",
+            "stayAs": "以{email} 保持登录 ",
+            "stayLoggedIn": "保持登录状态"
+        },
+        "cloudStorage": {
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
+            "activationError": {
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+            },
+            "systemDisconnectError": {
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
+                "status": {
+                    "offline": "Cloud storage cannot be moved to offline systems."
+                }
+            },
+            "noOtherSystemsError": {
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+            }
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "checking": "Checking...",
+            "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
+            "connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
+            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
+            "mergeSystemsTitle": "Merge current system with:",
+            "mergeFailedTitle": "系统合并失败",
+            "noServerFound": "No server found.",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
+            "passwordRequired": "Password is required.",
+            "passwordWrong": "Wrong password.",
+            "primaryCannotMerge": "系统 {{targetSystem}} 具有较新的软件版本，与当前系统不兼容。请将当前系统更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 将其与 {{targetSystem}} 系统合并。",
+            "primarySystemOffline": "系统 {{primarySystem}} 处于离线状态，无法合并系統{{targetSystem}}。",
+            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "建议您进行咨询",
+                "b_support": "技术支持",
+                "c_proceeding": "在继续执行之前："
+            },
+            "secondaryCannotMerge": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
+            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+            "systemVersionOld": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
+            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "urlEmpty": "Enter server address.",
+            "urlNotValid": "Enter valid URL.",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
+        },
+        "message": {
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "failedToSend": "訊息无法发送。",
+            "placeholders": {
+                "feedback": "请确保已包含您的摄像机型号和制造商..."
+            },
+            "sent": "訊息已傳送。",
+            "subject": {
+                "integration_feedback": "集成{{asset}} 反馈",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
+                "ipvd_feedback_page": "摄像机页面反馈",
+                "sales_inquiry": "{{asset}} 的產品咨询",
+                "technical_inquiry": "{{asset}} 的技术咨询"
+            },
+            "title": {
+                "integration": "与 {{companyName}} 联系",
+                "ipvd_feedback_device": "关于 {{asset}} 反馈",
+                "ipvd_feedback_page": "摄像机页面反馈"
+            }
+        },
+        "removeSystem": {
+            "action": "断开连接",
+            "message": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
+            "title": "断开系统吗？"
+        },
+        "titles": {
+            "error": "错误",
+            "success": "Success",
+            "changeAccount": "您已经以{email} 的身份登录。",
+            "deleteUser": "Delete user?",
+            "loggedFromOtherAccount": "您将使用其他帐户登录",
+            "noClientDetected": "安装%VMS_NAME%来查看您的系统",
+            "removeUser": "是否删除用户？",
+            "serversDetach": "Detach server \"{{ title }}\" from current system?",
+            "serversReset": "Reset server \"{{ title }}\" to defaults?",
+            "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "客户端和服务器",
+            "camera_sdk": "视频源SDK",
+            "client": "仅用于客户端",
+            "metadata_sdk": "Meta数据SDK",
+            "package": "数据包",
+            "server": "仅限服务器",
+            "servertool": "配置工具",
+            "storage_sdk": "存储 SDK",
+            "video_source_sdk": "视频源SDK"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "Windows"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "测试版本",
+            "betas": "测试版本",
+            "patch": "补丁",
+            "patches": "补丁",
+            "rc": "发布候选版本",
+            "release": "版本发布",
+            "releases": "版本发布"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
+        "EmailAlreadyExists": "此电子邮件已被注册",
+        "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
+        "INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
+        "accountAlreadyActivated": "此帐户已激活",
+        "accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
+        "accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
+        "alreadyExists": "此帐户已存在",
+        "brokenAccount": "帐户出现意外问题。 <a href=\"/restore_password\">恢复帐户</a>",
+        "cantActivatePrefix": "无法激活您的帐户",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantChangeAccountPrefix": "无法保存更改",
+        "cantChangePasswordPrefix": "无法保存密码",
+        "cantDisconnectSystemPrefix": "不能删除系统",
+        "cantEditAdmin": "此用户具有管理员权限",
+        "cantEditYourself": "不允许更改自己的权限",
+        "cantGetSystemInfoPrefix": "系统信息不可用",
+        "cantGetSystemsListPrefix": "系统列表不可用",
+        "cantGetUsersListPrefix": "用户列表不可用",
+        "cantOpenClient": "未检测到应用程序%VMS_NAME% 。",
+        "cantRegisterPrefix": "出现错误",
+        "cantSendActivationPrefix": "不能发送确认电子邮件",
+        "cantSendConfirmationPrefix": "不能发送确认电子邮件",
+        "cantSharePrefix": "不能共享系统",
+        "cantUnshareWithMeSystemPrefix": "不能删除系统",
+        "emailNotFound": "帐户不存在.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "forbidden": "您没有权限执行此操作",
+        "lostConnection": "连接到 {{systemName}} 失去了",
+        "mergedSystemIsOffline": "系统 <strong>{{failedSystem}}</strong> 处于离线状态。",
+        "notAuthorized": "错误的密码。",
+        "notFound": "找不到",
+        "ok": "ok",
+        "oldPasswordMistmatch": "当前密码不正确.",
+        "oldSafariNotSupported": "不支持10岁以上的Safari版本",
+        "passwordMismatch": "错误的密码。",
+        "thisSystem": "系统",
+        "unknownError": "Unexpected error occurred",
+        "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
+        "wrongAuthCode": "代码已过期或不正确",
+        "wrongCode": "已经激活帐户或确认码不正确",
+        "wrongCodeRestore": "确认代码已使用或不正确",
+        "wrongParameters": "窗体上的一些参数不正确"
+    },
+    "integration": {
+        "Access Control": "门禁管理",
+        "Connector": "连接器",
+        "Data Analytics": "数据分析",
+        "Drone": "无人机",
+        "Health Monitor": "健康状况监控器",
+        "Storage": "存储设备",
+        "myIntegrationsLabel": "我的",
+        "phoneNumberWithLabel": "电话： {{number}}",
+        "requirements": "{{name}} 要求",
+        "testedVersionLabel": "测试 {{vmsName}} 版本：",
+        "testedVersionsLabel": "测试 {{vmsName}} 版本："
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "高级 PTZ 摄像机",
+        "Cameras supporting H.265": "支持H.265的摄像机",
+        "Cameras with 2-way audio": "双向音频摄像机",
+        "Extra high resolution cameras": "超高分辨率摄像机",
+        "Fisheye Cameras": "鱼眼摄像机",
+        "I / O modules": "I/O 模块",
+        "Multisensor Cameras": "多传感器摄像机",
+        "PTZ cameras": "PTZ摄像机",
+        "camera": "摄像机",
+        "count": "总计",
+        "disclaimer": "此列表仅限于在 {{vmsName}} 上找到的设备，用戶已同意将设备规格自动回报给 {{companyName}}。不会收集任何个人信息，每个用戶都将完全匿名。",
+        "dvr": "DVR",
+        "encoder": "编码器",
+        "feedback": {
+            "a_Please": "请",
+            "b_Link": "提交申请",
+            "c_Info": "有关支持设备的其他问题/疑虑。"
+        },
+        "hardwareType": "类型",
+        "isAnalyticsSupported": "分析",
+        "isAptzSupported": "高级PTZ",
+        "isAptzSupportedShort": "高级PTZ",
+        "isAudioSupported": "音频",
+        "isFisheye": "鱼眼",
+        "isH265": "H.265",
+        "isIoSupported": "I/O",
+        "isMdSupported": "监控",
+        "isMultiSensor": "多传感器",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "双向音频",
+        "maxFps": "<span>最大</span><br><span>帧数</span>",
+        "maxResolution": "<span>最大</span><br><span>分辨率</span>",
+        "model": "型号",
+        "multiSensorCamera": "多传感器摄像机",
+        "other": "其它",
+        "primaryCodec": "编码器",
+        "resolutionArea": "区域",
+        "topXByVolume": "以量排名 {{value}}：",
+        "vendor": "制造商"
+    },
+    "menu": {
+        "titles": {
+            "systemAdministration": "系统管理",
+            "users": "用户"
+        }
+    },
+    "pageTitles": {
+        "about": "关于",
+        "account": "帐户设置",
+        "activate": "激活帐户",
+        "activateCode": "激活帐户",
+        "activateSuccess": "帐户已激活",
+        "changePassword": "更改密码",
+        "debug": "调试",
+        "default": "%CLOUD_NAME%",
+        "download": "下载 %VMS_NAME%",
+        "downloadPlatform": "下载 %VMS_NAME% ",
+        "failedToAccessSystem": "Failed to access system",
+        "integrations": "集成",
+        "login": "登录",
+        "pageNotFound": "找不到页面",
+        "register": "创建帐户中",
+        "registerSuccess": "欢迎来到",
+        "restorePassword": "重置密码",
+        "restorePasswordSuccess": "密码已保存。",
+        "supportedDevices": "支持设备",
+        "system": "系统",
+        "systemName": "{{systemName}}",
+        "systemShare": "共享系统",
+        "systems": "系统",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "查看摄像机"
+    },
+    "passwordRequirements": {
+        "common": "太常见",
+        "commonMessage": "此密码是在世界顶级最受欢迎的密码",
+        "fair": "一般",
+        "fairMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码",
+        "good": "良好",
+        "minLength": "太短",
+        "minLengthMessage": "密码必须包含至少 8 个字符",
+        "missingMessage": "密码为必填项",
+        "required": "不正确",
+        "requiredMessage": "使用只有拉丁文字母、 数字和符号键盘，避免前导和尾随空格",
+        "strongMessage": "强密码 ！",
+        "weak": "弱",
+        "weakMessage": "使用数字、 上层和小写字母和特殊字符，使您更强的密码"
+    },
+    "placeholderTexts": {
+        "merge": {
+            "title": "This system is being merged to {{systemName}}.",
+            "message": {
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+            }
+        }
+    },
+    "pleaseSelect": "请选择...",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+    },
+    "registration": {
+        "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合约条款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隐私政策</a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "is being merged to this system.",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
+        },
+        "finishingMerge": "Finishing systems merge",
+        "integration": {
+            "backToEditText": "返回编辑界面",
+            "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。"
+        },
+        "systemOffline": "系统离线。某些设置可能无法使用。"
+    },
+    "search": {
+        "Any": "任何",
+        "Search": "搜索",
+        "analytics": "分析",
+        "analyticsSelected": "分析事件",
+        "filter applied": "已使用的筛选项",
+        "filters applied": "已使用的筛选项",
+        "hardwareType": "类型",
+        "hardwareTypes": "类型",
+        "minResolution": "最低分辨率",
+        "search_ipvd": "按型号或制造商搜索",
+        "selected": "已选择",
+        "vendor": "制造商",
+        "vendors": "制造商"
+    },
+    "servers": {
+        "beginDetach": "Server is now detaching",
+        "beginReset": "Server is now reseting.",
+        "beginRestart": "Server is now restarting.",
+        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
+        "detachSystemSuccess": "Server was successfully detached from the system.",
+        "getModuleFailed": "There was a problem getting server information.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "removeMediaserverFailed": "Failed to remove the server from system.",
+        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
+        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
+        "restartFailed": "There was a problem restarting the server.",
+        "restartSuccessful": "Server has successfully restarted.",
+        "servers": "Servers",
+        "status": {
+            "checking": "checking...",
+            "offline": "离线",
+            "reseting": "reseting...",
+            "restarting": "restarting..."
+        },
+        "successRename": "Server name renamed."
+    },
+    "system": {
+        "MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
+        "mergeUnknownName": "未知的系统名称（由云合并引起）",
+        "mySystemSearch": "我的",
+        "settings": {
+            "notAbleToLoadSecurity": "Not able to load security settings.",
+            "notAbleToLoadSystem": "Not able to load system settings.",
+            "sessionLimitDuration": {
+                "hours": "小时",
+                "minutes": "分"
+            },
+            "warningMessages": {
+                "videoEncryption": "加密视频通信量将显著增加 CPU 使用率。"
+            }
+        },
+        "status": {
+            "offline": "系统处于离线状态",
+            "unavailable": "系统无法访问"
+        },
+        "users": {
+            "cloudDelete": "Remove User",
+            "localDelete": "Delete User"
+        },
+        "yourSystem": "您的系统",
+        "loggers": {
+            "none": {
+                "text": "None",
+                "help": "(log disabled)"
+            },
+            "error": {
+                "text": "错误",
+                "help": "(log errors only)"
+            },
+            "warning": {
+                "text": "Warning",
+                "help": "(log warnings and errors)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(log warnings, errors and all messages)"
+            },
+            "debug": {
+                "text": "调试",
+                "help": "(log every System message and debug information)"
+            },
+            "verbose": {
+                "text": "Verbose",
+                "help": "(log all information available)"
+            }
+        }
+    },
+    "systemStatuses": {
+        "activated": "激活",
+        "incompatible": "不兼容",
+        "merging": "合并中",
+        "notActivated": "未激活",
+        "offline": "离线",
+        "online": "在线",
+        "unavailable": "不可用"
+    },
+    "toastMessage": {
+        "system": {
+            "deleted": {
+                "success": "从您的帐户成功删除系统 {{systemName}}"
+            },
+            "disconnected": {
+                "success": "系统已成功从 %CLOUD_NAME%断线"
+            },
+            "merge": {
+                "failed": "系统合并失败",
+                "start": "系统开始合并中",
+                "success": "系统合并完成"
+            },
+            "rename": {
+                "success": "保存的系统名称"
+            }
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Additional local FS types",
+        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "crossdomainEnabled": "Cross domain",
+        "defaultExportVideoCodec": "Default export video codec",
+        "defaultVideoCodec": "Default video codec",
+        "downloaderPeers": "Downloader peers",
+        "lastMergeMasterId": "Last merge masterId",
+        "lastMergeSlaveId": "Last merge slaveId",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "License server",
+        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
+        "maxRtpRetryCount": "Max RTP retry count",
+        "metadataStorageChangePolicy": "Meta data storage change policy",
+        "pushNotificationsLanguage": "Push notification language",
+        "resourceFileUri": "Resource file URI",
+        "sessionLimitMinutes": "Session limit (minutes)",
+        "specificFeatures": "Specific features",
+        "systemName": "系统名称",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP Enabled",
+        "auditTrailEnabled": "Audit trail enabled",
+        "auditTrailPeriodDays": "Audit trail period days",
+        "autoDiscoveryEnabled": "Enable device auto discovery",
+        "autoUpdateThumbnails": "Auto-update thumbnails",
+        "backupNewCamerasByDefault": "Backup new cameras by default",
+        "backupQualities": "Backup qualities",
+        "cameraSettingsOptimization": "Allow device setting optimization",
+        "clientStatisticsSettingsUrl": "Client statistics relative url",
+        "cloudAccountName": "Cloud owner account",
+        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud System id",
+        "disabledVendors": "Disabled vendors",
+        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
+        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
+        "emailFrom": "Email from",
+        "emailSignature": "Email signature",
+        "emailSupportEmail": "Support Email",
+        "enableEdgeRecording": "Enable edge recording",
+        "eventLogPeriodDays": "Event log period (days)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP search base",
+        "ldapSearchFilter": "LDAP search filter",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Local System ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
+        "maxRecordQueueSizeElements": "Max record queue size (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
+        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
+        "maxSceneItems": "Max scene items (0 means default)",
+        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
+        "rtpTimeoutMs": "RTP timeout (milliseconds)",
+        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
+        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
+        "smtpConnectionType": "SMTP connection type",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP simple",
+        "smtpTimeout": "SMTP timeout",
+        "smtpUser": "SMTP user",
+        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+        "statisticsReportLastNumber": "Statistics report - last number",
+        "statisticsReportLastTime": "Statistics report - last time",
+        "statisticsReportLastVersion": "Statistics report - last version",
+        "statisticsReportServerApi": "Statistics server api",
+        "statisticsReportTimeCycle": "Statistics report interval",
+        "statisticsReportUpdateDelay": "Statistics report - update delay",
+        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "SystemName": "系统名称",
+        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
+        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "primaryTimeServer": "Primary time synchronization server",
+        "osTimeChangeCheckPeriodMs": "OS time change check period",
+        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time detla less than epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "updateNotificationsEnabled": "Update notifications enabled",
+        "upnpPortMappingEnabled": "UPNP port mapping enabled",
+        "useTextEmailFormat": "Send plain-text emails",
+        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "trafficEncryptionForced": "Force traffic encryption",
+        "videoTrafficEncryptionForced": "Force video traffic encryption",
+        "updateStatus": "Update status",
+        "watermarkSettings": "Watermark settings",
+        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+    }
 }

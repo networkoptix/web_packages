@@ -1,506 +1,756 @@
 {
-	"account": {
-		"accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-		"activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
-		"passwordChangedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
-		"changePassword": "เปลี่ยนรหัสผ่าน",
-		"newPasswordLabel": "สร้างรหัสผ่านใหม่",
-		"saveChanges": "บันทึก",
-		"accountSettings": "การตั้งค่าบัญชี"
-	},
-	"activeActions": {
-		"sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
-		"resetPassword": "รีเซ็ตรหัสผ่าน",
-		"setNewPassword": "บันทึกรหัสผ่าน",
-		"setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "ค้นหา",
-		"search_ipvd": "ค้นหาตามรุ่นหรือผู้ผลิต",
-		"filter applied": "ใช้ตัวกรอง",
-		"filters applied": "ใช้ตัวกรอง",
-		"Any": "รายการใดก็ได้",
-		"selected": "ได้เลือก",
-		"vendor": "ผู้ผลิต",
-		"vendors": "ผู้ผลิต",
-		"hardwareType": "ประเภท",
-		"hardwareTypes": "ประเภท",
-		"minResolution": "ความละเอียดขั้นต่ำ",
-		"analytics": "การวิเคราะห์",
-		"analyticsSelected": "วิเคราะห์เหตุการณ์"
-	},
-	"cameraFilters": {
-		"ptz": "กล้อง PTZ",
-		"aptz": "กล้อง PTZ ขั้นสูง",
-		"fisheye": "กล้อง Fisheye",
-		"H265": "กล้อง H.265",
-		"IO": "I/O โมดูล",
-		"multiSensor": "กล้อง Multisensor",
-		"TwWayAudio": "อุปกรณ์เสียงแบบสองทิศทาง",
-		"audio": "กล้องพร้อมกับระบบเสียง 2ทิศทาง",
-		"encoder": "Encoder",
-		"highRes": "กล้องความละเอียดสูงพิเศษ"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "วินโดวส์"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
-			"camera_sdk": "SDK แหล่งวิดีโอ",
-			"client": "ไคลเอ็นต์เท่านั้น",
-			"metadata_sdk": "Metadata SDK",
-			"package": "แพคเกจ",
-			"server": "เซิร์ฟเวอร์เท่านั้น",
-			"servertool": "เครื่องมือกำหนดค่า",
-			"storage_sdk": "SDK ที่เก็บข้อมูล",
-			"video_source_sdk": "SDK แหล่งวิดีโอ"
-		},
-		"releasesTypes": {
-			"beta": "Beta",
-			"betas": "เบต้า",
-			"rc": "Release Candidate",
-			"release": "Release",
-			"releases": "การเผยแพร่",
-			"patch": "Patch",
-			"patches": "โปรแกรมปรับปรุง"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "พื้นที่",
-		"count": "จำนวน",
-		"vendor": "ผู้ผลิต",
-		"model": "รุ่น",
-		"hardwareType": "ประเภท",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
-		"primaryCodec": "ตัวแปลงสัญญาณ",
-		"isAudioSupported": "เสียง",
-		"isTwAudioSupported": "เสียงสองทาง",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "PTZ ขั้นสูง",
-		"isAptzSupportedShort": "Adv PTZ",
-		"isFisheye": "ฟิชอาย",
-		"isMdSupported": "โมชั่น",
-		"isIoSupported": "I / O",
-		"isH265": "H.265",
-		"isMultiSensor": "เซ็นเซอร์หลายตัว",
-		"isAnalyticsSupported": "การวิเคราะห์",
-		"camera": "กล้อง",
-		"multiSensorCamera": "กล้องหลายเซ็นเซอร์",
-		"encoder": "Encoder",
-		"dvr": "DVR",
-		"other": "อื่นๆ",
-		"PTZ cameras": "กล้อง PTZ",
-		"Advanced PTZ cameras": "กล้อง PTZ ขั้นสูง",
-		"Fisheye Cameras": "กล้อง Fisheye",
-		"Cameras supporting H.265": "กล้องที่รองรับ H.265",
-		"I / O modules": "I/O โมดูล",
-		"Multisensor Cameras": "กล้อง Multisensor",
-		"Cameras with 2-way audio": "กล้องพร้อมกับระบบเสียง 2 ทิศทาง",
-		"Extra high resolution cameras": "กล้องความละเอียดสูงพิเศษ",
-		"feedback": {
-			"a_Please": "โปรด",
-			"b_Link": "ส่งคำขอ",
-			"c_Info": "สำหรับคำถาม / ข้อสงสัยเพิ่มเติมเกี่ยวกับอุปกรณ์ที่รองรับ"
-		},
-		"disclaimer": "รายการนี้ จำกัด เฉพาะอุปกรณ์ที่พบใน {{vmsName}} ที่ผู้ใช้อนุญาตการรายงานอัตโนมัติของข้อมูลจำเพาะของอุปกรณ์เป็น {{companyName}} ไม่มีการรวบรวมข้อมูลส่วนบุคคลและผู้ใช้แต่ละคนยังคงไม่ระบุชื่ออย่างสมบูรณ์"
-	},
-	"integration": {
-		"myIntegrationsLabel": "Mine",
-		"previewRibbonText": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ",
-		"backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
-		"requirements": "{{name}} Requirements",
-		"Access Control": "การควบคุมการเข้าถึง",
-		"Connector": "เชื่อมต่อ",
-		"Data Analytics": "การวิเคราะห์ข้อมูล",
-		"Drone": "Drone",
-		"Health Monitor": "การตรวจสอบสุขภาพ",
-		"Storage": "พื้นที่จัดเก็บ"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "ตรวจสอบให้แน่ใจว่าคุณได้รวมรุ่นกล้องและผู้ผลิตของคุณ..."
-	},
-	"pageTitles": {
-		"template": "{{title}} - %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "เกี่ยวกับ",
-		"registerSuccess": "ขอต้อนรับสู่:",
-		"register": "สร้างบัญชี",
-		"changePassword": "เปลี่ยนรหัสผ่าน",
-		"account": "Account settings",
-		"systems": "ระบบ",
-		"system": "ระบบ",
-		"systemName": "{{systemName}}",
-		"systemShare": "Share System",
-		"activate": "เปิดใช้งานบัญชี",
-		"activateSent": "เปิดใช้งานบัญชี",
-		"activateSuccess": "Account activated",
-		"activateCode": "เปิดใช้งานบัญชี",
-		"restorePassword": "รีเซ็ตรหัสผ่าน",
-		"restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว",
-		"restorePasswordCode": "รีเซ็ตรหัสผ่าน",
-		"view": "ดูกล้อง",
-		"debug": "การ​แก้ไข​จุด​บกพร่อง",
-		"login": "ลงชื่อเข้าสู่ระบบ",
-		"download": "ดาวน์โหลด %VMS_NAME%",
-		"downloadPlatform": "Download %VMS_NAME% for ",
-		"pageNotFound": "ไม่พบหน้านี้",
-		"supportedDevices": "อุปกรณ์ที่รองรับ",
-		"integrations": "Integration"
-	},
-	"dialogs": {
-		"okButton": "ตกลง",
-		"cancelButton": "ยกเลิก",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
-		"loginTitle": "เข้าสู่ระบบ %CLOUD_NAME%",
-		"loginButton": "ลงชื่อเข้าสู่ระบบ",
-		"logoutAuthorisedTitle": "คุณกำลังอยู่ในระบบ",
-		"logoutAuthorisedContinueButton": "ดำเนิน​การ",
-		"logoutAuthorisedLogoutButton": "ออกจากระบบ",
-		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
-		"download": "ดาวน์โหลด %VMS_NAME%",
-		"merge": {
-			"commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
-			"connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
-			"mergeConfirmation": "คุณกำลังจะรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>การตั้งค่าและชื่อจะถูกนำมาจาก <strong>{{primarySystem}}</strong>",
-			"mergeFailedTitle": "การผสานระบบล้มเหลว",
-			"primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
-			"primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
-			"secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
-			"systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
-			"systemUnavailable": "ระบบ {{targetSystem}} ไม่สามารถเข้าถึงได้ในขณะนี้ ลองอีกครั้งในไม่กี่นาทีหรือติดต่อ",
-			"recommendSupport": {
-				"a_recommend": "เราขอแนะนำให้ปรึกษากับ",
-				"b_support": "ทีมช่วยเหลือ",
-				"c_proceeding": "ก่อนดำเนินการต่อ"
-			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
-		},
-		"message": {
-			"failedToSend": "ไม่สามารถส่งข้อความได้",
-			"sent": "ส่งข้อความแล้ว",
-			"title": {
-				"integration": "ติดต่อกับ {{companyName}}",
-				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
-				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
-			},
-			"subject": {
-				"sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
-				"integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
-				"ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
-				"ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "หากคุณเปลี่ยนเจ้าของระบบคุณจะยกเลิกการเป็นเจ้าของจากบัญชีปัจจุบัน การกระทำนี้ไม่สามารถย้อนกลับได้ คุณแน่ใจไหม?",
-			"shareTitle": "เพิ่ม",
-			"shareConfirmButton": "เพิ่ม",
-			"editShareTitle": "แก้ไขสิทธิ์",
-			"editShareConfirmButton": "บันทึก",
-			"permissionsSaved": "อนุญาตสิทธิ์ใหม่แล้ว"
-		}
-	},
-	"errorCodes": {
-		"ok": "ตกลง",
-		"cantSendActivationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
-		"cantDisconnectSystemPrefix": "ไม่สามารถลบระบบได้",
-		"cantUnshareWithMeSystemPrefix": "ไม่สามารถลบระบบได้",
-		"cantSharePrefix": "ไม่สามารถแชร์ระบบ",
-		"cantGetUsersListPrefix": "รายการผู้ใช้ไม่พร้อมใช้งาน",
-		"cantGetSystemsListPrefix": "รายการระบบไม่พร้อมใช้งาน",
-		"cantRegisterPrefix": "เกิดข้อผิดพลาด",
-		"cantGetSystemInfoPrefix": "ข้อมูลระบบไม่พร้อมใช้งาน",
-		"cantChangeAccountPrefix": "ไม่สามารถบันทึกการเปลี่ยนแปลงได้",
-		"cantChangePasswordPrefix": "ไม่สามารถบันทึกรหัสผ่านได้",
-		"cantActivatePrefix": "ไม่สามารถเปิดใช้งานบัญชีของคุณได้",
-		"cantSendConfirmationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
-		"notAuthorized": "รหัสผ่านผิด",
-		"brokenAccount": "ปัญหาที่ไม่คาดคิดกับบัญชี <a href=\"/restore_password\">เรียกคืนบัญชี</a>",
-		"wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
-		"wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
-		"wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
-		"wrongAuthCode": "รหัสหมดอายุหรือไม่ถูกต้อง",
-		"forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
-		"accountNotActivated": "บัญชีนี้ยังไม่เปิดใช้งาน <a href=\"/activate\"> ส่งลิงก์การเปิดใช้งานอีกครั้ง </a>",
-		"accountBlocked": "บัญชีนี้ถูกปิดแล้ว โปรดลองอีกครั้งในไม่กี่นาที.",
-		"notFound": "ไม่​พบ",
-		"alreadyExists": "มีบัญชีอยู่แล้ว",
-		"unknownError": "เกิดข้อผิดพลาดที่ไม่คาดคิด",
-		"accountAlreadyActivated": "บัญชีนี้เปิดใช้งานแล้ว",
-		"emailNotFound": "ไม่มีบัญชีนี้อยู่",
-		"EmailAlreadyExists": "ลงทะเบียนอีเมล์นี้แล้ว",
-		"oldPasswordMistmatch": "ต้องระบุรหัสผ่านปัจจุบัน.",
-		"passwordMismatch": "รหัสผ่านผิด",
-		"cantEditYourself": "ไม่อนุญาตให้เปลี่ยนสิทธิ์ของตัวเอง",
-		"cantEditAdmin": "ผู้ใช้มีสิทธิ์ของผู้ดูแลระบบ",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
-		"lostConnection": "การเชื่อมต่อกับ {{systemName}} สูญหาย",
-		"thisSystem": "ระบบ",
-		"oldSafariNotSupported": "ไม่สนับสนุน Safari ที่เก่ากว่าเวอร์ชั่น 10",
-		"DUPLICATE_MEDIASERVER_FOUND": "เซิร์ฟเวอร์บางรายการมีอยู่ในทั้งสองระบบ - ในรายการที่เลือกและในปัจจุบัน<br>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองใหม่อีกครั้ง",
-		"mergedSystemIsOffline": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
-		"INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
-		"FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
-		"unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>"
-	},
-	"passwordRequirements": {
-		"good": "ดี",
-		"fair": "ยุติธรรม",
-		"fairMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-		"minLength": "สั้นเกินไป",
-		"minLengthMessage": "รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว",
-		"required": "ไม่ถูกต้อง",
-		"requiredMessage": "ใช้อักษรละตินตัวเลขและสัญลักษณ์แป้นพิมพ์เท่านั้นหลีกเลี่ยงช่องว่างด้านบนและด้านหลัง",
-		"weak": "อ่อนแอ",
-		"weakMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
-		"strongMessage": "รหัสผ่านที่แข็งแกร่ง!",
-		"common": "บ่อยเกินไป",
-		"commonMessage": "รหัสผ่านนี้อยู่ในรหัสผ่านที่ได้รับความนิยมมากที่สุดในโลก",
-		"missingMessage": "จำเป็นต้องใช้รหัสผ่าน"
-	},
-	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
-	},
-	"system": {
-		"yourSystem": "ระบบของคุณ",
-		"mySystemSearch": "IMeMyMine",
-		"unavailable": "ระบบไม่สามารถเข้าถึงได้",
-		"offline": "ระบบออฟไลน์",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "Open in %VMS_NAME%",
-		"openClientNoSystem": "เปิด {{VMS_NAME}}",
-		"confirmMergeAction": "ผสาน",
-		"mergeSystemTitle": "รวมระบบ",
-		"confirmRenameTitle": "ชื่อระบบ",
-		"confirmRenameAction": "บันทึก",
-		"successRename": "ระบบเปลี่ยนชื่อ",
-		"confirmDisconnectTitle": "ยกเลิกการเชื่อมต่อระบบจาก %CLOUD_NAME%?",
-		"confirmDisconnectAction": "ตัดการเชื่อมต่อ",
-		"confirmUnshareFromMe": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
-		"confirmUnshareFromMeTitle": "ยกเลิกการเชื่อมต่อระบบหรือไม่?",
-		"confirmUnshareFromMeAction": "ตัดการเชื่อมต่อ",
-		"confirmUnshare": "ผู้ใช้รายนี้จะไม่สามารถเข้าใช้งานระบบได้ คุณแน่ใจไหม?",
-		"confirmUnshareTitle": "Remove user?",
-		"confirmUnshareAction": "เอาออก",
-		"successDisconnected": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%",
-		"successDeleted": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว",
-		"mergeFailed": "การผสานระบบล้มเหลว",
-		"mergeStart": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
-		"mergeSuccess": "ผสานระบบเสร็จสมบูรณ์",
-		"permissionsRemoved": "สิทธิ์ถูกนำออกจาก {{email}}",
-		"unknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "ชั่วโมง",
-				"minutes": "นาที"
-			},
-			"warningMessages": {
-				"videoEncryption": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น"
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "เปิดใช้งาน",
-		"incompatible": "เข้ากันไม่ได้",
-		"merging": "การผสม",
-		"notActivated": "ยังไม่ถูกเปิดใช้งาน",
-		"online": "ออนไลน์",
-		"offline": "ออฟไลน์",
-		"unavailable": "ไม่พร้อมใช้งาน"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "ปิดใช้งาน",
-			"description": "ผู้ใช้ถูกปิดใช้งานและไม่สามารถเข้าสู่ระบบได้"
-		},
-		"Owner": {
-			"label": "เจ้าของ",
-			"description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์"
-		},
-		"Viewer": {
-			"label": "ผู้ชม",
-			"description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้"
-		},
-		"Live Viewer": {
-			"label": "แสดงสด",
-			"description": "สามารถดูวิดีโอสดได้เท่านั้น"
-		},
-		"Advanced Viewer": {
-			"label": "แสดงขั้นสูง",
-			"description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ"
-		},
-		"Administrator": {
-			"label": "ผู้ดูแลระบบ",
-			"description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแบ่งปัน"
-		},
-		"Custom": {
-			"label": "แบบกำหนดเอง",
-			"description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง"
-		},
-		"cloudAdmin": {
-			"label": "ผู้ดูแลระบบ",
-			"description": "สามารถกำหนดค่าระบบและแชร์ได้"
-		},
-		"customRole": {
-			"label": "บทบาทที่กำหนดเอง",
-			"description": "บทบาทผู้ใช้แบบกำหนดเองที่ระบุในระบบ"
-		},
-		"owner": {
-			"label": "เจ้าของ",
-			"description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์"
-		},
-		"viewer": {
-			"label": "ผู้ชม",
-			"description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้"
-		},
-		"liveViewer": {
-			"label": "แสดงสด",
-			"description": "สามารถดูวิดีโอสดได้เท่านั้น"
-		},
-		"advancedViewer": {
-			"label": "แสดงขั้นสูง",
-			"description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ"
-		},
-		"custom": {
-			"label": "แบบกำหนดเอง",
-			"description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก {{INTEGRATION_COMPANY}} และ / หรือ %COMPANY_NAME%\nคุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a> และ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนการยินยอมของคุณ",
-		"ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "สตรีมสูง",
-			"lowStream": "สตรีมต่ำ",
-			"transcoding": "การแปลงรหัส",
-			"unknown": "ม่รู้จัก",
-			"copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
-			"copyDefaultText": "สำเนา",
-			"copyActiveText": "คัดลอกไปยังคลิปบอร์ด"
-		},
-		"systemOffline": "ระบบออฟไลน์",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
-		"systemServerError": "Internal server error",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-		"systemHasNoCameras": "ไม่พบกล้อง",
-		"systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
-		"cameraStates": {
-			"offline": "ออฟไลน์",
-			"error": "ข้อผิดพลาด",
-			"errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
-			"unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้",
-			"noData": "ไม่มีข้อมูล",
-			"iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",
-			"flashRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> สำหรับเล่นวิดีโอ",
-			"flashOrWebmRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> หรือ<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับเล่นวิดีโอใน Internet Explorer",
-			"noArmSupport": "เบราว์เซอร์หรืออุปกรณ์นี้ไม่สนับสนุนการเล่นวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM",
-			"noFormat": "เบราเซอร์หรืออุปกรณ์นี้ไม่รองรับการเล่นวิดีโอจากกล้องนี้",
-			"ieNoWebm": "โปรดติดตั้ง <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับ Internet Explorer",
-			"ieWin10": "โปรดใช้ Microsoft Edge หรือเบราว์เซอร์ Google Chrome",
-			"ubuntuNX": "เบราว์เซอร์นี้ไม่สนับสนุนวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM โปรดใช้เบราว์เซอร์ Chromium แทน"
-		},
-		"searchCamPlaceholder": "ค้นหา",
-		"resolution": {
-			"auto": "อัตโนมัติ",
-			"high": "สูง",
-			"low": "ต่ำ"
-		},
-		"chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
-		"voiceCommands": {
-			"play": "เล่น",
-			"pause": "หยุด",
-			"live": "go to live | show me live",
-			"view": "view + [camera name]",
-			"search": "find + [text for searchbar]",
-			"clear search": "ล้างการค้นหา",
-			"expand server": "expand server + [server name]",
-			"collapse server": "collapse server + [server name]",
-			"expand all servers": "ขยายเซิร์ฟเวอร์ทั้งหมด",
-			"collapse all servers": "ยุบเซิร์ฟเวอร์ทั้งหมด",
-			"stop listening": "หยุดฟัง",
-			"help": "help | show commands"
-		}
-	},
-	"systemAdministration": "ผู้ดูแลระบบ",
-	"users": "ผู้ใช้งาน",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
-	"Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
-	"Integrations": "การรวบรวม",
-	"Privacy": "ความเป็นส่วนตัว",
-	"Support": "ทีมช่วยเหลือ",
-	"Supported Devices": "อุปกรณ์ที่รองรับ",
-	"Terms": "เงื่อนไข",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "โทร: {{number}}"
+    "About %CLOUD_NAME%": "เกี่ยวกับ %CLOUD_NAME%",
+    "Download %VMS_NAME%": "ดาวน์โหลด %VMS_NAME%",
+    "Integrations": "การรวบรวม",
+    "Privacy": "ความเป็นส่วนตัว",
+    "Support": "ทีมช่วยเหลือ",
+    "Terms": "เงื่อนไข",
+    "accessRoles": {
+        "Administrator": {
+            "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแบ่งปัน",
+            "label": "ผู้ดูแลระบบ"
+        },
+        "Advanced Viewer": {
+            "description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ",
+            "label": "แสดงขั้นสูง"
+        },
+        "Custom": {
+            "description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง",
+            "label": "แบบกำหนดเอง"
+        },
+        "Live Viewer": {
+            "description": "สามารถดูวิดีโอสดได้เท่านั้น",
+            "label": "แสดงสด"
+        },
+        "Owner": {
+            "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์",
+            "label": "เจ้าของ"
+        },
+        "Viewer": {
+            "description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",
+            "label": "ผู้ชม"
+        },
+        "advancedViewer": {
+            "description": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ",
+            "label": "แสดงขั้นสูง"
+        },
+        "cloudAdmin": {
+            "description": "สามารถกำหนดค่าระบบและแชร์ได้",
+            "label": "ผู้ดูแลระบบ"
+        },
+        "custom": {
+            "description": "ใช้แอ็พพลิเคชันไคลเอ็นต์ %VMS_NAME% เพื่อตั้งค่าสิทธิ์ที่กำหนดเอง",
+            "label": "แบบกำหนดเอง"
+        },
+        "customRole": {
+            "description": "บทบาทผู้ใช้แบบกำหนดเองที่ระบุในระบบ",
+            "label": "บทบาทที่กำหนดเอง"
+        },
+        "disabled": {
+            "description": "ผู้ใช้ถูกปิดใช้งานและไม่สามารถเข้าสู่ระบบได้",
+            "label": "ปิดใช้งาน"
+        },
+        "liveViewer": {
+            "description": "สามารถดูวิดีโอสดได้เท่านั้น",
+            "label": "แสดงสด"
+        },
+        "owner": {
+            "description": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแชร์และเชื่อมต่อ / ตัดการเชื่อมต่อระบบจากระบบคลาวด์",
+            "label": "เจ้าของ"
+        },
+        "viewer": {
+            "description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",
+            "label": "ผู้ชม"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
+        "accountSettings": "การตั้งค่าบัญชี",
+        "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
+        "agreementAccepted": "Agreement has been accepted",
+        "changePassword": "เปลี่ยนรหัสผ่าน",
+        "newPasswordLabel": "สร้างรหัสผ่านใหม่",
+        "saveChanges": "บันทึก"
+    },
+    "activeActions": {
+        "resetPassword": "รีเซ็ตรหัสผ่าน",
+        "sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
+        "setNewPassword": "บันทึกรหัสผ่าน",
+        "setNewPasswordLabel": "สร้างรหัสผ่านใหม่"
+    },
+    "cameraFilters": {
+        "H265": "กล้อง H.265",
+        "IO": "I/O โมดูล",
+        "TwWayAudio": "อุปกรณ์เสียงแบบสองทิศทาง",
+        "aptz": "กล้อง PTZ ขั้นสูง",
+        "audio": "กล้องพร้อมกับระบบเสียง 2ทิศทาง",
+        "encoder": "Encoder",
+        "fisheye": "กล้อง Fisheye",
+        "highRes": "กล้องความละเอียดสูงพิเศษ",
+        "multiSensor": "กล้อง Multisensor",
+        "ptz": "กล้อง PTZ"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {{email}}"
+            },
+            "activated": {
+                "title": "Account successfully activated"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "คัดลอกไปยังคลิปบอร์ด",
+            "copyDefaultText": "สำเนา",
+            "copyToClipboard": "คัดลอกไปยังคลิปบอร์ด",
+            "highStream": "สตรีมสูง",
+            "lowStream": "สตรีมต่ำ",
+            "transcoding": "การแปลงรหัส",
+            "unknown": "ม่รู้จัก"
+        },
+        "cameraStates": {
+            "error": "ข้อผิดพลาด",
+            "errorLoading": "เกิดข้อผิดพลาดขณะโหลดวิดีโอนี้",
+            "flashOrWebmRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> หรือ<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับเล่นวิดีโอใน Internet Explorer",
+            "flashRequired": "โปรด <a href='https://get.adobe.com/flashplayer/' target='_blank'> ติดตั้ง Adobe Flash</a> สำหรับเล่นวิดีโอ",
+            "iOSVideoTooLarge": "iOS ไม่สนับสนุนวิดีโอที่ใหญ่กว่า fullHD (2MP: 1920x1080)",
+            "ieNoWebm": "โปรดติดตั้ง <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> สำหรับ Internet Explorer",
+            "ieWin10": "โปรดใช้ Microsoft Edge หรือเบราว์เซอร์ Google Chrome",
+            "noArmSupport": "เบราว์เซอร์หรืออุปกรณ์นี้ไม่สนับสนุนการเล่นวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM",
+            "noData": "ไม่มีข้อมูล",
+            "noFormat": "เบราเซอร์หรืออุปกรณ์นี้ไม่รองรับการเล่นวิดีโอจากกล้องนี้",
+            "offline": "ออฟไลน์",
+            "ubuntuNX": "เบราว์เซอร์นี้ไม่สนับสนุนวิดีโอจากเซิร์ฟเวอร์ที่ใช้ ARM โปรดใช้เบราว์เซอร์ Chromium แทน",
+            "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้"
+        },
+        "chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
+        "resolution": {
+            "auto": "อัตโนมัติ",
+            "high": "สูง",
+            "low": "ต่ำ"
+        },
+        "general": "General",
+        "maintenanceInProgress": "Maintenance is in progress",
+        "searchCamPlaceholder": "ค้นหา",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "ระบบออฟไลน์",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Internal server error",
+        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
+        "unknown": "ม่รู้จัก",
+        "voiceCommands": {
+            "clear search": "ล้างการค้นหา",
+            "collapse all servers": "ยุบเซิร์ฟเวอร์ทั้งหมด",
+            "collapse server": "collapse server + [server name]",
+            "expand all servers": "ขยายเซิร์ฟเวอร์ทั้งหมด",
+            "expand server": "expand server + [server name]",
+            "help": "help | show commands",
+            "live": "go to live | show me live",
+            "pause": "หยุด",
+            "play": "เล่น",
+            "search": "find + [text for searchbar]",
+            "stop listening": "หยุดฟัง",
+            "view": "view + [camera name]"
+        },
+        "viewingOutdatedReport": "You are viewing an outdated report."
+    },
+    "dialogs": {
+        "buttons": {
+            "cancel": "ยกเลิก",
+            "createAccount": "Create New Account",
+            "delete": "Delete",
+            "deleteAccount": "Delete Account",
+            "download": "ดาวน์โหลด %VMS_NAME%",
+            "logoutAuthorised": "ออกจากระบบ",
+            "ok": "ตกลง",
+            "remove": "เอาออก",
+            "stayAs": "Stay logged as {email} ",
+            "stayLoggedIn": "Stay Logged In"
+        },
+        "cloudStorage": {
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
+            "activationError": {
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+            },
+            "systemDisconnectError": {
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
+                "status": {
+                    "offline": "Cloud storage cannot be moved to offline systems."
+                }
+            },
+            "noOtherSystemsError": {
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+            }
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "checking": "Checking...",
+            "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
+            "connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
+            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
+            "mergeSystemsTitle": "Merge current system with:",
+            "mergeFailedTitle": "การผสานระบบล้มเหลว",
+            "noServerFound": "No server found.",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
+            "passwordRequired": "Password is required.",
+            "passwordWrong": "Wrong password.",
+            "primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
+            "primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
+            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "เราขอแนะนำให้ปรึกษากับ",
+                "b_support": "ทีมช่วยเหลือ",
+                "c_proceeding": "ก่อนดำเนินการต่อ"
+            },
+            "secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
+            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+            "systemVersionOld": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
+            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "urlEmpty": "Enter server address.",
+            "urlNotValid": "Enter valid URL.",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+        },
+        "message": {
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "failedToSend": "ไม่สามารถส่งข้อความได้",
+            "placeholders": {
+                "feedback": "ตรวจสอบให้แน่ใจว่าคุณได้รวมรุ่นกล้องและผู้ผลิตของคุณ..."
+            },
+            "sent": "ส่งข้อความแล้ว",
+            "subject": {
+                "integration_feedback": "ข้อเสนอแนะสำหรับการรวม {{asset}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
+                "sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
+            "title": {
+                "integration": "ติดต่อกับ {{companyName}}",
+                "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
+                "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง"
+            }
+        },
+        "removeSystem": {
+            "action": "ตัดการเชื่อมต่อ",
+            "message": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
+            "title": "ยกเลิกการเชื่อมต่อระบบหรือไม่?"
+        },
+        "titles": {
+            "error": "ข้อผิดพลาด",
+            "success": "Success",
+            "changeAccount": "You are already logged in as {email}",
+            "deleteUser": "Delete user?",
+            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "removeUser": "Remove user?",
+            "serversDetach": "Detach server \"{{ title }}\" from current system?",
+            "serversReset": "Reset server \"{{ title }}\" to defaults?",
+            "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
+            "camera_sdk": "SDK แหล่งวิดีโอ",
+            "client": "ไคลเอ็นต์เท่านั้น",
+            "metadata_sdk": "Metadata SDK",
+            "package": "แพคเกจ",
+            "server": "เซิร์ฟเวอร์เท่านั้น",
+            "servertool": "เครื่องมือกำหนดค่า",
+            "storage_sdk": "SDK ที่เก็บข้อมูล",
+            "video_source_sdk": "SDK แหล่งวิดีโอ"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "วินโดวส์"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "Beta",
+            "betas": "เบต้า",
+            "patch": "Patch",
+            "patches": "โปรแกรมปรับปรุง",
+            "rc": "Release Candidate",
+            "release": "Release",
+            "releases": "การเผยแพร่"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "DUPLICATE_MEDIASERVER_FOUND": "เซิร์ฟเวอร์บางรายการมีอยู่ในทั้งสองระบบ - ในรายการที่เลือกและในปัจจุบัน<br>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองใหม่อีกครั้ง",
+        "EmailAlreadyExists": "ลงทะเบียนอีเมล์นี้แล้ว",
+        "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
+        "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
+        "accountAlreadyActivated": "บัญชีนี้เปิดใช้งานแล้ว",
+        "accountBlocked": "บัญชีนี้ถูกปิดแล้ว โปรดลองอีกครั้งในไม่กี่นาที.",
+        "accountNotActivated": "บัญชีนี้ยังไม่เปิดใช้งาน <a href=\"/activate\"> ส่งลิงก์การเปิดใช้งานอีกครั้ง </a>",
+        "alreadyExists": "มีบัญชีอยู่แล้ว",
+        "brokenAccount": "ปัญหาที่ไม่คาดคิดกับบัญชี <a href=\"/restore_password\">เรียกคืนบัญชี</a>",
+        "cantActivatePrefix": "ไม่สามารถเปิดใช้งานบัญชีของคุณได้",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantChangeAccountPrefix": "ไม่สามารถบันทึกการเปลี่ยนแปลงได้",
+        "cantChangePasswordPrefix": "ไม่สามารถบันทึกรหัสผ่านได้",
+        "cantDisconnectSystemPrefix": "ไม่สามารถลบระบบได้",
+        "cantEditAdmin": "ผู้ใช้มีสิทธิ์ของผู้ดูแลระบบ",
+        "cantEditYourself": "ไม่อนุญาตให้เปลี่ยนสิทธิ์ของตัวเอง",
+        "cantGetSystemInfoPrefix": "ข้อมูลระบบไม่พร้อมใช้งาน",
+        "cantGetSystemsListPrefix": "รายการระบบไม่พร้อมใช้งาน",
+        "cantGetUsersListPrefix": "รายการผู้ใช้ไม่พร้อมใช้งาน",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantRegisterPrefix": "เกิดข้อผิดพลาด",
+        "cantSendActivationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
+        "cantSendConfirmationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
+        "cantSharePrefix": "ไม่สามารถแชร์ระบบ",
+        "cantUnshareWithMeSystemPrefix": "ไม่สามารถลบระบบได้",
+        "emailNotFound": "ไม่มีบัญชีนี้อยู่",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
+        "lostConnection": "การเชื่อมต่อกับ {{systemName}} สูญหาย",
+        "mergedSystemIsOffline": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
+        "notAuthorized": "รหัสผ่านผิด",
+        "notFound": "ไม่​พบ",
+        "ok": "ตกลง",
+        "oldPasswordMistmatch": "ต้องระบุรหัสผ่านปัจจุบัน.",
+        "oldSafariNotSupported": "ไม่สนับสนุน Safari ที่เก่ากว่าเวอร์ชั่น 10",
+        "passwordMismatch": "รหัสผ่านผิด",
+        "thisSystem": "ระบบ",
+        "unknownError": "Unexpected error occurred",
+        "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
+        "wrongAuthCode": "รหัสหมดอายุหรือไม่ถูกต้อง",
+        "wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
+        "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
+        "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง"
+    },
+    "integration": {
+        "Access Control": "การควบคุมการเข้าถึง",
+        "Connector": "เชื่อมต่อ",
+        "Data Analytics": "การวิเคราะห์ข้อมูล",
+        "Drone": "Drone",
+        "Health Monitor": "การตรวจสอบสุขภาพ",
+        "Storage": "พื้นที่จัดเก็บ",
+        "myIntegrationsLabel": "Mine",
+        "phoneNumberWithLabel": "โทร: {{number}}",
+        "requirements": "{{name}} Requirements",
+        "testedVersionLabel": "Tested with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "กล้อง PTZ ขั้นสูง",
+        "Cameras supporting H.265": "กล้องที่รองรับ H.265",
+        "Cameras with 2-way audio": "กล้องพร้อมกับระบบเสียง 2 ทิศทาง",
+        "Extra high resolution cameras": "กล้องความละเอียดสูงพิเศษ",
+        "Fisheye Cameras": "กล้อง Fisheye",
+        "I / O modules": "I/O โมดูล",
+        "Multisensor Cameras": "กล้อง Multisensor",
+        "PTZ cameras": "กล้อง PTZ",
+        "camera": "กล้อง",
+        "count": "จำนวน",
+        "disclaimer": "รายการนี้ จำกัด เฉพาะอุปกรณ์ที่พบใน {{vmsName}} ที่ผู้ใช้อนุญาตการรายงานอัตโนมัติของข้อมูลจำเพาะของอุปกรณ์เป็น {{companyName}} ไม่มีการรวบรวมข้อมูลส่วนบุคคลและผู้ใช้แต่ละคนยังคงไม่ระบุชื่ออย่างสมบูรณ์",
+        "dvr": "DVR",
+        "encoder": "Encoder",
+        "feedback": {
+            "a_Please": "โปรด",
+            "b_Link": "ส่งคำขอ",
+            "c_Info": "สำหรับคำถาม / ข้อสงสัยเพิ่มเติมเกี่ยวกับอุปกรณ์ที่รองรับ"
+        },
+        "hardwareType": "ประเภท",
+        "isAnalyticsSupported": "การวิเคราะห์",
+        "isAptzSupported": "PTZ ขั้นสูง",
+        "isAptzSupportedShort": "Adv PTZ",
+        "isAudioSupported": "เสียง",
+        "isFisheye": "ฟิชอาย",
+        "isH265": "H.265",
+        "isIoSupported": "I / O",
+        "isMdSupported": "โมชั่น",
+        "isMultiSensor": "เซ็นเซอร์หลายตัว",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "เสียงสองทาง",
+        "maxFps": "<span>Max</span><br><span>FPS</span>",
+        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "model": "รุ่น",
+        "multiSensorCamera": "กล้องหลายเซ็นเซอร์",
+        "other": "อื่นๆ",
+        "primaryCodec": "ตัวแปลงสัญญาณ",
+        "resolutionArea": "พื้นที่",
+        "topXByVolume": "Top {{value}} by volume:",
+        "vendor": "ผู้ผลิต"
+    },
+    "menu": {
+        "titles": {
+            "systemAdministration": "ผู้ดูแลระบบ",
+            "users": "ผู้ใช้งาน"
+        }
+    },
+    "pageTitles": {
+        "about": "เกี่ยวกับ",
+        "account": "Account settings",
+        "activate": "เปิดใช้งานบัญชี",
+        "activateCode": "เปิดใช้งานบัญชี",
+        "activateSuccess": "Account activated",
+        "changePassword": "เปลี่ยนรหัสผ่าน",
+        "debug": "การ​แก้ไข​จุด​บกพร่อง",
+        "default": "%CLOUD_NAME%",
+        "download": "ดาวน์โหลด %VMS_NAME%",
+        "downloadPlatform": "Download %VMS_NAME% for ",
+        "failedToAccessSystem": "Failed to access system",
+        "integrations": "Integration",
+        "login": "ลงชื่อเข้าสู่ระบบ",
+        "pageNotFound": "ไม่พบหน้านี้",
+        "register": "สร้างบัญชี",
+        "registerSuccess": "ขอต้อนรับสู่:",
+        "restorePassword": "รีเซ็ตรหัสผ่าน",
+        "restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว",
+        "supportedDevices": "อุปกรณ์ที่รองรับ",
+        "system": "ระบบ",
+        "systemName": "{{systemName}}",
+        "systemShare": "Share System",
+        "systems": "ระบบ",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "ดูกล้อง"
+    },
+    "passwordRequirements": {
+        "common": "บ่อยเกินไป",
+        "commonMessage": "รหัสผ่านนี้อยู่ในรหัสผ่านที่ได้รับความนิยมมากที่สุดในโลก",
+        "fair": "ยุติธรรม",
+        "fairMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น",
+        "good": "ดี",
+        "minLength": "สั้นเกินไป",
+        "minLengthMessage": "รหัสผ่านต้องมีอักขระอย่างน้อย 8 ตัว",
+        "missingMessage": "จำเป็นต้องใช้รหัสผ่าน",
+        "required": "ไม่ถูกต้อง",
+        "requiredMessage": "ใช้อักษรละตินตัวเลขและสัญลักษณ์แป้นพิมพ์เท่านั้นหลีกเลี่ยงช่องว่างด้านบนและด้านหลัง",
+        "strongMessage": "รหัสผ่านที่แข็งแกร่ง!",
+        "weak": "อ่อนแอ",
+        "weakMessage": "ใช้ตัวเลขตัวพิมพ์ใหญ่และตัวพิมพ์เล็กและตัวอักษรพิเศษเพื่อทำให้รหัสผ่านของคุณแข็งแกร่งขึ้น"
+    },
+    "placeholderTexts": {
+        "merge": {
+            "title": "This system is being merged to {{systemName}}.",
+            "message": {
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+            }
+        }
+    },
+    "pleaseSelect": "Please select...",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+    },
+    "registration": {
+        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "is being merged to this system.",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
+        },
+        "finishingMerge": "Finishing systems merge",
+        "integration": {
+            "backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
+            "previewRibbon": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ"
+        },
+        "systemOffline": "System is offline. Some settings may not be available."
+    },
+    "search": {
+        "Any": "รายการใดก็ได้",
+        "Search": "ค้นหา",
+        "analytics": "การวิเคราะห์",
+        "analyticsSelected": "วิเคราะห์เหตุการณ์",
+        "filter applied": "ใช้ตัวกรอง",
+        "filters applied": "ใช้ตัวกรอง",
+        "hardwareType": "ประเภท",
+        "hardwareTypes": "ประเภท",
+        "minResolution": "ความละเอียดขั้นต่ำ",
+        "search_ipvd": "ค้นหาตามรุ่นหรือผู้ผลิต",
+        "selected": "ได้เลือก",
+        "vendor": "ผู้ผลิต",
+        "vendors": "ผู้ผลิต"
+    },
+    "servers": {
+        "beginDetach": "Server is now detaching",
+        "beginReset": "Server is now reseting.",
+        "beginRestart": "Server is now restarting.",
+        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
+        "detachSystemSuccess": "Server was successfully detached from the system.",
+        "getModuleFailed": "There was a problem getting server information.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "removeMediaserverFailed": "Failed to remove the server from system.",
+        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
+        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
+        "restartFailed": "There was a problem restarting the server.",
+        "restartSuccessful": "Server has successfully restarted.",
+        "servers": "Servers",
+        "status": {
+            "checking": "checking...",
+            "offline": "ออฟไลน์",
+            "reseting": "reseting...",
+            "restarting": "restarting..."
+        },
+        "successRename": "Server name renamed."
+    },
+    "system": {
+        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+        "mergeUnknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
+        "mySystemSearch": "IMeMyMine",
+        "settings": {
+            "notAbleToLoadSecurity": "Not able to load security settings.",
+            "notAbleToLoadSystem": "Not able to load system settings.",
+            "sessionLimitDuration": {
+                "hours": "ชั่วโมง",
+                "minutes": "นาที"
+            },
+            "warningMessages": {
+                "videoEncryption": "การเข้ารหัสวิดีโอจะช่วยเพิ่มการใช้งาน CPU ให้มากขึ้น"
+            }
+        },
+        "status": {
+            "offline": "ระบบออฟไลน์",
+            "unavailable": "ระบบไม่สามารถเข้าถึงได้"
+        },
+        "users": {
+            "cloudDelete": "Remove User",
+            "localDelete": "Delete User"
+        },
+        "yourSystem": "ระบบของคุณ",
+        "loggers": {
+            "none": {
+                "text": "None",
+                "help": "(log disabled)"
+            },
+            "error": {
+                "text": "ข้อผิดพลาด",
+                "help": "(log errors only)"
+            },
+            "warning": {
+                "text": "Warning",
+                "help": "(log warnings and errors)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(log warnings, errors and all messages)"
+            },
+            "debug": {
+                "text": "การ​แก้ไข​จุด​บกพร่อง",
+                "help": "(log every System message and debug information)"
+            },
+            "verbose": {
+                "text": "Verbose",
+                "help": "(log all information available)"
+            }
+        }
+    },
+    "systemStatuses": {
+        "activated": "เปิดใช้งาน",
+        "incompatible": "เข้ากันไม่ได้",
+        "merging": "การผสม",
+        "notActivated": "ยังไม่ถูกเปิดใช้งาน",
+        "offline": "ออฟไลน์",
+        "online": "ออนไลน์",
+        "unavailable": "ไม่พร้อมใช้งาน"
+    },
+    "toastMessage": {
+        "system": {
+            "deleted": {
+                "success": "ระบบ {{systemName}} จะถูกลบออกจากบัญชีของคุณเรียบร้อยแล้ว"
+            },
+            "disconnected": {
+                "success": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %CLOUD_NAME%"
+            },
+            "merge": {
+                "failed": "การผสานระบบล้มเหลว",
+                "start": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
+                "success": "ผสานระบบเสร็จสมบูรณ์"
+            },
+            "rename": {
+                "success": "ระบบเปลี่ยนชื่อ"
+            }
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Additional local FS types",
+        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "crossdomainEnabled": "Cross domain",
+        "defaultExportVideoCodec": "Default export video codec",
+        "defaultVideoCodec": "Default video codec",
+        "downloaderPeers": "Downloader peers",
+        "lastMergeMasterId": "Last merge masterId",
+        "lastMergeSlaveId": "Last merge slaveId",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "License server",
+        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
+        "maxRtpRetryCount": "Max RTP retry count",
+        "metadataStorageChangePolicy": "Meta data storage change policy",
+        "pushNotificationsLanguage": "Push notification language",
+        "resourceFileUri": "Resource file URI",
+        "sessionLimitMinutes": "Session limit (minutes)",
+        "specificFeatures": "Specific features",
+        "systemName": "ชื่อระบบ",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP Enabled",
+        "auditTrailEnabled": "Audit trail enabled",
+        "auditTrailPeriodDays": "Audit trail period days",
+        "autoDiscoveryEnabled": "Enable device auto discovery",
+        "autoUpdateThumbnails": "Auto-update thumbnails",
+        "backupNewCamerasByDefault": "Backup new cameras by default",
+        "backupQualities": "Backup qualities",
+        "cameraSettingsOptimization": "Allow device setting optimization",
+        "clientStatisticsSettingsUrl": "Client statistics relative url",
+        "cloudAccountName": "Cloud owner account",
+        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud System id",
+        "disabledVendors": "Disabled vendors",
+        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
+        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
+        "emailFrom": "Email from",
+        "emailSignature": "Email signature",
+        "emailSupportEmail": "Support Email",
+        "enableEdgeRecording": "Enable edge recording",
+        "eventLogPeriodDays": "Event log period (days)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP search base",
+        "ldapSearchFilter": "LDAP search filter",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Local System ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
+        "maxRecordQueueSizeElements": "Max record queue size (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
+        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
+        "maxSceneItems": "Max scene items (0 means default)",
+        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
+        "rtpTimeoutMs": "RTP timeout (milliseconds)",
+        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
+        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
+        "smtpConnectionType": "SMTP connection type",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP simple",
+        "smtpTimeout": "SMTP timeout",
+        "smtpUser": "SMTP user",
+        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+        "statisticsReportLastNumber": "Statistics report - last number",
+        "statisticsReportLastTime": "Statistics report - last time",
+        "statisticsReportLastVersion": "Statistics report - last version",
+        "statisticsReportServerApi": "Statistics server api",
+        "statisticsReportTimeCycle": "Statistics report interval",
+        "statisticsReportUpdateDelay": "Statistics report - update delay",
+        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "SystemName": "ชื่อระบบ",
+        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
+        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "primaryTimeServer": "Primary time synchronization server",
+        "osTimeChangeCheckPeriodMs": "OS time change check period",
+        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time detla less than epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "updateNotificationsEnabled": "Update notifications enabled",
+        "upnpPortMappingEnabled": "UPNP port mapping enabled",
+        "useTextEmailFormat": "Send plain-text emails",
+        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "trafficEncryptionForced": "Force traffic encryption",
+        "videoTrafficEncryptionForced": "Force video traffic encryption",
+        "updateStatus": "Update status",
+        "watermarkSettings": "Watermark settings",
+        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+    }
 }
