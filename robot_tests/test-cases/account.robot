@@ -259,6 +259,29 @@ Language change affects emails
     Close Mailbox
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
+Language change is new default
+    [tags]    C41574
+    Go To    ${url}/account
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
+    ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
+    ...    "${LANGUAGE}"!="ja_JP"    ja_JP
+    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
+    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    1    #to allow the system to change languages
+    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
+    Run Keyword If    ${lang}==ja_JP    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    ${lang}==de_DE    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Log Out
+    Set Language Anonymous    zh_CN
+    Go To    ${url}/account
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
+    Run Keyword If    ${lang}==ja_JP    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    ${lang}==de_DE    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+
 Should open account page in anonymous state
     [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
