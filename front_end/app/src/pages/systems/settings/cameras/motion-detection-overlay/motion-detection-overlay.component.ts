@@ -76,7 +76,6 @@ export class MotionMaskState {
         public canvas: ElementRef<HTMLCanvasElement>,
         private sensitivityColors: string[]) {
         const parsedInitial = this.initialToMaskZones(initialMask);
-        console.log(this.groupZones(parsedInitial).length);
         this.maskZones = new BehaviorSubject([parsedInitial]);
         this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
     }
@@ -121,7 +120,7 @@ export class MotionMaskState {
     /**
     * Returns zones sorted from top left to bottom right.
     */
-    private sortedZones(zones: Area[]): Area[] {
+    public sortedZones(zones: Area[]): Area[] {
         return zones.sort((a, b) => a.y - b.y || a.x - b.x);
     }
 
@@ -249,7 +248,7 @@ export class MotionMaskRenderer {
     }
 
     // Render methods
-    fillZones() {
+    private fillZones() {
         const zonesState = this.maskZones.value;
         const currentState = zonesState[zonesState.length - 1];
         currentState.forEach(({ sensitivity, x, y, width, height }) => {
@@ -260,7 +259,7 @@ export class MotionMaskRenderer {
         });
     }
 
-    drawCells() {
+    private drawCells() {
         const maskMatrix = this.maskMatrix.value;
         const currentMatrix = maskMatrix[maskMatrix.length - 1];
         currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
@@ -290,10 +289,23 @@ export class MotionMaskRenderer {
         draw(bottom, left, top, left, drawLeft);
     }
 
+    private addNumbers() {
+        const currentMask = this.motionMask.sortedZones(this.maskZones.value[this.maskZones.value.length - 1]);
+        const groups = this.motionMask.groupZones(currentMask);
+        const startCells = groups.map(group => this.motionMask.sortedZones(group.map(index => currentMask[index]))[0]);
+        const size = Math.min(this.cellWidth, this.cellHeight);
+        this.ctx.font = `${size}px sans-serif`;
+        this.ctx.fillStyle = 'black';
+        startCells.forEach(({ x, y, sensitivity }) => {
+            this.ctx.fillText(`${sensitivity || '0'}`, x * this.cellWidth, (y + 1) * this.cellHeight);
+        });
+    }
+
     render() {
         this.fillZones();
         // this.grid();
         this.drawCells();
+        this.addNumbers();
     }
 }
 
