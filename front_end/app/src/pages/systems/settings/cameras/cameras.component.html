@@ -177,9 +177,11 @@
                                     [motionPreview]="true" 
                                     [preloader]="true" 
                                     [state]="selectedCamera.status" 
-                                    [url]="motionPreviewImage" 
+                                    [url]="motionPreviewImage"
+                                    (loaded)="toggleMotionGrid()" 
                                     [lightBackground]="true"></nx-health-image>
                                 <nx-motion-detection-overlay 
+                                    *ngIf="showOverlay"
                                     [height]="canvasHeight" 
                                     [width]="canvasWidth"
                                     [initialMask]="selectedCamera.motionMask"></nx-motion-detection-overlay>

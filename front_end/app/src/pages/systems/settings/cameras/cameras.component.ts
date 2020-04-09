@@ -55,6 +55,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     warnings: string[] = [];
     errors: string[] = [];
     showUnauthorized = false;
+    showOverlay = false;
 
     constructor(
         configService: NxConfigService,
@@ -85,6 +86,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.warnings = [];
                 this.errors = [];
                 this.showUnauthorized = false;
+                this.showOverlay = false;
                 if (params.cameraId) {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
@@ -232,6 +234,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set selectedAspect(value) {
+        this.showOverlay = false;
         this.selectedAspectWatcher.value = value.value;
     }
 
@@ -267,6 +270,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             960,
             0
         );
+    }
+
+    toggleMotionGrid() {
+        this.showOverlay = true;
     }
 
     selectedRotationWatcher: Watcher<any> = new Watcher()
