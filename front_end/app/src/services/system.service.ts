@@ -890,6 +890,10 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
     }
 
+    checkMergeStatus() {
+        return this.mediaserver.checkMergeStatus();
+    }
+
     getPeerSystems() {
         return this.mediaserver.getPeerSystems();
     }
