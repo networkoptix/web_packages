@@ -3,21 +3,22 @@ import {
     OnDestroy, Input, OnChanges,
     SimpleChanges
 }                                    from '@angular/core';
-import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-import { deepEqual }                 from 'assert';
-import { NxUtilsService }            from '../../../../../services/utils.service';
+
+interface iLicense {
+    key: string
+}
 
 @AutoUnsubscribe()
 @Component({
-    selector      : 'nx-license-new-component',
-    templateUrl   : 'new.component.html',
-    styleUrls     : ['new.component.scss']
+    selector    : 'nx-license-new-component',
+    templateUrl : 'new.component.html',
+    styleUrls   : ['new.component.scss']
 })
 
 export class NxLicenseNewComponent implements OnChanges, OnDestroy {
@@ -25,40 +26,41 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     serverOptions: any = [];
-    showLoggers: boolean;
-    saveLoggers: any;
-    lockedSubscription: SubscriptionLike;
+    activateKey: any;
+
+    license: iLicense = { key: '' };
+    selectedServer: any = {};
 
     @Input() servers: any;
     @Input() system: any;
 
     private setupDefaults() {
-        this.showLoggers = false;
-
-        this.saveLoggers = this.processService.createProcess(() => {
+        this.activateKey = this.processService.createProcess(() => {
             return this.system
-                .setLogLevels()
+                .activateLicense(this.selectedServer.id.slice(1, -1))
                 .then(response => {
-                    if (typeof (response.error) !== 'undefined' && response.error !== '0') {
-                        const errorToShow = response.errorString;
-                        this.dialogsService
-                            .alert(errorToShow, this.LANG.dialogs.titles.error)
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    } else {
-                        this.dialogsService
-                            .alert(this.LANG.dialogs.message.logLevelsSaved, this.LANG.dialogs.titles.success)
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    }
+                    // ****** WIP : to fe finished in another task *****
+                    // if (typeof (response.error) !== 'undefined' && response.error !== '0') {
+                    //     const errorToShow = response.errorString;
+                    //     this.dialogsService
+                    //         .alert(errorToShow, this.LANG.dialogs.titles.error)
+                    //         .catch(error => {
+                    //             console.error(error);
+                    //         });
+                    // } else {
+                    //     this.dialogsService
+                    //         .alert(this.LANG.dialogs.message.logLevelsSaved, this.LANG.dialogs.titles.success)
+                    //         .catch(error => {
+                    //             console.error(error);
+                    //         });
+                    // }
                 }, () => {
-                    this.dialogsService
-                        .alert(this.LANG.dialogs.message.logLevelsNotSaved, this.LANG.dialogs.titles.error)
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    // this.dialogsService
+                    //     .alert(this.LANG.dialogs.message.logLevelsNotSaved, this.LANG.dialogs.titles.error)
+                    //     .catch(error => {
+                    //         console.error(error);
+                    //     });
+                    // ****** WIP : to fe finished in another task *****
                 });
         });
     }
@@ -94,6 +96,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 });
             }
         }
+    }
+
+    setLicenseKey(key, form) {
+        this.license.key = key.toUpperCase();
+        form.controls.licenseKey.markAsUntouched();
     }
 
     ngOnDestroy(): void {

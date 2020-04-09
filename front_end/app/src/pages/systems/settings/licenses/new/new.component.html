@@ -5,7 +5,7 @@
     <nx-section>
         <form class="form" role="form" name="newLicenseForm" #newLicenseForm="ngForm" novalidate>
             <div class="row p-0 form-group">
-                <label class="col-4 col-lg-3 m-0 d-flex align-items-center justify-content-end"
+                <label class="col-4 col-lg-3 m-0 mt-2 d-flex align-items-top justify-content-end"
                        translate>License key</label>
 
                 <div class="position-relative pl-2">
@@ -14,7 +14,22 @@
                            [specialCharacters]="[ '&mdash;' ]"
                            [showMaskTyped]="true"
                            placeHolderCharacter=" "
-                           mask="AAAA&mdash;AAAA&mdash;AAAA&mdash;AAAA"/>
+                           mask="AAAA&mdash;AAAA&mdash;AAAA&mdash;AAAA"
+                           id="licenseKey"
+                           name="licenseKey"
+                           [ngModel]="license.key"
+                           (ngModelChange)="setLicenseKey($event, newLicenseForm)"
+                           required
+                           #licenseKey="ngModel"/>
+
+                    <div *ngIf="licenseKey.invalid && licenseKey.touched"
+                         class="mt-1">
+
+                        <span class="input-error" *ngIf="licenseKey.errors.required"
+                            translate>Enter license key</span>
+                        <span class="input-error" *ngIf="licenseKey.errors.mask"
+                              translate>Invalid license key</span>
+                    </div>
                 </div>
             </div>
             <div class="row p-0 form-group" *ngIf="serverOptions.length">
@@ -36,7 +51,7 @@
     </nx-section>
     <nx-section >
         <nx-process-button
-                [process]="saveLoggers"
+                [process]="activateKey"
                 [buttonText]="'Activate' | translate">
         </nx-process-button>
     </nx-section>

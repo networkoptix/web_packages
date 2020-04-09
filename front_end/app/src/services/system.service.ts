@@ -814,6 +814,10 @@ export class NxSystem extends System implements OnDestroy {
         }));
     }
 
+    activateLicense(serverId) {
+        // ****** WIP : to fe finished in another task *****
+    }
+
     logLevel(serverId) {
         return this.mediaserver.logLevel(serverId);
     }
