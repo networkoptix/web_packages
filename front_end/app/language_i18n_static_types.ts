@@ -496,12 +496,8 @@ export interface Feedback {
 }
 
 export interface License {
-    info: Info;
-    messages: LicenseMessages;
-}
-
-export interface LicenseMessages {
-    required : string;
+    info:     Info;
+    messages: Messages;
 }
 
 export interface Info {
@@ -526,6 +522,10 @@ export interface Info {
     starter:       string;
     iomodule:      string;
     bridge:        string;
+}
+
+export interface Messages {
+    required: string;
 }
 
 export interface Menu {
@@ -1336,6 +1336,7 @@ const typeMap: any = {
     ], false),
     "License": o([
         { json: "info", js: "info", typ: r("Info") },
+        { json: "messages", js: "messages", typ: r("Messages") },
     ], false),
     "Info": o([
         { json: "type", js: "type", typ: "" },
@@ -1359,6 +1360,9 @@ const typeMap: any = {
         { json: "starter", js: "starter", typ: "" },
         { json: "iomodule", js: "iomodule", typ: "" },
         { json: "bridge", js: "bridge", typ: "" },
+    ], false),
+    "Messages": o([
+        { json: "required", js: "required", typ: "" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },

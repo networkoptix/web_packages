@@ -9,8 +9,10 @@ import { NgbModule }                 from '@ng-bootstrap/ng-bootstrap';
 import { DirectivesModule }          from '../../../../directives/directives.module';
 import { TranslateModule }           from '@ngx-translate/core';
 import { ComponentsModule }          from '../../../../components/components.module';
-import { NxSystemLicensesComponent } from './licenses.component';
 import { OverlayModule }             from '@angular/cdk/overlay';
+import { NxLicenseNewComponent }     from './new/new.component';
+import { NxSystemLicensesComponent } from './licenses.component';
+import { NgxMaskModule }             from 'ngx-mask';
 
 @NgModule({
     imports: [
@@ -24,10 +26,12 @@ import { OverlayModule }             from '@angular/cdk/overlay';
         ComponentsModule,
         DirectivesModule,
         AngularSvgIconModule.forRoot(),
-        OverlayModule
+        OverlayModule,
+        NgxMaskModule
     ],
     providers       : [],
     declarations    : [
+        NxLicenseNewComponent,
         NxSystemLicensesComponent
     ],
     bootstrap       : [],

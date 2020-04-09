@@ -32,7 +32,6 @@
     font-style  : normal;
 }
 
-
 @font-face {
     font-family : 'robotobold';
     src         : url('./roboto/roboto_bold/Roboto-Bold-webfont.eot');
@@ -42,4 +41,15 @@
     url('./roboto/roboto_bold/Roboto-Bold-webfont.svg#robotobold') format('svg');
     font-weight : 700 !important;
     font-style  : normal;
+}
+
+@font-face {
+    font-family: 'robotomonoregular';
+    src: url('./roboto/roboto_mono/roboto-mono-regular.eot');
+    src: url('./roboto/roboto_mono/roboto-mono-regular.eot?#iefix') format('embedded-opentype'),
+    url('./roboto/roboto_mono/roboto-mono-regular.woff') format('woff'),
+    url('./roboto/roboto_mono/roboto-mono-regular.ttf') format('truetype'),
+    url('./roboto/roboto_mono/roboto-mono-regular.svg#robotomonoregular') format('svg');
+    font-weight: 400 !important;
+    font-style: normal;
 }

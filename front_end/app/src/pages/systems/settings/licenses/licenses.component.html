@@ -1,6 +1,10 @@
+<nx-license-new-component
+        [servers]="this.system?.servers">
+</nx-license-new-component>
+
 <nx-pre-loader *ngIf="!licenses.length"></nx-pre-loader>
 
-<nx-block *ngIf="licenses.length">
+<nx-block *ngIf="licenses.length" class="d-block mt-3">
     <header>
         <h4 translate>Licenses Summary</h4>
     </header>

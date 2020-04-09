@@ -32,11 +32,16 @@ import { HMGuard }           from './src/routeGuards/hmGuard';
 import { UserGuard }         from './src/routeGuards/userGuard';
 import { AdminGuard }         from './src/routeGuards/adminGuard';
 import { CloudStorageGuard } from './src/routeGuards/cloudStorageGuard';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
+
+// @ts-ignore
+export const options: Partial<IConfig> | (() => Partial<IConfig>);
 
 // AoT requires an exported function for factories
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
+        // eslint-disable-next-line no-useless-escape
         return !url.toString().match('\/(systems|embed)\/[A-Za-z0-9\-:]+\/view\/?(?:[A-Za-z0-9\-:]+)?');
     }
 
@@ -79,7 +84,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
-        })
+        }),
+        NgxMaskModule.forRoot(options)
     ],
     entryComponents: [],
     providers      : [

@@ -1,0 +1,43 @@
+<nx-block>
+    <header>
+        <h4 translate>New License</h4>
+    </header>
+    <nx-section>
+        <form class="form" role="form" name="newLicenseForm" #newLicenseForm="ngForm" novalidate>
+            <div class="row p-0 form-group">
+                <label class="col-4 col-lg-3 m-0 d-flex align-items-center justify-content-end"
+                       translate>License key</label>
+
+                <div class="position-relative pl-2">
+                    <input type="text"
+                           class="form-control input-sm license-key"
+                           [specialCharacters]="[ '&mdash;' ]"
+                           [showMaskTyped]="true"
+                           placeHolderCharacter=" "
+                           mask="AAAA&mdash;AAAA&mdash;AAAA&mdash;AAAA"/>
+                </div>
+            </div>
+            <div class="row p-0 form-group" *ngIf="serverOptions.length">
+                <label class="col-4 col-lg-3 m-0 mt-2 d-flex align-items-top justify-content-end"
+                       translate>Bind to server</label>
+
+                <div class="position-relative pl-2">
+                    <nx-select id="bindToServer"
+                               name="bindToServer"
+                               class="dd-servers"
+                               [items]="serverOptions"
+                               [ngModel]=""
+                               [selected]="serverOptions[0]">
+                    </nx-select>
+                    <div class="hint mt-1" translate>This sever must be available in the system to make the license key work</div>
+                </div>
+            </div>
+        </form>
+    </nx-section>
+    <nx-section >
+        <nx-process-button
+                [process]="saveLoggers"
+                [buttonText]="'Activate' | translate">
+        </nx-process-button>
+    </nx-section>
+</nx-block>
