@@ -236,13 +236,7 @@ export class MergeModalContent {
                     .sort((sysA, sysB) => {
                         const a = `${sysA.systemName.toLowerCase()}${sysA.name.toLowerCase()}`;
                         const b = `${sysB.systemName.toLowerCase()}${sysB.name.toLowerCase()}`;
-                        if (a < b) {
-                            return -1;
-                        }
-                        if (a > b) {
-                            return 1;
-                        }
-                        return 0;
+                        return a < b ? -1 : 1;
                     });
                 this.peerSystemsLoaded = true;
             });
