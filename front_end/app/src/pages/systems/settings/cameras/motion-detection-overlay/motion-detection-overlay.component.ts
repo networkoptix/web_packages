@@ -158,20 +158,6 @@ export class MotionMaskRenderer {
     }
 
     // Render methods
-    grid() {
-        this.ctx.strokeStyle = '#FFFFFF1A';
-        this.ctx.beginPath();
-        for (let x = 0; x <= this.width; x += this.cellWidth) {
-            this.ctx.moveTo(x, 0.5);
-            this.ctx.lineTo(x, this.height + 0.5);
-        }
-        for (let y = 0; y <= this.height; y += this.cellHeight) {
-            this.ctx.moveTo(0, y + 0.5);
-            this.ctx.lineTo(this.width, y + 0.5);
-        }
-        this.ctx.stroke();
-    }
-
     fillZones() {
         const zonesState = this.maskZones.value;
         const currentState = zonesState[zonesState.length - 1];
@@ -199,24 +185,23 @@ export class MotionMaskRenderer {
         const drawBottom = row !== this.rows - 1 && sensitivity !== maskMatrix[row + 1][column];
         const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
 
-        this.ctx.strokeStyle = 'black';
-
-        const draw = (fromY, fromX, toY, toX) => {
+        const draw = (fromY, fromX, toY, toX, solid) => {
+            this.ctx.strokeStyle = solid ? 'black' : '#FFFFFF1A';
             this.ctx.beginPath();
             this.ctx.moveTo(fromX, fromY);
             this.ctx.lineTo(toX, toY);
             this.ctx.stroke();
         };
 
-        if (drawTop) draw(top, left, top, right);
-        if (drawRight) draw(top, right, bottom, right);
-        if (drawBottom) draw(bottom, right, bottom, left);
-        if (drawLeft) draw(bottom, left, top, left);
+        draw(top, left, top, right, drawTop);
+        draw(top, right, bottom, right, drawRight);
+        draw(bottom, right, bottom, left, drawBottom);
+        draw(bottom, left, top, left, drawLeft);
     }
 
     render() {
         this.fillZones();
-        this.grid();
+        // this.grid();
         this.drawCells();
     }
 }
