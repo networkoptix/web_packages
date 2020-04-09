@@ -125,86 +125,24 @@ export class MotionMaskState {
     }
 
     /**
-    * Returns nested array with each inner array containing indexes of contigious zones.
-    *
-    * Each inner array sorted from top left to bottom right.
+    * Returns array of start zones sorted top left to bottom right.
     */
-    public groupZones = (zones: Area[]): number[][] => {
-        enum Positions {
-            RIGHT = 'right',
-            BOTTOM = 'bottom',
-            LEFT = 'left'
-        }
-
+    public findStartZones = (zones: Area[]): Area[] => {
         const sorted = this.sortedZones(zones);
-        const visitedNodeIndexes: number[] = [];
-        const groupedNodes: number[][] = [];
+        const otherZones: Area[] = [];
+        const startZones: Area[] = [];
 
-        const findNodeIndex = (position: Positions, { x: zoneStartX, y: zoneStartY, width, height, sensitivity }: Area): number => {
-            const zoneEndX = zoneStartX + width;
-            const zoneEndY = zoneStartY + height;
-            const bounding = { startX: null, startY: null, endX: null, endY: null, sensitivity };
+        const bordersVisitedZones = (currentZone: Area, zones: Area[]) => zones.some((existingZone) => existingZone.borders(currentZone));
 
-            if (position === Positions.RIGHT) {
-                if (zoneEndX === this.columns - 1) return -1;
-                bounding.startX = bounding.endX = zoneEndX + 1;
-                bounding.startY = zoneStartY;
-                bounding.endY = zoneEndY;
-            }
-
-            if (position === Positions.LEFT) {
-                if (zoneStartX === 0) return -1;
-                bounding.startX = bounding.endX = zoneStartX - 1;
-                bounding.startY = zoneStartY;
-                bounding.endY = zoneEndY;
-            }
-
-            if (position === Positions.BOTTOM) {
-                if (zoneEndY === this.rows - 1) return -1;
-                bounding.startY = bounding.endY = zoneEndY + 1;
-                bounding.startX = zoneStartX;
-                bounding.endX = zoneEndX;
-            }
-
-            const byOverlap = ({ x: startX, y: startY, width, height, sensitivity }: Area): boolean => {
-                if (bounding.sensitivity !== sensitivity) return false;
-
-                const endX = startX + width;
-                const endY = startY + height;
-                const overlapX = bounding.endX < startX || bounding.startX > endX;
-                const overlapY = bounding.endY < startY || bounding.startY > endY;
-
-                return overlapX && overlapY;
+        sorted.forEach(zone => {
+            if (bordersVisitedZones(zone, [...otherZones, ...startZones])) {
+                otherZones.push(zone);
+            } else {
+                startZones.push(zone);
             };
-
-            return sorted.findIndex(byOverlap);
-        };
-
-        const traverseNode = (node: Area, index: number, group = []): number[] => {
-            if (index in visitedNodeIndexes || index in group) {
-                return;
-            }
-
-            const rightNodeIndex = findNodeIndex(Positions.RIGHT, node);
-            const leftNodeIndex = findNodeIndex(Positions.LEFT, node);
-            const bottomNodeIndex = findNodeIndex(Positions.BOTTOM, node);
-
-            // Add node to current group, mark as visited, then traverse contiguous nodes
-            visitedNodeIndexes.push(index);
-            group.push(index);
-            if (rightNodeIndex !== -1) traverseNode(sorted[rightNodeIndex], rightNodeIndex, group);
-            if (leftNodeIndex !== -1) traverseNode(sorted[leftNodeIndex], leftNodeIndex, group);
-            if (bottomNodeIndex !== -1) traverseNode(sorted[bottomNodeIndex], bottomNodeIndex, group);
-
-            return group;
-        };
-
-        sorted.forEach((node, index) => {
-            const group = traverseNode(node, index);
-            if (group) groupedNodes.push(group);
         });
 
-        return groupedNodes;
+        return startZones;
     }
 
     private maskStateEncodeToString(mask: Mask): string {
@@ -291,12 +229,11 @@ export class MotionMaskRenderer {
 
     private addNumbers() {
         const currentMask = this.motionMask.sortedZones(this.maskZones.value[this.maskZones.value.length - 1]);
-        const groups = this.motionMask.groupZones(currentMask);
-        const startCells = groups.map(group => this.motionMask.sortedZones(group.map(index => currentMask[index]))[0]);
+        const startZones = this.motionMask.findStartZones(currentMask);
         const size = Math.min(this.cellWidth, this.cellHeight);
         this.ctx.font = `${size}px sans-serif`;
         this.ctx.fillStyle = 'black';
-        startCells.forEach(({ x, y, sensitivity }) => {
+        startZones.forEach(({ x, y, sensitivity }, index) => {
             this.ctx.fillText(`${sensitivity || '0'}`, x * this.cellWidth, (y + 1) * this.cellHeight);
         });
     }
@@ -325,4 +262,12 @@ export class Area {
         public height: number,
         public currentSelection?: boolean
     ) {}
+
+    public borders(zone: Area) {
+        if (this.sensitivity !== zone.sensitivity) return false;
+        return !(this.x + this.width + 1 <= zone.x ||
+                this.y + this.height + 1 <= zone.y ||
+                this.x - 1 >= zone.x + zone.width ||
+                this.y - 1 >= zone.y + zone.height);
+    }
 }
