@@ -2,7 +2,7 @@
     <nx-pre-loader [type]="'generic-camera-preview'"></nx-pre-loader>
 </div>
 <div *ngIf="time && !show" class="header">{{time}}</div>
-<div [ngClass]="{mini: !isPrimary, 'd-none': !show,'light-thumbnail-preview': lightBackground, 'thumbnail-preview': !lightBackground}">
+<div [ngClass]="motionPreview ? {'motion-preview': true, 'd-none': !show} : {mini: !isPrimary, 'd-none': !show,'light-thumbnail-preview': lightBackground, 'thumbnail-preview': !lightBackground}">
     <img *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
         [style.height]="motionPreview ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"

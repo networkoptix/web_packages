@@ -113,6 +113,10 @@ export class MotionMaskState {
         return maskCopy;
     }
 
+    public groupZones(zones: Area[]) {
+
+    }
+
     private maskStateEncodeToString(mask: Mask): string {
         return 'wip';
     }
@@ -156,34 +160,64 @@ export class MotionMaskRenderer {
     // Render methods
     grid() {
         this.ctx.strokeStyle = '#FFFFFF1A';
-        this.ctx.lineWidth = 1.5;
         this.ctx.beginPath();
         for (let x = 0; x <= this.width; x += this.cellWidth) {
-            this.ctx.moveTo(x, 0);
-            this.ctx.lineTo(x, this.height);
+            this.ctx.moveTo(x, 0.5);
+            this.ctx.lineTo(x, this.height + 0.5);
         }
         for (let y = 0; y <= this.height; y += this.cellHeight) {
-            this.ctx.moveTo(0, y);
-            this.ctx.lineTo(this.width, y);
+            this.ctx.moveTo(0, y + 0.5);
+            this.ctx.lineTo(this.width, y + 0.5);
         }
         this.ctx.stroke();
     }
 
-    zones() {
+    fillZones() {
         const zonesState = this.maskZones.value;
         const currentState = zonesState[zonesState.length - 1];
         currentState.forEach(({ sensitivity, x, y, width, height }) => {
             this.ctx.beginPath();
-            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '26';
+            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '1A';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
-
         });
     }
 
+    drawCells() {
+        const maskMatrix = this.maskMatrix.value;
+        const currentMatrix = maskMatrix[maskMatrix.length - 1];
+        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
+    }
+
+    private drawCell = (maskMatrix: Mask, row: number) => (sensitivity: number, column: number) => {
+        const top = row * this.cellHeight - 0.5;
+        const bottom = (row + 1) * this.cellHeight + 0.5;
+        const left = column * this.cellWidth - 0.5;
+        const right = (column + 1) * this.cellWidth + 0.5;
+        const drawTop = row && sensitivity !== maskMatrix[row - 1][column];
+        const drawRight = column !== this.columns - 1 && sensitivity !== maskMatrix[row][column + 1];
+        const drawBottom = row !== this.rows - 1 && sensitivity !== maskMatrix[row + 1][column];
+        const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
+
+        this.ctx.strokeStyle = 'black';
+
+        const draw = (fromY, fromX, toY, toX) => {
+            this.ctx.beginPath();
+            this.ctx.moveTo(fromX, fromY);
+            this.ctx.lineTo(toX, toY);
+            this.ctx.stroke();
+        };
+
+        if (drawTop) draw(top, left, top, right);
+        if (drawRight) draw(top, right, bottom, right);
+        if (drawBottom) draw(bottom, right, bottom, left);
+        if (drawLeft) draw(bottom, left, top, left);
+    }
+
     render() {
-        this.zones();
+        this.fillZones();
         this.grid();
+        this.drawCells();
     }
 }
 
