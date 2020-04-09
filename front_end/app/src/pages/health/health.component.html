@@ -19,6 +19,7 @@
                              type="NEW_VERSION"
                              class="page-placeholder">
         </nx-page-placeholder>
+        <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
     </div>
 
     <div *ngSwitchDefault>
@@ -48,15 +49,7 @@
             </div>
         </div>
 
-        <ngx-file-drop dropZoneClassName="importZone"
-                       accept="json"
-                       [directory]="false"
-                       [multiple]="false"
-                       [showBrowseBtn]="false"
-                       (onFileLeave)="fileLeave()"
-                       [ngClass]="!importShow ? 'pointer-ignore' : ''"
-                       (onFileDrop)="fileDropped($event)">
-        </ngx-file-drop>
+        <ng-template [ngTemplateOutlet]="fileUpload"></ng-template>
 
         <ng-template #healthLinks>
             <hr class="mt-1"/>
@@ -80,3 +73,15 @@
         </ng-template>
     </div>
 </div>
+
+<ng-template #fileUpload>
+    <ngx-file-drop dropZoneClassName="importZone"
+                   accept="json"
+                   [directory]="false"
+                   [multiple]="false"
+                   [showBrowseBtn]="false"
+                   (onFileLeave)="fileLeave()"
+                   [ngClass]="!importShow ? 'pointer-ignore' : ''"
+                   (onFileDrop)="fileDropped($event)">
+    </ngx-file-drop>
+</ng-template>

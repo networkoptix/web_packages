@@ -65,7 +65,7 @@
     "YOUR ACCESS LEVEL TEXT": "רמת הגישה שלך",
     "USER DISABLED TEXT": "המשתמש מושבת",
     "NO UNSAVED CHANGES TEXT": "אין שינויים שלא נשמרו",
-    "ABOUT": "About %PRODUCT_NAME%",
+    "ABOUT": "אודות %PRODUCT_NAME%",
     "KNOWN LIMITATIONS": "מגבלות ידועות",
     "SUPPORT": "תמיכה",
     "REMOTE CONNECTIVITY": "חיבור מרחוק",
@@ -143,7 +143,7 @@
     "IPVD EXPORT ALL TO CSV": "ייצא נתונים לקובץ CSV",
     "IPVD SUBMIT A REQUEST TEXT": "הגש בקשה",
     "IPVD SEND DEVICE FEEDBACK TEXT": "שלח משוב על המכשיר הזה",
-    "IPVD FEEDBACK ABOUT": "Feedback about {{model}}",
+    "IPVD FEEDBACK ABOUT": "משוב על {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "משוב עבור דף מצלמות",
     "IPVD FEEDBACK MESSAGE SENT": "ההודעה נשלחה.",
     "PRIVACY POLICY LINK TEXT": "כאן",
@@ -210,10 +210,10 @@
     "SALES INQUIRY TEXT": "בירור מכירות עבור {{integration}}",
     "TECHNICAL INQUIRY TEXT": "בירור טכני עבור {{integration}}",
     "FEEDBACK TEXT": "משוב לאינטגרציה {{integration}}",
-    "INFORMATION TEXT": "Information",
-    "SYSTEM OFFLINE TEXT": "System Offline",
-    "SYSTEM CANNOT BE ACCESSED TEXT": "This system is offline and cannot be accessed right now.",
+    "INFORMATION TEXT": "מידע",
+    "SYSTEM OFFLINE TEXT": "השרת אינו זמין",
+    "SYSTEM CANNOT BE ACCESSED TEXT": "מערכת זו אינה מקוונת ולא ניתן לגשת אליה כרגע.",
     "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
-    "NO ALERTS TEXT": "No Alerts",
-    "SYSTEM DOING WELL TEXT": "Your system must be doing well!"
+    "NO ALERTS TEXT": "אין התראות",
+    "SYSTEM DOING WELL TEXT": "המערכת שלך עובדת טוב!"
 }

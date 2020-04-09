@@ -501,6 +501,6 @@
 	"NO_SYSTEMS_LOGIN": "使用%VMS_NAME%登录到您的系统",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "转到\"系统管理\"对话框中的\"云\"选项",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "按“将系统连接到 %CLOUD_NAME%”",
-	"topXByVolume": "Top {{value}} by volume:",
+	"topXByVolume": "以量排名 {{value}}：",
 	"phoneNumberWithLabel": "电话： {{number}}"
 }

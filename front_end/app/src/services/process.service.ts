@@ -44,16 +44,16 @@ export class Process {
     errorHandler: (any) => any;
 
     constructor(
-        configService: IConfig,
-        languageService: LanguageI18NStaticTypes,
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
         sessionService: NxSessionService,
         cloudApiService: NxCloudApiService,
         toastService: NxToastService,
         caller,
         settings
     ) {
-        this.CONFIG = configService;
-        this.LANG = languageService;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
         this.cloudApiService = cloudApiService;
         this.sessionService = sessionService;
         this.toastService = toastService;
@@ -213,19 +213,15 @@ export class Process {
     providedIn: 'root'
 })
 export class NxProcessService {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-
-    constructor(private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
-                private cloudApiService: NxCloudApiService,
-                private sessionService: NxSessionService,
-                private toastService: NxToastService) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
-    }
+    constructor(
+        private configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        private sessionService: NxSessionService,
+        private cloudApiService: NxCloudApiService,
+        private toastService: NxToastService
+    ) { }
 
     createProcess(caller, settings?) {
-        return new Process(this.CONFIG, this.LANG, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
+        return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }

@@ -217,7 +217,9 @@ Correct items are shown for owner
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
-    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}
+    Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}    ${MERGE BUTTON SYSTEM}
+    Go To User List
+    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
 
 Correct items are shown for admin
     [Tags]    C41561    Threaded
@@ -225,6 +227,8 @@ Correct items are shown for admin
     Wait Until Element Is Visible    ${USERS LIST LINK}
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
+    Go To User List
+    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    Threaded
@@ -434,7 +438,3 @@ Changing All Checkboxes Works
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing All Settings    ${SYSTEM SAVE}
     Changing All Settings    ${SYSTEM CANCEL}
-
-
-
-

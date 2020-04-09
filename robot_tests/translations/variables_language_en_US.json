@@ -27,7 +27,7 @@
     "SYSYEM DELETED FROM ACCOUNT"          :    "System {{system_name}} is successfully deleted from your account",
     "CANNOT SHARE SYSTEM"                  :    "Cannot share System:",
     "CHANGING OWN PERMISSIONS IS NOT ALLOWED" : "Changing own permissions is not allowed",
-
+    "EMAIL IS ALREADY REGISTERED TEXT"     :    "This Email has been already registered in Nx Cloud",
     "RESET SUCCESS MESSAGE TEXT"           :    "New password saved",
     "YOUR ACCOUNT IS SUCCESSFULLY SAVED"   :    "Your account is successfully saved",
     "ACCOUNT SUCCESSFULLY ACTIVATED TEXT"  :    "Account successfully activated",
@@ -66,6 +66,7 @@
     "ADD BUTTON TEXT"                      :    "Add",
     "DISCONNECT BUTTON TEXT"               :    "Disconnect",
     "SEND BUTTON TEXT"                     :    "Send",
+    "DELETE BUTTON TEXT"                   :    "Delete",
 
     "OWNER TEXT"                           :    "Owner",
     "ADMIN TEXT"                           :    "Administrator",
@@ -166,7 +167,13 @@
     "IPVD FEEDBACK ABOUT"                  :    "Feedback about {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE"       :    "Feedback for cameras page",
     "IPVD FEEDBACK MESSAGE SENT"           :    "Message has been sent.",
-
+    "IPVD SEARCH IN GOOGLE TEXT"           :    "Search in google",
+    "IPVD FIRMWARE VERSION TEXT"           :    "Firmware version",
+    "IPVD FIRMWARE VERSION POULARITY TEXT" :    "Popularity",
+    "IPVD LAST UPDATED TEXT"               :    "Updated",
+    "IPVD DEVICE SHOW ALL TEXT"            :    "Show All",
+    "IPVD DEVICE COLLAPSE TEXT"            :    "Collapse",
+    "IPVD EXPORT TO CSV TEXT"              :    "Export all to CSV",
     "PRIVACY POLICY LINK TEXT"             :    "here",
 
     "NOTHING FOUND"                        :    "Nothing Found",

@@ -284,6 +284,12 @@ ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdown
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[contains(text(), "${DELETE ACCOUNT TEXT}")]
+${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
+${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
+${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
+${CANCEL DELETE ACCOUNT BUTTON}       //nx-modal-delete-cloud-user-content//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE ACCOUNT PASSWORD INPUT}      //form[@name="deleteCloudUserForm"]//input[@id="password"]
+${DELETE ACCOUNT PASSWORD LABEL}      //form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[text()='${NO UNSAVED CHANGES TEXT}']
@@ -396,7 +402,7 @@ ${IPVD LANDING PAGE TEXT}             //ipvd//p
 ${IPVD FILTERS}                       //ipvd//nx-search/div/div
 ${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
 ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="query"]
-${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD SEARCH BAR}/../button
+${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
 #IPVD Advanced Filters
@@ -436,11 +442,22 @@ ${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/div[c
 ${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
 ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
-${IPVD DEVICE DETAILS}                //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                   ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
-${IPVD DEVICE RESOLUTION}             ${IPVD DEVICE DETAILS}//div[@class='active-camera-info']//nx-bool-icon[contains(@param, 'maxResolution')]/..
-${IPVD CLOSE DETAILS BUTTON}          //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
+${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
+${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[@class='active-camera-info']
+${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
+${IPVD DEVICE RESOLUTION}                    ${IPVD DEVICE INFO}//nx-bool-icon[contains(@param, 'maxResolution')]/..
+${IPVD DEVICE FIRMWARE INFO}                 ${IPVD DEVICE DETAILS}//nx-section//div[contains(@class, "firmware-info")]
+${IPVD DEVICE FIRMWARE VERSION}              ${IPVD DEVICE FIRMWARE INFO}//h4[contains(text(), "${IPVD FIRMWARE VERSION TEXT}")]
+${IPVD DEVICE FIRMWARE VERSION POPULARITY}   ${IPVD DEVICE FIRMWARE INFO}//h4[contains(text(), "${IPVD FIRMWARE VERSION POULARITY TEXT}")]
+${IPVD DEVICE FIRMWARE VERSIONS}             ${IPVD DEVICE FIRMWARE INFO}/div
+${IPVD DEVICE SHOW ALL LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[contains(text(), "${IPVD DEVICE SHOW ALL TEXT}")]
+${IPVD DEVICE COLLAPSE LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[contains(text(), "${IPVD DEVICE COLLAPSE TEXT}")]
+${IPVD DEVICE LAST UPDATED INFO}             ${IPVD DEVICE DETAILS}//div[contains(text(), "${IPVD LAST UPDATED TEXT}")]
+
 #IPVD Table
 ${IPVD TABLE}                         //ipvd//table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='${IPVD ADV FILTER MFR}']
@@ -455,7 +472,7 @@ ${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
 ${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
 ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
 #IPVD Export
-${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
+${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
 ${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
 ${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]

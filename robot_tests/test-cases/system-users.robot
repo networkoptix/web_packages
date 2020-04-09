@@ -123,9 +123,7 @@ Should display same user data as shown in user account
     Log in to Auto Tests System    ${EMAIL OWNER}
     Go to Users List
 #click link containing user's email
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
-    Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
+    Select user in Users List    ${random email}
 #verify name displayed
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
 
@@ -202,6 +200,41 @@ Admin cannot delete or edit self
     Click Link    ${USERS LIST LINK}
     Select user in Users List    ${EMAIL ADMIN}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
+
+Admin and owner cannot edit self and other users via share
+    [Tags]    deb
+    @{admins}=   Create List    ${EMAIL OWNER}    ${EMAIL ADMIN}
+    @{all users}=   Create List    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL CUSTOM}
+
+    FOR    ${user}    IN    @{admins}
+        Log    Step 1
+        Log in to Auto Tests System    ${user}
+        Select user in users list    ${user}
+        Elements should not be visible    ${REMOVE USER BUTTON}    ${ACCESS LEVEL DROPDOWN}
+
+        Log    Step 2
+        Share To    ${EMAIL OWNER}    ${CUSTOM TEXT}    fail
+        Click Button    ${SHARE CANCEL}
+        Share To    ${EMAIL ADMIN}    ${LIVE VIEWER TEXT}    fail
+        Click Button    ${SHARE CANCEL}
+        Share To    ${EMAIL VIEWER}    ${ADV VIEWER TEXT}    fail
+        Click Button    ${SHARE CANCEL}
+        Share To    ${EMAIL ADV VIEWER}    ${CUSTOM TEXT}    fail
+        Click Button    ${SHARE CANCEL}
+        Share To    ${EMAIL CUSTOM}    ${VIEWER TEXT}    fail
+        Click Button    ${SHARE CANCEL}
+        Log Out
+    END
+
+    Log    Step 3
+    FOR    ${user}    IN    @{all users}
+        ${role}=   Get Cloud User Role    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
+        Run Keyword If    '${user}'=='${EMAIL OWNER}'       Should be equal as strings    ${role}    owner
+        Run Keyword If    '${user}'=='${EMAIL ADMIN}'       Should be equal as strings    ${role}    cloudAdmin
+        Run Keyword If    '${user}'=='${EMAIL VIEWER}'      Should be equal as strings    ${role}    viewer
+        Run Keyword If    '${user}'=='${EMAIL ADV VIEWER}'  Should be equal as strings    ${role}    advancedViewer
+        Run Keyword If    '${user}'=='${EMAIL CUSTOM}'      Should be equal as strings    ${role}    custom
+    END
 
 Admin cannot delete or edit other admins
     [Tags]    C41905

@@ -109,7 +109,7 @@ Log In
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+#    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 
 Log In With Remember Me
@@ -284,7 +284,7 @@ Share To
     Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Run Keyword if    '${alert}'=='fail'    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Run Keyword if    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${EMAIL IS ALREADY REGISTERED TEXT}")]    ${selenium timeout}
     ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 

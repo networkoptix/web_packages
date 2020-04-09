@@ -456,5 +456,5 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def statistics(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
         return get_wrapper(request, auth=HTTPDigestAuth(email, password))

@@ -111,24 +111,25 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
-                if (this.system.isAvailable) {
-                    if (this.systemSubscription) {
-                        this.systemSubscription.unsubscribe();
-                    }
-                    this.systemSubscription = system.infoSubject
-                        .pipe(throttleTime(this.CONFIG.system.throttleTime))
-                        .subscribe(() => {
-                            this.settingsService.footerSubject.next(true);
-                            this.updateSettings(this.currentlyMerging);
-                            if (this.settingsSubscription) {
-                                this.settingsSubscription.unsubscribe();
-                            }
-                            this.settingsSubscription = this.system.updateOrGetSystemSettings()
-                                .subscribe((res: any) => {
-                                    this.settingsForSystem = res.reply.settings;
-                                });
-                        });
+                if (this.systemSubscription) {
+                    this.systemSubscription.unsubscribe();
                 }
+                this.systemSubscription = system.infoSubject
+                    .pipe(throttleTime(this.CONFIG.system.throttleTime))
+                    .subscribe(system => {
+                        if (!this.system.isAvailable && system.isAvailable) {
+                            this.system = system;
+                        }
+                        this.settingsService.footerSubject.next(true);
+                        this.updateSettings(this.currentlyMerging);
+                        if (this.settingsSubscription) {
+                            this.settingsSubscription.unsubscribe();
+                        }
+                        this.settingsSubscription = this.system.updateOrGetSystemSettings()
+                            .subscribe((res: any) => {
+                                this.settingsForSystem = res.reply.settings;
+                            });
+                    });
                 this.deletingSystem = this.processService.createProcess(
                     () => this.system.deleteFromCurrentAccount(),
                     {
