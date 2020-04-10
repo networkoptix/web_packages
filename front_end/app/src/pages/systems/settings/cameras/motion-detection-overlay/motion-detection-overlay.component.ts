@@ -3,8 +3,10 @@ import {
 }                           from '@angular/core';
 import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
 import {
-    BehaviorSubject, Subscription, merge
+    BehaviorSubject, Subscription, merge, fromEvent, Observable
 }                           from 'rxjs';
+import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map } from 'rxjs/operators';
+import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 
 @AutoUnsubscribe()
 @Component({
@@ -160,6 +162,7 @@ export class MotionMaskRenderer {
 
     public canvas: ElementRef<HTMLCanvasElement>;
     public renderer: Subscription;
+    public interactions: Subscription;
 
     constructor(private motionMask: MotionMaskState,
         private sensitivityColors: SensitivityColor[]
@@ -174,10 +177,99 @@ export class MotionMaskRenderer {
         this.ctx = canvas.nativeElement.getContext('2d');
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
+        this.initInteractions(canvas.nativeElement);
         this.renderer = merge(this.maskMatrix, this.maskZones)
             .subscribe(() => {
+                this.ctx.clearRect(0, 0, this.width, this.height);
                 this.render();
             });
+    }
+
+    private initInteractions(canvas: HTMLCanvasElement) {
+        // Initialize base observables from events
+        const track = (eventName: string) => <Observable<MouseEvent>> fromEvent(canvas, eventName);
+        const [
+            mouseDown, mouseUp, mouseLeave, mouseMove
+        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
+        const [keyDown, keyUp] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>> fromEvent(window, event));
+
+        // Utility functions
+        const findEventCoords = (event: MouseEvent) => {
+            const rect = canvas.getBoundingClientRect();
+            const cellActualWidth = rect.width / this.columns;
+            const cellActualHeight = rect.height / this.rows;
+
+            return {
+                x : Math.floor((event.clientX - rect.left) / cellActualWidth),
+                y : Math.floor((event.clientY - rect.top) / cellActualHeight)
+            };
+        };
+
+        // Observables for managing UI state
+        const shiftCtrlState = merge(keyDown, keyUp).pipe(
+            filter(({ key }) => key === 'Control' || key === 'Shift'),
+            map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
+            distinctUntilChanged((x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey));
+
+        const mouseState = merge(mouseDown, mouseUp, mouseLeave, mouseMove.pipe(throttleTime(100)))
+            .subscribe(event => {
+                console.log(JSON.stringify(event.type));
+            });
+
+        mouseDown.subscribe((event: MouseEvent) => {
+            const clickCoords = findEventCoords(event);
+            const { x, y, width, height } = {
+                x      : clickCoords.x * this.cellWidth,
+                y      : clickCoords.y * this.cellHeight,
+                width  : this.cellWidth,
+                height : this.cellHeight
+            };
+            this.render();
+            this.ctx.lineWidth = 2.5;
+            this.ctx.strokeStyle = '#2FA2DB';
+            this.ctx.strokeRect(x, y, width, height);
+        });
+
+        mouseMove.pipe(throttleTime(10)).subscribe((event: MouseEvent) => {
+            const clickCoords = findEventCoords(event);
+            const { x, y, width, height } = {
+                x      : clickCoords.x * this.cellWidth,
+                y      : clickCoords.y * this.cellHeight,
+                width  : this.cellWidth,
+                height : this.cellHeight
+            };
+            this.render();
+            this.ctx.lineWidth = 1.5;
+            this.ctx.strokeStyle = '#2FA2DB';
+            this.ctx.strokeRect(x, y, width, height);
+        });
+
+        // fromEvent(canvas, 'mousedown')
+        //     .pipe(
+        //         switchMap((e) => fromEvent(canvas, 'mousemove').pipe(
+        //             takeUntil(fromEvent(canvas, 'mouseup')),
+        //             takeUntil(fromEvent(canvas, 'mouseleave')),
+        //             pairwise()
+        //         )
+        //         )
+        //     )
+        //     .subscribe(([start, end]: [MouseEvent, MouseEvent]) => {
+        //         const rect = canvas.getBoundingClientRect();
+
+        //         // previous and current position with the offset
+        //         const prevPos = {
+        //             x : start.clientX - rect.left,
+        //             y : start.clientY - rect.top
+        //         };
+
+        //         const currentPos = {
+        //             x : end.clientX - rect.left,
+        //             y : end.clientY - rect.top
+        //         };
+
+        //         // this method we'll implement soon to do the actual drawing
+        //         console.log(prevPos + ' ' + currentPos);
+        //     });
     }
 
     // Render methods
@@ -186,7 +278,7 @@ export class MotionMaskRenderer {
         const currentState = zonesState[zonesState.length - 1];
         currentState.forEach(({ sensitivity, x, y, width, height }) => {
             this.ctx.beginPath();
-            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '1A';
+            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
@@ -195,6 +287,7 @@ export class MotionMaskRenderer {
     private drawCells() {
         const maskMatrix = this.maskMatrix.value;
         const currentMatrix = maskMatrix[maskMatrix.length - 1];
+        this.ctx.lineWidth = 1;
         currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
     }
 
@@ -234,7 +327,7 @@ export class MotionMaskRenderer {
         this.ctx.fillStyle = 'white';
         this.ctx.shadowColor = 'black';
         this.ctx.shadowBlur = 6;
-        startZones.forEach(({ x, y, width, height, sensitivity }) => {
+        startZones.forEach(({ x, y, width, height, sensitivity, borders }) => {
             const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
             this.ctx.fillText(
@@ -246,6 +339,7 @@ export class MotionMaskRenderer {
     }
 
     render() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
         this.fillZones();
         this.drawCells();
         this.addNumbers();

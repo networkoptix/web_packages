@@ -9,8 +9,8 @@ nx-motion-detection-overlay {
 .motion-canvas {
     background: transparent;
     position: absolute;
-    -webkit-backdrop-filter: brightness(150%) contrast(110%);
-    backdrop-filter: brightness(150%) contrast(110%);
+    -webkit-backdrop-filter: brightness(125%) contrast(110%);
+    backdrop-filter: brightness(125%) contrast(110%);
     width: 100%;
     height: 100%;
     top: 0;
@@ -20,6 +20,7 @@ nx-motion-detection-overlay {
     -o-animation: fadeIn ease-in 0.3s;
     -ms-animation: fadeIn ease-in 0.3s;
     animation: fadeIn ease-in 0.3s;
+    cursor: crosshair;
 }
 
 @keyframes fadeIn {
