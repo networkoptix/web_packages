@@ -105,13 +105,27 @@ export class MotionMaskState {
         return matrix;
     }
 
-    // Transform methods
+    // State transform methods
+    public mergeZones(currentZones: Area[], selectionZones: Area[]): {maskMatrix: Mask, zones: Area[]} {
+        const merged = [...currentZones, ...selectionZones]; // this will take a lot of work
+
+        return {
+            maskMatrix : this.zonesToMatrix([...currentZones, ...selectionZones]),
+            zones      : merged
+        };
+    }
+
+    public get renderState() {
+        return this.mergeZones(this.maskZones.value[this.maskZones.value.length - 1], this.selectionZones.value);
+    }
+
+    // Transform utilities
     private addZone(zone: Area, mask: Mask): Mask {
         const maskCopy = [...mask.map(row => [...row])];
-        const { sensitivity, x, y, width, height } = zone;
+        const { sensitivity, x, y, width, height, currentSelection } = zone;
         for (let row = y; row < y + height; row++) {
             for (let column = x; column < x + width; column++) {
-                maskCopy[row][column] = sensitivity;
+                maskCopy[row][column] = currentSelection ? sensitivity + 100 : sensitivity;
             }
         }
         return maskCopy;
@@ -231,19 +245,17 @@ export class MotionMaskRenderer {
 
     // Render methods
     private fillZones() {
-        const zonesState = this.maskZones.value;
-        const currentState = zonesState[zonesState.length - 1];
-        currentState.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
+        this.motionMask.renderState.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
+            this.ctx.clearRect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight); // can probably remove this for performance once overlap handling is finished
             this.ctx.beginPath();
-            this.ctx.fillStyle = currentSelection ? this.sensitivityColors[sensitivity] : this.sensitivityColors[sensitivity] + '55';
+            this.ctx.fillStyle = currentSelection ? this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
     }
 
     private drawCells() {
-        const maskMatrix = this.maskMatrix.value;
-        const currentMatrix = maskMatrix[maskMatrix.length - 1];
+        const currentMatrix = this.motionMask.renderState.maskMatrix;
         this.ctx.lineWidth = 1;
         currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
     }
@@ -275,8 +287,8 @@ export class MotionMaskRenderer {
     }
 
     private addNumbers() {
-        const { sortedZones, findStartZones } = this.motionMask;
-        const currentMask = sortedZones(this.maskZones.value[this.maskZones.value.length - 1]);
+        const { sortedZones, findStartZones, renderState: { zones } } = this.motionMask;
+        const currentMask = sortedZones(zones);
         const startZones = findStartZones(currentMask);
         const fontSize = 30;
         this.ctx.textAlign = 'center';
@@ -284,7 +296,7 @@ export class MotionMaskRenderer {
         this.ctx.fillStyle = 'white';
         this.ctx.shadowColor = 'black';
         this.ctx.shadowBlur = 6;
-        startZones.forEach(({ x, y, width, height, sensitivity, borders }) => {
+        startZones.forEach(({ x, y, width, height, sensitivity }) => {
             const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
             this.ctx.fillText(
@@ -315,5 +327,3 @@ export class MotionMaskRenderer {
         this.addNumbers();
     }
 }
-
-
