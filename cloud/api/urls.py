@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^account/delete$',             account.delete_user),
     url(r'^account/?$',                  account.index),
 
-    url(r'^storage/create',     storage.enable),
+    url(r'^storage/create',     storage.create),
     url(r'^storage/delete',     storage.delete),
     url(r'^storage/move',       storage.move),
     url(r'^storage/usageStats', storage.usage_stats),

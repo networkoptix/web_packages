@@ -403,7 +403,7 @@ class Storage(object):
         request = f"{CLOUD_STORAGES_URL}/"
         body = {
             "systems": [system_id],
-            "totalSpace": CLOUD_STORAGE_SPACE
+            "totalSpace": str(CLOUD_STORAGE_SPACE)
         }
         return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
 

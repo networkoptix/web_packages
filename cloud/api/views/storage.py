@@ -1,4 +1,5 @@
 import statistics
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
@@ -9,7 +10,7 @@ from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
-def enable(request):
+def create(request):
     require_params(request, ['systemId'])
     storage_info = cloud_api.Storage.create(request.session['login'],
                                             request.session['password'],
@@ -57,7 +58,8 @@ def usage_stats(request):
         'currentRecordingBitrate': [],
         'maxLiveDelay': [],
         'maxCameraRetention': 0,
-        'cameraCount': 0
+        'cameraCount': 0,
+        'cloudCapacity': 0
     }
     for storage in storages:
         storage_id = storage.get('id')
@@ -70,19 +72,22 @@ def usage_stats(request):
 
         aggregated_storage_info['cameraCount'] += storage_info.get('cameraCount', 0)
         aggregated_storage_info['maxCameraRetention'] += storage_info.get('maxCameraRetention', 0)
-        aggregated_storage_info['spaceUsed'] += storage_info.get('spaceUsed', 0)
+        aggregated_storage_info['spaceUsed'] += int(storage_info.get('spaceUsed', 0))
 
         currentBitRate = storage_info.get('currentRecordingBitrate')
         if currentBitRate is not None:
             aggregated_storage_info['currentRecordingBitrate'].append(currentBitRate)
 
-        maxLiveDelay = aggregated_storage_info.get('maxLiveDelay')
+        maxLiveDelay = storage_info.get('maxLiveDelay')
         if maxLiveDelay is not None:
             aggregated_storage_info['maxLiveDelay'].append(maxLiveDelay)
+        aggregated_storage_info['cloudCapacity'] += settings.CLOUD_STORAGE_SIZE
     else:
         # After going over storages average certain statistics
         aggregated_storage_info['currentRecordingBitrate'] = int(statistics.mean(
             aggregated_storage_info['currentRecordingBitrate']))
         aggregated_storage_info['maxLiveDelay'] = int(statistics.mean(aggregated_storage_info['maxLiveDelay']))
+        aggregated_storage_info['spaceUsed'] = str(aggregated_storage_info['spaceUsed'])
+        aggregated_storage_info['cloudCapacity'] = str(aggregated_storage_info['cloudCapacity'])
 
     return api_success(aggregated_storage_info)
