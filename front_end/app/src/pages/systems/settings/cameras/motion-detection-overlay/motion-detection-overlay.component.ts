@@ -1,8 +1,10 @@
-import { Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentInit, AfterContentChecked, ChangeDetectionStrategy } from '@angular/core';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { BehaviorSubject, Subscription, Observable, merge } from 'rxjs';
-import { throttleTime } from 'rxjs/operators';
-import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
+import {
+    Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked, ChangeDetectionStrategy
+}                           from '@angular/core';
+import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
+import {
+    BehaviorSubject, Subscription, merge
+}                           from 'rxjs';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,8 +22,10 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
 
+    /**
+     * Color for sensitivity level is found by its index. Level 3 is sensitivityColors[3].
+     */
     sensitivityColors: SensitivityColor[] = [
-        // Color for sensitivity level is found by its index. Level 3 is sensitivityColors[3].
         '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
     ];
 
@@ -50,9 +54,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         }
     }
 
-    ngOnDestroy() {
-        // this.motionMaskRenderer.renderer.unsubscribe();
-    }
+    ngOnDestroy() {}
 
     // Init methods
     private initMask() {
@@ -62,7 +64,6 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     private initRenderer() {
         this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors);
         this.motionMaskRenderer.initCanvas(this.motionCanvas);
-        // this.motionMaskRenderer.initCanvas(this.motionCanvas);
     }
 }
 
@@ -89,7 +90,6 @@ export class MotionMaskState {
             const areaTuples = <AreaTuple> area.split(',').map(numString => parseInt(numString));
             return new Area(...areaTuples);
         });
-
         return this.sortedZones(zones);
     }
 
@@ -121,7 +121,7 @@ export class MotionMaskState {
     }
 
     /**
-    * Returns array of start zones sorted top left to bottom right.
+    * Returns array representing contiguous areas representing one zone.
     */
     public findZoneGroups = (zones: Area[]): Area[][] => {
         const [startingZone, ...remainingZones]: Area[] = this.sortedZones(zones);
@@ -140,11 +140,10 @@ export class MotionMaskState {
         return zoneGroups;
     }
 
+    /**
+     * Used for placing sensitivity number indicators.
+     */
     public findStartZones = (zones: Area[]) => this.findZoneGroups(zones).map(group => group[0]);
-
-    private maskStateEncodeToString(mask: Mask): string {
-        return 'wip';
-    }
 }
 
 export class MotionMaskRenderer {
@@ -176,7 +175,6 @@ export class MotionMaskRenderer {
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
         this.renderer = merge(this.maskMatrix, this.maskZones)
-            // .pipe(throttleTime(0, animationFrame))
             .subscribe(() => {
                 this.render();
             });
@@ -249,7 +247,6 @@ export class MotionMaskRenderer {
 
     render() {
         this.fillZones();
-        // this.grid();
         this.drawCells();
         this.addNumbers();
     }
