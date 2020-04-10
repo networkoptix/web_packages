@@ -305,7 +305,7 @@ export const nxConfig: IConfig = {
             master : 'master',
             slave  : 'slave'
         },
-        auditTime    : 500
+        auditTime: 500
     },
     toast: {
         success : 'success',
