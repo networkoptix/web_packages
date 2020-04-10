@@ -56,7 +56,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     // Init methods
     private initMask() {
-        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityColors);
+        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas);
     }
 
     private initRenderer() {
@@ -67,14 +67,10 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 }
 
 export class MotionMaskState {
-    private columns = 44;
-    private rows = 32;
     public maskMatrix: BehaviorSubject<Mask[]>;
     public maskZones: BehaviorSubject<Area[][]>;
 
-    constructor(initialMask: string,
-        public canvas: ElementRef<HTMLCanvasElement>,
-        private sensitivityColors: string[]) {
+    constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
         this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
@@ -118,7 +114,7 @@ export class MotionMaskState {
     }
 
     /**
-    * Returns zones sorted from top left to bottom right.
+    * Returns zones sorted.
     */
     public sortedZones(zones: Area[]): Area[] {
         return zones.sort((a, b) => a.y - b.y || a.x - b.x);
@@ -127,23 +123,24 @@ export class MotionMaskState {
     /**
     * Returns array of start zones sorted top left to bottom right.
     */
-    public findStartZones = (zones: Area[]): Area[] => {
-        const sorted = this.sortedZones(zones);
-        const otherZones: Area[] = [];
-        const startZones: Area[] = [];
-
-        const bordersVisitedZones = (currentZone: Area, zones: Area[]) => zones.some((existingZone) => existingZone.borders(currentZone));
-
-        sorted.forEach(zone => {
-            if (bordersVisitedZones(zone, [...otherZones, ...startZones])) {
-                otherZones.push(zone);
-            } else {
-                startZones.push(zone);
-            };
-        });
-
-        return startZones;
+    public findZoneGroups = (zones: Area[]): Area[][] => {
+        const [startingZone, ...remainingZones]: Area[] = this.sortedZones(zones);
+        let group = [startingZone];
+        let sorted = remainingZones.reverse();
+        const zoneGroups: Area[][] = [];
+        while (sorted.length) {
+            group = [sorted.pop()];
+            for (let groupPointer = 0; groupPointer < group.length; groupPointer++) {
+                const borderingZones = sorted.filter(zone => zone.borders(group[groupPointer]));
+                group = [...group, ...borderingZones];
+                sorted = sorted.filter(zone => !zone.borders(group[groupPointer]));
+            }
+            zoneGroups.push(group);
+        }
+        return zoneGroups;
     }
+
+    public findStartZones = (zones: Area[]) => this.findZoneGroups(zones).map(group => group[0]);
 
     private maskStateEncodeToString(mask: Mask): string {
         return 'wip';
@@ -215,6 +212,8 @@ export class MotionMaskRenderer {
 
         const draw = (fromY, fromX, toY, toX, solid) => {
             this.ctx.strokeStyle = solid ? 'black' : '#FFFFFF1A';
+            this.ctx.shadowColor = null;
+            this.ctx.shadowBlur = null;
             this.ctx.beginPath();
             this.ctx.moveTo(fromX, fromY);
             this.ctx.lineTo(toX, toY);
@@ -228,13 +227,23 @@ export class MotionMaskRenderer {
     }
 
     private addNumbers() {
-        const currentMask = this.motionMask.sortedZones(this.maskZones.value[this.maskZones.value.length - 1]);
-        const startZones = this.motionMask.findStartZones(currentMask);
-        const size = Math.min(this.cellWidth, this.cellHeight);
-        this.ctx.font = `${size}px sans-serif`;
-        this.ctx.fillStyle = 'black';
-        startZones.forEach(({ x, y, sensitivity }, index) => {
-            this.ctx.fillText(`${sensitivity || '0'}`, x * this.cellWidth, (y + 1) * this.cellHeight);
+        const { sortedZones, findStartZones } = this.motionMask;
+        const currentMask = sortedZones(this.maskZones.value[this.maskZones.value.length - 1]);
+        const startZones = findStartZones(currentMask);
+        const fontSize = 30;
+        this.ctx.textAlign = 'center';
+        this.ctx.font = `${fontSize}px sans-serif`;
+        this.ctx.fillStyle = 'white';
+        this.ctx.shadowColor = 'black';
+        this.ctx.shadowBlur = 6;
+        startZones.forEach(({ x, y, width, height, sensitivity }) => {
+            const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
+            const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
+            this.ctx.fillText(
+                `${sensitivity || '0'}`,
+                (x + 0.5) * this.cellWidth + addOffsetX,
+                (y + 1) * this.cellHeight - 4 + addOffsetY
+            );
         });
     }
 

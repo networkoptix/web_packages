@@ -9,6 +9,7 @@ nx-motion-detection-overlay {
 .motion-canvas {
     background: transparent;
     position: absolute;
+    backdrop-filter: overlay;
     width: 100%;
     height: 100%;
     top: 0;
