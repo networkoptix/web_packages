@@ -95,12 +95,12 @@ class CloudPortalAPI(object):
             r = s.post(f'{env}/api/systems/{system_id}/users', json={'user_email': email, 'role': 'none'})
             return r.json()
         
-    def subscribe_push_notification(self, env, email, password, token):
+    def subscribe_push_notification(self, env, email, password, token, name):
         authAscii = email+":"+password
         authAscii = authAscii.encode('ascii')
         auth = b"Basic "+base64.b64encode(authAscii)
         headers = {'Authorization': auth}
-        r = requests.put(f'{env}/api/notifications/subscriptions/{token}', headers=headers, json={'type': 'notification','systems': ['all']})
+        r = requests.put(f'{env}/api/notifications/subscriptions/{token}', headers=headers, json={'type': 'notification','systems': ['all'],'deviceInfo': {'name': name, 'os':'web'}})
         return r.json()
         
     def get_new_FCM_token(self, key, auth, body):
