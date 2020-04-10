@@ -225,7 +225,7 @@
     "SALES INQUIRY TEXT": "Запрос на продажу {{integration}}",
     "TECHNICAL INQUIRY TEXT": "Технический запрос для {{integration}}",
     "FEEDBACK TEXT": "Отзыв об интеграции {{integration}}",
-    "INFORMATION TEXT": "Информация о продукте",
+    "INFORMATION TEXT": "Информация",
     "SYSTEM OFFLINE TEXT": "Система не в сети",
     "SYSTEM CANNOT BE ACCESSED TEXT": "Эта система находится в автономном режиме и сейчас недоступна.",
     "VIEWING IMPORTED REPORT TEXT": "Вы просматриваете импортированный отчет, обновите страницу, чтобы получить свежий",
