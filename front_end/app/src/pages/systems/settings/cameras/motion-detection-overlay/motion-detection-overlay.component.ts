@@ -124,12 +124,12 @@ export class MotionMaskState {
     * Returns array representing contiguous areas representing one zone.
     */
     public findZoneGroups = (zones: Area[]): Area[][] => {
-        const [startingZone, ...remainingZones]: Area[] = this.sortedZones(zones);
-        let group = [startingZone];
-        let sorted = remainingZones.reverse();
+        let sorted: Area[] = this.sortedZones(zones);
         const zoneGroups: Area[][] = [];
         while (sorted.length) {
-            group = [sorted.pop()];
+            const [first, ...rest] = sorted;
+            let group = [first];
+            sorted = rest;
             for (let groupPointer = 0; groupPointer < group.length; groupPointer++) {
                 const borderingZones = sorted.filter(zone => zone.borders(group[groupPointer]));
                 group = [...group, ...borderingZones];
