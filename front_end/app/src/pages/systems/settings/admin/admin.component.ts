@@ -115,7 +115,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.systemSubscription.unsubscribe();
                 }
                 this.systemSubscription = system.infoSubject
-                    .pipe(auditTime(500))
+                    .pipe(auditTime(this.CONFIG.system.auditTime))
                     .subscribe(system => {
                         if (!this.system.isAvailable && system.isAvailable) {
                             this.system = system;
