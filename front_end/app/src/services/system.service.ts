@@ -214,7 +214,6 @@ class UserManager {
     }
 
     getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string> {
-        console.log('getUsers called');
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
                 // eslint-disable-next-line prefer-promise-reject-errors
