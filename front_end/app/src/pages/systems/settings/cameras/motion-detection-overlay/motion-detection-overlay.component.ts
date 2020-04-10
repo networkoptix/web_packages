@@ -5,8 +5,9 @@ import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
 import {
     BehaviorSubject, Subscription, merge, fromEvent, Observable
 }                           from 'rxjs';
-import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map } from 'rxjs/operators';
+import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
+import { SensitivityColor, Mask, Area, AreaTuple } from './motion-detection-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -72,6 +73,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 export class MotionMaskState {
     public maskMatrix: BehaviorSubject<Mask[]>;
     public maskZones: BehaviorSubject<Area[][]>;
+    public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([new Area(4, 6, 5, 10, 10, true)]);
 
     constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>) {
         const parsedInitial = this.initialToMaskZones(initialMask);
@@ -159,6 +161,7 @@ export class MotionMaskRenderer {
 
     private maskMatrix: BehaviorSubject<Mask[]>;
     private maskZones: BehaviorSubject<Area[][]>;
+    private selectionZones: BehaviorSubject<Area[]>;
 
     public canvas: ElementRef<HTMLCanvasElement>;
     public renderer: Subscription;
@@ -177,8 +180,9 @@ export class MotionMaskRenderer {
         this.ctx = canvas.nativeElement.getContext('2d');
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
+        this.selectionZones = this.motionMask.selectionZones;
         this.initInteractions(canvas.nativeElement);
-        this.renderer = merge(this.maskMatrix, this.maskZones)
+        this.renderer = merge(this.maskMatrix, this.maskZones, this.selectionZones)
             .subscribe(() => {
                 this.ctx.clearRect(0, 0, this.width, this.height);
                 this.render();
@@ -189,8 +193,8 @@ export class MotionMaskRenderer {
         // Initialize base observables from events
         const track = (eventName: string) => <Observable<MouseEvent>> fromEvent(canvas, eventName);
         const [
-            mouseDown, mouseUp, mouseLeave, mouseMove
-        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
+            mouseDown, mouseUp, mouseLeave, mouseMove, mouseEnter
+        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove', 'mouseenter'].map(track);
         const [keyDown, keyUp] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>> fromEvent(window, event));
 
         // Utility functions
@@ -205,80 +209,33 @@ export class MotionMaskRenderer {
             };
         };
 
-        // Observables for managing UI state
+        // Base observables for managing UI state
         const shiftCtrlState = merge(keyDown, keyUp).pipe(
             filter(({ key }) => key === 'Control' || key === 'Shift'),
             map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
-            distinctUntilChanged((x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey));
+            distinctUntilChanged((x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey)
+        );
 
-        const mouseState = merge(mouseDown, mouseUp, mouseLeave, mouseMove.pipe(throttleTime(100)))
-            .subscribe(event => {
-                console.log(JSON.stringify(event.type));
-            });
+        const clickState = merge(mouseEnter, mouseDown, mouseUp, mouseLeave).pipe(
+            map(({ type }) => type === 'mousedown'),
+            distinctUntilChanged()
+        );
 
-        mouseDown.subscribe((event: MouseEvent) => {
-            const clickCoords = findEventCoords(event);
-            const { x, y, width, height } = {
-                x      : clickCoords.x * this.cellWidth,
-                y      : clickCoords.y * this.cellHeight,
-                width  : this.cellWidth,
-                height : this.cellHeight
-            };
-            this.render();
-            this.ctx.lineWidth = 2.5;
-            this.ctx.strokeStyle = '#2FA2DB';
-            this.ctx.strokeRect(x, y, width, height);
-        });
-
-        mouseMove.pipe(throttleTime(10)).subscribe((event: MouseEvent) => {
-            const clickCoords = findEventCoords(event);
-            const { x, y, width, height } = {
-                x      : clickCoords.x * this.cellWidth,
-                y      : clickCoords.y * this.cellHeight,
-                width  : this.cellWidth,
-                height : this.cellHeight
-            };
-            this.render();
-            this.ctx.lineWidth = 1.5;
-            this.ctx.strokeStyle = '#2FA2DB';
-            this.ctx.strokeRect(x, y, width, height);
-        });
-
-        // fromEvent(canvas, 'mousedown')
-        //     .pipe(
-        //         switchMap((e) => fromEvent(canvas, 'mousemove').pipe(
-        //             takeUntil(fromEvent(canvas, 'mouseup')),
-        //             takeUntil(fromEvent(canvas, 'mouseleave')),
-        //             pairwise()
-        //         )
-        //         )
-        //     )
-        //     .subscribe(([start, end]: [MouseEvent, MouseEvent]) => {
-        //         const rect = canvas.getBoundingClientRect();
-
-        //         // previous and current position with the offset
-        //         const prevPos = {
-        //             x : start.clientX - rect.left,
-        //             y : start.clientY - rect.top
-        //         };
-
-        //         const currentPos = {
-        //             x : end.clientX - rect.left,
-        //             y : end.clientY - rect.top
-        //         };
-
-        //         // this method we'll implement soon to do the actual drawing
-        //         console.log(prevPos + ' ' + currentPos);
-        //     });
+        const mouseState = mouseMove.pipe(
+            throttleTime(100),
+            map(findEventCoords),
+            distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y),
+            tap(this.drawHover) // For testing, will either remove or move into full UI observable later
+        ).subscribe(() => console.log('move'));
     }
 
     // Render methods
     private fillZones() {
         const zonesState = this.maskZones.value;
         const currentState = zonesState[zonesState.length - 1];
-        currentState.forEach(({ sensitivity, x, y, width, height }) => {
+        currentState.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
             this.ctx.beginPath();
-            this.ctx.fillStyle = this.sensitivityColors[sensitivity] + '55';
+            this.ctx.fillStyle = currentSelection ? this.sensitivityColors[sensitivity] : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
@@ -338,6 +295,19 @@ export class MotionMaskRenderer {
         });
     }
 
+    private drawHover = (cursor: {x: number, y: number}) => {
+        const { x, y, width, height } = {
+            x      : cursor.x * this.cellWidth,
+            y      : cursor.y * this.cellHeight,
+            width  : this.cellWidth,
+            height : this.cellHeight
+        };
+        this.render();
+        this.ctx.lineWidth = 1.5;
+        this.ctx.strokeStyle = '#2FA2DB';
+        this.ctx.strokeRect(x, y, width, height);
+    }
+
     render() {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.fillZones();
@@ -346,28 +316,4 @@ export class MotionMaskRenderer {
     }
 }
 
-export type SensitivityColor = '#FFFFFF'| '#627CD6'| '#23A4CB'| '#31BAA2'| '#79BC66'| '#B8BC37'| '#FBA405'| '#E97119'| '#D24729'| '#C22626';
-export type Cell = number;
-export type Row = Cell[];
-export type Mask = Row[];
 
-export type AreaTuple = [number, number, number, number, number]
-
-export class Area {
-    constructor(
-        public sensitivity: number,
-        public x: number,
-        public y: number,
-        public width: number,
-        public height: number,
-        public currentSelection?: boolean
-    ) {}
-
-    public borders(zone: Area) {
-        if (this.sensitivity !== zone.sensitivity) return false;
-        return !(this.x + this.width + 1 <= zone.x ||
-                this.y + this.height + 1 <= zone.y ||
-                this.x - 1 >= zone.x + zone.width ||
-                this.y - 1 >= zone.y + zone.height);
-    }
-}
