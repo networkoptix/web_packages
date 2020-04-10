@@ -91,10 +91,9 @@
                 || selectedUser.canBeEdited">
                 <div *ngIf="selectedUser.isCloud && selectedUser.isMe" class="float-left">
                     <button class="btn btn-default"
-                            (click)="routeToAccountSettings()"
-                            translate>
-                        Account Settings
-                    </button>
+                        id="accountSettingsButton"
+                        (click)="routeToAccountSettings()"
+                        translate>Account Settings</button>
                 </div>
                 <div *ngIf="!selectedUser.isCloud && selectedUser.canBeEdited"
                     class="float-left">

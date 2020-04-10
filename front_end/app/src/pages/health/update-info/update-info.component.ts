@@ -11,7 +11,7 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 @AutoUnsubscribe()
 @Component({
     selector : 'nx-health-update',
-    templateUrl: './update-info.component.html',
+    templateUrl : './update-info.component.html',
     styleUrls : ['update-info.component.scss']
 })
 export class NxUpdateInfoComponent implements OnInit, OnDestroy {
@@ -23,10 +23,11 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
     lastUpdate: string;
     timerSubscription: Subscription;
 
-    constructor(configService: NxConfigService,
-                languageService: NxLanguageProviderService,
-                private healthService: NxHealthService,
-                private ribbonService: NxRibbonService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private healthService: NxHealthService,
+        private ribbonService: NxRibbonService
     ) {
         this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
