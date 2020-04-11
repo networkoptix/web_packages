@@ -35,7 +35,7 @@
     "passwordMismatch": "패스워드가 틀립니다.",
     "cantEditYourself": "자신의 사용 권한 변경은 허용 되지 않습니다.",
     "cantEditAdmin": "이 사용자는 관리자 권한이 있습니다.",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "%VMS_NAME% 프로그램이 감지되지 않습니다. <a href=\"/download\">다운로드</a>",
     "lostConnection": "{{systemName}} 연결이 끊어졌습니다.",
     "thisSystem": "시스템",
     "oldSafariNotSupported": "10 이전의 Safari 버전은 지원되지 않습니다.",
