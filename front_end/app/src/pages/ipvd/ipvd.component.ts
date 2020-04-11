@@ -220,9 +220,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
     findVendorForCamera(name) {
         const camera = this.cameras.find((camera) => {
-            if (camera.model === name) {
-                return camera;
-            }
+            return camera.model === name;
         });
 
         if (camera) {
@@ -252,22 +250,23 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                 tag.value = false;
             });
             if (this.params.tags) {
+                const tags = {};
                 this.params.tags
                     .split(',')
                     .forEach((tagName) => {
-                        this.filterModel.tags.find((tag) => {
-                            if (tag.id === tagName) {
-                                tag.value = true;
-                            }
-                        });
+                        tags[tagName] = true;
                     });
+                this.filterModel.tags.forEach((tag) => {
+                    if (tags[tag.id]) {
+                        tag.value = true;
+                    }
+                });
             }
         }
 
         if (this.filterModel.selects && this.filterModel.selects.length) {
-            this.filterModel
-                .selects
-                .find((select) => {
+            this.filterModel.selects
+                .forEach((select) => {
                     if (this.params[select.id]) {
                         select.selected = select.items.find((item) => item.value === this.params[select.id]);
                     } else {
@@ -279,9 +278,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         if (this.filterModel.multiselects && this.filterModel.multiselects.length) {
-            this.filterModel
-                .multiselects
-                .find((select) => {
+            this.filterModel.multiselects
+                .forEach((select) => {
                     if (this.params[select.id]) {
                         select.selected = isArray(this.params[select.id]) ? this.params[select.id] : this.params[select.id].split(',');
                     } else {
