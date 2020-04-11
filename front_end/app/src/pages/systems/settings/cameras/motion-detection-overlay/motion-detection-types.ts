@@ -12,4 +12,19 @@ export class Area {
             this.x - 1 >= zone.x + zone.width ||
             this.y - 1 >= zone.y + zone.height);
     }
+
+    /**
+     * Implementation plan:
+     * 
+     * Need to create new overlap method on Area.
+     * 
+     * Iterate over each selectionZone, and for each check if any of the modifiedZones overlap. If they do
+     * resize and/or split that zone.
+     * @param selectionZones
+     */
+    public resizeForOverlaps(selectionZones: Area[]) {
+        const modifiedZones = [this];
+        // Do stuff
+        return modifiedZones;
+    }
 }

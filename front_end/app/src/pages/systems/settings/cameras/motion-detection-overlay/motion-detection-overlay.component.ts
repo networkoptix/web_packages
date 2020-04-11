@@ -107,8 +107,8 @@ export class MotionMaskState {
 
     // State transform methods
     public mergeZones(currentZones: Area[], selectionZones: Area[]): {maskMatrix: Mask, zones: Area[]} {
-        const merged = [...currentZones, ...selectionZones]; // this will take a lot of work
-
+        const merged = [...selectionZones]; // this will take a lot of work
+        currentZones.forEach(zone => zone.resizeForOverlaps(selectionZones).forEach(newZone => merged.push(newZone)));
         return {
             maskMatrix : this.zonesToMatrix([...currentZones, ...selectionZones]),
             zones      : merged
