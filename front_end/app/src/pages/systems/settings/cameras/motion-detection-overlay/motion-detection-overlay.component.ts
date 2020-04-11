@@ -71,10 +71,13 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 }
 
 export class MotionMaskState {
+    private columns = 44;
+    private rows = 32;
+
     public maskMatrix: BehaviorSubject<Mask[]>;
     public maskZones: BehaviorSubject<Area[][]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([new Area(4, 6, 5, 10, 10, true)]);
-
+    public renderState$: BehaviorSubject<{zones: Area[], maskMatrix: Mask}> = new BehaviorSubject({ zones: [], maskMatrix: [] });
     constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
@@ -97,6 +100,22 @@ export class MotionMaskState {
         return this.sortedZones(zones);
     }
 
+    // State transform methods
+    public mergeZones(currentZones: Area[], selectionZones: Area[]): {maskMatrix: Mask, zones: Area[]} {
+        const maskMatrix = this.zonesToMatrix([...currentZones, ...selectionZones]);
+        const zones = this.matrixToZones(maskMatrix);
+        return { maskMatrix, zones };
+    }
+
+    updateRenderState() {
+        this.renderState$.next(this.mergeZones(this.maskZones.value[this.maskZones.value.length - 1], this.selectionZones.value));
+    }
+
+    get renderState() {
+        return this.renderState$.value;
+    }
+
+    // Transform utilities
     private zonesToMatrix(zones: Area[]): Mask {
         let matrix: Mask = new Array(32).fill(new Array(44).fill(0));
         for (const zone of zones) {
@@ -105,21 +124,45 @@ export class MotionMaskState {
         return matrix;
     }
 
-    // State transform methods
-    public mergeZones(currentZones: Area[], selectionZones: Area[]): {maskMatrix: Mask, zones: Area[]} {
-        const merged = [...selectionZones]; // this will take a lot of work
-        currentZones.forEach(zone => zone.resizeForOverlaps(selectionZones).forEach(newZone => merged.push(newZone)));
-        return {
-            maskMatrix : this.zonesToMatrix([...currentZones, ...selectionZones]),
-            zones      : merged
+    private matrixToZones(maskMatrix: number[][]): Area[] {
+        const matrix = <(number | false)[][]> [...maskMatrix].map(row => [...row]);
+        const zones: Area[] = [];
+
+        const updateZones = (row: number, column: number, sensitivity) => {
+            let width = 1;
+            let height = 1;
+
+            while ((column + width) < this.columns && matrix[row][column + width] === sensitivity) {
+                // find width
+                matrix[row][column + width] = false;
+                width++;
+            };
+
+            while ((row + height) < this.rows &&
+                matrix[row + height].slice(column, column + width).every(cell => cell !== false &&
+                cell === sensitivity)) {
+                // find height
+                for (let x = column; x < column + width; x++) {
+                    matrix[row + height][x] = false;
+                }
+                height++;
+            }
+
+            zones.push(new Area(sensitivity, column, row, width, height, sensitivity >= 100));
         };
+
+        matrix.forEach((_, row) => {
+            _.forEach((_, column) => {
+                if (matrix[row][column] !== false) {
+                    updateZones(row, column, maskMatrix[row][column]);
+                }
+            });
+        });
+
+        console.log(JSON.stringify(zones, null, 2));
+        return zones;
     }
 
-    public get renderState() {
-        return this.mergeZones(this.maskZones.value[this.maskZones.value.length - 1], this.selectionZones.value);
-    }
-
-    // Transform utilities
     private addZone(zone: Area, mask: Mask): Mask {
         const maskCopy = [...mask.map(row => [...row])];
         const { sensitivity, x, y, width, height, currentSelection } = zone;
@@ -199,6 +242,7 @@ export class MotionMaskRenderer {
         this.renderer = merge(this.maskMatrix, this.maskZones, this.selectionZones)
             .subscribe(() => {
                 this.ctx.clearRect(0, 0, this.width, this.height);
+                this.motionMask.updateRenderState();
                 this.render();
             });
     }
@@ -287,7 +331,7 @@ export class MotionMaskRenderer {
     }
 
     private addNumbers() {
-        const { sortedZones, findStartZones, renderState: { zones } } = this.motionMask;
+        const { sortedZones, findStartZones, renderState: { zones, maskMatrix } } = this.motionMask;
         const currentMask = sortedZones(zones);
         const startZones = findStartZones(currentMask);
         const fontSize = 30;
