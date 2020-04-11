@@ -45,7 +45,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
-    Sleep    1
+    Sleep    3
     &{Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}:${server port}

@@ -38,7 +38,7 @@ Check System Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
+    Add user to cloud system if not there    ${AUTO TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
     Open Browser and go to URL    ${url}
 
 Restart
@@ -179,6 +179,17 @@ Change Duration Time Interval
     Click Button    ${action}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
 
+Validate Disconnect Form
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT FORM HEADER}
+    ...    ${DISCONNECT FORM CLOSE BUTTON}
+    ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
+    ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
+    ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
+    ...    ${DISCONNECT PASSWORD INPUT}
+    ...    ${DISCONNECT FORM CANCEL BUTTON}
+    ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+
 *** Test Cases ***
 Systems dropdown should allow you to go back to the systems page
     [Tags]    Threaded
@@ -190,14 +201,73 @@ Systems dropdown should allow you to go back to the systems page
     Location Should Be    ${url}/systems
     Run keyword and continue on failure    Title Should Be    ${SYSTEMS TITLE TEXT} - ${PRODUCT_NAME}
 
-Should confirm, if owner deletes system (You are going to disconnect your system from cloud)
-    [Tags]    Threaded
+Disconnect dialog interface checks
+    [Tags]    C48834
+    Log    Step 1
     Log in to Auto Tests System    ${EMAIL OWNER}
     Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}
-    Click Element    ${DISCONNECT FORM}
-    Click Button    ${DISCONNECT FORM CANCEL}
-    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
+    Validate Disconnect Form
+
+    Log     Step 2
+    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
+    Click Element    ${DISCONNECT FORM CLOSE BUTTON}
+    Wait Until Element Is Not Visible    ${DISCONNECT FORM}
+    Reload Page
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+
+    Log    Step 3
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Element Is Not Visible    ${DISCONNECT FORM}
+    Reload Page
+    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+
+    Log    Step 4
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Wait Until Element Is Visible    ${PASSWORD IS REQUIRED}
+
+    Log    Step 5
+    Input Text    ${DISCONNECT PASSWORD INPUT}    khgwearfgak
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM WRONG PASSWORD}
+    ${input class}=   Get Element Attribute    ${DISCONNECT PASSWORD INPUT}    class
+    Should Contain    ${input class}    ng-invalid
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    color    rgba(240, 44, 44, 1)
+    Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    rgb(240, 44, 44)
+
+Owner can disconnect System from Cloud - Cloud
+    [Tags]    C41883   C47020
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    ${old cloud system id}=   Get Cloud System Id    ${AUTO TESTS DEV 2 IP}:${AUTO TESTS DEV 2 PORT}    ${AUTO SYS AUTH}
+    Click Button    ${DISCONNECT FROM NX}
+    Validate Disconnect Form
+
+    Log    Step 2
+    Input Text    ${DISCONNECT PASSWORD INPUT}    ${password}
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
+    Run keyword and continue on failure    Wait Until Location Is    ${ENV}/systems
+    Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
+    # Restarting the serve is to let it know the cloud system is unbound
+    Restart Server    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}
+    Sleep    30
+
+    Log    Step 3
+    FOR    ${user}    IN    @{Auto Tests users.keys()}
+        @{user systems}=   Get Account Systems    ${ENV}    ${user}    ${password}
+        Should Not Contain    ${user systems}    ${old cloud system id}
+    END
+
+    ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   ${AUTO TESTS DEV2 IP}    ${AUTO TESTS DEV2 PORT}    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
+    @{cloud auth}=   Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
+    FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
+        Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
+    END
+
 
 Should confirm, if not owner deletes system (You will lose access to this system)
     [Tags]    Threaded

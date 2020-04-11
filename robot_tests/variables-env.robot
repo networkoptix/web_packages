@@ -9,7 +9,9 @@ ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
-${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
+#${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
+${AUTO TESTS DEV2 IP}                 http://10.1.5.147
+${AUTO TESTS DEV2 PORT}               7001
 @{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                Screenshots
 
@@ -31,6 +33,16 @@ ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
+&{Auto Tests users}
+...    ${EMAIL VIEWER}=viewer
+...    ${EMAIL ADV VIEWER}=adancedViewer
+...    ${EMAIL LIVE VIEWER}=liveViewer
+...    ${EMAIL NOT OWNER}=viewer
+...    ${EMAIL ADMIN}=cloudAdmin
+...    ${EMAIL CUSTOM}=custom
+...    ${EMAIL CLIENT CUSTOM}=clientCustom
+...    ${EMAIL AUTO TESTS ANCHOR}=viewer
+
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 3.0}              ${TEST EMAIL}+mergeowner3.0${BASE EMAIL DOMAIN}
