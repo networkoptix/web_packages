@@ -5,9 +5,9 @@ import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
 import {
     BehaviorSubject, Subscription, merge, fromEvent, Observable
 }                           from 'rxjs';
-import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom } from 'rxjs/operators';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
-import { SensitivityColor, Mask, Area, AreaTuple } from './motion-detection-types';
+import { SensitivityColor, Mask, Area, AreaTuple, SelectionAction } from './motion-detection-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -158,8 +158,6 @@ export class MotionMaskState {
                 }
             });
         });
-
-        console.log(JSON.stringify(zones, null, 2));
         return zones;
     }
 
@@ -241,7 +239,6 @@ export class MotionMaskRenderer {
         this.initInteractions(canvas.nativeElement);
         this.renderer = merge(this.maskMatrix, this.maskZones, this.selectionZones)
             .subscribe(() => {
-                this.ctx.clearRect(0, 0, this.width, this.height);
                 this.motionMask.updateRenderState();
                 this.render();
             });
@@ -251,9 +248,9 @@ export class MotionMaskRenderer {
         // Initialize base observables from events
         const track = (eventName: string) => <Observable<MouseEvent>> fromEvent(canvas, eventName);
         const [
-            mouseDown, mouseUp, mouseLeave, mouseMove, mouseEnter
-        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove', 'mouseenter'].map(track);
-        const [keyDown, keyUp] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>> fromEvent(window, event));
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
+        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
+        const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>> fromEvent(window, event));
 
         // Utility functions
         const findEventCoords = (event: MouseEvent) => {
@@ -268,29 +265,43 @@ export class MotionMaskRenderer {
         };
 
         // Base observables for managing UI state
-        const shiftCtrlState = merge(keyDown, keyUp).pipe(
+        const shiftCtrlSubject$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
+        const shiftCtrlState$ = merge(keyDown$, keyUp$).pipe(
             filter(({ key }) => key === 'Control' || key === 'Shift'),
             map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
             distinctUntilChanged((x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey)
-        );
+        ).subscribe(shiftCtrlSubject$);
 
-        const clickState = merge(mouseEnter, mouseDown, mouseUp, mouseLeave).pipe(
-            map(({ type }) => type === 'mousedown'),
-            distinctUntilChanged()
-        );
-
-        const mouseState = mouseMove.pipe(
+        const mouseState$ = mouseMove$.pipe(
             throttleTime(100),
             map(findEventCoords),
             distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y),
-            tap(this.drawHover) // For testing, will either remove or move into full UI observable later
-        ).subscribe(() => console.log('move'));
-    }
+            tap(this.drawHover)
+        ); // For testing, will either remove or move into full UI observable later
+
+        const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
+        const clickBuffer$ = clickAction$.pipe(debounceTime(250));
+
+        const selectionState$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
+
+        const clickState$ = clickAction$.pipe(
+            buffer(clickBuffer$),
+            withLatestFrom(mouseState$),
+            map(([buffer, { x, y }]) => {
+                const action: SelectionAction = buffer.length === 4
+                    ? 'double-click' : buffer.length === 2
+                        ? 'click' : buffer[0].type === 'mousedown'
+                            ? 'select-start' : 'select-end';
+                return { action, x, y, ...shiftCtrlSubject$.value };
+            })
+        ).subscribe(e => {
+            console.log(JSON.stringify(e, null, 2));
+        });
+    };
 
     // Render methods
     private fillZones() {
         this.motionMask.renderState.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
-            this.ctx.clearRect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight); // can probably remove this for performance once overlap handling is finished
             this.ctx.beginPath();
             this.ctx.fillStyle = currentSelection ? this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
@@ -314,8 +325,8 @@ export class MotionMaskRenderer {
         const drawBottom = row !== this.rows - 1 && sensitivity !== maskMatrix[row + 1][column];
         const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
 
-        const draw = (fromY, fromX, toY, toX, solid) => {
-            this.ctx.strokeStyle = solid ? 'black' : '#FFFFFF1A';
+        const draw = (fromY, fromX, toY, toX, solid, selected = false) => {
+            this.ctx.strokeStyle = solid ? selected ? '#2FA2DB' : 'black' : '#FFFFFF1A';
             this.ctx.shadowColor = null;
             this.ctx.shadowBlur = null;
             this.ctx.beginPath();
@@ -324,14 +335,14 @@ export class MotionMaskRenderer {
             this.ctx.stroke();
         };
 
-        draw(top, left, top, right, drawTop);
+        draw(top, left, top, right, drawTop, sensitivity >= 100);
         draw(top, right, bottom, right, drawRight);
         draw(bottom, right, bottom, left, drawBottom);
         draw(bottom, left, top, left, drawLeft);
     }
 
     private addNumbers() {
-        const { sortedZones, findStartZones, renderState: { zones, maskMatrix } } = this.motionMask;
+        const { sortedZones, findStartZones, renderState: { zones } } = this.motionMask;
         const currentMask = sortedZones(zones);
         const startZones = findStartZones(currentMask);
         const fontSize = 30;
@@ -367,7 +378,7 @@ export class MotionMaskRenderer {
     render() {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.fillZones();
-        this.drawCells();
         this.addNumbers();
+        this.drawCells();
     }
 }
