@@ -67,7 +67,7 @@
         "accountSavedSuccess": "Su cuenta se ha guardado",
         "accountSettings": "Ajustes de cuenta",
         "activationLinkSent": "Enlace de activación",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "El acuerdo ha sido aceptado",
         "changePassword": "Cambiar contraseña",
         "newPasswordLabel": "Nueva contraseña",
         "saveChanges": "Guardar"
@@ -94,11 +94,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Cuenta creada",
+                "message": "El mensaje de confirmación con el enlace de activación se envía a {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Cuenta activada con éxito"
             }
         },
         "cameraLinks": {
@@ -132,10 +132,10 @@
             "low": "Bajo"
         },
         "general": "General",
-        "maintenanceInProgress": "Maintenance is in progress",
+        "maintenanceInProgress": "El mantenimiento está en progreso",
         "searchCamPlaceholder": "Búsqueda",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "No hay cámaras",
+        "systemHasNoCamerasMessage": "No hay cámaras accesibles para usted en el sistema. <br><br>Conecta algunas cámaras a la red local del servidor para que sean detectables o pida al administrador del sistema que cambie su nivel de acceso.",
         "systemNewVersion": "Actualizar tu sistema",
         "systemNewVersionMessage": "Su versión actual es incompatible con esta función. Actualice sus servidores a la última versión para usar esta función.",
         "systemNoAlerts": "No hay Alertas",
@@ -160,14 +160,14 @@
             "stop listening": "detener escucha",
             "view": "vista + [nombre de la cámara]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Estás viendo un informe desactualizado."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Cancelar",
             "createAccount": "Crear Nueva Cuenta",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Borrar",
+            "deleteAccount": "Eliminar Cuenta",
             "download": "Descargar %VMS_NAME%",
             "logoutAuthorised": "Cerrar Sessión",
             "ok": "Aceptar",
@@ -176,13 +176,13 @@
             "stayLoggedIn": "Permanecer conectado"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Almacenamiento en la nube",
+            "enableStorage": "Habilitar almacenamiento en la nube",
+            "otherSystem": "Otro sistema...",
+            "initial": "Te ofrecemos {{compCapacity}} de almacenamiento gratuito en la nube por sistema para empezar.",
+            "available": "La ubicación de almacenamiento en la nube está disponible para todos los servidores de este sistema. Puedes gestionarla utilizando el cliente {{vmsName}} del escritorio.",
+            "camera": "cámara",
+            "cameras": "cámaras",
             "remove": {
                 "success": "Almacenamiento en la nube eliminado del sistema",
                 "errorPrefix": "Error al eliminar el almacenamiento en la nube"
@@ -404,7 +404,7 @@
         "oldSafariNotSupported": "Las versiones de Safari anteriores a 10 no son compatibles",
         "passwordMismatch": "Contraseña incorrecta",
         "thisSystem": "el sistema",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Error inesperado",
         "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "wrongAuthCode": "El código ha caducado o es incorrecto",
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
@@ -482,7 +482,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Descargar %VMS_NAME%",
         "downloadPlatform": "Descargar %VMS_NAME% para ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Error al acceder al sistema",
         "integrations": "Integraciones",
         "login": "Inicia sesión",
         "pageNotFound": "Página no encontrada",
@@ -515,28 +515,28 @@
     },
     "placeholderTexts": {
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Este sistema se está fusionando a {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Dependiendo del tamaño de la base de datos, esto puede tomar hasta varias horas.",
+                "untilFinished": "Hasta que finalice la fusión, puede iniciar sesión en este sistema y ver el video, pero no puede cambiar ninguna configuración.",
+                "whenFinished": "Cuando finalice la fusión, todos los usuarios y cámaras de este sistema estarán disponibles en el sistema {{systemName}}, y este sistema se eliminará."
             }
         }
     },
     "pleaseSelect": "Por favor, seleccione...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Al enviar este formulario, usted acepta ser contactado por {{INTEGRATION_COMPANY}} y / o %COMPANY_NAME%.\nEncontrará la {{INTEGRATION_COMPANY}} política de privacidad <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aquí</a> y la %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluyen instrucciones sobre cómo retirar su consentimiento.",
+        "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará la %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "registration": {
         "agreement": "Acepto los <a href=\"/content/eula\" target=\"_blank\">Términos y\nCondiciones</a> y <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de Privacidad</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system.",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "se está fusionando a este sistema.",
+            "mayTake": "Dependiendo del tamaño de la base de datos, puede llevar varias horas."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Acabando la fusión de sistemas",
         "integration": {
             "backToEditText": "Volver a las interfaces de edición",
             "previewRibbon": "Esta página es una vista previa de los últimos cambios y no coincide con la versión de acceso público."
@@ -559,34 +559,34 @@
         "vendors": "Fabricantes"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "beginRestart": "Server is now restarting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "getModuleFailed": "There was a problem getting server information.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
-        "servers": "Servers",
+        "beginDetach": "El servidor ahora se está separando",
+        "beginReset": "El servidor se está reseteando.",
+        "beginRestart": "El servidor se está reiniciando.",
+        "detachSystemFailed": "Error al desconectar el servidor del sistema. Verifique si la contraseña que ingresó es correcta y el servidor está en línea e intente nuevamente.",
+        "detachSystemSuccess": "El servidor se desconectó correctamente del sistema.",
+        "getModuleFailed": "Hubo un problema al obtener la información del servidor.",
+        "portWarning": "Los números de puerto menores de 1024 están restringidos. El servidor puede ser inaccesible.",
+        "removeMediaserverFailed": "Error al eliminar el servidor del sistema.",
+        "resetFailed": "Error al restablecer el servidor. Verifique si la contraseña que ingresó es correcta y el servidor está en línea e intente nuevamente.",
+        "resetSuccessful": "El servidor {{ serverName }} se ha restablecido a los valores predeterminados.",
+        "restartFailed": "Hubo un problema al reiniciar el servidor.",
+        "restartSuccessful": "El servidor se reinició correctamente.",
+        "servers": "Servidores",
         "status": {
-            "checking": "checking...",
+            "checking": "comprobando...",
             "offline": "desconectado",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "reseteando...",
+            "restarting": "reiniciando..."
         },
-        "successRename": "Server name renamed."
+        "successRename": "Nombre del servidor renombrado."
     },
     "system": {
         "MERGE_FINISHES": "Cuando la fusión haya terminado, todos los usuarios y cámaras de este sistema estarán disponibles en <strong>{{targetSystemName}}</strong> Sistema, y este sistema será eliminado.",
         "mergeUnknownName": "Nombre desconocido para el sistema (causado por la fusión en la nube)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "No se puede cargar la configuración de seguridad.",
+            "notAbleToLoadSystem": "No se puede cargar la configuración del sistema.",
             "sessionLimitDuration": {
                 "hours": "horas",
                 "minutes": "minutos"
@@ -600,34 +600,34 @@
             "unavailable": "El sistema es inalcanzable"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Eliminar usuario",
+            "localDelete": "Borrar el usuario"
         },
         "yourSystem": "Su Sistema",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Ninguno",
+                "help": "(registro deshabilitado)"
             },
             "error": {
                 "text": "Error",
-                "help": "(log errors only)"
+                "help": "(solo errores de registro)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Advertencia",
+                "help": "(registro de advertencias y errores)"
             },
             "info": {
-                "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "text": "Descripción",
+                "help": "(registro de advertencias, errores y todos los mensajes)"
             },
             "debug": {
                 "text": "Depurar",
-                "help": "(log every System message and debug information)"
+                "help": "(registrar cada mensaje del sistema e información de depuración)"
             },
             "verbose": {
                 "text": "Verbose",
-                "help": "(log all information available)"
+                "help": "(registrar toda la información disponible)"
             }
         }
     },
@@ -659,14 +659,14 @@
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
+        "additionalLocalFsTypes": "Tipos de FS locales adicionales",
+        "autoDiscoveryResponseEnabled": "Respuesta de autodescubrimiento",
+        "crossdomainEnabled": "Dominio cruzado",
+        "defaultExportVideoCodec": "Códec de video de exportación predeterminado",
+        "defaultVideoCodec": "Códec de video predeterminado",
+        "downloaderPeers": "Peers de descargador",
+        "lastMergeMasterId": "Última fusión masterId",
+        "lastMergeSlaveId": "Última fusión slaveId",
         "ldapSearchTimeoutS": "Tiempo de búsqueda LDAP (seg)",
         "licenseServer": "Servidor de licencia",
         "lowQualityScreenVideoCodec": "Códec de video de pantalla de baja calidad",
@@ -718,39 +718,39 @@
         "proxyConnectTimeoutSec": "Tiempo de espera de conexión de proxy (segundos)",
         "rtpTimeoutMs": "Tiempo de espera de RTP (milisegundos)",
         "sequentialFlirOnvifSearcherEnabled": "Utilice el buscador secuencial de Flir Onvif",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
+        "serverDiscoveryPingTimeoutSec": "Tiempo de espera de descubrimiento del servidor",
+        "smtpConnectionType": "Tipo de conexión SMTP",
+        "smtpHost": "Host SMTP",
+        "smtpPort": "Puerto SMTP",
         "smtpSimple": "SMTP simple",
-        "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "smtpTimeout": "Tiempo de Expiración de SMTP",
+        "smtpUser": "Usuario SMTP",
+        "statisticsAllowed": "Enviar estadísticas de uso anónimo e informes de fallos",
+        "statisticsReportLastNumber": "Informe de estadísticas - último número",
+        "statisticsReportLastTime": "Informe de estadísticas - última vez",
+        "statisticsReportLastVersion": "Informe de estadísticas - última versión",
+        "statisticsReportServerApi": "Api del servidor de estadísticas",
+        "statisticsReportTimeCycle": "Intervalo de informe de estadísticas",
+        "statisticsReportUpdateDelay": "Informe de estadísticas - retraso de actualización",
+        "synchronizeTimeWithInternet": "Sincronice el tiempo con Internet",
         "SystemName": "Nombre del sistema",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
-        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "takeCameraOwnershipWithoutLock": "Apropiarse de las cámaras sin bloquear",
+        "timeSynchronizationEnabled": "Sincronización de tiempo habilitada",
+        "primaryTimeServer": "Servidor primario de sincronización horaria",
+        "osTimeChangeCheckPeriodMs": "Período de verificación de cambio de hora del SO",
+        "syncTimeExchangePeriod": "Intervalo de sincronización de tiempo para solicitudes de red",
+        "syncTimeEpsilon": "Tiempo de sincronización epsilon. El nuevo valor no se aplica si el tiempo delta es menor que épsilon",
+        "maxWearableArchiveSynchronizationThreads": "Hilos de sincronización de archivo de cámara ponibles máx",
+        "updateNotificationsEnabled": "Notificaciones de actualización habilitadas",
+        "upnpPortMappingEnabled": "Mapeo de puerto UPNP habilitado",
+        "useTextEmailFormat": "Enviar correos electrónicos de texto plano",
+        "useWindowsEmailLineFeed": "Usa el salto de línea de Windows en los correos",
+        "trafficEncryptionForced": "Forzar Encriptación de Trafico",
+        "videoTrafficEncryptionForced": "Forzar Encriptación de Trafico de Video",
+        "updateStatus": "Estado de actualización",
+        "watermarkSettings": "Configuraciones de marca de agua",
+        "maxWebMTranscoders": "Cantidad máxima de conexiones WEBM para el servidor. Chrome abre 2 conexiones a la vez, luego cierra la primera. Por lo tanto, se recomienda fijar el valor >=2 a este parámetro.",
+        "maxEventLogRecords": "Máximo registro de eventos para mantener en la base de datos. La cantidad real de registros no eliminados puede ser hasta un 20% más alta que el valor especificado.",
+        "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara)."
     }
 }
