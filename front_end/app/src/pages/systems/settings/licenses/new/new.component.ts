@@ -175,6 +175,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     private isActivated(license): boolean {
         return this.licenses.find((lic) => {
             return lic.key === this.formatLicenseKey(license);
-        }).key;
+        });
     }
 }

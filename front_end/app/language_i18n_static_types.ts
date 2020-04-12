@@ -529,7 +529,6 @@ export interface Messages {
     required:  string;
     activated: string;
     inuse:     string;
-
 }
 
 export interface Menu {
