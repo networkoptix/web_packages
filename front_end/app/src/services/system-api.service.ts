@@ -293,6 +293,19 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    activateLicense(url, key) {
+        if (this.authGet) {
+            let params = new HttpParams();
+            params = params.append('auth', this.authPost);
+            // params = params.append('licenseKey', key);
+
+            const fullUrl = `${url}/api/activateLicense`;
+            return this.http.post(fullUrl, { licenseKey: key }, { params });
+        }
+
+        return of(false);
+    }
+
     logLevel(serverId, logId, name, value) {
         if (this.authGet) {
             const headers = new HttpHeaders().set('X-Runtime-Guid', serverId);

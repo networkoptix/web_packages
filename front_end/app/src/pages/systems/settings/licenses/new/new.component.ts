@@ -1,18 +1,15 @@
 import {
     Component,
     OnDestroy, Input, OnChanges,
-    SimpleChanges
-}                                    from '@angular/core';
+    SimpleChanges, ViewChild
+} from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
-
-interface iLicense {
-    key: string
-}
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -28,40 +25,86 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     serverOptions: any = [];
     activateKey: any;
 
-    license: iLicense = { key: '' };
+    license: string;
     selectedServer: any = {};
+    keyUsedIn: string;
 
-    @Input() servers: any;
-    @Input() system: any;
+    @Input() servers: any = [];
+    @Input() system: NxSystem;
+    @Input() licenses: any = [];
+
+    @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
     private setupDefaults() {
         this.activateKey = this.processService.createProcess(() => {
-            return this.system
-                .activateLicense(this.selectedServer.id.slice(1, -1))
-                .then(response => {
-                    // ****** WIP : to fe finished in another task *****
-                    // if (typeof (response.error) !== 'undefined' && response.error !== '0') {
-                    //     const errorToShow = response.errorString;
-                    //     this.dialogsService
-                    //         .alert(errorToShow, this.LANG.dialogs.titles.error)
-                    //         .catch(error => {
-                    //             console.error(error);
-                    //         });
-                    // } else {
-                    //     this.dialogsService
-                    //         .alert(this.LANG.dialogs.message.logLevelsSaved, this.LANG.dialogs.titles.success)
-                    //         .catch(error => {
-                    //             console.error(error);
-                    //         });
-                    // }
-                }, () => {
-                    // this.dialogsService
-                    //     .alert(this.LANG.dialogs.message.logLevelsNotSaved, this.LANG.dialogs.titles.error)
-                    //     .catch(error => {
-                    //         console.error(error);
-                    //     });
-                    // ****** WIP : to fe finished in another task *****
+            if (!this.system.isOnline) {
+                return new Promise((resolve, reject) => {
+                    this.licenseForm.controls.licenseKey.setErrors({ offline: true });
+                    this.licenseForm.controls.licenseKey.markAsTouched();
+
+                    // eslint-disable-next-line prefer-promise-reject-errors
+                    return reject('offline');
                 });
+            } else if (this.isActivated(this.license)) {
+                return new Promise((resolve, reject) => {
+                    this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
+                    this.licenseForm.controls.licenseKey.markAsTouched();
+
+                    // eslint-disable-next-line prefer-promise-reject-errors
+                    return reject('alreadyRegistered');
+                });
+            } else {
+                return this.system
+                    .activateLicense(this.selectedServer.url, this.formatLicenseKey(this.license))
+                    .toPromise()
+                    .then(response => {
+                        if (response.reply) {
+                            this.license = '';
+                            this.system.licensesModified = true;
+
+                            this.dialogsService
+                                .notify(this.LANG.license.messages.activated, 'success');
+
+                            return;
+                        }
+
+                        switch (response.error) {
+                            case '2':
+                            // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+
+                            // eslint-disable-next-line no-fallthrough
+                            case '3':
+                                // Can't activate license:  License Key you have entered is invalid.
+                                if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
+                                    this.licenseForm.controls.licenseKey.setErrors({ mask: true });
+                                }
+                                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f25774269474ec8f9454d92ca9511cf on 2020-04-10 21:04:30.776094+00:00..
+                                // eslint-disable-next-line no-case-declarations
+                                let matchStart = response.errorString.indexOf('activated to Hardware Id');
+                                if (matchStart !== -1) {
+                                    // get HWID
+                                    matchStart += 'activated to Hardware Id '.length;
+                                    const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
+                                    this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
+                                    this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                                }
+                                this.licenseForm.controls.licenseKey.markAsTouched();
+                                break;
+
+                            default:
+                        }
+                    }, (fail) => {
+                        if (fail.error.type === 'error') {
+                            this.dialogsService
+                                .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                        }
+                    });
+            }
+        }, {
+            errorCodes: {
+                offline           : () => {},
+                alreadyRegistered : () => {}
+            }
         });
     }
 
@@ -84,25 +127,54 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
-                        name : server.name,
-                        id   : server.id
+                        name  : server.name,
+                        value : server.id,
+                        url   : server.url
                     };
 
-                    if (server.status === 'Online') {
+                    if (server.status !== 'Online') {
                         option.help = `&mdash;&nbsp;${server.status}`;
+                    }
+
+                    // TODO: Remove it --- just for testing
+                    if (option.url.indexOf(':7001') >= 0) {
+                        option.url = 'https://localhost:7001';
                     }
 
                     this.serverOptions.push(option);
                 });
+
+                this.selectedServer = this.serverOptions[0] || {};
             }
         }
     }
 
+    pasteFn() {
+        navigator.clipboard.readText().then(clipText => {
+            this.license = clipText;
+        });
+    }
+
     setLicenseKey(key, form) {
-        this.license.key = key.toUpperCase();
+        this.license = key;
         form.controls.licenseKey.markAsUntouched();
     }
 
+    changeServer(server) {
+        this.selectedServer = server;
+    }
+
     ngOnDestroy(): void {
+    }
+
+    private formatLicenseKey = (key: string) => {
+        const chunks = key.match(/.{1,4}/g);
+        return chunks.join('-').toUpperCase(); // returns AAAA-BBBB-CCCC-DDDD
+    };
+
+    private isActivated(license): boolean {
+        return this.licenses.find((lic) => {
+            return lic.key === this.formatLicenseKey(license);
+        }).key;
     }
 }

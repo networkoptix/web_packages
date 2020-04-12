@@ -409,7 +409,8 @@
         "wrongAuthCode": "Code is expired or incorrect",
         "wrongCode": "Account is already activated or confirmation code is incorrect",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
-        "wrongParameters": "Some parameters on the form are incorrect"
+        "wrongParameters": "Some parameters on the form are incorrect",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support."
     },
     "integration": {
         "Access Control": "Access Control",
@@ -684,7 +685,9 @@
             "bridge": "Bridge"
         },
         "messages": {
-            "required": "{{number}} more required"
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}}"
         }
     },
     "settingsConfig": {

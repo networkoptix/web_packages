@@ -435,6 +435,7 @@ export interface ErrorCodes {
     wrongCode:                           string;
     wrongCodeRestore:                    string;
     wrongParameters:                     string;
+    licenseFail:                         string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -525,7 +526,10 @@ export interface Info {
 }
 
 export interface Messages {
-    required: string;
+    required:  string;
+    activated: string;
+    inuse:     string;
+
 }
 
 export interface Menu {
@@ -1278,6 +1282,7 @@ const typeMap: any = {
         { json: "wrongCode", js: "wrongCode", typ: "" },
         { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "" },
         { json: "wrongParameters", js: "wrongParameters", typ: "" },
+        { json: "licenseFail", js: "licenseFail", typ: "" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "" },
@@ -1363,6 +1368,8 @@ const typeMap: any = {
     ], false),
     "Messages": o([
         { json: "required", js: "required", typ: "" },
+        { json: "activated", js: "activated", typ: "" },
+        { json: "inuse", js: "inuse", typ: "" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },

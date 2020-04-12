@@ -468,6 +468,7 @@ export class NxSystem extends System implements OnDestroy {
     usersPromise: any;
     systemPoll: any;
 
+    licensesModifiedSubject = new BehaviorSubject<boolean>(false);
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
 
@@ -494,6 +495,14 @@ export class NxSystem extends System implements OnDestroy {
 
     set lostConnection(value) {
         this.connectionSubject.next(value);
+    }
+
+    get licensesModified() {
+        return this.licensesModifiedSubject.getValue();
+    }
+
+    set licensesModified(value) {
+        this.licensesModifiedSubject.next(value);
     }
 
     get systemInfo() {
@@ -814,8 +823,8 @@ export class NxSystem extends System implements OnDestroy {
         }));
     }
 
-    activateLicense(serverId) {
-        // ****** WIP : to fe finished in another task *****
+    activateLicense(url, key) {
+        return this.mediaserver.activateLicense(url, key);
     }
 
     logLevel(serverId) {

@@ -41,8 +41,9 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
     system: NxSystem;
     systemSubscription: SubscriptionLike;
     serverSubscription: SubscriptionLike;
+    licensesSubscription: SubscriptionLike;
 
-    licenses: any = [];
+    licenses: any;
     classMap: any = {};
 
     // Constructor and class initialization methods
@@ -64,86 +65,15 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
             .subscribe((system) => {
                 this.system = system;
 
-                this.system.getLicenses().then((result) => {
-                    if (result.length) {
-                        result.forEach((item) => {
-                            const info: LicenseInfo = {
-                                type       : '',
-                                count      : '',
-                                inuse      : '',
-                                required   : 0,
-                                serverName : '',
-                                hwid       : '',
-                                status     : '',
-                                expiration : ''
+                this.getLicenses();
 
-                            };
-                            item.info = info;
-                            item.licenseBlock
-                                .split('\n')
-                                .map((property) => {
-                                    const prop = property.split('=');
-                                    item.info[prop[0].toLowerCase()] = prop[1];
-                                });
-
-                            item.info.status = (new Date(item.info.expiration).getTime() < new Date().getTime()) ? this.LANG.license.info.expired : this.LANG.license.info.ok;
-
-                            // Set license type
-                            if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL') {
-                                item.info.type = this.LANG.license.info.trial;
-                            } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
-                                item.info.type = this.classMap[item.info.class];
-                            } else {
-                                item.info.type = this.LANG.license.info.time;
-                            }
-
-                            // Set license usage /Pending VMS-18155/
-                            if (item.info.inuse !== '') {
-                                item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
-                            }
-                        });
-
-                        if (this.serverSubscription) {
-                            this.serverSubscription.unsubscribe();
-                        }
-                        this.serverSubscription = this.system.infoSubject
-                            .pipe(
-                                map(system => {
-                                    if (!system.servers || system.servers.length === 0) {
-                                        throw system;
-                                    }
-                                }),
-                                retryWhen(err => err.pipe(delay(1000)))
-                            )
-                            .subscribe(() => {
-                                if (this.system.currentServerNotBusy) {
-                                    if (this.system && this.system.servers && this.system.servers.length) {
-                                        this.system
-                                            .getHardwareIdsOfServers()
-                                            .then((data) => {
-                                                if (data.reply.length) {
-                                                    result.forEach((item) => {
-                                                        const boundServer = data.reply.find((server) => {
-                                                            return server.hardwareIds.find((id) => id === item.info.hwid);
-                                                        });
-
-                                                        const server = this.system.servers.find((server) => server.id === boundServer.serverId);
-                                                        if (Object.keys(server).length) {
-                                                            item.info.serverName = server.name;
-                                                            item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
-                                                        }
-                                                    });
-                                                }
-                                            })
-                                            .finally(() => {
-                                                this.licenses = result;
-                                            });
-                                    }
-                                }
-                            });
-                    }
-
-                });
+                if (this.licensesSubscription) {
+                    this.licensesSubscription.unsubscribe();
+                }
+                this.licensesSubscription = this.system.licensesModifiedSubject
+                    .subscribe(() => {
+                        this.getLicenses();
+                    });
             });
     }
 
@@ -184,5 +114,89 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
         details.push({ name: this.LANG.license.info.expires, value: this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') });
 
         return details;
+    }
+
+    private getLicenses() {
+        this.system.getLicenses().then((result) => {
+            if (result.length) {
+                result.forEach((item) => {
+                    const info: LicenseInfo = {
+                        type      : '',
+                        count     : '',
+                        inuse     : '',
+                        required  : 0,
+                        serverName: '',
+                        hwid      : '',
+                        status    : '',
+                        expiration: ''
+
+                    };
+                    item.info = info;
+                    item.licenseBlock
+                        .split('\n')
+                        .map((property) => {
+                            const prop = property.split('=');
+                            item.info[prop[0].toLowerCase()] = prop[1];
+                        });
+
+                    item.info.status = (new Date(item.info.expiration).getTime() < new Date().getTime()) ? this.LANG.license.info.expired : this.LANG.license.info.ok;
+
+                    // Set license type
+                    if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL') {
+                        item.info.type = this.LANG.license.info.trial;
+                    } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
+                        item.info.type = this.classMap[item.info.class];
+                    } else {
+                        item.info.type = this.LANG.license.info.time;
+                    }
+
+                    // Set license usage /Pending VMS-18155/
+                    if (item.info.inuse !== '') {
+                        item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
+                    }
+                });
+
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system
+                                    .getHardwareIdsOfServers()
+                                    .then((data) => {
+                                        if (data.reply.length) {
+                                            result.forEach((item) => {
+                                                const boundServer = data.reply.find((server) => {
+                                                    return server.hardwareIds.find((id) => id === item.info.hwid);
+                                                });
+
+                                                const server = this.system.servers.find((server) => server.id === boundServer.serverId);
+                                                if (Object.keys(server).length) {
+                                                    item.info.serverName = server.name;
+                                                    item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                }
+                                            });
+                                        }
+                                    })
+                                    .finally(() => {
+                                        this.licenses = result;
+                                    });
+                            }
+                        }
+                    });
+            } else {
+                this.licenses = [];
+            }
+        });
     }
 }

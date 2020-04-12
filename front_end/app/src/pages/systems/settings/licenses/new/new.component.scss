@@ -111,8 +111,9 @@ nx-select .dropdown .dropdown-toggle .ellipsis {
 
 .license-key {
     font-family: robotomonoregular, monospace;
-    width: 183px;
+    width : 280px;
     float: left;
+    text-transform : uppercase;
 }
 
 .input-paste {
@@ -121,5 +122,9 @@ nx-select .dropdown .dropdown-toggle .ellipsis {
 }
 
 .dd-servers {
-    width : 183px;
+    width : 280px;
+}
+
+.ellipsis {
+    max-width : 100% !important;
 }
