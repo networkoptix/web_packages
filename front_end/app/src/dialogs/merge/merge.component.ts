@@ -236,13 +236,7 @@ export class MergeModalContent {
                     .sort((sysA, sysB) => {
                         const a = `${sysA.systemName.toLowerCase()}${sysA.name.toLowerCase()}`;
                         const b = `${sysB.systemName.toLowerCase()}${sysB.name.toLowerCase()}`;
-                        if (a < b) {
-                            return -1;
-                        }
-                        if (a > b) {
-                            return 1;
-                        }
-                        return 0;
+                        return a < b ? -1 : 1;
                     });
                 this.peerSystemsLoaded = true;
             });
@@ -344,7 +338,7 @@ export class MergeModalContent {
             .then(() => {
                 // handles telling the app which systems are getting merged and the proper messaging
                 this.systemsService.forceUpdateSystems();
-                this.activeModal.close({
+                this.close({
                     secondary: {
                         id   : this.secondarySystem.id,
                         name : this.secondarySystem.name || this.secondarySystem.info.name
@@ -650,12 +644,14 @@ export class MergeModalContent {
         this.updateShow(showUpdate, templateUpdates);
     }
 
-    close() {
+    close(data?) {
         this.updateShow('', {
+            passwordValue                     : '',
+            serverUrlInputValue               : '',
             passwordErrorText                 : '',
             checkingErrorText                 : '',
             serverUrlInputValidationErrorText : ''
         });
-        this.activeModal.close();
+        this.activeModal.close(data);
     }
 }

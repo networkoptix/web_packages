@@ -6,30 +6,30 @@
     "emailSubject": "Вы были приглашены в %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Запрос на продажу {{message.asset}}"
+    "emailSubject": "Sales inquiry for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Технический запрос для {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Отзыв о {{message.asset}}"
+    "emailSubject": "Feedback for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Отзыв о странице камеры{{#message.asset}} для {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} есть новая версия для проверки"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
   },
   "restore_password": {
     "emailSubject": "Восстановление пароля"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} приглашает вас присоединиться к %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Вам открыт доступ к системе {{message.system_name}}{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Вам открыт доступ к системе {{message.system_name}}"
+    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
   }
 }

@@ -385,12 +385,13 @@ class ServerManager {
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
-                                                              `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
-                                                              undefined,
-                                                              () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
-                                                                  this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
-                                                                  return Promise.resolve(true);
-                                                              }));
+                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
+                        undefined,
+                        () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                            this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                            return Promise.resolve(true);
+                        })
+                    );
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
@@ -901,6 +902,10 @@ export class NxSystem extends System implements OnDestroy {
 
     mergeSystems(url, dryRun, currentPassword?) {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
+    }
+
+    checkMergeStatus() {
+        return this.mediaserver.checkMergeStatus();
     }
 
     getPeerSystems() {

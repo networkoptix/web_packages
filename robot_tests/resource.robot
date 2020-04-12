@@ -538,9 +538,16 @@ Add user to cloud system if not there
     ${is there}=   User is in cloud system    ${email}    ${system id}
     Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
 
+Connect system to cloud if not
+    [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    [Return]    ${current cloud system id}
+
 Reset System Names
-    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
-    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${AUTO TESTS 2}
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    ${AUTO TESTS}
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}

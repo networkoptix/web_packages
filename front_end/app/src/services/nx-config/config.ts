@@ -309,7 +309,7 @@ export const nxConfig: IConfig = {
             master : 'master',
             slave  : 'slave'
         },
-        throttleTime: 5000
+        auditTime: 500
     },
     toast: {
         success : 'success',

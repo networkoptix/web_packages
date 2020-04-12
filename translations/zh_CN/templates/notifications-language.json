@@ -6,30 +6,30 @@
     "emailSubject": "您已被邀请到 %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "{{message.asset}} 的產品咨询"
+    "emailSubject": "Sales inquiry for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "{{message.asset}} 的技术咨询"
+    "emailSubject": "Technical inquiry for {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "{{message.asset}} 的反馈"
+    "emailSubject": "Feedback for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "关于 {{message.asset}}{{/message.asset}} 摄像机页面反馈{{#message.asset}}"
+    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}： {{message.asset}} 有新版本可供检视"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
   },
   "restore_password": {
     "emailSubject": "重新设置密码"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀请您至 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}视频系统 {{message.system_name}} 与您分享{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "与你分享了视频系统 {{message.system_name}}"
+    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
   }
 }

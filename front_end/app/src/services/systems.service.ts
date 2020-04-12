@@ -5,8 +5,11 @@ import { NxConfigService, IConfig }                    from './nx-config';
 import { NxLanguageProviderService }                   from './nx-language-provider';
 import { NxCloudApiService }                           from './nx-cloud-api';
 import { NxPollService }                               from './poll.service';
+import { LocalStorageService }                         from 'ngx-store';
 import { NxToastService }                              from '../dialogs/toast.service';
 import { NxUtilsService }                              from './utils.service';
+import { NxUriService }                                from './uri.service';
+import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
 import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
 import { NxSystem }                                    from './system.service';
 
@@ -33,7 +36,10 @@ export class NxSystemsService implements OnDestroy {
         languageService: NxLanguageProviderService,
         pollService: NxPollService,
         private cloudApi: NxCloudApiService,
-        private toastService: NxToastService
+        private localStorage: LocalStorageService,
+        private ribbonService: NxRibbonService,
+        private toastService: NxToastService,
+        private uriService: NxUriService
     ) {
         this.LANG = languageService.getTranslations();
         this.CONFIG = configService.getConfig();
@@ -160,13 +166,18 @@ export class NxSystemsService implements OnDestroy {
             if (system.mergeInfo !== undefined) {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
-                setTimeout(() => {
-                    this.systemsMerging = {
-                        primary   : undefined,
-                        secondary : undefined
-                    };
-                    this.removeFromMergeList(system.id);
-                }, 500);
+                const currentSystemId = this.localStorage.get('systemId');
+                if (currentSystemId === this.systemsMerging.secondary.id) {
+                    this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
+                }
+                if (currentSystemId === this.systemsMerging.primary.id) {
+                    this.ribbonService.hide();
+                }
+                this.systemsMerging = {
+                    primary   : undefined,
+                    secondary : undefined
+                };
+                this.removeFromMergeList(system.id);
             }
         });
     }

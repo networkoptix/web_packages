@@ -28,10 +28,8 @@
                             </div>
                             <label id="autoDiscoveryEnabledHelpBlock"
                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                   for="autoDiscoveryEnabled">
-                                <ng-container translate>When enabled, system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Failover enabled on some servers ignore status check prohibition.
-                                </ng-container>
-                            </label>
+                                   for="autoDiscoveryEnabled"
+                                   translate>When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.</label>
                         </ng-container>
                         <ng-container *ngIf="settingsWatchers.statisticsAllowed !== undefined">
                             <div class="d-flex checkbox-block align-items-center mt-1">
@@ -49,10 +47,8 @@
                             </div>
                             <label id="statisticsAllowedHelpBlock"
                                    class="form-text helper-block col-11 col-lg-9 col-xl-8 p-0"
-                                   for="statisticsAllowed">
-                                <ng-container translate>Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.
-                                </ng-container>
-                            </label>
+                                   for="statisticsAllowed"
+                                   translate>Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.</label>
                         </ng-container>
                         <div class="d-flex checkbox-block align-items-center mt-1"
                              *ngIf="settingsWatchers.cameraSettingsOptimization !== undefined">

@@ -14,7 +14,8 @@ env = "https://test3.cloud.hdw.mx/"
 
 class UserBehavior(TaskSet):
     def order(self):
-        time.sleep(random.uniform(0, 1))
+        self.randDelay = random.uniform(0, 3)
+        time.sleep(self.randDelay)
         txtFile = os.environ['LOCUSTTEXT']
         f= open(f'{txtFile}.txt', 'r')
 #        if f.mode == 'r':
@@ -48,7 +49,7 @@ class UserBehavior(TaskSet):
 #         f= open("responses.txt", 'w+')
 #         time.sleep(self.delay)
         notificationSent = []
-        print(str(self.currentProc)+" proc started push")
+        print(str(self.currentProc)+" proc started push"+str(self.randDelay))
         n = 0
         for x in self.systemsJson[self.minSys:self.maxSys]:
 #       for x in self.systemsJson[0:2]:

@@ -13,7 +13,7 @@ import { delay }                    from 'rxjs/operators';
 @AutoUnsubscribe()
 @Component({
     selector   : 'nx-cam-view',
-    templateUrl: './cam-view.component.html',
+    templateUrl : './cam-view.component.html',
     styleUrls  : ['./cam-view.component.scss']
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -50,12 +50,29 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
 
+    private camera = [
+        { title: 'Resolution(max)', param: 'maxResolution' },
+        { title: 'FPS(max)', param: 'maxFps' },
+        { title: 'Codec', secondaryParam: 'primaryCodec' },
+        { title: 'Audio', param: 'isAudioSupported' },
+        { title: '2-Way Audio', param: 'isTwAudioSupported' },
+        { title: 'PTZ', param: 'isPtzSupported' },
+        { title: 'Advanced PTZ', param: 'isAptzSupported' },
+        { title: 'Motion Detection', param: 'isMdSupported' },
+        { title: 'Fisheye', param: 'isFisheye' },
+        { title: 'I/O', param: 'isIoSupported' },
+        { title: 'Dual Streaming', param: 'isDualStreamingSupported' },
+        { title: 'Secondary Stream', param: 'sndResolution' },
+        { title: 'Multi Sensor', param: 'isMultiSensor' },
+        { title: 'Analytics', param: 'isAnalyticsSupported' }
+    ];
+
     @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
 
     constructor(
             private configService: NxConfigService,
             private scrollMechanicsService: NxScrollMechanicsService,
-            private uri: NxUriService,
+            private uri: NxUriService
     ) {
         this.CONFIG = this.configService.getConfig();
 
@@ -89,7 +106,6 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
             this.scrollHeight = this.scrollMechanicsService.searchViewHeightSubject.getValue() + NxScrollMechanicsService.HEADER_OFFSET;
             this.calcElementScrollMechanics();
         });
-
 
         this.windowScrollSubscription = this.scrollMechanicsService
             .windowScrollSubject

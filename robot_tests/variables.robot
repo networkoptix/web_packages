@@ -213,16 +213,18 @@ ${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']/
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
-${MERGE FORM}                         //form[@name="mergeForm"]
+${MERGE FORM}                         ${MERGE DIALOG}//form[@name="mergeForm"]
+${MERGE CHOOSE PRIMAY FORM}           ${MERGE DIALOG}//form[@name="choosePrimaryForm"]
+${CONFIRM MERGE FORM}                 ${MERGE DIALOG}//form[@name="confirmMergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
 ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 #${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE NEXT BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${NEXT TEXT}")]
 
-${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
-${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")]
+#${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
+${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")][1]
 #${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
-${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[contains(@class, "next-button") and contains(text(),"${NEXT TEXT}")]
+${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${MERGE SYSTEMS TEXT}")]
 ${MERGE PASSWORD INPUT}               ${MERGE DIALOG}//input[@name="cloudOwnerPassword"]
 ${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
@@ -234,17 +236,27 @@ ${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//p[contains(text(),"${MERG
 ${MERGE ONLY AS OWNER}                ${MERGE DIALOG}//p[contains(text(),"${YOU CAN ONLY MERGE AS OWNER TEXT}")]
 ${MERGE CHECKING HINT}                ${MERGE DIALOG}//p[contains(text(),"${CHECKING TEXT}")]
 ${MERGE CHOOSE PRIMARY FORM}          ${MERGE DIALOG}//form[@name="choosePrimaryForm"]
-${MERGE ENTER YOUR PASSWORD}          ${MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
-${MERGE PASSWORD REQUIRED}            ${MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
-${MERGE PASSWORD INCORRECT}           ${MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
+${MERGE RADIO FIRST SYSTEM}           ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="firstSystem"]
+${MERGE RADIO SECOND SYSTEM}          ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="secondSystem"]
+${MERGE TAKE SYSTEM NAME}             ${MERGE CHOOSE PRIMARY FORM}//p[contains(text(), "${TAKE SYSTEM NAME AND SETTINGS TEXT}")]
+${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
+${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
+${MERGE PASSWORD REQUIRED}            ${CONFIRM MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
+${MERGE PASSWORD INCORRECT}           ${CONFIRM MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
 
 #Disconnect from cloud portal
-${DISCONNECT FORM}                    //form[@name='disconnectForm']
-${DISCONNECT FORM CANCEL}             ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
-${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
-${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button/span[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
-
+${DISCONNECT FORM}                      //form[@name='disconnectForm']
+${DISCONNECT FORM HEADER}               ${DISCONNECT FORM}//h1["${DISCONNECT FORM HEADER TEXT}"]
+${DISCONNECT FORM CLOSE BUTTON}         ${DISCONNECT FORM}//button[contains(@class, "close")]
+${DISCONNECT FORM ALL USERS WILL BE DELETED}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ALL USERS WILL BE DELETED TEXT}")]
+${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT}")]
+${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}   ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT}")]
+#//span[contains(@class, "close-icon")]
+${DISCONNECT PASSWORD INPUT}             ${DISCONNECT FORM}//input[@id="password"]
+${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
+${DISCONNECT FORM CANCEL BUTTON}         ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
+${DISCONNECT FORM WRONG PASSWORD}        ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${WRONG PASSWORD}")]
+${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily

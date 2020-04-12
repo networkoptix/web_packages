@@ -13,25 +13,24 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector     : 'nx-email-input',
-    templateUrl  : 'email.component.html',
-    styleUrls    : ['email.component.scss'],
-    providers    : [
+    selector    : 'nx-email-input',
+    templateUrl : 'email.component.html',
+    styleUrls   : ['email.component.scss'],
+    providers   : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxEmailComponent),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxEmailComponent),
+            multi       : true
         },
         {
-            provide    : NG_VALIDATORS,
-            useExisting: forwardRef(() => NxEmailComponent),
-            multi      : true,
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxEmailComponent),
+            multi       : true
         }
     ],
     encapsulation: ViewEncapsulation.None
 })
 export class NxEmailComponent implements ControlValueAccessor, Validator {
-
     @Input() form: any;
     @Input() componentId: string;
     @Input() lockEmail: boolean;
@@ -69,14 +68,13 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
 
     constructor(configService: NxConfigService,
                 private language: NxLanguageProviderService) {
-
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.getTranslations();
     }
 
-    setValue() {
+    setValue(newValue) {
         // update the form
-        this.onChangeCallback(this.value);
+        this.onChangeCallback(newValue);
         this.form.form.get(this.componentId).markAsUntouched();
     }
 
@@ -104,5 +102,4 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     registerOnTouched(fn: any): void {
         this.onTouchedCallback = fn;
     }
-
 }

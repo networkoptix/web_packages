@@ -222,7 +222,7 @@ CACHES = {
 DEPLOYMENT_READY = 'ready'
 
 if LOCAL_ENVIRONMENT:
-    _HOST = 'https://dev3.cloud.hdw.mx'
+    _HOST = 'https://dev2.cloud.hdw.mx'
     conf["cloud_db"]["url"] = f"{_HOST}/cdb"
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"

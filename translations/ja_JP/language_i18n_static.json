@@ -1,506 +1,756 @@
 {
-	"account": {
-		"accountSavedSuccess": "あなたのアカウントは正常に保存されました",
-		"activationLinkSent": "アクティベーションリンクが送信されました",
-		"passwordChangedSuccess": "あなたのアカウントは正常に保存されました",
-		"changePassword": "パスワードを変更",
-		"newPasswordLabel": "新規パスワード",
-		"saveChanges": "保存",
-		"accountSettings": "アカウント設定"
-	},
-	"activeActions": {
-		"sendConfirm": "アクティベーションリンクを再送信",
-		"resetPassword": "パスワードを再設定する",
-		"setNewPassword": "パスワードを保存",
-		"setNewPasswordLabel": "新規パスワード"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "検索",
-		"search_ipvd": "モデルまたはメーカーで検索",
-		"filter applied": "フィルターが適用されました",
-		"filters applied": "フィルターが適用されました",
-		"Any": "全て",
-		"selected": "選択済み",
-		"vendor": "製造メーカー",
-		"vendors": "製造メーカー",
-		"hardwareType": "タイプ",
-		"hardwareTypes": "タイプ",
-		"minResolution": "最小解像度",
-		"analytics": "分析",
-		"analyticsSelected": "分析イベント"
-	},
-	"cameraFilters": {
-		"ptz": "PTZカメラ",
-		"aptz": "高度なPTZを搭載したカメラ",
-		"fisheye": "魚眼カメラ",
-		"H265": "H.265カメラ",
-		"IO": "I/Oモジュール",
-		"multiSensor": "マルチセンサーカメラ",
-		"TwWayAudio": "双方向オーディオ機器",
-		"audio": "音声付きカメラ",
-		"encoder": "エンコーダー",
-		"highRes": "超高解像度カメラ"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "ウィンドウズ"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "アンドロイド",
-				"shortLabel": "アンドロイド"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "N×1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "クライアントとサーバー",
-			"camera_sdk": "ビデオソースSDK",
-			"client": "クライアントのみ",
-			"metadata_sdk": "Metadata SDK",
-			"package": "パッケージ",
-			"server": "サーバーのみ",
-			"servertool": "構成ツール",
-			"storage_sdk": "ストレージ SDK",
-			"video_source_sdk": "ビデオソースSDK"
-		},
-		"releasesTypes": {
-			"beta": "ベータ",
-			"betas": "ベータ",
-			"rc": "リリース候補版",
-			"release": "リリース",
-			"releases": "リリース",
-			"patch": "パッチ",
-			"patches": "パッチ"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "領域",
-		"count": "カウント",
-		"vendor": "製造メーカー",
-		"model": "モデル",
-		"hardwareType": "タイプ",
-		"maxResolution": "<span>最大</span><br><span>解像度</span>",
-		"maxFps": "<span>最大</span><br><span>FPS</span>",
-		"primaryCodec": "コー​​デック",
-		"isAudioSupported": "オーディオ",
-		"isTwAudioSupported": "双方向オーディオ",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "高度なPTZ",
-		"isAptzSupportedShort": "高度なPTZ",
-		"isFisheye": "魚眼",
-		"isMdSupported": "モーション",
-		"isIoSupported": "I/O",
-		"isH265": "H.265",
-		"isMultiSensor": "マルチセンサー",
-		"isAnalyticsSupported": "解析",
-		"camera": "カメラ",
-		"multiSensorCamera": "マルチセンサーカメラ",
-		"encoder": "エンコーダー",
-		"dvr": "DVR",
-		"other": "その他",
-		"PTZ cameras": "PTZカメラ",
-		"Advanced PTZ cameras": "高度なPTZカメラ",
-		"Fisheye Cameras": "魚眼カメラ",
-		"Cameras supporting H.265": "H.265対応カメラ",
-		"I / O modules": "I/Oモジュール",
-		"Multisensor Cameras": "マルチセンサーカメラ",
-		"Cameras with 2-way audio": "双方向オーディオ付きカメラ",
-		"Extra high resolution cameras": "超高解像度カメラ",
-		"feedback": {
-			"a_Please": "これを実行して下さい",
-			"b_Link": "リクエストを送信する",
-			"c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
-		},
-		"disclaimer": "このリストは、ユーザーが{{companyName}} へのデバイススペックの自動報告を許可した{{vmsName}} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。"
-	},
-	"integration": {
-		"myIntegrationsLabel": "自分",
-		"previewRibbonText": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。",
-		"backToEditText": "編集インターフェースに戻る",
-		"requirements": "{{name}} Requirements",
-		"Access Control": "アクセスコントロール",
-		"Connector": "コネクタ",
-		"Data Analytics": "データ分析",
-		"Drone": "ドローン",
-		"Health Monitor": "ヘルスモニター",
-		"Storage": "ストレージ"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "カメラのモデルと製造元を必ず含めてください。"
-	},
-	"pageTitles": {
-		"template": "{{title}} - %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "について",
-		"registerSuccess": "ようこそ",
-		"register": "アカウントを作成",
-		"changePassword": "パスワードの変更",
-		"account": "アカウント設定",
-		"systems": "システム",
-		"system": "システム",
-		"systemName": "{{systemName}}",
-		"systemShare": "共有システム",
-		"activate": "アクティベート アカウント",
-		"activateSent": "アクティベート アカウント",
-		"activateSuccess": "アカウント アクティベート",
-		"activateCode": "アクティベート アカウント",
-		"restorePassword": "パスワードリセット",
-		"restorePasswordSuccess": "パスワードを保存",
-		"restorePasswordCode": "パスワードリセット",
-		"view": "カメラを表示",
-		"debug": "デバッグ",
-		"login": "ログイン",
-		"download": "%VMS_NAME% をダウンロード",
-		"downloadPlatform": "Download %VMS_NAME% for ",
-		"pageNotFound": "ページが見つかりません",
-		"supportedDevices": "サポートされているデバイス",
-		"integrations": "統合"
-	},
-	"dialogs": {
-		"okButton": "OK",
-		"cancelButton": "キャンセル",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
-		"loginTitle": "%CLOUD_NAME% にログイン",
-		"loginButton": "ログイン",
-		"logoutAuthorisedTitle": "すでにログインしています",
-		"logoutAuthorisedContinueButton": "続行",
-		"logoutAuthorisedLogoutButton": "ログアウト",
-		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
-		"download": "%VMS_NAME% をダウンロード",
-		"merge": {
-			"commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
-			"connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-			"mergeConfirmation": "<strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>を統合しようとしています。設定と名前は <strong>{{primarySystem}}</strong>から取得されます。",
-			"mergeFailedTitle": "システム統合が失敗しました",
-			"primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
-			"primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
-			"secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
-			"systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
-			"systemUnavailable": "システム {{targetSystem}} は現在到達不能です。数分後にもう一度試すか、連絡してください",
-			"recommendSupport": {
-				"a_recommend": "相談を推奨",
-				"b_support": "サポート",
-				"c_proceeding": "続行する前に"
-			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
-		},
-		"message": {
-			"failedToSend": "メッセージを送信できませんでした。",
-			"sent": "メッセージが送信されました。",
-			"title": {
-				"integration": "{{companyName}} と連絡を取る",
-				"ipvd_feedback_page": "カメラページへのフィードバック",
-				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
-			},
-			"subject": {
-				"sales_inquiry": "{{asset}} 販売問い合わせ",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
-				"integration_feedback": "{{asset}} 統合のためのフィードバック",
-				"ipvd_feedback_page": "カメラページへのフィードバック",
-				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "システムオーナーを変更すると現在のアカウントから所有権を失効します　この操作は元に戻せません　宜しいですか？",
-			"shareTitle": "追加",
-			"shareConfirmButton": "追加",
-			"editShareTitle": "権限を編集",
-			"editShareConfirmButton": "保存",
-			"permissionsSaved": "新しい権限の保存"
-		}
-	},
-	"errorCodes": {
-		"ok": "ok",
-		"cantSendActivationPrefix": "確認メールを送信できません",
-		"cantDisconnectSystemPrefix": "システムを削除できません",
-		"cantUnshareWithMeSystemPrefix": "システムを削除できません",
-		"cantSharePrefix": "システムを共有できません",
-		"cantGetUsersListPrefix": "ユーザーのリストは使用できません",
-		"cantGetSystemsListPrefix": "システム リストは使用できません",
-		"cantRegisterPrefix": "エラーが発生しました",
-		"cantGetSystemInfoPrefix": "システム情報はありません",
-		"cantChangeAccountPrefix": "変更を保存できません",
-		"cantChangePasswordPrefix": "パスワードを保存できません",
-		"cantActivatePrefix": "アカウントをアクティベートできません",
-		"cantSendConfirmationPrefix": "確認メールを送信できません",
-		"notAuthorized": "パスワードが間違っています",
-		"brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
-		"wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-		"wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
-		"wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
-		"wrongAuthCode": "期限切れまたは不正なコードです",
-		"forbidden": "この操作を実行するアクセス権限がありません",
-		"accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
-		"accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
-		"notFound": "見つかりません",
-		"alreadyExists": "このアカウントは既に存在します",
-		"unknownError": "予期しないエラーが発生しました",
-		"accountAlreadyActivated": "このアカウントは既にアクティベートされています",
-		"emailNotFound": "アカウントが存在しません",
-		"EmailAlreadyExists": "このEmailは既に登録されています",
-		"oldPasswordMistmatch": "パスワードが違います。",
-		"passwordMismatch": "間違ったパスワード",
-		"cantEditYourself": "自分のアクセス権限を変更することはできません",
-		"cantEditAdmin": "このユーザーは管理者権限を持っています",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
-		"lostConnection": "{{systemName}} への接続が失われました",
-		"thisSystem": "システム",
-		"oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
-		"DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
-		"mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
-		"INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
-		"FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
-		"unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。"
-	},
-	"passwordRequirements": {
-		"good": "良い",
-		"fair": "可",
-		"fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-		"minLength": "短すぎます",
-		"minLengthMessage": "パスワードは8文字以上必要です",
-		"required": "無効",
-		"requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
-		"weak": "弱",
-		"weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-		"strongMessage": "強力なパスワード!",
-		"common": "あまりにも一般的",
-		"commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
-		"missingMessage": "パスワードが必要"
-	},
-	"registration": {
-		"agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
-	},
-	"system": {
-		"yourSystem": "ご利用のシステム",
-		"mySystemSearch": "IMeMyMine",
-		"unavailable": "システムに到達できません",
-		"offline": "システムはオフライン",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
-		"openClient": "Open in %VMS_NAME%",
-		"openClientNoSystem": "%VMS_NAME% を開く",
-		"confirmMergeAction": "統合",
-		"mergeSystemTitle": "システム統合",
-		"confirmRenameTitle": "システム名",
-		"confirmRenameAction": "保存",
-		"successRename": "システム名は保存されました",
-		"confirmDisconnectTitle": "%CLOUD_NAME% からシステムを切断しますか？",
-		"confirmDisconnectAction": "切断",
-		"confirmUnshareFromMe": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
-		"confirmUnshareFromMeTitle": "システムを切断しますか？",
-		"confirmUnshareFromMeAction": "切断",
-		"confirmUnshare": "このユーザはシステムにアクセスすることができません　宜しいですか？",
-		"confirmUnshareTitle": "ユーザーを削除しますか?",
-		"confirmUnshareAction": "削除",
-		"successDisconnected": "システムは %CLOUD_NAME% から正常に切断されました",
-		"successDeleted": "システム {{systemName}} はあなたのアカウントから正常に削除されました",
-		"mergeFailed": "システム統合が失敗しました",
-		"mergeStart": "システムが統合を開始しました",
-		"mergeSuccess": "システムが統合されました",
-		"permissionsRemoved": "{{email}} からアクセス権限が削除されました",
-		"unknownName": "システムの名前が不明です（クラウド統合が原因）",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "時",
-				"minutes": "分"
-			},
-			"warningMessages": {
-				"videoEncryption": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "アクティベート済",
-		"incompatible": "互換性なし",
-		"merging": "統合中",
-		"notActivated": "アクティベートされていません",
-		"online": "オンライン",
-		"offline": "オフライン",
-		"unavailable": "利用できません"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "無効",
-			"description": "ユーザーが無効の為にシステムにログインできません"
-		},
-		"Owner": {
-			"label": "オーナー",
-			"description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
-		},
-		"Viewer": {
-			"label": "ビューアー",
-			"description": "ライブ ビデオとアーカイブを参照できます"
-		},
-		"Live Viewer": {
-			"label": "ライブビューアー",
-			"description": "ライブ表示のみ可能"
-		},
-		"Advanced Viewer": {
-			"label": "拡張ビューアー",
-			"description": "ライブ表示、アーカイブ表示、PTZコントロール 等"
-		},
-		"Administrator": {
-			"label": "アドミニストレーター",
-			"description": "共有する機能を含む無制限のアクセス"
-		},
-		"Custom": {
-			"label": "カスタム",
-			"description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-		},
-		"cloudAdmin": {
-			"label": "アドミニストレーター",
-			"description": "システムを構成し共有することができます"
-		},
-		"customRole": {
-			"label": "カスタムの役割",
-			"description": "システムで指定されたカスタムのユーザーの役割"
-		},
-		"owner": {
-			"label": "オーナー",
-			"description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス"
-		},
-		"viewer": {
-			"label": "ビューアー",
-			"description": "ライブ ビデオとアーカイブを参照できます"
-		},
-		"liveViewer": {
-			"label": "ライブビューアー",
-			"description": "ライブ表示のみ可能"
-		},
-		"advancedViewer": {
-			"label": "拡張ビューアー",
-			"description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等"
-		},
-		"custom": {
-			"label": "カスタム",
-			"description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "このフォームを送信することにより、あなたは {{INTEGRATION_COMPANY}} または %COMPANY_NAME%、あるいはその両方から連絡を受けることに同意します。\n{{INTEGRATION_COMPANY}} プライバシーポリシー <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ここ</a> と %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a> には同意を撤回する方法に関する指示が含まれています。",
-		"ipvd": "このフォームを送信することにより、あなたは %COMPANY_NAME%から連絡を受けることに同意します。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ここ</a>には同意を撤回する方法についての指示が含まれています。"
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "高解像度ストリーム",
-			"lowStream": "低解像度ストリーム",
-			"transcoding": "トランスコーディング",
-			"unknown": "未知の値",
-			"copyToClipboard": "クリップボードにコピー",
-			"copyDefaultText": "コピー",
-			"copyActiveText": "クリップボードにコピーしました"
-		},
-		"systemOffline": "システムはオフラインです",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
-		"systemServerError": "Internal server error",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-		"systemHasNoCameras": "カメラなし",
-		"systemUnreachable": "システムにアクセスできません",
-		"cameraStates": {
-			"offline": "オフライン",
-			"error": "エラー",
-			"errorLoading": "ビデオの読み込み中にエラーが発生しました",
-			"unauthorized": "認証が必要です。",
-			"noData": "データがありません",
-			"iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
-			"flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",
-			"flashOrWebmRequired": "ビデオを再生することはできません <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
-			"noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",
-			"noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません。",
-			"ieNoWebm": "ビデオを再生することはできません <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
-			"ieWin10": "Microsoft EdgeまたはGoogle Chromeブラウザを使用してください。",
-			"ubuntuNX": "このブラウザは、ARMベースのサーバーのビデオをサポートしていません。代わりにChromiumブラウザを使用してください。"
-		},
-		"searchCamPlaceholder": "検索",
-		"resolution": {
-			"auto": "自動",
-			"high": "高い",
-			"low": "低い"
-		},
-		"chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
-		"voiceCommands": {
-			"play": "再生",
-			"pause": "一時停止",
-			"live": "ライブに移動|ライブ表示",
-			"view": "表示 + [カメラ名]",
-			"search": "検索+ [検索バーのテキスト]",
-			"clear search": "検索をクリア",
-			"expand server": "サーバー展開+ [サーバー名]",
-			"collapse server": "サーバー折りたたみ+ [サーバー名]",
-			"expand all servers": "すべてのサーバーを展開する",
-			"collapse all servers": "すべてのサーバーを折りたたむ",
-			"stop listening": "聞くのをやめる",
-			"help": "ヘルプ| 表示コマンド"
-		}
-	},
-	"systemAdministration": "システムアドミニストレーション",
-	"users": "ユーザー",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
-	"About %CLOUD_NAME%": "%CLOUD_NAME%について",
-	"Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
-	"Integrations": "統合",
-	"Privacy": "プライバシー",
-	"Support": "サポート",
-	"Supported Devices": "サポートされているデバイス",
-	"Terms": "利用規約",
-	"pleaseSelect": "選択してください",
-	"WHEN_MERGE_FINISHES": "統合が完了すると、このシステムのすべてのユーザーとカメラが <strong>{{targetSystemName}}</strong> システムで使用可能になり、このシステムが削除されます。",
-	"FAILED_SYSTEM_DESCR": "このリンクは壊れています。<br>システムは %CLOUD_NAME%から切断される可能性があります。<br>このシステムへのアクセスが取り消される可能性があります。<br>または別のアカウントにログインしている可能性があります。",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "%CLOUD_NAME% に接続されたシステムがありません",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "システムアドミニストレーションのクラウドタブに移動",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "「システムを %CLOUD_NAME% に接続」を押します",
-	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "電話： {{number}}"
+    "About %CLOUD_NAME%": "%CLOUD_NAME%について",
+    "Download %VMS_NAME%": "%VMS_NAME% をダウンロード",
+    "Integrations": "統合",
+    "Privacy": "プライバシー",
+    "Support": "サポート",
+    "Terms": "利用規約",
+    "accessRoles": {
+        "Administrator": {
+            "description": "共有する機能を含む無制限のアクセス",
+            "label": "アドミニストレーター"
+        },
+        "Advanced Viewer": {
+            "description": "ライブ表示、アーカイブ表示、PTZコントロール 等",
+            "label": "拡張ビューアー"
+        },
+        "Custom": {
+            "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
+            "label": "カスタム"
+        },
+        "Live Viewer": {
+            "description": "ライブ表示のみ可能",
+            "label": "ライブビューアー"
+        },
+        "Owner": {
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "label": "オーナー"
+        },
+        "Viewer": {
+            "description": "ライブ ビデオとアーカイブを参照できます",
+            "label": "ビューアー"
+        },
+        "advancedViewer": {
+            "description": "ライブ表示、アーカイブ表示、カメラ設定、PTZコントロール 等",
+            "label": "拡張ビューアー"
+        },
+        "cloudAdmin": {
+            "description": "システムを構成し共有することができます",
+            "label": "アドミニストレーター"
+        },
+        "custom": {
+            "description": "%VMS_NAME% クライアント アプリケーションを使用してカスタム権限を設定する",
+            "label": "カスタム"
+        },
+        "customRole": {
+            "description": "システムで指定されたカスタムのユーザーの役割",
+            "label": "カスタムの役割"
+        },
+        "disabled": {
+            "description": "ユーザーが無効の為にシステムにログインできません",
+            "label": "無効"
+        },
+        "liveViewer": {
+            "description": "ライブ表示のみ可能",
+            "label": "ライブビューアー"
+        },
+        "owner": {
+            "description": "クラウドから、共有とシステムの接続/切断を含む無制限のアクセス",
+            "label": "オーナー"
+        },
+        "viewer": {
+            "description": "ライブ ビデオとアーカイブを参照できます",
+            "label": "ビューアー"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
+        "accountSettings": "アカウント設定",
+        "activationLinkSent": "アクティベーションリンクが送信されました",
+        "agreementAccepted": "Agreement has been accepted",
+        "changePassword": "パスワードを変更",
+        "newPasswordLabel": "新規パスワード",
+        "saveChanges": "保存"
+    },
+    "activeActions": {
+        "resetPassword": "パスワードを再設定する",
+        "sendConfirm": "アクティベーションリンクを再送信",
+        "setNewPassword": "パスワードを保存",
+        "setNewPasswordLabel": "新規パスワード"
+    },
+    "cameraFilters": {
+        "H265": "H.265カメラ",
+        "IO": "I/Oモジュール",
+        "TwWayAudio": "双方向オーディオ機器",
+        "aptz": "高度なPTZを搭載したカメラ",
+        "audio": "音声付きカメラ",
+        "encoder": "エンコーダー",
+        "fisheye": "魚眼カメラ",
+        "highRes": "超高解像度カメラ",
+        "multiSensor": "マルチセンサーカメラ",
+        "ptz": "PTZカメラ"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {{email}}"
+            },
+            "activated": {
+                "title": "Account successfully activated"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "クリップボードにコピーしました",
+            "copyDefaultText": "コピー",
+            "copyToClipboard": "クリップボードにコピー",
+            "highStream": "高解像度ストリーム",
+            "lowStream": "低解像度ストリーム",
+            "transcoding": "トランスコーディング",
+            "unknown": "未知の値"
+        },
+        "cameraStates": {
+            "error": "エラー",
+            "errorLoading": "ビデオの読み込み中にエラーが発生しました",
+            "flashOrWebmRequired": "ビデオを再生することはできません <a href='https://get.adobe.com/flashplayer/' target='_blank'>Adobe Flash</a> または <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "flashRequired": "動画を再生するには <a href='https://get.adobe.com/flashplayer/' target='_blank'> Adobe Flash をインストール</a> してください。",
+            "iOSVideoTooLarge": "iOSはfullHD(2MP：1920x1080)より大きいビデオをサポートしていません",
+            "ieNoWebm": "ビデオを再生することはできません <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a>をインストールして下さい",
+            "ieWin10": "Microsoft EdgeまたはGoogle Chromeブラウザを使用してください。",
+            "noArmSupport": "このブラウザまたはデバイスは、ARMベースのサーバーからのビデオ再生をサポートしていません。",
+            "noData": "データがありません",
+            "noFormat": "このブラウザは、このカメラのビデオ再生をサポートしていません。",
+            "offline": "オフライン",
+            "ubuntuNX": "このブラウザは、ARMベースのサーバーのビデオをサポートしていません。代わりにChromiumブラウザを使用してください。",
+            "unauthorized": "認証が必要です。"
+        },
+        "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
+        "resolution": {
+            "auto": "自動",
+            "high": "高い",
+            "low": "低い"
+        },
+        "general": "General",
+        "maintenanceInProgress": "Maintenance is in progress",
+        "searchCamPlaceholder": "検索",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemNewVersion": "Update your system",
+        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+        "systemNoAlerts": "No Alerts",
+        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemOffline": "システムはオフラインです",
+        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemServerError": "Internal server error",
+        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "システムにアクセスできません",
+        "unknown": "未知の値",
+        "voiceCommands": {
+            "clear search": "検索をクリア",
+            "collapse all servers": "すべてのサーバーを折りたたむ",
+            "collapse server": "サーバー折りたたみ+ [サーバー名]",
+            "expand all servers": "すべてのサーバーを展開する",
+            "expand server": "サーバー展開+ [サーバー名]",
+            "help": "ヘルプ| 表示コマンド",
+            "live": "ライブに移動|ライブ表示",
+            "pause": "一時停止",
+            "play": "再生",
+            "search": "検索+ [検索バーのテキスト]",
+            "stop listening": "聞くのをやめる",
+            "view": "表示 + [カメラ名]"
+        },
+        "viewingOutdatedReport": "You are viewing an outdated report."
+    },
+    "dialogs": {
+        "buttons": {
+            "cancel": "キャンセル",
+            "createAccount": "Create New Account",
+            "delete": "Delete",
+            "deleteAccount": "Delete Account",
+            "download": "%VMS_NAME% をダウンロード",
+            "logoutAuthorised": "ログアウト",
+            "ok": "OK",
+            "remove": "削除",
+            "stayAs": "Stay logged as {email} ",
+            "stayLoggedIn": "Stay Logged In"
+        },
+        "cloudStorage": {
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
+            "activationError": {
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+            },
+            "systemDisconnectError": {
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
+                "status": {
+                    "offline": "Cloud storage cannot be moved to offline systems."
+                }
+            },
+            "noOtherSystemsError": {
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+            }
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "checking": "Checking...",
+            "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
+            "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
+            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
+            "mergeSystemsTitle": "Merge current system with:",
+            "mergeFailedTitle": "システム統合が失敗しました",
+            "noServerFound": "No server found.",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
+            "passwordRequired": "Password is required.",
+            "passwordWrong": "Wrong password.",
+            "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
+            "primarySystemOffline": "システム {{primarySystem}} はオフラインのため、システム{{targetSystem}} と統合することはできません。",
+            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "相談を推奨",
+                "b_support": "サポート",
+                "c_proceeding": "続行する前に"
+            },
+            "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません。",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+            "systemVersionOld": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
+            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "urlEmpty": "Enter server address.",
+            "urlNotValid": "Enter valid URL.",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+        },
+        "message": {
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "failedToSend": "メッセージを送信できませんでした。",
+            "placeholders": {
+                "feedback": "カメラのモデルと製造元を必ず含めてください。"
+            },
+            "sent": "メッセージが送信されました。",
+            "subject": {
+                "integration_feedback": "{{asset}} 統合のためのフィードバック",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック",
+                "sales_inquiry": "{{asset}}販売問い合わせ",
+                "technical_inquiry": "Technical inquiry for {{asset}}"
+            },
+            "title": {
+                "integration": "{{companyName}} と連絡を取る",
+                "ipvd_feedback_device": "{{asset}} についてのフィードバック",
+                "ipvd_feedback_page": "カメラページへのフィードバック"
+            }
+        },
+        "removeSystem": {
+            "action": "切断",
+            "message": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
+            "title": "システムを切断しますか？"
+        },
+        "titles": {
+            "error": "エラー",
+            "success": "Success",
+            "changeAccount": "You are already logged in as {email}",
+            "deleteUser": "Delete user?",
+            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "removeUser": "ユーザーを削除しますか?",
+            "serversDetach": "Detach server \"{{ title }}\" from current system?",
+            "serversReset": "Reset server \"{{ title }}\" to defaults?",
+            "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "クライアントとサーバー",
+            "camera_sdk": "ビデオソースSDK",
+            "client": "クライアントのみ",
+            "metadata_sdk": "Metadata SDK",
+            "package": "パッケージ",
+            "server": "サーバーのみ",
+            "servertool": "構成ツール",
+            "storage_sdk": "ストレージ SDK",
+            "video_source_sdk": "ビデオソースSDK"
+        },
+        "groups": {
+            "android": {
+                "label": "アンドロイド",
+                "shortLabel": "アンドロイド"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "ウィンドウズ"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "N×1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "ベータ",
+            "betas": "ベータ",
+            "patch": "パッチ",
+            "patches": "パッチ",
+            "rc": "リリース候補版",
+            "release": "リリース",
+            "releases": "リリース"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
+        "EmailAlreadyExists": "このEmailは既に登録されています",
+        "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
+        "INCOMPATIBLE": "システムには異なるソフトウェアバージョンがあります。両方とも <a href=\"/download\">最新のビルド</a>を更新してください。",
+        "accountAlreadyActivated": "このアカウントは既にアクティベートされています",
+        "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
+        "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
+        "alreadyExists": "このアカウントは既に存在します",
+        "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
+        "cantActivatePrefix": "アカウントをアクティベートできません",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantChangeAccountPrefix": "変更を保存できません",
+        "cantChangePasswordPrefix": "パスワードを保存できません",
+        "cantDisconnectSystemPrefix": "システムを削除できません",
+        "cantEditAdmin": "このユーザーは管理者権限を持っています",
+        "cantEditYourself": "自分のアクセス権限を変更することはできません",
+        "cantGetSystemInfoPrefix": "システム情報はありません",
+        "cantGetSystemsListPrefix": "システム リストは使用できません",
+        "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
+        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantRegisterPrefix": "エラーが発生しました",
+        "cantSendActivationPrefix": "確認メールを送信できません",
+        "cantSendConfirmationPrefix": "確認メールを送信できません",
+        "cantSharePrefix": "システムを共有できません",
+        "cantUnshareWithMeSystemPrefix": "システムを削除できません",
+        "emailNotFound": "アカウントが存在しません",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "forbidden": "この操作を実行するアクセス権限がありません",
+        "lostConnection": "{{systemName}} への接続が失われました",
+        "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
+        "notAuthorized": "パスワードが間違っています",
+        "notFound": "見つかりません",
+        "ok": "ok",
+        "oldPasswordMistmatch": "パスワードが違います。",
+        "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
+        "passwordMismatch": "間違ったパスワード",
+        "thisSystem": "システム",
+        "unknownError": "Unexpected error occurred",
+        "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
+        "wrongAuthCode": "期限切れまたは不正なコードです",
+        "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
+        "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
+        "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません"
+    },
+    "integration": {
+        "Access Control": "アクセスコントロール",
+        "Connector": "コネクタ",
+        "Data Analytics": "データ分析",
+        "Drone": "ドローン",
+        "Health Monitor": "ヘルスモニター",
+        "Storage": "ストレージ",
+        "myIntegrationsLabel": "自分",
+        "phoneNumberWithLabel": "電話： {{number}}",
+        "requirements": "{{name}} Requirements",
+        "testedVersionLabel": "Tested with {{vmsName}} version:",
+        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "高度なPTZカメラ",
+        "Cameras supporting H.265": "H.265対応カメラ",
+        "Cameras with 2-way audio": "双方向オーディオ付きカメラ",
+        "Extra high resolution cameras": "超高解像度カメラ",
+        "Fisheye Cameras": "魚眼カメラ",
+        "I / O modules": "I/Oモジュール",
+        "Multisensor Cameras": "マルチセンサーカメラ",
+        "PTZ cameras": "PTZカメラ",
+        "camera": "カメラ",
+        "count": "カウント",
+        "disclaimer": "このリストは、ユーザーが{{companyName}} へのデバイススペックの自動報告を許可した{{vmsName}} において検出されたデバイスに限定されています。個人情報は収集されず、各ユーザーは完全に匿名のままです。",
+        "dvr": "DVR",
+        "encoder": "エンコーダー",
+        "feedback": {
+            "a_Please": "これを実行して下さい",
+            "b_Link": "リクエストを送信する",
+            "c_Info": "サポートされているデバイスに関するその他の質問/懸念事項については"
+        },
+        "hardwareType": "タイプ",
+        "isAnalyticsSupported": "解析",
+        "isAptzSupported": "高度なPTZ",
+        "isAptzSupportedShort": "高度なPTZ",
+        "isAudioSupported": "オーディオ",
+        "isFisheye": "魚眼",
+        "isH265": "H.265",
+        "isIoSupported": "I/O",
+        "isMdSupported": "モーション",
+        "isMultiSensor": "マルチセンサー",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "双方向オーディオ",
+        "maxFps": "<span>最大</span><br><span>FPS</span>",
+        "maxResolution": "<span>最大</span><br><span>解像度</span>",
+        "model": "モデル",
+        "multiSensorCamera": "マルチセンサーカメラ",
+        "other": "その他",
+        "primaryCodec": "コー​​デック",
+        "resolutionArea": "領域",
+        "topXByVolume": "Top {{value}} by volume:",
+        "vendor": "製造メーカー"
+    },
+    "menu": {
+        "titles": {
+            "systemAdministration": "システムアドミニストレーション",
+            "users": "ユーザー"
+        }
+    },
+    "pageTitles": {
+        "about": "について",
+        "account": "アカウント設定",
+        "activate": "アクティベート アカウント",
+        "activateCode": "アクティベート アカウント",
+        "activateSuccess": "アカウント アクティベート",
+        "changePassword": "パスワードの変更",
+        "debug": "デバッグ",
+        "default": "%CLOUD_NAME%",
+        "download": "%VMS_NAME% をダウンロード",
+        "downloadPlatform": "Download %VMS_NAME% for ",
+        "failedToAccessSystem": "Failed to access system",
+        "integrations": "統合",
+        "login": "ログイン",
+        "pageNotFound": "ページが見つかりません",
+        "register": "アカウントを作成",
+        "registerSuccess": "ようこそ",
+        "restorePassword": "パスワードリセット",
+        "restorePasswordSuccess": "パスワードを保存",
+        "supportedDevices": "サポートされているデバイス",
+        "system": "システム",
+        "systemName": "{{systemName}}",
+        "systemShare": "共有システム",
+        "systems": "システム",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "カメラを表示"
+    },
+    "passwordRequirements": {
+        "common": "あまりにも一般的",
+        "commonMessage": "このパスワードは、世界で最も人気のあるパスワード",
+        "fair": "可",
+        "fairMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
+        "good": "良い",
+        "minLength": "短すぎます",
+        "minLengthMessage": "パスワードは8文字以上必要です",
+        "missingMessage": "パスワードが必要",
+        "required": "無効",
+        "requiredMessage": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+        "strongMessage": "強力なパスワード!",
+        "weak": "弱",
+        "weakMessage": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る"
+    },
+    "placeholderTexts": {
+        "merge": {
+            "title": "This system is being merged to {{systemName}}.",
+            "message": {
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+            }
+        }
+    },
+    "pleaseSelect": "選択してください",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+    },
+    "registration": {
+        "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "is being merged to this system.",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
+        },
+        "finishingMerge": "Finishing systems merge",
+        "integration": {
+            "backToEditText": "編集インターフェースに戻る",
+            "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
+        },
+        "systemOffline": "System is offline. Some settings may not be available."
+    },
+    "search": {
+        "Any": "全て",
+        "Search": "検索",
+        "analytics": "分析",
+        "analyticsSelected": "分析イベント",
+        "filter applied": "フィルターが適用されました",
+        "filters applied": "フィルターが適用されました",
+        "hardwareType": "タイプ",
+        "hardwareTypes": "タイプ",
+        "minResolution": "最小解像度",
+        "search_ipvd": "モデルまたはメーカーで検索",
+        "selected": "選択済み",
+        "vendor": "製造メーカー",
+        "vendors": "製造メーカー"
+    },
+    "servers": {
+        "beginDetach": "Server is now detaching",
+        "beginReset": "Server is now reseting.",
+        "beginRestart": "Server is now restarting.",
+        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
+        "detachSystemSuccess": "Server was successfully detached from the system.",
+        "getModuleFailed": "There was a problem getting server information.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "removeMediaserverFailed": "Failed to remove the server from system.",
+        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
+        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
+        "restartFailed": "There was a problem restarting the server.",
+        "restartSuccessful": "Server has successfully restarted.",
+        "servers": "Servers",
+        "status": {
+            "checking": "checking...",
+            "offline": "オフライン",
+            "reseting": "reseting...",
+            "restarting": "restarting..."
+        },
+        "successRename": "Server name renamed."
+    },
+    "system": {
+        "MERGE_FINISHES": "統合が完了すると、このシステムのすべてのユーザーとカメラが <strong>{{targetSystemName}}</strong> システムで使用可能になり、このシステムが削除されます。",
+        "mergeUnknownName": "システムの名前が不明です（クラウド統合が原因）",
+        "mySystemSearch": "IMeMyMine",
+        "settings": {
+            "notAbleToLoadSecurity": "Not able to load security settings.",
+            "notAbleToLoadSystem": "Not able to load system settings.",
+            "sessionLimitDuration": {
+                "hours": "時",
+                "minutes": "分"
+            },
+            "warningMessages": {
+                "videoEncryption": "ビデオトラフィックを暗号化すると、CPU使用率が大幅に増加します。"
+            }
+        },
+        "status": {
+            "offline": "システムはオフライン",
+            "unavailable": "システムに到達できません"
+        },
+        "users": {
+            "cloudDelete": "Remove User",
+            "localDelete": "Delete User"
+        },
+        "yourSystem": "ご利用のシステム",
+        "loggers": {
+            "none": {
+                "text": "None",
+                "help": "(log disabled)"
+            },
+            "error": {
+                "text": "エラー",
+                "help": "(log errors only)"
+            },
+            "warning": {
+                "text": "Warning",
+                "help": "(log warnings and errors)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(log warnings, errors and all messages)"
+            },
+            "debug": {
+                "text": "デバッグ",
+                "help": "(log every System message and debug information)"
+            },
+            "verbose": {
+                "text": "Verbose",
+                "help": "(log all information available)"
+            }
+        }
+    },
+    "systemStatuses": {
+        "activated": "アクティベート済",
+        "incompatible": "互換性なし",
+        "merging": "統合中",
+        "notActivated": "アクティベートされていません",
+        "offline": "オフライン",
+        "online": "オンライン",
+        "unavailable": "利用できません"
+    },
+    "toastMessage": {
+        "system": {
+            "deleted": {
+                "success": "システム {{systemName}} はあなたのアカウントから正常に削除されました"
+            },
+            "disconnected": {
+                "success": "システムは %CLOUD_NAME% から正常に切断されました"
+            },
+            "merge": {
+                "failed": "システム統合が失敗しました",
+                "start": "システムが統合を開始しました",
+                "success": "システムが統合されました"
+            },
+            "rename": {
+                "success": "システム名は保存されました"
+            }
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Additional local FS types",
+        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "crossdomainEnabled": "Cross domain",
+        "defaultExportVideoCodec": "Default export video codec",
+        "defaultVideoCodec": "Default video codec",
+        "downloaderPeers": "Downloader peers",
+        "lastMergeMasterId": "Last merge masterId",
+        "lastMergeSlaveId": "Last merge slaveId",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "License server",
+        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
+        "maxRtpRetryCount": "Max RTP retry count",
+        "metadataStorageChangePolicy": "Meta data storage change policy",
+        "pushNotificationsLanguage": "Push notification language",
+        "resourceFileUri": "Resource file URI",
+        "sessionLimitMinutes": "Session limit (minutes)",
+        "specificFeatures": "Specific features",
+        "systemName": "システム名",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP Enabled",
+        "auditTrailEnabled": "Audit trail enabled",
+        "auditTrailPeriodDays": "Audit trail period days",
+        "autoDiscoveryEnabled": "Enable device auto discovery",
+        "autoUpdateThumbnails": "Auto-update thumbnails",
+        "backupNewCamerasByDefault": "Backup new cameras by default",
+        "backupQualities": "Backup qualities",
+        "cameraSettingsOptimization": "Allow device setting optimization",
+        "clientStatisticsSettingsUrl": "Client statistics relative url",
+        "cloudAccountName": "Cloud owner account",
+        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud System id",
+        "disabledVendors": "Disabled vendors",
+        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
+        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
+        "emailFrom": "Email from",
+        "emailSignature": "Email signature",
+        "emailSupportEmail": "Support Email",
+        "enableEdgeRecording": "Enable edge recording",
+        "eventLogPeriodDays": "Event log period (days)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP search base",
+        "ldapSearchFilter": "LDAP search filter",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Local System ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
+        "maxRecordQueueSizeElements": "Max record queue size (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
+        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
+        "maxSceneItems": "Max scene items (0 means default)",
+        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
+        "rtpTimeoutMs": "RTP timeout (milliseconds)",
+        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
+        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
+        "smtpConnectionType": "SMTP connection type",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP simple",
+        "smtpTimeout": "SMTP timeout",
+        "smtpUser": "SMTP user",
+        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+        "statisticsReportLastNumber": "Statistics report - last number",
+        "statisticsReportLastTime": "Statistics report - last time",
+        "statisticsReportLastVersion": "Statistics report - last version",
+        "statisticsReportServerApi": "Statistics server api",
+        "statisticsReportTimeCycle": "Statistics report interval",
+        "statisticsReportUpdateDelay": "Statistics report - update delay",
+        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "SystemName": "システム名",
+        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
+        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "primaryTimeServer": "Primary time synchronization server",
+        "osTimeChangeCheckPeriodMs": "OS time change check period",
+        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "updateNotificationsEnabled": "Update notifications enabled",
+        "upnpPortMappingEnabled": "UPNP port mapping enabled",
+        "useTextEmailFormat": "Send plain-text emails",
+        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "trafficEncryptionForced": "Force traffic encryption",
+        "videoTrafficEncryptionForced": "Force video traffic encryption",
+        "updateStatus": "Update status",
+        "watermarkSettings": "Watermark settings",
+        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+    }
 }

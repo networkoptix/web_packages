@@ -445,9 +445,9 @@ export interface ServersStatus {
 }
 
 export interface System {
+    auditTime: number;
     flags: Flags;
     status: SystemStatus;
-    throttleTime: number;
 }
 
 export interface Flags {

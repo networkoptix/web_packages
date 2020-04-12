@@ -543,6 +543,10 @@ export class NxSystemAPI {
         return this.post('/api/mergeSystems', data);
     }
 
+    checkMergeStatus() {
+        this.get('/ec2/mergeStatus');
+    }
+
     checkLocalAdminPassword(password) {
         const localPasswordUrl = this.urlBase.replace('/web', '');
         const httpOptions = {
