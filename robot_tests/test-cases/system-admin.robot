@@ -39,11 +39,7 @@ Check System Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-#    Add user to cloud system if not there    ${AUTO TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}
     ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO TESTS DEV2 IP}    ${AUTO TESTS DEV2 PORT}    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
-#    FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
-#        Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
-#    END
     FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
