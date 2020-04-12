@@ -10,6 +10,7 @@ import string
 from urllib3.util.timeout import current_time
 import os
 
+
 class CloudPortalAPI(object):
 
     def log_in(self, env, email, password):
@@ -18,12 +19,12 @@ class CloudPortalAPI(object):
         assert r.status_code == 200, "Log In Failed"
         return s
 
-    # TODO implement logging out using API where appropriate
     def log_out(self, env, session_id, csrftoken):
         with requests.Session() as s:
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
             r = s.post(f'{env}/api/account/logout')
+            assert 200 == r.status_code, 'Log out failed.'
             return r.status_code
 
     def change_password(self, env, email, old_password, new_password):
@@ -64,7 +65,7 @@ class CloudPortalAPI(object):
             return systems
 
     def get_system_settings(self, server_url, local_auth):
-        r = requests.get(f'{server_url}/ec2/getSettings', auth=HTTPBasicAuth(local_auth[0], local_auth[1]))
+        r = requests.get(f'{server_url}/ec2/getSettings', auth=HTTPDigestAuth(local_auth[0], local_auth[1]), verify=False)
         assert r.status_code == 200, 'Failed to get system settings'
         return r.json()
 
@@ -250,8 +251,3 @@ class CloudPortalAPI(object):
         f= open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
-
-if __name__ == '__main__':
-    cp = CloudPortalAPI()
-    print('ID: ', cp.get_cloud_system_id('http://10.1.5.115:7001', ['admin', 'qweasd 123']))
-    print('Owner: ', cp.get_cloud_system_owner('http://10.1.5.115:7001', ['admin', 'qweasd 123']))

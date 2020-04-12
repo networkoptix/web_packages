@@ -10,7 +10,7 @@ ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
 ${ENV}                                ${CLOUD TEST}
 #${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
-${AUTO TESTS DEV2 IP}                 http://10.1.5.147
+${AUTO TESTS DEV2 IP}                 https://10.1.5.147
 ${AUTO TESTS DEV2 PORT}               7001
 @{AUTO SYS AUTH}                      admin    qweasd 123
 ${SCREENSHOTDIRECTORY}                Screenshots
@@ -33,20 +33,20 @@ ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
-&{Auto Tests users}
+&{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
-...    ${EMAIL ADV VIEWER}=adancedViewer
+...    ${EMAIL ADV VIEWER}=advancedViewer
 ...    ${EMAIL LIVE VIEWER}=liveViewer
 ...    ${EMAIL NOT OWNER}=viewer
 ...    ${EMAIL ADMIN}=cloudAdmin
 ...    ${EMAIL CUSTOM}=custom
-...    ${EMAIL CLIENT CUSTOM}=clientCustom
 ...    ${EMAIL AUTO TESTS ANCHOR}=viewer
+...    nhartleb@networkoptix.com=cloudAdmin
 
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 3.0}              ${TEST EMAIL}+mergeowner3.0${BASE EMAIL DOMAIN}
-@{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}    ${EMAIL CLIENT CUSTOM}
+@{EMAILS LIST}                        ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL CUSTOM}
 ${ALT BASE EMAIL}                     qaburbank@gmail.com
 ${ALT EMAIL VIEWER}                   qaburbank+viewer@gmail.com
 ${ALT EMAIL ADV VIEWER}               qaburbank+advviewer@gmail.com
