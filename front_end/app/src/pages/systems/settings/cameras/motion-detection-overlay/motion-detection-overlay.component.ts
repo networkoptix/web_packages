@@ -276,15 +276,18 @@ export class MotionMaskRenderer {
             throttleTime(100),
             map(findEventCoords),
             distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y),
-            tap(this.drawHover)
+            // tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 }))
         ); // For testing, will either remove or move into full UI observable later
 
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
-        const clickBuffer$ = clickAction$.pipe(debounceTime(250));
+        const clickBuffer$ = clickAction$.pipe(debounceTime(100));
 
         const selectionState$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
 
+        let selectionRenderSubscription: Subscription;
+
         const clickState$ = clickAction$.pipe(
+            startWith({ type: null }),
             buffer(clickBuffer$),
             withLatestFrom(mouseState$),
             map(([buffer, { x, y }]) => {
@@ -293,9 +296,39 @@ export class MotionMaskRenderer {
                         ? 'click' : buffer[0].type === 'mousedown'
                             ? 'select-start' : 'select-end';
                 return { action, x, y, ...shiftCtrlSubject$.value };
+            }),
+            pairwise(),
+            filter(([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end')),
+            map(([prev, { action, x, y, ...keyStates }]) => {
+                let width = 1;
+                let height = 1;
+
+                if (action === 'select-end') {
+                    width = Math.max(x, prev.x) - Math.min(x, prev.x);
+                    height = Math.max(y, prev.y) - Math.min(y, prev.y);
+                }
+
+                return { action, x, y, width, height, ...keyStates };
+            }),
+            tap(({ action, x: selectX, y: selectY }) => {
+                if (action === 'select-start') {
+                    // start new observable for updating selection rect
+                    selectionRenderSubscription = mouseState$.subscribe(({ x: mouseX, y: mouseY }) => {
+                        const x = Math.min(selectX, mouseX);
+                        const y = Math.min(selectY, mouseY);
+                        const width = Math.max(selectX, mouseX) - x;
+                        const height = Math.max(selectY, mouseY) - y;
+
+                        this.drawHoverOrSelection({ x, y, height, width });
+                    });
+                } else if (selectionRenderSubscription && !selectionRenderSubscription.closed) {
+                    selectionRenderSubscription.unsubscribe();
+                } else {
+                    this.render();
+                }
             })
         ).subscribe(e => {
-            console.log(JSON.stringify(e, null, 2));
+            // handle pushing state updates here, create new Area then push to zones.
         });
     };
 
@@ -362,12 +395,12 @@ export class MotionMaskRenderer {
         });
     }
 
-    private drawHover = (cursor: {x: number, y: number}) => {
+    private drawHoverOrSelection = (cursor: {x: number, y: number, width: number, height: number}) => {
         const { x, y, width, height } = {
             x      : cursor.x * this.cellWidth,
             y      : cursor.y * this.cellHeight,
-            width  : this.cellWidth,
-            height : this.cellHeight
+            width  : cursor.width * this.cellWidth,
+            height : cursor.height * this.cellHeight
         };
         this.render();
         this.ctx.lineWidth = 1.5;
