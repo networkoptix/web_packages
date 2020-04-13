@@ -709,7 +709,6 @@ export interface Deleted {
 
 export interface SystemMerge {
     failed:  string;
-    start:   string;
     success: string;
 }
 
@@ -1488,7 +1487,6 @@ const typeMap: any = {
     ], false),
     "SystemMerge": o([
         { json: "failed", js: "failed", typ: "" },
-        { json: "start", js: "start", typ: "" },
         { json: "success", js: "success", typ: "" },
     ], false),
 };

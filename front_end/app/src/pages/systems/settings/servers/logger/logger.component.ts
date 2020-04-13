@@ -38,7 +38,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
 
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
-                .setLogLevels(this.serverId.slice(1, -1), this.loggersToBeSaved())
+                .setLogLevels(this.serverId, this.loggersToBeSaved())
                 .then(response => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
@@ -108,8 +108,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.serverId && changes.serverId.currentValue) {
             this.system
-                .logLevel(changes.serverId.currentValue.slice(1, -1))
-                .toPromise()
+                .logLevel(changes.serverId.currentValue)
                 .then(response => {
                     this.settingsToBeDisplayedOrUpdated(response.reply);
                     this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
