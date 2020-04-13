@@ -652,7 +652,6 @@
             },
             "merge": {
                 "failed": "System merge failed",
-                "start": "Systems have started merging",
                 "success": "System merge completed"
             },
             "rename": {

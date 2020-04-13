@@ -332,8 +332,7 @@ export class MergeModalContent {
                     wrongPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
                     }
-                },
-                successMessage: this.LANG.toastMessage.system.merge.start
+                }
             })
             .then(() => {
                 // handles telling the app which systems are getting merged and the proper messaging
