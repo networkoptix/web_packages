@@ -289,15 +289,22 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.systemNoAccess = false;
         this.content.system = this.system;
 
-        if (this.system.isAdmin || this.system.isOwner) {
-            const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
+        const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
 
-            adminNode.level3 = [{
+        adminNode.level3 = [{
+            id    : this.CONFIG.menus.systemSettings.general.id,
+            svg   : this.CONFIG.menus.systemSettings.general.icon,
+            label : this.LANG.menu.titles.general,
+            path  : this.CONFIG.menus.systemSettings.general.path
+        }];
+
+        if (this.system.isAdmin || this.system.isOwner) {
+            adminNode.level3.push({
                 id    : this.CONFIG.menus.systemSettings.licenses.id,
                 svg   : this.CONFIG.menus.systemSettings.licenses.icon,
                 label : this.LANG.menu.titles.licenses,
                 path  : this.CONFIG.menus.systemSettings.licenses.path
-            }];
+            });
         }
 
         if (this.system.permissions.editUsers) {

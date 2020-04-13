@@ -509,6 +509,7 @@ export interface Info {
     status:        string;
     expires:       string;
     time:          string;
+    deactivations: string;
     trial:         string;
     online:        string;
     error:         string;
@@ -526,9 +527,11 @@ export interface Info {
 }
 
 export interface Messages {
-    required:  string;
-    activated: string;
-    inuse:     string;
+    required:         string;
+    activated:        string;
+    inuse:            string;
+    trialLicenseText: string;
+    trialActivated:   string;
 }
 
 export interface Menu {
@@ -537,6 +540,7 @@ export interface Menu {
 
 export interface MenuTitles {
     systemAdministration: string;
+    general:              string;
     licenses:             string;
     users:                string;
 }
@@ -1350,6 +1354,7 @@ const typeMap: any = {
         { json: "status", js: "status", typ: "" },
         { json: "expires", js: "expires", typ: "" },
         { json: "time", js: "time", typ: "" },
+        { json: "deactivations", js: "deactivations", typ: "" },
         { json: "trial", js: "trial", typ: "" },
         { json: "online", js: "online", typ: "" },
         { json: "error", js: "error", typ: "" },
@@ -1369,12 +1374,15 @@ const typeMap: any = {
         { json: "required", js: "required", typ: "" },
         { json: "activated", js: "activated", typ: "" },
         { json: "inuse", js: "inuse", typ: "" },
+        { json: "trialLicenseText", js: "trialLicenseText", typ: "" },
+        { json: "trialActivated", js: "trialActivated", typ: "" },
     ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },
     ], false),
     "MenuTitles": o([
         { json: "systemAdministration", js: "systemAdministration", typ: "" },
+        { json: "general", js: "general", typ: "" },
         { json: "licenses", js: "licenses", typ: "" },
         { json: "users", js: "users", typ: "" },
     ], false),

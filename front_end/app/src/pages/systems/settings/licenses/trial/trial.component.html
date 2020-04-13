@@ -1,0 +1,22 @@
+<nx-block class="d-block mt-3" *ngIf="licenses?.length && !haveTrialLicense">
+    <nx-section>
+        <form class="form" role="form"
+              id="trialLicenseForm" name="trialLicenseForm" #trialLicenseForm="ngForm"
+              novalidate autocomplete="off">
+
+            <div>
+                <div>You have an unused trial license.</div>
+                <div [translate]="'license.messages.trialLicenseText'"
+                      [translateParams]="{ number: number , days: days }"></div>
+            </div>
+        </form>
+    </nx-section>
+    <nx-section >
+        <nx-process-button
+                [actionType]="'default'"
+                [form]="trialLicenseForm"
+                [process]="activateTrialKey"
+                [buttonText]="'Activate Trial License' | translate">
+        </nx-process-button>
+    </nx-section>
+</nx-block>

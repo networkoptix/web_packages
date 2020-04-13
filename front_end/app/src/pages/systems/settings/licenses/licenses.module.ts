@@ -12,7 +12,10 @@ import { ComponentsModule }          from '../../../../components/components.mod
 import { OverlayModule }             from '@angular/cdk/overlay';
 import { NxLicenseNewComponent }     from './new/new.component';
 import { NxSystemLicensesComponent } from './licenses.component';
+import { NxLicenseTrialComponent }   from './trial/trial.component';
 import { NgxMaskModule }             from 'ngx-mask';
+import { NxLicenseDetailComponent }  from './license-details/license.component';
+import { NxLicenseSummaryComponent } from './summary/summary.component';
 
 @NgModule({
     imports: [
@@ -30,9 +33,12 @@ import { NgxMaskModule }             from 'ngx-mask';
         NgxMaskModule
     ],
     providers       : [],
-    declarations    : [
+    declarations: [
         NxLicenseNewComponent,
-        NxSystemLicensesComponent
+        NxLicenseTrialComponent,
+        NxSystemLicensesComponent,
+        NxLicenseDetailComponent,
+        NxLicenseSummaryComponent
     ],
     bootstrap       : [],
     entryComponents : [

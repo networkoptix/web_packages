@@ -385,6 +385,7 @@ export interface SystemSettings {
     cloudStorage: Admin;
     users: Admin;
     servers: Admin;
+    general: Admin;
     licenses: Admin;
     buttons: Buttons;
 }
@@ -1020,6 +1021,7 @@ const typeMap: any = {
         { json: 'admin', js: 'admin', typ: r('Admin') },
         { json: 'users', js: 'users', typ: r('Admin') },
         { json: 'servers', js: 'servers', typ: r('Admin') },
+        { json: 'general', js: 'general', typ: r('Admin') },
         { json: 'licenses', js: 'licenses', typ: r('Admin') },
         { json: 'buttons', js: 'buttons', typ: r('Buttons') }
     ], false),
@@ -1173,11 +1175,4 @@ const typeMap: any = {
         { json: 'maxEventLogRecords', js: 'maxEventLogRecords', typ: r('Setting') },
         { json: 'forceLiveCacheForPrimaryStream', js: 'forceLiveCacheForPrimaryStream', typ: r('Setting') }
     ], false)
-    // LoggersConfig: o([
-    //     { json: 'EC2_TRAN', js: 'EC2_TRAN', typ: r('') },
-    //     { json: 'HTTP', js: 'HTTP', typ: r('') },
-    //     { json: 'HWID', js: 'HWID', typ: r('') },
-    //     { json: 'MAIN', js: 'MAIN', typ: r('') },
-    //     { json: 'PERMISSIONS', js: 'PERMISSIONS', typ: r('') }
-    // ], false)
 };

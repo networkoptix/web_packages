@@ -4,58 +4,18 @@
         [licenses]="licenses">
 </nx-license-new-component>
 
-<nx-block *ngIf="licenses?.length > 1" class="d-block mt-3">
-    <header>
-        <h4 translate>Licenses Summary</h4>
-    </header>
-    <nx-section nonPadded>
-        <div class="section-table-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th translate>Type</th>
-                    <th translate>Channels total</th>
-                    <th translate>In use</th>
-                    <th>&nbsp;</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="table-row-spacer"></tr>
-                <tr *ngFor="let license of licenses; index as i">
-                    <td>{{license.info.type}}</td>
-                    <td>{{license.info.count}}</td>
-                    <td><span [innerHTML]="license.info.inuse !== '' ? license.info.inuse : '&mdash;'"></span></td>
-                    <td><span *ngIf="license.info.required < 0"
-                              [translate]="LANG.license.messages.required"
-                              [translateParams]="license.info.required"
-                              class="error-label">
-                        </span>
-                    </td>
-                </tr>
-                <tr class="table-row-spacer"></tr>
-                </tbody>
-            </table>
-        </div>
-    </nx-section>
-</nx-block>
+<nx-pre-loader *ngIf="!licenses"></nx-pre-loader>
 
-<nx-block type="gray" *ngFor="let license of licenses" class="d-block mt-3">
-    <header>
-        <h4 [innerText]="license.key"></h4>
-    </header>
-    <nx-section>
-        <div class="row nx-panel-row align-items-end" *ngFor="let detail of orderedDetails(license.info)">
-            <div class="col-4 col-lg-3 nx-panel">
-                <div class="row-title">
-                    <span [innerText]="detail.name"></span>
-                </div>
-                <div class="row-line"></div>
-            </div>
-            <div class="col-8 col-lg-9 pl-0 d-flex align-items-end">
-                <span class="row-value"
-                      [innerText]="detail.value">
-                </span>
-            </div>
-        </div>
-    </nx-section>
-</nx-block>
+<nx-license-trial-component
+        [system]="this.system"
+        [servers]="this.system?.servers"
+        [licenses]="licenses">
+</nx-license-trial-component>
+
+<nx-license-summary-component
+        [licenses]="licenses">
+</nx-license-summary-component>
+
+<nx-license-detail-component
+        [licenses]="licenses">
+</nx-license-detail-component>

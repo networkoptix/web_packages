@@ -136,11 +136,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         option.help = `&mdash;&nbsp;${server.status}`;
                     }
 
-                    // TODO: Remove it --- just for testing
-                    if (option.url.indexOf(':7001') >= 0) {
-                        option.url = 'https://localhost:7001';
-                    }
-
                     this.serverOptions.push(option);
                 });
 

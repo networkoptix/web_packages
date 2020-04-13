@@ -119,6 +119,10 @@
                 line-height : 16px;
                 margin      : 4px 0;
                 word-break  : break-all;
+
+                &.error {
+                    color: $red_main;
+                }
             }
         }
 

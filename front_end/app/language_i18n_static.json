@@ -469,6 +469,7 @@
     "menu": {
         "titles": {
             "systemAdministration": "System Administration",
+            "general": "General",
             "licenses": "Licenses",
             "users": "Users"
         }
@@ -669,6 +670,7 @@
             "status": "Status",
             "expires": "Expires",
             "time": "Time",
+            "deactivations": "Deactivation left",
             "trial": "Trial",
             "online": "Online",
             "error": "Error",
@@ -687,7 +689,9 @@
         "messages": {
             "required": "{{number}} more required",
             "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}}"
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}}",
+            "trialLicenseText": "Once activated, it will allow you to record up to {{number}} cameras for {{days}} days.",
+            "trialActivated": "Trial license activated. Starting today, you can record up to {{number}} cameras for {{days}} days."
         }
     },
     "settingsConfig": {

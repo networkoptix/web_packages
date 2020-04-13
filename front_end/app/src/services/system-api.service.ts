@@ -297,7 +297,6 @@ export class NxSystemAPI {
         if (this.authGet) {
             let params = new HttpParams();
             params = params.append('auth', this.authPost);
-            // params = params.append('licenseKey', key);
 
             const fullUrl = `${url}/api/activateLicense`;
             return this.http.post(fullUrl, { licenseKey: key }, { params });

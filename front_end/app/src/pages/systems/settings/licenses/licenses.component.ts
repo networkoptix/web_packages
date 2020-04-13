@@ -24,15 +24,17 @@ interface LicenseInfo {
     required: number, // VMS-18155 ... once done it should display warning (if negative)
     serverName: string,
     hwid: string,
+    expired: boolean,
     status: string,
-    expiration: string
+    expiration: string,
+    deactivations: string
 }
 
 @AutoUnsubscribe()
 @Component({
-    selector      : 'nx-system-licenses-storage',
-    templateUrl   : 'licenses.component.html',
-    styleUrls     : ['licenses.component.scss']
+    selector    : 'nx-system-licenses-storage',
+    templateUrl : 'licenses.component.html',
+    styleUrls   : ['licenses.component.scss']
 })
 export class NxSystemLicensesComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -86,8 +88,7 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
-        private menuService: NxMenuService,
-        private datePipe: DatePipe
+        private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -98,105 +99,100 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
         this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.licenses.id);
-
     }
 
     ngOnDestroy(): void {
     }
 
-    orderedDetails(info) {
-        const details = [];
-        details.push({ name: this.LANG.license.info.type, value: info.type });
-        details.push({ name: this.LANG.license.info.channels, value: info.count });
-        details.push({ name: this.LANG.license.info.server, value: info.serverName });
-        details.push({ name: this.LANG.license.info.hwid, value: info.hwid });
-        details.push({ name: this.LANG.license.info.status, value: info.status });
-        details.push({ name: this.LANG.license.info.expires, value: this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') });
-
-        return details;
-    }
-
     private getLicenses() {
-        this.system.getLicenses().then((result) => {
-            if (result.length) {
-                result.forEach((item) => {
-                    const info: LicenseInfo = {
-                        type      : '',
-                        count     : '',
-                        inuse     : '',
-                        required  : 0,
-                        serverName: '',
-                        hwid      : '',
-                        status    : '',
-                        expiration: ''
+        this.system.getLicenses()
+            .then((result) => {
+                if (result.length) {
+                    result.forEach((item) => {
+                        item.info = {
+                            type          : '',
+                            count         : '',
+                            inuse         : '',
+                            required      : 0,
+                            serverName    : '',
+                            hwid          : '',
+                            expired       : false,
+                            status        : '',
+                            expiration    : '',
+                            deactivations : '-'
+                        };
 
-                    };
-                    item.info = info;
-                    item.licenseBlock
-                        .split('\n')
-                        .map((property) => {
-                            const prop = property.split('=');
-                            item.info[prop[0].toLowerCase()] = prop[1];
-                        });
+                        item.licenseBlock
+                            .split('\n')
+                            .map((property) => {
+                                const prop = property.split('=');
+                                item.info[prop[0].toLowerCase()] = prop[1];
+                            });
 
-                    item.info.status = (new Date(item.info.expiration).getTime() < new Date().getTime()) ? this.LANG.license.info.expired : this.LANG.license.info.ok;
+                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date('05/15/2020').getTime());
+                        item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
 
-                    // Set license type
-                    if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL') {
-                        item.info.type = this.LANG.license.info.trial;
-                    } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
-                        item.info.type = this.classMap[item.info.class];
-                    } else {
-                        item.info.type = this.LANG.license.info.time;
-                    }
-
-                    // Set license usage /Pending VMS-18155/
-                    if (item.info.inuse !== '') {
-                        item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
-                    }
-                });
-
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
-                    .pipe(
-                        map(system => {
-                            if (!system.servers || system.servers.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .subscribe(() => {
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system
-                                    .getHardwareIdsOfServers()
-                                    .then((data) => {
-                                        if (data.reply.length) {
-                                            result.forEach((item) => {
-                                                const boundServer = data.reply.find((server) => {
-                                                    return server.hardwareIds.find((id) => id === item.info.hwid);
-                                                });
-
-                                                const server = this.system.servers.find((server) => server.id === boundServer.serverId);
-                                                if (Object.keys(server).length) {
-                                                    item.info.serverName = server.name;
-                                                    item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
-                                                }
-                                            });
-                                        }
-                                    })
-                                    .finally(() => {
-                                        this.licenses = result;
-                                    });
-                            }
+                        // Set license type
+                        if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
+                            item.info.type = this.LANG.license.info.trial;
+                        } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
+                            item.info.type = this.classMap[item.info.class];
+                        } else {
+                            item.info.type = this.LANG.license.info.time;
                         }
+
+                        // Set license usage /Pending VMS-18155/
+                        if (item.info.inuse !== '') {
+                            item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
+                        }
+
+
                     });
-            } else {
+
+                    if (this.serverSubscription) {
+                        this.serverSubscription.unsubscribe();
+                    }
+                    this.serverSubscription = this.system.infoSubject
+                        .pipe(
+                            map(system => {
+                                if (!system.servers || system.servers.length === 0) {
+                                    throw system;
+                                }
+                            }),
+                            retryWhen(err => err.pipe(delay(1000)))
+                        )
+                        .subscribe(() => {
+                            if (this.system.currentServerNotBusy) {
+                                if (this.system && this.system.servers && this.system.servers.length) {
+                                    this.system
+                                        .getHardwareIdsOfServers()
+                                        .then((data) => {
+                                            if (data.reply.length) {
+                                                result.forEach((item) => {
+                                                    const boundServer = data.reply.find((server) => {
+                                                        return server.hardwareIds.find((id) => id === item.info.hwid);
+                                                    });
+
+                                                    const server = this.system.servers.find((server) => server.id === boundServer.serverId);
+                                                    if (Object.keys(server).length) {
+                                                        item.info.serverName = server.name;
+                                                        item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                    }
+                                                });
+                                            }
+                                        })
+                                        .finally(() => {
+                                            this.licenses = result;
+                                        });
+                                }
+                            }
+                        });
+                } else {
+                    this.licenses = [];
+                }
+            })
+            .catch((error) => {
                 this.licenses = [];
-            }
-        });
+            });
     }
 }
