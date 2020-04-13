@@ -152,7 +152,7 @@ export class MotionMaskState {
     }
 
     // Transform utilities
-    private zonesToMatrix(zones: Area[]): Mask {
+    public zonesToMatrix(zones: Area[]): Mask {
         let matrix: Mask = new Array(32).fill(new Array(44).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);
@@ -349,7 +349,7 @@ export class MotionMaskRenderer {
         ); // For testing, will either remove or move into full UI observable later
 
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
-        const clickBuffer$ = clickAction$.pipe(debounceTime(150));
+        const clickBuffer$ = clickAction$.pipe(debounceTime(50));
 
         const selectionState$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
 
@@ -408,9 +408,10 @@ export class MotionMaskRenderer {
 
     // Render methods
     private fillZones() {
-        this.motionMask.renderState.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
+        this.motionMask.renderState$.value.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
+            // this.ctx.clearRect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.beginPath();
-            this.ctx.fillStyle = currentSelection ? sensitivity === 150 ? '#5555555' : this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
+            this.ctx.fillStyle = sensitivity >= 150 ? '#33333377' : currentSelection ? this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
@@ -459,6 +460,7 @@ export class MotionMaskRenderer {
         this.ctx.shadowColor = 'black';
         this.ctx.shadowBlur = 6;
         startZones.forEach(({ x, y, width, height, sensitivity }) => {
+            if (sensitivity >= 150) return;
             const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
             this.ctx.fillText(
