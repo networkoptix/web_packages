@@ -470,6 +470,7 @@ export interface Ipvd {
     isAptzSupported:                 string;
     isAptzSupportedShort:            string;
     isAudioSupported:                string;
+    isDualStreamingSupported:        string;
     isFisheye:                       string;
     isH265:                          string;
     isIoSupported:                   string;
@@ -484,6 +485,7 @@ export interface Ipvd {
     other:                           string;
     primaryCodec:                    string;
     resolutionArea:                  string;
+    sndResolution:                   string;
     topXByVolume:                    string;
     vendor:                          string;
 }
@@ -1276,6 +1278,7 @@ const typeMap: any = {
         { json: "isAptzSupported", js: "isAptzSupported", typ: "" },
         { json: "isAptzSupportedShort", js: "isAptzSupportedShort", typ: "" },
         { json: "isAudioSupported", js: "isAudioSupported", typ: "" },
+        { json: "isDualStreamingSupported", js: "isDualStreamingSupported", typ: "" },
         { json: "isFisheye", js: "isFisheye", typ: "" },
         { json: "isH265", js: "isH265", typ: "" },
         { json: "isIoSupported", js: "isIoSupported", typ: "" },
@@ -1290,6 +1293,7 @@ const typeMap: any = {
         { json: "other", js: "other", typ: "" },
         { json: "primaryCodec", js: "primaryCodec", typ: "" },
         { json: "resolutionArea", js: "resolutionArea", typ: "" },
+        { json: "sndResolution", js: "sndResolution", typ: "" },
         { json: "topXByVolume", js: "topXByVolume", typ: "" },
         { json: "vendor", js: "vendor", typ: "" },
     ], false),
