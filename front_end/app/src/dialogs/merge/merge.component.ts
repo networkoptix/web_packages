@@ -291,6 +291,7 @@ export class MergeModalContent {
                         if (res.error === '0') {
                             this.machine.transition('confirmMerge');
                         } else if (res.errorString === 'UNAUTHORIZED') {
+                            this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
                             this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
                         } else if (res.errorString) {
                             this.machine.history = [];
@@ -334,23 +335,31 @@ export class MergeModalContent {
                     }
                 }
             })
-            .then(() => {
-                // handles telling the app which systems are getting merged and the proper messaging
-                this.systemsService.forceUpdateSystems();
-                this.close({
-                    secondary: {
-                        id   : this.secondarySystem.id,
-                        name : this.secondarySystem.name || this.secondarySystem.info.name
-                    },
-                    primary: {
-                        id   : this.primarySystem.id,
-                        name : this.primarySystem.name || this.primarySystem.info.name
-                    },
-                    anotherSystemId : this.targetSystem.id,
-                    role            : this.primarySystem.id === this.system.id
-                        ? this.CONFIG.system.status.master
-                        : this.CONFIG.system.status.slave
-                });
+            .then(res => {
+                if (res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
+                    // handles telling the app which systems are getting merged and the proper messaging
+                    this.systemsService.forceUpdateSystems();
+                    this.close({
+                        secondary: {
+                            id   : this.secondarySystem.id,
+                            name : this.secondarySystem.name || this.secondarySystem.info.name
+                        },
+                        primary: {
+                            id   : this.primarySystem.id,
+                            name : this.primarySystem.name || this.primarySystem.info.name
+                        },
+                        anotherSystemId : this.targetSystem.id,
+                        role            : this.primarySystem.id === this.system.id
+                            ? this.CONFIG.system.status.master
+                            : this.CONFIG.system.status.slave
+                    });
+                } else if (res.errorString === 'Wrong username or password.') {
+                    this.mergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
+                    this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                } else if (res.errorString) {
+                    this.mergeForm.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
+                    this.updateShow(this.confirmPasswordError, { passwordErrorText: this.unknownError });
+                }
             }, (error) => {
                 // for errors that pop up during the merge
                 const errorCode = error.resultCode || (error.data && error.data.resultCode);
