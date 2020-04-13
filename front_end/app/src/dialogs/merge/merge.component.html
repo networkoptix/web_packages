@@ -53,7 +53,7 @@
                 </label>
             </div>
             <p *ngIf="machine.state.show.checkingErrorText"
-                [ngClass]="{ 'mt-2': machine.state.show.serverUrlInput }"
+                [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
                 [innerHTML]="machine.state.template.checkingErrorText"
                 class="error-label">
             </p>
