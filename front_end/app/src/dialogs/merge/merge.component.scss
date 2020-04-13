@@ -41,3 +41,11 @@
 .error-text-margin {
     margin-top: 5px;
 }
+
+.password-label-margin {
+    margin-top: 6px;
+}
+
+.invalid-state {
+    border-color: $error;
+}

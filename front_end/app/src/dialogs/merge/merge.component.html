@@ -83,6 +83,7 @@
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
+                    [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
                     id="adminPassword" autocomplete="new-password"
                     name="adminPassword" type="password" required
                     (ngModelChange)="passwordChange(adminPassword)"
@@ -92,7 +93,7 @@
             <label 
                 *ngIf="machine.state.show.passwordError" 
                 [innerHTML]="machine.state.template.passwordErrorText" 
-                class="error-label mt-1 mb-0" for="adminPassword">
+                class="error-label password-label-margin mb-0" for="adminPassword">
             </label>
         </div>
     </div>
@@ -157,6 +158,7 @@
             <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"
+                    [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
                     id="cloudOwnerPassword" autocomplete="new-password"
                     name="cloudOwnerPassword" type="password" required
                     (ngModelChange)="passwordChange(cloudOwnerPassword)"
@@ -166,7 +168,7 @@
             <label 
                 *ngIf="machine.state.show.passwordError" 
                 [innerHTML]="machine.state.template.passwordErrorText" 
-                class="error-label mt-1 mb-0" for="cloudOwnerPassword">
+                class="error-label password-label-margin mb-0" for="cloudOwnerPassword">
             </label>
         </div>
     </div>
