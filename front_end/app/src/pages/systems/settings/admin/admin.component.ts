@@ -66,7 +66,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             disconnectDisabled : merging,
             mergeDisabled      : (merging || notAvailable) && !(this.debugMode || this.betaMode),
             renameDisabled     : merging && this.system.mergeInfo && this.system.mergeInfo.role !== 'master',
-            showMerge          : this.system && this.system.isMine && this.systemsService.systems.length > 1
+            showMerge          : this.system && this.system.isMine
         };
     }
 
@@ -117,7 +117,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemSubscription = system.infoSubject
                     .pipe(auditTime(this.CONFIG.system.auditTime))
                     .subscribe(system => {
-                        if (!this.system.isAvailable && system.isAvailable) {
+                        if (!this.system.isAvailable && system && system.isAvailable) {
                             this.system = system;
                         }
                         this.settingsService.footerSubject.next(true);
