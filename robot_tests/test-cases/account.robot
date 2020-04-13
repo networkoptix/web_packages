@@ -267,8 +267,8 @@ Language change is new default
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
     ...    "${LANGUAGE}"!="ja_JP"    ja_JP
-    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
-    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}following-sibling::ul//span[@lang='${lang}']
+    Click Element    ${ACCOUNT LANGUAGE DROPDOWN}following-sibling::ul//span[@lang='${lang}']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    1    #to allow the system to change languages
     Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
