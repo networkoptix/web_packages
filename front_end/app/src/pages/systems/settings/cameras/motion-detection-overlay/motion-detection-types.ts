@@ -13,4 +13,15 @@ export class Area {
             this.x - 1 >= zone.x + zone.width ||
             this.y - 1 >= zone.y + zone.height);
     }
+
+    /**
+     * Find if coordinates x y are within area. Might add overload on this method for selecting multiple zones.
+     * @param x
+     * @param y
+     */
+    public surrounds(x: number, y: number) {
+        const endX = this.x + this.width;
+        const endY = this.y + this.height;
+        return this.x <= x && x <= endX && this.y <= y && y <= endY;
+    }
 }

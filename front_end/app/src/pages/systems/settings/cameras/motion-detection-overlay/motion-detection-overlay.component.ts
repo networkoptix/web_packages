@@ -3,11 +3,12 @@ import {
 }                           from '@angular/core';
 import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
 import {
-    BehaviorSubject, Subscription, merge, fromEvent, Observable
+    BehaviorSubject, Subscription, merge, fromEvent, Observable, combineLatest
 }                           from 'rxjs';
-import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom } from 'rxjs/operators';
+import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom, first } from 'rxjs/operators';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 import { SensitivityColor, Mask, Area, AreaTuple, SelectionAction } from './motion-detection-types';
+import { debug } from 'ngx-store/src/config';
 
 @AutoUnsubscribe()
 @Component({
@@ -100,11 +101,46 @@ export class MotionMaskState {
         return this.sortedZones(zones);
     }
 
+    get maskZonesState() {
+        return this.maskZones.value;
+    }
+
+    get currentZones() {
+        const maskStates = this.maskZones.value;
+        return maskStates[maskStates.length - 1];
+    }
+
     // State transform methods
     public mergeZones(currentZones: Area[], selectionZones: Area[]): {maskMatrix: Mask, zones: Area[]} {
         const maskMatrix = this.zonesToMatrix([...currentZones, ...selectionZones]);
         const zones = this.matrixToZones(maskMatrix);
         return { maskMatrix, zones };
+    }
+
+    /**
+     * don't use yet
+     */
+    public selectCurrentZones(x: number, y: number) {
+        const previousZones = [...this.currentZones, ...this.selectionZones.value];
+        let newZones: Area[] = [];
+        let selectionZones: Area[] = [];
+        this.findZoneGroups(previousZones).forEach(group => {
+            if (group.some(area => area.surrounds(x, y))) {
+                selectionZones = [...selectionZones, ...group.map((area) => {
+                    area.currentSelection = true;
+                    return area;
+                })];
+            } else {
+                newZones = [...newZones, ...group.map((area) => {
+                    area.currentSelection = false;
+                    return area;
+                })];
+            }
+        });
+
+        this.selectionZones.next(selectionZones);
+        this.maskMatrix.next([this.zonesToMatrix([...previousZones, ...selectionZones])]);
+        this.maskZones.next([...this.maskZonesState, previousZones]);
     }
 
     updateRenderState() {
@@ -199,6 +235,11 @@ export class MotionMaskState {
         return zoneGroups;
     }
 
+    public get zoneGroups() {
+        const current = this.maskZones.value.pop();
+        return this.findZoneGroups(current);
+    }
+
     /**
      * Used for placing sensitivity number indicators.
      */
@@ -259,13 +300,42 @@ export class MotionMaskRenderer {
             const cellActualHeight = rect.height / this.rows;
 
             return {
-                x : Math.floor((event.clientX - rect.left) / cellActualWidth),
+                x : Math.floor(((event.clientX) - rect.left) / cellActualWidth),
                 y : Math.floor((event.clientY - rect.top) / cellActualHeight)
             };
         };
 
+        const getAction = (buffer: any[]) => {
+            buffer = buffer.filter(({ type }) => type !== null);
+            const firstClick = buffer.length >= 2 && buffer[0].type === 'mousedown' && buffer[1].type === 'mouseup';
+            const doubleClick = buffer.length >= 4 &&
+                firstClick &&
+                buffer[2].type === 'mousedown' &&
+                buffer[3].type === 'mouseup';
+
+            const click = firstClick;
+            const start = buffer[0].type === 'mousedown';
+
+            if (doubleClick) return 'double-click';
+            if (click) return 'click';
+            if (start) return 'select-start';
+            return 'select-end';
+        };
+
         // Base observables for managing UI state
         const shiftCtrlSubject$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
+        const shiftCtrlSelection = shiftCtrlSubject$.pipe(pairwise()).subscribe(([prev, cur]) => {
+            if (prev.shiftKey && !cur.shiftKey) {
+                const [currentZones, ...rest] = this.maskZones.value.reverse();
+                const prevSelections = this.selectionZones.value;
+                this.selectionZones.next([]);
+                this.maskZones.next([...rest, [...currentZones, ...prevSelections.map(area => {
+                    area.currentSelection = false;
+                    return area;
+                }
+                )]]);
+            }
+        });
         const shiftCtrlState$ = merge(keyDown$, keyUp$).pipe(
             filter(({ key }) => key === 'Control' || key === 'Shift'),
             map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
@@ -273,30 +343,21 @@ export class MotionMaskRenderer {
         ).subscribe(shiftCtrlSubject$);
 
         const mouseState$ = mouseMove$.pipe(
-            throttleTime(100),
+            throttleTime(0, animationFrame),
             map(findEventCoords),
             distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y)
-            // tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 }))
         ); // For testing, will either remove or move into full UI observable later
 
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
-        const clickBuffer$ = clickAction$.pipe(debounceTime(100));
+        const clickBuffer$ = clickAction$.pipe(debounceTime(150));
 
         const selectionState$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
 
-        let selectionRenderSubscription: Subscription;
-
         const clickState$ = clickAction$.pipe(
-            startWith({ type: null }),
+            startWith({ type: null, x: 0, y: 0 }),
             buffer(clickBuffer$),
-            withLatestFrom(mouseState$),
-            map(([buffer, { x, y }]) => {
-                const action: SelectionAction = buffer.length === 4
-                    ? 'double-click' : buffer.length === 2
-                        ? 'click' : buffer[0].type === 'mousedown'
-                            ? 'select-start' : 'select-end';
-                return { action, x, y, ...shiftCtrlSubject$.value };
-            }),
+            withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))),
+            map(([buffer, { x, y }]) => ({ action: getAction(buffer), x, y, ...shiftCtrlSubject$.value })),
             pairwise(),
             filter(([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end')),
             map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
@@ -310,59 +371,46 @@ export class MotionMaskRenderer {
                     height = Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
                 }
 
-                return { action, x, y, width, height, ...keyStates };
+                return { action, x, y, selectX: curX, selectY: curY, width, height, ...keyStates };
             }),
-            tap(({ action, x: selectX, y: selectY, ctrlKey, shiftKey, width, height }) => {
-                if (selectionRenderSubscription && !selectionRenderSubscription.closed) {
-                    selectionRenderSubscription.unsubscribe();
-                }
-
+            switchMap(({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
                 const [currentZones, ...rest] = this.maskZones.value.reverse();
                 const prevSelections = this.selectionZones.value;
-                const newZone = new Area(shiftKey ? 9 : Math.round(Math.random() * 9), selectX, selectY, width, height, true);
+                const newZone = new Area(150, x, y, width, height, true);
 
                 if (action === 'select-start') {
-                    // start new observable for updating selection rect
-                    // selectionRenderSubscription = mouseState$.subscribe(({ x: mouseX, y: mouseY }) => {
-                    //     const x = Math.min(selectX, mouseX);
-                    //     const y = Math.min(selectY, mouseY);
-                    //     width = Math.max(selectX, mouseX) - x + 1;
-                    //     height = Math.max(selectY, mouseY) - y + 1;
+                    return mouseState$.pipe(
+                        tap(({ x: mouseX, y: mouseY }) => {
+                            const x = Math.min(selectX, mouseX);
+                            const y = Math.min(selectY, mouseY);
+                            width = Math.max(selectX, mouseX) - x + 1;
+                            height = Math.max(selectY, mouseY) - y + 1;
 
-                    //     this.drawHoverOrSelection({ x, y, height, width });
-                    // });
+                            this.drawHoverOrSelection({ x, y, height, width });
+                        }));
                 } else if (action === 'select-end') {
                     if (ctrlKey || shiftKey) {
                         this.selectionZones.next([...prevSelections, newZone]);
                     } else {
-                        this.maskZones.next([...rest, [...currentZones, ...prevSelections.map(area => {
+                        this.selectionZones.next([]);
+                        this.maskZones.next([...rest, [...currentZones, ...prevSelections].filter(({ sensitivity }) => sensitivity !== 150).map(area => {
                             area.currentSelection = false;
                             return area;
-                        }
-                        )]]);
+                        })]);
                         this.selectionZones.next([newZone]);
                     }
-                } else if (action === 'double-click') {
-                    console.log('double-click');
-                } else {
-                    this.render();
                 }
+                return mouseState$.pipe(
+                    tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })));
             })
-        ).subscribe(({ ctrlKey, shiftKey, x, y, width, height, action }) => {
-            // const prevZones = ctrlKey || shiftKey ? this.selectionZones.value : [];
-            // const newZone = new Area(4, x, y, width, height, true);
-            // if (action === 'click' || action === 'select-end') {
-            //     this.selectionZones.next([...prevZones, newZone]);
-            //     selectionRenderSubscription.unsubscribe();
-            // }
-        });
+        ).subscribe();
     };
 
     // Render methods
     private fillZones() {
         this.motionMask.renderState.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
             this.ctx.beginPath();
-            this.ctx.fillStyle = currentSelection ? this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
+            this.ctx.fillStyle = currentSelection ? sensitivity === 150 ? '#5555555' : this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
