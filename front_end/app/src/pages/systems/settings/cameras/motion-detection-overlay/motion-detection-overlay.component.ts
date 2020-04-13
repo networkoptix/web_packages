@@ -76,7 +76,7 @@ export class MotionMaskState {
 
     public maskMatrix: BehaviorSubject<Mask[]>;
     public maskZones: BehaviorSubject<Area[][]>;
-    public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([new Area(4, 6, 5, 10, 10, true)]);
+    public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
     public renderState$: BehaviorSubject<{zones: Area[], maskMatrix: Mask}> = new BehaviorSubject({ zones: [], maskMatrix: [] });
     constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>) {
         const parsedInitial = this.initialToMaskZones(initialMask);
@@ -275,7 +275,7 @@ export class MotionMaskRenderer {
         const mouseState$ = mouseMove$.pipe(
             throttleTime(100),
             map(findEventCoords),
-            distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y),
+            distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y)
             // tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 }))
         ); // For testing, will either remove or move into full UI observable later
 
@@ -299,36 +299,62 @@ export class MotionMaskRenderer {
             }),
             pairwise(),
             filter(([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end')),
-            map(([prev, { action, x, y, ...keyStates }]) => {
+            map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
                 let width = 1;
                 let height = 1;
+                const x = Math.min(curX, prev.x);
+                const y = Math.min(curY, prev.y);
 
                 if (action === 'select-end') {
-                    width = Math.max(x, prev.x) - Math.min(x, prev.x);
-                    height = Math.max(y, prev.y) - Math.min(y, prev.y);
+                    width = Math.max(curX, prev.x) - Math.min(curX, prev.x) + 1;
+                    height = Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
                 }
 
                 return { action, x, y, width, height, ...keyStates };
             }),
-            tap(({ action, x: selectX, y: selectY }) => {
+            tap(({ action, x: selectX, y: selectY, ctrlKey, shiftKey, width, height }) => {
+                if (selectionRenderSubscription && !selectionRenderSubscription.closed) {
+                    selectionRenderSubscription.unsubscribe();
+                }
+
+                const [currentZones, ...rest] = this.maskZones.value.reverse();
+                const prevSelections = this.selectionZones.value;
+                const newZone = new Area(shiftKey ? 9 : Math.round(Math.random() * 9), selectX, selectY, width, height, true);
+
                 if (action === 'select-start') {
                     // start new observable for updating selection rect
-                    selectionRenderSubscription = mouseState$.subscribe(({ x: mouseX, y: mouseY }) => {
-                        const x = Math.min(selectX, mouseX);
-                        const y = Math.min(selectY, mouseY);
-                        const width = Math.max(selectX, mouseX) - x;
-                        const height = Math.max(selectY, mouseY) - y;
+                    // selectionRenderSubscription = mouseState$.subscribe(({ x: mouseX, y: mouseY }) => {
+                    //     const x = Math.min(selectX, mouseX);
+                    //     const y = Math.min(selectY, mouseY);
+                    //     width = Math.max(selectX, mouseX) - x + 1;
+                    //     height = Math.max(selectY, mouseY) - y + 1;
 
-                        this.drawHoverOrSelection({ x, y, height, width });
-                    });
-                } else if (selectionRenderSubscription && !selectionRenderSubscription.closed) {
-                    selectionRenderSubscription.unsubscribe();
+                    //     this.drawHoverOrSelection({ x, y, height, width });
+                    // });
+                } else if (action === 'select-end') {
+                    if (ctrlKey || shiftKey) {
+                        this.selectionZones.next([...prevSelections, newZone]);
+                    } else {
+                        this.maskZones.next([...rest, [...currentZones, ...prevSelections.map(area => {
+                            area.currentSelection = false;
+                            return area;
+                        }
+                        )]]);
+                        this.selectionZones.next([newZone]);
+                    }
+                } else if (action === 'double-click') {
+                    console.log('double-click');
                 } else {
                     this.render();
                 }
             })
-        ).subscribe(e => {
-            // handle pushing state updates here, create new Area then push to zones.
+        ).subscribe(({ ctrlKey, shiftKey, x, y, width, height, action }) => {
+            // const prevZones = ctrlKey || shiftKey ? this.selectionZones.value : [];
+            // const newZone = new Area(4, x, y, width, height, true);
+            // if (action === 'click' || action === 'select-end') {
+            //     this.selectionZones.next([...prevZones, newZone]);
+            //     selectionRenderSubscription.unsubscribe();
+            // }
         });
     };
 
