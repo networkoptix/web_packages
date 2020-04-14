@@ -67,13 +67,9 @@
                             componentId="newPassword"
                             [(ngModel)]="data.newPassword"
                             [form]="restorePasswordWithCode"
+                            [component]="newPassword"
                             #newPassword="ngModel">
                     </nx-password-input>
-
-                    <nx-password-input-tag-validation
-                            [forElement]="newPassword"
-                            [value]="data.newPassword">
-                    </nx-password-input-tag-validation>
                 </div>
 
                 <nx-password-input-validation
