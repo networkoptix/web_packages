@@ -59,7 +59,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showUnauthorized = false;
     showOverlay = false;
 
-    sensitivityColors = Array(10);
+    sensitivityColors = new Array(10);
 
     constructor(
         configService: NxConfigService,

@@ -21,7 +21,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() height: number;
     @Input() width: number;
     @Input() initialMask: string;
-    @Input() sensitivityButtons$: BehaviorSubject<number | boolean>;
+    @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
 
     motionMask: MotionMaskState;
@@ -80,7 +80,11 @@ export class MotionMaskState {
     public maskZones: BehaviorSubject<Area[][]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
     public renderState$: BehaviorSubject<{zones: Area[], maskMatrix: Mask}> = new BehaviorSubject({ zones: [], maskMatrix: [] });
-    constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>, public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>) {
+    constructor(
+        initialMask: string,
+        public canvas: ElementRef<HTMLCanvasElement>,
+        public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>
+    ) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
         this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
@@ -114,10 +118,12 @@ export class MotionMaskState {
 
     initSensitivityButtons = () => {
         this.selectionZones.subscribe((zones) => {
-            if (zones.length && this.sensitivityButtons$.value === false) this.sensitivityButtons$.next(!!zones.length);
+            if (zones.length && this.sensitivityButtons$.value === false) {
+                this.sensitivityButtons$.next(!!zones.length);
+            }
         });
 
-        this.sensitivityButtons$.subscribe((sensitivity => {
+        this.sensitivityButtons$.subscribe(sensitivity => {
             const selection = this.selectionZones.value;
             if (typeof sensitivity === 'number') {
                 const updatedZones = selection.map(area => {
@@ -133,7 +139,7 @@ export class MotionMaskState {
                 this.selectionZones.next([]);
                 this.sensitivityButtons$.next(false);
             }
-        }));
+        });
     }
 
     // State transform methods
