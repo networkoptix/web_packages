@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Avancerad PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Ljud",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisköga",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Rörelse",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multisensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-vägs ljud",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Upplösning</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Modell",
         "multiSensorCamera": "Multi-Sensor Kamera",
         "other": "Annat",
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Topp {{value}} efter volym:",
         "vendor": "Tillverkare"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Systemsammanslagning misslyckades",
-                "start": "System har börjat slås samman",
                 "success": "Systemsammanslagning slutförd"
             },
             "rename": {

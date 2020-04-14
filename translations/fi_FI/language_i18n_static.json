@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Järjestelmien yhdistäminen <strong>{{primarySystem}}</strong> ja <strong>{{secondarySystem}}</strong>epäonnistui.",
             "connectToCloud": "Yhdistä järjestelmä, johon haluat yhdistää tämän, <strong>{{cloudName}}</strong> tai yhdistä paikallisesti <strong>{{vmsName}}</strong> -Client-sovelluksen avulla.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Järjestelmien yhdistäminen epäonnistui",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Kehittynyt PTZ",
         "isAptzSupportedShort": "Kehittyneempi PTZ",
         "isAudioSupported": "Ääni",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "360-kamera",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Liike",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-suuntainen ääni",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Malli",
         "multiSensorCamera": "Multi-Sensor-kamera",
         "other": "Muu",
         "primaryCodec": "Koodekki",
         "resolutionArea": "Alue",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} by volume:",
         "vendor": "Valmistaja"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Järjestelmien yhdistäminen epäonnistui",
-                "start": "Järjestelmät ovat alkaneet yhdistyä",
                 "success": "Järjestelmän yhdistäminen on valmis"
             },
             "rename": {

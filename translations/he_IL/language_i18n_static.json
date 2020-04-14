@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "מתקדם PTZ",
         "isAptzSupportedShort": "מתקדם PTZ",
         "isAudioSupported": "אודיו",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "עין הדג",
         "isH265": "H.265",
         "isIoSupported": "I / O",
-        "isMdSupported": "תנועה",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "מרובה חיישנים",
         "isPtzSupported": "מצלמה ממונעת",
-        "isTwAudioSupported": "אודיו דו כיווני",
-        "maxFps": "<span>מקסימום</span><br><span>FPS</span>",
-        "maxResolution": "<span>מקסימום</span><br><span>רזולוציה</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "מודל",
         "multiSensorCamera": "מצלמה עם מספר חיישנים",
         "other": "אחר",
         "primaryCodec": "מקודד",
         "resolutionArea": "אזור",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "{{value}} בראש לפי נפח:",
         "vendor": "יצרן"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "מיזוג המערכת נכשל",
-                "start": "מיזוג מערכות החל",
                 "success": "מיזוג המערכת הושלם"
             },
             "rename": {

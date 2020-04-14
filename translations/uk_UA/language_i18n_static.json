@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Не вдалося об’єднати систему",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Розширений PTZ",
         "isAptzSupportedShort": "Розш. PTZ",
         "isAudioSupported": "Аудіо",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Риб'яче око",
         "isH265": "H.265",
         "isIoSupported": "Ввід/вивід",
-        "isMdSupported": "Рух",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Мультисенсор",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-канальний звуковий потік",
-        "maxFps": "<span>Макс.</span><br><span>FPS</span>",
-        "maxResolution": "<span>Макс.</span><br><span>Роздільна здатність</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Модель",
         "multiSensorCamera": "Багатоканальна камера",
         "other": "Інші",
         "primaryCodec": "Кодек",
         "resolutionArea": "Площа",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} за гучністю:",
         "vendor": "Виробник"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Не вдалося об’єднати систему",
-                "start": "Злиття систем почалося",
                 "success": "Злиття системи завершено"
             },
             "rename": {

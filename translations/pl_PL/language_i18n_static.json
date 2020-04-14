@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Łączenie systemu nie powiodło się",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Zaawansowane PTZ",
         "isAptzSupportedShort": "Zaaw. PTZ",
         "isAudioSupported": "Dźwięk",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Ruch",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "Dwukierunkowe audio",
-        "maxFps": "<span>Maks.</span><br><span>kl./s</span>",
-        "maxResolution": "<span>Maks.</span><br><span>Rozdzielczość</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Model",
         "multiSensorCamera": "Kamera multi-sensor",
         "other": "Inne",
         "primaryCodec": "Kodek",
         "resolutionArea": "Obszar",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Maks. wartość {{value}} :",
         "vendor": "Producent"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Łączenie systemu nie powiodło się",
-                "start": "Rozpoczęto złączanie systemów",
                 "success": "Zakończono łączenie systemu"
             },
             "rename": {
