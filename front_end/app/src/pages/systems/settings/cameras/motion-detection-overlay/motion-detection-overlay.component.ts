@@ -21,6 +21,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() height: number;
     @Input() width: number;
     @Input() initialMask: string;
+    @Input() sensitivityButtons$: BehaviorSubject<number | boolean>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
 
     motionMask: MotionMaskState;
@@ -62,7 +63,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     // Init methods
     private initMask() {
-        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas);
+        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityButtons$);
     }
 
     private initRenderer() {
@@ -79,10 +80,11 @@ export class MotionMaskState {
     public maskZones: BehaviorSubject<Area[][]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
     public renderState$: BehaviorSubject<{zones: Area[], maskMatrix: Mask}> = new BehaviorSubject({ zones: [], maskMatrix: [] });
-    constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>) {
+    constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>, public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
         this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
+        this.initSensitivityButtons();
     }
 
     // Public methods
@@ -108,6 +110,30 @@ export class MotionMaskState {
     get currentZones() {
         const maskStates = this.maskZones.value;
         return maskStates[maskStates.length - 1];
+    }
+
+    initSensitivityButtons = () => {
+        this.selectionZones.subscribe((zones) => {
+            if (zones.length && this.sensitivityButtons$.value === false) this.sensitivityButtons$.next(!!zones.length);
+        });
+
+        this.sensitivityButtons$.subscribe((sensitivity => {
+            const selection = this.selectionZones.value;
+            if (typeof sensitivity === 'number') {
+                const updatedZones = selection.map(area => {
+                    area.sensitivity = sensitivity;
+                    area.currentSelection = false;
+                    return area;
+                });
+                const [currentZones, ...prevZones] = this.maskZones.value.reverse();
+                this.maskZones.next([...prevZones, [...currentZones, ...updatedZones]]);
+                this.selectionZones.next([]);
+                this.sensitivityButtons$.next(false);
+            } else if (sensitivity === 'reset') {
+                this.selectionZones.next([]);
+                this.sensitivityButtons$.next(false);
+            }
+        }));
     }
 
     // State transform methods

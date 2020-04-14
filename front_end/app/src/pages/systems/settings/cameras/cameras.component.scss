@@ -146,9 +146,18 @@
         }
   }
 
+  .button-wrapper {
+      min-height: 32px;
+
+      & > .btn, & > .btn-default, & button {
+          font-size: 12px;
+      }
+  }
+
   .sensitivity-buttons {
       color: $dark9 !important;
       border-radius: 2px;
+      font-size: 12px;
 
       border: 1px solid $light4;
       &:hover {
@@ -156,7 +165,7 @@
       }
 
       &:active, &.active{
-        border: 1px solid $dark9;
+        border: 1px solid $light13;
       }
   }
 
