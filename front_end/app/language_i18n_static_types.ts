@@ -578,6 +578,7 @@ export interface Ribbon {
     finishingMerge: string;
     integration:    RibbonIntegration;
     systemOffline:  string;
+    systemsMerging: string;
 }
 
 export interface BeingMerged {
@@ -1374,6 +1375,7 @@ const typeMap: any = {
         { json: "finishingMerge", js: "finishingMerge", typ: "" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
         { json: "systemOffline", js: "systemOffline", typ: "" },
+        { json: "systemsMerging", js: "systemsMerging", typ: "" },
     ], false),
     "BeingMerged": o([
         { json: "to", js: "to", typ: "" },
