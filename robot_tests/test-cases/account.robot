@@ -64,6 +64,16 @@ Accessing the account page from a direct link while logged out asks for login, o
     Go To    ${url}/account
     Verify in account page
 
+Admin and Owner can access account settings by selecting themselves in users List
+    Go To    ${url}
+    Log In    ${EMAIL OWNER}    ${password}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Go To Users List
+    Select User in Users List    ${EMAIL OWNER}
+    Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON SYSTEM}
+    Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
+    Verify in Account Page
+
 Changing first name and saving maintains that setting
     [tags]    C41573
     Go To    ${url}/account
@@ -134,10 +144,25 @@ Change first and last name shows in system
     Input Text    ${ACCOUNT LAST NAME}    nameChanged
     Click Button    ${ACCOUNT SAVE}
     Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Log Out
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
     Go To Users List
-    Select user in Users List    ${EMAIL LIVE VIEWER}
+    Select User in Users List    ${EMAIL LIVE VIEWER}
     Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'nameChanged nameChanged')]
+    Log Out
+    Go To    ${url}/account
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    sleep    2
+    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
+    Clear Element Text    ${ACCOUNT FIRST NAME}
+    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
+    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
+    Clear Element Text    ${ACCOUNT LAST NAME}
+    Input Text    ${ACCOUNT FIRST NAME}    ${TEST LAST NAME}
+    Click Button    ${ACCOUNT SAVE}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded
