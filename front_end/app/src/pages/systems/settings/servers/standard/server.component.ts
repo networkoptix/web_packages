@@ -39,6 +39,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     previousInputValue: number;
     checking: boolean;
 
+    betaMode: boolean;
     renameDisabled: boolean;
     restartDisabled: boolean;
     detachDisabled: boolean;
@@ -57,6 +58,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
+        this.betaMode = this.CONFIG.clientMode.beta;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
         this.canSeeInfo = false;
