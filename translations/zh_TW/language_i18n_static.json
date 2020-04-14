@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "無法合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
             "connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本機合併。",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "系統合併失敗",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "進階PTZ",
         "isAptzSupportedShort": "進階PTZ",
         "isAudioSupported": "音源",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "魚眼",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "位移",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "多感測器",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "雙向語音",
-        "maxFps": "<span>最大</span><br><span>帪數</span>",
-        "maxResolution": "<span>最大</span><br><span>解析度</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "型號",
         "multiSensorCamera": "多感測器攝影機",
         "other": "其它",
         "primaryCodec": "編碼器",
         "resolutionArea": "區域",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "以量排名 {{value}}：",
         "vendor": "製造商"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "系統合併失敗",
-                "start": "系統開始合併中",
                 "success": "系統合併完成"
             },
             "rename": {

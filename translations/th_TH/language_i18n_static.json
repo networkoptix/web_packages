@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
             "connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "การผสานระบบล้มเหลว",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "PTZ ขั้นสูง",
         "isAptzSupportedShort": "Adv PTZ",
         "isAudioSupported": "เสียง",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "ฟิชอาย",
         "isH265": "H.265",
         "isIoSupported": "I / O",
-        "isMdSupported": "โมชั่น",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "เซ็นเซอร์หลายตัว",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "เสียงสองทาง",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolution</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "รุ่น",
         "multiSensorCamera": "กล้องหลายเซ็นเซอร์",
         "other": "อื่นๆ",
         "primaryCodec": "ตัวแปลงสัญญาณ",
         "resolutionArea": "พื้นที่",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} by volume:",
         "vendor": "ผู้ผลิต"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "การผสานระบบล้มเหลว",
-                "start": "ระบบได้รวมเข้าด้วยกันเรียบร้อยแล้ว",
                 "success": "ผสานระบบเสร็จสมบูรณ์"
             },
             "rename": {

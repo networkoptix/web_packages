@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
             "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "システム統合が失敗しました",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "高度なPTZ",
         "isAptzSupportedShort": "高度なPTZ",
         "isAudioSupported": "オーディオ",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "魚眼",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "モーション",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "マルチセンサー",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "双方向オーディオ",
-        "maxFps": "<span>最大</span><br><span>FPS</span>",
-        "maxResolution": "<span>最大</span><br><span>解像度</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "モデル",
         "multiSensorCamera": "マルチセンサーカメラ",
         "other": "その他",
         "primaryCodec": "コー​​デック",
         "resolutionArea": "領域",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} by volume:",
         "vendor": "製造メーカー"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "システム統合が失敗しました",
-                "start": "システムが統合を開始しました",
                 "success": "システムが統合されました"
             },
             "rename": {

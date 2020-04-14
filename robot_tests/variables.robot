@@ -178,6 +178,7 @@ ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"$
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
+${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 

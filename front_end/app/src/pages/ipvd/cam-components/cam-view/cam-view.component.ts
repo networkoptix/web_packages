@@ -2,13 +2,15 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
-}                                   from '@angular/core';
-import { NxConfigService, IConfig }          from '../../../../services/nx-config';
-import { NxUriService }             from '../../../../services/uri.service';
-import { Subscription }             from 'rxjs';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
-import { delay }                    from 'rxjs/operators';
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxUriService }              from '../../../../services/uri.service';
+import { Subscription }              from 'rxjs';
+import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { delay }                     from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,6 +25,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     firmwares: any = [];
     firmwaresToShow: number;
     analyticsToShow: number;
@@ -50,38 +53,40 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
 
-    private camera = [
-        { title: 'Resolution(max)', param: 'maxResolution' },
-        { title: 'FPS(max)', param: 'maxFps' },
-        { title: 'Codec', secondaryParam: 'primaryCodec' },
-        { title: 'Audio', param: 'isAudioSupported' },
-        { title: '2-Way Audio', param: 'isTwAudioSupported' },
-        { title: 'PTZ', param: 'isPtzSupported' },
-        { title: 'Advanced PTZ', param: 'isAptzSupported' },
-        { title: 'Motion Detection', param: 'isMdSupported' },
-        { title: 'Fisheye', param: 'isFisheye' },
-        { title: 'I/O', param: 'isIoSupported' },
-        { title: 'Dual Streaming', param: 'isDualStreamingSupported' },
-        { title: 'Secondary Stream', param: 'sndResolution' },
-        { title: 'Multi Sensor', param: 'isMultiSensor' },
-        { title: 'Analytics', param: 'isAnalyticsSupported' }
-    ];
+    private camera: { title: string, param?: string, secondaryParam?: string }[];
 
     @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
 
     constructor(
-            private configService: NxConfigService,
-            private scrollMechanicsService: NxScrollMechanicsService,
-            private uri: NxUriService
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private uri: NxUriService
     ) {
-        this.CONFIG = this.configService.getConfig();
-
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
         this.viewScrollFixedTop = false;
         this.viewScrollFixedBottom = false;
         this.elementWidth = '100%';
     }
 
     ngOnInit() {
+        this.camera = [
+            { title: this.LANG.ipvd.maxResolution, param: 'maxResolution' },
+            { title: this.LANG.ipvd.maxFps, param: 'maxFps' },
+            { title: this.LANG.ipvd.primaryCodec, secondaryParam: 'primaryCodec' },
+            { title: this.LANG.ipvd.isAudioSupported, param: 'isAudioSupported' },
+            { title: this.LANG.ipvd.isTwAudioSupported, param: 'isTwAudioSupported' },
+            { title: this.LANG.ipvd.isPtzSupported, param: 'isPtzSupported' },
+            { title: this.LANG.ipvd.isAptzSupported, param: 'isAptzSupported' },
+            { title: this.LANG.ipvd.isMdSupported, param: 'isMdSupported' },
+            { title: this.LANG.ipvd.isFisheye, param: 'isFisheye' },
+            { title: this.LANG.ipvd.isIoSupported, param: 'isIoSupported' },
+            { title: this.LANG.ipvd.isDualStreamingSupported, param: 'isDualStreamingSupported' },
+            { title: this.LANG.ipvd.sndResolution, param: 'sndResolution' },
+            { title: this.LANG.ipvd.isMultiSensor, param: 'isMultiSensor' },
+            { title: this.LANG.ipvd.isAnalyticsSupported, param: 'isAnalyticsSupported' }
+        ];
         this.uriSubscription = this.uri
             .getURI()
             .subscribe(params => {

@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
             "connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "고급 PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "오디오",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "움직임",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "다중 센서",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "양방향 오디오",
-        "maxFps": "<span>최대</span><br><span>FPS</span>",
-        "maxResolution": "<span>최대</span><br><span>해상도</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "모델",
         "multiSensorCamera": "다중 센서 카메라들",
         "other": "기타",
         "primaryCodec": "코덱",
         "resolutionArea": "영역",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} by volume:",
         "vendor": "제조사"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "시스템 머지에 실패했습니다.",
-                "start": "시스템이 머지를 시작했습니다.",
                 "success": "시스템 머지가 완료되었습니다."
             },
             "rename": {

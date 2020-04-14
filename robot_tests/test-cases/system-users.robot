@@ -236,7 +236,7 @@ Admin and owner cannot edit self and other users via share
         Run Keyword If    '${user}'=='${EMAIL CUSTOM}'      Should be equal as strings    ${role}    custom
     END
 
-Admin cannot delete or edit other admins
+Admin cannot delete or edit other admins or owner
     [Tags]    C41905
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
     Append To List    ${TMP USERS}    ${random email}
@@ -244,6 +244,8 @@ Admin cannot delete or edit other admins
 
     Log in to Auto Tests System    ${random email}
     Select user in Users List    ${EMAIL ADMIN}
+    Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
+    Select user in Users List    ${EMAIL OWNER}
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin cannot invite another admin
@@ -522,50 +524,3 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
-
-#Only Admin and Owner can access the share URL
-#    [Tags]    Deprecated
-#    Log     Owner test
-#    Log in to Auto Tests System    ${EMAIL OWNER}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-#    Click Button    ${SHARE CANCEL}
-#    Log Out
-#
-#    Log     Admin test
-#    Log in to Auto Tests System    ${EMAIL ADMIN}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-#    Click Button    ${SHARE CANCEL}
-#    Log Out
-#
-#    Log     Viewer test
-#    Log in to Auto Tests System    ${EMAIL VIEWER}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-#    Log Out
-#
-#    Log     Custom test
-#    Log in to Auto Tests System    ${EMAIL CUSTOM}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-#    Log Out
-#
-#    Log     Client Custom test
-#    Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-#    Log Out
-#
-#    Log     Advanced Viewer test
-#    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-#    Log Out
-#
-#    Log     Live Viewer test
-#    Log in to Auto Tests System    ${EMAIL LIVE VIEWER}
-#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
-#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
-#    Log Out
-

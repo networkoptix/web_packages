@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Объединение систем не удалось",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Расширенный PTZ",
         "isAptzSupportedShort": "Расш. PTZ",
         "isAudioSupported": "Аудио",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Рыбий глаз",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Движение",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Мультисенсор",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "двухсторонний звук",
-        "maxFps": "<span>Макс.</span><br><span>FPS</span>",
-        "maxResolution": "<span>Макс.</span><br><span>Разрешение</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Модель",
         "multiSensorCamera": "Мультисенсорная камера",
         "other": "Другое",
         "primaryCodec": "Кодек",
         "resolutionArea": "Область",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Топ {{value}} по объему:",
         "vendor": "Производитель"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Объединение систем не удалось",
-                "start": "Объединение систем началось",
                 "success": "Слияние системы завершено"
             },
             "rename": {

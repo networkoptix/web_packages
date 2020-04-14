@@ -87,10 +87,6 @@ export class NxSystemAPI {
             urlBase = window.location.protocol + '//' +
                 (this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId));
         }
-        urlBase += '/web';
-        if (this.serverId) {
-            urlBase += '/proxy/http/' + this.serverId;
-        }
         return urlBase;
     }
 
@@ -112,24 +108,36 @@ export class NxSystemAPI {
     }
 
     private get(url: string, params?: any) {
+        const headers = new HttpHeaders();
         params = params || {};
+
         if (this.authGet) {
             params.auth = this.authGet;
         }
+        if (this.serverId) {
+            headers.set('X-Runtime-Guid', this.serverId);
+        }
+
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.get(fullUrl, { params }).pipe(
+        return this.http.get(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
 
     private post(url: string, data?: any) {
-        data = data || {};
+        const headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         const params: any = {};
+        data = data || {};
+
         if (this.authPost) {
             params.auth = this.authPost;
         }
-        return this.http.post(fullUrl, data, { params }).pipe(
+        if (this.serverId) {
+            headers.set('X-Runtime-Guid', this.serverId);
+        }
+
+        return this.http.post(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)
         );
@@ -265,20 +273,12 @@ export class NxSystemAPI {
             .catch(err => Promise.reject(err));
     }
 
+    getModuleInfo() {
+        return this.get('/api/moduleInformation');
+    }
+
     getHardwareIdsOfServers() {
         return this.get('/ec2/getHardwareIdsOfServers');
-    }
-
-    getLicenses() {
-        return this.get('/ec2/getLicenses');
-    }
-
-    getModuleInfo(url?) {
-        if (url) {
-            return this.http.get(`${url}/api/moduleInformation`);
-        } else {
-            return this.get('/api/moduleInformation');
-        }
     }
 
     detachFromSystem(currentPassword) {
@@ -293,6 +293,10 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    getLicenses() {
+        return this.get('/ec2/getLicenses');
+    }
+
     activateLicense(url, key) {
         if (this.authGet) {
             let params = new HttpParams();
@@ -305,29 +309,15 @@ export class NxSystemAPI {
         return of(false);
     }
 
-    logLevel(serverId, logId, name, value) {
-        if (this.authGet) {
-            const headers = new HttpHeaders().set('X-Runtime-Guid', serverId);
-
-            let params = new HttpParams();
-            params = params.append('auth', this.authGet);
-
-            if (logId) {
-                params = params.append('id', logId);
-            }
-
-            if (name && value) {
-                params = params
-                    .append('name', name)
-                    .append('value', value);
-            }
-
-            const fullUrl = `${this.urlBase}/api/logLevel`;
-            return this.http.get(fullUrl, { headers, params });
-        }
-
-        return false;
-    }
+    // logLevel(logId?, name?, value?) {
+    //     const params: any = { id: logId, name, value };
+    //     Object.keys(params).forEach((key) => {
+    //         if (params[key] === undefined) {
+    //             delete params[key];
+    //         }
+    //     });
+    //     return this.get('/api/logLevel', params);
+    // }
 
     /* End of Server settings */
 

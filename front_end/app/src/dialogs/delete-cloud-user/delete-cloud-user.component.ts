@@ -1,9 +1,9 @@
-import { Component, Input }          from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService }            from '../../services/process.service';
+import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-delete-cloud-user-content',
@@ -19,6 +19,8 @@ export class DeleteCloudUserModalContent {
     deleteCloudUser: any;
     passwordForUser: string = '';
     passwordError: string = '';
+
+    @ViewChild('deleteCloudUserForm') deleteForm: HTMLFormElement;
 
     constructor(public activeModal: NgbActiveModal,
                 private configService: NxConfigService,
@@ -38,6 +40,7 @@ export class DeleteCloudUserModalContent {
                             this.passwordError = this.LANG.passwordRequirements.missingMessage;
                         },
                         wrongPassword: () => {
+                            this.deleteForm.form.controls.password.setErrors({ passwordWrong: true });
                             this.passwordError = this.LANG.errorCodes.notAuthorized;
                         }
                     },

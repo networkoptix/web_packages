@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Unione di sistemi fallita",
             "noServerFound": "No server found.",
             "newSystemDisplayName": "New System",
@@ -448,20 +448,22 @@
         "isAptzSupported": "PTZ avanzato",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Audio",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Movimento",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi sensore",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "Audio a 2 vie",
-        "maxFps": "<span>Massimo</span><br><span>FPS</span>",
-        "maxResolution": "<span>Risoluzione</span><br><span>Massima</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Modello",
         "multiSensorCamera": "Telecamera multisensore",
         "other": "Altro",
         "primaryCodec": "Codec",
         "resolutionArea": "Area",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} per volume:",
         "vendor": "Produttore"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Unione di sistemi fallita",
-                "start": "I sistemi hanno iniziato ad unirsi",
                 "success": "Unione del sistema completata"
             },
             "rename": {

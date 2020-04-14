@@ -110,12 +110,9 @@
                             componentId="registerPassword"
                             [(ngModel)]="accountInfo.password"
                             [form]="registerForm"
+                            [component]="registerPassword"
                             #registerPassword="ngModel">
                     </nx-password-input>
-                    <nx-password-input-tag-validation
-                            [forElement]="registerPassword"
-                            [value]="accountInfo.password">
-                    </nx-password-input-tag-validation>
                 </div>
             </div>
 

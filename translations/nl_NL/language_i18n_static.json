@@ -208,7 +208,7 @@
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to admin's account in system <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "checking": "Checking...",
             "commonText": "Kan systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>niet samenvoegen.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
@@ -216,7 +216,7 @@
             "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Huidig systeem samenvoegen met:",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
             "noServerFound": "Geen server gevonden.",
             "newSystemDisplayName": "Nieuw systeem",
@@ -448,20 +448,22 @@
         "isAptzSupported": "Geavanceerde PTZ",
         "isAptzSupportedShort": "Geav. PTZ",
         "isAudioSupported": "Audio",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "Fisheye",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Beweging",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-weg audio",
-        "maxFps": "<span>Max</span><br><span>FPS</span>",
-        "maxResolution": "<span>Max</span><br><span>Resolutie</span>",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "Model",
         "multiSensorCamera": "Multi-Sensor Camera",
         "other": "Overige",
         "primaryCodec": "Codec",
         "resolutionArea": "Gebied",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "Top {{value}} door volume:",
         "vendor": "Fabrikant"
     },
@@ -650,7 +652,6 @@
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "start": "Systemen zijn begonnen samen te voegen",
                 "success": "Systeem samenvoegen voltooid"
             },
             "rename": {
