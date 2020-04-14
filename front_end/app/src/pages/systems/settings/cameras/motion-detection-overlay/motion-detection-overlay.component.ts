@@ -356,18 +356,6 @@ export class MotionMaskRenderer {
 
         // Base observables for managing UI state
         const shiftCtrlSubject$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
-        const shiftCtrlSelection = shiftCtrlSubject$.pipe(pairwise()).subscribe(([prev, cur]) => {
-            if (prev.shiftKey && !cur.shiftKey) {
-                const [currentZones, ...rest] = this.maskZones.value.reverse();
-                const prevSelections = this.selectionZones.value;
-                this.selectionZones.next([]);
-                this.maskZones.next([...rest, [...currentZones, ...prevSelections.map(area => {
-                    area.currentSelection = false;
-                    return area;
-                }
-                )]]);
-            }
-        });
         const shiftCtrlState$ = merge(keyDown$, keyUp$).pipe(
             filter(({ key }) => key === 'Control' || key === 'Shift'),
             map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
