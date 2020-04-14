@@ -513,7 +513,7 @@ export class NxSystemAPI {
     }
 
     checkMergeStatus() {
-        this.get('/ec2/mergeStatus');
+        return this.get('/ec2/mergeStatus');
     }
 
     checkLocalAdminPassword(password) {
