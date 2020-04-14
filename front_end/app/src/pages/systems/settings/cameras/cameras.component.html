@@ -190,7 +190,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper">
+                <div class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper" (contextmenu)="preventContext($event)">
                     <span *ngIf="sensitivityButtons === false" class="text-muted" translate>Select some area on camera to change the sensitivity settings for it</span>
                     <ng-container *ngIf="sensitivityButtons !== false">
                         <div class="btn-toolbar btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="sensitivityButtons">

@@ -296,6 +296,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.sensitivityButtons = 'reset';
     }
 
+    preventContext = event => event.preventDefault();
+
     selectedRotationWatcher: Watcher<any> = new Watcher()
     get selectedRotation() {
         return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);

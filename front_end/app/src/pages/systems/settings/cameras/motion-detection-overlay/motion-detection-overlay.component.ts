@@ -1,14 +1,17 @@
 import {
-    Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked, ChangeDetectionStrategy
+    Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked, ChangeDetectionStrategy, HostListener
 }                           from '@angular/core';
 import { AutoUnsubscribe }  from 'ngx-auto-unsubscribe';
 import {
-    BehaviorSubject, Subscription, merge, fromEvent, Observable, combineLatest
+    BehaviorSubject, Subscription, merge, fromEvent, Observable
 }                           from 'rxjs';
-import { takeUntil, switchMap, pairwise, throttle, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom, first } from 'rxjs/operators';
-import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
-import { SensitivityColor, Mask, Area, AreaTuple, SelectionAction } from './motion-detection-types';
-import { debug } from 'ngx-store/src/config';
+import { 
+    switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom 
+}                           from 'rxjs/operators';
+import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
+import { 
+    SensitivityColor, Mask, Area, AreaTuple
+}                           from './motion-detection-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,6 +26,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() initialMask: string;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
+    @HostListener('contextmenu', ['$event']) preventContext = event => event.preventDefault();
 
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
@@ -66,6 +70,9 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityButtons$);
     }
 
+    /**
+     * Renderer has to be initialized after content checked, needs motionCanvas ref.
+     */
     private initRenderer() {
         this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors);
         this.motionMaskRenderer.initCanvas(this.motionCanvas);
@@ -91,7 +98,10 @@ export class MotionMaskState {
         this.initSensitivityButtons();
     }
 
-    // Public methods
+    /**
+     * Call this method to update mask on route changes.
+     * @param mask initial mask from server
+     */
     public reInitialize(mask: string) {
         const parsedInitial = this.initialToMaskZones(mask);
         this.maskZones.next([parsedInitial]);
@@ -105,15 +115,6 @@ export class MotionMaskState {
             return new Area(...areaTuples);
         });
         return this.sortedZones(zones);
-    }
-
-    get maskZonesState() {
-        return this.maskZones.value;
-    }
-
-    get currentZones() {
-        const maskStates = this.maskZones.value;
-        return maskStates[maskStates.length - 1];
     }
 
     initSensitivityButtons = () => {
@@ -150,36 +151,13 @@ export class MotionMaskState {
     }
 
     /**
-     * don't use yet
+     * Currently used to trigger first render. Could probably refactor this in the future.
      */
-    public selectCurrentZones(x: number, y: number) {
-        const previousZones = [...this.currentZones, ...this.selectionZones.value];
-        let newZones: Area[] = [];
-        let selectionZones: Area[] = [];
-        this.findZoneGroups(previousZones).forEach(group => {
-            if (group.some(area => area.surrounds(x, y))) {
-                selectionZones = [...selectionZones, ...group.map((area) => {
-                    area.currentSelection = true;
-                    return area;
-                })];
-            } else {
-                newZones = [...newZones, ...group.map((area) => {
-                    area.currentSelection = false;
-                    return area;
-                })];
-            }
-        });
-
-        this.selectionZones.next(selectionZones);
-        this.maskMatrix.next([this.zonesToMatrix([...previousZones, ...selectionZones])]);
-        this.maskZones.next([...this.maskZonesState, previousZones]);
-    }
-
-    updateRenderState() {
+    public updateRenderState() {
         this.renderState$.next(this.mergeZones(this.maskZones.value[this.maskZones.value.length - 1], this.selectionZones.value));
     }
 
-    get renderState() {
+    public get renderState() {
         return this.renderState$.value;
     }
 
@@ -192,7 +170,7 @@ export class MotionMaskState {
         return matrix;
     }
 
-    private matrixToZones(maskMatrix: number[][]): Area[] {
+    public matrixToZones(maskMatrix: number[][]): Area[] {
         const matrix = <(number | false)[][]> [...maskMatrix].map(row => [...row]);
         const zones: Area[] = [];
 
@@ -201,7 +179,7 @@ export class MotionMaskState {
             let height = 1;
 
             while ((column + width) < this.columns && matrix[row][column + width] === sensitivity) {
-                // find width
+                // Find row with matching sensitivity
                 matrix[row][column + width] = false;
                 width++;
             };
@@ -209,7 +187,7 @@ export class MotionMaskState {
             while ((row + height) < this.rows &&
                 matrix[row + height].slice(column, column + width).every(cell => cell !== false &&
                 cell === sensitivity)) {
-                // find height
+                // Find height where sensitivity still matches for all cells
                 for (let x = column; x < column + width; x++) {
                     matrix[row + height][x] = false;
                 }
@@ -229,19 +207,23 @@ export class MotionMaskState {
         return zones;
     }
 
-    private addZone(zone: Area, mask: Mask): Mask {
+    public addZone(zone: Area, mask: Mask, toggle = false): Mask {
         const maskCopy = [...mask.map(row => [...row])];
         const { sensitivity, x, y, width, height, currentSelection } = zone;
         for (let row = y; row < y + height; row++) {
             for (let column = x; column < x + width; column++) {
-                maskCopy[row][column] = currentSelection ? sensitivity + 100 : sensitivity;
+                if (toggle) {
+                    maskCopy[row][column] = maskCopy[row][column] >= 150 ? 0 : 150;
+                } else {
+                    maskCopy[row][column] = currentSelection ? Math.min(sensitivity + 100, 150) : sensitivity;
+                }
             }
         }
         return maskCopy;
     }
 
     /**
-    * Returns zones sorted.
+    * Returns zones sorted top left to bottom right
     */
     public sortedZones(zones: Area[]): Area[] {
         return zones.sort((a, b) => a.y - b.y || a.x - b.x);
@@ -321,8 +303,8 @@ export class MotionMaskRenderer {
         // Initialize base observables from events
         const track = (eventName: string) => <Observable<MouseEvent>> fromEvent(canvas, eventName);
         const [
-            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
-        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove'].map(track);
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseClick$
+        ] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove', 'click'].map(track);
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>> fromEvent(window, event));
 
         // Utility functions
@@ -370,10 +352,7 @@ export class MotionMaskRenderer {
 
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
         const clickBuffer$ = clickAction$.pipe(debounceTime(50));
-
-        const selectionState$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
-
-        const clickState$ = clickAction$.pipe(
+        clickAction$.pipe(
             startWith({ type: null, x: 0, y: 0 }),
             buffer(clickBuffer$),
             withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))),
@@ -409,11 +388,20 @@ export class MotionMaskRenderer {
                             this.drawHoverOrSelection({ x, y, height, width });
                         }));
                 } else if (action === 'select-end') {
-                    if (ctrlKey || shiftKey) {
+                    if (shiftKey) {
                         this.selectionZones.next([...prevSelections, newZone]);
+                    } else if (ctrlKey) {
+                        const matrix = this.motionMask.zonesToMatrix(prevSelections);
+                        const updatedMatrix = this.motionMask.addZone(newZone, matrix, true);
+                        const updatedZones = this.motionMask.matrixToZones(updatedMatrix)
+                            .filter(({ sensitivity }) => sensitivity >= 150);
+
+                        this.selectionZones.next(updatedZones);
                     } else {
                         this.selectionZones.next([]);
-                        this.maskZones.next([...rest, [...currentZones, ...prevSelections].filter(({ sensitivity }) => sensitivity !== 150).map(area => {
+                        this.maskZones.next([...rest, [...currentZones, ...prevSelections].filter(
+                            ({ sensitivity }) => sensitivity !== 150
+                        ).map(area => {
                             area.currentSelection = false;
                             return area;
                         })]);
@@ -427,22 +415,31 @@ export class MotionMaskRenderer {
     };
 
     // Render methods
+
+    /**
+     * Adds fill color for each cell
+     */
     private fillZones() {
         this.motionMask.renderState$.value.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
-            // this.ctx.clearRect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.beginPath();
-            this.ctx.fillStyle = sensitivity >= 150 ? '#33333377' : currentSelection ? this.sensitivityColors[sensitivity - 100] + 'bb' : this.sensitivityColors[sensitivity] + '55';
+            this.ctx.fillStyle = sensitivity >= 150 ? '#33333377' : this.sensitivityColors[sensitivity] + '55';
             this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
             this.ctx.fill();
         });
     }
 
+    /**
+     * Iterates through cells and draws outline for each
+     */
     private drawCells() {
         const currentMatrix = this.motionMask.renderState.maskMatrix;
         this.ctx.lineWidth = 1;
         currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
     }
 
+    /**
+     * Draw cell borders, black for zone edges, brand color for selection edges, light gray for grid.
+     */
     private drawCell = (maskMatrix: Mask, row: number) => (sensitivity: number, column: number) => {
         const top = row * this.cellHeight - 0.5;
         const bottom = (row + 1) * this.cellHeight + 0.5;
@@ -469,6 +466,9 @@ export class MotionMaskRenderer {
         draw(bottom, left, top, left, drawLeft);
     }
 
+    /**
+     * Add numbers to the top left most cell in a zone
+     */
     private addNumbers() {
         const { sortedZones, findStartZones, renderState: { zones } } = this.motionMask;
         const currentMask = sortedZones(zones);
@@ -491,6 +491,9 @@ export class MotionMaskRenderer {
         });
     }
 
+    /**
+     * Hover and selection outline
+     */
     private drawHoverOrSelection = (cursor: {x: number, y: number, width: number, height: number}) => {
         const { x, y, width, height } = {
             x      : cursor.x * this.cellWidth,
@@ -504,7 +507,10 @@ export class MotionMaskRenderer {
         this.ctx.strokeRect(x, y, width, height);
     }
 
-    render() {
+    /**
+     * Triggered on each state change
+     */
+    private render() {
         this.ctx.clearRect(0, 0, this.width, this.height);
         this.fillZones();
         this.addNumbers();

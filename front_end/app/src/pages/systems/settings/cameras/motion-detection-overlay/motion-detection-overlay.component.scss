@@ -21,6 +21,9 @@ nx-motion-detection-overlay {
     -ms-animation: fadeIn ease-in 0.3s;
     animation: fadeIn ease-in 0.3s;
     cursor: crosshair;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 @keyframes fadeIn {
