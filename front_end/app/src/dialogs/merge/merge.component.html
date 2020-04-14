@@ -15,7 +15,7 @@
         <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
     </div>
 </form>
-<form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
+<form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
     <div class="modal-body">
         <nx-pre-loader type="merge-wrapper" *ngIf="!peerSystemsLoaded; else checkMergeBody"></nx-pre-loader>
         <ng-template #checkMergeBody>
