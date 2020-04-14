@@ -186,7 +186,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.company = this.CONFIG.companyName;
         this.vmsName = this.CONFIG.vmsName;
-        this.placeholder = this.LANG.search.search_ipvd;
+        this.placeholder = this.LANG.search.Search;
 
         // add hardware types and tags
         this.addFilterTags();
