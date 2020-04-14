@@ -178,7 +178,7 @@ export class MergeModalContent {
         }
     }
 
-    setTargetSystem(targetSystem, checkOnSelect = false, serverUrlInputValue = '') {
+    setTargetSystem(targetSystem, serverUrlInputValue = '') {
         if (targetSystem.value === this.otherSystem) {
             this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
             this.targetSystem = targetSystem;
@@ -205,10 +205,6 @@ export class MergeModalContent {
                 delete templateUpdates.helpText;
             }
             this.updateShow(showUpdate, templateUpdates);
-
-            if (checkOnSelect) {
-                this.checkMergeabilityProcess.run();
-            }
         }
         this.setSystems();
     }
@@ -509,7 +505,7 @@ export class MergeModalContent {
             this.setTargetSystem({ value: template.selectedTarget });
         } else if (this.machine.currentState === this.checkMerge) {
             this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem(this.targetSystem, false, template.serverUrlInputValue);
+            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
         }
     }
 
