@@ -299,6 +299,10 @@ export class MotionMaskRenderer {
             });
     }
 
+    /**
+     * This initialization method could probably be broken down more in the future.
+     * @param canvas ref for target canvas
+     */
     private initInteractions(canvas: HTMLCanvasElement) {
         // Initialize base observables from events
         const track = (eventName: string) => <Observable<MouseEvent>> fromEvent(canvas, eventName);
