@@ -292,20 +292,21 @@ Language change is new default
     Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
     ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
     ...    "${LANGUAGE}"!="ja_JP"    ja_JP
-    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}following-sibling::ul//span[@lang='${lang}']
-    Click Element    ${ACCOUNT LANGUAGE DROPDOWN}following-sibling::ul//span[@lang='${lang}']/..
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']
+    Click Element    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']/..
     Click Button    ${ACCOUNT SAVE}
     Sleep    1    #to allow the system to change languages
-    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
-    Run Keyword If    ${lang}==ja_JP    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
-    ...    ELSE IF    ${lang}==de_DE    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
-    Log Out
-    Set Language Anonymous    zh_CN
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Log Out No Language
+    Set Language Anonymous    lang=zh_CN
     Go To    ${url}/account
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
-    Run Keyword If    ${lang}==ja_JP    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
-    ...    ELSE IF    ${lang}==de_DE    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
 Should open account page in anonymous state
     [tags]    anonymous

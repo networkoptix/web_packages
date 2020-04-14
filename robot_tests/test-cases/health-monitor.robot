@@ -201,6 +201,7 @@ Errors and Warnings are Counted and Shown Correctly in the Left Pane and Header 
     Count All Alerts and Validate Totals Shown
 
 Changing Page Height and Refreshing Reduces Row Count and Increases Page Count
+    [Tags]    C69785
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Log In    ${EMAIL OWNER}    ${password}    button=None
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}

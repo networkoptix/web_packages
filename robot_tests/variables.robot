@@ -296,7 +296,7 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
-${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[contains(text(), "${DELETE ACCOUNT TEXT}")]
+${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
 ${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
 ${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
