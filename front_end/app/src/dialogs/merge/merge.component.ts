@@ -243,18 +243,17 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
-                this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+                if (!this.serverUrlInputExists) {
+                    this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
+                }
                 return this.precheckSystemMerge();
             }, { ignoreError: true })
             .then(
                 res => {
-                    if (!res.system && this.systemMergeable === '') {
+                    if (res.error === '0') {
                         this.serverUrlInputExists
                             ? this.machine.transition('adminPassword')
                             : this.machine.transition('choosePrimary');
-                    } else {
-                        this.targetSystem.value = this.machine.state.template.selectedTarget;
-                        this.setTargetSystem(this.targetSystem);
                     }
                 },
                 err => {
@@ -272,7 +271,7 @@ export class MergeModalContent {
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
                 // for use case when password gets changed
-                if (this.serverUrl.indexOf('//admin:') >= 0) {
+                if (this.serverUrl.includes('//admin:')) {
                     const startIndex = this.serverUrl.indexOf('//admin') + 2;
                     const endIndex = this.serverUrl.indexOf('@', startIndex + 1) + 1;
                     this.serverUrl = this.serverUrl.slice(0, startIndex) + this.serverUrl.slice(endIndex);
@@ -440,7 +439,6 @@ export class MergeModalContent {
                                 throw Error(this.unknownError);
                         }
                     }
-                    this.systemMergeable = '';
                     return res;
                 });
         } else {
@@ -489,7 +487,7 @@ export class MergeModalContent {
             }
             this.targetSystemService.stopPoll();
         }
-        return Promise.resolve({});
+        return Promise.resolve({ error: '0' });
     }
 
     goBack(serverUrlError?) {
