@@ -189,8 +189,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="mb-3 pb-3">
-                    <span class="ml-3 text-muted" translate>Select some area on camera to change the sensitivity settings for it</span>
+                <div class="ml-3  mb-3 mr-3 pb-3 d-flex justify-content-between">
+                    <span *ngIf="buttons === false" class="text-muted" translate>Select some area on camera to change the sensitivity settings for it</span>
+                    <ng-container *ngIf="buttons !== false">
+                        <div class="btn-toolbar btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="buttons">
+                            <label *ngFor="let color of sensitivityColors; let i = index" ngbButtonLabel class="btn-secondary mr-2 sensitivity-buttons" [ngClass]="'button-' + i">
+                            <input ngbButton type="radio" [value]="i"> {{i}}
+                            </label>
+                        </div>
+                        <button class="btn btn-default" (click)="resetSensitivity()"><span translate>Reset</span></button>
+                    </ng-container>
                 </div>
             </nx-block>
         </div>

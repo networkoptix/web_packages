@@ -22,6 +22,7 @@ import { WINDOW }                    from '../../../../services/window-provider'
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { SensitivityColor } from './motion-detection-overlay/motion-detection-types';
 
 @AutoUnsubscribe()
 @Component({
@@ -56,6 +57,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     errors: string[] = [];
     showUnauthorized = false;
     showOverlay = false;
+
+    sensitivityColors: SensitivityColor[] = [
+        '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
+    ]
+
+    buttons: number | boolean = 4;
 
     constructor(
         configService: NxConfigService,
@@ -277,6 +284,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     toggleMotionGrid() {
         this.showOverlay = true;
+    }
+
+    resetSensitivity() {
+        this.buttons = true;
     }
 
     selectedRotationWatcher: Watcher<any> = new Watcher()

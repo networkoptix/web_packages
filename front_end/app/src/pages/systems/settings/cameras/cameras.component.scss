@@ -145,3 +145,121 @@
         height: 100%;
         }
   }
+
+  .sensitivity-buttons {
+      color: $dark9 !important;
+      border-radius: 2px;
+
+      border: 1px solid $light4;
+      &:hover {
+          border: 1px solid $light6;
+      }
+
+      &:active, &.active{
+        border: 1px solid $dark9;
+      }
+  }
+
+  .button {
+      &-0 {
+        background-color: #FFFFFF4D;
+        &:hover {
+            background-color: #FFFFFF66;
+        }
+        &:active, &.active{
+            background-color: #FFFFFF80 !important;
+        }
+
+      }
+      &-1 {
+        background-color: #627CD64D;
+        &:hover {
+            background-color: #627CD666;
+        }
+        &:active, &.active{
+            background-color: #627CD6 !important;
+        }
+
+      }
+      &-2{
+        background-color: #23A4CB4D;
+        &:hover {
+            background-color: #23A4CB66;
+        }
+        &:active, &.active{
+            background-color: #23A4CB !important;
+        }
+
+      }
+      &-3 {
+        background-color: #31BAA24D;
+        &:hover {
+            background-color: #31BAA266;
+        }
+        &:active, &.active{
+            background-color: #31BAA2 !important;
+        }
+
+      }
+      &-4 {
+        background-color: #79BC664D;
+        &:hover {
+            background-color: #79BC6666;
+        }
+        &:active, &.active{
+            background-color: #79BC66 !important;
+        }
+
+      }
+      &-5 {
+        background-color: #B8BC374D;
+        &:hover {
+            background-color: #B8BC3766;
+        }
+        &:active, &.active{
+            background-color: #B8BC37 !important;
+        }
+
+      }
+      &-6 {
+        background-color: #FBA4054D;
+        &:hover {
+            background-color: #FBA40566;
+        }
+        &:active, &.active{
+            background-color: #FBA405 !important;
+        }
+
+      }
+      &-7 {
+        background-color: #E971194D;
+        &:hover {
+            background-color: #E9711966;
+        }
+        &:active, &.active{
+            background-color: #E97119 !important;
+        }
+
+      }
+      &-8 {
+        background-color: #D247294D;
+        &:hover {
+            background-color: #D2472966;
+        }
+        &:active, &.active{
+            background-color: #D24729 !important;
+        }
+
+      }
+      &-9 {
+        background-color: #C226264D;
+        &:hover {
+            background-color: #C2262666;
+        }
+        &:active, &.active{
+            background-color: #C22626 !important;
+        }
+
+      }
+  }
+
