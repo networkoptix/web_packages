@@ -51,14 +51,15 @@ export class MergeModalContent {
     readonly serverUrlValidationError: string = 'serverUrlValidationError';
     readonly confirmPasswordError: string = 'confirmPasswordError';
 
-    readonly otherSystem: string = 'otherSystem';
-    readonly duplicateServers: string = 'duplicateServers';
     readonly differentOwners: string = 'differentOwners';
-    readonly systemOffline: string = 'systemOffline';
+    readonly duplicateServers: string = 'duplicateServers';
     readonly noServerFound: string = 'noServerFound';
-    readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
-    readonly passwordWrong: string = 'passwordWrong';
+    readonly otherSystem: string = 'otherSystem';
     readonly passwordRequired: string = 'passwordRequired';
+    readonly passwordWrong: string = 'passwordWrong';
+    readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
+    readonly serverNotAvailable: string = 'serverNotAvailable';
+    readonly systemOffline: string = 'systemOffline';
     readonly unknownError: string = 'unknownError';
 
     machine = new StateMachine(this.checkMerge, State);
@@ -292,12 +293,15 @@ export class MergeModalContent {
                             this.machine.transition('confirmMerge');
                         } else if (res.errorString === 'UNAUTHORIZED') {
                             this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
-                            this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                            this.updateShow(this.confirmPasswordError, {
+                                passwordErrorText : this.passwordWrong,
+                                passwordValue     : ''
+                            });
                         } else if (res.errorString) {
                             this.machine.history = [];
                             this.machine.transition(this.checkMerge);
                             this.updateShow(this.serverUrlMergeError, {
-                                checkingErrorText: newCheckMergeErrors[res.errorString] || this.unknownError
+                                checkingErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
                             });
                         }
                     })
