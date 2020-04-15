@@ -65,9 +65,9 @@ export class MotionMaskRenderer {
         const track = (eventName: string) =>
             <Observable<MouseEvent>>fromEvent(canvas, eventName);
         const [
-            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseEnter$
         ] = [
-            'mousedown', 'mouseup', 'mouseleave', 'mousemove'
+            'mousedown', 'mouseup', 'mouseleave', 'mousemove', 'mouseenter'
         ].map(track);
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
             (event) => <Observable<KeyboardEvent>>fromEvent(window, event)
@@ -128,11 +128,22 @@ export class MotionMaskRenderer {
                 ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
             )
         ); // For testing, will either remove or move into full UI observable later
-        const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
+        const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$, mouseEnter$);
         const clickBuffer$ = clickAction$.pipe(debounceTime(50));
+
+        const initialHover = mouseState$.pipe(
+            tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
+            takeUntil(this.unsub$)
+        ).subscribe();
+
         clickAction$
             .pipe(
                 startWith({ type: null, x: 0, y: 0 }),
+                tap(({ type }) => {
+                    if (type !== null) {
+                        initialHover.unsubscribe();
+                    }
+                }),
                 buffer(clickBuffer$),
                 withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))),
                 map(([buffer, { x, y }]) => ({
