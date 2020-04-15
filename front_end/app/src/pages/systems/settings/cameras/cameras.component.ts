@@ -194,24 +194,27 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
                 streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
             } : false;
-            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType'> = {
+            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
                 audioEnabled    : this.audioEnabled.value,
                 overrideAr      : `${this.selectedAspectWatcher.value}` || '',
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
-                motionType      : this.motionType
+                motionType      : this.motionType,
+                motionMask      : this.motionMaskWatcher.value || '5,0,0,44,32'
             };
-            return this.system.updateRecordingSettings(updatedTask, cameraSettings)
-                .then(_ => this.system.updateCameraSettings(cameraSettings.id, {
+            return Promise.all([
+                this.system.updateRecordingSettings(updatedTask, cameraSettings),
+                this.system.updateCameraSettings(cameraSettings.id, {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
-                }).then(_ => this.system.getCameras().then(res => {
-                    this.applyService.reset();
-                    this.setCamera();
-                    return res;
-                }))
-                );
+                })
+            ]).then(_ => this.system.getCameras().then(res => {
+                this.applyService.reset();
+                this.setCamera();
+                this.toggleMotionGrid();
+                return res;
+            }));
         });
     }
 
