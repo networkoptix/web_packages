@@ -1,4 +1,4 @@
-<nx-block class="d-block mt-3" *ngIf="licenses?.length && !haveTrialLicense">
+<nx-block class="d-block mt-3" *ngIf="!haveTrialLicense">
     <nx-section>
         <form class="form" role="form"
               id="trialLicenseForm" name="trialLicenseForm" #trialLicenseForm="ngForm"

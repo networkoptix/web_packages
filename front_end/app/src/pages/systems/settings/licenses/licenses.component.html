@@ -6,12 +6,6 @@
 
 <nx-pre-loader *ngIf="!licenses"></nx-pre-loader>
 
-<nx-license-trial-component
-        [system]="this.system"
-        [servers]="this.system?.servers"
-        [licenses]="licenses">
-</nx-license-trial-component>
-
 <nx-license-summary-component
         [licenses]="licenses">
 </nx-license-summary-component>

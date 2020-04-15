@@ -16,7 +16,7 @@ import { NxMenuService }                 from '../../../../components/menu/menu.
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
 @Component({
-    selector    : 'nx-system-licenses-storage',
+    selector    : 'nx-system-licenses',
     templateUrl : 'licenses.component.html',
     styleUrls   : ['licenses.component.scss']
 })
@@ -134,7 +134,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                 item.info[prop[0].toLowerCase()] = prop[1];
                             });
 
-                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date('05/15/2020').getTime());
+                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
                         item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
 
                         // Set license type

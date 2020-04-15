@@ -28,17 +28,16 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
     license: string;
     trialLicenseText: any;
-    selectedServer: any = {};
     haveTrialLicense: boolean;
 
-    @Input() servers: any = [];
+    @Input() selectedServer: any = [];
     @Input() system: NxSystem;
     @Input() licenses: any = [];
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
     private setupDefaults() {
-        this.haveTrialLicense = true;
+        this.haveTrialLicense = true; // hide it initially until we get info about existing licenses
 
         switch (this.CONFIG.vmsName.toLowerCase().replace(' ', '')) {
             case 'nxwitness':
@@ -51,8 +50,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
 
         this.activateTrialKey = this.processService.createProcess(() => {
             return this.system
-                .activateLicense(this.selectedServer.id, this.license)
-                .toPromise()
+                .activateLicense(this.selectedServer.value, this.license)
                 .then(response => {
                     if (response.reply) {
                         this.system.licensesModified = true;
@@ -63,6 +61,25 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                             .replace('{{days}}', this.days);
                         this.dialogsService
                             .notify(msg, 'success');
+                    }
+
+                    if (response.error) {
+                        switch (response.error) {
+                            case '1':
+                                this.dialogsService
+                                    .notify(response.errorString, 'danger'); // missing param?
+                                break;
+
+                            case '2':
+                                // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
+
+                            // eslint-disable-next-line no-fallthrough
+                            case '3':
+                                // Can't activate license:  License Key you have entered is invalid.
+                                // This should not happen as keys are predefined per customization
+                                this.dialogsService
+                                    .notify(response.errorString, 'danger');
+                        }
                     }
                 }, (fail) => {
                     if (fail.error.type === 'error') {
@@ -89,7 +106,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
         if (changes.licenses && changes.licenses.currentValue) {
             this.haveTrialLicense = changes.licenses.currentValue.find((lic) => {
                 return lic.key === this.license;
-            });
+            }) || false;
         }
     }
 
