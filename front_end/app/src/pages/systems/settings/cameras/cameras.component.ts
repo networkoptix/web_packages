@@ -5,16 +5,15 @@ import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
     NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes, MotionType
 }                                    from '../../../../services/system.service';
 import {
-    Subscription, BehaviorSubject
+    Subscription, BehaviorSubject, Subject
 }                                    from 'rxjs';
 import {
-    filter, map, retryWhen, delay, distinctUntilChanged
+    filter, map, retryWhen, delay, distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
@@ -57,6 +56,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     errors: string[] = [];
     showUnauthorized = false;
     showOverlay = false;
+    unsub$: Subject<boolean> = new Subject();
 
     sensitivityColors = new Array(10);
 
@@ -84,8 +84,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeParamsSubscription = this.route
             .params
-            .pipe(distinctUntilChanged())
-            .subscribe(params => {
+            .pipe(
+                takeUntil(this.unsub$),
+                distinctUntilChanged()
+            ).subscribe(params => {
                 this.warnings = [];
                 this.errors = [];
                 this.showUnauthorized = false;
@@ -99,8 +101,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
 
         this.settingsSubscription = this.settingsService.systemSubject
-            .pipe(filter(data => data !== undefined))
-            .subscribe(system => {
+            .pipe(
+                takeUntil(this.unsub$),
+                filter(data => data !== undefined)
+            ).subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 this.system = system;
                 this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
@@ -119,6 +123,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
+                        takeUntil(this.unsub$),
                         distinctUntilChanged(),
                         map(system => {
                             if (!system.cameras || system.cameras.length === 0) {
@@ -480,7 +485,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     canSeeInfo = false;
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.unsub$.next(true);
+    }
 
     setCamera = () => {
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
@@ -532,6 +539,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.healthService.ready = false;
         this.healthReportSubscription = this.system.mediaserver
             .getAggregateHealthReport()
+            .pipe(takeUntil(this.unsub$))
             .subscribe(
                 result => {
                     const alerts = result.reply['ec2/metrics/alarms'].reply.cameras;
