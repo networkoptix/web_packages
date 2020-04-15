@@ -280,7 +280,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     toggleMotionGrid() {
-        this.showOverlay = true;
+        this.showOverlay = false;
+        this.sensitivityButtons = false;
+        setTimeout(() => {
+            this.showOverlay = true;
+        });
     }
 
     sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'> = new BehaviorSubject(false);

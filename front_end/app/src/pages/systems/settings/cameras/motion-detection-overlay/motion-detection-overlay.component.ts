@@ -1,13 +1,11 @@
 import {
     Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked, ChangeDetectionStrategy, HostListener
 }                               from '@angular/core';
-import { AutoUnsubscribe }      from 'ngx-auto-unsubscribe';
-import { BehaviorSubject }      from 'rxjs';
+import { BehaviorSubject, Subject }      from 'rxjs';
 import { SensitivityColor }     from './motion-detection-types';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
 
-@AutoUnsubscribe()
 @Component({
     selector        : 'nx-motion-detection-overlay',
     templateUrl     : 'motion-detection-overlay.component.html',
@@ -21,7 +19,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
     @HostListener('contextmenu', ['$event']) preventContext = event => event.preventDefault();
-
+    unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
 
@@ -57,18 +55,20 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         }
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.unsub$.next(true);
+    }
 
     // Init methods
     private initMask() {
-        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityButtons$);
+        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityButtons$, this.unsub$);
     }
 
     /**
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
     private initRenderer() {
-        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors);
+        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors, this.unsub$);
         this.motionMaskRenderer.initCanvas(this.motionCanvas);
     }
 }

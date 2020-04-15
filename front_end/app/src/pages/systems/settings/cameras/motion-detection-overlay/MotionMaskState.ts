@@ -1,6 +1,8 @@
-import { ElementRef } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Mask, Area, AreaTuple } from './motion-detection-types';
+import { ElementRef }               from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { Mask, Area, AreaTuple }    from './motion-detection-types';
+import { takeUntil }                from 'rxjs/operators';
+
 export class MotionMaskState {
     private columns = 44;
     private rows = 32;
@@ -12,10 +14,17 @@ export class MotionMaskState {
         maskMatrix: Mask;
     }> = new BehaviorSubject({ zones: [], maskMatrix: [] });
 
-    constructor(initialMask: string, public canvas: ElementRef<HTMLCanvasElement>, public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>) {
+    constructor(
+        initialMask: string,
+        public canvas: ElementRef<HTMLCanvasElement>,
+        public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>,
+        private unsub$: Subject<boolean>
+    ) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
-        this.maskMatrix = new BehaviorSubject([this.zonesToMatrix(parsedInitial)]);
+        this.maskMatrix = new BehaviorSubject([
+            this.zonesToMatrix(parsedInitial)
+        ]);
         this.initSensitivityButtons();
     }
 
@@ -31,44 +40,60 @@ export class MotionMaskState {
 
     // Init Methods
     private initialToMaskZones(initial: string): Area[] {
-        const zones = initial.split(';').map(area => {
-            const areaTuples = <AreaTuple>area.split(',').map(numString => parseInt(numString));
+        const zones = initial.split(';').map((area) => {
+            const areaTuples = <AreaTuple>(
+                area.split(',').map((numString) => parseInt(numString))
+            );
             return new Area(...areaTuples);
         });
         return this.sortedZones(zones);
     }
 
     initSensitivityButtons = () => {
-        this.selectionZones.subscribe((zones) => {
+        this.selectionZones.pipe(takeUntil(this.unsub$)).subscribe((zones) => {
             if (zones.length && this.sensitivityButtons$.value === false) {
                 this.sensitivityButtons$.next(!!zones.length);
             }
         });
-        this.sensitivityButtons$.subscribe(sensitivity => {
-            const selection = this.selectionZones.value;
-            if (typeof sensitivity === 'number') {
-                const updatedZones = selection.map(area => {
-                    area.sensitivity = sensitivity;
-                    area.currentSelection = false;
-                    return area;
-                });
-                const [currentZones, ...prevZones] = this.maskZones.value.reverse();
-                this.maskZones.next([...prevZones, [...currentZones, ...updatedZones]]);
-                this.selectionZones.next([]);
-                this.sensitivityButtons$.next(false);
-            } else if (sensitivity === 'reset') {
-                this.selectionZones.next([]);
-                this.sensitivityButtons$.next(false);
-            }
-        });
+        this.sensitivityButtons$
+            .pipe(takeUntil(this.unsub$))
+            .subscribe((sensitivity) => {
+                const selection = this.selectionZones.value;
+                if (typeof sensitivity === 'number') {
+                    const updatedZones = selection.map((area) => {
+                        area.sensitivity = sensitivity;
+                        area.currentSelection = false;
+                        return area;
+                    });
+                    const [
+                        currentZones,
+                        ...prevZones
+                    ] = this.maskZones.value.reverse();
+                    this.maskZones.next([
+                        ...prevZones,
+                        [...currentZones, ...updatedZones]
+                    ]);
+                    this.selectionZones.next([]);
+                    this.sensitivityButtons$.next(false);
+                } else if (sensitivity === 'reset') {
+                    this.selectionZones.next([]);
+                    this.sensitivityButtons$.next(false);
+                }
+            });
     };
 
     // State transform methods
-    public mergeZones(currentZones: Area[], selectionZones: Area[]): {
+    public mergeZones(
+        currentZones: Area[],
+        selectionZones: Area[]
+    ): {
         maskMatrix: Mask;
         zones: Area[];
     } {
-        const maskMatrix = this.zonesToMatrix([...currentZones, ...selectionZones]);
+        const maskMatrix = this.zonesToMatrix([
+            ...currentZones,
+            ...selectionZones
+        ]);
         const zones = this.matrixToZones(maskMatrix);
         return { maskMatrix, zones };
     }
@@ -77,7 +102,12 @@ export class MotionMaskState {
      * Currently used to trigger first render. Could probably refactor this in the future.
      */
     public updateRenderState() {
-        this.renderState$.next(this.mergeZones(this.maskZones.value[this.maskZones.value.length - 1], this.selectionZones.value));
+        this.renderState$.next(
+            this.mergeZones(
+                this.maskZones.value[this.maskZones.value.length - 1],
+                this.selectionZones.value
+            )
+        );
     }
 
     public get renderState() {
@@ -94,20 +124,27 @@ export class MotionMaskState {
     }
 
     public matrixToZones(maskMatrix: number[][]): Area[] {
-        const matrix = <(number | false)[][]>[...maskMatrix].map(row => [...row]);
+        const matrix = <(number | false)[][]>(
+            [...maskMatrix].map((row) => [...row])
+        );
         const zones: Area[] = [];
         const updateZones = (row: number, column: number, sensitivity) => {
             let width = 1;
             let height = 1;
-            while ((column + width) < this.columns && matrix[row][column + width] === sensitivity) {
+            while (
+                column + width < this.columns &&
+                matrix[row][column + width] === sensitivity
+            ) {
                 // Find row with matching sensitivity
                 matrix[row][column + width] = false;
                 width++;
             }
-            ;
-            while ((row + height) < this.rows &&
-                matrix[row + height].slice(column, column + width).every(cell => cell !== false &&
-                    cell === sensitivity)) {
+            while (
+                row + height < this.rows &&
+                matrix[row + height]
+                    .slice(column, column + width)
+                    .every((cell) => cell !== false && cell === sensitivity)
+            ) {
                 // Find height where sensitivity still matches for all cells
                 for (let x = column; x < column + width; x++) {
                     matrix[row + height][x] = false;
@@ -127,14 +164,17 @@ export class MotionMaskState {
     }
 
     public addZone(zone: Area, mask: Mask, toggle = false): Mask {
-        const maskCopy = [...mask.map(row => [...row])];
+        const maskCopy = [...mask.map((row) => [...row])];
         const { sensitivity, x, y, width, height, currentSelection } = zone;
         for (let row = y; row < y + height; row++) {
             for (let column = x; column < x + width; column++) {
                 if (toggle) {
-                    maskCopy[row][column] = maskCopy[row][column] >= 150 ? 0 : 150;
+                    maskCopy[row][column] =
+                        maskCopy[row][column] >= 150 ? 0 : 150;
                 } else {
-                    maskCopy[row][column] = currentSelection ? Math.min(sensitivity + 100, 150) : sensitivity;
+                    maskCopy[row][column] = currentSelection
+                        ? Math.min(sensitivity + 100, 150)
+                        : sensitivity;
                 }
             }
         }
@@ -142,15 +182,15 @@ export class MotionMaskState {
     }
 
     /**
-    * Returns zones sorted top left to bottom right
-    */
+     * Returns zones sorted top left to bottom right
+     */
     public sortedZones(zones: Area[]): Area[] {
         return zones.sort((a, b) => a.y - b.y || a.x - b.x);
     }
 
     /**
-    * Returns array representing contiguous areas representing one zone.
-    */
+     * Returns array representing contiguous areas representing one zone.
+     */
     public findZoneGroups = (zones: Area[]): Area[][] => {
         let sorted: Area[] = this.sortedZones(zones);
         const zoneGroups: Area[][] = [];
@@ -158,10 +198,18 @@ export class MotionMaskState {
             const [first, ...rest] = sorted;
             let group = [first];
             sorted = rest;
-            for (let groupPointer = 0; groupPointer < group.length; groupPointer++) {
-                const borderingZones = sorted.filter(zone => zone.borders(group[groupPointer]));
+            for (
+                let groupPointer = 0;
+                groupPointer < group.length;
+                groupPointer++
+            ) {
+                const borderingZones = sorted.filter((zone) =>
+                    zone.borders(group[groupPointer])
+                );
                 group = [...group, ...borderingZones];
-                sorted = sorted.filter(zone => !zone.borders(group[groupPointer]));
+                sorted = sorted.filter(
+                    (zone) => !zone.borders(group[groupPointer])
+                );
             }
             zoneGroups.push(group);
         }
@@ -176,5 +224,6 @@ export class MotionMaskState {
     /**
      * Used for placing sensitivity number indicators.
      */
-    public findStartZones = (zones: Area[]) => this.findZoneGroups(zones).map(group => group[0]);
+    public findStartZones = (zones: Area[]) =>
+        this.findZoneGroups(zones).map((group) => group[0]);
 }

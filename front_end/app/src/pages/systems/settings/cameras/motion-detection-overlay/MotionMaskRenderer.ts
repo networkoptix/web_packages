@@ -1,9 +1,15 @@
-import { ElementRef } from '@angular/core';
-import { BehaviorSubject, Subscription, merge, fromEvent, Observable } from 'rxjs';
-import { switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map, startWith, tap, buffer, debounceTime, withLatestFrom } from 'rxjs/operators';
-import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
-import { SensitivityColor, Mask, Area } from './motion-detection-types';
-import { MotionMaskState } from './MotionMaskState';
+import { ElementRef }       from '@angular/core';
+import { BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
+}                           from 'rxjs';
+import { switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map, 
+    startWith, tap, buffer, debounceTime, withLatestFrom, takeUntil
+}                           from 'rxjs/operators';
+import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
+import { 
+    SensitivityColor, Mask, Area 
+}                           from './motion-detection-types';
+import { MotionMaskState }  from './MotionMaskState';
+
 export class MotionMaskRenderer {
     private cellWidth: number;
     private cellHeight: number;
@@ -18,7 +24,13 @@ export class MotionMaskRenderer {
     public canvas: ElementRef<HTMLCanvasElement>;
     public renderer: Subscription;
     public interactions: Subscription;
-    constructor(private motionMask: MotionMaskState, private sensitivityColors: SensitivityColor[]) { }
+
+    constructor(
+        private motionMask: MotionMaskState,
+        private sensitivityColors: SensitivityColor[],
+        private unsub$: Subject<boolean>
+    ) {}
+
     // Init methods
     public initCanvas = (canvas: ElementRef<HTMLCanvasElement>) => {
         this.cellWidth = canvas.nativeElement.width / this.columns;
@@ -30,7 +42,12 @@ export class MotionMaskRenderer {
         this.maskZones = this.motionMask.maskZones;
         this.selectionZones = this.motionMask.selectionZones;
         this.initInteractions(canvas.nativeElement);
-        this.renderer = merge(this.maskMatrix, this.maskZones, this.selectionZones)
+        this.renderer = merge(
+            this.maskMatrix,
+            this.maskZones,
+            this.selectionZones
+        )
+            .pipe(takeUntil(this.unsub$))
             .subscribe(() => {
                 this.motionMask.updateRenderState();
                 this.render();
@@ -43,95 +60,214 @@ export class MotionMaskRenderer {
      */
     private initInteractions(canvas: HTMLCanvasElement) {
         // Initialize base observables from events
-        const track = (eventName: string) => <Observable<MouseEvent>>fromEvent(canvas, eventName);
-        const [mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseClick$] = ['mousedown', 'mouseup', 'mouseleave', 'mousemove', 'click'].map(track);
-        const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(event => <Observable<KeyboardEvent>>fromEvent(window, event));
+        const track = (eventName: string) =>
+            <Observable<MouseEvent>>fromEvent(canvas, eventName);
+        const [
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseClick$
+        ] = [
+            'mousedown', 'mouseup', 'mouseleave', 'mousemove', 'click'
+        ].map(track);
+        const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
+            (event) => <Observable<KeyboardEvent>>fromEvent(window, event)
+        );
         // Utility functions
         const findEventCoords = (event: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
             const cellActualWidth = rect.width / this.columns;
             const cellActualHeight = rect.height / this.rows;
             return {
-                x : Math.floor(((event.clientX) - rect.left) / cellActualWidth),
+                x : Math.floor((event.clientX - rect.left) / cellActualWidth),
                 y : Math.floor((event.clientY - rect.top) / cellActualHeight)
             };
         };
         const getAction = (buffer: any[]) => {
             buffer = buffer.filter(({ type }) => type !== null);
-            const firstClick = buffer.length >= 2 && buffer[0].type === 'mousedown' && buffer[1].type === 'mouseup';
-            const doubleClick = buffer.length >= 4 &&
+            const firstClick =
+                buffer.length >= 2 &&
+                buffer[0].type === 'mousedown' &&
+                buffer[1].type === 'mouseup';
+            const doubleClick =
+                buffer.length >= 4 &&
                 firstClick &&
                 buffer[2].type === 'mousedown' &&
                 buffer[3].type === 'mouseup';
             const click = firstClick;
             const start = buffer[0].type === 'mousedown';
-            if (doubleClick) { return 'double-click'; }
-            if (click) { return 'click'; }
-            if (start) { return 'select-start'; }
+            if (doubleClick) {
+                return 'double-click';
+            }
+            if (click) {
+                return 'click';
+            }
+            if (start) {
+                return 'select-start';
+            }
             return 'select-end';
         };
         // Base observables for managing UI state
-        const shiftCtrlSubject$ = new BehaviorSubject({ ctrlKey: false, shiftKey: false });
-        const shiftCtrlState$ = merge(keyDown$, keyUp$).pipe(filter(({ key }) => key === 'Control' || key === 'Shift'), map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })), distinctUntilChanged((x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey)).subscribe(shiftCtrlSubject$);
-        const mouseState$ = mouseMove$.pipe(throttleTime(0, animationFrame), map(findEventCoords), distinctUntilChanged(({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y)); // For testing, will either remove or move into full UI observable later
+        const shiftCtrlSubject$ = new BehaviorSubject({
+            ctrlKey  : false,
+            shiftKey : false
+        });
+        const shiftCtrlState$ = merge(keyDown$, keyUp$)
+            .pipe(
+                filter(({ key }) => key === 'Control' || key === 'Shift'),
+                map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
+                distinctUntilChanged(
+                    (x, y) =>
+                        x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey
+                ),
+                takeUntil(this.unsub$)
+            )
+            .subscribe(shiftCtrlSubject$);
+        const mouseState$ = mouseMove$.pipe(
+            throttleTime(0, animationFrame),
+            map(findEventCoords),
+            distinctUntilChanged(
+                ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
+            )
+        ); // For testing, will either remove or move into full UI observable later
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
         const clickBuffer$ = clickAction$.pipe(debounceTime(50));
-        clickAction$.pipe(startWith({ type: null, x: 0, y: 0 }), buffer(clickBuffer$), withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))), map(([buffer, { x, y }]) => ({ action: getAction(buffer), x, y, ...shiftCtrlSubject$.value })), pairwise(), filter(([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end')), map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
-            let width = 1;
-            let height = 1;
-            const x = Math.min(curX, prev.x);
-            const y = Math.min(curY, prev.y);
-            if (action === 'select-end') {
-                width = Math.max(curX, prev.x) - Math.min(curX, prev.x) + 1;
-                height = Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
-            }
-            return { action, x, y, selectX: curX, selectY: curY, width, height, ...keyStates };
-        }), switchMap(({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
-            const [currentZones, ...rest] = this.maskZones.value.reverse();
-            const prevSelections = this.selectionZones.value;
-            const newZone = new Area(150, x, y, width, height, true);
-            if (action === 'select-start') {
-                return mouseState$.pipe(tap(({ x: mouseX, y: mouseY }) => {
-                    const x = Math.min(selectX, mouseX);
-                    const y = Math.min(selectY, mouseY);
-                    width = Math.max(selectX, mouseX) - x + 1;
-                    height = Math.max(selectY, mouseY) - y + 1;
-                    this.drawHoverOrSelection({ x, y, height, width });
-                }));
-            } else if (action === 'select-end') {
-                if (shiftKey) {
-                    this.selectionZones.next([...prevSelections, newZone]);
-                } else if (ctrlKey) {
-                    const matrix = this.motionMask.zonesToMatrix(prevSelections);
-                    const updatedMatrix = this.motionMask.addZone(newZone, matrix, true);
-                    const updatedZones = this.motionMask.matrixToZones(updatedMatrix)
-                        .filter(({ sensitivity }) => sensitivity >= 150);
-                    this.selectionZones.next(updatedZones);
-                } else {
-                    this.selectionZones.next([]);
-                    this.maskZones.next([...rest, [...currentZones, ...prevSelections].filter(({ sensitivity }) => sensitivity !== 150).map(area => {
-                        area.currentSelection = false;
-                        return area;
-                    })]);
-                    this.selectionZones.next([newZone]);
-                }
-            }
-            return mouseState$.pipe(tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })));
-        })).subscribe();
+        clickAction$
+            .pipe(
+                startWith({ type: null, x: 0, y: 0 }),
+                buffer(clickBuffer$),
+                withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))),
+                map(([buffer, { x, y }]) => ({
+                    action: getAction(buffer),
+                    x,
+                    y,
+                    ...shiftCtrlSubject$.value
+                })),
+                pairwise(),
+                filter(
+                    ([prev, cur]) =>
+                        !(
+                            prev.action === 'select-end' &&
+                            cur.action === 'select-end'
+                        )
+                ),
+                map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
+                    let width = 1;
+                    let height = 1;
+                    const x = Math.min(curX, prev.x);
+                    const y = Math.min(curY, prev.y);
+                    if (action === 'select-end') {
+                        width =
+                            Math.max(curX, prev.x) - Math.min(curX, prev.x) + 1;
+                        height =
+                            Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
+                    }
+                    return { action, x, y, selectX : curX, selectY : curY, width, height, ...keyStates
+                    };
+                }),
+                switchMap(
+                    ({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
+                        const [
+                            currentZones,
+                            ...rest
+                        ] = this.maskZones.value.reverse();
+                        const prevSelections = this.selectionZones.value;
+                        const newZone = new Area(
+                            150,
+                            x,
+                            y,
+                            width,
+                            height,
+                            true
+                        );
+                        if (action === 'select-start') {
+                            return mouseState$.pipe(
+                                tap(({ x: mouseX, y: mouseY }) => {
+                                    const x = Math.min(selectX, mouseX);
+                                    const y = Math.min(selectY, mouseY);
+                                    width = Math.max(selectX, mouseX) - x + 1;
+                                    height = Math.max(selectY, mouseY) - y + 1;
+                                    this.drawHoverOrSelection({
+                                        x,
+                                        y,
+                                        height,
+                                        width
+                                    });
+                                })
+                            );
+                        } else if (action === 'select-end') {
+                            if (shiftKey) {
+                                this.selectionZones.next([
+                                    ...prevSelections,
+                                    newZone
+                                ]);
+                            } else if (ctrlKey) {
+                                const matrix = this.motionMask.zonesToMatrix(
+                                    prevSelections
+                                );
+                                const updatedMatrix = this.motionMask.addZone(
+                                    newZone,
+                                    matrix,
+                                    true
+                                );
+                                const updatedZones = this.motionMask
+                                    .matrixToZones(updatedMatrix)
+                                    .filter(
+                                        ({ sensitivity }) => sensitivity >= 150
+                                    );
+                                this.selectionZones.next(updatedZones);
+                            } else {
+                                this.selectionZones.next([]);
+                                this.maskZones.next([
+                                    ...rest,
+                                    [...currentZones, ...prevSelections]
+                                        .filter(
+                                            ({ sensitivity }) =>
+                                                sensitivity !== 150
+                                        )
+                                        .map((area) => {
+                                            area.currentSelection = false;
+                                            return area;
+                                        })
+                                ]);
+                                this.selectionZones.next([newZone]);
+                            }
+                        }
+                        return mouseState$.pipe(
+                            tap(({ x, y }) =>
+                                this.drawHoverOrSelection({
+                                    x,
+                                    y,
+                                    height : 1,
+                                    width  : 1
+                                })
+                            ),
+                            takeUntil(this.unsub$)
+                        );
+                    }
+                )
+            )
+            .subscribe();
     }
 
-    ;
     // Render methods
     /**
      * Adds fill color for each cell
      */
     private fillZones() {
-        this.motionMask.renderState$.value.zones.forEach(({ sensitivity, x, y, width, height, currentSelection }) => {
-            this.ctx.beginPath();
-            this.ctx.fillStyle = sensitivity >= 150 ? '#33333377' : this.sensitivityColors[sensitivity] + '55';
-            this.ctx.rect(x * this.cellWidth, y * this.cellHeight, width * this.cellWidth, height * this.cellHeight);
-            this.ctx.fill();
-        });
+        this.motionMask.renderState$.value.zones.forEach(
+            ({ sensitivity, x, y, width, height, currentSelection }) => {
+                this.ctx.beginPath();
+                this.ctx.fillStyle =
+                    sensitivity >= 150
+                        ? '#33333377'
+                        : this.sensitivityColors[sensitivity] + '55';
+                this.ctx.rect(
+                    x * this.cellWidth,
+                    y * this.cellHeight,
+                    width * this.cellWidth,
+                    height * this.cellHeight
+                );
+                this.ctx.fill();
+            }
+        );
     }
 
     /**
@@ -140,23 +276,36 @@ export class MotionMaskRenderer {
     private drawCells() {
         const currentMatrix = this.motionMask.renderState.maskMatrix;
         this.ctx.lineWidth = 1;
-        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
+        currentMatrix.forEach((_, row) =>
+            _.forEach(this.drawCell(currentMatrix, row))
+        );
     }
 
     /**
      * Draw cell borders, black for zone edges, brand color for selection edges, light gray for grid.
      */
-    private drawCell = (maskMatrix: Mask, row: number) => (sensitivity: number, column: number) => {
+    private drawCell = (maskMatrix: Mask, row: number) => (
+        sensitivity: number,
+        column: number
+    ) => {
         const top = row * this.cellHeight - 0.5;
         const bottom = (row + 1) * this.cellHeight + 0.5;
         const left = column * this.cellWidth - 0.5;
         const right = (column + 1) * this.cellWidth + 0.5;
         const drawTop = row && sensitivity !== maskMatrix[row - 1][column];
-        const drawRight = column !== this.columns - 1 && sensitivity !== maskMatrix[row][column + 1];
-        const drawBottom = row !== this.rows - 1 && sensitivity !== maskMatrix[row + 1][column];
+        const drawRight =
+            column !== this.columns - 1 &&
+            sensitivity !== maskMatrix[row][column + 1];
+        const drawBottom =
+            row !== this.rows - 1 &&
+            sensitivity !== maskMatrix[row + 1][column];
         const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
         const draw = (fromY, fromX, toY, toX, solid, selected = false) => {
-            this.ctx.strokeStyle = solid ? selected ? '#2FA2DB' : 'black' : '#FFFFFF1A';
+            this.ctx.strokeStyle = solid
+                ? selected
+                    ? '#2FA2DB'
+                    : 'black'
+                : '#FFFFFF1A';
             this.ctx.shadowColor = null;
             this.ctx.shadowBlur = null;
             this.ctx.beginPath();
@@ -174,7 +323,11 @@ export class MotionMaskRenderer {
      * Add numbers to the top left most cell in a zone
      */
     private addNumbers() {
-        const { sortedZones, findStartZones, renderState: { zones } } = this.motionMask;
+        const {
+            sortedZones,
+            findStartZones,
+            renderState: { zones }
+        } = this.motionMask;
         const currentMask = sortedZones(zones);
         const startZones = findStartZones(currentMask);
         const fontSize = 30;
@@ -184,10 +337,16 @@ export class MotionMaskRenderer {
         this.ctx.shadowColor = 'black';
         this.ctx.shadowBlur = 6;
         startZones.forEach(({ x, y, width, height, sensitivity }) => {
-            if (sensitivity >= 150) { return; }
+            if (sensitivity >= 150) {
+                return;
+            }
             const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
-            this.ctx.fillText(`${sensitivity || '0'}`, (x + 0.5) * this.cellWidth + addOffsetX, (y + 1) * this.cellHeight - 4 + addOffsetY);
+            this.ctx.fillText(
+                `${sensitivity || '0'}`,
+                (x + 0.5) * this.cellWidth + addOffsetX,
+                (y + 1) * this.cellHeight - 4 + addOffsetY
+            );
         });
     }
 
@@ -195,10 +354,10 @@ export class MotionMaskRenderer {
      * Hover and selection outline
      */
     private drawHoverOrSelection = (cursor: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
+        x      : number;
+        y      : number;
+        width  : number;
+        height : number;
     }) => {
         const { x, y, width, height } = {
             x      : cursor.x * this.cellWidth,
