@@ -82,9 +82,22 @@ export default Object.assign({
             passwordValue     : ''
         },
         errorText: {
-            passwordRequired   : '',
-            passwordWrong      : '',
+            passwordRequired : '',
+            passwordWrong    : '',
+            unknownError     : ''
+        }
+    },
+    serverUrlErrors: {
+        show        : {},
+        showUpdates : { serverUrlErrors: {} },
+        template    : {
+            urlErrorText: ''
+        },
+        errorText: {
+            differentOwners    : '',
+            duplicateServers   : '',
             serverNotAvailable : '',
+            systemOfflineUrl   : '',
             unknownError       : ''
         }
     },

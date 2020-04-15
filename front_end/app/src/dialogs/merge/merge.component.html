@@ -109,6 +109,21 @@
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
     </div>
 </form>
+<form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
+    <div class="modal-body">
+        <p [innerHtml]="machine.state.template.urlErrorText"></p>
+    </div>
+    <div class="modal-footer d-flex justify-content-between next-button">
+        <button class="btn btn-default svg-icon" (click)="goBack()">
+            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+        </button>
+        <nx-process-button
+            [process]="checkPasswordProcess"
+            [form]="serverUrlErrorsForm"
+            actionType="primary"
+            buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
+    </div>
+</form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">
     <div class="modal-body">
         <p translate>Take system name and settings from</p>
