@@ -3,7 +3,7 @@ import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
 import { NxSystemsService }                from './systems.service';
 import { Injectable, OnDestroy }           from '@angular/core';
-import { 
+import {
     NxSystemAPIService, NxSystemAPI, ResourceParam
 }                                          from './system-api.service';
 import { BehaviorSubject, from, of }       from 'rxjs';
@@ -389,12 +389,13 @@ class ServerManager {
                 mediaserverConnections[server.id] = this.systemApiService
                     .createConnection(
                         this.currentUserEmail,
-                        `${server.id.replace(/[{}]/g, '')}.${this.systemId}`, // a different way of proxying: serverId.systemId,
-                        undefined,
+                        this.systemId,
+                        server.id,
                         () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
                             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                             return Promise.resolve(true);
-                        }));
+                        })
+                    );
                 const { authGet, authPost, authPlay } = this.mediaserver.getAuthKeys();
                 mediaserverConnections[server.id].setAuthKeys(authGet, authPost, authPlay);
                 return mediaserverConnections;
@@ -562,6 +563,26 @@ class ServerManager {
         return this.mediaserverConnections[serverId].changePort(port)
             .catch(err => Promise.reject(err));
     }
+
+    logLevel(serverId) {
+        return this.mediaserverConnections[serverId].logLevel().toPromise();
+    }
+
+    setLogLevels(serverId, loggers) {
+        const promises = [];
+
+        loggers.forEach((logger) => {
+            promises.push(this.mediaserverConnections[serverId].logLevel(undefined, logger.key, logger.value).toPromise());
+        });
+
+        return Promise.all(promises)
+            .then(() => {
+                return Promise.resolve({});
+            })
+            .catch((error) => {
+                return Promise.reject(new Error(error));
+            });
+    };
 
     renameServer(serverId, serverName) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
@@ -958,10 +979,6 @@ export class NxSystem extends System implements OnDestroy {
         }));
     }
 
-    logLevel(serverId) {
-        return this.mediaserver.logLevel(serverId);
-    }
-
     updateOrGetSystemSettings(updateParams = {}) {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
@@ -1034,12 +1051,24 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
     }
 
+    checkMergeStatus() {
+        return this.mediaserver.checkMergeStatus();
+    }
+
     getPeerSystems() {
         return this.mediaserver.getPeerSystems();
     }
 
     checkLocalAdminPassword(password) {
         return this.mediaserver.checkLocalAdminPassword(password);
+    }
+
+    logLevel(serverId) {
+        return this.serverManager.logLevel(serverId);
+    }
+
+    setLogLevels(serverId, loggers) {
+        return this.serverManager.setLogLevels(serverId, loggers);
     }
 }
 

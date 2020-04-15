@@ -38,10 +38,8 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
 
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
-                .updateOrGetSystemSettings(this.settingsToBeSaved())
-                .toPromise()
+                .setLogLevels(this.serverId, this.loggersToBeSaved())
                 .then(response => {
-                    this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -51,14 +49,14 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
                             });
                     } else {
                         this.dialogsService
-                            .alert(this.LANG.dialogs.message.settingsSaved, this.LANG.dialogs.titles.success)
+                            .alert(this.LANG.dialogs.message.logLevelsSaved, this.LANG.dialogs.titles.success)
                             .catch(error => {
                                 console.error(error);
                             });
                     }
                 }, () => {
                     this.dialogsService
-                        .alert(this.LANG.dialogs.message.settingsNotSaved, this.LANG.dialogs.titles.error)
+                        .alert(this.LANG.dialogs.message.logLevelsNotSaved, this.LANG.dialogs.titles.error)
                         .catch(error => {
                             console.error(error);
                         });
@@ -76,15 +74,27 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         this.LANG = language.getTranslations();
 
         this.loggerOptions = [
-            { value : 'none', name: this.LANG.system.loggers.none.text, help: this.LANG.system.loggers.none.help },
-            { value : 'error', name: this.LANG.system.loggers.error.text, help: this.LANG.system.loggers.error.help },
+            {
+                value : 'none',
+                name: this.LANG.system.loggers.none.text,
+                help: this.LANG.system.loggers.none.help },
+            {
+                value : 'error',
+                name: this.LANG.system.loggers.error.text,
+                help: this.LANG.system.loggers.error.help },
             {
                 value : 'warning',
                 name  : this.LANG.system.loggers.warning.text,
                 help  : this.LANG.system.loggers.warning.help
             },
-            { value: 'info', name: this.LANG.system.loggers.info.text, help: this.LANG.system.loggers.info.help },
-            { value: 'debug', name: this.LANG.system.loggers.debug.text, help: this.LANG.system.loggers.debug.help },
+            {
+                value: 'info',
+                name: this.LANG.system.loggers.info.text,
+                help: this.LANG.system.loggers.info.help },
+            {
+                value: 'debug',
+                name: this.LANG.system.loggers.debug.text,
+                help: this.LANG.system.loggers.debug.help },
             {
                 value : 'verbose',
                 name  : this.LANG.system.loggers.verbose.text,
@@ -98,8 +108,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.serverId && changes.serverId.currentValue) {
             this.system
-                .logLevel(changes.serverId.currentValue.slice(1, -1))
-                .toPromise()
+                .logLevel(changes.serverId.currentValue)
                 .then(response => {
                     this.settingsToBeDisplayedOrUpdated(response.reply);
                     this.showLoggers = (Object.keys(this.systemLoggers).length > 1);
@@ -123,6 +132,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
             })[0];
 
             this.systemLoggers[key] = {};
+            this.systemLoggers[key].key = key;
             this.systemLoggers[key].name = name;
             this.systemLoggers[key].help = help;
             this.systemLoggers[key].value = value;
@@ -130,15 +140,15 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         });
     }
 
-    settingsToBeSaved() {
-        const serverSettings = {};
+    loggersToBeSaved() {
+        const loggers = [];
 
         Object.keys(this.systemLoggers).forEach((key) => {
             if (this.systemLoggers[key].value !== this.systemLoggers[key].originalValue) {
-                serverSettings[key] = this.systemLoggers[key].value;
+                loggers.push(this.systemLoggers[key]);
             }
         });
 
-        return serverSettings;
+        return loggers;
     }
 }

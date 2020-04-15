@@ -403,7 +403,7 @@ class Storage(object):
         request = f"{CLOUD_STORAGES_URL}/"
         body = {
             "systems": [system_id],
-            "totalSpace": CLOUD_STORAGE_SPACE
+            "totalSpace": str(CLOUD_STORAGE_SPACE)
         }
         return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
 
@@ -456,5 +456,5 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def statistics(email, password, storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/statistics"
         return get_wrapper(request, auth=HTTPDigestAuth(email, password))

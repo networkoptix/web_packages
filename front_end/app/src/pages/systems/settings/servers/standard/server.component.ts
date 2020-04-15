@@ -39,6 +39,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     previousInputValue: number;
     checking: boolean;
 
+    betaMode: boolean;
     renameDisabled: boolean;
     restartDisabled: boolean;
     detachDisabled: boolean;
@@ -57,6 +58,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
+        this.betaMode = this.CONFIG.clientMode.beta;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
         this.canSeeInfo = false;
@@ -114,6 +116,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy(): void {}
 
     setServer(): void {
+        this.betaMode = this.route.snapshot.queryParams.beta !== undefined;
         this.applyService.hardReset();
         const { ip, port } = this.selectedServer;
         this.ipPortWatcher.value = port;
@@ -130,7 +133,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.portChangeDisabled = !this.system.permissions.editAdmins;
         this.applyService.reset();
         this.applyService.setVisible(true);
-        // }
     }
 
     initForApplyService(): void {

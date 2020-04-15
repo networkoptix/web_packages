@@ -82,8 +82,10 @@ export default Object.assign({
             passwordValue     : ''
         },
         errorText: {
-            passwordRequired : '',
-            passwordWrong    : ''
+            passwordRequired   : '',
+            passwordWrong      : '',
+            serverNotAvailable : '',
+            unknownError       : ''
         }
     },
     choosePrimary : { show: {}, template: {}, errorText: {} },
@@ -99,7 +101,8 @@ export default Object.assign({
         },
         errorText: {
             passwordRequired : '',
-            passwordWrong    : ''
+            passwordWrong    : '',
+            unknownError     : ''
         }
     }
 });

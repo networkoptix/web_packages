@@ -1,6 +1,6 @@
 <input [style.display]="lockEmail ? 'none' : 'inline'"
-       [(ngModel)]="value"
-       (keyup)="setValue()"
+       [ngModel]="value"
+       (ngModelChange)="setValue($event)"
        (blur)="onTouchedCallback()"
        [id]="componentId" [name]="componentId"
        type="email"

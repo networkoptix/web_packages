@@ -1,16 +1,15 @@
 <div class="camview col-12"
-     *ngIf="activeCamera" #nxCamView nxScrollMechanics
-     [ngClass]="{'view-scroll-fixed-top':viewScrollFixedTop, 'view-scroll-fixed-bottom':viewScrollFixedBottom}">
+    *ngIf="activeCamera" #nxCamView nxScrollMechanics
+    [ngClass]="{'view-scroll-fixed-top':viewScrollFixedTop, 'view-scroll-fixed-bottom':viewScrollFixedBottom}">
 
     <nx-block type='gray' >
-
         <header>
             <div class="camera-vendor-model">
                 <span>{{ activeCamera.vendor }}</span>
                 <span class="ml-1">{{ activeCamera.model }}</span>
             </div>
             <span class="glyphicon close-icon detailsClose"
-                  (click)="closeView()">
+                (click)="closeView()">
             </span>
         </header>
 
@@ -21,143 +20,20 @@
 
             <div class="camview-link">
                 <a class="blue" target="_blank"
-                   href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{ activeCamera.model }}"
+                    href="https://www.google.com/search?q={{ activeCamera.vendor }}+{{ activeCamera.model }}"
                     translate>Search in google</a>
             </div>
-
-            <div class="active-camera-info">
+            <div class="active-camera-info" *ngFor="let setting of camera">
                 <div class="row">
-                    <div class="col-7" translate>Resolution(max)</div>
+                    <div class="col-7">{{ setting.title }}</div>
                     <div class="col-5">
                         <nx-bool-icon
-                                param="maxResolution"
-                                [value]="activeCamera.maxResolution"
-                                align="left">
+                            *ngIf="!setting.secondaryParam"
+                            [param]="setting.param"
+                            [value]="activeCamera[setting.param]"
+                            align="left">
                         </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>FPS(max)</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="maxFps"
-                                [value]="activeCamera.maxFps"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Codec</div>
-                    <div class="col-5">{{ activeCamera.primaryCodec }}</div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Audio</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isAudioSupported"
-                                [value]="activeCamera.isAudioSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>2-Way Audio</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isTwAudioSupported"
-                                [value]="activeCamera.isTwAudioSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>PTZ</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isPtzSupported"
-                                [value]="activeCamera.isPtzSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Advanced PTZ</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isAptzSupported"
-                                [value]="activeCamera.isAptzSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Motion Detection</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isMdSupported"
-                                [value]="activeCamera.isMdSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Fisheye</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="</nx-bool-icon>"
-                                [value]="activeCamera.isFisheye"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>I/O</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isIoSupported"
-                                [value]="activeCamera.isIoSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Dual Streaming</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isDualStreamingSupported"
-                                [value]="activeCamera.isDualStreamingSupported"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Secondary Stream</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="sndResolution"
-                                [value]="activeCamera.sndResolution"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-7" translate>Multi Sensor</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isMultiSensor"
-                                [value]="activeCamera.isMultiSensor"
-                                align="left">
-                        </nx-bool-icon>
-                    </div>
-                </div>
-                <div class="row" *ngIf="showAnalytics">
-                    <div class="col-7" translate>Analytics</div>
-                    <div class="col-5">
-                        <nx-bool-icon
-                                param="isAnalyticsSupported"
-                                [value]="activeCamera.isAnalyticsSupported"
-                                align="left">
-                        </nx-bool-icon>
+                        <span *ngIf="setting.secondaryParam">{{ activeCamera[setting.secondaryParam] }}</span>
                     </div>
                 </div>
             </div>
@@ -218,9 +94,9 @@
                                 <canvas class="icon-canvas" height="4"></canvas>
                                 <svg class="img-responsive icon-svg" height="4">
                                     <line x1="0" y1="8"
-                                          [attr.x2]="firmware.barLength"
-                                          y2="8" class="firmware-line"
-                                          stroke-dasharray="8, 2"></line>
+                                        [attr.x2]="firmware.barLength"
+                                        y2="8" class="firmware-line"
+                                        stroke-dasharray="8, 2"></line>
                                 </svg>
                             </div>
                         </div>
@@ -230,14 +106,14 @@
                 <div class="row" *ngIf="!showAllFirmware && firmwares.length > firmwaresToShow">
                     <div class="col-12">
                         <a href (click)="showAllFirmware = true; firmwaresToShow = firmwares.length; false"
-                           translate>Show All</a>
+                            translate>Show All</a>
                     </div>
                 </div>
 
                 <div class="row" *ngIf="showAllFirmware">
                     <div class="col-12">
                         <a href (click)="showAllFirmware = false; firmwaresToShow = CONFIG.ipvd.firmwaresToShow; false"
-                           translate>Collapse</a>
+                            translate>Collapse</a>
                     </div>
                 </div>
             </div>

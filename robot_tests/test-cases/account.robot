@@ -19,6 +19,7 @@ Verify in Account Page
     ...    ${ACCOUNT LAST NAME}
     ...    ${ACCOUNT LANGUAGE DROPDOWN}
     ...    ${ACCOUNT DROPDOWN}
+    ...    ${DELETE ACCOUNT BUTTON}
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     sleep    .5
 
@@ -62,6 +63,16 @@ Accessing the account page from a direct link while logged out asks for login, o
     Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
     Go To    ${url}/account
     Verify in account page
+
+Admin and Owner can access account settings by selecting themselves in users List
+    Go To    ${url}
+    Log In    ${EMAIL OWNER}    ${password}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Go To Users List
+    Select User in Users List    ${EMAIL OWNER}
+    Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON SYSTEM}
+    Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
+    Verify in Account Page
 
 Changing first name and saving maintains that setting
     [tags]    C41573
@@ -124,20 +135,34 @@ Last name is required
     Wait Until Element Has Style   ${ACCOUNT LAST NAME}    color    ${ERROR COLOR WITH OPACITY}
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
-#First and last names are required
-#    [Tags]    C41573    Threaded
-#    Go To    ${url}/account
-#    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
-#    Verify in Account Page
-#    @{names}=   Create List    ${ACCOUNT FIRST NAME}   ${ACCOUNT LAST NAME}
-#    FOR    ${name}    IN    @{names}
-#        ${locator}=   Get WebElement    ${name}
-#        Delete All Text    ${locator}
-#        Click Element    ${name}
-#        Wait Until Element Has Style    ${name}    border-color    ${ERROR COLOR}
-#        Wait Until Element Has Style   ${name}    color    ${ERROR COLOR WITH OPACITY}
-#        Element Should Be Visible    ${LAST NAME IS REQUIRED}
-#    END
+Change first and last name shows in system
+    [Tags]    C41573    Threaded
+    Go To    ${url}/account
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Input Text    ${ACCOUNT FIRST NAME}    nameChanged
+    Input Text    ${ACCOUNT LAST NAME}    nameChanged
+    Click Button    ${ACCOUNT SAVE}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
+    Log Out
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
+    Go To Users List
+    Select User in Users List    ${EMAIL LIVE VIEWER}
+    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header/span[contains(text(),'nameChanged nameChanged')]
+    Log Out
+    Go To    ${url}/account
+    Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    sleep    2
+    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
+    Clear Element Text    ${ACCOUNT FIRST NAME}
+    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
+    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
+    Clear Element Text    ${ACCOUNT LAST NAME}
+    Input Text    ${ACCOUNT FIRST NAME}    ${TEST LAST NAME}
+    Click Button    ${ACCOUNT SAVE}
+    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
 
 SPACE for first name is not valid
     [tags]    C41573    Threaded
@@ -259,8 +284,75 @@ Language change affects emails
     Close Mailbox
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
+Language change is new default
+    [tags]    C41574
+    Go To    ${url}/account
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${ACCOUNT LANGUAGE DROPDOWN}
+    ${lang}    Set Variable If    "${LANGUAGE}"=="ja_JP"    de_DE
+    ...    "${LANGUAGE}"!="ja_JP"    ja_JP
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']
+    Click Element    ${ACCOUNT LANGUAGE DROPDOWN}/following-sibling::ul//span[@lang='${lang}']/..
+    Click Button    ${ACCOUNT SAVE}
+    Sleep    1    #to allow the system to change languages
+    Wait Until Element is Visible    ${ACCOUNT LANGUAGE DROPDOWN}/span[@lang='${lang}']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //heade/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Log Out No Language
+    Set Language Anonymous    lang=zh_CN
+    Go To    ${url}/account
+    Log In    ${EMAIL NOPERM}    ${password}    ${False}    button=None
+    Wait Until Element is Visible    //nx-language-select//button/span[@lang='${lang}']
+    Run Keyword If    "${lang}"=="ja_JP"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[9]']
+    ...    ELSE IF    "${lang}"=="de_DE"    Wait Until Element is Visible    //header/span[text()='${LANGUAGES ACCOUNT INFORMATION TEXT LIST}[4]']
+    Check Language Logged In    ${EMAIL NOPERM}    ${password}
+
 Should open account page in anonymous state
     [tags]    anonymous
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
+
+User who owns a system cannot remove themselves
+    Go To    ${url}/account
+    Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
+    Mouse Over    ${DELETE ACCOUNT BUTTON}
+    Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
+
+User can delete their own account
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Wait Until Elements are Visible
+    ...    ${DELETE ACCOUNT MODAL BUTTON}
+    ...    ${CANCEL DELETE ACCOUNT BUTTON}
+    ...    ${DELETE ACCOUNT PASSWORD INPUT}
+
+    Click Button    ${CANCEL DELETE ACCOUNT BUTTON}
+    Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Wait Until Elements are Visible
+    ...    ${DELETE ACCOUNT MODAL BUTTON}
+    ...    ${CANCEL DELETE ACCOUNT BUTTON}
+    ...    ${DELETE ACCOUNT PASSWORD INPUT}
+
+    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
+    Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element is Visible    ${DELETE ACCOUNT PASSWORD LABEL}
+    Element Text Should Be    ${DELETE ACCOUNT PASSWORD LABEL}    ${PASSWORD IS REQUIRED TEXT}
+
+    Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    qweasdqwe
+    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
+    Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD LABEL}    ${WRONG PASSWORD}
+
+    Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
+    Validate Log Out
+    Log In    ${random email}    ${BASE PASSWORD}    ${False}
+    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}

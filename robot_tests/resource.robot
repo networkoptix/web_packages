@@ -89,8 +89,8 @@ Set Language Anonymous
     Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
-    Click Element    ${LANGUAGE TO SELECT}
+    Wait Until Element Is Visible    //nx-language-select//span[@lang='${lang}']/..
+    Click Element    //nx-language-select//span[@lang='${lang}']/..
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
@@ -109,7 +109,7 @@ Log In
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+#    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 
 Log In With Remember Me
@@ -132,7 +132,7 @@ Validate Log In
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
-    [arguments]    ${button}=${LOG IN NAV BAR}
+    [Arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
@@ -152,6 +152,16 @@ Validate Log Out
     Wait Until Element Is Not Visible    ${BACKDROP}
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
     Check Language Anonymous
+
+Log Out No Language
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+    Wait Until Page Contains Element    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    .05    #Ubuntu was clicking too soon
+    Click Button    ${ACCOUNT DROPDOWN}
+    Wait Until Element Is Visible    //li[contains(@class, 'collapse-first')]//li[2]/a
+    Click Link    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}
@@ -284,7 +294,7 @@ Share To
     Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
     Click Button    ${SHARE BUTTON MODAL}
-    Run Keyword if    '${alert}'=='fail'    Check For Alert    ${CANNOT SHARE SYSTEM}${SPACE}${SPACE}${CHANGING OWN PERMISSIONS IS NOT ALLOWED}
+    Run Keyword if    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${EMAIL IS ALREADY REGISTERED TEXT}")]    ${selenium timeout}
     ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
@@ -538,9 +548,16 @@ Add user to cloud system if not there
     ${is there}=   User is in cloud system    ${email}    ${system id}
     Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
 
+Connect system to cloud if not
+    [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    [Return]    ${current cloud system id}
+
 Reset System Names
-    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Auto Tests 2
-    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    Auto Tests
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${AUTO TESTS 2}
+    Run Keyword And Ignore Error    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}    ${AUTO TESTS}
 
 Validate Input Field State
     [arguments]    ${FIELD LOCATOR}    ${Valid True or False}

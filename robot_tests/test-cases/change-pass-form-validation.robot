@@ -8,11 +8,32 @@ Force Tags        form    Threaded File
 
 *** Variables ***
 ${url}    ${ENV}
-${no upper password}    adrhartjad
+${lowercase password}    adrhartjad
+${uppercase password}    ADRHARTJAD
+${numbers password}      13462344
 ${7char password}       asdfghj
+${symbol only password}    !@#$%^&*()_-+=
+@{weak passwords}    ${7char password}    ${uppercase password}    ${lowercase password}    ${common password}    ${7char password}    ${numbers password}    ${symbol only password}
+
+${lower upper password}    multPASS
+${lower number password}    mult1234
+${lower symbol password}    mult!@#$
+${upper number password}    MULT1234
+${upper symbol password}    MULT!@#$
+${number symbol password}    1234!@#$
+@{fair passwords}    ${lower upper password}    ${lower number password}    ${lower symbol password}    ${upper number password}    ${upper symbol password}    ${number symbol password}    ${symbol password}
+
+${lower uppper number password}    qweASD123
+${lower upper symbol password}    qweASD!@#
+${lower number symbol password}    qwe123!@#
+${upper number symbol password}   QWE123!@#
+@{good passwords}    ${lower uppper number password}    ${lower upper symbol password}    ${lower number symbol password}    ${upper number symbol password}    ${BASE PASSWORD}
+
+${symbol password}      pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
 ${common password}      qweasd123
-${weak password}        asqwerdf
-${fair password}        qweasd1234
+${valid email}          noptixqa+valid@gmail.com
+
+@{incorrect passwords}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
 
 ${PASSWORD SPECIAL CHARS}
 ...    //div[contains(@class, 'input-error') and contains(text(),'${PASSWORD SPECIAL CHARS TEXT}')]
@@ -32,12 +53,6 @@ Empty Old password              ${EMPTY}                  ${BASE PASSWORD}
     [tags]    C41577
 Short New Password              ${BASE PASSWORD}          ${7char password}
     [tags]    C41578
-Common New Password             ${BASE PASSWORD}          ${common password}
-    [tags]    C41578
-Weak New Password               ${BASE PASSWORD}          ${weak password}
-    [tags]    C41578
-Fair New Password               ${EMPTY}                  ${fair password}
-    [tags]    C41578
 Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}
     [tags]    C41578
 Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}
@@ -55,6 +70,37 @@ Empty New Password              ${BASE PASSWORD}          ${EMPTY}
 Empty Both                      ${EMPTY}                  ${EMPTY}
     [tags]    C41832
 
+Weak 1 Lowercase Password adrhartjad           ${BASE PASSWORD}       ${lowercase password}
+    [tags]    C41578
+Weak 2 Uppercase Password ADRHARTJAD           ${BASE PASSWORD}       ${uppercase password}
+    [tags]    C41578
+Weak 3 Numbers Password 13462344                ${BASE PASSWORD}      ${numbers password}
+    [tags]    C41578
+Weak 4 Symbol only Password !@#$%^&*()_-+=     ${BASE PASSWORD}       ${symbol only password}
+    [tags]    C41578
+
+Fair 1 Lower and Uppercase                      ${BASE PASSWORD}      ${lower upper password}
+    [tags]    C41578
+Fair 2 Lowercase and numbers                   ${BASE PASSWORD}       ${lower number password}
+    [tags]    C41578
+Fair 3 Lowercase and Symbols                   ${BASE PASSWORD}       ${lower symbol password}
+    [tags]    C41578
+Fair 4 Uppercase and numbers                  ${BASE PASSWORD}        ${upper number password}
+    [tags]    C41578
+Fair 5 Uppercase and Symbols                  ${BASE PASSWORD}        ${upper symbol password}
+    [tags]    C41578
+Fair 6 Numbers and Symbols                     ${BASE PASSWORD}       ${number symbol password}
+    [tags]    C41578
+
+Good 1 qweASD123                              ${BASE PASSWORD}        ${lower uppper number password}
+    [tags]    C41578
+Good 2 qweASD!@#                                ${BASE PASSWORD}      ${lower upper symbol password}
+    [tags]    C41578
+Good 3 qwe123!@#                               ${BASE PASSWORD}       ${lower number symbol password}
+    [tags]    C41578
+Good 4 QWE123!@#                              ${BASE PASSWORD}        ${upper number symbol password}
+    [tags]    C41578
+
 *** Keywords ***
 Restart
     Close Browser
@@ -62,7 +108,7 @@ Restart
 
 Open Change Password Dialog
     Open Browser and go to URL    ${url}/account/password
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}    button=None
+    Log In    ${EMAIL VIEWER}    ${BASE PASSWORD}    button=None
     Validate Log In
     Wait Until Element Is Not Visible    ${LOG IN MODAL}
     Wait Until Elements Are Visible
@@ -78,7 +124,7 @@ Test Passwords Invalid
     Change Password Form Validation    ${old pw}    ${new pw}
     Run Keyword Unless    "${old pw}" == "${BASE PASSWORD}" or "${old pw}" == "${7char password}"
     ...    Check Old Password Outline
-    Run Keyword Unless    "${new pw}" == "${BASE PASSWORD}"    Check New Password Outline    ${new pw}
+    Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    Check New Password Outline    ${new pw}
     Run Keyword If    "${old pw}" == "${7char password}"    Check Old Password Alert
 
 Change Password Form Validation
@@ -103,29 +149,20 @@ Check Old Password Alert
 
 Check New Password Outline
     [Arguments]    ${new pw}
-    Run Keyword Unless    "${new pw}"=="${fair password}"    Wait Until Element Is Visible
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
     ...    //nx-password-input[@name='newPassword' and contains(@class, 'ng-invalid')]//input[@id="newPassword"]
     # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
-    Run Keyword If    "${new pw}"=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${CURRENT PASSWORD INPUT}    ${EMPTY}
-    Run Keyword If    "${new pw}"=="${EMPTY}" or "${new pw}"=="${SPACE}"    Element Should Be Visible    ${PASSWORD IS REQUIRED}
-    Run Keyword If    "${new pw}"=="${7char password}"    Element Should Be Visible    ${PASSWORD TOO SHORT}
-    Run Keyword If
-    ...    "${new pw}"=="${CYRILLIC TEXT}" or "${new pw}"=="${SMILEY TEXT}" or "${new pw}"=="${GLYPH TEXT}" or "${new pw}"=="${TM TEXT}" or "${new pw}"=="${SPACE}${BASE PASSWORD}" or "${new pw}"=="${BASE PASSWORD}${SPACE}"
-    ...    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
-    Run Keyword If    "${new pw}"=="${common password}"    Element Should Be Visible    ${PASSWORD TOO COMMON}
-    Run Keyword If    "${new pw}"=="${weak password}"    Element Should Be Visible    ${PASSWORD IS WEAK}
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${CURRENT PASSWORD INPUT}    ${EMPTY}
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Element Should Be Visible    ${PASSWORD IS REQUIRED}
+    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Element Should Be Visible    ${PASSWORD TOO SHORT}
+    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
+    ...    ELSE IF    '''${new pw}'''=="${common password}"    Element Should Be Visible    ${PASSWORD TOO COMMON}
+    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Element Should Be Visible    ${PASSWORD IS WEAK}
 
 Check Password Badge
-    [arguments]    ${pass}
-    Run Keyword Unless    "${pass}"=="${EMPTY}"
-    ...    Wait Until Element Is Visible    ${PASSWORD BADGE}
-    Run Keyword If
-    ...    "${pass}"=="${no upper password}" or "${pass}"=="${weak password}" or "${pass}"=="${7char password}" or "${pass}"=="${common password}"
-    ...    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
-    ...    ELSE IF
-    ...    "${pass}"=="${CYRILLIC TEXT}" or "${pass}"=="${SMILEY TEXT}" or "${pass}"=="${GLYPH TEXT}" or "${pass}"=="${TM TEXT}" or "${pass}"=="${SPACE}${BASE PASSWORD}" or "${pass}"=="${BASE PASSWORD}${SPACE}"
-    ...    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF
-    ...    "${pass}"=="${fair password}"    Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
-    ...    ELSE IF
-    ...    "${pass}"=="${BASE PASSWORD}"    Element Should Be Visible    ${PASSWORD IS GOOD BADGE}
+    [arguments]    ${new pw}
+    Run Keyword Unless    '''${new pw}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${new pw}''' in ${weak passwords}         Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${fair passwords}         Element Should Be Visible    ${PASSWORD IS FAIR BADGE}
+    ...    ELSE IF    '''${new pw}''' in ${good passwords}         Element Should Be Visible    ${PASSWORD IS GOOD BADGE}

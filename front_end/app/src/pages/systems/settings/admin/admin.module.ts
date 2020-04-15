@@ -24,7 +24,7 @@ import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
         TranslateModule,
         ComponentsModule,
         DirectivesModule,
-        AngularSvgIconModule.forRoot(),
+        AngularSvgIconModule.forRoot()
     ],
     providers       : [],
     declarations    : [

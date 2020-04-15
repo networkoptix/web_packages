@@ -6,30 +6,30 @@
     "emailSubject": "U bent uitgenodigd voor %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{message.subject}}"
+    "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Verkoopaanvraag voor {{message.asset}}"
+    "emailSubject": "Sales inquiry for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technische aanvraag voor {{message.asset}}"
+    "emailSubject": "Technical inquiry for {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback over {{message.asset}}"
+    "emailSubject": "Feedback for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Feedback over de camera pagina{{#message.asset}} voor {{message.asset}}{{/message.asset}}"
+    "emailSubject": "Feedback over de camera pagina{{#message.asset}} voor {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{message.asset}} heeft een nieuwe versie om te beoordelen"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} heeft een nieuwe versie om te beoordelen"
   },
   "restore_password": {
     "emailSubject": "Stel je wachtwoord opnieuw in"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} nodigt u uit voor %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}video systeem {{message.system_name}} werd gedeeld met u{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} nodigt u uit voor %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}video systeem {{{message.system_name}}} werd gedeeld met u{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Het systeem {{message.system_name}} werd met u gedeeld"
+    "emailSubject": "Videosysteem {{{message.system_name}}} is met u gedeeld"
   }
 }

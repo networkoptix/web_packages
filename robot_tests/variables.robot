@@ -178,6 +178,7 @@ ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"$
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
+${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
@@ -213,16 +214,18 @@ ${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']/
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
 ${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
 ${MERGE DIALOG}                       //nx-modal-merge-content
-${MERGE FORM}                         //form[@name="mergeForm"]
+${MERGE FORM}                         ${MERGE DIALOG}//form[@name="mergeForm"]
+${MERGE CHOOSE PRIMAY FORM}           ${MERGE DIALOG}//form[@name="choosePrimaryForm"]
+${CONFIRM MERGE FORM}                 ${MERGE DIALOG}//form[@name="confirmMergeForm"]
 ${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
 ${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
 #${MERGE OK BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${OK TEXT}")]
 ${MERGE NEXT BUTTON}                    ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${NEXT TEXT}")]
 
-${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
-${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")]
+#${MERGE CANCEL BUTTON}                ${MERGE DIALOG}//button[@class="btn btn-default"]
+${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")][1]
 #${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[@class="btn btn-primary" and contains(text(),"${MERGE SYSTEMS TEXT}")]
-${MERGE BUTTON MODAL}                 ${MERGE DIALOG}//button[contains(@class, "next-button") and contains(text(),"${NEXT TEXT}")]
+${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${MERGE SYSTEMS TEXT}")]
 ${MERGE PASSWORD INPUT}               ${MERGE DIALOG}//input[@name="cloudOwnerPassword"]
 ${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
 ${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
@@ -234,17 +237,27 @@ ${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//p[contains(text(),"${MERG
 ${MERGE ONLY AS OWNER}                ${MERGE DIALOG}//p[contains(text(),"${YOU CAN ONLY MERGE AS OWNER TEXT}")]
 ${MERGE CHECKING HINT}                ${MERGE DIALOG}//p[contains(text(),"${CHECKING TEXT}")]
 ${MERGE CHOOSE PRIMARY FORM}          ${MERGE DIALOG}//form[@name="choosePrimaryForm"]
-${MERGE ENTER YOUR PASSWORD}          ${MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
-${MERGE PASSWORD REQUIRED}            ${MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
-${MERGE PASSWORD INCORRECT}           ${MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
+${MERGE RADIO FIRST SYSTEM}           ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="firstSystem"]
+${MERGE RADIO SECOND SYSTEM}          ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="secondSystem"]
+${MERGE TAKE SYSTEM NAME}             ${MERGE CHOOSE PRIMARY FORM}//p[contains(text(), "${TAKE SYSTEM NAME AND SETTINGS TEXT}")]
+${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
+${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
+${MERGE PASSWORD REQUIRED}            ${CONFIRM MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
+${MERGE PASSWORD INCORRECT}           ${CONFIRM MERGE FORM}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
 
 #Disconnect from cloud portal
-${DISCONNECT FORM}                    //form[@name='disconnectForm']
-${DISCONNECT FORM CANCEL}             ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
-${DISCONNECT FORM HEADER}             //h1["${DISCONNECT FORM HEADER TEXT}"]
-${DISCONNECT PASSWORD INPUT}          ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT FORM}//button/span[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
-
+${DISCONNECT FORM}                      //form[@name='disconnectForm']
+${DISCONNECT FORM HEADER}               ${DISCONNECT FORM}//h1["${DISCONNECT FORM HEADER TEXT}"]
+${DISCONNECT FORM CLOSE BUTTON}         ${DISCONNECT FORM}//button[contains(@class, "close")]
+${DISCONNECT FORM ALL USERS WILL BE DELETED}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ALL USERS WILL BE DELETED TEXT}")]
+${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT}")]
+${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}   ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT}")]
+#//span[contains(@class, "close-icon")]
+${DISCONNECT PASSWORD INPUT}             ${DISCONNECT FORM}//input[@id="password"]
+${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
+${DISCONNECT FORM CANCEL BUTTON}         ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
+${DISCONNECT FORM WRONG PASSWORD}        ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${WRONG PASSWORD}")]
+${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
@@ -283,7 +296,13 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button
 ${ACCOUNT CANCEL}                     //nx-apply/div/button
-${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[contains(text(), "${DELETE ACCOUNT TEXT}")]
+${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
+${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
+${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
+${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
+${CANCEL DELETE ACCOUNT BUTTON}       //nx-modal-delete-cloud-user-content//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE ACCOUNT PASSWORD INPUT}      //form[@name="deleteCloudUserForm"]//input[@id="password"]
+${DELETE ACCOUNT PASSWORD LABEL}      //form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[text()='${NO UNSAVED CHANGES TEXT}']
@@ -396,7 +415,7 @@ ${IPVD LANDING PAGE TEXT}             //ipvd//p
 ${IPVD FILTERS}                       //ipvd//nx-search/div/div
 ${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
 ${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="query"]
-${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD SEARCH BAR}/../button
+${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..
 #IPVD Advanced Filters
@@ -436,11 +455,22 @@ ${IPVD DEVS FILTER MULTI-SENSOR CAMERAS}      ${IPVD DEVICES PANE}//nx-tag/div[c
 ${IPVD DEVS FILTER FISHEYE CAMERAS}           ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER FISHEYE CAMERAS}')]/..
 ${IPVD DEVS FILTER I/O MODULES}               ${IPVD DEVICES PANE}//nx-tag/div[contains(text(),'${IPVD DEV FILTER I/O MODULES}')]/..
 #IPVD Details
-${IPVD DEVICE DETAILS}                //ipvd//nx-cam-view
-${IPVD DEVICE MAKE}                   ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
-${IPVD DEVICE MODEL}                  ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
-${IPVD DEVICE RESOLUTION}             ${IPVD DEVICE DETAILS}//div[@class='active-camera-info']//nx-bool-icon[contains(@param, 'maxResolution')]/..
-${IPVD CLOSE DETAILS BUTTON}          //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD DEVICE DETAILS}                       //ipvd//nx-cam-view
+${IPVD DEVICE MAKE}                          ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[1]
+${IPVD DEVICE MODEL}                         ${IPVD DEVICE DETAILS}//div[@class="camera-vendor-model"]//span[2]
+${IPVD CLOSE DETAILS BUTTON}                 //ipvd//header//span[@class="glyphicon close-icon detailsClose"]
+${IPVD DEVICE GOOGLE LINK}                   ${IPVD DEVICE DETAILS}//div[contains(@class, "camview-link")]/a[contains(text(), "${IPVD SEARCH IN GOOGLE TEXT}")]
+${IPVD DEVICE INFO}                          ${IPVD DEVICE DETAILS}//div[@class='active-camera-info']
+${IPVD DEVICE INFO PARAMETER}                ${IPVD DEVICE INFO}/div
+${IPVD DEVICE RESOLUTION}                    ${IPVD DEVICE INFO}//nx-bool-icon[contains(@param, 'maxResolution')]/..
+${IPVD DEVICE FIRMWARE INFO}                 ${IPVD DEVICE DETAILS}//nx-section//div[contains(@class, "firmware-info")]
+${IPVD DEVICE FIRMWARE VERSION}              ${IPVD DEVICE FIRMWARE INFO}//h4[contains(text(), "${IPVD FIRMWARE VERSION TEXT}")]
+${IPVD DEVICE FIRMWARE VERSION POPULARITY}   ${IPVD DEVICE FIRMWARE INFO}//h4[contains(text(), "${IPVD FIRMWARE VERSION POULARITY TEXT}")]
+${IPVD DEVICE FIRMWARE VERSIONS}             ${IPVD DEVICE FIRMWARE INFO}/div
+${IPVD DEVICE SHOW ALL LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[contains(text(), "${IPVD DEVICE SHOW ALL TEXT}")]
+${IPVD DEVICE COLLAPSE LINK}                 ${IPVD DEVICE FIRMWARE INFO}//a[contains(text(), "${IPVD DEVICE COLLAPSE TEXT}")]
+${IPVD DEVICE LAST UPDATED INFO}             ${IPVD DEVICE DETAILS}//div[contains(text(), "${IPVD LAST UPDATED TEXT}")]
+
 #IPVD Table
 ${IPVD TABLE}                         //ipvd//table
 ${IPVD TABLE HEADING MANUFACTURER}    ${IPVD TABLE}/thead//div[text()='${IPVD ADV FILTER MFR}']
@@ -455,7 +485,7 @@ ${IPVD FIRST PAGE BUTTON}             ${IPVD PAGINATION}/li[1]/following::li[1]
 ${IPVD LAST PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]/preceding::li[1]
 ${IPVD NEXT PAGE BUTTON}              ${IPVD PAGINATION}/li[last()]
 #IPVD Export
-${IPVD EXPORT TO CSV}                 //ipvd//div[@class='export-button']
+${IPVD EXPORT TO CSV LINK}            //ipvd//div[@class='export-button']/a[contains(text(), "${IPVD EXPORT TO CSV TEXT}")]
 #IPVD Feedback
 ${IPVD SUBMIT A REQUEST LINK}        ${IPVD LANDING PAGE TEXT}//a
 ${IPVD SUBMIT A REQUEST}              //ipvd//a[contains(text(),"${IPVD SUBMIT A REQUEST TEXT}")]

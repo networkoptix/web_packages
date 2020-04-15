@@ -62,6 +62,7 @@
                 <div class="float-right">
                     <div class="d-inline-block" [ngbTooltip]="isSystemOwner ? LANG.dialogs.tooltips.deleteAccount : ''">
                         <button class="btn btn-default"
+                                id="accountSettingsDeleteButton"
                                 [disabled]="isSystemOwner"
                                 (click)="deleteUser()">
                             <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"

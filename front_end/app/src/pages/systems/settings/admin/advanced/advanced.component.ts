@@ -30,6 +30,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
 
     @Input() system: any;
 
+    private haveAdvSettings: boolean;
     private saveSettings: any;
     private serverSubscription: Subscription;
 
@@ -86,7 +87,6 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
                 .updateOrGetSystemSettings(this.settingsToBeSaved())
                 .toPromise()
                 .then(response => {
-                    // this.applyService.reset();
                     this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
@@ -121,6 +121,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
             .toPromise()
             .then(response => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
+                this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
             });
     }
 
