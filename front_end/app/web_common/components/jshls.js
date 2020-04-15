@@ -387,7 +387,11 @@ import * as Hls from 'hls.js';
                 enableWorker: enableWorker,
                 manifestLoadingTimeOut: loadingTimeOut,
                 levelLoadingTimeOut: loadingTimeOut, // used by playlist-loader
-                fragLoadingTimeOut: loadingTimeOut
+                fragLoadingTimeOut: loadingTimeOut,
+                initialLiveManifestSize: 2,
+                maxBufferLength: 120, // 2 minute buffer
+                maxBufferSize: 150 * 1024 * 1024, // 150MB buffer
+                maxFragLookUpTolerance: 0.5
             });
             
             this.initHlsEvents(this.hls);
