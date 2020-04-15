@@ -7,7 +7,6 @@ import { SensitivityColor }     from './motion-detection-types';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
 
-
 @Component({
     selector        : 'nx-motion-detection-overlay',
     templateUrl     : 'motion-detection-overlay.component.html',
