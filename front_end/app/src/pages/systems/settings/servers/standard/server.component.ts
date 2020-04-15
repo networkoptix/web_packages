@@ -116,6 +116,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy(): void {}
 
     setServer(): void {
+        this.betaMode = this.route.snapshot.queryParams.beta !== undefined;
         this.applyService.hardReset();
         const { ip, port } = this.selectedServer;
         this.ipPortWatcher.value = port;
@@ -132,7 +133,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.portChangeDisabled = !this.system.permissions.editAdmins;
         this.applyService.reset();
         this.applyService.setVisible(true);
-        // }
     }
 
     initForApplyService(): void {
