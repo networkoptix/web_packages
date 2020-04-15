@@ -178,14 +178,15 @@
                                     [preloader]="true" 
                                     [state]="selectedCamera.status" 
                                     [url]="motionPreviewImage"
-                                    (loaded)="toggleMotionGrid()" 
+                                    (loaded)="toggleMotionGrid()"
                                     [lightBackground]="true"></nx-health-image>
                                 <nx-motion-detection-overlay 
                                     *ngIf="showOverlay"
+                                    (updateMask)="updateMask($event)"
                                     [height]="canvasHeight" 
                                     [width]="canvasWidth"
                                     [sensitivityButtons$]="sensitivityButtons$"
-                                    [initialMask]="selectedCamera.motionMask"></nx-motion-detection-overlay>
+                                    [initialMask]="motionMaskWatcher.originalValue"></nx-motion-detection-overlay>
                             </div>
                         </div>
                     </div>

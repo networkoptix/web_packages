@@ -1,12 +1,12 @@
-import { ElementRef }               from '@angular/core';
+import { ElementRef, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Mask, Area, AreaTuple }    from './motion-detection-types';
-import { takeUntil }                from 'rxjs/operators';
+import { takeUntil, skip }          from 'rxjs/operators';
 
 export class MotionMaskState {
     private columns = 44;
     private rows = 32;
-    public maskMatrix: BehaviorSubject<Mask[]>;
+    public maskMatrix: BehaviorSubject<Mask>;
     public maskZones: BehaviorSubject<Area[][]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
     public renderState$: BehaviorSubject<{
@@ -18,13 +18,23 @@ export class MotionMaskState {
         initialMask: string,
         public canvas: ElementRef<HTMLCanvasElement>,
         public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>,
-        private unsub$: Subject<boolean>
+        private unsub$: Subject<boolean>,
+        updateMask: EventEmitter<string>
     ) {
         const parsedInitial = this.initialToMaskZones(initialMask);
         this.maskZones = new BehaviorSubject([parsedInitial]);
-        this.maskMatrix = new BehaviorSubject([
+        this.maskMatrix = new BehaviorSubject(
             this.zonesToMatrix(parsedInitial)
-        ]);
+        );
+
+        this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
+            const matrix = this.zonesToMatrix(zones[zones.length - 1]);
+            const latestZones = this.matrixToZones(matrix);
+            const maskString = latestZones.map(
+                ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
+            ).join(';');
+            updateMask.emit(maskString);
+        });
         this.initSensitivityButtons();
     }
 
@@ -35,7 +45,7 @@ export class MotionMaskState {
     public reInitialize(mask: string) {
         const parsedInitial = this.initialToMaskZones(mask);
         this.maskZones.next([parsedInitial]);
-        this.maskMatrix.next([this.zonesToMatrix(parsedInitial)]);
+        this.maskMatrix.next(this.zonesToMatrix(parsedInitial));
     }
 
     // Init Methods
@@ -123,7 +133,7 @@ export class MotionMaskState {
         return matrix;
     }
 
-    public matrixToZones(maskMatrix: number[][]): Area[] {
+    public matrixToZones(maskMatrix: Mask): Area[] {
         const matrix = <(number | false)[][]>(
             [...maskMatrix].map((row) => [...row])
         );

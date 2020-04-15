@@ -1,10 +1,12 @@
 import {
-    Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked, ChangeDetectionStrategy, HostListener
+    Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked,
+    ChangeDetectionStrategy, HostListener, Output, EventEmitter
 }                               from '@angular/core';
 import { BehaviorSubject, Subject }      from 'rxjs';
 import { SensitivityColor }     from './motion-detection-types';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
+
 
 @Component({
     selector        : 'nx-motion-detection-overlay',
@@ -22,6 +24,8 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
+
+    @Output() updateMask: EventEmitter<string> = new EventEmitter();
 
     /**
      * Color for sensitivity level is found by its index. Level 3 is sensitivityColors[3].
@@ -61,7 +65,9 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     // Init methods
     private initMask() {
-        this.motionMask = new MotionMaskState(this.initialMask, this.motionCanvas, this.sensitivityButtons$, this.unsub$);
+        this.motionMask = new MotionMaskState(
+            this.initialMask, this.motionCanvas, this.sensitivityButtons$, this.unsub$, this.updateMask
+        );
     }
 
     /**

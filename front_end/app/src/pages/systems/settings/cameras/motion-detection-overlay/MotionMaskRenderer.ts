@@ -20,7 +20,7 @@ export class MotionMaskRenderer {
     private columns = 44;
     private rows = 32;
     private ctx: CanvasRenderingContext2D;
-    private maskMatrix: BehaviorSubject<Mask[]>;
+    private maskMatrix: BehaviorSubject<Mask>;
     private maskZones: BehaviorSubject<Area[][]>;
     private selectionZones: BehaviorSubject<Area[]>;
     public canvas: ElementRef<HTMLCanvasElement>;

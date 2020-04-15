@@ -25,7 +25,6 @@ import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 
-@AutoUnsubscribe()
 @Component({
     selector    : 'nx-cameras-component',
     templateUrl : 'cameras.component.html',
@@ -143,7 +142,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.viewContainerRef,
             this.saveSettings,
             () => {
-                this.showOverlay = false;
+                this.toggleMotionGrid();
                 this.applyService.reset();
             },
             [
@@ -155,7 +154,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
                 this.selectedRotationWatcher,
-                this.motionEnabledWatcher
+                this.motionEnabledWatcher,
+                this.motionMaskWatcher
             ]);
     }
 
@@ -432,6 +432,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
     }
 
+    motionMaskWatcher: Watcher<string> = new Watcher();
+    get motionMask() {
+        return this.motionMaskWatcher.value;
+    }
+
+    set motionMask(value) {
+        this.motionMaskWatcher.value = value;
+    }
+
+    updateMask(maskString) {
+        this.motionMask = maskString;
+    }
+
     set motionType(value: MotionType) {
         this.motionEnabledWatcher.value = value;
     }
@@ -495,6 +508,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recording = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
+            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
             this.updateAlerts();
             this.applyService.reset();
             this.applyService.setVisible(true);
