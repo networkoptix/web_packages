@@ -218,14 +218,14 @@
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-            "noServerFound": "No server found.",
+            "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
-            "passwordRequired": "Password is required.",
-            "passwordWrong": "Wrong password.",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Parola gerekmektedir",
+            "passwordWrong": "Hatalı parola",
             "primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-            "primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez.",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Danışmanızı tavsiye ederiz",
@@ -238,12 +238,12 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address.",
-            "urlNotValid": "Enter valid URL.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "Birleştirilmiş Sistemde <strong>{{maxServers}}</strong> ten çok sunucu olacaktır."
         },
@@ -543,7 +543,8 @@
             "backToEditText": "Düzeleme arayüzüne dön",
             "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
         },
-        "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir."
+        "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
         "Any": "Herhangi",

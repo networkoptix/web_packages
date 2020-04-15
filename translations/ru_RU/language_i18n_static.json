@@ -218,14 +218,14 @@
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Объединение систем не удалось",
-            "noServerFound": "No server found.",
+            "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
-            "passwordRequired": "Password is required.",
-            "passwordWrong": "Wrong password.",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Пароль обязателен для заполнения",
+            "passwordWrong": "Неправильный пароль",
             "primaryCannotMerge": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей Системой. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
-            "primarySystemOffline": "Система {{primarySystem}} не находится в сети и не может быть объединена с системой {{targetSystem}}.",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Мы рекомендуем проконсультироваться с",
@@ -238,12 +238,12 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей Системой. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address.",
-            "urlNotValid": "Enter valid URL.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "В объединенной системе будет больше <strong>{{maxServers}}</strong> серверов."
         },
@@ -543,7 +543,8 @@
             "backToEditText": "Вернуться к интерфейсам редактирования",
             "previewRibbon": "Эта страница является предварительным просмотром последних изменений и не соответствует общедоступной версии."
         },
-        "systemOffline": "Система не в сети. Некоторые настройки могут быть недоступны."
+        "systemOffline": "Система не в сети. Некоторые настройки могут быть недоступны.",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
         "Any": "Любой",

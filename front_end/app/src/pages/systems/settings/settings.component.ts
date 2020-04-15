@@ -259,30 +259,37 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     updateAlert() {
-        const { primary, secondary } = this.systemsService.systemsMerging || {};
-        if (!this.system.isOnline) {
-            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
-        } else if (primary && primary.id === this.system.id) {
-            this.secondaryMerge = false;
-            const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-            const secondaryName = secondarySystem && secondarySystem.name || this.LANG.system.mergeUnknownName;
-            const template =
-                `<div class="my-1">
-                    <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
-                    <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
-                </div>`;
-            this.ribbonService.show(template, '', '', 'alert');
-        } else if (secondary && secondary.id === this.system.id) {
-            this.mergeTargetSystem = this.systemsService.systems
-                .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
-            this.secondaryMerge = true;
-        } else {
-            this.secondaryMerge = false;
-            this.ribbonService.hide();
-        }
-        setTimeout(() => {
-            this.setHeaderHeight();
-        });
+        this.system.checkMergeStatus()
+            .subscribe(res => {
+                const { mergeInProgress } = res.reply;
+                const { primary, secondary } = this.systemsService.systemsMerging || {};
+                if (!this.system.isOnline) {
+                    this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                } else if (primary && primary.id === this.system.id) {
+                    this.secondaryMerge = false;
+                    const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
+                    const secondaryName = secondarySystem && secondarySystem.name ||
+                        secondary && secondary.name || this.LANG.system.mergeUnknownName;
+                    const template =
+                        `<div class="my-1">
+                            <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
+                            <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
+                        </div>`;
+                    this.ribbonService.show(template, '', '', 'alert');
+                } else if (secondary && secondary.id === this.system.id) {
+                    this.mergeTargetSystem = this.systemsService.systems
+                        .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
+                    this.secondaryMerge = true;
+                } else if (mergeInProgress) {
+                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, '', '');
+                } else {
+                    this.secondaryMerge = false;
+                    this.ribbonService.hide();
+                }
+                setTimeout(() => {
+                    this.setHeaderHeight();
+                });
+            })
     }
 
     updateMenu() {

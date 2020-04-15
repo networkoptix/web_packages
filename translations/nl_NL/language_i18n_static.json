@@ -218,14 +218,14 @@
             "mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
-            "noServerFound": "Geen server gevonden.",
+            "noServerFound": "No server found",
             "newSystemDisplayName": "Nieuw systeem",
             "otherSystem": "Andere systemen...",
-            "ownerCanMergeText": "U kunt alleen cloud systemen samenvoegen, waarvan u de eigenaar bent.",
-            "passwordRequired": "Wachtwoord is vereist.",
-            "passwordWrong": "Wachtwoord onjuist.",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Wachtwoord is vereist",
+            "passwordWrong": "Wachtwoord onjuist",
             "primaryCannotMerge": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
-            "primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}.",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "Systeem {{primarySystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "We raden aan om te overleggen met",
@@ -238,12 +238,12 @@
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
             "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
             "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
-            "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige exemplaar.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemsIncompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
             "systemVersionOld": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige.",
             "systemVersionNew": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
-            "urlEmpty": "Voer het serveradres in.",
-            "urlNotValid": "Voer een geldige URL in.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "Er zullen meer dan <strong>{{maxServers}}</strong> servers in het samengevoegde systeem zijn."
         },
@@ -543,7 +543,8 @@
             "backToEditText": "Terug naar het bewerken van de interface",
             "previewRibbon": "Deze pagina is een voorbeeld van de laatste wijzigingen, en het komt niet overeen met de publiekelijk beschikbare versie."
         },
-        "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar."
+        "systemOffline": "Systeem is offline. Sommige instellingen zijn mogelijk niet beschikbaar.",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
         "Any": "Elke",

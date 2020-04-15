@@ -218,14 +218,14 @@
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "系统合并失败",
-            "noServerFound": "No server found.",
+            "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
-            "passwordRequired": "Password is required.",
-            "passwordWrong": "Wrong password.",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "密码为必填项",
+            "passwordWrong": "错误的密码。",
             "primaryCannotMerge": "系统 {{targetSystem}} 具有较新的软件版本，与当前系统不兼容。请将当前系统更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 将其与 {{targetSystem}} 系统合并。",
-            "primarySystemOffline": "系统 {{primarySystem}} 处于离线状态，无法合并系統{{targetSystem}}。",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "建议您进行咨询",
@@ -238,12 +238,12 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address.",
-            "urlNotValid": "Enter valid URL.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
         },
@@ -543,7 +543,8 @@
             "backToEditText": "返回编辑界面",
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。"
         },
-        "systemOffline": "系统离线。某些设置可能无法使用。"
+        "systemOffline": "系统离线。某些设置可能无法使用。",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
         "Any": "任何",

@@ -89,8 +89,8 @@ Set Language Anonymous
     Sleep     1
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}
     Click Button    ${LANGUAGE DROPDOWN}
-    Wait Until Element Is Visible    ${LANGUAGE TO SELECT}
-    Click Element    ${LANGUAGE TO SELECT}
+    Wait Until Element Is Visible    //nx-language-select//span[@lang='${lang}']/..
+    Click Element    //nx-language-select//span[@lang='${lang}']/..
     Wait Until Element Is Visible    ${LANGUAGE DROPDOWN}/span[@lang='${lang}']    20
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
@@ -132,7 +132,7 @@ Validate Log In
     Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
 
 Check Log In
-    [arguments]    ${button}=${LOG IN NAV BAR}
+    [Arguments]    ${button}=${LOG IN NAV BAR}
     ${random email}    Get Random Email    ${BASE EMAIL}
     Log In    ${random email}    ${password}      validate=False     button=${button}
     Wait Until Element Is Visible    ${ACCOUNT NOT FOUND}
@@ -152,6 +152,16 @@ Validate Log Out
     Wait Until Element Is Not Visible    ${BACKDROP}
     Wait Until Page Contains Element    ${ANONYMOUS BODY}
     Check Language Anonymous
+
+Log Out No Language
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+    Wait Until Page Contains Element    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Wait Until Element Is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    .05    #Ubuntu was clicking too soon
+    Click Button    ${ACCOUNT DROPDOWN}
+    Wait Until Element Is Visible    //li[contains(@class, 'collapse-first')]//li[2]/a
+    Click Link    //li[contains(@class, 'collapse-first')]//li[3]/a
+    Validate Log Out
 
 Validate on Register Page
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER PASSWORD INPUT}    ${CREATE ACCOUNT BUTTON}

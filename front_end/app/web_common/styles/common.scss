@@ -94,6 +94,7 @@ camera-view-informer {
         text-align: center;
 
         position: relative;
+        height : auto;
         top: 50%;
         transform: translateY(-65%);
         -ms-transform: translateY(-65%);
@@ -101,7 +102,7 @@ camera-view-informer {
         font-size:130%;
         font-weight: 300;
         line-height:30px;
-        color: $light;
+        color: $light !important;
 
         @include media-breakpoint-down(sm) {
             top : 50%;
@@ -115,18 +116,20 @@ camera-view-informer {
         .placeholder-icon{
             margin-bottom: 24px;
         }
-    
+
         .placeholder-title{
             font-family : $font-family-light;
             font-size: 40px;
             line-height:48px;
             text-transform: uppercase;
+            color : $light !important;
         }
 
         .placeholder-message{
             font-size: 18px;
             line-height: 24px;
             height: 24px;
+            color : $light !important;
         }
 
 
