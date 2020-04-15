@@ -305,9 +305,9 @@ import * as Hls from 'hls.js';
                     case Hls.default.ErrorDetails.BUFFER_APPENDING_ERROR:
                         console.log('Buffer Appending Error');
                         break;
-                    // case Hls.default.ErrorDetails.BUFFER_STALLED_ERROR:
-                    //     jshlsApi.load(jshlsApi.video.src);
-                    //     break;
+                    case Hls.default.ErrorDetails.BUFFER_STALLED_ERROR:
+                        jshlsApi.load(jshlsApi.video.src);
+                        break;
                     default:
                         break;
                 }
@@ -429,8 +429,9 @@ import * as Hls from 'hls.js';
                 case 'waiting':
                 case 'stalled':
                 case 'error':
+                case 'mediaError':
                     data = Math.round(evt.target.currentTime * 1000);
-                    if (evt.type === 'error') {
+                    if (evt.type === 'error' || evt.type === 'mediaError') {
                         var errorTxt, mediaError = evt.currentTarget.error;
                         switch (mediaError.code) {
                             case mediaError.MEDIA_ERR_ABORTED:
@@ -530,6 +531,7 @@ import * as Hls from 'hls.js';
         this.addEventListener('loadedmetadata', this.handleVideoEvent);
         this.addEventListener('loadeddata', this.handleVideoEvent);
         this.addEventListener('durationchange', this.handleVideoEvent);
+        this.addEventListener('stalled', this.handleVideoEvent)
     };
     
     window.JsHlsAPI.prototype.addEventListener = function (event, handler) {
