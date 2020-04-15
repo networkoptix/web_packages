@@ -292,7 +292,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.setHeaderHeight();
                 });
-            })
+            });
     }
 
     updateMenu() {
@@ -384,7 +384,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
-                    const server = this.formatURL(systemServer);
+                    const server = NxUtilsService.formatURL(systemServer);
 
                     serversNode.level3.push({
                         id              : server.id,
@@ -417,43 +417,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         this.content = { ...this.content };
     }
-
-    /**
-     * Return IPv4 address or IPv6 address if none
-     */
-    formatURL(server) {
-        function ipReducer(result: any, currentValue: any) {
-            if (currentValue[0] === '[') {
-                result.ipv6.push(currentValue);
-            } else {
-                result.ipv4.push(currentValue);
-            }
-            return result;
-        }
-
-        const addr = server.networkAddresses.split(';');
-        const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
-
-        if (addresses.ipv4.length > 0) {
-            const [ip, port] = addresses.ipv4[0].split(':');
-            server.ip = ip;
-            server.port = port || '';
-        } else if (addresses.ipv6.length > 0) {
-            if (addresses.ipv6[0].indexOf('[') === 0) {
-                const [ip, port] = addresses.ipv6[0].split(']:');
-                server.ip = ip.substring(1);
-                server.port = port || '';
-            } else {
-                server.ip = addresses.ipv6[0];
-                server.port = '';
-            }
-        } else {
-            server.ip = 'N/A';
-            server.port = '';
-        }
-
-        return server;
-    };
 
     cleanUrl() {
         return this.router

@@ -160,23 +160,31 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     checkIfOnline(serverId) {
-        return this.system.getModuleInfo(serverId).toPromise()
-            .then(() => this.setStatus(''))
-            .catch(() => this.setStatus(this.CONFIG.servers.status.offline));
+        return this.system.getServers()
+            .then(servers => {
+                this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                    ? '' : this.CONFIG.servers.status.offline);
+            })
+            .catch(err => {
+                console.error(err);
+                this.setStatus(this.CONFIG.servers.status.offline);
+            });
     }
 
     checkStatus() {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
-        const now = new Date().getTime();
-        this.system.getModuleInfo(this.selectedServer.id)
-            .pipe(
-                catchError(() => of('error')),
-                delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
-            )
-            .subscribe(res => {
-                this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
-                this.checking = false;
+        this.system.getServers()
+            .then(servers => {
+                const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
+                setTimeout(() => {
+                    this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                    this.checking = false;
+                }, 3400);
+            })
+            .catch(err => {
+                console.error(err);
+                this.setStatus(this.CONFIG.servers.status.offline);
             });
     }
 

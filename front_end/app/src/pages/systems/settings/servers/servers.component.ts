@@ -1,24 +1,19 @@
-import {
-    Component, OnInit, Inject,
-    ViewContainerRef, OnDestroy
-}                                   from '@angular/core';
-import { ActivatedRoute, Params }   from '@angular/router';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxDialogsService }            from '../../../../dialogs/dialogs.service';
-import { NxSettingsService }           from '../settings.service';
-import { NxLanguageProviderService }   from '../../../../services/nx-language-provider';
-import { NxMenuService }               from '../../../../components/menu/menu.service';
-import { NxProcessService }            from '../../../../services/process.service';
-import { NxSystem }                    from '../../../../services/system.service';
-import { NxApplyService, Watcher }     from '../../../../services/apply.service';
-import { NxUriService }                from '../../../../services/uri.service';
-import { Subscription, of, interval }  from 'rxjs';
-import {
-    filter, map, delay,
-    retryWhen, delayWhen, catchError
-}                                      from 'rxjs/operators';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }     from '../../../../../language_i18n_static_types';
+import { Component, OnInit, OnDestroy }  from '@angular/core';
+import { ActivatedRoute, Params }        from '@angular/router';
+import { NxConfigService, IConfig }      from '../../../../services/nx-config';
+import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }             from '../settings.service';
+import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
+import { NxMenuService }                 from '../../../../components/menu/menu.service';
+import { NxProcessService }              from '../../../../services/process.service';
+import { NxSystem }                      from '../../../../services/system.service';
+import { NxUtilsService }                from '../../../../services/utils.service';
+import { NxApplyService }                from '../../../../services/apply.service';
+import { NxUriService }                  from '../../../../services/uri.service';
+import { Subscription }                  from 'rxjs';
+import { filter, map, delay, retryWhen } from 'rxjs/operators';
+import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -162,8 +157,10 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             }
 
             server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
+            if (!server.ip) {
+                NxUtilsService.formatURL(server);
+            }
             this.selectedServer = server;
-
             this.menuService.setDetailsSection(this.selectedServer.id);
         }
     }
