@@ -342,7 +342,7 @@ export class MergeModalContent {
                     this.close({
                         secondary: {
                             id   : this.secondarySystem.id,
-                            name : this.secondarySystem.name || this.secondarySystem.info.name
+                            name : this.secondaryName
                         },
                         primary: {
                             id   : this.primarySystem.id,

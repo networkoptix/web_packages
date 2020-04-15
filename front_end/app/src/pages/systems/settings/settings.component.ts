@@ -270,7 +270,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 } else if (primary && primary.id === this.system.id) {
                     this.secondaryMerge = false;
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    const secondaryName = secondarySystem && secondarySystem.name || this.LANG.system.mergeUnknownName;
+                    const secondaryName = secondarySystem && secondarySystem.name ||
+                        secondary && secondary.name || this.LANG.system.mergeUnknownName;
                     const template =
                         `<div class="my-1">
                             <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
