@@ -58,30 +58,24 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         this.orderedLicense.push({
             name  : this.LANG.license.info.type,
             value : info.type
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.channels,
             value : info.count
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.server,
             value : info.serverName
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.hwid,
             value : info.hwid
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.status,
             value : info.status,
             error : info.expired
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.expires,
             value : this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a'),
             error : info.expired
-        });
-        this.orderedLicense.push({
+        }, {
             name  : this.LANG.license.info.deactivations,
             value : info.deactivations
         });
