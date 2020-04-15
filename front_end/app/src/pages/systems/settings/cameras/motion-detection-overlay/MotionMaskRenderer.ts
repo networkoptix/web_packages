@@ -1,12 +1,14 @@
 import { ElementRef }       from '@angular/core';
-import { BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
+import {
+    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
 }                           from 'rxjs';
-import { switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map, 
+import {
+    switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
     startWith, tap, buffer, debounceTime, withLatestFrom, takeUntil
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
-import { 
-    SensitivityColor, Mask, Area 
+import {
+    SensitivityColor, Mask, Area
 }                           from './motion-detection-types';
 import { MotionMaskState }  from './MotionMaskState';
 
@@ -63,9 +65,9 @@ export class MotionMaskRenderer {
         const track = (eventName: string) =>
             <Observable<MouseEvent>>fromEvent(canvas, eventName);
         const [
-            mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseClick$
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
         ] = [
-            'mousedown', 'mouseup', 'mouseleave', 'mousemove', 'click'
+            'mousedown', 'mouseup', 'mouseleave', 'mousemove'
         ].map(track);
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
             (event) => <Observable<KeyboardEvent>>fromEvent(window, event)
@@ -109,13 +111,12 @@ export class MotionMaskRenderer {
             ctrlKey  : false,
             shiftKey : false
         });
-        const shiftCtrlState$ = merge(keyDown$, keyUp$)
+        const shiftCtrlState = merge(keyDown$, keyUp$)
             .pipe(
                 filter(({ key }) => key === 'Control' || key === 'Shift'),
                 map(({ ctrlKey, shiftKey }) => ({ ctrlKey, shiftKey })),
                 distinctUntilChanged(
-                    (x, y) =>
-                        x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey
+                    (x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey
                 ),
                 takeUntil(this.unsub$)
             )
@@ -142,11 +143,7 @@ export class MotionMaskRenderer {
                 })),
                 pairwise(),
                 filter(
-                    ([prev, cur]) =>
-                        !(
-                            prev.action === 'select-end' &&
-                            cur.action === 'select-end'
-                        )
+                    ([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end')
                 ),
                 map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
                     let width = 1;
@@ -159,89 +156,77 @@ export class MotionMaskRenderer {
                         height =
                             Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
                     }
-                    return { action, x, y, selectX : curX, selectY : curY, width, height, ...keyStates
-                    };
+                    return { action, x, y, selectX: curX, selectY: curY, width, height, ...keyStates };
                 }),
-                switchMap(
-                    ({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
-                        const [
-                            currentZones,
-                            ...rest
-                        ] = this.maskZones.value.reverse();
-                        const prevSelections = this.selectionZones.value;
-                        const newZone = new Area(
-                            150,
-                            x,
-                            y,
-                            width,
-                            height,
-                            true
-                        );
-                        if (action === 'select-start') {
-                            return mouseState$.pipe(
-                                tap(({ x: mouseX, y: mouseY }) => {
-                                    const x = Math.min(selectX, mouseX);
-                                    const y = Math.min(selectY, mouseY);
-                                    width = Math.max(selectX, mouseX) - x + 1;
-                                    height = Math.max(selectY, mouseY) - y + 1;
-                                    this.drawHoverOrSelection({
-                                        x,
-                                        y,
-                                        height,
-                                        width
-                                    });
-                                })
-                            );
-                        } else if (action === 'select-end') {
-                            if (shiftKey) {
-                                this.selectionZones.next([
-                                    ...prevSelections,
-                                    newZone
-                                ]);
-                            } else if (ctrlKey) {
-                                const matrix = this.motionMask.zonesToMatrix(
-                                    prevSelections
-                                );
-                                const updatedMatrix = this.motionMask.addZone(
-                                    newZone,
-                                    matrix,
-                                    true
-                                );
-                                const updatedZones = this.motionMask
-                                    .matrixToZones(updatedMatrix)
-                                    .filter(
-                                        ({ sensitivity }) => sensitivity >= 150
-                                    );
-                                this.selectionZones.next(updatedZones);
-                            } else {
-                                this.selectionZones.next([]);
-                                this.maskZones.next([
-                                    ...rest,
-                                    [...currentZones, ...prevSelections]
-                                        .filter(
-                                            ({ sensitivity }) =>
-                                                sensitivity !== 150
-                                        )
-                                        .map((area) => {
-                                            area.currentSelection = false;
-                                            return area;
-                                        })
-                                ]);
-                                this.selectionZones.next([newZone]);
-                            }
-                        }
+                switchMap(({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
+                    const [
+                        currentZones,
+                        ...rest
+                    ] = this.maskZones.value.reverse();
+                    const prevSelections = this.selectionZones.value;
+                    const newZone = new Area(
+                        150,
+                        x,
+                        y,
+                        width,
+                        height,
+                        true
+                    );
+                    if (action === 'select-start') {
                         return mouseState$.pipe(
-                            tap(({ x, y }) =>
+                            tap(({ x: mouseX, y: mouseY }) => {
+                                const x = Math.min(selectX, mouseX);
+                                const y = Math.min(selectY, mouseY);
+                                width = Math.max(selectX, mouseX) - x + 1;
+                                height = Math.max(selectY, mouseY) - y + 1;
                                 this.drawHoverOrSelection({
                                     x,
                                     y,
-                                    height : 1,
-                                    width  : 1
-                                })
-                            ),
-                            takeUntil(this.unsub$)
+                                    height,
+                                    width
+                                });
+                            })
                         );
+                    } else if (action === 'select-end') {
+                        if (shiftKey) {
+                            this.selectionZones.next([
+                                ...prevSelections,
+                                newZone
+                            ]);
+                        } else if (ctrlKey) {
+                            const matrix = this.motionMask.zonesToMatrix(
+                                prevSelections
+                            );
+                            const updatedMatrix = this.motionMask.addZone(
+                                newZone,
+                                matrix,
+                                true
+                            );
+                            const updatedZones = this.motionMask
+                                .matrixToZones(updatedMatrix)
+                                .filter(
+                                    ({ sensitivity }) => sensitivity >= 150
+                                );
+                            this.selectionZones.next(updatedZones);
+                        } else {
+                            this.selectionZones.next([]);
+                            this.maskZones.next([
+                                ...rest,
+                                [...currentZones, ...prevSelections]
+                                    .filter(({ sensitivity }) => sensitivity !== 150)
+                                    .map((area) => {
+                                        area.currentSelection = false;
+                                        return area;
+                                    })
+                            ]);
+                            this.selectionZones.next([newZone]);
+                        }
                     }
+                    return mouseState$.pipe(
+                        tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
+                        takeUntil(this.unsub$)
+                    );
+                }
                 )
             )
             .subscribe();
@@ -253,7 +238,7 @@ export class MotionMaskRenderer {
      */
     private fillZones() {
         this.motionMask.renderState$.value.zones.forEach(
-            ({ sensitivity, x, y, width, height, currentSelection }) => {
+            ({ sensitivity, x, y, width, height }) => {
                 this.ctx.beginPath();
                 this.ctx.fillStyle =
                     sensitivity >= 150
@@ -276,9 +261,7 @@ export class MotionMaskRenderer {
     private drawCells() {
         const currentMatrix = this.motionMask.renderState.maskMatrix;
         this.ctx.lineWidth = 1;
-        currentMatrix.forEach((_, row) =>
-            _.forEach(this.drawCell(currentMatrix, row))
-        );
+        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
     }
 
     /**
@@ -354,9 +337,9 @@ export class MotionMaskRenderer {
      * Hover and selection outline
      */
     private drawHoverOrSelection = (cursor: {
-        x      : number;
-        y      : number;
-        width  : number;
+        x : number;
+        y : number;
+        width : number;
         height : number;
     }) => {
         const { x, y, width, height } = {

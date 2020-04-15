@@ -203,9 +203,7 @@ export class MotionMaskState {
                 groupPointer < group.length;
                 groupPointer++
             ) {
-                const borderingZones = sorted.filter((zone) =>
-                    zone.borders(group[groupPointer])
-                );
+                const borderingZones = sorted.filter((zone) => zone.borders(group[groupPointer]));
                 group = [...group, ...borderingZones];
                 sorted = sorted.filter(
                     (zone) => !zone.borders(group[groupPointer])
