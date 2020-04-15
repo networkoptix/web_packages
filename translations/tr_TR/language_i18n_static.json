@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Arama",
-		"search_ipvd": "Belirli bir üretici veya modele göre arama",
 		"filter applied": "filtre uygulandı",
 		"filters applied": "filtreler uygulandı",
 		"Any": "Herhangi",

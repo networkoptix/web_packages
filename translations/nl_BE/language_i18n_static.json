@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Zoek",
-		"search_ipvd": "Zoeken op model of fabrikant",
 		"filter applied": "filter toegepast",
 		"filters applied": "filters toegepast",
 		"Any": "Elk",

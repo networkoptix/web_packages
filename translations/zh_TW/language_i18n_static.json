@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "搜尋",
-		"search_ipvd": "按型號或製造商搜尋",
 		"filter applied": "已使用的篩選條件",
 		"filters applied": "已使用的篩選條件",
 		"Any": "任何",

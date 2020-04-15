@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Tìm kiếm",
-		"search_ipvd": "Tìm kiếm theo mô hình hoặc nhà sản xuất",
 		"filter applied": "áp dụng bộ lọc",
 		"filters applied": "bộ lọc được áp dụng",
 		"Any": "Bất kỳ",

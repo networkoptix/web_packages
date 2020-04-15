@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Поиск",
-		"search_ipvd": "Поиск по модели или производителю",
 		"filter applied": "фильтр применен",
 		"filters applied": "фильтры применены",
 		"Any": "Любой",

@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Sök",
-		"search_ipvd": "Sök efter modell eller tillverkare",
 		"filter applied": "filter används",
 		"filters applied": "filter används",
 		"Any": "Någon",

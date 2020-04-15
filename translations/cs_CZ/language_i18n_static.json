@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Hledat",
-		"search_ipvd": "Hledání podle modelu nebo výrobce",
 		"filter applied": "aplikovány filtry",
 		"filters applied": "aplikovány filtry",
 		"Any": "Libovolný",

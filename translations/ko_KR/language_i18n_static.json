@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "검색",
-		"search_ipvd": "모델 또는 제조업체로 검색",
 		"filter applied": "필터 적용되었음",
 		"filters applied": "필터들이 적용되었음",
 		"Any": "아무거나",

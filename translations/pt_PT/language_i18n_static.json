@@ -18,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Pesquisar",
-		"search_ipvd": "Search by model or manufacturer",
 		"filter applied": "filter applied",
 		"filters applied": "filters applied",
 		"Any": "Any",
