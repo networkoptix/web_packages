@@ -41,6 +41,7 @@ export class MergeModalContent {
     tooManyServers: boolean;
     nonCloudMerge = false;
     peerSystemsLoaded = false;
+    secondaryName: string;
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -419,6 +420,7 @@ export class MergeModalContent {
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             this.nonCloudMerge = true;
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
+            this.getSecondaryName();
             if (!(/^https?:\/\//).test(this.serverUrl)) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
             }
@@ -442,6 +444,7 @@ export class MergeModalContent {
                     return res;
                 });
         } else {
+            this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
             let targetSystem;
             try {
@@ -659,5 +662,13 @@ export class MergeModalContent {
             serverUrlInputValidationErrorText : ''
         });
         this.activeModal.close(data);
+    }
+
+    getSecondaryName() {
+        let name: string = this.secondarySystem.name || this.secondarySystem.info && this.secondarySystem.info.name;
+        if (name === this.LANG.dialogs.merge.otherSystem) {
+            name = this.LANG.dialogs.merge.serverAtUrl.replace('{{url}}', this.serverUrl);
+        }
+        this.secondaryName = name;
     }
 }

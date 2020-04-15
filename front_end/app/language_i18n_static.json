@@ -234,6 +234,7 @@
             },
             "secondaryCannotMerge": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {{url}}",
             "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",

@@ -243,6 +243,7 @@ export interface DialogsMerge {
     recommendSupport:           RecommendSupport;
     secondaryCannotMerge:       string;
     secondarySystemUnavailable: string;
+    serverAtUrl:                string;
     serverNotAvailable:         string;
     serverNotYours:             string;
     serverVersionOld:           string;
@@ -1071,6 +1072,7 @@ const typeMap: any = {
         { json: "recommendSupport", js: "recommendSupport", typ: r("RecommendSupport") },
         { json: "secondaryCannotMerge", js: "secondaryCannotMerge", typ: "" },
         { json: "secondarySystemUnavailable", js: "secondarySystemUnavailable", typ: "" },
+        { json: "serverAtUrl", js: "serverAtUrl", typ: "" },
         { json: "serverNotAvailable", js: "serverNotAvailable", typ: "" },
         { json: "serverNotYours", js: "serverNotYours", typ: "" },
         { json: "serverVersionOld", js: "serverVersionOld", typ: "" },

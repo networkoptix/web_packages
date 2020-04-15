@@ -72,7 +72,7 @@
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
     <div class="modal-body">
         <p [innerHTML]="'dialogs.merge.adminPasswordTitle'| translate: {
-                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+                secondarySystem: secondaryName
             }"></p>
         <div class="form-group">
             <label class="mt-2" for="adminLogin" translate>Login</label>
@@ -142,7 +142,7 @@
     <div class="modal-body">
         <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
                 primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
-                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+                secondarySystem: secondaryName
             }"></p>
         <div *ngIf="tooManyServers">
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
