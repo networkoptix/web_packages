@@ -8,7 +8,6 @@ ${default name}    API made system
 ${customization}    default
 
 *** Keywords ***
-
 # Keywords which use Cloud and cloud Portal API
 Bind System
     [Arguments]    ${auth}    ${cloud url}    ${name}=${default name}
@@ -45,7 +44,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
-    Sleep    1
+    Sleep    3
     &{Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}:${server port}
@@ -61,7 +60,7 @@ Rename System
     Create Digest Session    Rename System session    ${ENV}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Rename System session    /cdb/system/rename    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()} add
+    Return From Keyword    ${resp.json()}
 
 Share
     [Arguments]    ${auth}    ${system id}    ${access role}    ${account email}
@@ -147,10 +146,11 @@ Log Out via API
     Should Be Equal as Strings    ${status}    200
     Go To    ${ENV}
     Validate Log Out
+    [Return]    ${status}
 
 Evaluate Auto System Settings via API
     [Arguments]    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    ${AUTO SYS AUTH}     disable_warnings=1
+    Create Digest Session    returnedSetting    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
@@ -206,7 +206,7 @@ Detach Server From Cloud
 # Local user management
 Get Users
     [Arguments]    ${auth}    ${server url}
-    Create Digest Session    Get Users session   ${server url}    auth=${auth}
+    Create Digest Session    Get Users session   ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Get Request    Get Users session    /ec2/getUsers
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
@@ -214,7 +214,7 @@ Get Users
 Save User
     [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
     &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
-    Create Digest Session    Save User session    ${server url}    auth=${auth}
+    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}

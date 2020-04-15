@@ -15,7 +15,7 @@
         <button class="btn btn-primary m-0" (click)="activeModal.close()" translate>OK</button>
     </div>
 </form>
-<form *ngIf="machine.currentState === 'checkMerge'" name="checkMergeForm">
+<form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
     <div class="modal-body">
         <nx-pre-loader type="merge-wrapper" *ngIf="!peerSystemsLoaded; else checkMergeBody"></nx-pre-loader>
         <ng-template #checkMergeBody>
@@ -53,7 +53,7 @@
                 </label>
             </div>
             <p *ngIf="machine.state.show.checkingErrorText"
-                [ngClass]="{ 'mt-2': machine.state.show.serverUrlInput }"
+                [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
                 [innerHTML]="machine.state.template.checkingErrorText"
                 class="error-label">
             </p>
@@ -72,7 +72,7 @@
 <form *ngIf="machine.currentState === 'adminPassword'" #adminPasswordForm="ngForm" name="adminPasswordForm">
     <div class="modal-body">
         <p [innerHTML]="'dialogs.merge.adminPasswordTitle'| translate: {
-                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+                secondarySystem: secondaryName
             }"></p>
         <div class="form-group">
             <label class="mt-2" for="adminLogin" translate>Login</label>
@@ -83,6 +83,7 @@
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
+                    [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
                     id="adminPassword" autocomplete="new-password"
                     name="adminPassword" type="password" required
                     (ngModelChange)="passwordChange(adminPassword)"
@@ -92,7 +93,7 @@
             <label 
                 *ngIf="machine.state.show.passwordError" 
                 [innerHTML]="machine.state.template.passwordErrorText" 
-                class="error-label mt-1 mb-0" for="adminPassword">
+                class="error-label password-label-margin mb-0" for="adminPassword">
             </label>
         </div>
     </div>
@@ -141,7 +142,7 @@
     <div class="modal-body">
         <p [innerHTML]="'dialogs.merge.mergeConfirmation'| translate: {
                 primarySystem: primarySystem.name || primarySystem.info && primarySystem.info.name,
-                secondarySystem: secondarySystem.name || secondarySystem.info && secondarySystem.info.name
+                secondarySystem: secondaryName
             }"></p>
         <div *ngIf="tooManyServers">
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
@@ -157,6 +158,7 @@
             <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"
+                    [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
                     id="cloudOwnerPassword" autocomplete="new-password"
                     name="cloudOwnerPassword" type="password" required
                     (ngModelChange)="passwordChange(cloudOwnerPassword)"
@@ -166,7 +168,7 @@
             <label 
                 *ngIf="machine.state.show.passwordError" 
                 [innerHTML]="machine.state.template.passwordErrorText" 
-                class="error-label mt-1 mb-0" for="cloudOwnerPassword">
+                class="error-label password-label-margin mb-0" for="cloudOwnerPassword">
             </label>
         </div>
     </div>

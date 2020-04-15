@@ -18,10 +18,11 @@ import { NxDialogsService }             from '../../../../../dialogs/dialogs.ser
 })
 export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
     @Input() system: NxSystem;
-
     @Input() serverId: string;
 
     LANG: LanguageI18NStaticTypes;
+
+    showStorage: boolean;
     systemSubscription: Subscription;
     saveSettings: Process;
     storages = [];
@@ -34,6 +35,8 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         private dialogsService: NxDialogsService
     ) {
         this.LANG = languageService.getTranslations();
+
+        this.showStorage = false;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -66,6 +69,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     updateAndGetStorage() {
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
+            this.showStorage = (Object.keys(response.reply.storages).length > 0);
             const { storages, watchers } = mapStorages(response.reply.storages);
             this.storages = storages;
             this.watchers = watchers;

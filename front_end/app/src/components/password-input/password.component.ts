@@ -1,14 +1,14 @@
 import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
-    OnDestroy
-}                                   from '@angular/core';
+    OnDestroy, ViewChild, ElementRef
+} from '@angular/core';
 import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
-    Validator, FormControl
-}                                   from '@angular/forms';
+    Validator, FormControl, NgModel
+} from '@angular/forms';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxCloudApiService }        from '../../services/nx-cloud-api';
 import { Subscription }             from 'rxjs';
@@ -17,19 +17,19 @@ import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-password-input',
-    templateUrl: 'password.component.html',
-    styleUrls  : ['password.component.scss'],
-    providers  : [
+    selector    : 'nx-password-input',
+    templateUrl : 'password.component.html',
+    styleUrls   : ['password.component.scss'],
+    providers   : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxPasswordComponent),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxPasswordComponent),
+            multi       : true
         },
         {
-            provide    : NG_VALIDATORS,
-            useExisting: forwardRef(() => NxPasswordComponent),
-            multi      : true
+            provide     : NG_VALIDATORS,
+            useExisting : forwardRef(() => NxPasswordComponent),
+            multi       : true
         }
     ],
     encapsulation: ViewEncapsulation.None
@@ -37,15 +37,19 @@ import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
     @Input() form: any;
     @Input() componentId: string;
+    @Input() component: NgModel;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     fairPassword: boolean;
     passwordToggle: boolean;
     clicked: boolean = false;
+    tagWidth: number;
 
     private value: string;
     private passwordSubscription: Subscription;
+
+    @ViewChild('addons') addons : ElementRef;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -57,6 +61,8 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
 
     // validates the form, returns null when valid else the validation object
     public validate(c: FormControl) {
+        this.tagWidth = this.addons.nativeElement.offsetWidth;
+
         if (!c.value) {
             return {
                 required: true
@@ -163,6 +169,7 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     }
 
     ngOnInit() {
+        this.tagWidth = 0;
         this.fairPassword = true;
         this.passwordToggle = true;
 

@@ -1,506 +1,758 @@
 {
-	"account": {
-		"accountSavedSuccess": "Ваш обліковий запис успішно збережено",
-		"activationLinkSent": "Посилання для активації відправлене",
-		"passwordChangedSuccess": "Ваш обліковий запис успішно збережено",
-		"changePassword": "Змінити пароль",
-		"newPasswordLabel": "Новий пароль",
-		"saveChanges": "Зберегти",
-		"accountSettings": "Параметри Облікового Запису"
-	},
-	"activeActions": {
-		"sendConfirm": "Відправити посилання активації ще раз",
-		"resetPassword": "Скидання пароля",
-		"setNewPassword": "Зберегти пароль",
-		"setNewPasswordLabel": "Новий пароль"
-	},
-	"clientProtocol": "%CLIENT_PROTOCOL%:",
-	"search": {
-		"Search": "Пошук",
-		"search_ipvd": "Пошук за моделлю або виробником",
-		"filter applied": "застосований фільтр",
-		"filters applied": "застосовані фільтри",
-		"Any": "Будь-які",
-		"selected": "вибрано",
-		"vendor": "Виробник",
-		"vendors": "Виробники",
-		"hardwareType": "Тип",
-		"hardwareTypes": "Типи",
-		"minResolution": "Мінімальна роздільна здатність",
-		"analytics": "Аналітика",
-		"analyticsSelected": "аналітика подій"
-	},
-	"cameraFilters": {
-		"ptz": "PTZ камери",
-		"aptz": "Камери з передовою PTZ",
-		"fisheye": "Фіш-ай камери",
-		"H265": "Камери H.265",
-		"IO": "Модулі вводу-виводу",
-		"multiSensor": "Багатоканальні камери",
-		"TwWayAudio": "2-канальні аудіопристрої",
-		"audio": "Аудіо камери",
-		"encoder": "Енкодери",
-		"highRes": "Камери з високою роздільною здатністю"
-	},
-	"downloads": {
-		"mobile": {
-			"ios": {
-				"link": "%IOS_APPLICATION_LINK%"
-			},
-			"android": {
-				"link": "%ANDROID_APPLICATION_LINK%"
-			}
-		},
-		"groups": {
-			"windows": {
-				"label": "Windows"
-			},
-			"mac": {
-				"label": "Mac OS"
-			},
-			"linux": {
-				"label": "Ubuntu Linux",
-				"shortLabel": "Ubuntu"
-			},
-			"macos": {
-				"label": "Mac OS"
-			},
-			"ios": {
-				"label": "iOS",
-				"shortLabel": "iOS"
-			},
-			"android": {
-				"label": "Android",
-				"shortLabel": "Android"
-			},
-			"arm": {
-				"label": "ARM",
-				"shortLabel": "ARM"
-			},
-			"sdk": {
-				"label": "SDK",
-				"shortLabel": "SDK"
-			}
-		},
-		"platforms": {
-			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
-			"linux64": "x64",
-			"linux_arm32": "x32",
-			"linux_arm64": "x64",
-			"mac": "X",
-			"rpi": " Raspberry Pi",
-			"universal": "SDK",
-			"win64": "x64"
-		},
-		"appTypes": {
-			"bundle": "Клієнт і сервер",
-			"camera_sdk": "SDK джерела відео",
-			"client": "Тільки клієнт",
-			"metadata_sdk": "Метадані SDK",
-			"package": "Package",
-			"server": "Тільки сервер",
-			"servertool": "Інструмент налаштування",
-			"storage_sdk": "SDK для інтеграції сховищ",
-			"video_source_sdk": "SDK джерела відео"
-		},
-		"releasesTypes": {
-			"beta": "Бета",
-			"betas": "Бета",
-			"rc": "Реліз-кандидат",
-			"release": "Реліз",
-			"releases": "Релізи",
-			"patch": "Патч",
-			"patches": "Патчі"
-		}
-	},
-	"ipvd": {
-		"resolutionArea": "Площа",
-		"count": "Підрахунок",
-		"vendor": "Виробник",
-		"model": "Модель",
-		"hardwareType": "Тип",
-		"maxResolution": "<span>Макс.</span><br><span>Роздільна здатність</span>",
-		"maxFps": "<span>Макс.</span><br><span>FPS</span>",
-		"primaryCodec": "Кодек",
-		"isAudioSupported": "Аудіо",
-		"isTwAudioSupported": "2-канальний звуковий потік",
-		"isPtzSupported": "PTZ",
-		"isAptzSupported": "Розширений PTZ",
-		"isAptzSupportedShort": "Розш. PTZ",
-		"isFisheye": "Риб'яче око",
-		"isMdSupported": "Рух",
-		"isIoSupported": "Ввід/вивід",
-		"isH265": "H.265",
-		"isMultiSensor": "Мультисенсор",
-		"isAnalyticsSupported": "Аналітика",
-		"camera": "Камера",
-		"multiSensorCamera": "Багатоканальна камера",
-		"encoder": "Енкодер",
-		"dvr": "DVR",
-		"other": "Інші",
-		"PTZ cameras": "PTZ камери",
-		"Advanced PTZ cameras": "PTZ камери",
-		"Fisheye Cameras": "Фіш-ай камери",
-		"Cameras supporting H.265": "Камери, що підтримують H.265",
-		"I / O modules": "Модулі вводу-виводу",
-		"Multisensor Cameras": "Мультиненсорні камери",
-		"Cameras with 2-way audio": "Камери з 2-смуговим звуком",
-		"Extra high resolution cameras": "Камери з високою роздільною здатністю",
-		"feedback": {
-			"a_Please": "Будь ласка",
-			"b_Link": "надіслати запит",
-			"c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
-		},
-		"disclaimer": "Цей список обмежується пристроями, знайденими в {{vmsName}} де користувачі дозволили автоматичну звітність характеристик пристрою до {{companyName}}. Жодна особиста інформація не збирається і кожен користувач залишається повністю анонімним."
-	},
-	"integration": {
-		"myIntegrationsLabel": "Мій",
-		"previewRibbonText": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії.",
-		"backToEditText": "Повернутися до інтерфейсів редагування",
-		"requirements": "{{name}} Вимоги",
-		"Access Control": "Контроль доступу",
-		"Connector": "З'єднувач",
-		"Data Analytics": "Аналітика даних",
-		"Drone": "Дрон",
-		"Health Monitor": "Моніторинг ресурсів",
-		"Storage": "Сховище"
-	},
-	"messageDialogPlaceholders": {
-		"feedback": "Укажіть камеру та модель виробника..."
-	},
-	"pageTitles": {
-		"template": "{{title}} - %CLOUD_NAME%",
-		"default": "%CLOUD_NAME%",
-		"about": "Про",
-		"registerSuccess": "Вітаємо в",
-		"register": "Створити обліковий запис",
-		"changePassword": "Змінити пароль",
-		"account": "Параметри облікового запису",
-		"systems": "Системи",
-		"system": "Система",
-		"systemName": "{{systemName}}",
-		"systemShare": "Спільна система",
-		"activate": "Активувати обліковий запис",
-		"activateSent": "Активувати обліковий запис",
-		"activateSuccess": "Обліковий запис активований",
-		"activateCode": "Активувати обліковий запис",
-		"restorePassword": "Відновити пароль",
-		"restorePasswordSuccess": "Пароль збережений",
-		"restorePasswordCode": "Відновити пароль",
-		"view": "Подивитися камери",
-		"debug": "Відладка",
-		"login": "Вхід",
-		"download": "Завантажити %VMS_NAME%",
-		"downloadPlatform": "Завантажити %VMS_NAME% для ",
-		"pageNotFound": "Сторінку не знайдено",
-		"supportedDevices": "Пристрої, що підтримуються",
-		"integrations": "Інтеграції"
-	},
-	"dialogs": {
-		"okButton": "Добре",
-		"cancelButton": "Скасувати",
-		"createNewAccount": "Створити новий обліковий запис",
-		"changeAccountLogged": "Ви вже увійшли як {email}",
-		"loggedFromOther": "Ви ввійдете в інший обліковий запис",
-		"loginTitle": "Увійти до %CLOUD_NAME%",
-		"loginButton": "Вхід",
-		"logoutAuthorisedTitle": "Ви вже увійшли",
-		"logoutAuthorisedContinueButton": "Продовжити",
-		"logoutAuthorisedLogoutButton": "Вийти",
-		"noClientDetectedTitle": "Встановіть %VMS_NAME% для роботи з системою",
-		"stayAs": "Залишайтеся зареєстрованими як {email} ",
-		"stayLoggedIn": "Залишайтеся в системі",
-		"download": "Завантажити %VMS_NAME%",
-		"merge": {
-			"commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.",
-			"connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
-			"mergeConfirmation": "Ви збираєтеся об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>. Ім'я та налаштування будуть взяті з <strong>{{primarySystem}}</strong>.",
-			"mergeFailedTitle": "Не вдалося об’єднати систему",
-			"primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
-			"primarySystemOffline": "Система {{primarySystem}} офлайн і не може бути об'єднана з Системою {{targetSystem}}.",
-			"secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
-			"systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана.",
-			"systemUnavailable": "Система {{targetSystem}} наразі недоступна. Повторіть спробу через декілька хвилин або зв'яжіться з нами",
-			"recommendSupport": {
-				"a_recommend": "Ми рекомендуємо проконсультуватися з",
-				"b_support": "підтримка",
-				"c_proceeding": "перед тим, як продовжити."
-			},
-			"warning": "У об'єднаній системі буде більше ніж <strong>{{maxServers}}</strong> серверів."
-		},
-		"message": {
-			"failedToSend": "Не вдалося надіслати повідомлення.",
-			"sent": "Повідомлення відправлено.",
-			"title": {
-				"integration": "Зв’яжіться з {{companyName}}",
-				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-				"ipvd_feedback_device": "Відгук про {{asset}}"
-			},
-			"subject": {
-				"sales_inquiry": "Запит на продаж {{asset}}",
-				"technical_inquiry": "Технічний запит на {{asset}}",
-				"integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
-				"ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
-				"ipvd_feedback_device": "Відгук про {{asset}}"
-			}
-		},
-		"sharing": {
-			"confirmOwner": "Якщо змінити власника системи, вона більше не буде належати до поточного облікового запису. Ця дія є незворотньою. Ви впевнені?",
-			"shareTitle": "Додати",
-			"shareConfirmButton": "Додати",
-			"editShareTitle": "Редагувати права доступу",
-			"editShareConfirmButton": "Зберегти",
-			"permissionsSaved": "Нові права доступу збережені"
-		}
-	},
-	"errorCodes": {
-		"ok": "гаразд",
-		"cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
-		"cantDisconnectSystemPrefix": "Невдається видалити систему",
-		"cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
-		"cantSharePrefix": "Неможливо об’єднати систему",
-		"cantGetUsersListPrefix": "Список користувачів недоступний",
-		"cantGetSystemsListPrefix": "Список систем недоступний",
-		"cantRegisterPrefix": "Виникла помилка",
-		"cantGetSystemInfoPrefix": "Інформація про систему недоступна",
-		"cantChangeAccountPrefix": "Не вдається зберегти зміни",
-		"cantChangePasswordPrefix": "Не вдається зберегти пароль",
-		"cantActivatePrefix": "Не вдається активувати ваш обліковий запис",
-		"cantSendConfirmationPrefix": "Не вдається надіслати підтвердження електронною поштою",
-		"notAuthorized": "Невірний пароль",
-		"brokenAccount": "Неочікувана проблема з обліковим записом. <a href=\"/restore_password\">Відновити обліковий запис</a>",
-		"wrongParameters": "Деякі параметри у формі невірні",
-		"wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
-		"wrongCodeRestore": "Код підтвердження вже використовується або невірний",
-		"wrongAuthCode": "Код закінчився або неправильний",
-		"forbidden": "У вас немає дозволів для виконання цієї дії",
-		"accountNotActivated": "Цей акаунт ще не активовано. <a href=\"/activate\">Надіслати посилання для активації ще раз</a>",
-		"accountBlocked": "Цей обліковий запис тимчасово заблоковано. Будь ласка, спробуйте ще раз через декілька хвилин.",
-		"notFound": "Не знайдено",
-		"alreadyExists": "Такий акаунт вже існує",
-		"unknownError": "Сталася неочікувана помилка",
-		"accountAlreadyActivated": "Цей обліковий запис вже активовано",
-		"emailNotFound": "Обліковий запис не існує.",
-		"EmailAlreadyExists": "Ця електронна пошта вже зареєстрована",
-		"oldPasswordMistmatch": "Введений пароль невірний.",
-		"passwordMismatch": "Невірний пароль",
-		"cantEditYourself": "Зміна власних дозволів не допускається",
-		"cantEditAdmin": "Цей користувач має права адміністратора",
-		"cantOpenClient": "Додаток %VMS_NAME% не виявлено.",
-		"lostConnection": "Підключення до {{systemName}} втрачено",
-		"thisSystem": "система",
-		"oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
-		"DUPLICATE_MEDIASERVER_FOUND": "Деякі списки серверів існують в обох системах - у вибраному і в поточному.<br>Видаліть з будь-якої системи сервер і спробуйте знову.",
-		"mergedSystemIsOffline": "Система<strong>{{failedSystem}}</strong>офлайн.",
-		"INCOMPATIBLE": "Системи мають різні версії програмного забезпечення. Будь ласка, поновіть їх до<a href=\"/download\">останньої збірки</a>.",
-		"FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
-		"unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>."
-	},
-	"passwordRequirements": {
-		"good": "хороший",
-		"fair": "середній",
-		"fairMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи",
-		"minLength": "занадто короткий",
-		"minLengthMessage": "Пароль повинен містити принаймні 8 символів",
-		"required": "некоректний",
-		"requiredMessage": "Використовуйте тільки латинські букви, цифри і символи клавіатури, уникайте початкових та кінцевих пробілів",
-		"weak": "слабкий",
-		"weakMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи",
-		"strongMessage": "Сильний пароль!",
-		"common": "занадто поширений",
-		"commonMessage": "Цей пароль входить у список найпопулярніших паролів у світі",
-		"missingMessage": "Необхідно вказати пароль"
-	},
-	"registration": {
-		"agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
-	},
-	"system": {
-		"yourSystem": "Ваша Система",
-		"mySystemSearch": "ЯМійМоя",
-		"unavailable": "Система недоступна",
-		"offline": "Система знаходиться поза мережею",
-		"offlineAlertRibbon": "Система відключена. Деякі налаштування можуть бути недоступні.",
-		"openClient": "Відкрити в %VMS_NAME%",
-		"openClientNoSystem": "Відкрити %VMS_NAME%",
-		"confirmMergeAction": "Об'єднати",
-		"mergeSystemTitle": "Об'єднати системи",
-		"confirmRenameTitle": "Назва системи",
-		"confirmRenameAction": "Зберегти",
-		"successRename": "Ім'я системи збережено",
-		"confirmDisconnectTitle": "Відключити систему від %CLOUD_NAME%?",
-		"confirmDisconnectAction": "Відключити",
-		"confirmUnshareFromMe": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
-		"confirmUnshareFromMeTitle": "Відключити систему?",
-		"confirmUnshareFromMeAction": "Відключити",
-		"confirmUnshare": "Цей користувач не зможе отримати доступ до системи. Ти впевнений?",
-		"confirmUnshareTitle": "Видалити користувача?",
-		"confirmUnshareAction": "Видалити",
-		"successDisconnected": "Система успішно відключена від %CLOUD_NAME%",
-		"successDeleted": "Система {{systemName}} успішно видалена з вашого облікового запису",
-		"mergeFailed": "Не вдалося об’єднати систему",
-		"mergeStart": "Злиття систем почалося",
-		"mergeSuccess": "Злиття системи завершено",
-		"permissionsRemoved": "{{email}} був позбавлений повноважень",
-		"unknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
-		"shareOffline": "Не можна поділитись системою, поки вона не підключена в режимі офлайн",
-		"shareUnauthorized": "Ви не маєте прав для створення цього клієнта",
-		"settings": {
-			"sessionLimitDuration": {
-				"hours": "година",
-				"minutes": "хвилина"
-			},
-			"warningMessages": {
-				"videoEncryption": "Шифрування відео трафіку значно збільшить використання центрального процесора."
-			}
-		}
-	},
-	"systemStatuses": {
-		"activated": "активовано",
-		"incompatible": "несумісно",
-		"merging": "злиття",
-		"notActivated": "не активовано",
-		"online": "oнлайн",
-		"offline": "офлайн",
-		"unavailable": "недоступний"
-	},
-	"accessRoles": {
-		"disabled": {
-			"label": "Вимкнений",
-			"description": "Користувач вимкнений і не може ввійти в систему"
-		},
-		"Owner": {
-			"label": "Власник",
-			"description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-		},
-		"Viewer": {
-			"label": "Відео з камер і архів",
-			"description": "Можна переглядати відео в реальному часі та переглядати архів"
-		},
-		"Live Viewer": {
-			"label": "Відео з камер",
-			"description": "Можна переглядати лише відео в реальному часі"
-		},
-		"Advanced Viewer": {
-			"label": "Перегляд і налаштування",
-			"description": "Може дивитися живе відео, архів, управляти PTZ і т. Д"
-		},
-		"Administrator": {
-			"label": "Адміністратор",
-			"description": "Необмежений доступ, включаючи можливість керування спільним доступом"
-		},
-		"Custom": {
-			"label": "Особливі",
-			"description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-		},
-		"cloudAdmin": {
-			"label": "Адміністратор",
-			"description": "Може налаштувати систему та загальний доступ"
-		},
-		"customRole": {
-			"label": "Особлива роль",
-			"description": "Особлива роль, налаштована в системі"
-		},
-		"owner": {
-			"label": "Власник",
-			"description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари"
-		},
-		"viewer": {
-			"label": "Відео з камер і архів",
-			"description": "Можна переглядати відео в реальному часі та переглядати архів"
-		},
-		"liveViewer": {
-			"label": "Відео в реальному часі",
-			"description": "Можна переглядати лише відео в реальному часі"
-		},
-		"advancedViewer": {
-			"label": "Перегляд і налаштування",
-			"description": "Може дивитися відео в реальному часі, архів, змінювати налаштування камер, керувари RTZ і т. д"
-		},
-		"custom": {
-			"label": "Особливі",
-			"description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень"
-		}
-	},
-	"privacyPolicy": {
-		"integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
-		"ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
-	},
-	"common": {
-		"cameraLinks": {
-			"highStream": "Висока якість",
-			"lowStream": "Низька якість",
-			"transcoding": "Перекодування",
-			"unknown": "Невідомо",
-			"copyToClipboard": "копіювати в буфер обміну",
-			"copyDefaultText": "копіювати",
-			"copyActiveText": "скопійовано до буфера обміну"
-		},
-		"systemOffline": "Система знаходиться поза мережею",
-		"systemOfflineMessage": "Ця система не доступна, тому її зараз не можна відкрити.",
-		"systemNoAlerts": "Немає попереджень",
-		"systemNoAlertsMessage": "Ваша система має добре працювати!",
-		"systemServerError": "Внутрішня помилка сервера",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Оновіть вашу систему",
-		"systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
-		"systemHasNoCameras": "НЕМАЄ КАМЕР",
-		"systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
-		"cameraStates": {
-			"offline": "Поза мережею",
-			"error": "Помилка",
-			"errorLoading": "Під час завантаження цього відео сталася помилка.",
-			"unauthorized": "Потрібна авторизація",
-			"noData": "Немає даних",
-			"iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
-			"flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
-			"flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
-			"noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",
-			"noFormat": "Цей веб-переглядач не підтримує відтворення відео з цієї камери.",
-			"ieNoWebm": "Відео не може бути відтворено. Можливо, потрібно <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
-			"ieWin10": "Будь ласка, використовуйте веб-перегляд Microsoft Edge або Google Chrome.",
-			"ubuntuNX": "Цей веб-переглядач не підтримує відео з серверів на базі ARM. Замість цього скористайтеся браузером Chromium."
-		},
-		"searchCamPlaceholder": "Пошук",
-		"resolution": {
-			"auto": "Авто",
-			"high": "Високий",
-			"low": "Низький"
-		},
-		"chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
-		"voiceCommands": {
-			"play": "відтворити",
-			"pause": "пауза",
-			"live": "live | show me live",
-			"view": "перегляд + [назва камери]",
-			"search": "знайти + [текст для панелі пошуку]",
-			"clear search": "очистити вікно пошуку",
-			"expand server": "розширити сервер + [назва сервера]",
-			"collapse server": "сховати сервер + [назва сервера]",
-			"expand all servers": "розгорнути всі сервери",
-			"collapse all servers": "згорнути всі сервери",
-			"stop listening": "припинити прослуховування",
-			"help": "допомога | показати команди"
-		}
-	},
-	"systemAdministration": "Адміністрування системи",
-	"users": "Користувачі",
-	"testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
-	"testedVersionsLabel": "Протестовано {{vmsName}} версій:",
-	"About %CLOUD_NAME%": "Про %CLOUD_NAME%",
-	"Download %VMS_NAME%": "Завантажити %VMS_NAME%",
-	"Integrations": "Інтеграції",
-	"Privacy": "Приватність",
-	"Support": "Підтримка",
-	"Supported Devices": "Пристрої, що підтримуються",
-	"Terms": "Умови",
-	"pleaseSelect": "Будь ласка виберіть...",
-	"WHEN_MERGE_FINISHES": "Після завершення об’єднання всі користувачі та камери із цієї системи стануть доступними в<strong>{{targetSystemName}}</strong>, а ця система буде видалена.",
-	"FAILED_SYSTEM_DESCR": "Це посилання не працює, <br>Система може бути відключена від %CLOUD_NAME%,<br> Доступ до цієї системи може бути скасований <br> або ви можете входити в інший обліковий запис.",
-	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас немає систем, підключених до %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Увійдіть в систему за допомогою %VMS_NAME%",
-	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдіть на вкладку \"Хмара\" у діалоговому вікні \"Системне адміністрування\"",
-	"NO_SYSTEMS_CONNECT_SYSTEM": "Натисніть \"Підключити систему до %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} за гучністю:",
-	"phoneNumberWithLabel": "Тел.: {{number}}"
+    "About %CLOUD_NAME%": "Про %CLOUD_NAME%",
+    "Download %VMS_NAME%": "Завантажити %VMS_NAME%",
+    "Integrations": "Інтеграції",
+    "Privacy": "Приватність",
+    "Support": "Підтримка",
+    "Terms": "Умови",
+    "accessRoles": {
+        "Administrator": {
+            "description": "Необмежений доступ, включаючи можливість керування спільним доступом",
+            "label": "Адміністратор"
+        },
+        "Advanced Viewer": {
+            "description": "Може дивитися живе відео, архів, управляти PTZ і т. Д",
+            "label": "Перегляд і налаштування"
+        },
+        "Custom": {
+            "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень",
+            "label": "Особливі"
+        },
+        "Live Viewer": {
+            "description": "Можна переглядати лише відео в реальному часі",
+            "label": "Відео з камер"
+        },
+        "Owner": {
+            "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари",
+            "label": "Власник"
+        },
+        "Viewer": {
+            "description": "Можна переглядати відео в реальному часі та переглядати архів",
+            "label": "Відео з камер і архів"
+        },
+        "advancedViewer": {
+            "description": "Може дивитися відео в реальному часі, архів, змінювати налаштування камер, керувари RTZ і т. д",
+            "label": "Перегляд і налаштування"
+        },
+        "cloudAdmin": {
+            "description": "Може налаштувати систему та загальний доступ",
+            "label": "Адміністратор"
+        },
+        "custom": {
+            "description": "Використовуйте додаток %VMS_NAME% для налаштування особливих повноважень",
+            "label": "Особливі"
+        },
+        "customRole": {
+            "description": "Особлива роль, налаштована в системі",
+            "label": "Особлива роль"
+        },
+        "disabled": {
+            "description": "Користувач вимкнений і не може ввійти в систему",
+            "label": "Вимкнений"
+        },
+        "liveViewer": {
+            "description": "Можна переглядати лише відео в реальному часі",
+            "label": "Відео в реальному часі"
+        },
+        "owner": {
+            "description": "Необмежений доступ, включаючи управління спільним доступом та підключенням/відключення системи до/від хмари",
+            "label": "Власник"
+        },
+        "viewer": {
+            "description": "Можна переглядати відео в реальному часі та переглядати архів",
+            "label": "Відео з камер і архів"
+        }
+    },
+    "account": {
+        "accountSavedSuccess": "Ваш обліковий запис успішно збережено",
+        "accountSettings": "Параметри Облікового Запису",
+        "activationLinkSent": "Посилання для активації відправлене",
+        "agreementAccepted": "Agreement has been accepted",
+        "changePassword": "Змінити пароль",
+        "newPasswordLabel": "Новий пароль",
+        "saveChanges": "Зберегти"
+    },
+    "activeActions": {
+        "resetPassword": "Скидання пароля",
+        "sendConfirm": "Відправити посилання активації ще раз",
+        "setNewPassword": "Зберегти пароль",
+        "setNewPasswordLabel": "Новий пароль"
+    },
+    "cameraFilters": {
+        "H265": "Камери H.265",
+        "IO": "Модулі вводу-виводу",
+        "TwWayAudio": "2-канальні аудіопристрої",
+        "aptz": "Камери з передовою PTZ",
+        "audio": "Аудіо камери",
+        "encoder": "Енкодери",
+        "fisheye": "Фіш-ай камери",
+        "highRes": "Камери з високою роздільною здатністю",
+        "multiSensor": "Багатоканальні камери",
+        "ptz": "PTZ камери"
+    },
+    "clientProtocol": "%CLIENT_PROTOCOL%:",
+    "common": {
+        "account": {
+            "created": {
+                "title": "Account Created",
+                "message": "Confirmation message with the activation link is sent to {{email}}"
+            },
+            "activated": {
+                "title": "Account successfully activated"
+            }
+        },
+        "cameraLinks": {
+            "copyActiveText": "скопійовано до буфера обміну",
+            "copyDefaultText": "копіювати",
+            "copyToClipboard": "копіювати в буфер обміну",
+            "highStream": "Висока якість",
+            "lowStream": "Низька якість",
+            "transcoding": "Перекодування",
+            "unknown": "Невідомо"
+        },
+        "cameraStates": {
+            "error": "Помилка",
+            "errorLoading": "Під час завантаження цього відео сталася помилка.",
+            "flashOrWebmRequired": "Відео не може бути відтворено. Можливо, потрібно <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановитиAdobe Flash</a> або<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для відтворення відео в Internet Explorer.",
+            "flashRequired": "Будь ласка, <a href='https://get.adobe.com/flashplayer/' target='_blank'>встановіть Adobe Flash</a> для відтворення відео.",
+            "iOSVideoTooLarge": "iOS не підтримує відео з розшиненням більшим за fullHD (2MP: 1920x1080).",
+            "ieNoWebm": "Відео не може бути відтворено. Можливо, потрібно <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>кодек WebM</a> для Internet Explorer.",
+            "ieWin10": "Будь ласка, використовуйте веб-перегляд Microsoft Edge або Google Chrome.",
+            "noArmSupport": "Цей браузер або пристрій не підтримує відтворення відео з серверів на базі ARM.",
+            "noData": "Немає даних",
+            "noFormat": "Цей веб-переглядач не підтримує відтворення відео з цієї камери.",
+            "offline": "Поза мережею",
+            "ubuntuNX": "Цей веб-переглядач не підтримує відео з серверів на базі ARM. Замість цього скористайтеся браузером Chromium.",
+            "unauthorized": "Потрібна авторизація"
+        },
+        "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
+        "resolution": {
+            "auto": "Авто",
+            "high": "Високий",
+            "low": "Низький"
+        },
+        "general": "General",
+        "maintenanceInProgress": "Maintenance is in progress",
+        "searchCamPlaceholder": "Пошук",
+        "systemHasNoCameras": "No Cameras",
+        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemNewVersion": "Оновіть вашу систему",
+        "systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
+        "systemNoAlerts": "Немає попереджень",
+        "systemNoAlertsMessage": "Ваша система має добре працювати!",
+        "systemOffline": "Система знаходиться поза мережею",
+        "systemOfflineMessage": "Ця система не доступна, тому її зараз не можна відкрити.",
+        "systemServerError": "Внутрішня помилка сервера",
+        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
+        "unknown": "Невідомо",
+        "voiceCommands": {
+            "clear search": "очистити вікно пошуку",
+            "collapse all servers": "згорнути всі сервери",
+            "collapse server": "сховати сервер + [назва сервера]",
+            "expand all servers": "розгорнути всі сервери",
+            "expand server": "розширити сервер + [назва сервера]",
+            "help": "допомога | показати команди",
+            "live": "live | show me live",
+            "pause": "пауза",
+            "play": "відтворити",
+            "search": "знайти + [текст для панелі пошуку]",
+            "stop listening": "припинити прослуховування",
+            "view": "перегляд + [назва камери]"
+        },
+        "viewingOutdatedReport": "You are viewing an outdated report."
+    },
+    "dialogs": {
+        "buttons": {
+            "cancel": "Скасувати",
+            "createAccount": "Створити новий обліковий запис",
+            "delete": "Delete",
+            "deleteAccount": "Delete Account",
+            "download": "Завантажити %VMS_NAME%",
+            "logoutAuthorised": "Вийти",
+            "ok": "Добре",
+            "remove": "Видалити",
+            "stayAs": "Залишайтеся зареєстрованими як {email} ",
+            "stayLoggedIn": "Залишайтеся в системі"
+        },
+        "cloudStorage": {
+            "title": "Cloud Storage",
+            "enableStorage": "Enable Cloud Storage",
+            "otherSystem": "Other System...",
+            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
+            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "camera": "camera",
+            "cameras": "cameras",
+            "remove": {
+                "success": "Cloud storage successfully removed from system",
+                "errorPrefix": "Error removing cloud storage"
+            },
+            "activationError": {
+                "title": "Cannot Enable Cloud Storage",
+                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+            },
+            "systemDisconnectError": {
+                "title": "Can't disconnect system from %CLOUD_NAME%",
+                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+            },
+            "moveCloudStorage": {
+                "title": "Move Cloud Storage",
+                "success": "Storage succesfully moved",
+                "errorPrefix": "Cloud storage move error",
+                "status": {
+                    "offline": "Cloud storage cannot be moved to offline systems."
+                }
+            },
+            "noOtherSystemsError": {
+                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+            }
+        },
+        "merge": {
+            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
+            "checking": "Checking...",
+            "commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.",
+            "connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
+            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
+            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
+            "mergeSystemsTitle": "Merge current system with",
+            "mergeFailedTitle": "Не вдалося об’єднати систему",
+            "noServerFound": "No server found",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Необхідно вказати пароль",
+            "passwordWrong": "Невірний пароль",
+            "primaryCannotMerge": "Система {{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}} Системою.",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
+            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "recommendSupport": {
+                "a_recommend": "Ми рекомендуємо проконсультуватися з",
+                "b_support": "підтримка",
+                "c_proceeding": "перед тим, як продовжити."
+            },
+            "secondaryCannotMerge": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
+            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+            "systemVersionOld": "Система {{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
+            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "У об'єднаній системі буде більше ніж <strong>{{maxServers}}</strong> серверів."
+        },
+        "message": {
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "failedToSend": "Не вдалося надіслати повідомлення.",
+            "placeholders": {
+                "feedback": "Укажіть камеру та модель виробника..."
+            },
+            "sent": "Повідомлення відправлено.",
+            "subject": {
+                "integration_feedback": "Зворотній зв'язок для інтеграції {{asset}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер",
+                "sales_inquiry": "Запит на продаж {{asset}}",
+                "technical_inquiry": "Технічний запит на {{asset}}"
+            },
+            "title": {
+                "integration": "Зв’яжіться з {{companyName}}",
+                "ipvd_feedback_device": "Відгук про {{asset}}",
+                "ipvd_feedback_page": "Зворотній зв’язок для сторінки камер"
+            }
+        },
+        "removeSystem": {
+            "action": "Відключити",
+            "message": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
+            "title": "Відключити систему?"
+        },
+        "titles": {
+            "error": "Помилка",
+            "success": "Success",
+            "changeAccount": "Ви вже увійшли як {email}",
+            "deleteUser": "Delete user?",
+            "loggedFromOtherAccount": "Ви ввійдете в інший обліковий запис",
+            "noClientDetected": "Встановіть %VMS_NAME% для роботи з системою",
+            "removeUser": "Видалити користувача?",
+            "serversDetach": "Detach server \"{{ title }}\" from current system?",
+            "serversReset": "Reset server \"{{ title }}\" to defaults?",
+            "serversRestart": "Restart server \"{{ title }}\"?"
+        },
+        "tooltips": {
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+        }
+    },
+    "downloads": {
+        "appTypes": {
+            "bundle": "Клієнт і сервер",
+            "camera_sdk": "SDK джерела відео",
+            "client": "Тільки клієнт",
+            "metadata_sdk": "Метадані SDK",
+            "package": "Package",
+            "server": "Тільки сервер",
+            "servertool": "Інструмент налаштування",
+            "storage_sdk": "SDK для інтеграції сховищ",
+            "video_source_sdk": "SDK джерела відео"
+        },
+        "groups": {
+            "android": {
+                "label": "Android",
+                "shortLabel": "Android"
+            },
+            "arm": {
+                "label": "ARM",
+                "shortLabel": "ARM"
+            },
+            "ios": {
+                "label": "iOS",
+                "shortLabel": "iOS"
+            },
+            "linux": {
+                "label": "Ubuntu Linux",
+                "shortLabel": "Ubuntu"
+            },
+            "mac": {
+                "label": "Mac OS"
+            },
+            "macos": {
+                "label": "Mac OS"
+            },
+            "sdk": {
+                "label": "SDK",
+                "shortLabel": "SDK"
+            },
+            "windows": {
+                "label": "Windows"
+            }
+        },
+        "mobile": {
+            "android": {
+                "link": "%ANDROID_APPLICATION_LINK%"
+            },
+            "ios": {
+                "link": "%IOS_APPLICATION_LINK%"
+            }
+        },
+        "platforms": {
+            "bananapi": "Banana Pi",
+            "bpi": "Nx1",
+            "linux64": "x64",
+            "linux_arm32": "x32",
+            "linux_arm64": "x64",
+            "mac": "X",
+            "rpi": " Raspberry Pi",
+            "universal": "SDK",
+            "win64": "x64"
+        },
+        "releasesTypes": {
+            "beta": "Бета",
+            "betas": "Бета",
+            "patch": "Патч",
+            "patches": "Патчі",
+            "rc": "Реліз-кандидат",
+            "release": "Реліз",
+            "releases": "Релізи"
+        }
+    },
+    "errorCodes": {
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "DUPLICATE_MEDIASERVER_FOUND": "Деякі списки серверів існують в обох системах - у вибраному і в поточному.<br>Видаліть з будь-якої системи сервер і спробуйте знову.",
+        "EmailAlreadyExists": "Ця електронна пошта вже зареєстрована",
+        "FAIL": "Система<strong>{{failedSystem}}</strong>в даний час недоступна.<br>Повторіть спробу через кілька хвилин або зверніться до <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримки</a>.",
+        "INCOMPATIBLE": "Системи мають різні версії програмного забезпечення. Будь ласка, поновіть їх до<a href=\"/download\">останньої збірки</a>.",
+        "accountAlreadyActivated": "Цей обліковий запис вже активовано",
+        "accountBlocked": "Цей обліковий запис тимчасово заблоковано. Будь ласка, спробуйте ще раз через декілька хвилин.",
+        "accountNotActivated": "Цей акаунт ще не активовано. <a href=\"/activate\">Надіслати посилання для активації ще раз</a>",
+        "alreadyExists": "Такий акаунт вже існує",
+        "brokenAccount": "Неочікувана проблема з обліковим записом. <a href=\"/restore_password\">Відновити обліковий запис</a>",
+        "cantActivatePrefix": "Не вдається активувати ваш обліковий запис",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantChangeAccountPrefix": "Не вдається зберегти зміни",
+        "cantChangePasswordPrefix": "Не вдається зберегти пароль",
+        "cantDisconnectSystemPrefix": "Невдається видалити систему",
+        "cantEditAdmin": "Цей користувач має права адміністратора",
+        "cantEditYourself": "Зміна власних дозволів не допускається",
+        "cantGetSystemInfoPrefix": "Інформація про систему недоступна",
+        "cantGetSystemsListPrefix": "Список систем недоступний",
+        "cantGetUsersListPrefix": "Список користувачів недоступний",
+        "cantOpenClient": "Додаток %VMS_NAME% не виявлено.",
+        "cantRegisterPrefix": "Виникла помилка",
+        "cantSendActivationPrefix": "Не вдається надіслати підтвердження електронною поштою",
+        "cantSendConfirmationPrefix": "Не вдається надіслати підтвердження електронною поштою",
+        "cantSharePrefix": "Неможливо об’єднати систему",
+        "cantUnshareWithMeSystemPrefix": "Невдається видалити систему",
+        "emailNotFound": "Обліковий запис не існує.",
+        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "forbidden": "У вас немає дозволів для виконання цієї дії",
+        "lostConnection": "Підключення до {{systemName}} втрачено",
+        "mergedSystemIsOffline": "Система<strong>{{failedSystem}}</strong>офлайн.",
+        "notAuthorized": "Невірний пароль",
+        "notFound": "Не знайдено",
+        "ok": "гаразд",
+        "oldPasswordMistmatch": "Введений пароль невірний.",
+        "oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
+        "passwordMismatch": "Невірний пароль",
+        "thisSystem": "система",
+        "unknownError": "Unexpected error occurred",
+        "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>.",
+        "wrongAuthCode": "Код закінчився або неправильний",
+        "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
+        "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
+        "wrongParameters": "Деякі параметри у формі невірні"
+    },
+    "integration": {
+        "Access Control": "Контроль доступу",
+        "Connector": "З'єднувач",
+        "Data Analytics": "Аналітика даних",
+        "Drone": "Дрон",
+        "Health Monitor": "Моніторинг ресурсів",
+        "Storage": "Сховище",
+        "myIntegrationsLabel": "Мій",
+        "phoneNumberWithLabel": "Тел.: {{number}}",
+        "requirements": "{{name}} Вимоги",
+        "testedVersionLabel": "Протестовано за допомогою {{vmsName}} версії:",
+        "testedVersionsLabel": "Протестовано {{vmsName}} версій:"
+    },
+    "ipvd": {
+        "Advanced PTZ cameras": "PTZ камери",
+        "Cameras supporting H.265": "Камери, що підтримують H.265",
+        "Cameras with 2-way audio": "Камери з 2-смуговим звуком",
+        "Extra high resolution cameras": "Камери з високою роздільною здатністю",
+        "Fisheye Cameras": "Фіш-ай камери",
+        "I / O modules": "Модулі вводу-виводу",
+        "Multisensor Cameras": "Мультиненсорні камери",
+        "PTZ cameras": "PTZ камери",
+        "camera": "Камера",
+        "count": "Підрахунок",
+        "disclaimer": "Цей список обмежується пристроями, знайденими в {{vmsName}} де користувачі дозволили автоматичну звітність характеристик пристрою до {{companyName}}. Жодна особиста інформація не збирається і кожен користувач залишається повністю анонімним.",
+        "dvr": "DVR",
+        "encoder": "Енкодер",
+        "feedback": {
+            "a_Please": "Будь ласка",
+            "b_Link": "надіслати запит",
+            "c_Info": "додаткові питання / зауваження щодо підтримуваних пристроїв."
+        },
+        "hardwareType": "Тип",
+        "isAnalyticsSupported": "Аналітика",
+        "isAptzSupported": "Розширений PTZ",
+        "isAptzSupportedShort": "Розш. PTZ",
+        "isAudioSupported": "Аудіо",
+        "isDualStreamingSupported": "Dual Streaming",
+        "isFisheye": "Риб'яче око",
+        "isH265": "H.265",
+        "isIoSupported": "Ввід/вивід",
+        "isMdSupported": "Motion Detection",
+        "isMultiSensor": "Мультисенсор",
+        "isPtzSupported": "PTZ",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
+        "model": "Модель",
+        "multiSensorCamera": "Багатоканальна камера",
+        "other": "Інші",
+        "primaryCodec": "Кодек",
+        "resolutionArea": "Площа",
+        "sndResolution": "Secondary Stream",
+        "topXByVolume": "Top {{value}} за гучністю:",
+        "vendor": "Виробник"
+    },
+    "menu": {
+        "titles": {
+            "systemAdministration": "Адміністрування системи",
+            "users": "Користувачі"
+        }
+    },
+    "pageTitles": {
+        "about": "Про",
+        "account": "Параметри облікового запису",
+        "activate": "Активувати обліковий запис",
+        "activateCode": "Активувати обліковий запис",
+        "activateSuccess": "Обліковий запис активований",
+        "changePassword": "Змінити пароль",
+        "debug": "Відладка",
+        "default": "%CLOUD_NAME%",
+        "download": "Завантажити %VMS_NAME%",
+        "downloadPlatform": "Завантажити %VMS_NAME% для ",
+        "failedToAccessSystem": "Failed to access system",
+        "integrations": "Інтеграції",
+        "login": "Вхід",
+        "pageNotFound": "Сторінку не знайдено",
+        "register": "Створити обліковий запис",
+        "registerSuccess": "Вітаємо в",
+        "restorePassword": "Відновити пароль",
+        "restorePasswordSuccess": "Пароль збережений",
+        "supportedDevices": "Пристрої, що підтримуються",
+        "system": "Система",
+        "systemName": "{{systemName}}",
+        "systemShare": "Спільна система",
+        "systems": "Системи",
+        "template": "{{title}} - %CLOUD_NAME%",
+        "view": "Подивитися камери"
+    },
+    "passwordRequirements": {
+        "common": "занадто поширений",
+        "commonMessage": "Цей пароль входить у список найпопулярніших паролів у світі",
+        "fair": "середній",
+        "fairMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи",
+        "good": "хороший",
+        "minLength": "занадто короткий",
+        "minLengthMessage": "Пароль повинен містити принаймні 8 символів",
+        "missingMessage": "Необхідно вказати пароль",
+        "required": "некоректний",
+        "requiredMessage": "Використовуйте тільки латинські букви, цифри і символи клавіатури, уникайте початкових та кінцевих пробілів",
+        "strongMessage": "Сильний пароль!",
+        "weak": "слабкий",
+        "weakMessage": "Для надійності паролю використовуйте цифри, букви верхнього та нижнього регістру та спеціальні символи"
+    },
+    "placeholderTexts": {
+        "merge": {
+            "title": "This system is being merged to {{systemName}}.",
+            "message": {
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+            }
+        }
+    },
+    "pleaseSelect": "Будь ласка виберіть...",
+    "privacyPolicy": {
+        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+    },
+    "registration": {
+        "agreement": "Я згоден з <a href=\"/content/eula\" target=\"_blank\">Правилами і\nумовами,</a> і <a href=\"%PRIVACY_LINK%\" target=\"_blank\">політикою конфіденційності</a>"
+    },
+    "ribbon": {
+        "beingMerged": {
+            "to": "is being merged to this system.",
+            "mayTake": "Depending on the size of the database, it may take up to several hours."
+        },
+        "finishingMerge": "Finishing systems merge",
+        "integration": {
+            "backToEditText": "Повернутися до інтерфейсів редагування",
+            "previewRibbon": "Ця сторінка є попереднім переглядом останніх змін і не відповідає загальнодоступній версії."
+        },
+        "systemOffline": "Система відключена. Деякі налаштування можуть бути недоступні.",
+        "systemsMerging": "This system is currently involved in a merge operation."
+    },
+    "search": {
+        "Any": "Будь-які",
+        "Search": "Пошук",
+        "analytics": "Аналітика",
+        "analyticsSelected": "аналітика подій",
+        "filter applied": "застосований фільтр",
+        "filters applied": "застосовані фільтри",
+        "hardwareType": "Тип",
+        "hardwareTypes": "Типи",
+        "minResolution": "Мінімальна роздільна здатність",
+        "search_ipvd": "Пошук за моделлю або виробником",
+        "selected": "вибрано",
+        "vendor": "Виробник",
+        "vendors": "Виробники"
+    },
+    "servers": {
+        "beginDetach": "Server is now detaching",
+        "beginReset": "Server is now reseting.",
+        "beginRestart": "Server is now restarting.",
+        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
+        "detachSystemSuccess": "Server was successfully detached from the system.",
+        "getModuleFailed": "There was a problem getting server information.",
+        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
+        "removeMediaserverFailed": "Failed to remove the server from system.",
+        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
+        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
+        "restartFailed": "There was a problem restarting the server.",
+        "restartSuccessful": "Server has successfully restarted.",
+        "servers": "Servers",
+        "status": {
+            "checking": "checking...",
+            "offline": "офлайн",
+            "reseting": "reseting...",
+            "restarting": "restarting..."
+        },
+        "successRename": "Server name renamed."
+    },
+    "system": {
+        "MERGE_FINISHES": "Після завершення об’єднання всі користувачі та камери із цієї системи стануть доступними в<strong>{{targetSystemName}}</strong>, а ця система буде видалена.",
+        "mergeUnknownName": "Невідоме ім’я для системи (викликане злиттям хмари)",
+        "mySystemSearch": "ЯМійМоя",
+        "settings": {
+            "notAbleToLoadSecurity": "Not able to load security settings.",
+            "notAbleToLoadSystem": "Not able to load system settings.",
+            "sessionLimitDuration": {
+                "hours": "година",
+                "minutes": "хвилина"
+            },
+            "warningMessages": {
+                "videoEncryption": "Шифрування відео трафіку значно збільшить використання центрального процесора."
+            }
+        },
+        "status": {
+            "offline": "Система знаходиться поза мережею",
+            "unavailable": "Система недоступна"
+        },
+        "users": {
+            "cloudDelete": "Remove User",
+            "localDelete": "Delete User"
+        },
+        "yourSystem": "Ваша Система",
+        "loggers": {
+            "none": {
+                "text": "None",
+                "help": "(log disabled)"
+            },
+            "error": {
+                "text": "Помилка",
+                "help": "(log errors only)"
+            },
+            "warning": {
+                "text": "Warning",
+                "help": "(log warnings and errors)"
+            },
+            "info": {
+                "text": "Info",
+                "help": "(log warnings, errors and all messages)"
+            },
+            "debug": {
+                "text": "Відладка",
+                "help": "(log every System message and debug information)"
+            },
+            "verbose": {
+                "text": "Verbose",
+                "help": "(log all information available)"
+            }
+        }
+    },
+    "systemStatuses": {
+        "activated": "активовано",
+        "incompatible": "несумісно",
+        "merging": "злиття",
+        "notActivated": "не активовано",
+        "offline": "офлайн",
+        "online": "oнлайн",
+        "unavailable": "недоступний"
+    },
+    "toastMessage": {
+        "system": {
+            "deleted": {
+                "success": "Система {{systemName}} успішно видалена з вашого облікового запису"
+            },
+            "disconnected": {
+                "success": "Система успішно відключена від %CLOUD_NAME%"
+            },
+            "merge": {
+                "failed": "Не вдалося об’єднати систему",
+                "success": "Злиття системи завершено"
+            },
+            "rename": {
+                "success": "Ім'я системи збережено"
+            }
+        }
+    },
+    "settingsConfig": {
+        "additionalLocalFsTypes": "Additional local FS types",
+        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "crossdomainEnabled": "Cross domain",
+        "defaultExportVideoCodec": "Default export video codec",
+        "defaultVideoCodec": "Default video codec",
+        "downloaderPeers": "Downloader peers",
+        "lastMergeMasterId": "Last merge masterId",
+        "lastMergeSlaveId": "Last merge slaveId",
+        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
+        "licenseServer": "License server",
+        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
+        "maxRtpRetryCount": "Max RTP retry count",
+        "metadataStorageChangePolicy": "Meta data storage change policy",
+        "pushNotificationsLanguage": "Push notification language",
+        "resourceFileUri": "Resource file URI",
+        "sessionLimitMinutes": "Session limit (minutes)",
+        "specificFeatures": "Specific features",
+        "systemName": "Назва системи",
+        "webSocketEnabled": "Web sockets",
+        "arecontRtspEnabled": "Arecont RTSP Enabled",
+        "auditTrailEnabled": "Audit trail enabled",
+        "auditTrailPeriodDays": "Audit trail period days",
+        "autoDiscoveryEnabled": "Enable device auto discovery",
+        "autoUpdateThumbnails": "Auto-update thumbnails",
+        "backupNewCamerasByDefault": "Backup new cameras by default",
+        "backupQualities": "Backup qualities",
+        "cameraSettingsOptimization": "Allow device setting optimization",
+        "clientStatisticsSettingsUrl": "Client statistics relative url",
+        "cloudAccountName": "Cloud owner account",
+        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
+        "cloudHost": "Cloud host",
+        "cloudSystemID": "Cloud System id",
+        "disabledVendors": "Disabled vendors",
+        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
+        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
+        "emailFrom": "Email from",
+        "emailSignature": "Email signature",
+        "emailSupportEmail": "Support Email",
+        "enableEdgeRecording": "Enable edge recording",
+        "eventLogPeriodDays": "Event log period (days)",
+        "ldapAdminDn": "LDAP admin DN",
+        "ldapSearchBase": "LDAP search base",
+        "ldapSearchFilter": "LDAP search filter",
+        "ldapUri": "LDAP URI",
+        "localSystemId": "Local System ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
+        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
+        "maxRecordQueueSizeElements": "Max record queue size (elements)",
+        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
+        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
+        "maxSceneItems": "Max scene items (0 means default)",
+        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
+        "rtpTimeoutMs": "RTP timeout (milliseconds)",
+        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
+        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
+        "smtpConnectionType": "SMTP connection type",
+        "smtpHost": "SMTP host",
+        "smtpPort": "SMTP port",
+        "smtpSimple": "SMTP simple",
+        "smtpTimeout": "SMTP timeout",
+        "smtpUser": "SMTP user",
+        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
+        "statisticsReportLastNumber": "Statistics report - last number",
+        "statisticsReportLastTime": "Statistics report - last time",
+        "statisticsReportLastVersion": "Statistics report - last version",
+        "statisticsReportServerApi": "Statistics server api",
+        "statisticsReportTimeCycle": "Statistics report interval",
+        "statisticsReportUpdateDelay": "Statistics report - update delay",
+        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "SystemName": "Назва системи",
+        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
+        "timeSynchronizationEnabled": "Time synchronization enabled",
+        "primaryTimeServer": "Primary time synchronization server",
+        "osTimeChangeCheckPeriodMs": "OS time change check period",
+        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "updateNotificationsEnabled": "Update notifications enabled",
+        "upnpPortMappingEnabled": "UPNP port mapping enabled",
+        "useTextEmailFormat": "Send plain-text emails",
+        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
+        "trafficEncryptionForced": "Force traffic encryption",
+        "videoTrafficEncryptionForced": "Force video traffic encryption",
+        "updateStatus": "Update status",
+        "watermarkSettings": "Watermark settings",
+        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
+        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+    }
 }

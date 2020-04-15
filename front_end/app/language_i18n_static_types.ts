@@ -247,6 +247,7 @@ export interface DialogsMerge {
     recommendSupport:           RecommendSupport;
     secondaryCannotMerge:       string;
     secondarySystemUnavailable: string;
+    serverAtUrl:                string;
     serverNotAvailable:         string;
     serverNotYours:             string;
     serverVersionOld:           string;
@@ -272,6 +273,8 @@ export interface DialogsMessage {
     storageSettingsNotSaved: string;
     settingsSaved:           string;
     settingsNotSaved:        string;
+    logLevelsSaved:          string;
+    logLevelsNotSaved:       string;
     failedToSend:            string;
     placeholders:            Placeholders;
     sent:                    string;
@@ -472,6 +475,7 @@ export interface Ipvd {
     isAptzSupported:                 string;
     isAptzSupportedShort:            string;
     isAudioSupported:                string;
+    isDualStreamingSupported:        string;
     isFisheye:                       string;
     isH265:                          string;
     isIoSupported:                   string;
@@ -486,6 +490,7 @@ export interface Ipvd {
     other:                           string;
     primaryCodec:                    string;
     resolutionArea:                  string;
+    sndResolution:                   string;
     topXByVolume:                    string;
     vendor:                          string;
 }
@@ -578,6 +583,7 @@ export interface Ribbon {
     finishingMerge: string;
     integration:    RibbonIntegration;
     systemOffline:  string;
+    systemsMerging: string;
 }
 
 export interface BeingMerged {
@@ -709,7 +715,6 @@ export interface Deleted {
 
 export interface SystemMerge {
     failed:  string;
-    start:   string;
     success: string;
 }
 
@@ -1075,6 +1080,7 @@ const typeMap: any = {
         { json: "recommendSupport", js: "recommendSupport", typ: r("RecommendSupport") },
         { json: "secondaryCannotMerge", js: "secondaryCannotMerge", typ: "" },
         { json: "secondarySystemUnavailable", js: "secondarySystemUnavailable", typ: "" },
+        { json: "serverAtUrl", js: "serverAtUrl", typ: "" },
         { json: "serverNotAvailable", js: "serverNotAvailable", typ: "" },
         { json: "serverNotYours", js: "serverNotYours", typ: "" },
         { json: "serverVersionOld", js: "serverVersionOld", typ: "" },
@@ -1098,6 +1104,8 @@ const typeMap: any = {
         { json: "storageSettingsNotSaved", js: "storageSettingsNotSaved", typ: "" },
         { json: "settingsSaved", js: "settingsSaved", typ: "" },
         { json: "settingsNotSaved", js: "settingsNotSaved", typ: "" },
+        { json: "logLevelsSaved", js: "logLevelsSaved", typ: "" },
+        { json: "logLevelsNotSaved", js: "logLevelsNotSaved", typ: "" },
         { json: "failedToSend", js: "failedToSend", typ: "" },
         { json: "placeholders", js: "placeholders", typ: r("Placeholders") },
         { json: "sent", js: "sent", typ: "" },
@@ -1280,6 +1288,7 @@ const typeMap: any = {
         { json: "isAptzSupported", js: "isAptzSupported", typ: "" },
         { json: "isAptzSupportedShort", js: "isAptzSupportedShort", typ: "" },
         { json: "isAudioSupported", js: "isAudioSupported", typ: "" },
+        { json: "isDualStreamingSupported", js: "isDualStreamingSupported", typ: "" },
         { json: "isFisheye", js: "isFisheye", typ: "" },
         { json: "isH265", js: "isH265", typ: "" },
         { json: "isIoSupported", js: "isIoSupported", typ: "" },
@@ -1294,6 +1303,7 @@ const typeMap: any = {
         { json: "other", js: "other", typ: "" },
         { json: "primaryCodec", js: "primaryCodec", typ: "" },
         { json: "resolutionArea", js: "resolutionArea", typ: "" },
+        { json: "sndResolution", js: "sndResolution", typ: "" },
         { json: "topXByVolume", js: "topXByVolume", typ: "" },
         { json: "vendor", js: "vendor", typ: "" },
     ], false),
@@ -1375,6 +1385,7 @@ const typeMap: any = {
         { json: "finishingMerge", js: "finishingMerge", typ: "" },
         { json: "integration", js: "integration", typ: r("RibbonIntegration") },
         { json: "systemOffline", js: "systemOffline", typ: "" },
+        { json: "systemsMerging", js: "systemsMerging", typ: "" },
     ], false),
     "BeingMerged": o([
         { json: "to", js: "to", typ: "" },
@@ -1488,7 +1499,6 @@ const typeMap: any = {
     ], false),
     "SystemMerge": o([
         { json: "failed", js: "failed", typ: "" },
-        { json: "start", js: "start", typ: "" },
         { json: "success", js: "success", typ: "" },
     ], false),
 };

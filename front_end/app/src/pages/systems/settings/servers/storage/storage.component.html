@@ -3,7 +3,8 @@
     <nx-section nonPadded>
         <div class="storage-container">
             <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
-                <table>
+                <nx-pre-loader *ngIf="!showStorage"></nx-pre-loader>
+                <table *ngIf="showStorage">
                     <thead>
                         <tr>
                             <th>Address</th>
