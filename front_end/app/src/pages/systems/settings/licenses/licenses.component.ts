@@ -1,6 +1,6 @@
 import {
     Component, LOCALE_ID, Inject,
-    OnInit, OnDestroy
+    OnInit
 }                                        from '@angular/core';
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
@@ -14,15 +14,13 @@ import { NxCloudApiService }             from '../../../../services/nx-cloud-api
 import { NxProcessService }              from '../../../../services/process.service';
 import { NxMenuService }                 from '../../../../components/menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
-import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
 @Component({
     selector    : 'nx-system-licenses-storage',
     templateUrl : 'licenses.component.html',
     styleUrls   : ['licenses.component.scss']
 })
-export class NxSystemLicensesComponent implements OnInit, OnDestroy {
+export class NxSystemLicensesComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -109,9 +107,6 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
         this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.licenses.id);
-    }
-
-    ngOnDestroy(): void {
     }
 
     private getLicenses() {

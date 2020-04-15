@@ -55,29 +55,30 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     }
 
     private orderedDetails(info): void {
-        this.orderedLicense.push({
-            name  : this.LANG.license.info.type,
-            value : info.type
-        }, {
-            name  : this.LANG.license.info.channels,
-            value : info.count
-        }, {
-            name  : this.LANG.license.info.server,
-            value : info.serverName
-        }, {
-            name  : this.LANG.license.info.hwid,
-            value : info.hwid
-        }, {
-            name  : this.LANG.license.info.status,
-            value : info.status,
-            error : info.expired
-        }, {
-            name  : this.LANG.license.info.expires,
-            value : this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a'),
-            error : info.expired
-        }, {
-            name  : this.LANG.license.info.deactivations,
-            value : info.deactivations
-        });
+        this.orderedLicense[info.serial] = [
+            {
+                name  : this.LANG.license.info.type,
+                value : info.type
+            }, {
+                name  : this.LANG.license.info.channels,
+                value : info.count
+            }, {
+                name  : this.LANG.license.info.server,
+                value : info.serverName
+            }, {
+                name  : this.LANG.license.info.hwid,
+                value : info.hwid
+            }, {
+                name  : this.LANG.license.info.status,
+                value : info.status,
+                error : info.expired
+            }, {
+                name  : this.LANG.license.info.expires,
+                value : this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a'),
+                error : info.expired
+            }, {
+                name  : this.LANG.license.info.deactivations,
+                value : info.deactivations
+            }];
     }
 }
