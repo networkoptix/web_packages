@@ -445,6 +445,10 @@ class ServerManager {
             });
     };
 
+    activateLicense(serverId, key) {
+        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+    }
+
     renameServer(serverId, serverName) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
         return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
@@ -912,8 +916,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.checkLocalAdminPassword(password);
     }
 
-    activateLicense(url, key) {
-        return this.mediaserver.activateLicense(url, key);
+    activateLicense(serverId, key) {
+        return this.serverManager.activateLicense(serverId, key);
     }
 
     logLevel(serverId) {

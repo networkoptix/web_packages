@@ -55,8 +55,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 });
             } else {
                 return this.system
-                    .activateLicense(this.selectedServer.url, this.formatLicenseKey(this.license))
-                    .toPromise()
+                    .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))
                     .then(response => {
                         if (response.reply) {
                             this.license = '';
@@ -69,6 +68,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         }
 
                         switch (response.error) {
+                            case '1':
+                                this.dialogsService
+                                    .notify(response.errorString, 'danger'); // missing param?
+                                break;
+
                             case '2':
                             // Invalid license serial number provided. Serial number MUST be in format AAAA-BBBB-CCCC-DDDD
 
@@ -94,9 +98,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             default:
                         }
                     }, (fail) => {
-                        if (fail.error.type === 'error') {
+                        if (fail.error && fail.error.type === 'error') {
                             this.dialogsService
                                 .notify(this.LANG.errorCodes.licenseFail, 'danger');
+                        } else {
+                            console.error(fail);
                         }
                     });
             }
@@ -128,8 +134,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
                         name  : server.name,
-                        value : server.id,
-                        url   : server.url
+                        value : server.id
                     };
 
                     if (server.status !== 'Online') {

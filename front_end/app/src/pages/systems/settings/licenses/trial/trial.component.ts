@@ -49,11 +49,9 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
             default:
         }
 
-        this.selectedServer.url = 'https://localhost:7001';
-
         this.activateTrialKey = this.processService.createProcess(() => {
             return this.system
-                .activateLicense(this.selectedServer.url, this.license)
+                .activateLicense(this.selectedServer.id, this.license)
                 .toPromise()
                 .then(response => {
                     if (response.reply) {

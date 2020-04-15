@@ -1,7 +1,7 @@
 import {
     Component, LOCALE_ID, Inject,
-    OnInit, OnDestroy, ViewEncapsulation
-} from '@angular/core';
+    OnInit, OnDestroy
+}                                        from '@angular/core';
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
 import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
@@ -11,24 +11,10 @@ import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_stat
 import { NxSettingsService }             from '../settings.service';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxCloudApiService }             from '../../../../services/nx-cloud-api';
-import { NxProcessService, Process }     from '../../../../services/process.service';
+import { NxProcessService }              from '../../../../services/process.service';
 import { NxMenuService }                 from '../../../../components/menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
-import { DatePipe }                      from '@angular/common';
-
-interface LicenseInfo {
-    type: string,
-    count: string,
-    inuse: string, // still not implemented VMS-18155 ... TODO: once done adjust var name
-    required: number, // VMS-18155 ... once done it should display warning (if negative)
-    serverName: string,
-    hwid: string,
-    expired: boolean,
-    status: string,
-    expiration: string,
-    deactivations: string
-}
 
 @AutoUnsubscribe()
 @Component({
@@ -75,6 +61,30 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
                 this.licensesSubscription = this.system.licensesModifiedSubject
                     .subscribe(() => {
                         this.getLicenses();
+                    });
+
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system
+                                    .initSystemMediaServers()
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+                        }
                     });
             });
     }
@@ -145,8 +155,6 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
                         if (item.info.inuse !== '') {
                             item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
                         }
-
-
                     });
 
                     if (this.serverSubscription) {
@@ -191,7 +199,7 @@ export class NxSystemLicensesComponent implements OnInit, OnDestroy {
                     this.licenses = [];
                 }
             })
-            .catch((error) => {
+            .catch(() => {
                 this.licenses = [];
             });
     }

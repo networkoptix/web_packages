@@ -124,14 +124,18 @@ export class NxSystemAPI {
         );
     }
 
-    private post(url: string, data?: any) {
+    private post(url: string, data?: any, paramsToAdd?: any) {
         const headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
-        const params: any = {};
+        let params = new HttpParams();
         data = data || {};
 
+        Object.keys(paramsToAdd).forEach((key) => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
         if (this.authPost) {
-            params.auth = this.authPost;
+            params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
             headers.set('X-Runtime-Guid', this.serverId);
@@ -297,27 +301,20 @@ export class NxSystemAPI {
         return this.get('/ec2/getLicenses');
     }
 
-    activateLicense(url, key) {
-        if (this.authGet) {
-            let params = new HttpParams();
-            params = params.append('auth', this.authPost);
-
-            const fullUrl = `${url}/api/activateLicense`;
-            return this.http.post(fullUrl, { licenseKey: key }, { params });
-        }
-
-        return of(false);
+    activateLicense(key) {
+        const params: any = { key }; // 3.2 systems expect key as param
+        return this.post('/api/activateLicense', { licenseKey: key }, params);
     }
 
-    // logLevel(logId?, name?, value?) {
-    //     const params: any = { id: logId, name, value };
-    //     Object.keys(params).forEach((key) => {
-    //         if (params[key] === undefined) {
-    //             delete params[key];
-    //         }
-    //     });
-    //     return this.get('/api/logLevel', params);
-    // }
+    logLevel(logId?, name?, value?) {
+        const params: any = { id: logId, name, value };
+        Object.keys(params).forEach((key) => {
+            if (params[key] === undefined) {
+                delete params[key];
+            }
+        });
+        return this.get('/api/logLevel', params);
+    }
 
     /* End of Server settings */
 
