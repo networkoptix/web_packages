@@ -218,14 +218,14 @@
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Fusion système a échoué",
-            "noServerFound": "No server found.",
+            "noServerFound": "No server found",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner.",
-            "passwordRequired": "Password is required.",
-            "passwordWrong": "Wrong password.",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "passwordRequired": "Mot de passe requis",
+            "passwordWrong": "Mot de passe incorrect",
             "primaryCannotMerge": "Système {{targetSystem}} a une version logicielle plus récente incompatible avec le système actuel. Mettre à jour le système actuel a la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec le {{targetSystem}} système.",
-            "primarySystemOffline": "Le système {{primarySystem}} est hors ligne et ne peut pas être fusionné avec le système {{targetSystem}}.",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Nous recommandons de consulter avec",
@@ -238,12 +238,12 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "Système {{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address.",
-            "urlNotValid": "Enter valid URL.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
@@ -543,7 +543,8 @@
             "backToEditText": "Retour aux interfaces d'édition",
             "previewRibbon": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique."
         },
-        "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles."
+        "systemOffline": "Système hors ligne. Certains paramètres ne sont peut-être pas disponibles.",
+        "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
         "Any": "Tout",
