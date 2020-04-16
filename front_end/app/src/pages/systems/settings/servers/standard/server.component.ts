@@ -27,6 +27,7 @@ import { NxSettingsService }           from '../../settings.service';
 export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer: any;
+    @Input() isOffline: boolean;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -161,8 +162,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     checkIfOnline(serverId) {
         return this.system.getServers()
             .then(servers => {
-                this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
-                    ? '' : this.CONFIG.servers.status.offline);
+                if (servers) {
+                    this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                        ? '' : this.CONFIG.servers.status.offline);
+                }
             })
             .catch(err => {
                 console.error(err);
@@ -175,11 +178,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.setStatus(this.CONFIG.servers.status.checking);
         this.system.getServers()
             .then(servers => {
-                const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
-                setTimeout(() => {
-                    this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
-                    this.checking = false;
-                }, 3400);
+                if (servers) {
+                    const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
+                    setTimeout(() => {
+                        this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                        this.checking = false;
+                    }, 3400);
+                }
             })
             .catch(err => {
                 console.error(err);

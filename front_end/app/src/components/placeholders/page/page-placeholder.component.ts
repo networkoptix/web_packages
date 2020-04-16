@@ -136,6 +136,10 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                         <p class="mt-2">${this.LANG.placeholderTexts.merge.message.whenFinished.replace('{{systemName}}', this.data.systemName)}`;
                     this.iconName = 'Merge';
                     break;
+                case 'SERVER_OFFLINE':
+                    this.placeholderTitle = this.LANG.placeholderTexts.server.title;
+                    this.message = this.LANG.placeholderTexts.server.message;
+                    this.iconName = 'Offline';
             }
         }
     }

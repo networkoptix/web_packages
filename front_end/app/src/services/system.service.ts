@@ -911,7 +911,8 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getModuleInfo()
             .pipe(tap((moduleInfo: any) => {
                 this.moduleInfo = moduleInfo.reply;
-            })).toPromise();
+            })).toPromise()
+            .catch(err => console.error(err));
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {
