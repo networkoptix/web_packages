@@ -196,6 +196,7 @@
     "To": "אל",
     "Too many attempts. Try again in a minute.": "יותר מדי ניסיונות. נסה שוב בעוד דקה.",
     "Tracks and logs all user actions.": "עוקב ומבצע את כל פעולות המשתמש.",
+    "Try Again": "Try Again",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>",
     "Update your system to the latest build to enable Cloud Storage.": "Update your system to the latest build to enable Cloud Storage.",
     "Updated": "מעודכן",

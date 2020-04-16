@@ -196,6 +196,7 @@
     "To": "發送到",
     "Too many attempts. Try again in a minute.": "嘗試次數過多，請稍後再試。",
     "Tracks and logs all user actions.": "追蹤和記錄所有使用者操作",
+    "Try Again": "Try Again",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>",
     "Update your system to the latest build to enable Cloud Storage.": "Update your system to the latest build to enable Cloud Storage.",
     "Updated": "更新",

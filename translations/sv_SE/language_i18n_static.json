@@ -67,7 +67,7 @@
         "accountSavedSuccess": "Ditt konto har sparats",
         "accountSettings": "Kontoinställningar",
         "activationLinkSent": "Aktiveringslänk skickad",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Avtal har accepterats",
         "changePassword": "Ändra lösenord",
         "newPasswordLabel": "Nytt lösenord",
         "saveChanges": "Spara"
@@ -94,11 +94,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Konto skapat",
+                "message": "Bekräftelsemeddelande med aktiveringslänken skickas till {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Kontot har aktiverats"
             }
         },
         "cameraLinks": {
@@ -131,11 +131,11 @@
             "high": "Hög",
             "low": "Låg"
         },
-        "general": "General",
-        "maintenanceInProgress": "Maintenance is in progress",
+        "general": "Allmänt",
+        "maintenanceInProgress": "Underhåll pågår",
         "searchCamPlaceholder": "Sök",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Inga kameror",
+        "systemHasNoCamerasMessage": "Det finns inga tillgängliga kameror för dig i systemet. <br><br>Anslut några kameror till serverns lokala nätverk för att göra dem upptäckbara eller be systemadministratören att ändra din åtkomstnivå.",
         "systemNewVersion": "Uppdatera ditt system",
         "systemNewVersionMessage": "Din nuvarande version är inte kompatibel med den här funktionen. Uppdatera dina servrar till den senaste versionen för att använda den här funktionen.",
         "systemNoAlerts": "Inga varningar",
@@ -160,14 +160,14 @@
             "stop listening": "sluta lyssna",
             "view": "visa + [kamera namn]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Du tittar på en föråldrad rapport."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Avbryt",
             "createAccount": "Skapa nytt konto",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Radera",
+            "deleteAccount": "Radera konto",
             "download": "Ladda ner %VMS_NAME%",
             "logoutAuthorised": "Logga ut",
             "ok": "OK",
@@ -176,84 +176,86 @@
             "stayLoggedIn": "Kom ihåg mig"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Molnlagring",
+            "enableStorage": "Aktivera molnlagring",
+            "otherSystem": "Andra system...",
+            "initial": "Vi erbjuder {{compCapacity}} gratis molnlagring per system för att komma igång.",
+            "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbord {{vmsName}} klienten.",
+            "camera": "kamera",
+            "cameras": "kameror",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Molnlagring har tagits bort från systemet",
+                "errorPrefix": "Fel vid borttagning av molnlagring"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Det går inte att aktivera molnlagring",
+                "message": "Du har redan lagt till <volume> molnlagring till dina system och kan inte lägga till mer. <br/><br/>Du kan ta bort lagring från ett annat system istället eller flytta till det här. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Det går inte att koppla bort systemet från %CLOUD_NAME%",
+                "message": "Detta system har molnlagring med vissa arkiv på det. <br/><br/>Molnlagring måste raderas manuellt innan systemet kopplas från %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Cloud storage move error",
+                "title": "Flytta molnlagring",
+                "success": "Lagringen har flyttats",
+                "errorPrefix": "Flyttningsfel i molnet",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "Molnlagring kan inte flyttas till offlinesystem."
                 }
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Du kan bara flytta molnlagring mellan system du är ägare till. <br/><br/>Anslut ett system till %CLOUD_NAME% med ditt molnkonto för att kunna flytta molnlagring till det."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{{secondarySystem}}</strong>",
+            "checking": "Kontrollerar...",
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
-            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
-            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "Du kan bara slå samman system med samma ägare och dessa systemägare är olika.",
+            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
+            "mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.",
+            "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "noServerFound": "Inga servrar hittades",
+            "newSystemDisplayName": "Nytt system",
+            "otherSystem": "Annat system...",
+            "ownerCanMergeText": "Du kan bara slå samman system där du är ägare",
             "passwordRequired": "Lösenord krävs",
             "passwordWrong": "Fel lösenord",
             "primaryCannotMerge": "System {{targetSystem}} har en nyare mjukvaruversion som inte är kompatibel med det aktuella systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste bygg</a> att slå samman det med {{targetSystem}} systemet.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}",
+            "primarySystemUnavailable": "System {{primarySystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "Vi rekommenderar att vi konsulterar med",
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
             "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+            "secondarySystemUnavailable": "System {{targetSystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
+            "serverVersionOld": "Denna server har en äldre programversion som är inkompatibel med det nuvarande systemet. Uppdatera den till den senaste versionen för att slå ihop den med den nuvarande.",
+            "serverVersionNew": "Denna server har nyare programversion än det nuvarande systemet. Uppdatera båda systemen till samma bygga för att slå samman dem.",
+            "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
             "systemVersionOld": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
-            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "systemVersionNew": "System {{targetSystem}} har en nyare programversion som inte är kompatibel med det nuvarande systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman det med {{targetSystem}} systemet.",
+            "urlEmpty": "Ange serveradress",
+            "urlNotValid": "Ange en giltig URL",
+            "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "Det kommer att finnas mer än <strong>{{maxServers}}</strong> servrar i det sammanslagna systemet."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "storageSettingsSaved": "Lagringsinställningar sparade.",
+            "storageSettingsNotSaved": "Det gick inte att spara lagringsinställningar.",
+            "settingsSaved": "Inställningar sparade.",
+            "settingsNotSaved": "Kunde inte spara inställningar.",
+            "logLevelsSaved": "Loggnivå sparad.",
+            "logLevelsNotSaved": "Kunde inte spara loggnivå(er).",
             "failedToSend": "Meddelandet gick inte att skicka.",
             "placeholders": {
                 "feedback": "Se till att du inkluderar din kameramodell och tillverkare..."
@@ -279,18 +281,18 @@
         },
         "titles": {
             "error": "Fel",
-            "success": "Success",
+            "success": "Klart",
             "changeAccount": "Du är redan inloggad som {email}",
-            "deleteUser": "Delete user?",
+            "deleteUser": "Radera användaren?",
             "loggedFromOtherAccount": "Du kommer att vara inloggad med ett annat konto",
             "noClientDetected": "Installera %VMS_NAME% om du vill visa ditt System",
             "removeUser": "Ta bort användare?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "Ta bort servern \"{{ title }}\" från nuvarande system?",
+            "serversReset": "Återställa servern \"{{ title }}\" till standardvärden?",
+            "serversRestart": "Starta om servern \"{{ title }}\"?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Koppla från alla system som du är ägare till från %CLOUD_NAME% -portalen för att ta bort ditt konto."
         }
     },
     "downloads": {
@@ -366,7 +368,7 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
         "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -377,7 +379,7 @@
         "alreadyExists": "Det här kontot existerar redan",
         "brokenAccount": "Oväntat problem med kontot. <a href=\"/restore_password\">Återställ konto</a>",
         "cantActivatePrefix": "Kan inte aktivera ditt konto",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "Det är inte tillåtet att lägga till din egen e-postadress",
         "cantChangeAccountPrefix": "Kan inte spara ändringar",
         "cantChangePasswordPrefix": "Kan inte spara lösenord",
         "cantDisconnectSystemPrefix": "Kan inte ta bort System",
@@ -393,7 +395,7 @@
         "cantSharePrefix": "Kan inte dela System",
         "cantUnshareWithMeSystemPrefix": "Kan inte ta bort System",
         "emailNotFound": "Kontot existerar inte.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %CLOUD_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
         "forbidden": "Du har inte behörighet att utföra denna åtgärd",
         "lostConnection": "Anslutning till {{systemName}} förlorad",
         "mergedSystemIsOffline": "Systemet <strong>{{failedSystem}}</strong> är offline.",
@@ -404,7 +406,7 @@
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
         "thisSystem": "systemet",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "wrongAuthCode": "Koden är utgått eller felaktig",
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
@@ -448,22 +450,22 @@
         "isAptzSupported": "Avancerad PTZ",
         "isAptzSupportedShort": "Adv. PTZ",
         "isAudioSupported": "Ljud",
-        "isDualStreamingSupported": "Dual Streaming",
+        "isDualStreamingSupported": "Dubbla strömmar",
         "isFisheye": "Fisköga",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Motion Detection",
+        "isMdSupported": "Rörelsedetektering",
         "isMultiSensor": "Multisensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "2-vägs ljud",
+        "maxFps": "FPS (max)",
+        "maxResolution": "Upplösning (max)",
         "model": "Modell",
         "multiSensorCamera": "Multi-Sensor Kamera",
         "other": "Annat",
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
-        "sndResolution": "Secondary Stream",
+        "sndResolution": "Sekundär ström",
         "topXByVolume": "Topp {{value}} efter volym:",
         "vendor": "Tillverkare"
     },
@@ -484,7 +486,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Ladda ner %VMS_NAME%",
         "downloadPlatform": "Hämta %VMS_NAME% för ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Misslyckades med att komma åt system",
         "integrations": "Integrationer",
         "login": "Logga in",
         "pageNotFound": "Det gick inte att hitta sidan",
@@ -517,34 +519,34 @@
     },
     "placeholderTexts": {
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Detta system slås samman med {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Beroende på databasens storlek kan det ta upp till flera timmar.",
+                "untilFinished": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
+                "whenFinished": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i {{systemName}} System, och detta system kommer att raderas."
             }
         }
     },
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Genom att skicka detta formulär samtycker du till att kontakta {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar de {{INTEGRATION_COMPANY}} integritetspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke.",
+        "ipvd": "Genom att skicka detta formulär samtycker du till att kontakta dig av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke."
     },
     "registration": {
         "agreement": "Jag godkänner <a href=\"/content/eula\" target=\"_blank\">Villkor &\nVillkor</a> och <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Sekretesspolicy</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system.",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "is being merged to this system",
+            "mayTake": "Beroende på databasens storlek kan det ta upp till flera timmar."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Slutför sammanslagningen av system",
         "integration": {
             "backToEditText": "Tillbaka till redigeringsgränssnittet",
             "previewRibbon": "Den här sidan är en förhandsvisning av de senaste ändringarna, och den matchar inte den offentligt tillgängliga versionen."
         },
         "systemOffline": "Systemet är offline. Vissa inställningar kanske inte är tillgängliga.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Detta system är för närvarande involverat i en sammanslagningsoperation."
     },
     "search": {
         "Any": "Någon",
@@ -562,34 +564,34 @@
         "vendors": "Tillverkare"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "beginRestart": "Server is now restarting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "getModuleFailed": "There was a problem getting server information.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
-        "servers": "Servers",
+        "beginDetach": "Servern frånkopplas nu",
+        "beginReset": "Servern återställer nu.",
+        "beginRestart": "Servern startar nu om.",
+        "detachSystemFailed": "Det gick inte att ta bort servern från systemet. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
+        "detachSystemSuccess": "Servern kopplades bort från systemet.",
+        "getModuleFailed": "Det gick inte att få serverinformation.",
+        "portWarning": "Portnummer mindre än 1024 är begränsade. Servern kan bli otillgänglig.",
+        "removeMediaserverFailed": "Det gick inte att ta bort servern från systemet.",
+        "resetFailed": "Det gick inte att återställa servern. Kontrollera om ditt lösenord är korrekt och servern är online och försök igen.",
+        "resetSuccessful": "Server {{ serverName }} har återställts till standardinställningar.",
+        "restartFailed": "Det gick inte att starta om servern.",
+        "restartSuccessful": "Servern har startat om.",
+        "servers": "Servrar",
         "status": {
-            "checking": "checking...",
+            "checking": "kontrollerar...",
             "offline": "frånkopplad",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "återställer...",
+            "restarting": "startar om..."
         },
-        "successRename": "Server name renamed."
+        "successRename": "Server name saved."
     },
     "system": {
         "MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",
         "mergeUnknownName": "Okänt namn för system (orsakad av molnsammanslagning)",
         "mySystemSearch": "JagMigMinMin",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "Kan inte ladda säkerhetsinställningar.",
+            "notAbleToLoadSystem": "Kan inte ladda systeminställningar.",
             "sessionLimitDuration": {
                 "hours": "timmar",
                 "minutes": "minuter"
@@ -603,34 +605,34 @@
             "unavailable": "Systemet är oåtkomligt"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Ta Bort Användare",
+            "localDelete": "Radera användare"
         },
         "yourSystem": "Ditt system",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Ingen",
+                "help": "(log avaktiverad)"
             },
             "error": {
                 "text": "Fel",
-                "help": "(log errors only)"
+                "help": "(loggar bara fel)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Varning",
+                "help": "(loggarvarningar och fel)"
             },
             "info": {
                 "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(logga varningar, fel och alla meddelanden)"
             },
             "debug": {
                 "text": "Debugläge",
-                "help": "(log every System message and debug information)"
+                "help": "(loggar varje systemmeddelande och felsökningsinformation)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "Detaljerad",
+                "help": "(logga all tillgänglig information)"
             }
         }
     },
@@ -661,98 +663,98 @@
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "Ytterligare lokala FS-typer",
+        "autoDiscoveryResponseEnabled": "Automatisk upptäckt svar",
+        "crossdomainEnabled": "Domänövergripande",
+        "defaultExportVideoCodec": "Standard exportvideokodek",
+        "defaultVideoCodec": "Standardvideokodek",
+        "downloaderPeers": "Klienter för nedladdning",
+        "lastMergeMasterId": "Senaste sammanslagning masterId",
+        "lastMergeSlaveId": "Senaste sammanslagning slaveId",
+        "ldapSearchTimeoutS": "LDAP-sökning timeout(sec)",
+        "licenseServer": "Licensserver",
+        "lowQualityScreenVideoCodec": "Video-codec med låg kvalitet",
+        "maxP2pAllClientsSizeBytes": "Max P2P alla klienters storlek byte",
+        "maxRtpRetryCount": "Max antal RTP återförsök",
+        "metadataStorageChangePolicy": "Ändringspolicy för datalagring i Meta",
+        "pushNotificationsLanguage": "Språket för push-meddelanden",
+        "resourceFileUri": "URI för resursfil",
+        "sessionLimitMinutes": "Sessionsgräns (minuter)",
+        "specificFeatures": "Specifika funktioner",
         "systemName": "Systemets namn",
-        "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
+        "webSocketEnabled": "Webb sockets",
+        "arecontRtspEnabled": "Arecont RTSP aktiverad",
+        "auditTrailEnabled": "Revisionsspårning aktiverad",
+        "auditTrailPeriodDays": "Dagar för granskningsspår",
+        "autoDiscoveryEnabled": "Aktivera automatisk upptäckt av enheter",
+        "autoUpdateThumbnails": "Uppdatera miniatyrer automatiskt",
+        "backupNewCamerasByDefault": "Säkerhetskopiera nya kameror som standard",
+        "backupQualities": "Backup kvaliteter",
+        "cameraSettingsOptimization": "Tillåt optimering av enhetsinställningar",
+        "clientStatisticsSettingsUrl": "Klientstatistik relativ url",
+        "cloudAccountName": "Cloud ägarkonto",
+        "cloudConnectRelayingEnabled": "Aktivera vidarebefordran för molnanslutning",
+        "cloudConnectUdpHolePunchingEnabled": "Aktivera UDP-hålstansning för molnanslutning",
+        "cloudHost": "Molnvärd",
+        "cloudSystemID": "Cloud system id",
+        "disabledVendors": "Inaktiverade leverantörer",
+        "ec2AliveUpdateIntervalSec": "Systemuppdateringsintervall (sekunder)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Anslutningen håller timeout vid liv (sekunder)",
+        "ec2KeepAliveProbeCount": "Anslutning hålla levande sonder (sekunder)",
+        "emailFrom": "E-post från",
+        "emailSignature": "Epostsignatur",
         "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
+        "enableEdgeRecording": "Aktivera edgeinspelning",
+        "eventLogPeriodDays": "Händelsesloggperiod (dagar)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
+        "ldapSearchBase": "LDAP-sökbas",
+        "ldapSearchFilter": "LDAP-sökfilter",
         "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
-        "smtpSimple": "SMTP simple",
+        "localSystemId": "Lokalt system-ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max skillnad mellan synkroniserad och Internettid (millisekunder)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max skillnad mellan synkroniserad och lokal tid (millisekunder)",
+        "maxP2pQueueSizeBytes": "Max P2P-köstorlek (byte)",
+        "maxRecordQueueSizeBytes": "Max inspelningsköstorlek (byte)",
+        "maxRecordQueueSizeElements": "Max inspelningsköstorlek (element)",
+        "maxRemoteArchiveSynchronizationThreads": "Max trådar för synkronisering av fjärrarkiv",
+        "maxRtspConnectDurationSeconds": "Max antal varaktighetssekunder för Rtsp",
+        "maxSceneItems": "Max scenobjekt (0 betyder standard)",
+        "proxyConnectTimeoutSec": "Proxyanslutningstid (sekunder)",
+        "rtpTimeoutMs": "RTP timeout (millisekunder)",
+        "sequentialFlirOnvifSearcherEnabled": "Använd sekventiell Flir Onvif sökare",
+        "serverDiscoveryPingTimeoutSec": "Tidsgräns för serverupptäckt",
+        "smtpConnectionType": "Typ av SMTP-anslutning",
+        "smtpHost": "SMTP Server",
+        "smtpPort": "SMTP Port",
+        "smtpSimple": "SMTP enkelt",
         "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "smtpUser": "SMTP användare",
+        "statisticsAllowed": "Skicka anonym användningsstatistik och kraschrapporter",
+        "statisticsReportLastNumber": "Statistikrapport - sista nummer",
+        "statisticsReportLastTime": "Statistik rapport - senaste gången",
+        "statisticsReportLastVersion": "Statistikrapport - senaste versionen",
+        "statisticsReportServerApi": "Statistikserver api",
+        "statisticsReportTimeCycle": "Statistikrapportintervall",
+        "statisticsReportUpdateDelay": "Statistik rapport - uppdateringsfördröjning",
+        "synchronizeTimeWithInternet": "Synkronisera tid med Internet",
         "SystemName": "Systemets namn",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
-        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "takeCameraOwnershipWithoutLock": "Ta kamerans ägarskap utan lås",
+        "timeSynchronizationEnabled": "Tidssynkronisering aktiverad",
+        "primaryTimeServer": "Primär tidssynkroniseringsserver",
+        "osTimeChangeCheckPeriodMs": "Kontroll av OS-tidsinställningar",
+        "syncTimeExchangePeriod": "Synkronisera tidssynkroniseringsintervall för nätverksförfrågningar",
+        "syncTimeEpsilon": "Synkronisera tidsepsilon. Nytt värde tillämpas inte om tidsdeltat mindre än epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Maximalt antal bärbara kamerarkiv synkronisera trådar",
+        "updateNotificationsEnabled": "Uppdateringsaviseringar aktiverade",
+        "upnpPortMappingEnabled": "UPNP-portmappning aktiverad",
+        "useTextEmailFormat": "Skicka e-post med vanlig text",
+        "useWindowsEmailLineFeed": "Använd Windows ny rad i e-post",
+        "trafficEncryptionForced": "Kräv trafikkryptering",
+        "videoTrafficEncryptionForced": "Tvinga videotrafikkryptering",
+        "updateStatus": "Uppdatera status",
+        "watermarkSettings": "Vattenmärkesinställningar",
+        "maxWebMTranscoders": "Max antal WEBM-anslutningar för servern. Chrome öppnar 2 anslutningar samtidigt och stänger sedan den första. Så det rekommenderas att ange värdet> = 2 till denna parameter.",
+        "maxEventLogRecords": "Maximala händelseloggposter för att hålla i databasen. Den verkliga mängden obestängda poster kan vara upp till 20% högre än det angivna värdet.",
+        "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran)."
     }
 }

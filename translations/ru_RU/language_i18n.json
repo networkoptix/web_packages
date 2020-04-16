@@ -196,6 +196,7 @@
     "To": "Куда",
     "Too many attempts. Try again in a minute.": "Слишком много попыток. Повторите позже.",
     "Tracks and logs all user actions.": "Отслеживает и регистрирует все действия пользователя.",
+    "Try Again": "Try Again",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>",
     "Update your system to the latest build to enable Cloud Storage.": "Update your system to the latest build to enable Cloud Storage.",
     "Updated": "Обновлено",
