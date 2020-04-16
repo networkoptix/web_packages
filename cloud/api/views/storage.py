@@ -61,6 +61,9 @@ def usage_stats(request):
     if len(storages) == 0:
         raise APINotFoundException({'message': 'System does not cloud storage.'})
 
+    storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION) \
+        .get('portal_config', {}).get('cloud_storage_size', 0)
+
     aggregated_storage_info = {
         'spaceUsed': 0,
         'currentRecordingBitrate': [],
@@ -89,7 +92,7 @@ def usage_stats(request):
         maxLiveDelay = storage_info.get('maxLiveDelay')
         if maxLiveDelay is not None:
             aggregated_storage_info['maxLiveDelay'].append(maxLiveDelay)
-        aggregated_storage_info['cloudCapacity'] += settings.CLOUD_STORAGE_SIZE
+        aggregated_storage_info['cloudCapacity'] += int(storage_info.get('totalSize', storage_size))
     else:
         # After going over storages average certain statistics
         aggregated_storage_info['currentRecordingBitrate'] = int(statistics.mean(
