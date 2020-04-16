@@ -386,12 +386,24 @@ export interface SystemSettings {
     users: Admin;
     servers: Admin;
     buttons: Buttons;
+    cameras: Cameras;
 }
 
 export interface Admin {
     id: string;
     icon?: string;
     path: string;
+}
+
+export interface Cameras extends Admin {
+    statusIcons: {
+        archive: string;
+        offline: string;
+        recording: string;
+        scheduled: string;
+        unauthorized: string;
+        online: string;
+    }
 }
 
 export interface Buttons {

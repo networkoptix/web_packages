@@ -81,6 +81,7 @@ export interface Common {
     cameraLinks:               CameraLinks;
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
+    recordingSettingsWarning:  string;
     resolution:                Resolution;
     general:                   string;
     maintenanceInProgress:     string;
@@ -142,9 +143,12 @@ export interface CameraStates {
 }
 
 export interface Resolution {
-    auto: string;
-    high: string;
-    low:  string;
+    various: string;
+    auto:    string;
+    best:    string;
+    high:    string;
+    medium:  string;
+    low:     string;
 }
 
 export interface VoiceCommands {
@@ -926,6 +930,7 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
+        { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
         { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
@@ -981,8 +986,11 @@ const typeMap: any = {
         { json: "unauthorized", js: "unauthorized", typ: "" },
     ], false),
     "Resolution": o([
+        { json: "various", js: "various", typ: "" },
         { json: "auto", js: "auto", typ: "" },
+        { json: "best", js: "best", typ: "" },
         { json: "high", js: "high", typ: "" },
+        { json: "medium", js: "medium", typ: "" },
         { json: "low", js: "low", typ: "" },
     ], false),
     "VoiceCommands": o([

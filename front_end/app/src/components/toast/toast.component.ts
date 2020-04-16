@@ -3,31 +3,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { NxToastService }                      from '../../dialogs/toast.service';
 
 @Component({
-    selector: 'app-toasts',
-    template: `
-        <div *ngFor="let toast of toastService.toasts;" @fadeInOut>
-            <ngb-toast
-                    class="alert alert-{{toast.classname}} fade"
-                    [ngClass]="{'alert-dismissible': !toast.autohide}"
-                    [autohide]="toast.autohide"
-                    [delay]="toast.delay"
-                    (hide)="remove(toast)">
-                <ng-template [ngIf]="isTemplate(toast)" [ngIfElse]="text">
-                    <ng-template [ngTemplateOutlet]="toast.textOrTpl"></ng-template>
-                </ng-template>
-
-                <ng-template #text>
-                    <span class="toast-content" [innerHTML]="toast.textOrTpl"></span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"
-                            *ngIf="!toast.autohide" (click)="remove(toast)">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </ng-template>
-            </ngb-toast>
-        </div>`,
-    styleUrls : ['toast.component.scss'],
-    host      : { '[class.nx-toasts]': 'true' },
-    animations: [
+    selector    : 'app-toasts',
+    templateUrl : 'toast.component.html',
+    styleUrls   : ['toast.component.scss'],
+    host        : { '[class.nx-toasts]': 'true' },
+    animations  : [
         trigger('fadeInOut', [
             transition(':enter', [
                 style({ opacity: 0 }),

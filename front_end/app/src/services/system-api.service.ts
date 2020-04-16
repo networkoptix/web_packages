@@ -1,9 +1,10 @@
 import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
-import { from, of, throwError }                from 'rxjs';
+import { from, of, throwError, Observable }    from 'rxjs';
 import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
 import { Location }                            from '@angular/common';
+import { ICamera } from './system.service';
 
 interface User {
     canBeEdited: boolean;
@@ -355,9 +356,17 @@ export class NxSystemAPI {
     /* End of Working with users */
 
     /* Cameras and Servers */
-    getCameras(id) {
+    getCameras(id?) {
         const params = id ? { id: this.cleanId(id) } : {};
         return this.get('/ec2/getCamerasEx', params);
+    }
+
+    setResourceParams(params: ResourceParam[]) {
+        return this.post('/ec2/setResourceParams', params);
+    }
+
+    updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera>) {
+        return this.post('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
     getMediaServers(id?, url?) {
@@ -380,7 +389,7 @@ export class NxSystemAPI {
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time?, width?, height?) {
+    previewUrl(cameraId, time?, width?, height?, rotate?) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
@@ -400,6 +409,11 @@ export class NxSystemAPI {
         if (height) {
             data.height = height;
         }
+
+        if (rotate !== null) {
+            data.rotate = rotate;
+        }
+
         if (this.systemId) {
             data.auth = this.authGet;
         }
@@ -562,4 +576,10 @@ export class NxSystemAPIService {
         // }
         return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
     }
+}
+
+export interface ResourceParam {
+    value: string;
+    name: string;
+    resourceId?: string;
 }

@@ -1,0 +1,41 @@
+import {
+    Component, ViewEncapsulation,
+    Input, forwardRef
+}                            from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { BaseDropdown }      from '../injDropdown';
+
+/* Usage
+ <nx-select
+     [items]="ActionItems[]"
+ </nx-select>
+ */
+
+@Component({
+    selector      : 'nx-three-dot',
+    templateUrl   : 'three-dot.component.html',
+    styleUrls     : ['three-dot.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
+        {
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxThreeDotDropdown),
+            multi       : true
+        }
+    ]
+})
+
+export class NxThreeDotDropdown extends BaseDropdown {
+    @Input() items: ActionItems[];
+
+    change(item) {
+        item.action();
+    }
+}
+
+export class ActionItems {
+    constructor(
+        public name: string,
+        public action: () => void
+    ) {}
+}

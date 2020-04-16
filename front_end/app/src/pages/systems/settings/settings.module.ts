@@ -21,6 +21,8 @@ import { AdminGuard }                       from '../../../routeGuards/adminGuar
 import { NxCloudStorageModule }             from './cloud-storage/cloud-storage.module';
 import { NxCloudStorageComponent }          from './cloud-storage/cloud-storage.component';
 import { CloudStorageGuard }                from '../../../routeGuards/cloudStorageGuard';
+import { NxCamerasComponent } from './cameras/cameras.component';
+import { NxCamerasModule } from './cameras/cameras.module';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -57,6 +59,16 @@ const appRoutes: Routes = [
                 canDeactivate : [ApplyGuard]
             },
             {
+                path          : 'cameras',
+                component     : NxCamerasComponent,
+                canDeactivate : [ApplyGuard]
+            },
+            {
+                path          : 'cameras/:cameraId',
+                component     : NxCamerasComponent,
+                canDeactivate : [ApplyGuard]
+            },
+            {
                 path          : 'cloud-storage',
                 component     : NxCloudStorageComponent,
                 canActivate   : [CloudStorageGuard],
@@ -78,6 +90,7 @@ const appRoutes: Routes = [
         NxSystemAdminModule,
         NxSystemUsersModule,
         NxSystemServersModule,
+        NxCamerasModule,
         NxCloudStorageModule,
         RouterModule.forChild(appRoutes)
     ],

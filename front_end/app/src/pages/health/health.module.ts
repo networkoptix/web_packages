@@ -87,6 +87,7 @@ const appRoutes: Routes = [
         NxHealthComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
+        NxImageComponent
     ]
 })
 export class NxHealthModule {

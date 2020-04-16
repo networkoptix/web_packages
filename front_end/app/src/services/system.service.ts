@@ -3,13 +3,16 @@ import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
 import { NxSystemsService }                from './systems.service';
 import { Injectable, OnDestroy }           from '@angular/core';
-import { NxSystemAPIService, NxSystemAPI } from './system-api.service';
+import {
+    NxSystemAPIService, NxSystemAPI, ResourceParam
+}                                          from './system-api.service';
 import { BehaviorSubject, from, of }       from 'rxjs';
 import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { recursiveJson }                   from '../utils/recursive-json';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -370,6 +373,7 @@ class ServerManager {
     };
 
     servers: NxSystemServer[];
+    cameras: ICamera[];
 
     constructor(private mediaserver: NxSystemAPI,
                 private systemApiService: NxSystemAPIService,
@@ -410,6 +414,141 @@ class ServerManager {
                 this.servers = result;
                 return this.servers;
             });
+    }
+
+    getPreviewUrl(cameraId, time, width, height, rotate) {
+        return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
+    }
+
+    async getCameras(): Promise<ICamera[]> {
+        const { reply: servers }: any = await this.mediaserver.getServerTimes().toPromise();
+        return this.mediaserver.getCameras().toPromise()
+            .then((result: any) => {
+                if (!result) {
+                    return Promise.reject(new Error(`Request to server has failed ${result}`));
+                }
+                this.cameras = result.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
+                    const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
+                    const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
+                    const vmsDate = new Date(serverTime);
+                    const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+                    const secondsToday = Math.round((serverTime % 86400000) / 1000);
+                    const {
+                        rotation,
+                        overrideAr,
+                        mediaCapabilities,
+                        isAudioSupported: audioSupported,
+                        ...parsedAddParams
+                    }: any = addParamsRaw.reduce((params, { name, value }) => (
+                        { ...params, [name]: recursiveJson(value) }
+                    ), {});
+                    const parentName = this.servers.find(server => server.id === parentId).name;
+                    const isAudioSupported = audioSupported === '1';
+                    const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
+                    const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+                    // eslint-disable-next-line no-use-before-define
+                    const motionEnabled = camera.motionType !== MotionType.noMotion;
+                    const recordingSettings: IRecordingSettings = {
+                        recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
+                        quality   : this.parseRecordingQuality(camera.scheduleTasks),
+                        fps       : this.parseFps(camera.scheduleTasks),
+                        motionEnabled,
+                        modes     : [
+                            { name: 'Record Always', id: 'RT_Always', value: (this.parseRecordingMode(camera, 'RT_MotionOnly') || this.parseRecordingMode(camera, 'RT_MotionAndLowQuality')) ? this.parseRecordingMode(camera, 'RT_Always') : 2, enabled: true },
+                            { name: 'Record Motion', id: 'RT_MotionOnly', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                            {
+                                name    : 'Record Motion + Low Quality',
+                                id      : 'RT_MotionAndLowQuality',
+                                value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
+                                enabled : motionEnabled
+                            }
+                        ]
+                    };
+                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+                });
+                return this.cameras;
+            });
+    }
+
+    updateCameraSettings(resourceId: string, params: Object) {
+        const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
+        return this.mediaserver.setResourceParams(mappedParams).toPromise();
+    }
+
+    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false,
+        cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        const baseTask: Pick<ITask, 'bitrateKbps' | 'endTime' | 'startTime' | 'recordingType'> = updatedTask && cameraSettings.scheduleEnabled ? {
+            bitrateKbps   : 0,
+            endTime       : 86400,
+            startTime     : 0,
+            recordingType : updatedTask.recordingType
+        } : {
+            bitrateKbps   : 0,
+            endTime       : 0,
+            startTime     : 0,
+            recordingType : 'RT_Never'
+        };
+
+        const updateParams: Partial<ICamera> | any = cameraSettings;
+
+        const scheduleTasks: ITask[] = [];
+        if (updatedTask && cameraSettings.scheduleEnabled) {
+            for (let dayOfWeek = 1; dayOfWeek < 8; dayOfWeek++) {
+                scheduleTasks.push({ ...updatedTask, ...baseTask, dayOfWeek });
+            }
+            updateParams.scheduleTasks = scheduleTasks;
+        }
+        return this.mediaserver.updateRecordingSettings(updateParams).toPromise();
+    }
+
+    private parseFps(schedule: ITask[]): number | 'various' {
+        const schedulesWithFps = schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps);
+        const uniqueFps = new Set(schedulesWithFps);
+        const currentFps = Array.from(uniqueFps);
+        return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
+    }
+
+    private parseRecordingQuality(schedule: ITask[]): StreamQuality {
+        const streamQualities: StreamQuality[] = ['low', 'normal', 'high', 'highest'];
+        let quality: StreamQuality = schedule.length ? 'various' : 'high';
+        for (const stream of streamQualities) {
+            if (schedule.length && schedule.every(({ streamQuality }) => streamQuality === stream)) {
+                quality = stream;
+            }
+        }
+        return quality;
+    }
+
+    private parseRecordingMode({ scheduleTasks }: Partial<ICamera>, id: RecordingType) {
+        const partialSchedule = scheduleTasks.some(({ recordingType, startTime, endTime, fps }) => (
+            recordingType === id &&
+            fps > 0 &&
+            startTime < endTime
+        ));
+
+        const fullSchedule = scheduleTasks.length && scheduleTasks.every(({ recordingType, startTime, endTime, fps }) => (
+            recordingType === id &&
+            fps > 0 &&
+            startTime < endTime
+        ));
+        return fullSchedule ? 2 : partialSchedule ? 1 : 0;
+    }
+
+    private parseCameraStatus({ status, scheduleEnabled, scheduleTasks }: Partial<ICamera>, { dayOfWeek, secondsToday }) {
+        if (status !== 'Online' || !scheduleEnabled) {
+            return status;
+        }
+        const recording = scheduleTasks.some(({ dayOfWeek: day, startTime, endTime, recordingType }) => (
+            recordingType !== 'RT_Never' &&
+            day === dayOfWeek &&
+            startTime < secondsToday &&
+            secondsToday < endTime
+        ));
+        if (recording) {
+            return 'Recording';
+        } else {
+            return 'Scheduled';
+        }
     }
 
     getModuleInfo(serverId?) {
@@ -556,6 +695,10 @@ export class NxSystem extends System implements OnDestroy {
 
     get users() {
         return this.userManager.users;
+    }
+
+    get cameras() {
+        return this.serverManager.cameras;
     }
 
     // End of userManager get functions
@@ -827,6 +970,7 @@ export class NxSystem extends System implements OnDestroy {
             return this.getInfo(true, false)
                 .then(() => this.getSystem())
                 .then(() => this.getServers())
+                .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch(() => {
                     this.isAvailable = false;
@@ -848,6 +992,22 @@ export class NxSystem extends System implements OnDestroy {
 
     initSystemMediaServers() {
         return this.serverManager.initSystemMediaServers();
+    }
+
+    getPreviewUrl(cameraId, time, width = 640, height = 480, rotate = 0) {
+        return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
+    }
+
+    getCameras() {
+        return this.serverManager.getCameras();
+    }
+
+    updateCameraSettings(id: string, params: Object) {
+        return this.serverManager.updateCameraSettings(id, params);
+    }
+
+    updateRecordingSettings(updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false, cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation'>) {
+        return this.serverManager.updateRecordingSettings(updatedTask, cameraSettings);
     }
 
     getServers() {
@@ -950,3 +1110,241 @@ export class NxSystemService {
         return system;
     }
 }
+
+export interface IAddParamsRaw {
+    name: string;
+    value: string;
+}
+
+export interface ICamera {
+    addParams: IAddParamsRaw[];
+    parsedAddParams: IParsedAddParams;
+    rotation?: number | string;
+    overrideAr?: number | string;
+    isAudioSupported: boolean;
+    audioEnabled: boolean;
+    backupType: string;
+    controlEnabled: boolean;
+    dewarpingParams: string;
+    disableDualStreaming: boolean;
+    failoverPriority: string;
+    groupId: string;
+    groupName: string;
+    id: string;
+    licenseUsed: boolean;
+    logicalId: string;
+    mac: string;
+    manuallyAdded: boolean;
+    maxArchiveDays: number;
+    minArchiveDays: number;
+    model: string;
+    motionMask: string;
+    motionType: MotionType;
+    motionEnabled: boolean | string;
+    mediaCapabilities: IMediaCapabilities;
+    name: string;
+    parentId: string;
+    parentName: string;
+    physicalId: string;
+    preferredServerId: string;
+    recordAfterMotionSec: number;
+    recordBeforeMotionSec: number;
+    scheduleEnabled: boolean;
+    scheduleTasks: ITask[];
+    status: string;
+    statusFlags: string;
+    typeId: string;
+    url: string;
+    userDefinedGroupName: string;
+    vendor: string;
+    previewUrl: string;
+    recordingSettings: IRecordingSettings;
+}
+
+export enum MotionType {
+    hardwareGrid = '1',
+    softwareGrid = '2',
+    motionWindow = '4',
+    noMotion = '8'
+}
+
+export interface IMediaCapabilities {
+    hasAudio: boolean;
+}
+
+export interface ITask {
+    bitrateKbps: number;
+    dayOfWeek: number;
+    endTime: number;
+    fps: number;
+    recordingType: RecordingType;
+    startTime: number;
+    streamQuality: StreamQuality
+}
+
+export interface IRecordingSettings {
+    recording: boolean;
+    quality: StreamQuality;
+    fps: number | 'various' | any;
+    motionEnabled: boolean;
+    modes: IRecordingModes[];
+}
+
+export interface IRecordingModes {
+    name: string;
+    id: RecordingType;
+    value: 0 | 1 | 2; // 0: None scheduled, 1: Some scheduled, 2: All scheduled
+    enabled: boolean;
+}
+
+export type RecordingType = 'RT_Always' | 'RT_MotionOnly' | 'RT_MotionAndLowQuality' | 'RT_Never'
+export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various'
+
+export interface Condition {
+    paramId: string;
+    type: string;
+    value: string;
+}
+
+export interface Dependency {
+    conditions: Condition[];
+    id: string;
+    internalRange: string;
+    range: string;
+    type: string;
+    valuesToAddToRange: any[];
+    valuesToRemoveFromRange: any[];
+}
+
+export interface Param {
+    aux: string;
+    availableInOffline: boolean;
+    bindDefaultToMinimum: boolean;
+    compact: boolean;
+    confirmation: string;
+    dataType: string;
+    dependencies: Dependency[];
+    description: string;
+    group: string;
+    id: string;
+    internalRange: string;
+    keepInitialValue: boolean;
+    name: string;
+    notes: string;
+    range: string;
+    readCmd: string;
+    readOnly: boolean;
+    resync: boolean;
+    showRange: boolean;
+    tag: string;
+    unit: string;
+    writeCmd: string;
+}
+
+export interface Group2 {
+    aux: string;
+    description: string;
+    groups: any[];
+    name: string;
+    params: Param[];
+}
+
+export interface Group {
+    aux: string;
+    description: string;
+    groups: Group2[];
+    name: string;
+    params: any[];
+}
+
+export interface CameraAdvancedParams {
+    groups: Group[];
+    name: string;
+    // eslint-disable-next-line camelcase
+    packet_mode: boolean;
+    // eslint-disable-next-line camelcase
+    unique_id: string;
+    version: string;
+}
+
+export interface IoSetting {
+    autoResetTimeoutMs: number;
+    iDefaultState: string;
+    id: number;
+    inputName: string;
+    oDefaultState: string;
+    outputName: string;
+    portType: string;
+    supportedPortTypes: string;
+}
+
+export interface CustomStreamParams {
+}
+
+export interface Stream {
+    codec: number;
+    customStreamParams: CustomStreamParams;
+    encoderIndex: number;
+    resolution: string;
+    transcodingRequired: boolean;
+    transports: string[];
+}
+
+export interface MediaStreams {
+    streams: Stream[];
+}
+
+export interface StreamUrls {
+    1?: string;
+    2?: string;
+}
+
+export interface BitrateInfoStreams {
+    actualBitrate: number;
+    actualFps: number;
+    averageGopSize: number;
+    bitrateFactor: number;
+    bitratePerGop: boolean;
+    encoderIndex: string;
+    fps: number;
+    isConfigured: boolean;
+    numberOfChannels: number;
+    rawSuggestedBitrate: number;
+    resolution: string;
+    suggestedBitrate: number;
+    timestamp: Date;
+}
+
+export interface BitrateInfos {
+    streams: BitrateInfoStreams[];
+}
+
+interface _ParsedAddParams {
+    DeviceUrl: string;
+    VideoLayout: string;
+    cameraAdvancedParams: CameraAdvancedParams;
+    cameraCapabilities: number;
+    compatibleAnalyticsEngines: any[];
+    defaultCredentials: string;
+    driverClass: string;
+    firmware: string;
+    hasDualStreaming: number;
+    ioSettings: IoSetting[];
+    mediaStreams: MediaStreams;
+    ptzCapabilities: number;
+    streamUrls: StreamUrls;
+    bitrateInfos: BitrateInfos;
+    bitratePerGOP: number;
+    dontRecordPrimaryStream: number;
+    dontRecordSecondaryStream: number;
+    mediaPort: string;
+    rtpTransport: string;
+    trustCameraTime: number;
+    userEnabledAnalyticsEngines: any[];
+    motionStream: string;
+    streamFpsSharing: string;
+    supportedMotion: string;
+    defaultPreferredPtzPresetType: string;
+}
+
+export type IParsedAddParams = Partial<_ParsedAddParams>

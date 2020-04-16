@@ -1,0 +1,14 @@
+<div class="dropdown ali custom-drop-down" [ngClass]="{'show': show}" (nxClickElsewhere)="show = false">
+    <button class="dot-menu" (click)="show = !show" type="button" data-toggle="dropdown"></button>
+    <div class="dropdown-menu custom-menu" [style.display]="show ? 'inline-block' : 'none'">
+        <ul class="dropdown-menu--list">
+            <li class="dropdown-item-container" *ngFor="let item of items; trackBy: trackItem">
+                    <a class="dropdown-item inset"
+                        [ngClass]="{ 'selected': _selected && _selected.name === item.name }"
+                       (click)="show = false; change(item)">
+                        <span [innerHTML]="item.name"></span>
+                    </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,585 @@
+import {
+    Component, OnDestroy, OnInit, Inject, ViewContainerRef
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxSettingsService }         from '../settings.service';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import {
+    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes, MotionType
+}                                    from '../../../../services/system.service';
+import {
+    Subscription, BehaviorSubject, Subject
+}                                    from 'rxjs';
+import {
+    filter, map, retryWhen, delay, distinctUntilChanged, takeUntil
+}                                    from 'rxjs/operators';
+import { ActivatedRoute }            from '@angular/router';
+import { NxUriService }              from '../../../../services/uri.service';
+
+import { NxHealthService }           from '../../../health/health.service';
+import { WINDOW }                    from '../../../../services/window-provider';
+import { Watcher, NxApplyService }   from '../../../../services/apply.service';
+import { Process, NxProcessService } from '../../../../services/process.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+
+@Component({
+    selector    : 'nx-cameras-component',
+    templateUrl : 'cameras.component.html',
+    styleUrls   : ['cameras.component.scss']
+})
+export class NxCamerasComponent implements OnInit, OnDestroy {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+    viewContainerRef: ViewContainerRef;
+    system: NxSystem;
+    settingsSubscription: Subscription;
+    routeParamsSubscription: Subscription;
+    healthReportSubscription: Subscription;
+    cameraSubscription: Subscription;
+    cameraIdFromParams: string;
+    parsedCameraId: string;
+    selectedCamera: ICamera;
+    fullInfoPath: string;
+    cameraViewPath: string;
+    alerts: Alert[];
+    saveSettings: Process
+    various: ISelect;
+    auto: ISelect;
+    aspectRatios: ISelect[];
+    rotations: ISelect[];
+    streamQualities: ISelect[];
+    maxFps: number = 30;
+    fps: number = this.maxFps;
+    warnings: string[] = [];
+    errors: string[] = [];
+    showUnauthorized = false;
+    showOverlay = false;
+    unsub$: Subject<boolean> = new Subject();
+
+    sensitivityColors = new Array(10);
+
+    constructor(
+        configService: NxConfigService,
+        language: NxLanguageProviderService,
+        private menuService: NxMenuService,
+        private settingsService: NxSettingsService,
+        private route: ActivatedRoute,
+        private uriService: NxUriService,
+        private healthService: NxHealthService,
+        private applyService: NxApplyService,
+        private processService: NxProcessService,
+        private dialogService: NxDialogsService,
+        @Inject(WINDOW) private window: Window,
+        @Inject(ViewContainerRef) viewContainerRef
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = language.getTranslations();
+        this.updateSelects();
+        this.viewContainerRef = viewContainerRef;
+        this.menuService.setSection('cameras');
+    }
+
+    ngOnInit() {
+        this.routeParamsSubscription = this.route
+            .params
+            .pipe(
+                takeUntil(this.unsub$),
+                distinctUntilChanged()
+            ).subscribe(params => {
+                this.warnings = [];
+                this.errors = [];
+                this.showUnauthorized = false;
+                this.showOverlay = false;
+                if (params.cameraId) {
+                    this.menuService.setDetailsSection(params.cameraId);
+                    this.cameraIdFromParams = params.cameraId;
+                    this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
+                    this.setCamera();
+                }
+            });
+
+        this.settingsSubscription = this.settingsService.systemSubject
+            .pipe(
+                takeUntil(this.unsub$),
+                filter(data => data !== undefined)
+            ).subscribe(system => {
+                this.settingsService.footerSubject.next(true);
+                this.system = system;
+                this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
+                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+                        system.info.capabilities &&
+                        system.info.capabilities.vms_metrics) &&
+                        this.system.canViewInfo();
+                    this.initUpdateProcess();
+                    if (this.canSeeInfo) {
+                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                    }
+                });
+                if (this.cameraSubscription) {
+                    this.cameraSubscription.unsubscribe();
+                }
+                this.cameraSubscription = this.system.infoSubject
+                    .pipe(
+                        takeUntil(this.unsub$),
+                        distinctUntilChanged(),
+                        map(system => {
+                            if (!system.cameras || system.cameras.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        this.updateValues();
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.cameras && this.system.cameras.length) {
+                                this.system.initSystemMediaServers();
+                            }
+                            this.setCamera();
+                        }
+                    });
+            });
+        this.initUpdateProcess();
+        this.applyService.initPageWatcher(
+            this.viewContainerRef,
+            this.saveSettings,
+            () => {
+                this.toggleMotionGrid();
+                this.applyService.reset();
+            },
+            [
+                this.audioEnabledWatcher,
+                this.cameraNameWatcher,
+                this.recordingModesWatcher,
+                this.recordingWatcher,
+                this.selectedAspectWatcher,
+                this.selectedFpsWatcher,
+                this.selectedQualityWatcher,
+                this.selectedRotationWatcher,
+                this.motionEnabledWatcher,
+                this.motionMaskWatcher
+            ]);
+    }
+
+    // Update menu options after language is loaded
+    updateSelects() {
+        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
+        this.auto = { name: this.LANG.common.resolution.auto, value: '' };
+        this.aspectRatios = [
+            this.auto,
+            { name: '4:3', value: 1.33333 },
+            { name: '16:9', value: 1.77778 },
+            { name: '1:1', value: 1 }
+        ];
+        this.rotations = [
+            this.auto,
+            { name: '90˚', value: 90 },
+            { name: '180˚', value: 180 },
+            { name: '270˚', value: 270 }
+        ];
+        this.streamQualities = [
+            { name: this.LANG.common.resolution.best, value: 'highest' },
+            { name: this.LANG.common.resolution.high, value: 'high' },
+            { name: this.LANG.common.resolution.medium, value: 'normal' },
+            { name: this.LANG.common.resolution.low, value: 'low' }
+        ];
+    }
+
+    // Process for apply service
+    initUpdateProcess() {
+        this.saveSettings = this.processService.createProcess(() => {
+            if (!this.safeToUpdateRecordingSettings) {
+                return this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
+            }
+            const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
+                fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
+                recordingType : this.recordingModesWatcher.value.find(({ value }) => value === 2).id || 'RT_Always',
+                streamQuality : this.selectedQualityWatcher.value === 'varies' ? null : this.selectedQualityWatcher.value
+            } : false;
+            const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
+                id              : this.selectedCamera.id,
+                name            : this.cameraNameWatcher.value,
+                audioEnabled    : this.audioEnabled.value,
+                overrideAr      : `${this.selectedAspectWatcher.value}` || '',
+                rotation        : `${this.selectedRotationWatcher.value}` || '',
+                scheduleEnabled : this.recordingWatcher.value,
+                motionType      : this.motionType,
+                motionMask      : this.motionMaskWatcher.value || '5,0,0,44,32'
+            };
+            return Promise.all([
+                this.system.updateRecordingSettings(updatedTask, cameraSettings),
+                this.system.updateCameraSettings(cameraSettings.id, {
+                    overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
+                })
+            ]).then(_ => this.system.getCameras().then(res => {
+                this.applyService.reset();
+                this.setCamera();
+                this.toggleMotionGrid();
+                return res;
+            }));
+        });
+    }
+
+    // Basic Settings
+    cameraNameWatcher = new Watcher()
+    get cameraName() {
+        return this.cameraNameWatcher.value;
+    }
+
+    set cameraName(value) {
+        this.cameraNameWatcher.value = value;
+    }
+
+    handleBlankName() {
+        if (!this.cameraName) {
+            this.cameraName = this.cameraNameWatcher.originalValue;
+        }
+    }
+
+    updateCredentials() {
+        this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, this.setCamera);
+    }
+
+    selectedAspectWatcher = new Watcher()
+    get selectedAspect() {
+        return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
+    }
+
+    set selectedAspect(value) {
+        this.showOverlay = false;
+        this.selectedAspectWatcher.value = value.value;
+    }
+
+    get aspectClass() {
+        let aspect: ISelect;
+        if (this.selectedAspectWatcher.value) {
+            aspect = this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
+        } else {
+            aspect = this.aspectRatios[1];
+        }
+        const [width, height] = (aspect.value ? aspect.name : this.selectedAspect[1].name).split(':');
+        return `${width}-${height}`;
+    }
+
+    get previewWrapperWidth() {
+        return (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 480;
+    }
+
+    get canvasWidth() {
+        return Math.round(this.previewWrapperWidth * 2 / 44) * 44;
+    }
+
+    get canvasHeight() {
+        const aspect = <number> this.selectedAspect.value || <number> this.aspectRatios[1].value;
+        return Math.round(this.canvasWidth / aspect / 32) * 32;
+    }
+
+    get motionPreviewImage() {
+        return this.system.getPreviewUrl(
+            this.selectedCamera.id,
+            null,
+            (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 960,
+            960,
+            0
+        );
+    }
+
+    toggleMotionGrid() {
+        this.showOverlay = false;
+        this.sensitivityButtons = false;
+        setTimeout(() => {
+            this.showOverlay = true;
+        });
+    }
+
+    sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'> = new BehaviorSubject(false);
+    get sensitivityButtons() {
+        return this.sensitivityButtons$.value;
+    }
+
+    set sensitivityButtons(value) {
+        this.sensitivityButtons$.next(value);
+    }
+
+    resetSensitivity() {
+        this.sensitivityButtons = 'reset';
+    }
+
+    preventContext = event => event.preventDefault();
+
+    selectedRotationWatcher: Watcher<any> = new Watcher()
+    get selectedRotation() {
+        return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
+    }
+
+    set selectedRotation(value) {
+        this.selectedRotationWatcher.value = value.value;
+    }
+
+    audioEnabledWatcher = new Watcher()
+    get audioEnabled() {
+        return this.audioEnabledWatcher.value;
+    }
+
+    set audioEnabled(value) {
+        this.audioEnabledWatcher.value = value;
+    }
+
+    // Recording Settings
+    get recordingSettingsChanged() {
+        return this.recordingModesWatcher.changed ||
+                this.selectedFpsWatcher.changed ||
+                this.selectedQualityWatcher.changed;
+    }
+
+    get recordingSwitchedOn() {
+        return !this.recordingWatcher.originalValue && this.recordingWatcher.value;
+    }
+
+    get existingRecordingsScheduled() {
+        let type;
+        let fps;
+        let quality;
+        return !this.recordingSettingsChanged &&
+            this.selectedCamera.scheduleTasks.length &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never') &&
+            !this.selectedCamera.scheduleTasks.every(({ recordingType, fps: currentFps, streamQuality }, index) => {
+                if (index === 0) {
+                    type = recordingType;
+                    fps = currentFps;
+                    quality = streamQuality;
+                    return true;
+                }
+                return recordingType === type && fps === currentFps && quality === streamQuality;
+            });
+    }
+
+    recordingWatcher = new Watcher()
+    get recording() {
+        return this.recordingWatcher.value;
+    }
+
+    set recording(value) {
+        this.recordingWatcher.value = value;
+    }
+
+    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher()
+    get recordingModes(): IRecordingModes[] {
+        return this.recordingModesWatcher.value;
+    }
+
+    set recordingModes(value: IRecordingModes[]) {
+        this.recordingModesWatcher.value = value;
+    }
+
+    get existingModesSelected() {
+        return this.recordingModes.some(({ value }) => value === 1);
+    }
+
+    get safeToUpdateRecordingSettings() {
+        return !this.recordingSettingsChanged ||
+        (!this.selectedCamera.scheduleTasks.length ||
+            this.selectedCamera.scheduleTasks.every(({ recordingType }) => recordingType === 'RT_Never')) ||
+            !this.variousQualities && !this.variousFps && !this.existingModesSelected;
+    }
+
+    toggleMode({ name: toggledName, enabled }) {
+        if (!enabled) return;
+        this.recordingModes = this.recordingModes.map(({ name, id, enabled }) => ({
+            name, id, enabled, value: name === toggledName ? 2 : 0
+        }));
+    }
+
+    selectedFpsWatcher = new Watcher()
+    get selectedFps() {
+        return this.selectedFpsWatcher.value;
+    }
+
+    set selectedFps(value) {
+        this.selectedFpsWatcher.value = value;
+    }
+
+    get variousFps() {
+        return this.selectedFps === 'various' || !this.selectedFps;
+    }
+
+    selectedQualityWatcher = new Watcher()
+    get selectedQuality() {
+        return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
+    }
+
+    set selectedQuality(value) {
+        this.selectedQualityWatcher.value = value.value;
+    }
+
+    get variousQualities() {
+        return this.selectedQuality.value === this.various.value;
+    }
+
+    recordingSettings: IRecordingSettings;
+
+    // Motion Detection
+    motionEnabledWatcher: Watcher<string> = new Watcher()
+    get motionEnabled() {
+        return this.motionEnabledWatcher.value !== MotionType.noMotion;
+    }
+
+    set motionEnabled(value) {
+        this.motionEnabledWatcher.value = !value ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
+            ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
+
+        this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
+            ...mode, id, enabled: id === 'RT_Always' || id === 'RT_Never' ? true : this.motionEnabled
+        }));
+
+        if (!value) {
+            this.toggleMode({ name: 'RT_Always', enabled: true });
+        }
+    }
+
+    motionMaskWatcher: Watcher<string> = new Watcher();
+    get motionMask() {
+        return this.motionMaskWatcher.value;
+    }
+
+    set motionMask(value) {
+        this.motionMaskWatcher.value = value;
+    }
+
+    updateMask(maskString) {
+        this.motionMask = maskString;
+    }
+
+    set motionType(value: MotionType) {
+        this.motionEnabledWatcher.value = value;
+    }
+
+    get motionType(): MotionType {
+        return this.motionEnabledWatcher.value;
+    }
+
+    toggleMotionEnabled = () => {
+        this.motionEnabled = !this.motionEnabled;
+    }
+
+    disableMotion = () => {
+        this.motionType = MotionType.noMotion;
+    }
+
+    getSupportedMotion() {
+        const softwareGrid = {
+            id    : MotionType.softwareGrid,
+            value : 'softwaregrid'
+        };
+        const hardwaregrid = {
+            id    : MotionType.hardwareGrid,
+            value : 'hardwaregrid'
+        };
+
+        const { selectedCamera: { parsedAddParams: { supportedMotion, motionStream } } } = this;
+        return supportedMotion === hardwaregrid.value || typeof motionStream === 'undefined' ? hardwaregrid.id : softwareGrid.id;
+    }
+
+    canSeeInfo = false;
+
+    ngOnDestroy() {
+        this.unsub$.next(true);
+    }
+
+    setCamera = () => {
+        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
+            return;
+        }
+        if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
+            this.applyService.hardReset();
+            let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
+
+            if (cameraIndex === -1) {
+                cameraIndex = 0;
+                this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
+                this.uriService
+                    .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+            this.menuService.setDetailsSection(this.parsedCameraId);
+            this.selectedCamera = this.system.cameras[cameraIndex];
+            this.cameraName = this.selectedCamera.name;
+            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
+            this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
+            this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
+            this.recordingModes = this.selectedCamera.recordingSettings.modes;
+            this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
+            this.selectedFps = this.selectedCamera.recordingSettings.fps;
+            this.recording = this.selectedCamera.recordingSettings.recording;
+            this.recordingSettings = this.selectedCamera.recordingSettings;
+            this.motionType = this.selectedCamera.motionType;
+            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
+            this.updateAlerts();
+            this.applyService.reset();
+            this.applyService.setVisible(true);
+        }
+    }
+
+    private updateAlerts() {
+        const currentAlerts = (this.alerts || []).find(({ cameraId }) => cameraId === this.parsedCameraId);
+        const unauthorizedMessage = 'camera is unauthorized';
+        if (currentAlerts) {
+            this.warnings = currentAlerts.warnings;
+            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage);
+            this.showUnauthorized = currentAlerts.errors.some(error => error.toLowerCase() === unauthorizedMessage);
+        }
+    }
+
+    updateValues() {
+        this.healthService.ready = false;
+        this.healthReportSubscription = this.system.mediaserver
+            .getAggregateHealthReport()
+            .pipe(takeUntil(this.unsub$))
+            .subscribe(
+                result => {
+                    const alerts = result.reply['ec2/metrics/alarms'].reply.cameras;
+                    this.alerts = Object.entries(alerts).map(
+                        ([cameraId, alertInfo]) =>
+                            new Alert(cameraId, alertInfo, 'Camera')
+                    );
+                    this.updateAlerts();
+                },
+                () => {
+                    if (!this.system.id) {
+                        !this.window.parent
+                            ? this.window.location.reload()
+                            : this.window.parent.location.reload();
+                    }
+                }
+            );
+    }
+
+    toggle(property: string, disabled = false) {
+        if (disabled) return;
+        this.selectedCamera[property] = !this.selectedCamera[property];
+    }
+}
+
+export class Alert {
+    errors: string[] = [];
+    warnings: string[] = [];
+    constructor(public cameraId: string, alertInfo, prefix: string) {
+        Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
+            _.forEach(item => {
+                if (item && item.level && item.text && this[`${item.level}s`]) {
+                    this[`${item.level}s`].push(`${prefix} ${item.text}`);
+                }
+            })
+        );
+    }
+}
+
+export interface ISelect {
+    name: string;
+    value: number | '' | StreamQuality;
+}

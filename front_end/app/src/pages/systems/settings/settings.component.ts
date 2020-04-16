@@ -415,8 +415,79 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             adminNode.level2 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
+        if (this.system.permissions.isAdmin) {
+            let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
+            if (!camerasNode) {
+                camerasNode = {
+                    id    : this.CONFIG.menus.systemSettings.cameras.id,
+                    svg   : this.CONFIG.menus.systemSettings.cameras.icon,
+                    label : 'Cameras',
+                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                };
+                this.content.level1.push(camerasNode);
+            }
+            if (this.system.cameras) {
+                const byParam = NxUtilsService.byParam((camera) => {
+                    return camera.name;
+                }, NxUtilsService.sortASC);
+                this.system.cameras.sort(byParam);
+                camerasNode.level3 = this.system.cameras.map(camera => ({
+                    id              : camera.id.replace(/\s|\{|\}/g, ''),
+                    svgIcon         : this.getCameraStatusIcon(camera),
+                    isEnabled       : camera.status !== 'Offline' && camera.status !== 'Unauthorized',
+                    label           : camera.name,
+                    indent          : true,
+                    path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
+                }));
+            }
+        } else {
+            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
+        }
+
         this.content = { ...this.content };
     }
+
+    getCameraStatusIcon({ status }) {
+        return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
+    }
+
+    /**
+     * Return IPv4 address or IPv6 address if none
+     */
+    formatURL(server) {
+        function ipReducer(result: any, currentValue: any) {
+            if (currentValue[0] === '[') {
+                result.ipv6.push(currentValue);
+            } else {
+                result.ipv4.push(currentValue);
+            }
+            return result;
+        }
+
+        const addr = server.networkAddresses.split(';');
+        const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
+
+        if (addresses.ipv4.length > 0) {
+            const [ip, port] = addresses.ipv4[0].split(':');
+            server.ip = ip;
+            server.port = port || '';
+        } else if (addresses.ipv6.length > 0) {
+            if (addresses.ipv6[0].indexOf('[') === 0) {
+                const [ip, port] = addresses.ipv6[0].split(']:');
+                server.ip = ip.substring(1);
+                server.port = port || '';
+            } else {
+                server.ip = addresses.ipv6[0];
+                server.port = '';
+            }
+        } else {
+            server.ip = 'N/A';
+            server.port = '';
+        }
+
+        return server;
+    };
 
     cleanUrl() {
         return this.router

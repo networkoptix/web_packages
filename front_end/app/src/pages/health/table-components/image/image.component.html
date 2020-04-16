@@ -1,12 +1,19 @@
-<div class="header">{{time}}</div>
-<div class="thumbnail-preview" [ngClass]="{mini: !isPrimary}">
-    <img *ngIf="(state === 'Online' || state === 'Recording') && url; else noLivePreview" [src]="url"
-         (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
+<div *ngIf="!show" class="d-flex h-100 w-100 align-items-center justify-content-center">
+    <nx-pre-loader [type]="'generic-camera-preview'"></nx-pre-loader>
+</div>
+<div *ngIf="time && !show" class="header">{{time}}</div>
+<div [ngClass]="motionPreview ? {'motion-preview': true, 'd-none': !show} : {mini: !isPrimary, 'd-none': !show,'light-thumbnail-preview': lightBackground, 'thumbnail-preview': !lightBackground}">
+    <img *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
+        [style.height]="motionPreview ? '100%' : 'auto'"
+        [attr.object-fit]="'cover'"
+        (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
-        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="state" class="hm-camera-preview">
-            <div *ngSwitchCase="'Offline'">OFFLINE</div>
-            <div *ngSwitchCase="'Unauthorized'">AUTHENTICATION REQUIRED</div>
-            <div *ngSwitchDefault>UNAVAILABLE</div>
+        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state" 
+            [ngClass]="lightBackground || motionPreview ? 'light-camera-preview' : 'hm-camera-preview'">
+            <div *ngSwitchCase="'No Image'" translate>NO IMAGE</div>
+            <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
+            <div *ngSwitchCase="'Unauthorized'" translate>AUTHENTICATION REQUIRED</div>
+            <div *ngSwitchDefault translate>UNAVAILABLE</div>
         </div>
         <ng-template #noMiniPreview>
              <div class="camera-preview-offline"></div>

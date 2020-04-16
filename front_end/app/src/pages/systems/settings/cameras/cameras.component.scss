@@ -1,0 +1,276 @@
+@import "../../../../styles/typography";
+@import "../../../../../styles/theme_palette";
+
+.camera-settings-info {
+    font-family: $font-family-regular;
+    font-size: $font-size-base;
+    color: $dark9;
+    .header-top-bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        .header-title {
+            display: flex;
+            align-items: start;
+            flex-direction: column;
+            flex-grow: 1;
+            h2 {
+                font-family: $font-family-regular;
+                height: 32px;
+                font-weight: bold;
+                font-size: 24px;
+            }
+        }
+        .camera-buttons {
+            &:hover {
+                color: $dark15;
+                svg-icon {
+                    svg {
+                        g,
+                        path {
+                            fill: $dark15 !important;
+                        }
+                    }
+                }
+            }
+            @extend #regular13;
+            background-color: inherit;
+            color: $light16;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            svg-icon {
+                svg {
+                    height: 20px;
+                    g,
+                    path {
+                        fill: $light16 !important;
+                    }
+                }
+            }
+            a {
+                text-decoration: none;
+                color: inherit;
+            }
+        }
+    }
+
+    .header-table {
+        font-size: $font-size-base;
+        padding: 0;
+        .header-table-cell {
+            display: flex;
+            height: 20px;
+            align-items: flex-end;
+            .cell-title {
+                @extend #regular13;
+            }
+            .cell-ellipsis {
+                margin-bottom: 2px;
+                border-bottom: 1px dotted $light6;
+                flex-grow: 1;
+            }
+        }
+    }
+
+    .camera-setting-buttons {
+        display: flex;
+        justify-content: space-between;
+        .setting-buttons {
+            display: flex;
+            button:first-child {
+                margin-right: 8px;
+            }
+        }
+    }
+
+    @media (max-width: 870px) {
+        .camera-setting-buttons {
+            flex-direction: column;
+            .left button:not(:first-child) {
+                margin-top: 16px;
+            }
+            .right button {
+                margin-top: 16px;
+            }
+            .setting-buttons {
+                flex-direction: column;
+                button {
+                    max-width: 100%;
+                }
+                button:first-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+.preview-wrapper {
+    border-radius: 2px;
+    border: 1px solid $light3;
+    padding: 0;
+}
+
+.forced-aspect {
+    height: 0;
+    overflow: hidden;
+    position: relative;
+
+    &-4-3 {
+        padding-top: calc(3 / 4 * 100%) !important;
+    }
+
+    &-1-1 {
+        padding-top: calc(100%) !important;
+    }
+
+    &-16-9 {
+        padding-top: calc(9 / 16 * 100%) !important;
+    }
+
+    &-3-4 {
+        padding-top: calc(4 / 3 * 100%) !important;
+    }
+
+    &-9-16 {
+        padding-top: calc(16 / 9 * 100%) !important;
+    }
+
+    &-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        }
+  }
+
+  .button-wrapper {
+      min-height: 32px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+
+      & > .btn, & > .btn-default, & button {
+          font-size: 12px;
+      }
+  }
+
+  .sensitivity-buttons {
+      color: $dark9 !important;
+      border-radius: 2px;
+      font-size: 12px;
+
+      border: 1px solid $light4;
+      &:hover {
+          border: 1px solid $light6;
+      }
+
+      &:active, &.active{
+        border: 1px solid $light13;
+      }
+  }
+
+  .button {
+      &-0 {
+        background-color: #FFFFFF4D;
+        &:hover {
+            background-color: #FFFFFF66;
+        }
+        &:active, &.active{
+            background-color: #FFFFFF80 !important;
+        }
+
+      }
+      &-1 {
+        background-color: #627CD64D;
+        &:hover {
+            background-color: #627CD666;
+        }
+        &:active, &.active{
+            background-color: #627CD680 !important;
+        }
+
+      }
+      &-2{
+        background-color: #23A4CB4D;
+        &:hover {
+            background-color: #23A4CB66;
+        }
+        &:active, &.active{
+            background-color: #23A4CB80 !important;
+        }
+
+      }
+      &-3 {
+        background-color: #31BAA24D;
+        &:hover {
+            background-color: #31BAA266;
+        }
+        &:active, &.active{
+            background-color: #31BAA280 !important;
+        }
+
+      }
+      &-4 {
+        background-color: #79BC664D;
+        &:hover {
+            background-color: #79BC6666;
+        }
+        &:active, &.active{
+            background-color: #79BC6680 !important;
+        }
+
+      }
+      &-5 {
+        background-color: #B8BC374D;
+        &:hover {
+            background-color: #B8BC3766;
+        }
+        &:active, &.active{
+            background-color: #B8BC3780 !important;
+        }
+
+      }
+      &-6 {
+        background-color: #FBA4054D;
+        &:hover {
+            background-color: #FBA40566;
+        }
+        &:active, &.active{
+            background-color: #FBA40580 !important;
+        }
+
+      }
+      &-7 {
+        background-color: #E971194D;
+        &:hover {
+            background-color: #E9711966;
+        }
+        &:active, &.active{
+            background-color: #E9711980 !important;
+        }
+
+      }
+      &-8 {
+        background-color: #D247294D;
+        &:hover {
+            background-color: #D2472966;
+        }
+        &:active, &.active{
+            background-color: #D2472980 !important;
+        }
+
+      }
+      &-9 {
+        background-color: #C226264D;
+        &:hover {
+            background-color: #C2262666;
+        }
+        &:active, &.active{
+            background-color: #C2262680 !important;
+        }
+
+      }
+  }
