@@ -196,6 +196,7 @@
     "To": "A",
     "Too many attempts. Try again in a minute.": "Demasiados intentos. Inténtalo de nuevo en un minuto.",
     "Tracks and logs all user actions.": "Rastrea y registra todas las acciones del usuario.",
+    "Try Again": "Try Again",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Actualícelos a la <a routerLink=\"/download\" target=\"_blank\">última compilación</a>",
     "Update your system to the latest build to enable Cloud Storage.": "Actualice su sistema a la última versión para habilitar Cloud Storage.",
     "Updated": "Actualizado",
