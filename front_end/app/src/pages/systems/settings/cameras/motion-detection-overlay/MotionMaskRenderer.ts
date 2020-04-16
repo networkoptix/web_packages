@@ -26,6 +26,7 @@ export class MotionMaskRenderer {
     public canvas: ElementRef<HTMLCanvasElement>;
     public renderer: Subscription;
     public interactions: Subscription;
+    private brandColor: string;
 
     constructor(
         private motionMask: MotionMaskState,
@@ -43,6 +44,7 @@ export class MotionMaskRenderer {
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
         this.selectionZones = this.motionMask.selectionZones;
+        this.brandColor = getComputedStyle(canvas.nativeElement).color;
         this.initInteractions(canvas.nativeElement);
         this.renderer = merge(
             this.maskMatrix,
@@ -61,13 +63,15 @@ export class MotionMaskRenderer {
      * @param canvas ref for target canvas
      */
     private initInteractions(canvas: HTMLCanvasElement) {
+        this.brandColor = getComputedStyle(canvas).color;
+
         // Initialize base observables from events
         const track = (eventName: string) =>
             <Observable<MouseEvent>>fromEvent(canvas, eventName);
         const [
-            mouseDown$, mouseUp$, mouseLeave$, mouseMove$, mouseEnter$
+            mouseDown$, mouseUp$, mouseLeave$, mouseMove$
         ] = [
-            'mousedown', 'mouseup', 'mouseleave', 'mousemove', 'mouseenter'
+            'mousedown', 'mouseup', 'mouseleave', 'mousemove'
         ].map(track);
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(
             (event) => <Observable<KeyboardEvent>>fromEvent(window, event)
@@ -128,7 +132,7 @@ export class MotionMaskRenderer {
                 ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
             )
         ); // For testing, will either remove or move into full UI observable later
-        const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$, mouseEnter$);
+        const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
         const clickBuffer$ = clickAction$.pipe(debounceTime(50));
 
         const initialHover = mouseState$.pipe(
@@ -282,6 +286,7 @@ export class MotionMaskRenderer {
         sensitivity: number,
         column: number
     ) => {
+        // add check here for if border should be
         const top = row * this.cellHeight - 0.5;
         const bottom = (row + 1) * this.cellHeight + 0.5;
         const left = column * this.cellWidth - 0.5;
@@ -294,23 +299,33 @@ export class MotionMaskRenderer {
             row !== this.rows - 1 &&
             sensitivity !== maskMatrix[row + 1][column];
         const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
-        const draw = (fromY, fromX, toY, toX, solid, selected = false) => {
+        const draw = (fromY, fromX, toY, toX, solid, sensitivity = 0) => {
+            const selected = sensitivity >= 100;
             this.ctx.strokeStyle = solid
                 ? selected
-                    ? '#2FA2DB'
+                    ? this.brandColor
                     : 'black'
                 : '#FFFFFF1A';
-            this.ctx.shadowColor = null;
-            this.ctx.shadowBlur = null;
+            this.ctx.shadowColor = 'black';
+            this.ctx.shadowBlur = selected ? 1 : 0;
+            this.ctx.lineWidth = selected ? 2 : 1;
             this.ctx.beginPath();
             this.ctx.moveTo(fromX, fromY);
             this.ctx.lineTo(toX, toY);
             this.ctx.stroke();
         };
-        draw(top, left, top, right, drawTop, sensitivity >= 100);
-        draw(top, right, bottom, right, drawRight);
-        draw(bottom, right, bottom, left, drawBottom);
-        draw(bottom, left, top, left, drawLeft);
+        draw(top, left, top, right, drawTop, Math.max(
+            maskMatrix[Math.max(row - 1, 0)][column], sensitivity
+        ));
+        draw(top, right, bottom, right, drawRight, Math.max(
+            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
+        ));
+        draw(bottom, right, bottom, left, drawBottom, Math.max(
+            maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
+        ));
+        draw(bottom, left, top, left, drawLeft, Math.max(
+            maskMatrix[row][Math.max(column - 1, 0)], sensitivity
+        ));
     };
 
     /**
@@ -361,7 +376,7 @@ export class MotionMaskRenderer {
         };
         this.render();
         this.ctx.lineWidth = 1.5;
-        this.ctx.strokeStyle = '#2FA2DB';
+        this.ctx.strokeStyle = this.brandColor;
         this.ctx.strokeRect(x, y, width, height);
     };
 

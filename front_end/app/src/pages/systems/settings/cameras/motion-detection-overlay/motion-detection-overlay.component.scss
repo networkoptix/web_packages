@@ -1,3 +1,5 @@
+@import '../../../../../../styles/theme_variables';
+
 nx-motion-detection-overlay {
     position: absolute;
     top: 0;
@@ -15,6 +17,7 @@ nx-motion-detection-overlay {
     height: 100%;
     top: 0;
     left: 0;
+    color: $brand_info;
     -webkit-animation: fadeIn ease-in 0.3s;
     -moz-animation: fadeIn ease-in 0.3s;
     -o-animation: fadeIn ease-in 0.3s;
