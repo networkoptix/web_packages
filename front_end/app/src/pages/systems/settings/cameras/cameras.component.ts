@@ -240,7 +240,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     updateCredentials() {
-        this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, this.setCamera);
+        const update = () => {
+            this.showUnauthorized = false;
+            setTimeout(this.setCamera, 1500);
+        };
+
+        this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
     }
 
     selectedAspectWatcher = new Watcher()

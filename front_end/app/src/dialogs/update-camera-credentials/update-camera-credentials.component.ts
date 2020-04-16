@@ -48,10 +48,10 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
             return this.system.updateCameraSettings(this.camera.id, { defaultCredentials: `${this.loginName}:${this.password}` })
                 .then(_ => this.system.getCameras().then(_ => {
                     this.system.systemInfo = this.system;
-                    this.updateCallback();
                 }));
         }).then(() => {
             this.activeModal.close();
+            this.updateCallback();
         });
     }
 

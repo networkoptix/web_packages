@@ -5,5 +5,5 @@
 <style type="text/css">
 	.st0{fill:#F02C2C;}
 </style>
-<circle class="st0" cx="12" cy="12" r="5"/>
+<circle class="st0" cx="12" cy="12" r="5" style="fill: #F02C2C !important;"/>
 </svg>
