@@ -1,6 +1,6 @@
 <div class="card simple-{{type}}">
-    <nx-section>
-        <div class="row p-0">
+    <nx-section [nonPadded]="type === 'warning' || type === 'error'">
+        <div class="row p-0" [ngClass]="{'warning-error-padding': type === 'warning' || type === 'error'}">
             <div class="col-12 col-md-6 d-flex flex-row">
                 <div>
                     <svg-icon [src]="iconSrc"
@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
-                <button *ngIf="btnCaption || btnIconSrc" class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 1rem"
+                <button *ngIf="btnCaption || btnIconSrc" class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 20px"
                         (click)="onClick()">
                     <svg-icon [src]="btnIconSrc"
                               [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
