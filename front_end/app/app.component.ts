@@ -186,6 +186,8 @@ export class AppComponent {
         // @ts-ignore
         this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
         // @ts-ignore
+        this.CONFIG.trialLicenseKey = window.SETTINGS.trialLicenseKey;
+        // @ts-ignore
         this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
         // @ts-ignore
         this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;

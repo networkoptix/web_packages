@@ -786,6 +786,18 @@
             "value": "GTM-5MRNWP",
             "optional": false,
             "advanced": true
+          },
+          {
+            "label": "Trial license key",
+            "name": "%TRIAL_LICENSE_KEY%",
+            "description": "Trial license key info. ex.: A123-B456-CDE9-QWE0",
+            "type": "text",
+            "value": "",
+            "optional": false,
+            "advanced": true,
+            "meta": {
+              "regex": "^[0-9A-Z]{4}[-][0-9A-Z]{4}[-][0-9A-Z]{4}[-][0-9A-Z]{4}$"
+            }
           }
         ]
       },

@@ -43,6 +43,7 @@ export interface BaseConfig {
     company: Company;
     footerItems: any;
     googleTagManagerId: string;
+    trialLicenseKey: string,
     pushConfig: string;
     trafficRelayHost: string;
     vmsName: string;

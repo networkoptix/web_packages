@@ -343,6 +343,7 @@ export const nxConfig: IConfig = {
     },
     footerItems        : '',
     googleTagManagerId : '',
+    trialLicenseKey    : '',
     pushConfig         : '',
     trafficRelayHost   : '',
     vmsName            : '',
