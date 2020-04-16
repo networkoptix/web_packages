@@ -122,6 +122,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'app_types_for_platform': asset.read_global_value('%APP_TYPES_FOR_PLATFORM%'),
                 'available_downloads_platform': asset.read_global_value('%AVAILABLE_DOWNLOADS_PLATFORM%'),
                 'cloud_storage_enabled': asset.read_global_value("%CLOUD_STORAGE_ENABLED%"),
+                'cloud_storage_size': asset.read_global_value('%CLOUD_STORAGE_SIZE%'),
                 'copyright_year': asset.read_global_value("%COPYRIGHT_YEAR%"),
                 'company_name': asset.read_global_value("%COMPANY_NAME%"),
                 'company_link': asset.read_global_value("%COMPANY_LINK%"),
@@ -151,9 +152,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled
-            },
-            'portal_config': {
-                'cloud_storage_size': asset.read_global_value('%CLOUD_STORAGE_SIZE%')
             }
         }
         cache.set(customization_name, data)

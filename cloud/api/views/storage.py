@@ -14,7 +14,7 @@ from cms.models import cloud_portal_customization_cache
 def create(request):
     require_params(request, ['systemId'])
     storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
-        .get('portal_config', {}).get('cloud_storage_size', 0)
+        .get('config', {}).get('cloud_storage_size', 0)
 
     if int(storage_size) < 1:
         raise APIInternalException('Storage size not set.')
@@ -62,7 +62,7 @@ def usage_stats(request):
         raise APINotFoundException({'message': 'System does not cloud storage.'})
 
     storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION) \
-        .get('portal_config', {}).get('cloud_storage_size', 0)
+        .get('config', {}).get('cloud_storage_size', 0)
 
     aggregated_storage_info = {
         'spaceUsed': 0,
