@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
-CLOUD_STORAGE_SPACE = settings.CLOUD_STORAGE_SIZE
 
 
 def lower_case_email(func):
@@ -399,11 +398,11 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def create(email, password, system_id):
+    def create(email, password, system_id, storage_size):
         request = f"{CLOUD_STORAGES_URL}/"
         body = {
             "systems": [system_id],
-            "totalSpace": str(CLOUD_STORAGE_SPACE)
+            "totalSpace": storage_size
         }
         return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
 

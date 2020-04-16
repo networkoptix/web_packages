@@ -4,7 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from api.controllers import cloud_api
-from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_success, require_params
+from api.helpers.exceptions import APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params
+from cms.models import cloud_portal_customization_cache
 
 
 @api_view(['POST'])
@@ -12,9 +13,16 @@ from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_
 @handle_exceptions
 def create(request):
     require_params(request, ['systemId'])
+    storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
+        .get('portal_config', {}).get('cloud_storage_size', 0)
+
+    if int(storage_size) < 1:
+        raise APIInternalException('Storage size not set.')
+
     storage_info = cloud_api.Storage.create(request.session['login'],
                                             request.session['password'],
-                                            request.data.get('systemId'))
+                                            request.data.get('systemId'),
+                                            storage_size)
     return api_success(storage_info)
 
 

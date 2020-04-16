@@ -786,6 +786,15 @@
             "value": "GTM-5MRNWP",
             "optional": false,
             "advanced": true
+          },
+          {
+            "label": "Cloud Storage Size (Bytes)",
+            "name": "%CLOUD_STORAGE_SIZE%",
+            "description": "The cloud storage size for a system. Default storage size is 50GB. (50 * 1024 ^ 3)",
+            "type": "text",
+            "value": "53687091200",
+            "optional": false,
+            "advanced": true
           }
         ]
       },

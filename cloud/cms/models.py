@@ -151,6 +151,9 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled
+            },
+            'portal_config': {
+                'cloud_storage_size': asset.read_global_value('%CLOUD_STORAGE_SIZE%')
             }
         }
         cache.set(customization_name, data)

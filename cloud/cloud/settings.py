@@ -560,4 +560,3 @@ PUSH_NOTIFICATIONS_SETTINGS = {
 # Cloud storage settings
 CLOUD_STORAGE_URL = conf['cloud_storage']['url']
 CLOUD_STORAGES_URL = conf['cloud_storages']['url']
-CLOUD_STORAGE_SIZE = 50 * 1073741824
