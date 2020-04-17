@@ -392,7 +392,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _remove_from_system(email, password, storage_id, system_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/{system_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systemS/{system_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
