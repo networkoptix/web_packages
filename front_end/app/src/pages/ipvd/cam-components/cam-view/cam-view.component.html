@@ -174,8 +174,9 @@
             </div>
             <div class="row">
                 <div class="col-12 mb-2 error-label" translate>This information is based on what camera reports through API. Actual list of events supported by this camera my be different.</div>
-                <div class="analytics-label col-12" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                    {{event}}
+                <div class="analytics-label col-12"
+                     *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow"
+                     [innerText]="event">
                 </div>
             </div>
 
