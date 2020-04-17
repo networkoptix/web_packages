@@ -3,7 +3,7 @@
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
     <ng-container *ngIf="selectedCamera">
-        <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info mb-2">
+        <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
                 type="error"
