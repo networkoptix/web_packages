@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "Destek",
     "INTEGRATION SUPPORT URL TEXT": "Destek URL'si",
     "INTEGRATION SUPPORT EMAIL TEXT": "Destek maili",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "By submitting this form you agree to be contacted by {{developer}} and/or Network Optix. You will find {{developer}} privacy policy here and Network Optix privacy policy here which include instruction on how to withdraw your consent.",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "Bu formu göndererek {{developer}} ve / veya Network Optix tarafından sizinle iletişim kurulmasını kabul edersiniz. Burada {{developer}} gizlilik politikası ve izninizi nasıl geri çekeceğiniz konusunda talimatlar içeren Network Optix gizlilik politikası bulacaksınız.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Mesaj gönderildi.",
     "REGISTER TITLE TEXT": "Hesap Oluştur",
     "DOWNLOAD TITLE TEXT": "İndir %VMS_NAME%",
@@ -213,7 +213,7 @@
     "INFORMATION TEXT": "Bilgi",
     "SYSTEM OFFLINE TEXT": "Sistem çevrimdışı",
     "SYSTEM CANNOT BE ACCESSED TEXT": "Bu sistem çevrimdışı ve şu anda erişilemiyor.",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "VIEWING IMPORTED REPORT TEXT": "İçe aktarılan bir raporu görüntülüyorsunuz, yeni bir rapor almak için sayfayı yenileyin",
     "NO ALERTS TEXT": "Uyarı Yok",
     "SYSTEM DOING WELL TEXT": "Sisteminiz iyi durumunda!"
 }
