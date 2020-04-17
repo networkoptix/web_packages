@@ -126,9 +126,13 @@
             "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้"
         },
         "chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "อัตโนมัติ",
+            "best": "Best",
             "high": "สูง",
+            "medium": "Medium",
             "low": "ต่ำ"
         },
         "general": "General",
@@ -525,6 +529,10 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Please select...",

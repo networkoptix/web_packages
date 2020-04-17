@@ -126,9 +126,13 @@
             "unauthorized": "認証が必要です。"
         },
         "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "自動",
+            "best": "Best",
             "high": "高い",
+            "medium": "Medium",
             "low": "低い"
         },
         "general": "General",
@@ -525,6 +529,10 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "選択してください",

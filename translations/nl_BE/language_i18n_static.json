@@ -126,9 +126,13 @@
             "unauthorized": "Authentication required"
         },
         "chromeCastWarning": "Chromecast is arbeidsintensief en kan problemen veroorzaken op uw server.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Automatisch",
+            "best": "Best",
             "high": "Hoog",
+            "medium": "Medium",
             "low": "Lage"
         },
         "general": "Algemeen",
@@ -213,7 +217,7 @@
             "commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "U kunt alleen systemen samenvoegen met dezelfde eigenaar en deze systeemeigenaren zijn verschillend.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
             "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
             "mergeConfirmation": "U staat op het punt Systems <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen. Instellingen en de naam worden overgenomen van de <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Huidig systeem samenvoegen met",
@@ -234,13 +238,13 @@
             },
             "secondaryCannotMerge": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
             "secondarySystemUnavailable": "Systeem {{targetSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverAtUrl": "server op {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Geen toegang tot het {{targetSystem}} systeem.</p><p>Zorg ervoor dat de opgegeven server online is en probeer het opnieuw.</p>",
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
             "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
             "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige systeem",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} is ontoegankelijk",
             "systemsIncompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
             "systemVersionOld": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
             "systemVersionNew": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
@@ -525,6 +529,10 @@
                 "untilFinished": "Tot het samenvoegen is voltooid, kunt u zich aanmelden bij dit systeem en video bekijken, maar kunt u geen instellingen wijzigen.",
                 "whenFinished": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"{{systemName}}\" en zal het huidige systeem worden verwijderd."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Selecteer...",
@@ -537,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
+            "to": "wordt samengevoegd met dit systeem",
             "mayTake": "Afhankelijk van de grootte van de database kan dit enkele uren duren."
         },
         "finishingMerge": "Samenvoegen van systemen voltooid",
@@ -583,7 +591,7 @@
             "reseting": "resetten...",
             "restarting": "herstarten..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Servernaam opgeslagen."
     },
     "system": {
         "MERGE_FINISHES": "Wanneer het samenvoegen is voltooid, worden alle gebruikers en camera's van dit systeem beschikbaar in systeem \"<strong>{{targetSystemName}}</strong>\" en zal het huidige systeem worden verwijderd.",

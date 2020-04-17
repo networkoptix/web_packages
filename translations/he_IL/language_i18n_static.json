@@ -126,9 +126,13 @@
             "unauthorized": "נדרש אימות"
         },
         "chromeCastWarning": "Chromecast הוא משאב אינטנסיבי ועשוי לגרום לבעיות בשרת שלך.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "אוטומטי",
+            "best": "Best",
             "high": "גבוה",
+            "medium": "Medium",
             "low": "נמוך"
         },
         "general": "General",
@@ -218,14 +222,14 @@
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
-            "noServerFound": "No server found",
+            "noServerFound": "לא נמצא שרת",
             "newSystemDisplayName": "New System",
             "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "ownerCanMergeText": "ניתן למזג רק מערכות שבהן אתה הבעלים",
             "passwordRequired": "נדרשת סיסמא",
             "passwordWrong": "סיסמא שגויה",
             "primaryCannotMerge": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
+            "primarySystemOffline": "המערכת {{primarySystem}} אינה זמינה ולא ניתן למזגה עם מערכת {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
                 "a_recommend": "אנו ממליצים להתייעץ עם",
@@ -239,13 +243,13 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
+            "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
+            "urlEmpty": "הזן כתובת שרת",
+            "urlNotValid": "הזן כתובת URL חוקית",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
         },
@@ -525,6 +529,10 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "נא לבחור...",
@@ -546,7 +554,7 @@
             "previewRibbon": "דף זה הוא תצוגה מקדימה של השינויים האחרונים, והוא אינו תואם לגרסה הזמינה לציבור."
         },
         "systemOffline": "המערכת אינה מקוונת. ייתכן שהגדרות מסוימות אינן זמינות.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "מערכת זו מעורבת כעת בפעולת מיזוג."
     },
     "search": {
         "Any": "כל",

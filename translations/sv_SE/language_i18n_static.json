@@ -126,9 +126,13 @@
             "unauthorized": "Autentisering krävs"
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Auto",
+            "best": "Best",
             "high": "Hög",
+            "medium": "Medium",
             "low": "Låg"
         },
         "general": "Allmänt",
@@ -213,7 +217,7 @@
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Du kan bara slå samman system med samma ägare och dessa systemägare är olika.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
             "mergeConfirmation": "Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>. Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
@@ -234,13 +238,13 @@
             },
             "secondaryCannotMerge": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
             "secondarySystemUnavailable": "System {{targetSystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverAtUrl": "server vid {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Har inte åtkomst till {{targetSystem}} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "serverVersionOld": "Denna server har en äldre programversion som är inkompatibel med det nuvarande systemet. Uppdatera den till den senaste versionen för att slå ihop den med den nuvarande.",
             "serverVersionNew": "Denna server har nyare programversion än det nuvarande systemet. Uppdatera båda systemen till samma bygga för att slå samman dem.",
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} är otillgänglig",
             "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
             "systemVersionOld": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
             "systemVersionNew": "System {{targetSystem}} har en nyare programversion som inte är kompatibel med det nuvarande systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman det med {{targetSystem}} systemet.",
@@ -525,6 +529,10 @@
                 "untilFinished": "Innan sammanslagningen är klar kan du logga in på det här systemet och titta på video, men kan inte ändra några inställningar.",
                 "whenFinished": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i {{systemName}} System, och detta system kommer att raderas."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Vänligen välj...",
@@ -537,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
+            "to": "sammanfogas till detta system",
             "mayTake": "Beroende på databasens storlek kan det ta upp till flera timmar."
         },
         "finishingMerge": "Slutför sammanslagningen av system",
@@ -583,7 +591,7 @@
             "reseting": "återställer...",
             "restarting": "startar om..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Servernamn sparat."
     },
     "system": {
         "MERGE_FINISHES": "När sammanslagningen är klar kommer alla användare och kameror från detta system att bli tillgängliga i <strong>{{targetSystemName}}</strong> System, och detta system kommer att raderas.",

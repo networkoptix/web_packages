@@ -126,9 +126,13 @@
             "unauthorized": "Autenticación necesaria"
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Auto",
+            "best": "Best",
             "high": "Elevado",
+            "medium": "Medium",
             "low": "Bajo"
         },
         "general": "General",
@@ -525,6 +529,10 @@
                 "untilFinished": "Hasta que finalice la fusión, puede iniciar sesión en este sistema y ver el video, pero no puede cambiar ninguna configuración.",
                 "whenFinished": "Cuando finalice la fusión, todos los usuarios y cámaras de este sistema estarán disponibles en el sistema {{systemName}}, y este sistema se eliminará."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Por favor, seleccione...",

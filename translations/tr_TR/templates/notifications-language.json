@@ -9,19 +9,19 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "{{{message.asset}} için satış talebi"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "{{{message.asset}} için teknik sorgulama"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "{{{message.asset}}için geri bildirim}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Kamera Sayfası Geribildirimi{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}:{{{message.asset}} incelemesi gereken yeni bir sürümü var"
   },
   "restore_password": {
     "emailSubject": "Parolanızı sıfırlayın"

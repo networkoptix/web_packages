@@ -126,9 +126,13 @@
             "unauthorized": "Authentifizierung erforderlich"
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Auto",
+            "best": "Best",
             "high": "Hoch",
+            "medium": "Medium",
             "low": "Niedrig"
         },
         "general": "Allgemein",
@@ -213,7 +217,7 @@
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
             "differentOwners": "Sie können nur Systeme mit demselben Besitzer zusammenführen, und diese Systembesitzer sind unterschiedlich.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
             "mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong> verwendet.",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
@@ -234,13 +238,13 @@
             },
             "secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "secondarySystemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverAtUrl": "Server bei {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Zugriff auf das {{targetSystem}}-System nicht möglich.</p><p>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.</p>",
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "serverVersionOld": "Dieser Server verfügt über eine ältere Softwareversion, die nicht mit dem aktuellen System kompatibel ist. Aktualisieren Sie es auf den neuesten Build, um es mit dem aktuellen zusammenzuführen.",
             "serverVersionNew": "Dieser Server verfügt über eine neuere Softwareversion als das aktuelle System. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
             "systemVersionOld": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "systemVersionNew": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
@@ -525,6 +529,10 @@
                 "untilFinished": "Bis die Zusammenführung abgeschlossen ist, können Sie sich bei diesem System anmelden und Videos ansehen, aber keine Einstellungen ändern.",
                 "whenFinished": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"{{systemName}}}\" verfügbar, und dieses System wird gelöscht."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Bitte auswählen...",
@@ -537,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
+            "to": "wird mit diesem System zusammengeführt",
             "mayTake": "Abhängig von der Größe der Datenbank kann dies mehrere Stunden dauern."
         },
         "finishingMerge": "Zusammenführung von Systemen abschließen",
@@ -583,7 +591,7 @@
             "reseting": "Zurücksetzen...",
             "restarting": "Neustarten..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Servername gespeichert."
     },
     "system": {
         "MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}}</strong>\" verfügbar, und dieses System wird gelöscht.",

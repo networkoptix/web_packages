@@ -126,9 +126,13 @@
             "unauthorized": "인증이 필요합니다"
         },
         "chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "자동",
+            "best": "Best",
             "high": "높은",
+            "medium": "Medium",
             "low": "낮은"
         },
         "general": "General",
@@ -525,6 +529,10 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "선택하십시오",
