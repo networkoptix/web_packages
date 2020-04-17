@@ -668,7 +668,9 @@ export class MergeModalContent {
     }
 
     getSecondaryName() {
-        let name: string = this.secondarySystem.name || this.secondarySystem.info && this.secondarySystem.info.name;
+        let name: string = this.secondarySystem.systemName ||
+            this.secondarySystem.name ||
+            this.secondarySystem.info && this.secondarySystem.info.name;
         if (name === this.LANG.dialogs.merge.otherSystem) {
             name = this.LANG.dialogs.merge.serverAtUrl.replace('{{url}}', this.serverUrl);
         }
