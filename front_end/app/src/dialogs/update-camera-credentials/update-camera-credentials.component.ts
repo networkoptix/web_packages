@@ -22,7 +22,6 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     LANG: LanguageI18NStaticTypes;
     update: Process;
-    currentCredentials: {loginName: string, password: string};
     loginName = '';
     password = '';
 
@@ -35,16 +34,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     }
 
     ngOnInit() {
-        const [loginName, password] = (this.camera.parsedAddParams && this.camera.parsedAddParams.defaultCredentials || ':').split(':');
-        this.currentCredentials = { loginName, password };
-        this.loginName = loginName;
-        this.password = password;
         this.update = this.processService.createProcess(() => {
-            if (this.loginName === this.currentCredentials.loginName &&
-                this.password === this.currentCredentials.password
-            ) {
-                return Promise.resolve();
-            }
             return this.system.updateCameraSettings(this.camera.id, { defaultCredentials: `${this.loginName}:${this.password}` })
                 .then(_ => this.system.getCameras().then(_ => {
                     this.system.systemInfo = this.system;
@@ -53,12 +43,6 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
             this.activeModal.close();
             this.updateCallback();
         });
-    }
-
-    clearExistingPassword() {
-        if (this.password === '******') {
-            this.password = '';
-        }
     }
 
     close() {

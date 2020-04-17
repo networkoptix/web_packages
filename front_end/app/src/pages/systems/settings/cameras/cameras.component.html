@@ -91,7 +91,7 @@
                     <nx-section>
                         <h4 class="mb-3" translate>Audio</h4>
                         <nx-checkbox name="audioEnabled" componentId="audioEnabled" [(ngModel)]="audioEnabled" [disabled]="!selectedCamera.isAudioSupported"></nx-checkbox>
-                        <span [ngClass]="!selectedCamera.isAudioSupported && 'text-muted'" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)" translate>Enable Audio</span>
+                        <span [ngClass]="{ 'disabled': !selectedCamera.isAudioSupported }" (click)="toggle('audioEnabled', !selectedCamera.isAudioSupported)" translate>Enable Audio</span>
                     </nx-section>
                     <nx-section>
                         <h4 class="mb-3" translate>Authentication</h4>
