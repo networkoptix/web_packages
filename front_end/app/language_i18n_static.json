@@ -701,7 +701,7 @@
         "messages": {
             "required": "{{number}} more required",
             "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}}",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
             "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },

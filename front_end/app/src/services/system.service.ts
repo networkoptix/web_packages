@@ -632,7 +632,7 @@ export class NxSystem extends System implements OnDestroy {
     usersPromise: any;
     systemPoll: any;
 
-    licensesModifiedSubject = new BehaviorSubject<boolean>(false);
+    licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
 

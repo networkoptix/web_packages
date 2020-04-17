@@ -58,8 +58,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))
                     .then(response => {
                         if (response.reply) {
+                            this.system.licensesModified = this.license;
                             this.license = '';
-                            this.system.licensesModified = true;
 
                             this.dialogsService
                                 .notify(this.LANG.license.messages.activated, 'success');
@@ -149,9 +149,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         }
     }
 
-    pasteFn() {
+    pasteFn(form) {
         navigator.clipboard.readText().then(clipText => {
-            this.license = clipText;
+            this.setLicenseKey(clipText.replace(/-/g, ''), form); // don't confuse ngModel - remove dashes :)
         });
     }
 

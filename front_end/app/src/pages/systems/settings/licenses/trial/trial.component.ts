@@ -43,7 +43,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
                 .activateLicense(this.selectedServer.value, this.trialLicense)
                 .then(response => {
                     if (response.reply) {
-                        this.system.licensesModified = true;
+                        this.system.licensesModified = this.trialLicense;
                         this.haveTrialLicense = true;
 
                         this.dialogsService

@@ -24,8 +24,10 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     orderedLicense: any = [];
+    newlyAddedLicense: any;
 
     @Input() licenses: any = [];
+    @Input() system: NxSystem;
 
     private setupDefaults() {
         this.orderedLicense = [];
@@ -45,18 +47,34 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.orderedLicense = [];
+            this.newlyAddedLicense = this.formatLicenseKey(this.system.licensesModified);
             this.licenses.forEach((lic) => {
                 this.orderedDetails(lic.info);
             });
+
+            this.licenses.sort((a, b) => a.order < b.order ? 1 : -1);
         }
     }
 
     ngOnDestroy(): void {
     }
 
+    private formatLicenseKey = (key: string) => {
+        if (!key) {
+            return '';
+        }
+
+        const chunks = key.match(/.{1,4}/g);
+        return chunks.join('-').toUpperCase(); // returns AAAA-BBBB-CCCC-DDDD
+    };
+
     private orderedDetails(info): void {
+        const order = (info.serial === this.newlyAddedLicense) ? 1 : 2;
         this.orderedLicense[info.serial] = [
             {
+                name  : 'order',
+                value : order
+            }, {
                 name  : this.LANG.license.info.type,
                 value : info.type
             }, {
@@ -74,7 +92,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 error : info.expired
             }, {
                 name  : this.LANG.license.info.expires,
-                value : this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a'),
+                value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
                 error : info.expired
             }, {
                 name  : this.LANG.license.info.deactivations,
