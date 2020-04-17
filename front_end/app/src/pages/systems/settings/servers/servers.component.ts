@@ -77,9 +77,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.systemSubscription = this.settingsService.systemSubject
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
-                if (!system.isOnline) {
-                    this.isOffline = true;
-                }
+                this.isOffline = !system.isOnline;
                 this.settingsService.footerSubject.next(true);
 
                 if (!system.permissions || !system.permissions.editUsers) {
