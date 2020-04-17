@@ -411,8 +411,12 @@ class Storage(object):
     @lower_case_email
     def delete_from_system(email, password, system_id):
         storages = Storage.list_system_storages(email, password, system_id)
+        logger.debug(f"Delete storage for system.\tEmail: {email} Password: {password} SystemId: {system_id}")
         for storage in storages:
-            Storage._delete(email, password, storage['id'])
+            storage_id = storage.get('id')
+            logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
+            Storage._remove_from_system(email, password, storage_id, system_id)
+            Storage._delete(email, password, storage_id)
         return True
 
     @staticmethod
