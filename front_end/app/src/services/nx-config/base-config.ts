@@ -437,6 +437,7 @@ export interface Search {
 }
 
 export interface Servers {
+    checkStatusTimeout: number;
     port: Port;
     status: ServersStatus;
 }

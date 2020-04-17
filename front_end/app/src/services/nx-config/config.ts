@@ -287,7 +287,8 @@ export const nxConfig: IConfig = {
         minSystems   : 9 // We need at least 9 system to enable search
     },
     servers: {
-        port: {
+        checkStatusTimeout : 3400,
+        port               : {
             max           : 65535,
             min           : 1,
             restrictedMax : 1024

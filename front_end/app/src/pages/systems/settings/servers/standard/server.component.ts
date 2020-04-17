@@ -183,7 +183,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     setTimeout(() => {
                         this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
                         this.checking = false;
-                    }, 3400);
+                    }, this.CONFIG.servers.checkStatusTimeout);
                 }
             })
             .catch(err => {
