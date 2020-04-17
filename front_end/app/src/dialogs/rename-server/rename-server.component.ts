@@ -7,7 +7,7 @@ import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types
 @Component({
     selector   : 'nx-modal-rename-server-content',
     templateUrl: 'rename-server.component.html',
-    styleUrls  : []
+    styleUrls  : ['rename-server.component.scss']
 })
 export class RenameServerModalContent {
     @Input() system: any;
