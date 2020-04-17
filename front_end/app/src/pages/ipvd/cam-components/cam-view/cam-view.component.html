@@ -167,25 +167,15 @@
             <div class="row">
                 <div class="col-7 card--body-heading">
                     <h4>
-                        <span *ngIf="activeCamera.analyticsEvents.length">{{activeCamera.analyticsEvents.length}}&nbsp;</span>
                         <span *ngIf="activeCamera.analyticsEvents.length == 0 || activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
                         <span *ngIf="activeCamera.analyticsEvents.length == 1" translate>Analytics Event</span>
                     </h4>
                 </div>
             </div>
-            <div>
-                <div class="col-7 float-left">
-                    <div class="row col-12 p-0" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                        <div class="analytics-label">
-                            {{event}}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-5 pr-0 float-left disclaimer">
-                    <ng-container translate>
-                        Note: Actual supported events list could be different.
-                        Please check the specific camera before planning.
-                    </ng-container>
+            <div class="row">
+                <div class="col-12 mb-2 error-label" translate>This information is based on what camera reports through API. Actual list of events supported by this camera my be different.</div>
+                <div class="analytics-label col-12" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
+                    {{event}}
                 </div>
             </div>
 
@@ -197,9 +187,6 @@
             </div>
 
             <div class="row mt-2" *ngIf="showAllEvents">
-                <div class="col-12 mb-2 info-label" translate>
-                    Actual number of events supported by this camera may be bigger.
-                </div>
                 <div class="col-12">
                     <a href (click)="showAllEvents = false; analyticsToShow = CONFIG.ipvd.analyticsToShow; false"
                        translate>Collapse</a>
