@@ -31,7 +31,7 @@ def create(request):
 @handle_exceptions
 def delete(request):
     require_params(request, ['systemId', 'password'])
-    cloud_api.Storage.delete_from_system(request.session['login'],
+    cloud_api.Storage.delete_from_system(request.user.email,
                                          request.data.get('password'),
                                          request.data.get('systemId'))
     return api_success()
