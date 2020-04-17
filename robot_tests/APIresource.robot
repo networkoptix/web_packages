@@ -212,6 +212,13 @@ Detach Server From Cloud
     [Return]    ${resp.json()}
 
 # Local user management
+Get System Settings
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get System Settings session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=    Get Request    Get System Settings session   /ec2/getSettings
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
+
 Get Users
     [Arguments]    ${auth}    ${server url}
     Create Digest Session    Get Users session   ${server url}    auth=${auth}    disable_warnings=1
@@ -236,7 +243,7 @@ Save User Role
     Return From Keyword    ${resp.json()}
 
 Remove User
-    [Arguments]    ${auth}    ${server url}
+    [Arguments]    ${auth}    ${server url}    ${user id}
     &{data}=   Create Dictionary    id=${user id}
     Create Digest Session    Remove User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
