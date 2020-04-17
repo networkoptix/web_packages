@@ -2,10 +2,9 @@
 Verify on Servers Page
     Wait Until Elements are Visible
     ...    ${PORT INPUT}
-    ...    ${CHECK STATUS BUTTON}
+    # ...    ${CHECK STATUS BUTTON}
     ...    ${RENAME SERVER BUTTON}
     ...    ${RESTART SESRVER BUTTON}
-    ...    ${RESET SERVER TO DEFAULTS}
     ...    ${FULL INFO BUTTON}
 
 Log in to user and system
@@ -15,3 +14,11 @@ Log in to user and system
     Run Keyword If    '${user}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
     Run Keyword If    '${user}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
     Run Keyword Unless    '${user}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+
+Verify Rename Dialog
+    Wait Until Elements are Visible
+    ...    ${RENAME SERVER FORM}
+    ...    ${RENAME SAVE BUTTON}
+    ...    ${RENAME CANCEL BUTTON}
+    ...    ${RENAME CLOSE BUTTON}
+    ...    ${$RENAME SERVER INPUT}

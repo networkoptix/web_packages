@@ -258,5 +258,8 @@
     "SYSTEM DOING WELL TEXT"               :    "Your system must be doing well!",
 
     "PORT TEXT"                            :    "Port",
-    "CHECK STATUS TEXT"                    :    "Check Status"
+    "CHECK STATUS TEXT"                    :    "Check Status",
+
+    "SERVER NAME REQUIRED"                 :    "Server name is required",
+    "SERVER NAME SAVED"                    :    "Server name saved."
 }
