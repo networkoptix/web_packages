@@ -126,9 +126,13 @@
             "unauthorized": "需要身份验证"
         },
         "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "自动",
+            "best": "Best",
             "high": "高",
+            "medium": "Medium",
             "low": "低"
         },
         "general": "General",
@@ -213,7 +217,7 @@
             "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
             "connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
             "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
-            "duplicateServers": "Some server exists in both systems - in the selected and in the current one. <br><br> Remove offline and incompatible servers from each system and try again.",
+            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>. Settings and the name will be taken from <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Merge current system with",
@@ -234,11 +238,13 @@
             },
             "secondaryCannotMerge": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
             "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverNotAvailable": "Can't access the {{targetSystem}} system.<br><br>Make sure the specified server is online and try again.",
+            "serverAtUrl": "server at {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
             "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
@@ -523,6 +529,10 @@
                 "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
                 "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "请选择...",
@@ -535,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system.",
+            "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
         "finishingMerge": "Finishing systems merge",
@@ -581,7 +591,7 @@
             "reseting": "reseting...",
             "restarting": "restarting..."
         },
-        "successRename": "Server name renamed."
+        "successRename": "Server name saved."
     },
     "system": {
         "MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",

@@ -1,19 +1,21 @@
-import { Component, Input }          from '@angular/core';
-import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { Component, Input, ViewChild } from '@angular/core';
+import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }   from '../../services/nx-language-provider';
+import { NxProcessService }            from '../../services/process.service';
+import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-modal-rename-server-content',
     templateUrl: 'rename-server.component.html',
-    styleUrls  : []
+    styleUrls  : ['rename-server.component.scss']
 })
 export class RenameServerModalContent {
     @Input() system: any;
     @Input() serverId: string;
     @Input() serverName: string;
     @Input() closable: any;
+
+    @ViewChild('renameServerForm') renameForm: HTMLFormElement;
 
     LANG: LanguageI18NStaticTypes;
     renameServer: any;
@@ -29,11 +31,15 @@ export class RenameServerModalContent {
     ngOnInit() {
         this.renameServer = this.processService
             .createProcess(() => this.system.renameServer(this.serverId, this.serverName),
-                { successMessage: this.LANG.toastMessage.system.rename.success })
+                { successMessage: this.LANG.servers.successRename })
             .then(() => this.activeModal.close(this.serverName));
     }
 
-    close() {
-        this.activeModal.close();
+    verifyName(serverName) {
+        if (/^\s+$/.test(serverName)) {
+            this.renameForm.form.controls.serverName.setErrors({ invalidInput: true });
+        } else {
+            this.serverName = serverName;
+        }
     }
 }

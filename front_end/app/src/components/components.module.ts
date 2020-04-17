@@ -46,6 +46,7 @@ import { NxSectionPlaceholderComponent }    from './placeholders/section/section
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent } from './password-input-tag-validation/password-tag-validation.component';
 import { downgradeComponent }               from '@angular/upgrade/static';
+import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
 
 @NgModule({
     imports: [
@@ -60,6 +61,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         AngularSvgIconModule.forRoot()
     ],
     declarations: [
+        NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -99,6 +101,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         ToastsContainer
     ],
     entryComponents: [
+        NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,
@@ -170,6 +173,7 @@ import { downgradeComponent }               from '@angular/upgrade/static';
         NxRibbonService
     ],
     exports: [
+        NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
         NxAccountSettingsDropdown,

@@ -34,11 +34,11 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() componentId: string;
     @Input() name: string;
     @Input() label: string;
-    @Input() value: string;
+    @Input() value: 'tristate' | string;
     @Input() disabled: any;
     @Output() onClick = new EventEmitter<string>();
 
-    private state: string;
+    public state: string;
     private _value: any;    // ngModel representation
     private _rbxStates = {
         rbFalse   : 'unchecked',
@@ -67,7 +67,9 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
      * Write a new value to the element.
      */
     writeValue(value: any) {
-        if ((value && this.value === value)) {
+        if (value === 'tristate' || value === 1) {
+            this.state = this._rbxStates.rbOrElse; // 'checked'
+        } else if ((value && this.value === value)) {
             this.state = this._rbxStates.rbTrue; // 'checked'
         } else {
             // clear other radio buttons

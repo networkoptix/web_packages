@@ -4,7 +4,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
 from api.controllers import cloud_api
-from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_success, require_params
+from api.helpers.exceptions import APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params
+from cms.models import cloud_portal_customization_cache
 
 
 @api_view(['POST'])
@@ -12,9 +13,16 @@ from api.helpers.exceptions import APINotFoundException, handle_exceptions, api_
 @handle_exceptions
 def create(request):
     require_params(request, ['systemId'])
+    storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION)\
+        .get('config', {}).get('cloud_storage_size', 0)
+
+    if int(storage_size) < 1:
+        raise APIInternalException('Storage size not set.')
+
     storage_info = cloud_api.Storage.create(request.session['login'],
                                             request.session['password'],
-                                            request.data.get('systemId'))
+                                            request.data.get('systemId'),
+                                            storage_size)
     return api_success(storage_info)
 
 
@@ -23,7 +31,7 @@ def create(request):
 @handle_exceptions
 def delete(request):
     require_params(request, ['systemId', 'password'])
-    cloud_api.Storage.delete_from_system(request.session['login'],
+    cloud_api.Storage.delete_from_system(request.user.email,
                                          request.data.get('password'),
                                          request.data.get('systemId'))
     return api_success()
@@ -53,6 +61,9 @@ def usage_stats(request):
     if len(storages) == 0:
         raise APINotFoundException({'message': 'System does not cloud storage.'})
 
+    storage_size = cloud_portal_customization_cache(settings.CUSTOMIZATION) \
+        .get('config', {}).get('cloud_storage_size', 0)
+
     aggregated_storage_info = {
         'spaceUsed': 0,
         'currentRecordingBitrate': [],
@@ -81,7 +92,7 @@ def usage_stats(request):
         maxLiveDelay = storage_info.get('maxLiveDelay')
         if maxLiveDelay is not None:
             aggregated_storage_info['maxLiveDelay'].append(maxLiveDelay)
-        aggregated_storage_info['cloudCapacity'] += settings.CLOUD_STORAGE_SIZE
+        aggregated_storage_info['cloudCapacity'] += int(storage_info.get('totalSize', storage_size))
     else:
         # After going over storages average certain statistics
         aggregated_storage_info['currentRecordingBitrate'] = int(statistics.mean(

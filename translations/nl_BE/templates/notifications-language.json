@@ -9,13 +9,13 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Verkoopaanvraag voor {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Technische aanvraag voor {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Feedback over {{{message.asset}}}"
   },
   "ipvd_feedback": {
     "emailSubject": "Feedback over de camera pagina{{#message.asset}} voor {{{message.asset}}}{{/message.asset}}"

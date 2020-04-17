@@ -14,22 +14,61 @@ ${url}         ${ENV}
 @{TMP USERS}
 
 *** Test Cases ***
-# Rename server
-#     Log in to User and System    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-#     click Rename
-#     follow prompts
-#     verify name is changed
+Rename server close button works
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${RENAME SERVER BUTTON}
+    Verify Rename Dialog
+    Click Button    ${RENAME CLOSE BUTTON}
+
+Rename server cancel button works
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${RENAME SERVER BUTTON}
+    Verify Rename Dialog
+    Click Button    ${RENAME CANCEL BUTTON}
+    Element Should Not be Visible    ${RENAME SERVER FORM}
+
+Rename server requires a name
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${RENAME SERVER BUTTON}
+    Verify Rename Dialog
+    Delete All Text    ${$RENAME SERVER INPUT}
+    Click Button    ${RENAME SAVE BUTTON}
+    Wait Until Element is Visible    ${RENAME ERROR TEXT}
+    Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
+
+
+Server name can be changed
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${RENAME SERVER BUTTON}
+    Verify Rename Dialog
+    Input Text    ${$RENAME SERVER INPUT}    server 1 name changed
+    Click Button    ${RENAME SAVE BUTTON}
+    Check for Alert    ${SERVER NAME SAVED}
+    Wait Until Element is Visible    //header//h2[contains(text(),"server 1 name changed")]
+    Click Button    ${RENAME SERVER BUTTON}
+    Verify Rename Dialog
+    Input Text    ${$RENAME SERVER INPUT}    server 1
+    Click Button    ${RENAME SAVE BUTTON}
+    Check for Alert    ${SERVER NAME SAVED}
+
 
 # Restart server
 #     Log in to user system and servers    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     # Restart server
     # Wait
     # verify back online
-
-# Reset to Defaults
-#     Log in to user system and servers    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    # reset server
-    # unsure of expected
 
 # Change port
 #     Log in to user system and servers    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}

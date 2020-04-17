@@ -35,6 +35,7 @@ def get_settings_from_cache():
         'cloudName': customization_cache['cloud_name'],
         'vmsName': customization_cache['vms_name'],
         'cloudStorageEnabled': customization_cache['cloud_storage_enabled'],
+        'cloudStorageSize': customization_cache['cloud_storage_size'],
         'copyrightYear': customization_cache['copyright_year'],
         'companyName': customization_cache['company_name'],
         'companyLink': customization_cache['company_link'],

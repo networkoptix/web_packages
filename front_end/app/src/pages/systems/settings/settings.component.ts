@@ -268,8 +268,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 } else if (primary && primary.id === this.system.id) {
                     this.secondaryMerge = false;
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    const secondaryName = secondarySystem && secondarySystem.name ||
+                    let secondaryName = secondarySystem && secondarySystem.name ||
                         secondary && secondary.name || this.LANG.system.mergeUnknownName;
+                    if (secondaryName.indexOf('server at ') === 0) {
+                        secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
+                    }
                     const template =
                         `<div class="my-1">
                             <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
@@ -289,7 +292,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 setTimeout(() => {
                     this.setHeaderHeight();
                 });
-            })
+            });
     }
 
     updateMenu() {
@@ -399,7 +402,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
-                    const server = this.formatURL(systemServer);
+                    const server = NxUtilsService.formatURL(systemServer);
 
                     serversNode.level3.push({
                         id              : server.id,
@@ -430,7 +433,41 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             adminNode.level2 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
+        if (this.system.permissions.isAdmin) {
+            let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
+            if (!camerasNode) {
+                camerasNode = {
+                    id    : this.CONFIG.menus.systemSettings.cameras.id,
+                    svg   : this.CONFIG.menus.systemSettings.cameras.icon,
+                    label : 'Cameras',
+                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                };
+                this.content.level1.push(camerasNode);
+            }
+            if (this.system.cameras) {
+                const byParam = NxUtilsService.byParam((camera) => {
+                    return camera.name;
+                }, NxUtilsService.sortASC);
+                this.system.cameras.sort(byParam);
+                camerasNode.level3 = this.system.cameras.map(camera => ({
+                    id              : camera.id.replace(/\s|\{|\}/g, ''),
+                    svgIcon         : this.getCameraStatusIcon(camera),
+                    isEnabled       : camera.status !== 'Offline' && camera.status !== 'Unauthorized',
+                    label           : camera.name,
+                    indent          : true,
+                    path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                    additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
+                }));
+            }
+        } else {
+            this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
+        }
+
         this.content = { ...this.content };
+    }
+
+    getCameraStatusIcon({ status }) {
+        return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
     /**

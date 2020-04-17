@@ -227,8 +227,7 @@
             overflow: hidden;
         }
     }
-
-
+    
     &.extended-header {
         .card--header {
             height  : auto;
@@ -252,6 +251,10 @@
             }
         }
     }
+}
+
+.warning-error-padding {
+    padding: 10px 16px !important;
 }
 
 

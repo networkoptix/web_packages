@@ -6,6 +6,7 @@ import { HighlightPipe }              from './nx-highlight-text';
 import { NxScrollHelperDirective }    from './nx-scroll-helper';
 import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxUrlValidatorDirective }    from './nx-url-validator';
+import { NxEditableDirective } from './nx-editable.directive';
 
 @NgModule({
     imports     : [],
@@ -16,7 +17,8 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
-        NxUrlValidatorDirective
+        NxUrlValidatorDirective,
+        NxEditableDirective
     ],
     entryComponents: [],
     exports        : [
@@ -26,7 +28,8 @@ import { NxUrlValidatorDirective }    from './nx-url-validator';
         HighlightPipe,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,
-        NxUrlValidatorDirective
+        NxUrlValidatorDirective,
+        NxEditableDirective
     ]
 })
 export class DirectivesModule {

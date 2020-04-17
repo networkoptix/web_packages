@@ -25,7 +25,11 @@ import { Process, NxProcessService } from './process.service';
  */
 export class Watcher<T> {
     originalValue: T;
-    valueSubject = new BehaviorSubject<T>(undefined);
+    valueSubject = new BehaviorSubject<any>(undefined);
+
+    constructor(value?: T) {
+        this.originalValue = value;
+    }
 
     get value() {
         return this.valueSubject.getValue();
@@ -38,6 +42,10 @@ export class Watcher<T> {
         if (this.value !== data) {
             this.valueSubject.next(data);
         }
+    }
+
+    get changed() {
+        return this.originalValue !== this.value;
     }
 
     // Resets the value of the watcher to the first value that was not undefined.

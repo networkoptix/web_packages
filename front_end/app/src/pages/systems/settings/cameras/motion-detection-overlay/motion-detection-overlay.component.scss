@@ -1,0 +1,75 @@
+@import '../../../../../../styles/theme_variables';
+
+nx-motion-detection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.motion-canvas {
+    background: transparent;
+    position: absolute;
+    -webkit-backdrop-filter: brightness(125%) contrast(110%);
+    backdrop-filter: brightness(125%) contrast(110%);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    color: $brand_info;
+    -webkit-animation: fadeIn ease-in 0.3s;
+    -moz-animation: fadeIn ease-in 0.3s;
+    -o-animation: fadeIn ease-in 0.3s;
+    -ms-animation: fadeIn ease-in 0.3s;
+    animation: fadeIn ease-in 0.3s;
+    cursor: crosshair;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-moz-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-webkit-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-o-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }
+  
+  @-ms-keyframes fadeIn {
+    0% {
+      opacity:0;
+    }
+    100% {
+      opacity:1;
+    }
+  }

@@ -51,6 +51,7 @@ export class MergeModalContent {
     readonly serverUrlMergeError: string = 'serverUrlMergeError';
     readonly serverUrlValidationError: string = 'serverUrlValidationError';
     readonly confirmPasswordError: string = 'confirmPasswordError';
+    readonly serverUrlErrors: string = 'serverUrlErrors';
 
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
@@ -281,10 +282,6 @@ export class MergeModalContent {
                 this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
                 return this.system.mergeSystems(this.serverUrl, true).toPromise()
                     .then(res => {
-                        const newCheckMergeErrors = {
-                            DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
-                            CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners
-                        };
                         if (res.error === '0') {
                             this.machine.transition('confirmMerge');
                         } else if (res.errorString === 'UNAUTHORIZED') {
@@ -294,10 +291,16 @@ export class MergeModalContent {
                                 passwordValue     : ''
                             });
                         } else if (res.errorString) {
-                            this.machine.history = [];
-                            this.machine.transition(this.checkMerge);
-                            this.updateShow(this.serverUrlMergeError, {
-                                checkingErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
+                            if (this.machine.currentState !== this.serverUrlErrors) {
+                                this.machine.transition(this.serverUrlErrors);
+                            }
+                            const newCheckMergeErrors = {
+                                CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
+                                DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
+                                FAIL                                : this.systemOffline
+                            };
+                            this.updateShow(this.serverUrlErrors, {
+                                urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
                             });
                         }
                     })
@@ -512,7 +515,7 @@ export class MergeModalContent {
 
     insertErrorMessages() {
         const { errorText }       = this.machine.state;
-        const targetSystemName  = this.targetSystem.name || this.targetSystem.info.name;
+        const targetSystemName  = this.secondaryName;
         const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
         for (const error in errorText) {
             errorText[error] = this.LANG.dialogs.merge[error]
@@ -665,7 +668,9 @@ export class MergeModalContent {
     }
 
     getSecondaryName() {
-        let name: string = this.secondarySystem.name || this.secondarySystem.info && this.secondarySystem.info.name;
+        let name: string = this.secondarySystem.systemName ||
+            this.secondarySystem.name ||
+            this.secondarySystem.info && this.secondarySystem.info.name;
         if (name === this.LANG.dialogs.merge.otherSystem) {
             name = this.LANG.dialogs.merge.serverAtUrl.replace('{{url}}', this.serverUrl);
         }

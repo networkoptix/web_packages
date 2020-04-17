@@ -27,6 +27,7 @@ import { NxSettingsService }           from '../../settings.service';
 export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() selectedServer: any;
+    @Input() isOffline: boolean;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -58,7 +59,6 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
-        this.betaMode = this.CONFIG.clientMode.beta;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
         this.canSeeInfo = false;
@@ -116,7 +116,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ngOnDestroy(): void {}
 
     setServer(): void {
-        this.betaMode = this.route.snapshot.queryParams.beta !== undefined;
+        this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
         this.applyService.hardReset();
         const { ip, port } = this.selectedServer;
         this.ipPortWatcher.value = port;
@@ -160,30 +160,46 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     checkIfOnline(serverId) {
-        return this.system.getModuleInfo(serverId).toPromise()
-            .then(() => this.setStatus(''))
-            .catch(() => this.setStatus(this.CONFIG.servers.status.offline));
+        return this.system.getServers()
+            .then(servers => {
+                if (servers) {
+                    this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
+                        ? '' : this.CONFIG.servers.status.offline);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.setStatus(this.CONFIG.servers.status.offline);
+            });
     }
 
     checkStatus() {
         this.checking = true;
         this.setStatus(this.CONFIG.servers.status.checking);
-        const now = new Date().getTime();
-        this.system.getModuleInfo(this.selectedServer.id)
-            .pipe(
-                catchError(() => of('error')),
-                delayWhen(() => interval(3400 - ((new Date().getTime()) - now)))
-            )
-            .subscribe(res => {
-                this.setStatus(res === 'error' ? this.CONFIG.servers.status.offline : '');
-                this.checking = false;
+        this.system.getServers()
+            .then(servers => {
+                if (servers) {
+                    const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
+                    setTimeout(() => {
+                        this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);
+                        this.checking = false;
+                    }, this.CONFIG.servers.checkStatusTimeout);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                this.setStatus(this.CONFIG.servers.status.offline);
             });
     }
 
     renameServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs.renameServer(this.system, id, name)
-            .then(newName => { this.selectedServer.name = newName; });
+            .then(newName => {
+                if (newName) {
+                    this.selectedServer.name = newName;
+                }
+            });
     }
 
     restartServer() {

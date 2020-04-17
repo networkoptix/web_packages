@@ -1,0 +1,29 @@
+@import '../../../../styles/theme_palette';
+@import '../../../styles/typography';
+
+nx-three-dot {
+    display: inline-block;
+}
+
+.dot-menu {
+    padding: 16px;
+    margin: -8px;
+    background: transparent;
+    &:after {
+        content: '\2807';
+        font-size: 1em;
+        color: $dark9;
+        transform: translateY(-50%);
+    }
+}
+
+.custom-menu {
+    width: auto !important;
+    transform: translateX(-100%);
+    border-radius: 2px;
+    border: none !important;
+}
+
+.custom-drop-down {
+    height: 18px;
+}

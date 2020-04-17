@@ -126,9 +126,13 @@
             "unauthorized": "Authentifizierung erforderlich"
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
+        "recordingSettingsWarning": "Please update missing recording settings.",
         "resolution": {
+            "various": "– Different Values –",
             "auto": "Auto",
+            "best": "Best",
             "high": "Hoch",
+            "medium": "Medium",
             "low": "Niedrig"
         },
         "general": "Allgemein",
@@ -213,19 +217,19 @@
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
             "differentOwners": "Sie können nur Systeme mit demselben Besitzer zusammenführen, und diese Systembesitzer sind unterschiedlich.",
-            "duplicateServers": "Einige Server existieren in beiden Systemen - in den ausgewählten und in den aktuellen. <br><br> Entferne offline und inkompatible Server von jedem System und versuche es erneut.",
+            "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
             "mergeConfirmation": "Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen. Die Einstellungen und der Name werden von diesem System <strong>{{primarySystem}}</strong> verwendet.",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
-            "noServerFound": "No server found",
+            "noServerFound": "Keine Server gefunden",
             "newSystemDisplayName": "Neues System",
             "otherSystem": "Andere Systeme...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "ownerCanMergeText": "Sie können nur Cloudsysteme zusammenführen, in welchen Sie Besitzer sind",
             "passwordRequired": "Passwort ist erforderlich",
             "passwordWrong": "Falsches Passwort",
             "primaryCannotMerge": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
+            "primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden",
             "primarySystemUnavailable": "System {{primarySystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
             "recommendSupport": {
                 "a_recommend": "Wir empfehlen die Beratung mit",
@@ -234,16 +238,18 @@
             },
             "secondaryCannotMerge": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "secondarySystemUnavailable": "System {{targetSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "serverNotAvailable": "Ich kann nicht auf das {{targetSystem}} System zugreifen.<br><br>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.",
+            "serverAtUrl": "Server bei {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Zugriff auf das {{targetSystem}}-System nicht möglich.</p><p>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.</p>",
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "serverVersionOld": "Dieser Server verfügt über eine ältere Softwareversion, die nicht mit dem aktuellen System kompatibel ist. Aktualisieren Sie es auf den neuesten Build, um es mit dem aktuellen zusammenzuführen.",
             "serverVersionNew": "Dieser Server verfügt über eine neuere Softwareversion als das aktuelle System. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
+            "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
+            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
             "systemVersionOld": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "systemVersionNew": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
+            "urlEmpty": "Serveradresse eingeben",
+            "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
             "warning": "Es werden mehr als <strong>{{maxServers}}</strong> Server im zusammengeführten System sein."
         },
@@ -523,6 +529,10 @@
                 "untilFinished": "Bis die Zusammenführung abgeschlossen ist, können Sie sich bei diesem System anmelden und Videos ansehen, aber keine Einstellungen ändern.",
                 "whenFinished": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"{{systemName}}}\" verfügbar, und dieses System wird gelöscht."
             }
+        },
+        "server": {
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "Bitte auswählen...",
@@ -535,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "wird mit diesem System zusammengeführt.",
+            "to": "wird mit diesem System zusammengeführt",
             "mayTake": "Abhängig von der Größe der Datenbank kann dies mehrere Stunden dauern."
         },
         "finishingMerge": "Zusammenführung von Systemen abschließen",
@@ -544,7 +554,7 @@
             "previewRibbon": "Diese Seite ist eine Vorschau auf die neuesten Änderungen und entspricht nicht der öffentlich zugänglichen Version."
         },
         "systemOffline": "Das System ist offline. Einige Einstellungen sind möglicherweise nicht verfügbar.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Dieses System ist derzeit an einem Zusammenführungsvorgang beteiligt."
     },
     "search": {
         "Any": "Alle",
@@ -581,7 +591,7 @@
             "reseting": "Zurücksetzen...",
             "restarting": "Neustarten..."
         },
-        "successRename": "Servername umbenannt."
+        "successRename": "Servername gespeichert."
     },
     "system": {
         "MERGE_FINISHES": "Wenn der Zusammenschluss abgeschlossen ist, sind alle Benutzer und Kameras dieses Systems im System \"<strong>{{targetSystemName}}}</strong>\" verfügbar, und dieses System wird gelöscht.",

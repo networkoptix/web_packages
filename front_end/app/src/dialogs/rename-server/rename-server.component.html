@@ -11,21 +11,23 @@
     <div class="modal-body">
         <div class="form-group">
             <input class="form-control"
-                   [(ngModel)]="serverName"
-                   id="serverName"
-                   name="serverName" type="text"
-                   required nxFocusMe>
-            <p class="help-block"
-               *ngIf="!renameServerForm.controls['serverName']?.valid && renameServerForm.controls['serverName']?.touched">
-                    <span class="input-error" translate>Server name is required</span>
+                [ngClass]="{ 'rename-input': !(renameServerForm.controls.serverName?.invalid && renameServerForm.controls.serverName?.touched) }"
+                [ngModel]="serverName"
+                (ngModelChange)="verifyName($event)"
+                id="serverName"
+                name="serverName" type="text"
+                required nxFocusMe>
+            <p class="help-block" *ngIf="renameServerForm.controls.serverName?.invalid && renameServerForm.controls.serverName?.touched">
+                <span class="input-error" *ngIf="renameServerForm.controls.serverName.errors.required" translate>Server name is required</span>
+                <span class="input-error" *ngIf="renameServerForm.controls.serverName.errors.invalidInput" translate>Please enter a valid name</span>
             </p>
         </div>
     </div>
     <div class="modal-footer">
         <nx-process-button [process]="renameServer"
-                           [form]="renameServerForm"
-                           [actionType]="'primary'"
-                           buttonText="{{ 'Save' | translate }}"></nx-process-button>
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+                        [form]="renameServerForm"
+                        [actionType]="'primary'"
+                        buttonText="{{ 'Save' | translate }}"></nx-process-button>
+        <button type="button" class="btn btn-default" (click)="activeModal.close()" translate>Cancel</button>
     </div>
 </form>

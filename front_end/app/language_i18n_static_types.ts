@@ -82,6 +82,7 @@ export interface Common {
     cameraLinks:               CameraLinks;
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
+    recordingSettingsWarning:  string;
     resolution:                Resolution;
     general:                   string;
     maintenanceInProgress:     string;
@@ -103,7 +104,7 @@ export interface Common {
 }
 
 export interface CommonAccount {
-    created:   Created;
+    created:   Server;
     activated: Activated;
 }
 
@@ -111,7 +112,7 @@ export interface Activated {
     title: string;
 }
 
-export interface Created {
+export interface Server {
     title:   string;
     message: string;
 }
@@ -143,9 +144,12 @@ export interface CameraStates {
 }
 
 export interface Resolution {
-    auto: string;
-    high: string;
-    low:  string;
+    various: string;
+    auto:    string;
+    best:    string;
+    high:    string;
+    medium:  string;
+    low:     string;
 }
 
 export interface VoiceCommands {
@@ -195,8 +199,8 @@ export interface CloudStorage {
     camera:                string;
     cameras:               string;
     remove:                Remove;
-    activationError:       Created;
-    systemDisconnectError: Created;
+    activationError:       Server;
+    systemDisconnectError: Server;
     moveCloudStorage:      MoveCloudStorage;
     noOtherSystemsError:   NoOtherSystemsError;
 }
@@ -250,6 +254,7 @@ export interface DialogsMerge {
     serverVersionOld:           string;
     serverVersionNew:           string;
     systemOffline:              string;
+    systemOfflineUrl:           string;
     systemsIncompatible:        string;
     systemVersionOld:           string;
     systemVersionNew:           string;
@@ -592,7 +597,8 @@ export interface PasswordRequirements {
 }
 
 export interface PlaceholderTexts {
-    merge: PlaceholderTextsMerge;
+    merge:  PlaceholderTextsMerge;
+    server: Server;
 }
 
 export interface PlaceholderTextsMerge {
@@ -967,6 +973,7 @@ const typeMap: any = {
         { json: "cameraLinks", js: "cameraLinks", typ: r("CameraLinks") },
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
+        { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
         { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
@@ -987,13 +994,13 @@ const typeMap: any = {
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
     ], false),
     "CommonAccount": o([
-        { json: "created", js: "created", typ: r("Created") },
+        { json: "created", js: "created", typ: r("Server") },
         { json: "activated", js: "activated", typ: r("Activated") },
     ], false),
     "Activated": o([
         { json: "title", js: "title", typ: "" },
     ], false),
-    "Created": o([
+    "Server": o([
         { json: "title", js: "title", typ: "" },
         { json: "message", js: "message", typ: "" },
     ], false),
@@ -1022,8 +1029,11 @@ const typeMap: any = {
         { json: "unauthorized", js: "unauthorized", typ: "" },
     ], false),
     "Resolution": o([
+        { json: "various", js: "various", typ: "" },
         { json: "auto", js: "auto", typ: "" },
+        { json: "best", js: "best", typ: "" },
         { json: "high", js: "high", typ: "" },
+        { json: "medium", js: "medium", typ: "" },
         { json: "low", js: "low", typ: "" },
     ], false),
     "VoiceCommands": o([
@@ -1070,8 +1080,8 @@ const typeMap: any = {
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
         { json: "remove", js: "remove", typ: r("Remove") },
-        { json: "activationError", js: "activationError", typ: r("Created") },
-        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Created") },
+        { json: "activationError", js: "activationError", typ: r("Server") },
+        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Server") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
         { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
     ], false),
@@ -1120,6 +1130,7 @@ const typeMap: any = {
         { json: "serverVersionOld", js: "serverVersionOld", typ: "" },
         { json: "serverVersionNew", js: "serverVersionNew", typ: "" },
         { json: "systemOffline", js: "systemOffline", typ: "" },
+        { json: "systemOfflineUrl", js: "systemOfflineUrl", typ: "" },
         { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },
         { json: "systemVersionOld", js: "systemVersionOld", typ: "" },
         { json: "systemVersionNew", js: "systemVersionNew", typ: "" },
@@ -1434,6 +1445,7 @@ const typeMap: any = {
     ], false),
     "PlaceholderTexts": o([
         { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
+        { json: "server", js: "server", typ: r("Server") },
     ], false),
     "PlaceholderTextsMerge": o([
         { json: "title", js: "title", typ: "" },

@@ -26,15 +26,18 @@ import { AngularSvgIconModule }        from 'angular-svg-icon';
 import {
     GenericModalContent,
     NxModalGenericComponent
-}                                     from './generic/generic.component';
+}                                      from './generic/generic.component';
 import {
     ApplyModalContent,
     NxModalApplyComponent
-}                                     from './apply/apply.component';
+}                                      from './apply/apply.component';
 import {
     CloudStorageMoveModalContent,
     CloudStorageDeleteModalContent
-}                                     from './cloud-storage';
+}                                      from './cloud-storage';
+import {
+    UpdateCameraCredentialsModalContent
+}                                      from './update-camera-credentials/update-camera-credentials.component';
 
 @NgModule({
     imports: [
@@ -67,7 +70,8 @@ import {
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
-        CloudStorageMoveModalContent
+        CloudStorageMoveModalContent,
+        UpdateCameraCredentialsModalContent
     ],
     entryComponents: [
         LoginModalContent,
@@ -89,7 +93,8 @@ import {
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
-        CloudStorageMoveModalContent
+        CloudStorageMoveModalContent,
+        UpdateCameraCredentialsModalContent
     ],
     providers: [
         NxDialogsService,

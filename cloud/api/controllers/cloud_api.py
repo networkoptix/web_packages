@@ -1,4 +1,6 @@
 import requests
+from rest_framework.response import Response
+from rest_framework import status
 from requests.auth import HTTPDigestAuth
 from hashlib import md5, sha256
 import base64
@@ -13,7 +15,6 @@ logger = logging.getLogger(__name__)
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']
 CLOUD_STORAGE_URL = settings.CLOUD_STORAGE_URL
 CLOUD_STORAGES_URL = settings.CLOUD_STORAGES_URL
-CLOUD_STORAGE_SPACE = settings.CLOUD_STORAGE_SIZE
 
 
 def lower_case_email(func):
@@ -393,17 +394,17 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _remove_from_system(email, password, storage_id, system_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/{system_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
     @validate_response
     @lower_case_email
-    def create(email, password, system_id):
+    def create(email, password, system_id, storage_size):
         request = f"{CLOUD_STORAGES_URL}/"
         body = {
             "systems": [system_id],
-            "totalSpace": str(CLOUD_STORAGE_SPACE)
+            "totalSpace": storage_size
         }
         return put_wrapper(request, json=body, auth=HTTPDigestAuth(email, password))
 
@@ -412,9 +413,13 @@ class Storage(object):
     @lower_case_email
     def delete_from_system(email, password, system_id):
         storages = Storage.list_system_storages(email, password, system_id)
+        logger.debug(f"Delete storage for system.\tEmail: {email} Password: {password} SystemId: {system_id}")
         for storage in storages:
-            Storage._delete(email, password, storage['id'])
-        return True
+            storage_id = storage.get('id')
+            logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
+            Storage._remove_from_system(email, password, storage_id, system_id)
+            Storage._delete(email, password, storage_id)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response

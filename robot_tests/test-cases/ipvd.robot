@@ -23,7 +23,7 @@ IPVD landing page actions
     Validate on IPVD Page
     ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
     Should Be Equal as Strings    ${search_placeholder}    ${IPVD SEARCH PLACEHOLDER TEXT}    ignore_case=true
-    Element should contain    ${IPVD ADV SEARCH BUTTON}  ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
+    Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
     Element should contain    ${IPVD MANUFACTURERS PANE}//header/span    ${IPVD ADV FILTER MFRS}    ignore_case=true
     ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
     Should Not Be Equal As Numbers  ${num vendors}   0

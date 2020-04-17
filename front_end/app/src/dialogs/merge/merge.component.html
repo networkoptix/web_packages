@@ -27,7 +27,7 @@
                 merge="true"
                 [items]="processedSystems"
                 [selected]="targetSystemDropdown"
-                (onSelected)="setTargetSystem($event)"
+                (onSelected)="setTargetSystem($event, true)"
                 required></nx-select>
             <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
             <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
@@ -107,6 +107,21 @@
             actionType="primary"
             [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
+    </div>
+</form>
+<form *ngIf="machine.currentState === 'serverUrlErrors'" #serverUrlErrorsForm="ngForm" name="serverUrlErrorsForm">
+    <div class="modal-body">
+        <p [innerHtml]="machine.state.template.urlErrorText"></p>
+    </div>
+    <div class="modal-footer d-flex justify-content-between next-button">
+        <button class="btn btn-default svg-icon" (click)="goBack()">
+            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
+        </button>
+        <nx-process-button
+            [process]="checkPasswordProcess"
+            [form]="serverUrlErrorsForm"
+            actionType="primary"
+            buttonText="{{ 'Try Again' | translate}}"></nx-process-button>
     </div>
 </form>
 <form *ngIf="machine.currentState === 'choosePrimary'" name="choosePrimaryForm">

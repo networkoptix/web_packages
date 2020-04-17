@@ -44,7 +44,7 @@ Connect System to Cloud
     [Arguments]    ${auth}   ${server ip}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
-    Sleep    3
+    Sleep    5
     &{Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
     ...    ${server ip}:${server port}
@@ -162,7 +162,7 @@ Setup Local System
     @{auth}=   Create List    admin    admin
     &{data}=    Create Dictionary    password=${new password}    systemName=${system name}
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}
+    ${resp}=    Post Request    Setup System session    /api/setupLocalSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
@@ -170,7 +170,7 @@ Setup Cloud System
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
     &{data}=   Create Dictionary    cloudAuthKey=${auth key}    systemName=${system name}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
     Create Digest Session    Setup System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}
+    ${resp}=   Post Request    Setup System session    /api/setupCloudSystem    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
@@ -178,28 +178,36 @@ Save Cloud System Credentials
     [Arguments]    ${auth}    ${server url}    ${auth key}    ${system name}    ${cloud system id}    ${owner email}
     &{data}=   Create Dictionary    cloudAuthKey=${auth key}    cloudSystemID=${cloud system id}    cloudAccountName=${owner email}
     Create Digest Session    Save Cloud Credentials session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}
+    ${resp}=   Post Request    Save Cloud Credentials session    /api/saveCloudSystemCredentials    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Restart Server
     [Arguments]    ${server url}    ${auth}
     Create Digest Session    Restart Server session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Get Request    Restart Server session     /api/restart
+    ${resp}=   Get Request    Restart Server session     /api/restart    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+
+Restore Factory Defaults
+    [Arguments]    ${server url}    ${auth}
+    &{data}=   Create Dictionary    currentPassword=${auth[1]}
+    Create Digest Session    Restore Server session    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Restore Server session     /api/restoreState    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 Detach Server From System
     [Arguments]    ${server url}    ${auth}
-    &{data}=    Create Dictionary    currentPassword=${auth[1]}
+    &{data}=   Create Dictionary    currentPassword=${auth[1]}
     Create Digest Session    Detach From System session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Detach From System session     /api/detachFromSystem    json=${data}
+    ${resp}=   Post Request    Detach From System session     /api/detachFromSystem    json=${data}
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
 Detach Server From Cloud
     [Arguments]    ${server url}    ${auth}
-    &{data}=    Create Dictionary    currentPassword=${auth[1]}
+    &{data}=   Create Dictionary    currentPassword=${auth[1]}
     Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=    Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}
+    ${resp}=   Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     [Return]    ${resp.json()}
 
@@ -215,22 +223,22 @@ Save User
     [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
     &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}
+    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Save User Role
     [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}
-    &{data}=    Create Dictionary    name=${name}    permissions=${permissions}
+    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}
     Create Digest Session    Save User Role session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Save User Role session    /ec2/saveUserRole    json=${data}
+    ${resp}=   Post Request    Save User Role session    /ec2/saveUserRole    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
 Remove User
-    [Arguments]    ${auth}    ${server url}    ${user id}
+    [Arguments]    ${auth}    ${server url}
     &{data}=   Create Dictionary    id=${user id}
     Create Digest Session    Remove User session    ${server url}    auth=${auth}    disable_warnings=1
-    ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}
+    ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}

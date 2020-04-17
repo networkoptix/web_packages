@@ -253,6 +253,19 @@ export const nxConfig: IConfig = {
                 icon : 'servers',
                 path : 'servers'
             },
+            cameras: {
+                id  : 'cameras',
+                icon: 'cameras',
+                path: 'cameras',
+                statusIcons: {
+                    archive: 'camera_archive',
+                    offline: 'camera_offline',
+                    recording: 'camera_recording',
+                    scheduled: 'camera_scheduled',
+                    unauthorized: 'camera_unauthorized',
+                    online: ''
+                }
+            },
             general: {
                 id  : 'general',
                 path: '/'
@@ -282,7 +295,8 @@ export const nxConfig: IConfig = {
         minSystems   : 9 // We need at least 9 system to enable search
     },
     servers: {
-        port: {
+        checkStatusTimeout : 3400,
+        port               : {
             max           : 65535,
             min           : 1,
             restrictedMax : 1024
