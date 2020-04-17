@@ -41,7 +41,6 @@ ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL
 ...    ${EMAIL ADMIN}=cloudAdmin
 ...    ${EMAIL CUSTOM}=custom
 ...    ${EMAIL AUTO TESTS ANCHOR}=viewer
-...    nhartleb@networkoptix.com=cloudAdmin
 
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}

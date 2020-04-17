@@ -20,4 +20,4 @@ def get_variables(cloud_url, test_email):
     return systemIds
 
 if __name__ == '__main__':
-    get_variables("https://test4.cloud.hdw.mx")
+    get_variables("https://dev2.cloud.hdw.mx", "noptixautoqa")

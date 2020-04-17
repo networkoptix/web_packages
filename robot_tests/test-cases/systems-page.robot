@@ -33,7 +33,7 @@ Restart
 Remove Temporary Users
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+        Remove User    ${auth}    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${user id}
     END
 
 *** Test Cases ***

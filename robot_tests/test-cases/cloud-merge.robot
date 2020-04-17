@@ -5,7 +5,7 @@ Library           ../NoptixLibrary/
 
 Suite Setup       Startup
 Test Setup        Restart
-Test Teardown     Run Keyword If Test Failed    reset state
+Test Teardown     Run Keyword If Test Failed    Reset State
 Suite Teardown    Remove Containers
 Force Tags        Threaded File    merge
 
@@ -326,8 +326,8 @@ Only one system connected to Cloud Account - Merge Button should be disabled
     Press Keys    ${MERGE OK BUTTON}    ESCAPE
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
-    Disconnect
-    Disconnect
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 1}    ${password}    ${system id 1}
+    Disconnect    ${ENV}    ${EMAIL MERGE OWNER 2}    ${password}    ${system id 2}
 
 2 Systems: 1 online and 1 offline
     [tags]    C53960
@@ -510,8 +510,7 @@ From secondary system merge to primary with no other systems
     ...    ${image}
     ...    7003
     ...    API made system 2
-    log in    ${user}    ${password}
-    Validate Log in
+    Log In    ${user}    ${password}
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Validate system available    API made system 1

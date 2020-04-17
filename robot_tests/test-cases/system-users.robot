@@ -39,7 +39,7 @@ Reset DB and Open New Browser On Failure
 Remove Temporary Users
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
+        Run Keyword Unless    '${user id}'=='None'    Remove User    ${auth}    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${user id}
     END
 
 Restart
@@ -202,7 +202,6 @@ Admin cannot delete or edit self
     Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
 
 Admin and owner cannot edit self and other users via share
-    [Tags]    deb
     @{admins}=   Create List    ${EMAIL OWNER}    ${EMAIL ADMIN}
     @{all users}=   Create List    ${EMAIL OWNER}    ${EMAIL ADMIN}    ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL CUSTOM}
 
@@ -524,3 +523,52 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
+<<<<<<< Updated upstream
+=======
+
+#Only Admin and Owner can access the share URL
+#    [Tags]    Deprecated
+#    Log     Owner test
+#    Log in to Auto Tests System    ${EMAIL OWNER}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+#    Click Button    ${SHARE CANCEL}
+#    Log Out
+#
+#    Log     Admin test
+#    Log in to Auto Tests System    ${EMAIL ADMIN}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Wait Until Elements are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
+#    Click Button    ${SHARE CANCEL}
+#    Log Out
+#
+#    Log     Viewer test
+#    Log in to Auto Tests System    ${EMAIL VIEWER}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+#    Log Out
+#
+#    Log     Custom test
+#    Log in to Auto Tests System    ${EMAIL CUSTOM}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+#    Log Out
+#
+#    Log     Client Custom test
+#    Log in to Auto Tests System    ${EMAIL CLIENT CUSTOM}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+#    Log Out
+#
+#    Log     Advanced Viewer test
+#    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+#    Log Out
+#
+#    Log     Live Viewer test
+#    Log in to Auto Tests System    ${EMAIL LIVE VIEWER}
+#    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/share
+#    Check For Alert    ${NO PERMISSION TO SHARE TEXT}
+#    Log Out
+
