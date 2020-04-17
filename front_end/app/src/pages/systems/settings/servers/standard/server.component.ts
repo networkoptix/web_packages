@@ -195,7 +195,11 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     renameServer() {
         const { id, name } = this.selectedServer;
         return this.dialogs.renameServer(this.system, id, name)
-            .then(newName => { this.selectedServer.name = newName; });
+            .then(newName => {
+                if (newName) {
+                    this.selectedServer.name = newName;
+                }
+            });
     }
 
     restartServer() {
