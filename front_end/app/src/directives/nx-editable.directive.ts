@@ -1,7 +1,9 @@
 import {
-    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit
-}                                                  from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, Inject
+} from '@angular/core';
+import {
+    ControlValueAccessor, NG_VALUE_ACCESSOR
+} from '@angular/forms';
 
 @Directive({
     selector  : '[NxEditable]',
@@ -19,8 +21,9 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
 
         Example usage:
             <h2 NxEditable
-                [(ngModel)]="bound.model"
+                [(content)]="model"
                 [hasError]="booleanIfError"
+                [maxLength]="number"
                 class="nothing-special-here"
                 initialClass ="optional-initial-class"
                 editClass="optional-edit-class"
@@ -42,6 +45,8 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     @Input() initialClass = 'editable-directive-initial';
     @Input() errorClass = 'editable-directive-error';
     @Input() hasError: boolean;
+    @Input() maxLength: number;
+    @HostBinding('attr.innerHTML') innerHTML;
 
     private _elementClass: string[] = [];
 
@@ -53,6 +58,24 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
 
     set elementClass(val: string) {
         this._elementClass = val.split(' ');
+    }
+
+    contentValue : string;
+
+    @Output()
+    contentChange = new EventEmitter<string>();
+
+    @Input()
+    get content() {
+        return this.contentValue;
+    }
+
+    set content(curValue) {
+        if (!this.maxLength || curValue.length <= this.maxLength) {
+            this.contentValue = curValue;
+        }
+        this.contentChange.emit(this.contentValue);
+        this.elementRef.nativeElement[this.propValueAccessor] = this.innerHTML = this.contentValue;
     }
 
     private onChange: (value: string) => void;
@@ -118,6 +141,7 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     @HostListener('input')
     callOnChange() {
         this.checkError();
+        this.content = this.elementRef.nativeElement[this.propValueAccessor];
         if (typeof this.onChange === 'function') {
             this.onChange(
                 this.elementRef.nativeElement[this.propValueAccessor]
