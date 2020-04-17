@@ -530,11 +530,10 @@ export interface Info {
 }
 
 export interface Messages {
-    required:         string;
-    activated:        string;
-    inuse:            string;
-    trialLicenseText: string;
-    trialActivated:   string;
+    required:       string;
+    activated:      string;
+    inuse:          string;
+    trialActivated: string;
 }
 
 export interface Menu {
@@ -1380,7 +1379,6 @@ const typeMap: any = {
         { json: "required", js: "required", typ: "" },
         { json: "activated", js: "activated", typ: "" },
         { json: "inuse", js: "inuse", typ: "" },
-        { json: "trialLicenseText", js: "trialLicenseText", typ: "" },
         { json: "trialActivated", js: "trialActivated", typ: "" },
     ], false),
     "Menu": o([

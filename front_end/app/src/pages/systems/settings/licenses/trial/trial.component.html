@@ -1,4 +1,4 @@
-<nx-block class="d-block mt-3" *ngIf="!haveTrialLicense">
+<nx-block class="d-block mt-3" *ngIf="!haveTrialLicense && trialLicense">
     <nx-section>
         <form class="form" role="form"
               id="trialLicenseForm" name="trialLicenseForm" #trialLicenseForm="ngForm"
@@ -6,8 +6,7 @@
 
             <div>
                 <div>You have an unused trial license.</div>
-                <div [translate]="'license.messages.trialLicenseText'"
-                      [translateParams]="{ number: number , days: days }"></div>
+                <div>Once activated, it will allow you to record up to 4 cameras for 30 days.</div>
             </div>
         </form>
     </nx-section>

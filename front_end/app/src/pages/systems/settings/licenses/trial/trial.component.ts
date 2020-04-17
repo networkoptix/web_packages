@@ -2,7 +2,7 @@ import {
     Component,
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewChild
-} from '@angular/core';
+}                                    from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
@@ -23,10 +23,8 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     activateTrialKey: any;
-    number: string;
-    days: string;
 
-    license: string;
+    trialLicense: string;
     trialLicenseText: any;
     haveTrialLicense: boolean;
 
@@ -37,30 +35,19 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
 
     private setupDefaults() {
+        this.trialLicense = this.CONFIG.trialLicenseKey || '';
         this.haveTrialLicense = true; // hide it initially until we get info about existing licenses
-
-        switch (this.CONFIG.vmsName.toLowerCase().replace(' ', '')) {
-            case 'nxwitness':
-                this.license = '0000-0000-0000-0005';
-                this.number = '4';
-                this.days = '30';
-                break;
-            default:
-        }
 
         this.activateTrialKey = this.processService.createProcess(() => {
             return this.system
-                .activateLicense(this.selectedServer.value, this.license)
+                .activateLicense(this.selectedServer.value, this.trialLicense)
                 .then(response => {
                     if (response.reply) {
                         this.system.licensesModified = true;
                         this.haveTrialLicense = true;
 
-                        const msg = this.LANG.license.messages.trialActivated
-                            .replace('{{number}}', this.number)
-                            .replace('{{days}}', this.days);
                         this.dialogsService
-                            .notify(msg, 'success');
+                            .notify(this.LANG.license.messages.trialActivated, 'success');
                     }
 
                     if (response.error) {
@@ -105,7 +92,7 @@ export class NxLicenseTrialComponent implements OnChanges, OnDestroy {
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.licenses && changes.licenses.currentValue) {
             this.haveTrialLicense = changes.licenses.currentValue.find((lic) => {
-                return lic.key === this.license;
+                return lic.key === this.trialLicense;
             }) || false;
         }
     }
