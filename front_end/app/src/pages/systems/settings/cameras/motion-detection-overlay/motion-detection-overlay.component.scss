@@ -18,58 +18,8 @@ nx-motion-detection-overlay {
     top: 0;
     left: 0;
     color: $brand_info;
-    -webkit-animation: fadeIn ease-in 0.3s;
-    -moz-animation: fadeIn ease-in 0.3s;
-    -o-animation: fadeIn ease-in 0.3s;
-    -ms-animation: fadeIn ease-in 0.3s;
-    animation: fadeIn ease-in 0.3s;
     cursor: crosshair;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-
-@keyframes fadeIn {
-    0% {
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
-  
-  @-moz-keyframes fadeIn {
-    0% {
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
-  
-  @-webkit-keyframes fadeIn {
-    0% {
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
-  
-  @-o-keyframes fadeIn {
-    0% {
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
-  
-  @-ms-keyframes fadeIn {
-    0% {
-      opacity:0;
-    }
-    100% {
-      opacity:1;
-    }
-  }
