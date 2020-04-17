@@ -1,4 +1,6 @@
 import requests
+from rest_framework.response import Response
+from rest_framework import status
 from requests.auth import HTTPDigestAuth
 from hashlib import md5, sha256
 import base64
@@ -392,7 +394,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _remove_from_system(email, password, storage_id, system_id):
-        request = f"{CLOUD_STORAGE_URL}/{storage_id}/systemS/{system_id}"
+        request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
     @staticmethod
@@ -417,7 +419,7 @@ class Storage(object):
             logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
             Storage._remove_from_system(email, password, storage_id, system_id)
             Storage._delete(email, password, storage_id)
-        return True
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     @validate_response
