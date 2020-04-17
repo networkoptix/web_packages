@@ -43,7 +43,7 @@
                     <span class="input-error" *ngIf="licenseKey.errors.mask"
                           translate>Invalid license key</span>
                     <span class="input-error" *ngIf="licenseKey.errors.offline"
-                          translate>Server need to be online to get license activated</span>
+                          translate>Server needs to be online to get license activated</span>
                     <span class="input-error" *ngIf="licenseKey.errors.alreadyRegistered"
                           translate>License key has already been activated in this system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.inuse"
@@ -65,7 +65,7 @@
                                (ngModelChange)="changeServer($event)"
                                [selected]="serverOptions[0]">
                     </nx-select>
-                    <div class="hint mt-1" translate>This sever must be available in the system to make the license key work</div>
+                    <div class="hint mt-1" translate>This server must be available in the system to make the license key work</div>
                 </div>
             </div>
         </form>
