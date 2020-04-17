@@ -38,8 +38,7 @@ export class RenameServerModalContent {
     verifyName(serverName) {
         if (/^\s+$/.test(serverName)) {
             this.renameForm.form.controls.serverName.setErrors({ invalidInput: true });
-        } else {
-            this.serverName = serverName;
         }
+        this.serverName = serverName;
     }
 }
