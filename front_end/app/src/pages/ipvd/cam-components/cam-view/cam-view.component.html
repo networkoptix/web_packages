@@ -173,9 +173,19 @@
                     </h4>
                 </div>
             </div>
-            <div class="row">
-                <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                    {{event}}
+            <div>
+                <div class="col-7 float-left">
+                    <div class="row col-12 p-0" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
+                        <div class="analytics-label">
+                            {{event}}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 pr-0 float-left disclaimer">
+                    <ng-container translate>
+                        Note: Actual supported events list could be different.
+                        Please check the specific camera before planning.
+                    </ng-container>
                 </div>
             </div>
 
