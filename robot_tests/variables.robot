@@ -586,3 +586,10 @@ ${SYMBOL PASSWORD}      pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}
 ${COMMON PASSWORD}      qweasd123
 
 @{INCORRECT PASSWORDS}    ${CYRILLIC TEXT}    ${SMILEY TEXT}    ${GLYPH TEXT}    ${TM TEXT}    ${SPACE}${BASE PASSWORD}    ${BASE PASSWORD}${SPACE}
+
+#Local User in System Users
+${LOCAL USER LOGIN}                  //input[@id='name']
+${LOCAL USER NAME}                   //input[@id='fullName']
+${LOCAL USER EMAIL}                  //input[@id='email']
+${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
+${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]

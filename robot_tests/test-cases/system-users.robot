@@ -66,6 +66,14 @@ Check Special Hint
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
     ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
 
+Create Local Users via API
+    [Arguments]    ${auth}    ${server}
+    @{local users} =    Create List    GlobalAdmin    GlobalEditCameras    GlobalControlVideoWall    GlobalViewArchive      GlobalExport    GlobalViewBookmarks    GlobalManageBookmarks    GlobalUserInput    GlobalAccessAllMedia    GlobalCustomUser
+    FOR   ${user}    IN    @{local users}
+        Save Local User    ${auth}    ${server}    ${user}    ${user}Permission    noptixautoqa+localuser_${user}@gmail.com    Local User    ${BASE PASSWORD}
+    END                
+    [return]    @{local users}
+
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
@@ -523,3 +531,62 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
+    
+Local User Basic Test
+    ${auto sys auth} =    Set Variable    @{AUTO SYS AUTH}
+    @{local users} =    Create Local Users via API    ${auto sys auth}    ${AUTO SYS IP}
+    Log    Modify local users  
+    Log in to Auto Tests System    ${email}
+    Click Link    ${USERS LIST LINK}
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element is Visible    //span[text()="${user}"]
+        Run Keyword If    '${user}' == 'GlobalAccessAllMedia'    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Live Viewer 
+        ...    ELSE IF    '${user}' == 'GlobalAdmin'    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Administrator
+        ...    ELSE    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Custom
+        Click Element    //span[text()="${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER LOGIN}
+	    ...    ${LOCAL USER NAME}
+	    ...    ${LOCAL USER EMAIL}
+	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${user}
+	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
+	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+localuser_${user}@gmail.com
+	    Run Keyword If    '${user}' == 'GlobalAccessAllMedia'    Element Text Should Be    //*[@id="permissionsSelect"]/span    Live Viewer
+	    ...    ELSE IF    '${user}' == 'GlobalAdmin'    Element Text Should Be    //*[@id="permissionsSelect"]/span    Administrator
+	    ...    ELSE    Element Text Should Be    //*[@id="permissionsSelect"]/span    Custom
+    
+	    Log     Verify that you can change the login for ${user}
+	    ${new login} =    Set Variable   changedlogin_${user}
+	    Input Text    ${LOCAL USER LOGIN}     ${new login}
+	    Click Button    //button[text()="Save"]
+	    ${new login} =    Convert To Lowercase    ${new login}
+	    Wait Until Element is Visible    //span[text()="${new login}"]
+	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+    
+	    Log     Verify that you can change permission level for ${user}
+	    ${new permission} =    Set Variable    Viewer
+	    Click Button    ${ACCESS LEVEL DROPDOWN}
+	    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"] 
+	    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"]
+	    Click Button    //button[text()="Save"]
+	    Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
+	    
+	    Log    Verify that you can change email for ${user}
+	    ${new local user email} =    Set Variable    ${EMAIL VIEWER}
+	    Input Text    ${LOCAL USER EMAIL}      ${new local user email}
+	    ${new local user email} =    Convert To Lowercase    ${new local user email} 
+	    Click Button    //button[text()="Save"]
+        
+        Log    Verify that you can change password for ${user}
+        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
+        Input Text    //input[@id="newPassword"]    newpassword
+        Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
+        
+        Log    Verify changed info via API    
+        ${users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+        ${users1} =    Convert To String    ${users}    
+        Should Contain   ${users1}    name': '${new login}
+	    Should Not Contain    ${users1}    name': '${user}
+	    Should Contain    ${users1}    email': '${new local user email}
+	    Should Not Contain    ${users1}   email': 'noptixautoqa+localuser_${user}@gmail.com	    
+    END
