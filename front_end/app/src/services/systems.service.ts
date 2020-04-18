@@ -167,10 +167,10 @@ export class NxSystemsService implements OnDestroy {
                 this.addToMergeList(system.id);
             } else if (this.mergingSystems.has(system.id)) {
                 const currentSystemId = this.localStorage.get('systemId');
-                if (currentSystemId === this.systemsMerging.secondary.id) {
+                if (this.systemsMerging.secondary && currentSystemId === this.systemsMerging.secondary.id) {
                     this.uriService.updateURI(`/systems/${this.systemsMerging.primary.id}`, {});
                 }
-                if (currentSystemId === this.systemsMerging.primary.id) {
+                if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
                     this.ribbonService.hide();
                 }
                 this.systemsMerging = {
