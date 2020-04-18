@@ -116,16 +116,15 @@
                 <ng-container *ngIf="recording">
                     <nx-section>
                         <h4 class="mb-3" translate>Mode</h4>
-                        <div *ngFor="let mode of recordingModes" class="d-flex">
                             <nx-radio
+                                *ngFor="let mode of recordingModes" class="d-flex pb-2"
                                 [name]="mode.name" [componentId]="mode.name"
                                 [value]="mode.value"
+                                [label]="mode.name"
                                 [disabled]="!mode.enabled"
                                 [(ngModel)]="mode.value"
                                 (click)="toggleMode(mode)"
                                 ></nx-radio>
-                            <label [for]="mode.name" [ngClass]="mode.enabled ? '' : 'text-muted'">{{mode.name}}</label>
-                        </div>
                         <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
                         <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
