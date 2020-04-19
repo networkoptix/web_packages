@@ -246,5 +246,7 @@
     "PORT TEXT": "Port",
     "CHECK STATUS TEXT": "Kontrollera Status",
     "SERVER NAME REQUIRED": "Servernamn krävs",
-    "SERVER NAME SAVED": "Servernamn sparat."
+    "SERVER NAME SAVED": "Servernamn sparat.",
+    "CHANGE PASSWORD BUTTON TEXT": "Change Password",
+    "DELETE USER TEXT": "Delete User"
 }

@@ -246,5 +246,7 @@
     "PORT TEXT": "Port",
     "CHECK STATUS TEXT": "Status prüfen",
     "SERVER NAME REQUIRED": "Servername ist erforderlich",
-    "SERVER NAME SAVED": "Servername gespeichert."
+    "SERVER NAME SAVED": "Servername gespeichert.",
+    "CHANGE PASSWORD BUTTON TEXT": "Change Password",
+    "DELETE USER TEXT": "Delete User"
 }
