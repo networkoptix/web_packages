@@ -270,16 +270,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get previewWrapperWidth() {
-        return (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 480;
+        return Math.ceil((this.selectedAspect.value as number || this.aspectRatios[1].value as number) * 480 / 44) * 44;
     }
 
     get canvasWidth() {
-        return Math.round(this.previewWrapperWidth * 2 / 44) * 44;
+        return Math.floor(this.previewWrapperWidth / 44) * 44;
     }
 
     get canvasHeight() {
         const aspect = <number> this.selectedAspect.value || <number> this.aspectRatios[1].value;
-        return Math.round(this.canvasWidth / aspect / 32) * 32;
+        return Math.floor(this.canvasWidth / aspect / 32) * 32;
     }
 
     get motionPreviewImage() {

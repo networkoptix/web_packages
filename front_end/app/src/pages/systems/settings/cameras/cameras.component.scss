@@ -109,6 +109,8 @@
 .preview-wrapper {
     border-radius: 2px;
     border: 1px solid $light3;
+    max-height: 480px;
+    overflow: hidden;
     padding: 0;
 }
 
