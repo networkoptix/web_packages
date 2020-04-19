@@ -308,8 +308,8 @@ export class MotionMaskRenderer {
                     ? this.brandColor
                     : 'black'
                 : '#FFFFFF1A';
-            this.ctx.shadowColor = 'black';
-            this.ctx.shadowBlur = selected ? 1 : 0;
+            // this.ctx.shadowColor = 'black';
+            // this.ctx.shadowBlur = selected ? 1 : 0;
             this.ctx.lineWidth = selected ? 2 : 1;
             this.ctx.beginPath();
             this.ctx.moveTo(fromX, fromY);
@@ -356,9 +356,10 @@ export class MotionMaskRenderer {
             this.ctx.fillText(
                 `${sensitivity || '0'}`,
                 (x + 0.5) * this.cellWidth + addOffsetX,
-                (y + 1) * this.cellHeight - 4 + addOffsetY
+                (y + 1) * this.cellHeight - 2 + addOffsetY
             );
         });
+        this.ctx.shadowBlur = 0;
     }
 
     /**
