@@ -316,17 +316,11 @@ export class MotionMaskRenderer {
             this.ctx.lineTo(toX, toY);
             this.ctx.stroke();
         };
-        draw(top, left, top, right, drawTop, Math.max(
-            maskMatrix[Math.max(row - 1, 0)][column], sensitivity
+        draw(bottom, right + 0.5, bottom, left + (drawBottom ? -0.5 : +0.5), drawBottom, Math.max(
+            maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
         ));
-        // draw(top, right, bottom, right, drawRight, Math.max(
-        //     maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
-        // ));
-        // draw(bottom, right, bottom, left, drawBottom, Math.max(
-        //     maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
-        // ));
-        draw(bottom, left, top, left, drawLeft, Math.max(
-            maskMatrix[row][Math.max(column - 1, 0)], sensitivity
+        draw(top + 0.5, right, bottom + (drawRight ? +0.5 : -0.5), right, drawRight, Math.max(
+            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
         ));
     };
 
