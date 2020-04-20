@@ -41,6 +41,8 @@ export class MotionMaskRenderer {
         this.width = canvas.nativeElement.width;
         this.height = canvas.nativeElement.height;
         this.ctx = canvas.nativeElement.getContext('2d');
+        this.ctx.imageSmoothingEnabled = false;
+        this.ctx.translate(0.5, 0.5);
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
         this.selectionZones = this.motionMask.selectionZones;
@@ -287,10 +289,10 @@ export class MotionMaskRenderer {
         column: number
     ) => {
         // add check here for if border should be
-        const top = row * this.cellHeight - 0.5;
-        const bottom = (row + 1) * this.cellHeight + 0.5;
-        const left = column * this.cellWidth - 0.5;
-        const right = (column + 1) * this.cellWidth + 0.5;
+        const top = row * this.cellHeight;
+        const bottom = (row + 1) * this.cellHeight;
+        const left = column * this.cellWidth;
+        const right = (column + 1) * this.cellWidth;
         const drawTop = row && sensitivity !== maskMatrix[row - 1][column];
         const drawRight =
             column !== this.columns - 1 &&
@@ -306,25 +308,19 @@ export class MotionMaskRenderer {
                     ? this.brandColor
                     : 'black'
                 : '#FFFFFF1A';
-            this.ctx.shadowColor = 'black';
-            this.ctx.shadowBlur = selected ? 1 : 0;
+            // this.ctx.shadowColor = 'black';
+            // this.ctx.shadowBlur = selected ? 1 : 0;
             this.ctx.lineWidth = selected ? 2 : 1;
             this.ctx.beginPath();
             this.ctx.moveTo(fromX, fromY);
             this.ctx.lineTo(toX, toY);
             this.ctx.stroke();
         };
-        draw(top, left, top, right, drawTop, Math.max(
-            maskMatrix[Math.max(row - 1, 0)][column], sensitivity
-        ));
-        draw(top, right, bottom, right, drawRight, Math.max(
-            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
-        ));
-        draw(bottom, right, bottom, left, drawBottom, Math.max(
+        draw(bottom, right + 0.5, bottom, left + (drawBottom ? -0.5 : +0.5), drawBottom, Math.max(
             maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
         ));
-        draw(bottom, left, top, left, drawLeft, Math.max(
-            maskMatrix[row][Math.max(column - 1, 0)], sensitivity
+        draw(top + 0.5, right, bottom + (drawRight ? +0.5 : -0.5), right, drawRight, Math.max(
+            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
         ));
     };
 
@@ -339,7 +335,7 @@ export class MotionMaskRenderer {
         } = this.motionMask;
         const currentMask = sortedZones(zones);
         const startZones = findStartZones(currentMask);
-        const fontSize = 30;
+        const fontSize = 13;
         this.ctx.textAlign = 'center';
         this.ctx.font = `${fontSize}px sans-serif`;
         this.ctx.fillStyle = 'white';
@@ -354,9 +350,10 @@ export class MotionMaskRenderer {
             this.ctx.fillText(
                 `${sensitivity || '0'}`,
                 (x + 0.5) * this.cellWidth + addOffsetX,
-                (y + 1) * this.cellHeight - 4 + addOffsetY
+                (y + 1) * this.cellHeight - 2 + addOffsetY
             );
         });
+        this.ctx.shadowBlur = 0;
     }
 
     /**
@@ -375,7 +372,7 @@ export class MotionMaskRenderer {
             height : cursor.height * this.cellHeight
         };
         this.render();
-        this.ctx.lineWidth = 1.5;
+        this.ctx.lineWidth = 1;
         this.ctx.strokeStyle = this.brandColor;
         this.ctx.strokeRect(x, y, width, height);
     };

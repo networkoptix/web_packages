@@ -126,13 +126,13 @@
             "unauthorized": "Autenticación necesaria"
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Valores diferentes -",
             "auto": "Auto",
-            "best": "Best",
+            "best": "Mejor",
             "high": "Elevado",
-            "medium": "Medium",
+            "medium": "Medio",
             "low": "Bajo"
         },
         "general": "General",
@@ -217,7 +217,7 @@
             "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "differentOwners": "Sólo puede fusionar sistemas con el mismo propietario y estos propietarios de sistemas son diferentes.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
             "mergeConfirmation": "Está a punto de combinar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>. Los ajustes y el nombre se tomarán de <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
@@ -238,13 +238,13 @@
             },
             "secondaryCannotMerge": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
             "secondarySystemUnavailable": "El sistema {{targetSystem}} no está disponible actualmente. Inténtalo de nuevo en unos minutos o ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverAtUrl": "servidor a {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">No se puede acceder al {{targetSystem}} sistema.</p><p>Asegúrese de que el servidor especificado esté en línea e intente nuevamente.</p>",
             "serverNotYours": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un propietario diferente. Los sistemas de la nube solo pueden fusionarse si la cuenta del propietario es la misma.",
             "serverVersionOld": "Este servidor tiene una versión de software antigua que es incompatible con el sistema actual. Actualízala a la última versión para fusionarla con la actual.",
             "serverVersionNew": "Este servidor tiene una versión de software más reciente que el sistema actual. Actualice ambos sistemas a la misma versión para fusionarlos.",
             "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} es inaccesible",
             "systemsIncompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la misma versión para fusionarlos.",
             "systemVersionOld": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
             "systemVersionNew": "El sistema {{targetSystem}} tiene una versión de software más reciente que es incompatible con el sistema actual. Actualice el sistema actual a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para combinarlo con el sistema {{targetSystem}}.",
@@ -531,8 +531,8 @@
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "El servidor no está disponible",
+            "message": "El sistema está fuera de línea y, por lo tanto, los servidores no son accesibles."
         }
     },
     "pleaseSelect": "Por favor, seleccione...",
@@ -545,7 +545,7 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
+            "to": "se está fusionando con este sistema",
             "mayTake": "Dependiendo del tamaño de la base de datos, puede llevar varias horas."
         },
         "finishingMerge": "Acabando la fusión de sistemas",
@@ -591,7 +591,7 @@
             "reseting": "reseteando...",
             "restarting": "reiniciando..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Nombre del servidor guardado."
     },
     "system": {
         "MERGE_FINISHES": "Cuando la fusión haya terminado, todos los usuarios y cámaras de este sistema estarán disponibles en <strong>{{targetSystemName}}</strong> Sistema, y este sistema será eliminado.",

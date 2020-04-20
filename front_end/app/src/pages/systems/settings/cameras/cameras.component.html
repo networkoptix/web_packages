@@ -3,7 +3,7 @@
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
     <ng-container *ngIf="selectedCamera">
-        <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info mb-2">
+        <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
                 type="error"
@@ -116,16 +116,15 @@
                 <ng-container *ngIf="recording">
                     <nx-section>
                         <h4 class="mb-3" translate>Mode</h4>
-                        <div *ngFor="let mode of recordingModes" class="d-flex">
                             <nx-radio
+                                *ngFor="let mode of recordingModes" class="d-flex pb-2"
                                 [name]="mode.name" [componentId]="mode.name"
                                 [value]="mode.value"
+                                [label]="mode.name"
                                 [disabled]="!mode.enabled"
                                 [(ngModel)]="mode.value"
                                 (click)="toggleMode(mode)"
                                 ></nx-radio>
-                            <label [for]="mode.name" [ngClass]="mode.enabled ? '' : 'text-muted'">{{mode.name}}</label>
-                        </div>
                         <span *ngIf="!existingRecordingsScheduled && existingModesSelected" class="input-error" translate>Please select recording mode.</span>
                         <span *ngIf="!motionEnabled" class="input-error" translate>Motion detection is disabled</span>
                     </nx-section>
@@ -168,7 +167,7 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion}]"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper">
+                <div class="m-3 preview-wrapper" [ngStyle]="{'max-height.px' : maxHeight}">
                     <div [style.max-width.px]="previewWrapperWidth" class="mx-auto overflow-hidden">
                         <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
                             <div class="d-flex forced-aspect-content">

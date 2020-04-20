@@ -14,10 +14,11 @@ import { NxSystemsService }          from '../../../services/systems.service';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxProcessService }          from '../../../services/process.service';
 import { NxUtilsService }            from '../../../services/utils.service';
+import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
 import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
+import { filter, tap }               from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
@@ -91,6 +92,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private processService: NxProcessService,
+                private uriService: NxUriService,
                 private menuService: NxMenuService,
                 private ribbonService: NxRibbonService,
                 private router: Router,
@@ -239,7 +241,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     }
                     this.systemSubscription = this.system.infoSubject
                         .pipe(filter((system: any) => system !== undefined))
-                        .subscribe(_ => {
+                        .subscribe(() => {
+                            // if system is removed while on page, redirects to systems page
+                            if (
+                                this.system && this.systemsService.systems &&
+                                !this.systemsService.systems.some(system => system.id === this.system.id)
+                            ) {
+                                this.uriService.updateURI('/systems');
+                            }
                             this.updateAlert();
                             if (this.system.users) {
                                 this.updateMenu();
@@ -264,6 +273,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
                 if (!this.system.isOnline) {
+                    this.ribbonService.hide();
                     this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
                 } else if (primary && primary.id === this.system.id) {
                     this.secondaryMerge = false;
@@ -278,13 +288,15 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             <div class="larger"><strong>${secondaryName}</strong> ${this.LANG.ribbon.beingMerged.to}</div>
                             <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake}</div>
                         </div>`;
+                    this.ribbonService.hide();
                     this.ribbonService.show(template, '', '', 'alert');
                 } else if (secondary && secondary.id === this.system.id) {
                     this.mergeTargetSystem = this.systemsService.systems
                         .find((system) => primary.id === system.id) || { name: this.LANG.system.mergeUnknownName };
                     this.secondaryMerge = true;
                 } else if (mergeInProgress) {
-                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, '', '');
+                    this.ribbonService.hide();
+                    this.ribbonService.show(this.LANG.ribbon.systemsMerging, '', '', 'alert');
                 } else {
                     this.secondaryMerge = false;
                     this.ribbonService.hide();

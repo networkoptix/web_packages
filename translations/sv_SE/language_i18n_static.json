@@ -126,13 +126,13 @@
             "unauthorized": "Autentisering krävs"
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
         "resolution": {
-            "various": "– Different Values –",
+            "various": "– Olika värden –",
             "auto": "Auto",
-            "best": "Best",
+            "best": "Bästa",
             "high": "Hög",
-            "medium": "Medium",
+            "medium": "Medel",
             "low": "Låg"
         },
         "general": "Allmänt",
@@ -531,8 +531,8 @@
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Servern är inte tillgänglig",
+            "message": "Systemet är offline och därför är servrar inte tillgängliga."
         }
     },
     "pleaseSelect": "Vänligen välj...",

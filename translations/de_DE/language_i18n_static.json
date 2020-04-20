@@ -126,13 +126,13 @@
             "unauthorized": "Authentifizierung erforderlich"
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Verschiedene Werte -",
             "auto": "Auto",
-            "best": "Best",
+            "best": "Beste",
             "high": "Hoch",
-            "medium": "Medium",
+            "medium": "Mittel",
             "low": "Niedrig"
         },
         "general": "Allgemein",
@@ -531,8 +531,8 @@
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Server nicht erreichbar",
+            "message": "Das System ist offline und daher sind Server nicht zugänglich."
         }
     },
     "pleaseSelect": "Bitte auswählen...",
