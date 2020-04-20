@@ -1,4 +1,4 @@
-<label class="nx-checkbox" [attr.disabled]="disabled">
+<label class="nx-checkbox" [attr.disabled]="disabled ? '' : null">
     <input type="checkbox"
            [id]="componentId"
            [attr.checked]="value ? '' : null"
