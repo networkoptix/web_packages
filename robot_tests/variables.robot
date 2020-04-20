@@ -2,6 +2,9 @@
 Variables    getvars.py
 Resource     variables/system-server-variables.robot
 Resource     variables/health-monitor-variables.robot
+Resource     variables/restore-pass-variables.robot
+Resource     variables/change-pass-variables.robot
+Resource     variables/register-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
@@ -70,53 +73,6 @@ ${CREATE ACCOUNT BODY}                //nx-app//a[@href='/register']
 
 ${LOG IN BODY}                        //nx-app//a[@href='/login']
 
-#Forgot Password
-${RESET PASSWORD FORM}                //form[@name='restorePasswordWithCode']
-${RESET PASSWORD OK BUTTON}           ${RESET PASSWORD FORM}//button[contains(@class,'btn btn-primary')]
-${RESTORE PASSWORD EMAIL INPUT}       //form[@name='restorePassword']//nx-email-input/input
-${RESET PASSWORD BUTTON}              //form[@name='restorePassword']//button[contains(@class,'btn btn-primary')]
-${RESET PASSWORD INPUT}               ${RESET PASSWORD FORM}//input[@id='newPassword']
-${SAVE PASSWORD}                      ${RESET PASSWORD FORM}//button[contains(@class,'btn btn-primary')]
-${RESET EMAIL SENT MESSAGE}           //h1/span[contains(text(),"${RESET EMAIL SENT MESSAGE TEXT}")]
-${RESET SUCCESS MESSAGE}              //h1[contains(text(),"${RESET SUCCESS MESSAGE TEXT}")]
-${RESET SUCCESS LOG IN LINK}          //div[contains(@class,'process-success')]//a[contains(@class,'btn btn-primary')]
-${RESET EYE ICON OPEN}                ${RESET PASSWORD FORM}${EYE ICON OPEN}
-${RESET EYE ICON CLOSED}              ${RESET PASSWORD FORM}${EYE ICON CLOSED}
-
-#Change Password
-${CHANGE PASSWORD LEFT MENU LINK}     //nx-menu//span[contains(text(), "${CHANGE PASSWORD LEFT MENU TEXT}")]
-${CHANGE PASSWORD FORM}               //nx-account-password-component//form
-${CURRENT PASSWORD INPUT}             ${CHANGE PASSWORD FORM}//input[@id='password']
-${NEW PASSWORD INPUT}                 ${CHANGE PASSWORD FORM}//input[@id='newPassword']
-${CHANGE PASSWORD BUTTON}             //nx-account-password-component//nx-apply//nx-process-button//button
-${CANCEL CHANGES BUTTON}              //nx-account-password-component//nx-apply//button[contains(text(), "${CANCEL CHANGES BUTTON TEXT}")]
-${PASSWORD IS REQUIRED}               //div[contains(@class,'input-error') and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
-${CHANGE PASS EYE ICON OPEN}          ${CHANGE PASSWORD FORM}${EYE ICON OPEN}
-${CHANGE PASS EYE ICON CLOSED}        ${CHANGE PASSWORD FORM}${EYE ICON CLOSED}
-${CHANGE PASS NO CHANGES}             //div[contains(@class, "placeholder-text-no-changes")]
-
-#Register Form Elements
-${REGISTER FORM}                      //form[@id='registerForm']
-${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
-${REGISTER LAST NAME INPUT}           ${REGISTER FORM}//input[@id='lastName']
-${REGISTER EMAIL INPUT}               ${REGISTER FORM}//input[@id='registerEmail']
-${REGISTER EMAIL INPUT LOCKED}        ${REGISTER FORM}//input[@name='registerEmailLocked']
-${REGISTER PASSWORD INPUT}            ${REGISTER FORM}//input[@id='registerPassword']
-
-${TERMS AND CONDITIONS CHECKBOX VISIBLE}    ${REGISTER FORM}//label[@class="nx-checkbox"]
-${TERMS AND CONDITIONS CHECKBOX REAL}       ${REGISTER FORM}//input[@id='accept']
-
-${CREATE ACCOUNT BUTTON}              ${REGISTER FORM}//button[contains(text(),"${CREATE ACCOUNT BUTTON TEXT}")]
-${TERMS AND CONDITIONS LINK}          ${REGISTER FORM}//a[@href='/content/eula']
-${TERMS AND CONDITIONS ERROR}         ${REGISTER FORM}//span[@class='help-block input-error' and contains(text(),"${TERMS AND CONDITIONS ERROR TEXT}")]
-${PRIVACY POLICY LINK}                ${REGISTER FORM}//a[@href='${PRIVACY POLICY URL HREF}']
-${RESEND ACTIVATION LINK BUTTON}      //form[@name= 'loginForm']//a[contains(text(),"${RESEND ACTIVATION LINK BUTTON TEXT}")]
-${REGISTER EYE ICON OPEN}             ${REGISTER FORM}${EYE ICON OPEN}
-${REGISTER EYE ICON CLOSED}           ${REGISTER FORM}${EYE ICON CLOSED}
-
-${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invites you to %PRODUCT_NAME%
-
-#Register form errors
 ${FIRST NAME IS REQUIRED}             //span[contains(@class,'input-error') and contains(text(),"${FIRST NAME IS REQUIRED TEXT}")]
 ${LAST NAME IS REQUIRED}              //span[contains(@class,'input-error') and contains(text(),"${LAST NAME IS REQUIRED TEXT}")]
 ${EMAIL IS REQUIRED}                  //span[contains(@class,'input-error') and contains(text(),"${EMAIL IS REQUIRED TEXT}")]
@@ -131,10 +87,6 @@ ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}} invit
 
 #targets the open nx witness button presented when logging in after activating with from=mobile or client
 ${OPEN NX WITNESS BUTTON FROM =}      //button[text()="${OPEN NX WITNESS BUTTON TEXT}"]
-
-${ACCOUNT CREATION SUCCESS}           //h2[@name="ACCOUNT_CREATED" and contains(text(),"${ACCOUNT CREATED TEXT}")]
-${ACCOUNT CREATION SUCCESS ICON}      //div[@name="ACCOUNT_CREATED"]/svg-icon
-${ACCOUNT CREATION CONFIRMATION}      ${ACCOUNT CREATION SUCCESS}/following-sibling::div[@name="ACCOUNT_CREATED"]
 
 ${ACTIVATION SUCCESS}                 //h2[@name="ACCOUNT_ACTIVATED" and contains(text(),"${ACCOUNT SUCCESSFULLY ACTIVATED TEXT}")]
 ${ACTIVATION SUCCESS ICON}            //div[@name="ACCOUNT_ACTIVATED"]/svg-icon
