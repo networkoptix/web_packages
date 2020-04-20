@@ -12,3 +12,6 @@ ${RENAME CANCEL BUTTON}           ${RENAME SERVER FORM}//button[contains(text(),
 ${RENAME CLOSE BUTTON}            ${RENAME SERVER FORM}//button[contains(@class,"close")]
 ${$RENAME SERVER INPUT}           ${RENAME SERVER FORM}//input[@id="serverName"]
 ${RENAME ERROR TEXT}              ${$RENAME SERVER INPUT}/following-sibling::p/span[contains(@class,"input-error")]
+
+${SERVER NOT ACCESIBLE IMAGE}     //div[contains(@class,"placeholder-icon") and @name="SERVER_OFFLINE"]
+${OFFLINE BADGE}                  //header//h2/following-sibling::span[contains(text(),"${AUTOTESTS OFFLINE TEXT}")]
