@@ -247,6 +247,6 @@
     "CHECK STATUS TEXT": "Comprobar estado",
     "SERVER NAME REQUIRED": "Se requiere el nombre del servidor",
     "SERVER NAME SAVED": "Nombre del servidor guardado.",
-    "CHANGE PASSWORD BUTTON TEXT": "Change Password",
-    "DELETE USER TEXT": "Delete User"
+    "CHANGE PASSWORD BUTTON TEXT": "Cambiar contraseña",
+    "DELETE USER TEXT": "Borrar el usuario"
 }

@@ -126,13 +126,13 @@
             "unauthorized": "נדרש אימות"
         },
         "chromeCastWarning": "Chromecast הוא משאב אינטנסיבי ועשוי לגרום לבעיות בשרת שלך.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "אנא עדכן את הגדרות ההקלטה החסרות.",
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- ערכים שונים -",
             "auto": "אוטומטי",
-            "best": "Best",
+            "best": "הטוב ביותר",
             "high": "גבוה",
-            "medium": "Medium",
+            "medium": "בינוני",
             "low": "נמוך"
         },
         "general": "General",
@@ -531,8 +531,8 @@
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "השרת לא נגיש",
+            "message": "המערכת אינה מקוונת ולכן השרתים אינם נגישים."
         }
     },
     "pleaseSelect": "נא לבחור...",
