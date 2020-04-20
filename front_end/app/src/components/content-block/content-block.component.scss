@@ -313,6 +313,13 @@
         }
     }
 
+    &.no-padding-header {
+        .card--header {
+            height  : auto;
+            padding : 0;
+        }
+    }
+
     &.slim-header {
         .card--header {
             height  : auto;

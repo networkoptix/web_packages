@@ -247,6 +247,6 @@
     "CHECK STATUS TEXT": "Kontrollera Status",
     "SERVER NAME REQUIRED": "Servernamn krävs",
     "SERVER NAME SAVED": "Servernamn sparat.",
-    "CHANGE PASSWORD BUTTON TEXT": "Change Password",
-    "DELETE USER TEXT": "Delete User"
+    "CHANGE PASSWORD BUTTON TEXT": "Ändra lösenord",
+    "DELETE USER TEXT": "Radera användare"
 }

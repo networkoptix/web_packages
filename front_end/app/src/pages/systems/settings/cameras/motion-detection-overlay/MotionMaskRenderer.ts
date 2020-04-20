@@ -7,9 +7,7 @@ import {
     startWith, tap, buffer, debounceTime, withLatestFrom, takeUntil
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
-import {
-    SensitivityColor, Mask, Area
-}                           from './motion-detection-types';
+import { Mask, Area }       from './motion-detection-types';
 import { MotionMaskState }  from './MotionMaskState';
 
 export class MotionMaskRenderer {
@@ -30,7 +28,7 @@ export class MotionMaskRenderer {
 
     constructor(
         private motionMask: MotionMaskState,
-        private sensitivityColors: SensitivityColor[],
+        private sensitivityColors: string[],
         private unsub$: Subject<boolean>
     ) {}
 
@@ -254,12 +252,13 @@ export class MotionMaskRenderer {
      * Adds fill color for each cell
      */
     private fillZones() {
+        const selectedFill = '#33333377';
         this.motionMask.renderState$.value.zones.forEach(
             ({ sensitivity, x, y, width, height }) => {
                 this.ctx.beginPath();
                 this.ctx.fillStyle =
                     sensitivity >= 150
-                        ? '#33333377'
+                        ? selectedFill
                         : this.sensitivityColors[sensitivity] + '55';
                 this.ctx.rect(
                     x * this.cellWidth,

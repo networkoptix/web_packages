@@ -3,9 +3,9 @@ import {
     ChangeDetectionStrategy, HostListener, Output, EventEmitter
 }                               from '@angular/core';
 import { BehaviorSubject, Subject }      from 'rxjs';
-import { SensitivityColor }     from './motion-detection-types';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
+import { NxConfigService, IConfig } from '../../../../../services/nx-config';
 
 @Component({
     selector        : 'nx-motion-detection-overlay',
@@ -23,15 +23,13 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
+    config: IConfig;
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();
 
-    /**
-     * Color for sensitivity level is found by its index. Level 3 is sensitivityColors[3].
-     */
-    sensitivityColors: SensitivityColor[] = [
-        '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
-    ];
+    constructor(config: NxConfigService) {
+        this.config = config.getConfig();
+    };
 
     ngOnInit() {
         this.initMask();
@@ -73,7 +71,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
     private initRenderer() {
-        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.sensitivityColors, this.unsub$);
+        this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.config.cameraSettings.sensitivityColors, this.unsub$);
         this.motionMaskRenderer.initCanvas(this.motionCanvas);
     }
 }

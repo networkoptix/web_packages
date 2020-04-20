@@ -168,7 +168,7 @@ Validate on Register Page
     Run keyword and continue on failure    Title should be    ${REGISTER TITLE TEXT} ${PRODUCT_NAME}
 
 Register
-    [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
+    [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}=false    ${from}=desktop
     Run Keyword If    '${from}'=='desktop'    Go To    ${ENV}/register
     Run Keyword If    '${from}'=='mobile'     Go To    ${ENV}/register/?from=mobile
     Run Keyword If    '${from}'=='client'     Go To    ${ENV}/register/?from=client
@@ -181,15 +181,25 @@ Register
     Run Keyword If    "${checked}"=="false"    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
     Click Button    ${CREATE ACCOUNT BUTTON}
 
+Verify in Account Page
+    Wait Until Elements are Visible
+    ...    ${ACCOUNT EMAIL}
+    ...    ${ACCOUNT FIRST NAME}
+    ...    ${ACCOUNT LAST NAME}
+    ...    ${ACCOUNT LANGUAGE DROPDOWN}
+    ...    ${ACCOUNT DROPDOWN}
+    ...    ${DELETE ACCOUNT BUTTON}
+    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    sleep    .5
 
 Validate Register Success
-    [arguments]    ${location}=${url}/register/success
+    [Arguments]    ${location}=${ENV}/register/success
     Wait Until Element Is Visible    ${ACCOUNT CREATION SUCCESS}
     Wait Until Location Is    ${location}
     Run keyword and continue on failure    Title should be    ${WELCOME TEXT} ${PRODUCT_NAME}
 
 Validate Register Email Received
-    [arguments]    ${recipient}
+    [Arguments]    ${recipient}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${recipient}    timeout=120    status=UNSEEN
     Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -198,7 +208,7 @@ Validate Register Email Received
     Close Mailbox
 
 Get Email Link
-    [arguments]    ${recipient}    ${link type}    ${timeout}=120
+    [Arguments]    ${recipient}    ${link type}    ${timeout}=120
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${recipient}    timeout=${timeout}    status=UNSEEN
     Run Keyword If    "${link type}"=="activate"    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
@@ -213,13 +223,22 @@ Get Email Link
     Return From Keyword    ${links}
 
 Activate
-    [arguments]    ${email}
+    [Arguments]    ${email}
     ${code}=   Get Code From Email   ${ENV}    ${auth}    ${email}    activate_account
     Go To    ${ENV}/activate/${code}
     Wait Until Elements Are Visible
     ...    ${ACTIVATION SUCCESS}
     ...    ${ACTIVATION SUCCESS ICON}
+    ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
     Location Should Be    ${ENV}/activate/success
+
+Validate Activation Success
+    ${current url}=   Get Location
+    Wait Until Location Contains    ${current url}
+    Wait Until Elements Are Visible
+    ...    ${ACTIVATION SUCCESS}
+    ...    ${ACTIVATION SUCCESS ICON}
+    ...    ${ACTIVATION SUCCESS LOG IN BUTTON}
 
 Register And Activate Account
     [Arguments]    ${first name}    ${last name}    ${email}    ${password}    ${reg}=api    ${act}=api
@@ -447,6 +466,12 @@ Wait Until Page Does Not Contain Elements
         Wait Until Page Does Not Contain Element    ${element}    ${timeout}
     END
 
+Wait Until Elements Are Not Visible
+    [Arguments]    @{elements}
+    FOR    ${element}    IN    @{elements}
+        Wait Until Element Is Not Visible    ${element}
+    END
+
 #Reset resources
 Clean up email noperm
     Register Keyword To Run On Failure    None
@@ -669,3 +694,12 @@ Convert Code
     ${code}=   Replace String Using Regexp    ${code}    %3D    =
     ${code}=   Replace String Using Regexp    ${code}    %2B    +
     [Return]    ${code}
+
+Get the link from email
+    [Arguments]    ${email host}    ${email receipient}    ${password}    ${path}    ${timeout}=120
+    Open Mailbox    host=${BASE HOST}    password=${password}    port=${BASE PORT}    user=${email host}    is_secure=True
+    ${email index}=   Wait For Email    recipient=${email receipient}    timeout=${timeout}    status=UNSEEN
+    ${link}=   Get Nx Links From Email    ${email index}    ${path}
+    Delete Email    ${email index}
+    Close Mailbox
+    [Return]    ${link}

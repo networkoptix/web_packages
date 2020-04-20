@@ -26,6 +26,7 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     @Input() value: boolean;
     @Input() disabled: any;
     @Output() onClick = new EventEmitter<boolean>();
+    @Input() label: string;
 
     private checked: boolean;
     private invalid: boolean;
@@ -101,6 +102,10 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
         this.onChangeCallback(this.value);
 
         this.onClick.emit(this.value);
+    }
+
+    preventBubbling(event: Event) {
+        event.stopPropagation();
     }
 
     changeState(event) {

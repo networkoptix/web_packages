@@ -8,8 +8,13 @@ export const nxConfig: IConfig = {
             leave : '0.25s ease-out'
         }
     },
-    apiBase    : '/api',
-    clientMode : {
+    apiBase        : '/api',
+    cameraSettings : {
+        sensitivityColors: [
+            '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
+        ]
+    },
+    clientMode: {
         beta  : false,
         debug : false
     },
@@ -254,16 +259,16 @@ export const nxConfig: IConfig = {
                 path : 'servers'
             },
             cameras: {
-                id  : 'cameras',
-                icon: 'cameras',
-                path: 'cameras',
-                statusIcons: {
-                    archive: 'camera_archive',
-                    offline: 'camera_offline',
-                    recording: 'camera_recording',
-                    scheduled: 'camera_scheduled',
-                    unauthorized: 'camera_unauthorized',
-                    online: ''
+                id          : 'cameras',
+                icon        : 'cameras',
+                path        : 'cameras',
+                statusIcons : {
+                    archive      : 'camera_archive',
+                    offline      : 'camera_offline',
+                    recording    : 'camera_recording',
+                    scheduled    : 'camera_scheduled',
+                    unauthorized : 'camera_unauthorized',
+                    online       : ''
                 }
             },
             general: {

@@ -1,13 +1,3 @@
-export type SensitivityColor = '#FFFFFF' |
-                               '#627CD6' |
-                               '#23A4CB' |
-                               '#31BAA2' |
-                               '#79BC66' |
-                               '#B8BC37' |
-                               '#FBA405' |
-                               '#E97119' |
-                               '#D24729' |
-                               '#C22626';
 export type SelectionAction = 'double-click' | 'click' | 'select-start' | 'select-end' | 'filter';
 export type Cell = number;
 export type Row = Cell[];

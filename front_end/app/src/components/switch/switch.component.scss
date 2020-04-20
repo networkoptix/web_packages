@@ -1,12 +1,13 @@
 @import "../../../styles/_theme_variables";
 
 .switch {
-    width : 33px;
+    width : 33px !important;
+    display: inline-block;
 
     &-element {
         position : relative;
         display  : inline-block;
-        width    : 100%;
+        width : 33px !important;
         height   : 17px;
         margin   : 0;
 
@@ -15,6 +16,39 @@
             width   : 0;
             height  : 0;
         }
+    }
+
+    &-with-label {
+        padding: 16px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        &:hover {
+            .switch {
+                .switch-element {
+                    .slider {
+                        background-color: $red_l2;
+                    }
+                    input.selected + .slider {
+                        background-color: $green_l1;
+                    }
+                    
+                    input:focus + .slider {
+                        box-shadow: 0 0 1px $green_l1;
+                    }
+                }
+            }
+        }
+    }
+
+    &-label {
+        cursor: pointer;
+        margin: 0;
+        -webkit-touch-callout: none; 
+        -webkit-user-select: none; 
+        -moz-user-select: none; 
+        -ms-user-select: none; 
+        user-select: none;
     }
 }
 
@@ -82,7 +116,7 @@ input.selected + .slider:before {
     -o-user-select: none;
     user-select: none;
     height: 9px;
-    bottom: 5px;
+    bottom: 4px;
 }
 
 .bar {

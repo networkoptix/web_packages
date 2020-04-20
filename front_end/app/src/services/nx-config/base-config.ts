@@ -17,6 +17,7 @@ export interface BaseConfig {
     alertTimeout: number;
     animations: Animations;
     apiBase: string;
+    cameraSettings: CameraSettings;
     clientMode: ClientMode;
     credentialsValidation: CredentialsValidation;
     dialogs: Dialogs;
@@ -86,6 +87,10 @@ export interface AccessRoles {
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
     order: string[];
+}
+
+export interface CameraSettings {
+    sensitivityColors: string[];
 }
 
 export interface CustomPermission {
