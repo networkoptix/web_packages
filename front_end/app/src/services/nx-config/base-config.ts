@@ -8,7 +8,6 @@
 // match the expected interface, even if the JSON is valid.
 
 import { Watcher } from '../apply.service';
-import { SensitivityColor } from '../../pages/systems/settings/cameras/motion-detection-overlay/motion-detection-types';
 
 export interface BaseConfig {
     commonPasswordsList?: string[];
@@ -90,7 +89,7 @@ export interface AccessRoles {
 }
 
 export interface CameraSettings {
-    sensitivityColors: SensitivityColor[];
+    sensitivityColors: string[];
 }
 
 export interface CustomPermission {

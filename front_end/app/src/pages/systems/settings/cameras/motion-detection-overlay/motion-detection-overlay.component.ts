@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy, HostListener, Output, EventEmitter
 }                               from '@angular/core';
 import { BehaviorSubject, Subject }      from 'rxjs';
-import { SensitivityColor }     from './motion-detection-types';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
 import { NxConfigService, IConfig } from '../../../../../services/nx-config';

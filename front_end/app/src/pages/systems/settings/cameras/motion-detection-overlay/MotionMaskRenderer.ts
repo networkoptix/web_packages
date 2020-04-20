@@ -7,9 +7,7 @@ import {
     startWith, tap, buffer, debounceTime, withLatestFrom, takeUntil
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
-import {
-    SensitivityColor, Mask, Area
-}                           from './motion-detection-types';
+import { Mask, Area }       from './motion-detection-types';
 import { MotionMaskState }  from './MotionMaskState';
 
 export class MotionMaskRenderer {
@@ -30,7 +28,7 @@ export class MotionMaskRenderer {
 
     constructor(
         private motionMask: MotionMaskState,
-        private sensitivityColors: SensitivityColor[],
+        private sensitivityColors: string[],
         private unsub$: Subject<boolean>
     ) {}
 
