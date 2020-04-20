@@ -1,13 +1,13 @@
 @import "../../../styles/_theme_variables";
 
 .switch {
-    width : 33px;
+    width : 33px !important;
     display: inline-block;
 
     &-element {
         position : relative;
         display  : inline-block;
-        width    : 100%;
+        width : 33px !important;
         height   : 17px;
         margin   : 0;
 
@@ -21,6 +21,8 @@
     &-with-label {
         padding: 16px;
         cursor: pointer;
+        display: inline-flex;
+        align-items: center;
         &:hover {
             .switch {
                 .switch-element {
@@ -42,6 +44,11 @@
     &-label {
         cursor: pointer;
         margin: 0;
+        -webkit-touch-callout: none; 
+        -webkit-user-select: none; 
+        -moz-user-select: none; 
+        -ms-user-select: none; 
+        user-select: none;
     }
 }
 
