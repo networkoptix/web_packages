@@ -1,13 +1,16 @@
-<div class="switch position-relative">
-    <label class="switch-element" [ngClass]="{'disabled': disabled}">
-        <input type="checkbox"
-               [ngClass]="{'selected' : value}"
-               [id]="componentId"
-               [attr.checked]="value ? '': null"
-               [attr.disabled]="disabled ? '' : null"
-               (click)="changeState($event)">
-        <span class="slider round"></span>
-    </label>
-    <div class="bar"></div>
-    <div class="circle"></div>
+<div [ngClass]="{'switch-with-label': label}" (click)="changeState($event)">
+    <div class="switch position-relative">
+        <label class="switch-element" [ngClass]="{'disabled': disabled}">
+            <input type="checkbox"
+                [ngClass]="{'selected' : value}"
+                [id]="componentId"
+                [attr.checked]="value ? '': null"
+                (click)="preventBubbling($event)"
+                [attr.disabled]="disabled ? '' : null">
+            <span class="slider round"></span>
+        </label>
+        <div class="bar"></div>
+        <div class="circle"></div>
+    </div>
+    <label *ngIf="label" class="pl-3 switch-label">{{label}}</label>
 </div>

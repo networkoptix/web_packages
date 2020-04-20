@@ -101,16 +101,11 @@
             </nx-block>
         </div>
         <div class="col-12 camera-settings-info mt-3">
-            <nx-block header-style="extended">
+            <nx-block header-style="no-padding">
                 <header>
-                    <div class="d-flex">
-                        <div class="d-flex justify-content-center align-items-center"  [style.width.px]="64">
-                            <nx-switch [(ngModel)]="recording"></nx-switch>
-                        </div>
-                        <div class="d-flex flex-column">
-                            <span translate>Recording</span>
-                            <span *ngIf="recording && existingRecordingsScheduled" class="input-error" translate>Existing recordings scheduled. Changing the settings below will override those recordings.</span>
-                        </div>
+                    <div class="d-flex align-items-center">
+                        <nx-switch [(ngModel)]="recording" [label]="'Recording'" id="recording"></nx-switch>
+                        <span *ngIf="recording && existingRecordingsScheduled" class="input-error" translate>Changing these settings will override existing recordings.</span>
                     </div>
                 </header>
                 <ng-container *ngIf="recording">
