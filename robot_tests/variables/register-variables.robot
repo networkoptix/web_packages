@@ -1,6 +1,3 @@
-*** Settings ***
-Variables    getvars.py
-
 *** Variables ***
 ${REGISTER FORM}                      //form[@id='registerForm']
 ${REGISTER FIRST NAME INPUT}          ${REGISTER FORM}//input[@id='firstName']
