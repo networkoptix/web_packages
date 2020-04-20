@@ -444,12 +444,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode, id, enabled: id === 'RT_Always' || id === 'RT_Never' ? true : this.motionEnabled
+            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') ? true : this.motionEnabled
         }));
-
-        if (!value) {
-            this.toggleMode({ name: 'RT_Always', enabled: true });
-        }
     }
 
     motionMaskWatcher: Watcher<string> = new Watcher();
