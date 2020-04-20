@@ -75,6 +75,12 @@ $preloader_small_circle_distance : 8px;
 
 .section-placeholder {}
 
+.page-placeholder-wrapper {
+    display     : flex;
+    align-items : center;
+    min-height  : 400px;
+}
+
 .page-placeholder {
     width            : calc(100% - 16px);
     margin           : 0 auto;
