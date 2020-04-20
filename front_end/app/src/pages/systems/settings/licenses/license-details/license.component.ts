@@ -70,6 +70,10 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
 
     private orderedDetails(info): void {
         const order = (info.serial === this.newlyAddedLicense) ? 1 : 2;
+        const next30days = new Date();
+        next30days.setDate(next30days.getDate() + 30);
+        const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
+
         this.orderedLicense[info.serial] = [
             {
                 name  : 'order',
@@ -93,7 +97,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
             }, {
                 name  : this.LANG.license.info.expires,
                 value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
-                error : info.expired
+                error : warning
             }, {
                 name  : this.LANG.license.info.deactivations,
                 value : info.deactivations
