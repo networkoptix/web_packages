@@ -22,8 +22,8 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     LANG: LanguageI18NStaticTypes;
     update: Process;
-    loginName = '';
-    password = '';
+    cameraLoginCredentials = '';
+    cameraPasswordCredentials = '';
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -35,7 +35,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     ngOnInit() {
         this.update = this.processService.createProcess(() => {
-            return this.system.updateCameraSettings(this.camera.id, { defaultCredentials: `${this.loginName}:${this.password}` })
+            return this.system.updateCameraSettings(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
                 .then(_ => this.system.getCameras().then(_ => {
                     this.system.systemInfo = this.system;
                 }));
