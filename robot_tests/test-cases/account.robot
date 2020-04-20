@@ -12,17 +12,6 @@ ${url}         ${ENV}
 ${CZECH ALERT}    Váš účet byl úspěšně uložen
 
 *** Keywords ***
-Verify in Account Page
-    Wait Until Elements are Visible
-    ...    ${ACCOUNT EMAIL}
-    ...    ${ACCOUNT FIRST NAME}
-    ...    ${ACCOUNT LAST NAME}
-    ...    ${ACCOUNT LANGUAGE DROPDOWN}
-    ...    ${ACCOUNT DROPDOWN}
-    ...    ${DELETE ACCOUNT BUTTON}
-    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    sleep    .5
-
 Restart
     Common Restart Logout    ${url}
 
