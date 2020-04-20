@@ -254,12 +254,13 @@ export class MotionMaskRenderer {
      * Adds fill color for each cell
      */
     private fillZones() {
+        const selectedFill = '#33333377';
         this.motionMask.renderState$.value.zones.forEach(
             ({ sensitivity, x, y, width, height }) => {
                 this.ctx.beginPath();
                 this.ctx.fillStyle =
                     sensitivity >= 150
-                        ? '#33333377'
+                        ? selectedFill
                         : this.sensitivityColors[sensitivity] + '55';
                 this.ctx.rect(
                     x * this.cellWidth,
