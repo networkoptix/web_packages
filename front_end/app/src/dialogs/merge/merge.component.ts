@@ -253,9 +253,13 @@ export class MergeModalContent {
             .then(
                 res => {
                     if (res.error === '0') {
-                        this.serverUrlInputExists
-                            ? this.machine.transition('adminPassword')
-                            : this.machine.transition('choosePrimary');
+                        if (this.serverUrlInputExists) {
+                            this.machine.transition('adminPassword');
+                        } else {
+                            this.primarySystem = this.system;
+                            this.setSystems();
+                            this.machine.transition('choosePrimary');
+                        }
                     }
                 },
                 err => {
