@@ -40,7 +40,7 @@ export class MotionMaskRenderer {
         this.height = canvas.nativeElement.height;
         this.ctx = canvas.nativeElement.getContext('2d');
         this.ctx.imageSmoothingEnabled = false;
-        this.ctx.translate(0.5, 0.5);
+        this.ctx.translate(-0.5, -0.5);
         this.maskMatrix = this.motionMask.maskMatrix;
         this.maskZones = this.motionMask.maskZones;
         this.selectionZones = this.motionMask.selectionZones;

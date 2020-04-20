@@ -270,7 +270,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     get maxHeight() {
-        return (this.selectedAspect.value as number || this.aspectRatios[1].value as number) > 1.5 ? 384 : 480;
+        const aspect = (this.selectedAspect.value as number || this.aspectRatios[1].value as number);
+        const normalHeight = 480;
+        const narrowHeight = 384;
+        return aspect > 1.5 ? narrowHeight : normalHeight;
     }
 
     get previewWrapperWidth() {
@@ -283,7 +286,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     get canvasHeight() {
         const aspect = <number> this.selectedAspect.value || <number> this.aspectRatios[1].value;
-        return Math.floor(this.canvasWidth / aspect / 32) * 32;
+        return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
     }
 
     get motionPreviewImage() {
@@ -291,7 +294,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera.id,
             null,
             (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight * 2,
-            960,
+            this.maxHeight * 2,
             0
         );
     }
