@@ -1,17 +1,17 @@
 <nx-search
         *ngIf="isSearchable || false"
         (ngModelChange)="modelChanged($event)"
-        [ngModel]="menuModel"
+        [ngModel]="menuQuery"
         layout="search"
-        name="menuModel"
-        ngDefaultControl>
+        name="menuQuery">
 </nx-search>
 
-<div class="nx-menu" [ngClass]="{ 'mt-2' : isSearchable }">
+<div class="nx-menu" [ngClass]="{ 'mt-2 searchable' : isSearchable }">
+    <div class="nx-menu-overlay" *ngIf="transition" ></div>
     <div *ngFor="let item of content.level1" class="level-1-container" [class.selected]="selectedLevel1 == item.id">
         <nx-level-1-item [item]="item"
                          [base]="content.base"
-                         [selected]="selectedLevel1 == item.id"
+                         [selected]="selectedLevel1 == item.id || menuQuery != ''"
                          *ngIf="item.id">
         </nx-level-1-item>
 
@@ -27,14 +27,15 @@
                 <nx-level-2-item [item]="subitem"
                                  [ngClass]="{ 'last-level-2': isLast }"
                                  [base]="content.base"
-                                 [selected]="selectedLevel2 == subitem.id">
+                                 [selected]="selectedLevel2 == subitem.id"
+                                 *ngIf="menuQuery != ''">
                 </nx-level-2-item>
 
                 <div class="level-3-items">
                     <div *ngFor="let details of subitem.level3; trackBy: trackItem">
                         <nx-level-3-item [item]="details"
                                          [base]="content.base"
-                                         [selected]="selectedLevel3 == details.id">
+                                         [selected]="selectedLevel3 == details.id || menuQuery != ''">
                         </nx-level-3-item>
                     </div>
                 </div>

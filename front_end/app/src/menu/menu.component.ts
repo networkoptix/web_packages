@@ -5,7 +5,6 @@ import {
 import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
-import { NxUtilsService }            from '../services/utils.service';
 
 /* Usage
  <nx-menu>
@@ -27,8 +26,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
     selectedLevel2: string;
     selectedLevel3: string;
     isSearchable: boolean;
+    transition: boolean;
 
-    menuModel: any = {};
+    menuQuery: string;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -44,6 +44,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        this.menuQuery = '';
         this.isSearchable = (this.searchable !== undefined);
     }
 
@@ -60,8 +61,15 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
-        this.menuModel = NxUtilsService.deepCopy(model);
-        // this.searchMenu();
+        const delay = model.query ? this.CONFIG.search.transitionInMs : this.CONFIG.search.transitionShortInMs;
+        this.transition = true;
+
+        setTimeout(() => {
+            // create an illusion for search transition
+            this.menuQuery = model.query;
+            // this.searchMenu();
+            this.transition = false;
+        }, delay);
     }
 
     subLevelItemsFor(item) {
