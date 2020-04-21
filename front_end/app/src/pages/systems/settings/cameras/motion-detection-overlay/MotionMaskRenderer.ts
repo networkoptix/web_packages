@@ -51,12 +51,12 @@ export class MotionMaskRenderer {
         this.brandColor = getComputedStyle(canvas.nativeElement).color;
         this.initInteractions(canvas.nativeElement);
         this.renderer = this.maskZones.pipe(takeUntil(this.unsub$))
-            .subscribe(() => {
-                this.updateRenderMask();
+            .subscribe((maskZones) => {
+                this.updateRenderMask(maskZones);
             });
         this.selectionRenderer = this.selectionZones.pipe(takeUntil(this.unsub$))
-            .subscribe(() => {
-                this.updateSelection();
+            .subscribe((selectionZones) => {
+                this.updateSelection(selectionZones);
             });
     };
 
@@ -222,13 +222,6 @@ export class MotionMaskRenderer {
                                 );
                             this.selectionZones.next(updatedZones);
                         } else {
-                            this.selectionZones.next([]);
-                            // this.maskZones.next([...this.maskZones.value, ...prevSelections]
-                            //     .filter(({ sensitivity }) => sensitivity !== 150)
-                            //     .map((area) => {
-                            //         area.currentSelection = false;
-                            //         return area;
-                            //     }));
                             this.selectionZones.next([newZone]);
                         }
                     }
@@ -253,9 +246,9 @@ export class MotionMaskRenderer {
     /**
      * Adds fill color for each cell
      */
-    private fillZones = () => {
+    private fillZones = (maskZones: Area[]) => {
         const selectedFill = '#33333377';
-        this.motionMask.maskZones.value.forEach(
+        maskZones.forEach(
             ({ sensitivity, x, y, width, height }) => {
                 const instruction = () => {
                     this.ctx.beginPath();
@@ -347,11 +340,11 @@ export class MotionMaskRenderer {
     /**
      * Add numbers to the top left most cell in a zone
      */
-    private addNumbers = () => {
+    private addNumbers = (maskZones: Area[]) => {
         const {
             findStartZones
         } = this.motionMask;
-        const startZones = findStartZones(this.motionMask.maskZones.value);
+        const startZones = findStartZones(maskZones);
         const instruction = () => {
             const fontSize = 13;
             this.ctx.textAlign = 'center';
@@ -405,24 +398,21 @@ export class MotionMaskRenderer {
     /**
      * Triggered on each state change
      */
-    private updateRenderMask = () => {
-        // const updateRenderStart = performance.now();
+    private updateRenderMask = (maskZones: Area[]) => {
         this.maskRenderInstructions.push(() => this.ctx.clearRect(0, 0, this.width, this.height));
-        this.fillZones();
-        this.addNumbers();
+        this.fillZones(maskZones);
+        this.addNumbers(maskZones);
         this.drawCells();
         this.renderMask();
         this.maskRenderInstructions.push(() => this.selectionCtx.clearRect(0, 0, this.width, this.height));
-        // const updateRenderEnd = performance.now();
-        // console.log(`update render time: ${updateRenderEnd - updateRenderStart}ms`);
     }
 
     private renderMask = () => this.maskRenderInstructions.forEach(instruction => instruction());
 
-    private updateSelection = () => {
+    private updateSelection = (selectionZones) => {
         this.selectionRenderInstructions.push(() => this.selectionCtx.clearRect(0, 0, this.width, this.height));
         this.drawCells(
-            this.motionMask.zonesToMatrix(this.selectionZones.value),
+            this.motionMask.zonesToMatrix(selectionZones),
             this.selectionCtx,
             this.selectionRenderInstructions,
             true);
