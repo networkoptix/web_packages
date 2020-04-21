@@ -1,23 +1,27 @@
 import {
-    Component, OnDestroy, OnInit, Inject, ViewContainerRef
+    Component, OnDestroy, OnInit,
+    Inject, ViewContainerRef
 }                                    from '@angular/core';
+import {
+    Subscription, BehaviorSubject,
+    Subject
+}                                    from 'rxjs';
+import {
+    filter, map, retryWhen, delay,
+    distinctUntilChanged, takeUntil
+}                                    from 'rxjs/operators';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxSettingsService }         from '../settings.service';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../../menu/menu.service';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
-    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes, MotionType
+    NxSystem, ICamera, StreamQuality,
+    IRecordingSettings, ITask,
+    IRecordingModes, MotionType
 }                                    from '../../../../services/system.service';
-import {
-    Subscription, BehaviorSubject, Subject
-}                                    from 'rxjs';
-import {
-    filter, map, retryWhen, delay, distinctUntilChanged, takeUntil
-}                                    from 'rxjs/operators';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../../../services/uri.service';
-
 import { NxHealthService }           from '../../../health/health.service';
 import { WINDOW }                    from '../../../../services/window-provider';
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';

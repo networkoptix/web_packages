@@ -6,7 +6,7 @@ import {
 import { ActivatedRoute }           from '@angular/router';
 import { Location }                 from '@angular/common';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxMenuService }            from '../../../components/menu/menu.service';
+import { NxMenuService }            from '../../../menu/menu.service';
 import { NxHealthService }          from '../health.service';
 import { of, SubscriptionLike }     from 'rxjs';
 import { NxUriService }             from '../../../services/uri.service';

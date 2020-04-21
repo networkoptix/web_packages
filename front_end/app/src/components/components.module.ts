@@ -9,7 +9,6 @@ import { NxProcessButtonComponent }       from './process-button/process-button.
 import { NxPreLoaderComponent }           from './pre-loader/pre-loader.component';
 import { NxCheckboxComponent }            from './checkbox/checkbox.component';
 import { NxRadioComponent }               from './radio/radio.component';
-import { MenuModule }                     from './menu/menu.module';
 import { NxAlertBlockComponent }          from './content-block/alert/block.component';
 import { NxContentBlockComponent }        from './content-block/content-block.component';
 import { NxContentBlockSectionComponent } from './content-block/section/section.component';
@@ -46,7 +45,7 @@ import { NxSectionPlaceholderComponent }    from './placeholders/section/section
 import { AngularSvgIconModule }             from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent } from './password-input-tag-validation/password-tag-validation.component';
 import { downgradeComponent }               from '@angular/upgrade/static';
-import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
+import { NxThreeDotDropdown }               from './dropdowns/three-dot/three-dot.component';
 
 @NgModule({
     imports: [
@@ -55,7 +54,6 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
         TranslateModule,
         RouterModule,
         FormsModule,
-        MenuModule,
         NgbToastModule,
         NgbModule,
         AngularSvgIconModule.forRoot()
@@ -210,9 +208,7 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
         NxPagePlaceholderComponent,
         NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer,
-
-        MenuModule
+        ToastsContainer
     ]
 })
 export class ComponentsModule {

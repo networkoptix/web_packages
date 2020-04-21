@@ -2,15 +2,15 @@ import {
     Component, Input, OnInit,
     OnChanges, SimpleChanges
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 /* Usage
  */
 
 @Component({
-    selector   : 'nx-level-3-item',
-    templateUrl: 'level-3-item.component.html',
-    styleUrls  : ['level-3-item.component.scss']
+    selector    : 'nx-level-3-item',
+    templateUrl : 'level-3-item.component.html',
+    styleUrls   : ['level-3-item.component.scss']
 })
 export class NxLevel3ItemComponent implements OnInit, OnChanges {
     @Input() base: any = {};

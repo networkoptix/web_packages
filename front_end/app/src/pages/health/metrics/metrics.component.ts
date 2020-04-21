@@ -6,9 +6,9 @@ import {
 import { ActivatedRoute }            from '@angular/router';
 import { Location }                  from '@angular/common';
 import { NxAccountService }          from '../../../services/account.service';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../menu/menu.service';
 import { NxHealthService }           from '../health.service';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
@@ -17,7 +17,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { delay, throttleTime }       from 'rxjs/operators';
 import { NxHealthLayoutService }     from '../health-layout.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -25,10 +25,10 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-system-metrics-component',
-    templateUrl : 'metrics.component.html',
-    styleUrls : ['metrics.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-system-metrics-component',
+    templateUrl   : 'metrics.component.html',
+    styleUrls     : ['metrics.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;

@@ -7,7 +7,7 @@ import {
     ViewChildren,
     QueryList,
     OnDestroy
-} from '@angular/core';
+}                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
@@ -17,7 +17,7 @@ import { LocalStorageService }       from 'ngx-store';
 import { NxProcessService }          from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';

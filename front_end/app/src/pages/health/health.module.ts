@@ -26,6 +26,7 @@ import { FormsModule }                  from '@angular/forms';
 import { NxSystemAlertCardComponent }   from './card/card.component';
 import { PipesModule }                  from '../../pipes/pipes.module';
 import { NxUpdateInfoComponent }        from './update-info/update-info.component';
+import { MenuModule }                   from '../../menu/menu.module';
 
 const appRoutes: Routes = [
     {
@@ -59,7 +60,8 @@ const appRoutes: Routes = [
         NgxFileDropModule,
         PipesModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers      : [],
     declarations   : [

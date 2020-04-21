@@ -1,8 +1,11 @@
 import {
-    Component, Input, OnChanges,
+    Component, Input, OnChanges, OnInit,
     SimpleChanges, ViewEncapsulation
-}                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../services/nx-config';
+import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { NxUtilsService }            from '../services/utils.service';
 
 /* Usage
  <nx-menu>
@@ -10,24 +13,38 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
  */
 
 @Component({
-    selector     : 'nx-menu',
-    templateUrl  : 'menu.component.html',
-    styleUrls    : ['menu.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-menu',
+    templateUrl   : 'menu.component.html',
+    styleUrls     : ['menu.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
-export class NxMenuComponent implements OnChanges {
+export class NxMenuComponent implements OnInit, OnChanges {
     @Input() content: any;
+    @Input() searchable: any;
 
     systemId: any;
     selectedLevel1: string;
     selectedLevel2: string;
     selectedLevel3: string;
+    isSearchable: boolean;
+
+    menuModel: any = {};
 
     CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    constructor(configService: NxConfigService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+
+        this.isSearchable = false;
+    }
+
+    ngOnInit() {
+        this.isSearchable = (this.searchable !== undefined);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -40,6 +57,11 @@ export class NxMenuComponent implements OnChanges {
         if (changes.content.currentValue.selectedSection) {
             this.systemId = changes.content.currentValue.systemId;
         }
+    }
+
+    modelChanged(model) {
+        this.menuModel = NxUtilsService.deepCopy(model);
+        // this.searchMenu();
     }
 
     subLevelItemsFor(item) {

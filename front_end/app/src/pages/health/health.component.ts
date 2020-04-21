@@ -6,7 +6,7 @@ import { ActivatedRoute, Router }                from '@angular/router';
 import { NxAccountService }                      from '../../services/account.service';
 import { NxConfigService, IConfig }              from '../../services/nx-config';
 import { NxSystem, NxSystemService }             from '../../services/system.service';
-import { NxMenuService }                         from '../../components/menu/menu.service';
+import { NxMenuService }                         from '../../menu/menu.service';
 import { NxHealthService }                       from './health.service';
 import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { NxUtilsService }                        from '../../services/utils.service';

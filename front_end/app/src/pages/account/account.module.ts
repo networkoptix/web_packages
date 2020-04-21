@@ -7,14 +7,15 @@ import { FormsModule }                           from '@angular/forms';
 
 import { NxAccountComponent } from './account.component';
 
-import { TranslateModule }       from '@ngx-translate/core';
-import { ComponentsModule }      from '../../components/components.module';
+import { TranslateModule }            from '@ngx-translate/core';
+import { ComponentsModule }           from '../../components/components.module';
 import { NxAccountSettingsComponent } from './settings/settings.component';
 import { NxAccountPasswordComponent } from './password/password.component';
-import { NxAccountSettingsModule } from './settings/settings.module';
-import { NxAccountPasswordModule } from './password/password.module';
-import { ApplyGuard } from '../../routeGuards/applyGuard';
-import { AuthGuard } from '../../routeGuards/authGuard';
+import { NxAccountSettingsModule }    from './settings/settings.module';
+import { NxAccountPasswordModule }    from './password/password.module';
+import { ApplyGuard }                 from '../../routeGuards/applyGuard';
+import { AuthGuard }                  from '../../routeGuards/authGuard';
+import { MenuModule }                 from '../../menu/menu.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -37,7 +38,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -47,7 +48,8 @@ const appRoutes: Routes = [
         NxAccountSettingsModule,
         NxAccountPasswordModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers      : [
         TypeResolver

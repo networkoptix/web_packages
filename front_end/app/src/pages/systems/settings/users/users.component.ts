@@ -10,7 +10,7 @@ import { NxPageService }                        from '../../../../services/page.
 import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }                    from '../settings.service';
 import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
-import { NxMenuService }                        from '../../../../components/menu/menu.service';
+import { NxMenuService }                        from '../../../../menu/menu.service';
 import { NxAccountService }                     from '../../../../services/account.service';
 import { NxProcessService }                     from '../../../../services/process.service';
 import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
@@ -22,9 +22,9 @@ import { LanguageI18NStaticTypes }              from '../../../../../language_i1
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-user-component',
-    templateUrl: 'users.component.html',
-    styleUrls  : ['users.component.scss'],
+    selector    : 'nx-system-user-component',
+    templateUrl : 'users.component.html',
+    styleUrls   : ['users.component.scss']
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {

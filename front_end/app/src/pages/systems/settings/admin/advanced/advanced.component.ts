@@ -15,7 +15,7 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../../settings.service';
-import { NxMenuService }             from '../../../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../../../menu/menu.service';
 
 @AutoUnsubscribe()
 @Component({

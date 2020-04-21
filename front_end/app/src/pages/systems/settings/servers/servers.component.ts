@@ -4,7 +4,7 @@ import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }             from '../settings.service';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { NxMenuService }                 from '../../../../components/menu/menu.service';
+import { NxMenuService }                 from '../../../../menu/menu.service';
 import { NxProcessService }              from '../../../../services/process.service';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';

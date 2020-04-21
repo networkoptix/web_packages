@@ -9,17 +9,17 @@ import { NxRibbonService }              from '../../../components/ribbon/ribbon.
 import { NxConfigService, IConfig }     from '../../../services/nx-config';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
-import { NxMenuService }                from '../../../components/menu/menu.service';
+import { NxMenuService }                from '../../../menu/menu.service';
 import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { NxAccountService }             from '../../../services/account.service';
 import { NxPageService }                from '../../../services/page.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'integration-detail-component',
-    templateUrl: 'details.component.html',
-    styleUrls  : ['details.component.scss']
+    selector    : 'integration-detail-component',
+    templateUrl : 'details.component.html',
+    styleUrls   : ['details.component.scss']
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {

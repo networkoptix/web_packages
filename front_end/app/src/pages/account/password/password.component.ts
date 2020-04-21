@@ -1,5 +1,9 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
-import { NxConfigService, IConfig }           from '../../../services/nx-config';
+import {
+    Component, OnInit, AfterViewInit,
+    ViewChild, ViewContainerRef,
+    ViewChildren, QueryList
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
@@ -7,17 +11,17 @@ import { ActivatedRoute }            from '@angular/router';
 import { NxProcessService }          from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../menu/menu.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NgForm }                    from '@angular/forms';
 import { first }                     from 'rxjs/operators';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @Component({
-    selector : 'nx-account-password-component',
+    selector    : 'nx-account-password-component',
     templateUrl : 'password.component.html',
-    styleUrls : ['password.component.scss']
+    styleUrls   : ['password.component.scss']
 })
 
 export class NxAccountPasswordComponent implements OnInit, AfterViewInit {

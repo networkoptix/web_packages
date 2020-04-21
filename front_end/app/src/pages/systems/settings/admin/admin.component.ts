@@ -5,7 +5,7 @@ import { NxPageService }                  from '../../../../services/page.servic
 import { NxDialogsService }               from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }              from '../settings.service';
 import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
-import { NxMenuService }                  from '../../../../components/menu/menu.service';
+import { NxMenuService }                  from '../../../../menu/menu.service';
 import { NxSystemsService }               from '../../../../services/systems.service';
 import { NxAccountService }               from '../../../../services/account.service';
 import { NxProcessService }               from '../../../../services/process.service';

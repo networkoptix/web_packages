@@ -19,6 +19,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AppComponent }      from './app.component';
 import { ComponentsModule }  from './src/components/components.module';
 import { DialogsModule }     from './src/dialogs/dialogs.module';
+import { MenuModule }        from './src/menu/menu.module';
 import { PagesModule }       from './src/pages/pages.module';
 import { DirectivesModule }  from './src/directives/directives.module';
 import { PipesModule }       from './src/pipes/pipes.module';
@@ -58,13 +59,14 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         LayoutModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
-            cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken'
+            cookieName : 'csrftoken',
+            headerName : 'X-CSRFToken'
         }),
         WebStorageModule,
         OrderModule,
         InputTrimModule,
         ComponentsModule,
+        MenuModule,
         DialogsModule,
         PagesModule,
         DirectivesModule,
@@ -75,14 +77,14 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         TranslateModule.forRoot(),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
-            initialNavigation        : true,
-            scrollPositionRestoration: 'enabled',
-            anchorScrolling          : 'enabled',
-            enableTracing            : false
+            initialNavigation         : true,
+            scrollPositionRestoration : 'enabled',
+            anchorScrolling           : 'enabled',
+            enableTracing             : false
         })
     ],
-    entryComponents: [],
-    providers      : [
+    entryComponents : [],
+    providers       : [
         NgbToast,
         NgbModal,
         Location,
@@ -93,9 +95,9 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
         {
-            provide   : FirebaseOptionsToken,
-            deps      : [NxConfigService],
-            useFactory: initializeApp
+            provide    : FirebaseOptionsToken,
+            deps       : [NxConfigService],
+            useFactory : initializeApp
         },
         AuthGuard,
         HMGuard,
