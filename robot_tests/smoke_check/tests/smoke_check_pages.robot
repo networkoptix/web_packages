@@ -1,5 +1,5 @@
 *** Settings ***
-Resource         ../resources.robot
+Resource         ../smoke_check_resource.robot
 
 Suite Setup      Open Browser    ${ENV}   headlesschrome
 Test Teardown    Run Keyword if Test Failed    Fatal Error    Smoke Check Failed - Cloud Pages

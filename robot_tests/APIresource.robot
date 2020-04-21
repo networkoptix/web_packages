@@ -249,8 +249,8 @@ Save User
     ...    ${is enabled}=${True}
     ...    ${is cloud}=${False}
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
-    Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictiobary    ${data}    id=${user id}
-    Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictiobary    ${data}    id=${user role id}
+    Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
+    Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
