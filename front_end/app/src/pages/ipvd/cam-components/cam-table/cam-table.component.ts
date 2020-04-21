@@ -71,6 +71,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     tableScrollFixed: boolean;
     elementWidth: any;
     revert: any;
+    timesElementSet = 0;
 
     uriSubscription: SubscriptionLike;
     searchViewHeightSubscription: SubscriptionLike;
@@ -237,6 +238,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             this.csvCameraData = this.getCsvData();
 
             this.setPage(this.currentPage, true);
+            ++this.timesElementSet;
         }
 
         if (changes.activeCamera) {
@@ -444,19 +446,19 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
     getCsvData() {
         return this._elements.map(camera => ({
-            Vendor          : camera.vendor,
-            Model           : camera.model,
-            Type            : camera.hardwareType,
-            'Max Resolution': camera.maxResolution,
-            'Max FPS'       : camera.maxFps,
-            Codec           : camera.primaryCodec,
-            Audio           : NxUtilsService.yesNo(camera.isAudioSupported),
-            '2-Way Audio'   : NxUtilsService.yesNo(camera.isTwAudioSupported),
-            PTZ             : NxUtilsService.yesNo(camera.isPtzSupported),
-            'Advanced PTZ'  : NxUtilsService.yesNo(camera.isAptzSupported),
-            Fisheye         : NxUtilsService.yesNo(camera.isFisheye),
-            Motion          : NxUtilsService.yesNo(camera.isMdSupported),
-            'I/O'           : NxUtilsService.yesNo(camera.isIoSupported)
+            Vendor           : camera.vendor,
+            Model            : camera.model,
+            Type             : camera.hardwareType,
+            'Max Resolution' : camera.maxResolution,
+            'Max FPS'        : camera.maxFps,
+            Codec            : camera.primaryCodec,
+            Audio            : NxUtilsService.yesNo(camera.isAudioSupported),
+            '2-Way Audio'    : NxUtilsService.yesNo(camera.isTwAudioSupported),
+            PTZ              : NxUtilsService.yesNo(camera.isPtzSupported),
+            'Advanced PTZ'   : NxUtilsService.yesNo(camera.isAptzSupported),
+            Fisheye          : NxUtilsService.yesNo(camera.isFisheye),
+            Motion           : NxUtilsService.yesNo(camera.isMdSupported),
+            'I/O'            : NxUtilsService.yesNo(camera.isIoSupported)
         })
         );
     }
