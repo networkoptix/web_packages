@@ -1,4 +1,4 @@
-<div [ngClass]="{'switch-with-label': label}" (click)="changeState($event)">
+<div [ngClass]="{'switch-with-label': label}" (click)="changeState($event)" [id]="id">
     <div class="switch position-relative">
         <label class="switch-element" [ngClass]="{'disabled': disabled}">
             <input type="checkbox"
