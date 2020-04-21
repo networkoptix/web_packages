@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Account does not exist.",
     "CODE USED/INCORRECT": "Confirmation code is already used or incorrect",
     "CHANGE PASSWORD TITLE TEXT": "Change password",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Unrestricted access including the ability to share",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Can view live video, browse the archive, control PTZ etc",
     "SHARE PERMISSIONS HINT VIEWER": "Can view live video and browse the archive",

@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "帳號不存在.",
     "CODE USED/INCORRECT": "確認代碼已使用或不正確",
     "CHANGE PASSWORD TITLE TEXT": "確定變更管理者密碼",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "不受限的權限包括共用的能力",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "可以瀏覽即時影像, 回放錄影資料, 控制 PTZ 等",
     "SHARE PERMISSIONS HINT VIEWER": "可以瀏覽即時影像和回放錄影資料",

@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Tài khoản không tồn tại.",
     "CODE USED/INCORRECT": "Mã xác nhận đã được sử dụng hoặc không chính xác",
     "CHANGE PASSWORD TITLE TEXT": "Đổi mật khẩu",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Truy cập không giới hạn bao gồm khả năng chia sẻ",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Có thể xem video trực tiếp, duyệt kho lưu trữ, kiểm soát PTZ",
     "SHARE PERMISSIONS HINT VIEWER": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ",

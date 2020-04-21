@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Account existiert nicht.",
     "CODE USED/INCORRECT": "Bestätigungscode wurde bereits verwendet oder ist falsch",
     "CHANGE PASSWORD TITLE TEXT": "Passwort ändern",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Uneingeschränkter Zugriff inklusive der Fähigkeit zu teilen",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Kann Livevideo ansehen, das Archiv durchsuchen, PTZ steuern usw",
     "SHARE PERMISSIONS HINT VIEWER": "Kann Livevideos ansehen und das Archiv durchsuchen",
@@ -247,6 +248,6 @@
     "CHECK STATUS TEXT": "Status prüfen",
     "SERVER NAME REQUIRED": "Servername ist erforderlich",
     "SERVER NAME SAVED": "Servername gespeichert.",
-    "CHANGE PASSWORD BUTTON TEXT": "Change Password",
-    "DELETE USER TEXT": "Delete User"
+    "CHANGE PASSWORD BUTTON TEXT": "Passwort ändern",
+    "DELETE USER TEXT": "Benutzer löschen"
 }

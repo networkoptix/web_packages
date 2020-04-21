@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Обліковий запис не існує.",
     "CODE USED/INCORRECT": "Код підтвердження вже використовується або невірний",
     "CHANGE PASSWORD TITLE TEXT": "Змінити пароль",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Необмежений доступ, включаючи можливість керування спільним доступом",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Може дивитися живе відео, архів, управляти PTZ і т. Д",
     "SHARE PERMISSIONS HINT VIEWER": "Можна переглядати відео в реальному часі та переглядати архів",
