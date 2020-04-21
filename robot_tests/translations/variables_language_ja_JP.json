@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "アカウントが存在しません",
     "CODE USED/INCORRECT": "確認コードは既に使用されているかまたは不正です",
     "CHANGE PASSWORD TITLE TEXT": "パスワードの変更",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "共有機能を含む無制限のアクセス",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "ライブ表示、アーカイブ表示、PTZコントロール 等",
     "SHARE PERMISSIONS HINT VIEWER": "ライブ ビデオとアーカイブを参照できます",

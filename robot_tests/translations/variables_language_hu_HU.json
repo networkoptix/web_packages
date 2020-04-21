@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "A fiók nem létezik.",
     "CODE USED/INCORRECT": "Megerősítési kód már használt, vagy hibás",
     "CHANGE PASSWORD TITLE TEXT": "Jelszó módosítása",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Korlátlan hozzáférést biztosít, beleértve a megosztást",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Élőkép megtekintése, keresés archívban, PTZ vezérlés, stb",
     "SHARE PERMISSIONS HINT VIEWER": "Élő videó megtekintése és rögzített visszajátszása",

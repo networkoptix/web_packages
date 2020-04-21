@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "계정이 존재하지 않습니다.",
     "CODE USED/INCORRECT": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
     "CHANGE PASSWORD TITLE TEXT": "암호 변경",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "공유 기능을 포함한 무제한 액세스",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "라이브 비디오를보고, 아카이브를 검색하고, PTZ 등을 제어 할 수 있습니다.",
     "SHARE PERMISSIONS HINT VIEWER": "라이브 비디오를보고 아카이브를 열람 할 수 있습니다.",

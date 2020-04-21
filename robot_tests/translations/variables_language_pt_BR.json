@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Conta não existe.",
     "CODE USED/INCORRECT": "O código de confirmação já está sendo usado ou está incorreto",
     "CHANGE PASSWORD TITLE TEXT": "Mudar Senha",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Acesso irrestrito, incluindo a capacidade de compartilhar",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Pode ver vídeo ao vivo, navegar no arquivo, controle PTZ etc",
     "SHARE PERMISSIONS HINT VIEWER": "Pode ver o vídeo ao vivo e navegar no arquivo",

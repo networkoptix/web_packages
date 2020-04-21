@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "ไม่มีบัญชีนี้อยู่",
     "CODE USED/INCORRECT": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
     "CHANGE PASSWORD TITLE TEXT": "เปลี่ยนรหัสผ่าน",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "การเข้าถึงที่ไม่ จำกัด รวมถึงความสามารถในการแบ่งปัน",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "สามารถดูวิดีโอสดเรียกดูไฟล์จัดเก็บกำหนดค่ากล้องควบคุม PTZ ฯลฯ",
     "SHARE PERMISSIONS HINT VIEWER": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",

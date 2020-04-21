@@ -162,7 +162,6 @@ export class LoginModalContent implements OnInit {
             }
         }).then((result) => {
             this.activeModal.close();
-
             const isRootPath = ['/', ''].includes(this.locationService.path());
 
             if (this.keepPage) {

@@ -45,6 +45,7 @@
     "ACCOUNT DOES NOT EXIST": "Kontoen eksisterer ikke.",
     "CODE USED/INCORRECT": "Bekreftelseskoden er allerede brukt eller feil",
     "CHANGE PASSWORD TITLE TEXT": "Bytt passord",
+    "CHANGE PASSWORD LEFT MENU TEXT": "Change Password",
     "SHARE PERMISSIONS HINT ADMINISTRATOR": "Ubegrenset tilgang, inkludert evnen til å dele",
     "SHARE PERMISSIONS HINT ADVANCED VIEWER": "Kan se live video, bla gjennom arkivet, kontrollere PTZ osv",
     "SHARE PERMISSIONS HINT VIEWER": "Kan se live video og spille av opptak",
