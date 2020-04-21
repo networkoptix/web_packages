@@ -1,6 +1,6 @@
 import { ElementRef }       from '@angular/core';
 import {
-    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
+    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject, empty
 }                           from 'rxjs';
 import {
     switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
@@ -18,11 +18,13 @@ export class MotionMaskRenderer {
     private columns = 44;
     private rows = 32;
     private ctx: CanvasRenderingContext2D;
-    private maskMatrix: BehaviorSubject<Mask>;
-    private maskZones: BehaviorSubject<Area[][]>;
+    private maskZones: BehaviorSubject<Area[]>;
     private selectionZones: BehaviorSubject<Area[]>;
     public canvas: ElementRef<HTMLCanvasElement>;
+    public selectionCanvas: ElementRef<HTMLCanvasElement>;
+    private selectionCtx: CanvasRenderingContext2D;
     public renderer: Subscription;
+    public selectionRenderer: Subscription;
     public interactions: Subscription;
     private brandColor: string;
 
@@ -33,28 +35,28 @@ export class MotionMaskRenderer {
     ) {}
 
     // Init methods
-    public initCanvas = (canvas: ElementRef<HTMLCanvasElement>) => {
+    public initCanvas = (canvas: ElementRef<HTMLCanvasElement>, selectionCanvas: ElementRef<HTMLCanvasElement>) => {
         this.cellWidth = canvas.nativeElement.width / this.columns;
         this.cellHeight = canvas.nativeElement.height / this.rows;
         this.width = canvas.nativeElement.width;
         this.height = canvas.nativeElement.height;
         this.ctx = canvas.nativeElement.getContext('2d');
+        this.selectionCtx = selectionCanvas.nativeElement.getContext('2d');
         this.ctx.imageSmoothingEnabled = false;
         this.ctx.translate(-0.5, -0.5);
-        this.maskMatrix = this.motionMask.maskMatrix;
+        this.selectionCtx.imageSmoothingEnabled = false;
+        this.selectionCtx.translate(-0.5, -0.5);
         this.maskZones = this.motionMask.maskZones;
         this.selectionZones = this.motionMask.selectionZones;
         this.brandColor = getComputedStyle(canvas.nativeElement).color;
         this.initInteractions(canvas.nativeElement);
-        this.renderer = merge(
-            this.maskMatrix,
-            this.maskZones,
-            this.selectionZones
-        )
-            .pipe(takeUntil(this.unsub$))
+        this.renderer = this.maskZones.pipe(takeUntil(this.unsub$))
             .subscribe(() => {
-                this.motionMask.updateRenderState();
-                this.render();
+                this.updateRenderMask();
+            });
+        this.selectionRenderer = this.selectionZones.pipe(takeUntil(this.unsub$))
+            .subscribe(() => {
+                this.updateSelection();
             });
     };
 
@@ -174,10 +176,6 @@ export class MotionMaskRenderer {
                     return { action, x, y, selectX: curX, selectY: curY, width, height, ...keyStates };
                 }),
                 switchMap(({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
-                    const [
-                        currentZones,
-                        ...rest
-                    ] = this.maskZones.value.reverse();
                     const prevSelections = this.selectionZones.value;
                     const newZone = new Area(
                         150,
@@ -225,15 +223,12 @@ export class MotionMaskRenderer {
                             this.selectionZones.next(updatedZones);
                         } else {
                             this.selectionZones.next([]);
-                            this.maskZones.next([
-                                ...rest,
-                                [...currentZones, ...prevSelections]
-                                    .filter(({ sensitivity }) => sensitivity !== 150)
-                                    .map((area) => {
-                                        area.currentSelection = false;
-                                        return area;
-                                    })
-                            ]);
+                            // this.maskZones.next([...this.maskZones.value, ...prevSelections]
+                            //     .filter(({ sensitivity }) => sensitivity !== 150)
+                            //     .map((area) => {
+                            //         area.currentSelection = false;
+                            //         return area;
+                            //     }));
                             this.selectionZones.next([newZone]);
                         }
                     }
@@ -249,24 +244,35 @@ export class MotionMaskRenderer {
 
     // Render methods
     /**
+     * Cached render instructions
+     */
+    maskRenderInstructions: (() => void)[] = []
+
+    selectionRenderInstructions: (() => void)[] = []
+
+    /**
      * Adds fill color for each cell
      */
-    private fillZones() {
+    private fillZones = () => {
         const selectedFill = '#33333377';
-        this.motionMask.renderState$.value.zones.forEach(
+        this.motionMask.maskZones.value.forEach(
             ({ sensitivity, x, y, width, height }) => {
-                this.ctx.beginPath();
-                this.ctx.fillStyle =
+                const instruction = () => {
+                    this.ctx.beginPath();
+                    this.ctx.fillStyle =
                     sensitivity >= 150
                         ? selectedFill
                         : this.sensitivityColors[sensitivity] + '55';
-                this.ctx.rect(
-                    x * this.cellWidth,
-                    y * this.cellHeight,
-                    width * this.cellWidth,
-                    height * this.cellHeight
-                );
-                this.ctx.fill();
+                    this.ctx.rect(
+                        x * this.cellWidth,
+                        y * this.cellHeight,
+                        width * this.cellWidth,
+                        height * this.cellHeight
+                    );
+                    this.ctx.fill();
+                };
+
+                this.maskRenderInstructions.push(instruction);
             }
         );
     }
@@ -274,16 +280,27 @@ export class MotionMaskRenderer {
     /**
      * Iterates through cells and draws outline for each
      */
-    private drawCells() {
-        const currentMatrix = this.motionMask.renderState.maskMatrix;
-        this.ctx.lineWidth = 1;
-        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row)));
+    private drawCells = (
+        currentMatrix = this.motionMask.maskMatrix.value,
+        ctx = this.ctx,
+        renderInstructions = this.maskRenderInstructions,
+        onlySelection = false
+    ) => {
+        const instruction = () => {
+            ctx.lineWidth = 1;
+        };
+        renderInstructions.push(instruction);
+        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row, ctx, renderInstructions, onlySelection)));
     }
 
     /**
      * Draw cell borders, black for zone edges, brand color for selection edges, light gray for grid.
      */
-    private drawCell = (maskMatrix: Mask, row: number) => (
+    private drawCell = (
+        maskMatrix: Mask, row: number,
+        ctx = this.ctx,
+        renderInstructions = this.maskRenderInstructions,
+        onlySelection = false) => (
         sensitivity: number,
         column: number
     ) => {
@@ -292,28 +309,32 @@ export class MotionMaskRenderer {
         const bottom = (row + 1) * this.cellHeight;
         const left = column * this.cellWidth;
         const right = (column + 1) * this.cellWidth;
-        const drawTop = row && sensitivity !== maskMatrix[row - 1][column];
         const drawRight =
             column !== this.columns - 1 &&
             sensitivity !== maskMatrix[row][column + 1];
         const drawBottom =
             row !== this.rows - 1 &&
             sensitivity !== maskMatrix[row + 1][column];
-        const drawLeft = column && sensitivity !== maskMatrix[row][column - 1];
         const draw = (fromY, fromX, toY, toX, solid, sensitivity = 0) => {
-            const selected = sensitivity >= 100;
-            this.ctx.strokeStyle = solid
-                ? selected
-                    ? this.brandColor
-                    : 'black'
-                : '#FFFFFF1A';
-            // this.ctx.shadowColor = 'black';
-            // this.ctx.shadowBlur = selected ? 1 : 0;
-            this.ctx.lineWidth = selected ? 2 : 1;
-            this.ctx.beginPath();
-            this.ctx.moveTo(fromX, fromY);
-            this.ctx.lineTo(toX, toY);
-            this.ctx.stroke();
+            if (onlySelection && !solid) {
+                return;
+            }
+            const instruction = () => {
+                const selected = sensitivity >= 100;
+                ctx.strokeStyle = solid
+                    ? selected
+                        ? this.brandColor
+                        : 'black'
+                    : '#FFFFFF1A';
+                // ctx.shadowColor = 'black';
+                // ctx.shadowBlur = selected ? 1 : 0;
+                ctx.lineWidth = selected ? 2 : 1;
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.stroke();
+            };
+            renderInstructions.push(instruction);
         };
         draw(bottom, right + 0.5, bottom, left + (drawBottom ? -0.5 : +0.5), drawBottom, Math.max(
             maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
@@ -326,33 +347,37 @@ export class MotionMaskRenderer {
     /**
      * Add numbers to the top left most cell in a zone
      */
-    private addNumbers() {
+    private addNumbers = () => {
         const {
-            sortedZones,
-            findStartZones,
-            renderState: { zones }
+            findStartZones
         } = this.motionMask;
-        const currentMask = sortedZones(zones);
-        const startZones = findStartZones(currentMask);
-        const fontSize = 13;
-        this.ctx.textAlign = 'center';
-        this.ctx.font = `${fontSize}px sans-serif`;
-        this.ctx.fillStyle = 'white';
-        this.ctx.shadowColor = 'black';
-        this.ctx.shadowBlur = 6;
+        const startZones = findStartZones(this.motionMask.maskZones.value);
+        const instruction = () => {
+            const fontSize = 13;
+            this.ctx.textAlign = 'center';
+            this.ctx.font = `${fontSize}px sans-serif`;
+            this.ctx.fillStyle = 'white';
+            this.ctx.shadowColor = 'black';
+            this.ctx.shadowBlur = 6;
+        };
+        this.maskRenderInstructions.push(instruction);
         startZones.forEach(({ x, y, width, height, sensitivity }) => {
             if (sensitivity >= 150) {
                 return;
             }
             const addOffsetX = width >= 2 ? this.cellWidth / 2 : 0;
             const addOffsetY = height >= 2 ? this.cellHeight / 2 : 0;
-            this.ctx.fillText(
+            this.maskRenderInstructions.push(() => {
+                this.ctx.fillText(
                 `${sensitivity || '0'}`,
                 (x + 0.5) * this.cellWidth + addOffsetX,
                 (y + 1) * this.cellHeight - 2 + addOffsetY
-            );
+                );
+            });
         });
-        this.ctx.shadowBlur = 0;
+        this.maskRenderInstructions.push(() => {
+            this.ctx.shadowBlur = 0;
+        });
     }
 
     /**
@@ -370,19 +395,38 @@ export class MotionMaskRenderer {
             width  : cursor.width * this.cellWidth,
             height : cursor.height * this.cellHeight
         };
-        this.render();
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeStyle = this.brandColor;
-        this.ctx.strokeRect(x, y, width, height);
+        this.selectionCtx.clearRect(0, 0, this.width, this.height);
+        this.renderSelection();
+        this.selectionCtx.lineWidth = 1;
+        this.selectionCtx.strokeStyle = this.brandColor;
+        this.selectionCtx.strokeRect(x, y, width, height);
     };
 
     /**
      * Triggered on each state change
      */
-    private render() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
+    private updateRenderMask = () => {
+        // const updateRenderStart = performance.now();
+        this.maskRenderInstructions.push(() => this.ctx.clearRect(0, 0, this.width, this.height));
         this.fillZones();
         this.addNumbers();
         this.drawCells();
+        this.renderMask();
+        this.maskRenderInstructions.push(() => this.selectionCtx.clearRect(0, 0, this.width, this.height));
+        // const updateRenderEnd = performance.now();
+        // console.log(`update render time: ${updateRenderEnd - updateRenderStart}ms`);
     }
+
+    private renderMask = () => this.maskRenderInstructions.forEach(instruction => instruction());
+
+    private updateSelection = () => {
+        this.selectionRenderInstructions.push(() => this.selectionCtx.clearRect(0, 0, this.width, this.height));
+        this.drawCells(
+            this.motionMask.zonesToMatrix(this.selectionZones.value),
+            this.selectionCtx,
+            this.selectionRenderInstructions,
+            true);
+    }
+
+    private renderSelection = () => this.selectionRenderInstructions.forEach(instruction => instruction());
 }
