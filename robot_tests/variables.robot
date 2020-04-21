@@ -275,7 +275,7 @@ ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNS
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
 ${DOWNLOAD WINDOWS VMS LINK}          //div[contains(text(),"Windows x64 - Client & Server")]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //div[contains(text(),"Ubuntu x64 - Client")]/../..
+${DOWNLOAD LINUX VMS LINK}            //div[contains(text(),"Ubuntu x64 - Client")]/../..
 ${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/../..
 ${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]

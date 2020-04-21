@@ -102,7 +102,7 @@ Set Account Password
 
 Integration Store is Enabled
     [Arguments]    ${auth}
-    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}
+    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}    disable_warnings=1
     ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['integrationStoreEnabled']}
