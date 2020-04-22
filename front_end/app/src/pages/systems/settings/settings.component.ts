@@ -458,7 +458,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 label : this.LANG.dialogs.cloudStorage.title,
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
-            adminNode.level2 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
+            adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
         this.content = { ...this.content };
