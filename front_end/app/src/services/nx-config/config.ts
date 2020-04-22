@@ -342,7 +342,8 @@ export const nxConfig: IConfig = {
         integrationStore    : '',
         publicDownloads     : '',
         publicReleases      : '',
-        cloudStorageEnabled : ''
+        cloudStorageEnabled : '',
+        cloudStorageSize    : 0
     },
     cloudName : '',
     company   : {

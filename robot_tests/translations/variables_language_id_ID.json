@@ -19,7 +19,7 @@
     "RENAME": "Rename",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "Anda akan memutuskan Sistem ini dari akun Anda. Anda tidak akan dapat mengakses Sistem ini lagi. Apakah kamu yakin?",
     "SUCCESSFULLY DISCONNECTED": "System is successfully disconnected from %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Account is already activated or confirmation code is incorrect",

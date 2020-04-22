@@ -126,13 +126,13 @@
             "unauthorized": "Authenticatie vereist"
         },
         "chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Verschillende waarden -",
             "auto": "Automatisch",
-            "best": "Best",
+            "best": "Beste",
             "high": "Hoog",
-            "medium": "Medium",
+            "medium": "Middelgroot",
             "low": "Lage"
         },
         "general": "Algemeen",
@@ -531,8 +531,8 @@
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Server niet toegankelijk",
+            "message": "Systeem is offline en daarom zijn servers niet toegankelijk."
         }
     },
     "pleaseSelect": "Selecteer...",

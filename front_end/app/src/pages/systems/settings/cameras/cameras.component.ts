@@ -260,6 +260,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     set selectedAspect(value) {
         this.showOverlay = false;
         this.selectedAspectWatcher.value = value.value;
+        setTimeout(() => {
+            this.showOverlay = true;
+        });
     }
 
     get aspectClass() {
@@ -448,7 +451,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') ? true : this.motionEnabled
+            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || this.motionEnabled
         }));
     }
 
@@ -538,7 +541,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
             this.updateAlerts();
             this.applyService.reset();
-            this.applyService.setVisible(true);
+            this.applyService.setVisible();
         }
     }
 

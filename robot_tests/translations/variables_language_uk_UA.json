@@ -19,7 +19,7 @@
     "RENAME": "Змінити Назву",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
     "SUCCESSFULLY DISCONNECTED": "Система успішно відключена від %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Обліковий запис вже активовано або код підтвердження невірний",

@@ -27,6 +27,7 @@ import { BaseDropdown }      from '../injDropdown';
 
 export class NxThreeDotDropdown extends BaseDropdown {
     @Input() items: ActionItems[];
+    @Input() id: string = 'three-dot-menu'
 
     change(item) {
         item.action();
@@ -36,6 +37,7 @@ export class NxThreeDotDropdown extends BaseDropdown {
 export class ActionItems {
     constructor(
         public name: string,
-        public action: () => void
+        public action: () => void,
+        public id?: string
     ) {}
 }

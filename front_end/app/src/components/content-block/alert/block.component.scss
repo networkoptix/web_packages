@@ -254,7 +254,13 @@
 }
 
 .warning-error-padding {
-    padding: 10px 16px 10px 8px !important;
+    height: 40px !important;
+    display: flex;
+    align-items: center;
+    padding: 0 16px 0 10px !important;
 }
 
+.warning-margin {
+    margin-left: 10px
+}
 

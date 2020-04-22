@@ -11,7 +11,6 @@ ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
-@{TMP USERS}
 
 *** Test Cases ***
 Rename server close button works
@@ -87,11 +86,20 @@ Full info 1 server
     Verify on Servers Page
     Click Button    ${FULL INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
 
 
 
-# Full info 2 servers
-    # goes to the right place
+Full info 2 servers
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${FULL INFO BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
 
 Offline system server settings
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
