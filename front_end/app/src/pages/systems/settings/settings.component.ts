@@ -319,10 +319,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
-                    id    : this.CONFIG.menus.systemSettings.cameras.id,
-                    svg   : this.CONFIG.menus.systemSettings.cameras.icon,
-                    label : 'Cameras',
-                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                    id     : this.CONFIG.menus.systemSettings.cameras.id,
+                    svg    : this.CONFIG.menus.systemSettings.cameras.icon,
+                    label  : 'Cameras',
+                    path   : this.CONFIG.menus.systemSettings.cameras.path,
+                    level3 : []
                 };
                 this.content.level1.push(camerasNode);
             }
@@ -340,6 +341,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                     additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
                 }));
+            } else {
+                camerasNode.level3 = [];
             }
         } else {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
