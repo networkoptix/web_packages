@@ -215,6 +215,12 @@ class PushDevice(GCMDevice):
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
 
+    def send_message(self, *args, **kwargs):
+        try:
+            return super().send_message(*args, **kwargs)
+        except GCMError as gcm_error:
+            return gcm_error.args[0]
+
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
@@ -269,17 +275,11 @@ class PushNotification(models.Model):
         notification_devices = devices.filter(type=PushDevice.TYPES.notification)
         data_devices = devices.filter(type=PushDevice.TYPES.data)
 
-        try:
-            notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
-        except GCMError as gcm_error:
-            notification_response = gcm_error.args[0]
+        notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
 
         payload['caption'] = title or ''
         payload['description'] = body or ''
 
-        try:
-            data_response = data_devices.send_message(None, title=None, extra=payload, **options)
-        except GCMError as gcm_error:
-            data_response = gcm_error.args[0]
+        data_response = data_devices.send_message(None, title=None, extra=payload, **options)
 
         return notification_response, data_response

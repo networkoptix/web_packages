@@ -7,6 +7,13 @@ from .models import PushSubscription, PushDevice
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 
+FCM_ERRORS = {
+    'MismatchSenderId': 'Device token does not match with the current configuration',
+    'InvalidRegistration': 'Device token is invalid',
+    'NotRegistered': 'Device token is no longer valid',
+    'InvalidApnsCredential': 'APNs key is not valid for this device'
+}
+
 
 class NotificationSerializer(serializers.Serializer):
     systemId = serializers.UUIDField(allow_null=False)
@@ -51,7 +58,12 @@ class SubscriptionSerializer(serializers.Serializer):
             if response['success'] == 1:
                 return value
             else:
-                raise serializers.ValidationError("Token could not be validated")
+                fcm_error = response['results'][0]['error']
+                raise serializers.ValidationError({
+                    'message': 'Token could not be validated',
+                    'code': fcm_error,
+                    'error': FCM_ERRORS.get(fcm_error, fcm_error)
+                })
 
     def validate_systems(self, value):
         if value is not None:
