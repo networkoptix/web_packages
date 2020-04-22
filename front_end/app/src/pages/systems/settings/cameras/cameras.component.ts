@@ -537,7 +537,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
             this.updateAlerts();
             this.applyService.reset();
-            this.applyService.setVisible(true);
+            this.applyService.setVisible();
         }
     }
 
