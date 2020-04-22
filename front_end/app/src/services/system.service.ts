@@ -808,7 +808,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
     }
 
-    getInfoAndPermissions(useCache = true) {
+    getInfoAndPermissions(useCache = true, suppressUpdate = false): any {
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
             .then((response: any) => {
@@ -831,7 +831,9 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
-                this.systemInfo = this;
+                if (!suppressUpdate) {
+                    this.systemInfo = this;
+                }
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;
                 }
@@ -839,13 +841,13 @@ export class NxSystem extends System implements OnDestroy {
             });
     }
 
-    getInfo(force?, useCache = true) {
+    getInfo(force?, useCache = true, suppressUpdate = false) {
         if (force) {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-                return this.getInfoAndPermissions(useCache);
+                return this.getInfoAndPermissions(useCache, suppressUpdate);
             });
         }
         return this.infoPromise;
@@ -902,7 +904,9 @@ export class NxSystem extends System implements OnDestroy {
             .pipe(tap((moduleInfo: any) => {
                 this.moduleInfo = moduleInfo.reply;
             })).toPromise()
-            .catch(err => console.error(err));
+            .catch(err => {
+                return Promise.reject(err);
+            });
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {
@@ -927,9 +931,7 @@ export class NxSystem extends System implements OnDestroy {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll
-                    .subscribe(() => {
-                        this.systemInfo = this;
-                    });
+                    .subscribe(() => {});
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
@@ -958,8 +960,8 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false)
-                .then(() => this.getSystem())
+            return this.getInfo(true, false, true)
+                .then(() => this.isOnline ? this.getSystem() : Promise.reject())
                 .then(() => this.getServers())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))

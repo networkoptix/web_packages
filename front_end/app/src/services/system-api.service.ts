@@ -370,9 +370,9 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        return this.getRequestAggregator(['/ec2/getTimeOfServers', '/ec2/getCamerasEx'])
+        return this.getRequestAggregator(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
             .pipe(map(({ reply }: any) => {
-                return ([reply['/ec2/getTimeOfServers'].reply, reply['/ec2/getCamerasEx']]);
+                return ([reply['ec2/getTimeOfServers'].reply, reply['ec2/getCamerasEx']]);
             }));
     }
 
@@ -389,7 +389,7 @@ export class NxSystemAPI {
         if (url) {
             return this.http.get(`${url}/ec2/getMediaServersEx`, { params });
         } else {
-            return this.get('/ec2/getMediaServersEx', { params });
+            return this.get('/ec2/getMediaServersEx', params);
         }
     }
 
