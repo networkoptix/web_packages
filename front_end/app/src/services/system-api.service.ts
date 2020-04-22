@@ -2,7 +2,7 @@ import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
-import { mergeMap, retryWhen, timeout }        from 'rxjs/operators';
+import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera } from './system.service';
 
@@ -155,6 +155,14 @@ export class NxSystemAPI {
             }
             return throwError(error);
         }));
+    }
+
+    private getRequestAggregator(requests: string[]) {
+        const concatRequests = encodeURI(requests.map((request) => {
+            return `exec_cmd=${request}`;
+        }).join('&')).replace('/', '%2F');
+        const url = `/api/aggregator?${concatRequests}`;
+        return this.get(url);
     }
 
     init(userEmail, systemId, serverId, unauthorizedCallback) {
@@ -361,6 +369,13 @@ export class NxSystemAPI {
         return this.get('/ec2/getCamerasEx', params);
     }
 
+    getCamerasWithSeverTime(): Observable<any> {
+        return this.getRequestAggregator(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
+            .pipe(map(({ reply }: any) => {
+                return ([reply['ec2/getTimeOfServers'].reply, reply['ec2/getCamerasEx']]);
+            }));
+    }
+
     setResourceParams(params: ResourceParam[]) {
         return this.post('/ec2/setResourceParams', params);
     }
@@ -374,7 +389,7 @@ export class NxSystemAPI {
         if (url) {
             return this.http.get(`${url}/ec2/getMediaServersEx`, { params });
         } else {
-            return this.get('/ec2/getMediaServersEx', { params });
+            return this.get('/ec2/getMediaServersEx', params);
         }
     }
 

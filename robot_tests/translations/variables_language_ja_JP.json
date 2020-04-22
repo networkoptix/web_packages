@@ -19,7 +19,7 @@
     "RENAME": "名前の変更",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "アカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
     "SUCCESSFULLY DISCONNECTED": "システムは %PRODUCT_NAME%から正常に切断されました",
     "ALREADY ACTIVATED TEXT": "アカウントは既にアクティブ済か確認コードが正しくありません",

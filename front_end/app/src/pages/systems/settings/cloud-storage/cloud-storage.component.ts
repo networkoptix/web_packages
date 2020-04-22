@@ -10,7 +10,8 @@ import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_stati
 import { NxSettingsService }            from '../settings.service';
 import { NxSystem }                     from '../../../../services/system.service';
 import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
-import { NxProcessService, Process }             from '../../../../services/process.service';
+import { NxProcessService, Process }    from '../../../../services/process.service';
+import { NxMenuService }                from '../../../../components/menu/menu.service';
 
 @Component({
     selector    : 'nx-cloud-storage',
@@ -39,7 +40,8 @@ export class NxCloudStorageComponent implements OnInit {
         private utilsService: NxUtilsService,
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private menuService: NxMenuService
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -57,6 +59,8 @@ export class NxCloudStorageComponent implements OnInit {
             if (system === undefined) return;
             this.updateEnabledAndUsageStats();
         });
+        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
+        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.cloudStorage.id);
     }
 
     ngOnInit() {
@@ -83,9 +87,8 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public get compCloudCapacity() {
-        const { locale } = this;
-        // TODO: Where will the comp cloud capacity come from? Config?
-        return fromBits(53687091200, { locale, roundTo: 1073741824 / 10 });
+        const { locale, CONFIG: { cloudCapabilities: { cloudStorageSize } } } = this;
+        return fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get bitrate() {

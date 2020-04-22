@@ -146,14 +146,15 @@ export class AppComponent {
             name: companyName
         };
         // @ts-ignore
-        const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled } = window.SETTINGS;
+        const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = window.SETTINGS;
         this.CONFIG.cloudCapabilities = {
             feedbackEnabled,
             healthMonitor,
             integrationStore: integrationStoreEnabled,
             publicDownloads,
             publicReleases,
-            cloudStorageEnabled
+            cloudStorageEnabled,
+            cloudStorageSize
         };
         // @ts-ignore
         const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;

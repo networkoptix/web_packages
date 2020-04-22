@@ -18,7 +18,7 @@ import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
 import { Subscription }              from 'rxjs';
-import { filter, tap }               from 'rxjs/operators';
+import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
@@ -251,7 +251,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             ) {
                                 this.uriService.updateURI('/systems');
                             }
-                            this.updateAlert();
+                            if (this.system.isAvailable) {
+                                this.updateAlert();
+                            }
                             if (this.system.users) {
                                 this.updateMenu();
                             }
@@ -456,7 +458,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 label : this.LANG.dialogs.cloudStorage.title,
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
-            adminNode.level2 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
+            adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
         }
 
         this.content = { ...this.content };

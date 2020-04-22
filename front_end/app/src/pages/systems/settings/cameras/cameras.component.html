@@ -7,6 +7,7 @@
             <nx-alert-block
                 *ngIf="showUnauthorized"
                 type="error"
+                id="unauthorized-warning"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
                 [line1]="'Camera unauthorized' | translate"
                 [btnIconSrc]="CONFIG.icons.dir + 'settings.svg'"
@@ -31,16 +32,16 @@
                 <header>
                     <div class="header-top-bar d-flex justify-content-start">
                         <div class="header-title">
-                            <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" [maxLength]="45"></h2>
+                            <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" [maxLength]="45" id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
-                        <button class="camera-buttons pr-0"[routerLink]="cameraViewPath">
+                        <button class="camera-buttons pr-0"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>View</span>
                         </button>
-                        <button *ngIf="canSeeInfo" class="camera-buttons pr-0" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                        <button *ngIf="canSeeInfo" class="camera-buttons pr-0"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
                             </span>
@@ -81,11 +82,11 @@
                             <h4 class="mb-3" translate>Image</h4>
                             <div class="d-flex justify-content-start col-6 align-items-center mb-2">
                                 <span class="col-3 text-nowrap text-right" translate>Aspect Ratio</span>
-                                <nx-select [selected]="false" [(ngModel)]="selectedAspect" [items]="aspectRatios"></nx-select>
+                                <nx-select [selected]="false" [(ngModel)]="selectedAspect" [items]="aspectRatios" id="aspect-ratios"></nx-select>
                             </div>
                             <div class="d-flex justify-content-start col-6 align-items-center">
                                 <span class="col-3 text-nowrap text-right" translate>Rotation</span>
-                                <nx-select [selected]="false" [(ngModel)]="selectedRotation" [items]="rotations"></nx-select>
+                                <nx-select [selected]="false" [(ngModel)]="selectedRotation" [items]="rotations" id="rotations"></nx-select>
                             </div>
                     </nx-section>
                     <nx-section>
@@ -95,7 +96,7 @@
                     </nx-section>
                     <nx-section>
                         <h4 class="mb-3" translate>Authentication</h4>
-                        <button class="btn btn-default" (click)="updateCredentials()"><span translate>Edit Credentials</span></button>
+                        <button class="btn btn-default" (click)="updateCredentials()" id="update-credentials"><span translate>Edit Credentials</span></button>
                     </nx-section>
                 </ng-container>
             </nx-block>
@@ -138,6 +139,7 @@
                                 <nx-select [selected]="selectedQuality"
                                     [(ngModel)]="selectedQuality"
                                     [items]="streamQualities"
+                                    id="quality"
                                     class="col-3 pl-0 pr-0"></nx-select>
                                     <span *ngIf="!existingRecordingsScheduled && variousQualities" class="input-error col-8" translate>Please select recording quality</span>
                             </div>
@@ -150,7 +152,7 @@
                 <span class="d-block" translate>Motion detection for this camera is turned off.</span>
                 <span clss="d-block" translate>Enabling it will allow you to set up "motion only" and "motion + low-res" recording types, but may increase the CPU usage.</span>
                 <div class="mt-3">
-                    <button class="btn btn-default"(click)="toggleMotionEnabled()" translate>Enable Motion Detection</button>
+                    <button class="btn btn-default"(click)="toggleMotionEnabled()" translate id="enable-motion-detection">Enable Motion Detection</button>
                 </div>
             </nx-section>
             <nx-block *ngIf="motionEnabled" header-style="extended">
@@ -159,10 +161,10 @@
                         <div class="d-flex flex-column">
                             <span translate>Motion Sensitivity</span>
                         </div>
-                        <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion}]"></nx-three-dot>
+                        <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper" [ngStyle]="{'max-height.px' : maxHeight}">
+                <div class="m-3 preview-wrapper">
                     <div [style.max-width.px]="previewWrapperWidth" class="mx-auto overflow-hidden">
                         <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
                             <div class="d-flex forced-aspect-content">
@@ -192,11 +194,12 @@
                             <label *ngFor="let _ of sensitivityColors; let i = index" 
                                 ngbButtonLabel 
                                 class="btn-secondary mr-2 sensitivity-buttons" 
+                                [id]="'sensitivity-' + i + '-button'"
                                 [ngClass]="'button-' + i">
                                 <input ngbButton type="radio" [value]="i"> {{i}}
                             </label>
                         </div>
-                        <button class="btn btn-default" (click)="resetSensitivity()"><span translate>Clear Selection</span></button>
+                        <button class="btn btn-default" (click)="resetSensitivity()" id="reset-selection"><span translate>Clear Selection</span></button>
                     </ng-container>
                 </div>
             </nx-block>

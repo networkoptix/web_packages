@@ -19,6 +19,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() initialMask: string;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
+    @ViewChild('selectionCanvas') selectionCanvas: ElementRef<HTMLCanvasElement>;
     @HostListener('contextmenu', ['$event']) preventContext = event => event.preventDefault();
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
@@ -45,7 +46,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         };
 
         if (changed && this.motionMaskRenderer && this.motionMaskRenderer.canvas) {
-            this.motionMaskRenderer.initCanvas(this.motionCanvas);
+            this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
         }
     }
 
@@ -72,6 +73,6 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
      */
     private initRenderer() {
         this.motionMaskRenderer = new MotionMaskRenderer(this.motionMask, this.config.cameraSettings.sensitivityColors, this.unsub$);
-        this.motionMaskRenderer.initCanvas(this.motionCanvas);
+        this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
     }
 }

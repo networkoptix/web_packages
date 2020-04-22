@@ -7,12 +7,8 @@ export class MotionMaskState {
     private columns = 44;
     private rows = 32;
     public maskMatrix: BehaviorSubject<Mask>;
-    public maskZones: BehaviorSubject<Area[][]>;
+    public maskZones: BehaviorSubject<Area[]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
-    public renderState$: BehaviorSubject<{
-        zones: Area[];
-        maskMatrix: Mask;
-    }> = new BehaviorSubject({ zones: [], maskMatrix: [] });
 
     constructor(
         initialMask: string,
@@ -22,13 +18,13 @@ export class MotionMaskState {
         updateMask: EventEmitter<string>
     ) {
         const parsedInitial = this.initialToMaskZones(initialMask);
-        this.maskZones = new BehaviorSubject([parsedInitial]);
+        this.maskZones = new BehaviorSubject(parsedInitial);
         this.maskMatrix = new BehaviorSubject(
             this.zonesToMatrix(parsedInitial)
         );
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.zonesToMatrix(zones[zones.length - 1]);
+            const matrix = this.zonesToMatrix(zones);
             const latestZones = this.matrixToZones(matrix);
             const maskString = latestZones.map(
                 ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
@@ -44,7 +40,7 @@ export class MotionMaskState {
      */
     public reInitialize(mask: string) {
         const parsedInitial = this.initialToMaskZones(mask);
-        this.maskZones.next([parsedInitial]);
+        this.maskZones.next(parsedInitial);
         this.maskMatrix.next(this.zonesToMatrix(parsedInitial));
     }
 
@@ -75,14 +71,9 @@ export class MotionMaskState {
                         area.currentSelection = false;
                         return area;
                     });
-                    const [
-                        currentZones,
-                        ...prevZones
-                    ] = this.maskZones.value.reverse();
-                    this.maskZones.next([
-                        ...prevZones,
-                        [...currentZones, ...updatedZones]
-                    ]);
+                    const { maskMatrix, zones } = this.mergeZones(this.maskZones.value, updatedZones);
+                    this.maskMatrix.next(maskMatrix);
+                    this.maskZones.next(zones);
                     this.selectionZones.next([]);
                     this.sensitivityButtons$.next(false);
                 } else if (sensitivity === 'reset') {
@@ -106,22 +97,6 @@ export class MotionMaskState {
         ]);
         const zones = this.matrixToZones(maskMatrix);
         return { maskMatrix, zones };
-    }
-
-    /**
-     * Currently used to trigger first render. Could probably refactor this in the future.
-     */
-    public updateRenderState() {
-        this.renderState$.next(
-            this.mergeZones(
-                this.maskZones.value[this.maskZones.value.length - 1],
-                this.selectionZones.value
-            )
-        );
-    }
-
-    public get renderState() {
-        return this.renderState$.value;
     }
 
     // Transform utilities
@@ -225,8 +200,7 @@ export class MotionMaskState {
     };
 
     public get zoneGroups() {
-        const current = this.maskZones.value.pop();
-        return this.findZoneGroups(current);
+        return this.findZoneGroups(this.maskZones.value);
     }
 
     /**
