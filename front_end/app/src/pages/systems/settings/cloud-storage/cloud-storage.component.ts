@@ -157,12 +157,11 @@ export class NxCloudStorageComponent implements OnInit {
 
     private initEnableCloudStorageProcess() {
         this.enableCloudStorage = this.processService.createProcess(() => {
-            const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
-            // TODO: check if more storage is available, need to find where to get this
-            // eslint-disable-next-line no-constant-condition
-            if (false) {
-                return this.dialogService.confirm(message, title, ok);
-            }
+            // Uncomment these lines and add condition in if statement if we add account limits.
+            // const { dialogs: { cloudStorage:{ activationError: { title, message } }, buttons: { ok } } } = this.LANG;
+            // if (false) {
+            //     return this.dialogService.confirm(message, title, ok);
+            // }
             return this.cloudApiService.enableCloudStorage(this.systemId);
         }, {
             successMessage : 'Cloud Storage Enabled',
