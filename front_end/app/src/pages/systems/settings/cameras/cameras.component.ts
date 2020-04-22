@@ -256,6 +256,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     set selectedAspect(value) {
         this.showOverlay = false;
         this.selectedAspectWatcher.value = value.value;
+        setTimeout(() => {
+            this.showOverlay = true;
+        });
     }
 
     get aspectClass() {
