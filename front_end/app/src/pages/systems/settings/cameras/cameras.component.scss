@@ -119,23 +119,15 @@
     position: relative;
 
     &-4-3 {
-        padding-top: calc(3 / 4 * 100%) !important;
+        padding-top: calc(3 / 4 * 100% + 16px) !important;
     }
 
     &-1-1 {
-        padding-top: calc(100%) !important;
+        padding-top: calc(100% + 16px) !important;
     }
 
     &-16-9 {
-        padding-top: calc(9 / 16 * 100%) !important;
-    }
-
-    &-3-4 {
-        padding-top: calc(4 / 3 * 100%) !important;
-    }
-
-    &-9-16 {
-        padding-top: calc(16 / 9 * 100%) !important;
+        padding-top: calc(9 / 16 * 100% + 16px) !important;
     }
 
     &-content {

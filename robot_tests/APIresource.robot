@@ -102,7 +102,7 @@ Set Account Password
 
 Integration Store is Enabled
     [Arguments]    ${auth}
-    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}
+    Create Digest Session    Get Integration Store status    ${ENV}    ${auth}    disable_warnings=1
     ${resp}=    Get Request    Get Integration Store status    /api/utils/cloudCapabilities/
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()['integrationStoreEnabled']}
@@ -227,14 +227,35 @@ Get Users
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
 
+#Save User
+#    [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
+#    &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
+#    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
+#    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
+#    Should Be Equal As Strings    ${resp.status_code}    200
+#    Return From Keyword    ${resp.json()}
+
 Save User
-    [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}   
-    &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
+    [Arguments]
+    ...    ${auth}
+    ...    ${server url}
+    ...    ${name}
+    ...    ${permissions}
+    ...    ${email}
+    ...    ${full name}
+    ...    ${password}
+    ...    ${user id}=${EMPTY}
+    ...    ${user role id}=${EMPTY}
+    ...    ${is enabled}=${True}
+    ...    ${is cloud}=${False}
+    &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
+    Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
+    Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}
     Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
-    Return From Keyword    ${resp.json()}
-    
+    [Return]    ${resp.json()}
+
 Save Local User
     [Arguments]    ${auth}    ${server url}    ${name}    ${permissions}    ${email}    ${full name}    ${password}
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isCloud=false    fullName=${full name}    password=${password}

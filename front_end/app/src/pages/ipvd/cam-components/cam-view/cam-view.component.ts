@@ -98,7 +98,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.showCameraAnalytics = this.showAnalytics && this.activeCamera.isAnalyticsSupported;
             });
 
-        this.firmwaresToShow = 1; // this.CONFIG.ipvd.firmwaresToShow;
+        this.firmwaresToShow = this.CONFIG.ipvd.firmwaresToShow;
         this.analyticsToShow = this.CONFIG.ipvd.analyticsToShow;
         this.showAllFirmware = false;
         this.showAllEvents = false;

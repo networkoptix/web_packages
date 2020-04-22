@@ -11,7 +11,6 @@ ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
-@{TMP USERS}
 
 *** Test Cases ***
 Rename server close button works
@@ -44,7 +43,6 @@ Rename server requires a name
     Click Button    ${RENAME SAVE BUTTON}
     Wait Until Element is Visible    ${RENAME ERROR TEXT}
     Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
-
 
 Server name can be changed
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
@@ -88,19 +86,42 @@ Full info 1 server
     Verify on Servers Page
     Click Button    ${FULL INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
+    Wait Until Page Contains Element    ${HM SINGLE ENTITY}
+    Page Should Not Contain Element    ${HM TABLE}
 
 
 
-# Full info 2 servers
-    # goes to the right place
+Full info 2 servers
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Button    ${FULL INFO BUTTON}
+    Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
+    Wait Until Page Contains Element    ${HM TABLE}
+    Page Should Not Contain Element    ${HM SINGLE ENTITY}
 
-# offline Rename server
-# offline Restart server
-# offline Reset to Defaults
-# offline Change port
-# offline Check staus
-# offline Full info
-    # Maybe all these don't work offline?  If all are diabled just one Cases
+Offline system server settings
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
+    Element Should not be Visible    ${PORT INPUT}
+    Element Should not be Visible    ${RENAME SERVER BUTTON}
+    Element Should not be Visible    ${RESTART SESRVER BUTTON}
+    Element Should not be Visible    ${FULL INFO BUTTON}
+
+Offline two servers
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Verify on Servers Page
+    Click Link    //span[contains(text(),"server 2")]/../..
+    Wait Until Elements are Visible    ${CHECK STATUS BUTTON}    ${OFFLINE BADGE}
+    Wait Until Element has Style    ${OFFLINE BADGE}    text-transform    uppercase
+    Element Should be Disabled    ${PORT INPUT}
+    Element Should be Disabled    ${RENAME SERVER BUTTON}
+    Element Should be Disabled    ${RESTART SESRVER BUTTON}
 
 Owner has Access
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}

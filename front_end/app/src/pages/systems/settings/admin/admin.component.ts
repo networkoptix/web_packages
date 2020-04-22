@@ -57,6 +57,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.menuService.setSection('admin');
+        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.admin.id);
     }
 
     private updateSettings(forceMergeState?: boolean) {

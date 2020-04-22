@@ -421,53 +421,50 @@ class ServerManager {
     }
 
     async getCameras(): Promise<ICamera[]> {
-        const { reply: servers }: any = await this.mediaserver.getServerTimes().toPromise();
-        return this.mediaserver.getCameras().toPromise()
-            .then((result: any) => {
-                if (!result) {
-                    return Promise.reject(new Error(`Request to server has failed ${result}`));
-                }
-                this.cameras = result.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
-                    const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
-                    const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
-                    const vmsDate = new Date(serverTime);
-                    const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-                    const secondsToday = Math.round((serverTime % 86400000) / 1000);
-                    const {
-                        rotation,
-                        overrideAr,
-                        mediaCapabilities,
-                        isAudioSupported: audioSupported,
-                        ...parsedAddParams
-                    }: any = addParamsRaw.reduce((params, { name, value }) => (
-                        { ...params, [name]: recursiveJson(value) }
-                    ), {});
-                    const parentName = this.servers.find(server => server.id === parentId).name;
-                    const isAudioSupported = audioSupported === '1';
-                    const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
-                    const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
-                    // eslint-disable-next-line no-use-before-define
-                    const motionEnabled = camera.motionType !== MotionType.noMotion;
-                    const recordingSettings: IRecordingSettings = {
-                        recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
-                        quality   : this.parseRecordingQuality(camera.scheduleTasks),
-                        fps       : this.parseFps(camera.scheduleTasks),
-                        motionEnabled,
-                        modes     : [
-                            { name: 'Record Always', id: 'RT_Always', value: (this.parseRecordingMode(camera, 'RT_MotionOnly') || this.parseRecordingMode(camera, 'RT_MotionAndLowQuality')) ? this.parseRecordingMode(camera, 'RT_Always') : 2, enabled: true },
-                            { name: 'Record Motion', id: 'RT_MotionOnly', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
-                            {
-                                name    : 'Record Motion + Low Quality',
-                                id      : 'RT_MotionAndLowQuality',
-                                value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
-                                enabled : motionEnabled
-                            }
-                        ]
-                    };
-                    return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
-                });
-                return this.cameras;
-            });
+        const [servers, cameras] = await this.mediaserver.getCamerasWithSeverTime().toPromise();
+        if (!cameras) {
+            return Promise.reject(new Error(`Request to server has failed ${cameras}`));
+        }
+        this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
+            const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
+            const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
+            const vmsDate = new Date(serverTime);
+            const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+            const secondsToday = Math.round((serverTime % 86400000) / 1000);
+            const {
+                rotation,
+                overrideAr,
+                mediaCapabilities,
+                isAudioSupported: audioSupported,
+                ...parsedAddParams
+            }: any = addParamsRaw.reduce((params, { name, value }) => (
+                { ...params, [name]: recursiveJson(value) }
+            ), {});
+            const parentName = this.servers.find(server => server.id === parentId).name;
+            const isAudioSupported = audioSupported === '1';
+            const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
+            const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
+            // eslint-disable-next-line no-use-before-define
+            const motionEnabled = camera.motionType !== MotionType.noMotion;
+            const recordingSettings: IRecordingSettings = {
+                recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
+                quality   : this.parseRecordingQuality(camera.scheduleTasks),
+                fps       : this.parseFps(camera.scheduleTasks),
+                motionEnabled,
+                modes     : [
+                    { name: 'Record Always', id: 'RT_Always', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'Record Motion', id: 'RT_MotionOnly', value: (this.parseRecordingMode(camera, 'RT_Always') || this.parseRecordingMode(camera, 'RT_MotionAndLowQuality')) ? this.parseRecordingMode(camera, 'RT_Always') : 2, enabled: motionEnabled },
+                    {
+                        name    : 'Record Motion + Low Quality',
+                        id      : 'RT_MotionAndLowQuality',
+                        value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
+                        enabled : motionEnabled
+                    }
+                ]
+            };
+            return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+        });
+        return this.cameras;
     }
 
     updateCameraSettings(resourceId: string, params: Object) {
@@ -824,7 +821,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
     }
 
-    getInfoAndPermissions(useCache = true) {
+    getInfoAndPermissions(useCache = true, suppressUpdate = false): any {
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
             .then((response: any) => {
@@ -847,14 +844,9 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
-                if (this.id) {
-                    this.cloudApi.getCloudStorageUsage(this.id).then(() => {
-                        this.cloudStorageSystemEnabled = true;
-                    }, () => {
-                        this.cloudStorageSystemEnabled = false;
-                    });
+                if (!suppressUpdate) {
+                    this.systemInfo = this;
                 }
-                this.systemInfo = this;
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;
                 }
@@ -862,13 +854,13 @@ export class NxSystem extends System implements OnDestroy {
             });
     }
 
-    getInfo(force?, useCache = true) {
+    getInfo(force?, useCache = true, suppressUpdate = false) {
         if (force) {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-                return this.getInfoAndPermissions(useCache);
+                return this.getInfoAndPermissions(useCache, suppressUpdate);
             });
         }
         return this.infoPromise;
@@ -925,7 +917,9 @@ export class NxSystem extends System implements OnDestroy {
             .pipe(tap((moduleInfo: any) => {
                 this.moduleInfo = moduleInfo.reply;
             })).toPromise()
-            .catch(err => console.error(err));
+            .catch(err => {
+                return Promise.reject(err);
+            });
     }
 
     saveUser(user: NxSystemUser, role: NxSystemRole) {
@@ -950,9 +944,7 @@ export class NxSystem extends System implements OnDestroy {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll
-                    .subscribe(() => {
-                        this.systemInfo = this;
-                    });
+                    .subscribe(() => {});
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
@@ -981,8 +973,8 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false)
-                .then(() => this.getSystem())
+            return this.getInfo(true, false, true)
+                .then(() => this.isOnline ? this.getSystem() : Promise.reject())
                 .then(() => this.getServers())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))

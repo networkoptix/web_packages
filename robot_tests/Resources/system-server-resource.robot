@@ -2,7 +2,6 @@
 Verify on Servers Page
     Wait Until Elements are Visible
     ...    ${PORT INPUT}
-    # ...    ${CHECK STATUS BUTTON}
     ...    ${RENAME SERVER BUTTON}
     ...    ${RESTART SESRVER BUTTON}
     ...    ${FULL INFO BUTTON}

@@ -222,6 +222,7 @@ ${DISCONNECT PASSWORD INPUT}             ${DISCONNECT FORM}//input[@id="password
 ${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
 ${DISCONNECT FORM CANCEL BUTTON}         ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
 ${DISCONNECT FORM WRONG PASSWORD}        ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${WRONG PASSWORD}")]
+${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${PASSWORD IS REQUIRED TEXT}")]
 ${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
@@ -275,7 +276,7 @@ ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNS
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
 ${DOWNLOAD WINDOWS VMS LINK}          //div[contains(text(),"Windows x64 - Client & Server")]/../..
-${DOWNLOAD UBUNTU VMS LINK}           //div[contains(text(),"Ubuntu x64 - Client")]/../..
+${DOWNLOAD LINUX VMS LINK}            //div[contains(text(),"Ubuntu x64 - Client")]/../..
 ${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/../..
 ${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]

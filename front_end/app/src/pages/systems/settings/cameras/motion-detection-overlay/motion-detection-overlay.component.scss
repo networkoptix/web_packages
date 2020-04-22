@@ -13,8 +13,8 @@ nx-motion-detection-overlay {
     position: absolute;
     -webkit-backdrop-filter: brightness(125%) contrast(110%);
     backdrop-filter: brightness(125%) contrast(110%);
-    // width: 100%;
-    // height: 100%;
+    width: 100%;
+    height: 100%;
     top: 0;
     left: 0;
     color: $brand_info;
@@ -22,8 +22,13 @@ nx-motion-detection-overlay {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -webkit-crisp-edges;
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+}
+
+#render-canvas {
+    z-index: 10;
+}
+
+#selection-overlay {
+    z-index: 20;
+    pointer-events: none;
 }
