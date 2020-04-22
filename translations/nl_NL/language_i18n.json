@@ -167,7 +167,7 @@
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "De inloggegevens van deze gebruiker worden zichtbaar! U moet een aangepaste rol \"Openbare Gebruiker\" maken met alleen toegang voor de camera's die zijn geselecteerd voor openbaar gebruik en waaraan alleen de minimaal vereiste weergaverechten zijn toegewezen. Deze \"Openbare Gebruiker\" mag geen systeembrede toegang hebben.",
     "This Email has been already registered in %CLOUD_NAME%": "Dit Email is al geregistreerd voor %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Dit apparaat heeft gemeld sommige analyse-evenementen te ondersteunen, maar we hebben geen exacte informatie daarover.",
-    "This information is based on what camera reports through API. Actual list of events supported by this camera my be different.": "This information is based on what camera reports through API. Actual list of events supported by this camera my be different.",
+    "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Deze informatie is gebaseerd op wat de camera rapporteert via de API. De werkelijke lijst met gebeurtenissen die door deze camera worden ondersteund, kan anders zijn.",
     "To": "Aan",
     "Too many attempts. Try again in a minute.": "Te veel pogingen. Probeer het later opnieuw.",
     "Tracks and logs all user actions.": "Traceert en logt alle gebruikersacties.",
