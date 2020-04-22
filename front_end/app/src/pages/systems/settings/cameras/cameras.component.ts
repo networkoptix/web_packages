@@ -57,6 +57,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showUnauthorized = false;
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
+    showPreloader = true;
 
     sensitivityColors = new Array(10);
 
@@ -107,6 +108,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             ).subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 this.system = system;
+                if (!this.system.isOnline) {
+                    this.showPreloader = false;
+                }
                 this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
                     this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
                     this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
@@ -126,7 +130,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         takeUntil(this.unsub$),
                         distinctUntilChanged(),
                         map(system => {
-                            if (!system.cameras || system.cameras.length === 0) {
+                            if (!system.cameras) {
                                 throw system;
                             }
                         }),
@@ -137,6 +141,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
+                            } else {
+                                this.showPreloader = false;
                             }
                             this.setCamera();
                         }
@@ -509,6 +515,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
             return;
         }
+
         if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
@@ -522,8 +529,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
             }
+
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
+            this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
             this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];

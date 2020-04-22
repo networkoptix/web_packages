@@ -1,5 +1,6 @@
 <div *ngIf="system" class="row auth-visible">
-    <div class="col-12 loader-div" *ngIf="!selectedCamera">
+    <nx-page-placeholder *ngIf="!selectedCamera && !showPreloader" class="placeholder-section" type="NO_CAMS" ></nx-page-placeholder>
+    <div class="col-12 loader-div" *ngIf="showPreloader">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
     <ng-container *ngIf="selectedCamera">
