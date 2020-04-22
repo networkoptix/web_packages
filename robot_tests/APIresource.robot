@@ -247,7 +247,7 @@ Save User
     ...    ${user id}=${EMPTY}
     ...    ${user role id}=${EMPTY}
     ...    ${is enabled}=${True}
-    ...    ${is cloud}=${False}
+    ...    ${is cloud}=${True}
     &{data}=   Create Dictionary    name=${name}    permissions=${permissions}    email=${email}    isEnabled=${is enabled}    isCloud=${is cloud}    fullName=${full name}    password=${password}
     Run Keyword Unless    "${user id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user id}
     Run Keyword Unless    "${user role id}"=="${EMPTY}"   Set To Dictionary    ${data}    id=${user role id}

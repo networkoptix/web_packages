@@ -47,6 +47,21 @@ ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL
 ...    viewer=GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission
 ...    liveViewer=GlobalAccessAllMediaPermission
 ...    advancedViewer=GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission
+...    custom=GlobalViewArchivePermission
+    
+&{role names}
+...    cloudAdmin=Administrator
+...    viewer=Viewer
+...    liveViewer=Live Viewer
+...    advancedViewer=Advanced Viewer
+...    custom=Custom
+    
+&{reverse role names}
+...    Administrator=cloudAdmin
+...    Viewer=viewer
+...    Live Viewer=liveViewer
+...    Advanced Viewer=advancedViewer
+...    Custom=custom
 
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
