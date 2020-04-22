@@ -83,9 +83,8 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     public get compCloudCapacity() {
-        const { locale } = this;
-        // TODO: Where will the comp cloud capacity come from? Config?
-        return fromBits(53687091200, { locale, roundTo: 1073741824 / 10 });
+        const { locale, CONFIG: { cloudCapabilities: { cloudStorageSize } } } = this;
+        return fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get bitrate() {
