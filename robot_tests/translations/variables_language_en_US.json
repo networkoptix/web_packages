@@ -20,7 +20,7 @@
     "RENAME"                               :    "Rename",
     "RESTART"                              :    "Restart",
     "RESET TO DEFAULTS TEXT"               :    "Reset to Defaults",
-    "FULL INFO TEXT"                       :    "Full Info",
+    "DETAILED INFO TEXT"                   :    "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT"        :    "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
     "SUCCESSFULLY DISCONNECTED"            :    "System is successfully disconnected from %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT"               :    "Account is already activated or confirmation code is incorrect",
