@@ -5,6 +5,8 @@ import {
 import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { SubscriptionLike }          from 'rxjs';
+import { ActivatedRoute }            from '@angular/router';
 
 /* Usage
  <nx-menu>
@@ -29,13 +31,15 @@ export class NxMenuComponent implements OnInit, OnChanges {
     transition: boolean;
 
     menuQuery: string;
+    routeParamsSubscription: SubscriptionLike;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     constructor(
         configService: NxConfigService,
-        languageService: NxLanguageProviderService
+        languageService: NxLanguageProviderService,
+        private route: ActivatedRoute,
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -46,6 +50,14 @@ export class NxMenuComponent implements OnInit, OnChanges {
     ngOnInit() {
         this.menuQuery = '';
         this.isSearchable = (this.searchable !== undefined);
+
+        this.routeParamsSubscription = this.route
+            .queryParams
+            .subscribe(params => {
+                if (params.search) {
+                    this.menuQuery = params.search;
+                }
+            });
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -63,6 +75,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     modelChanged(model) {
         const delay = model.query ? this.CONFIG.search.transitionInMs : this.CONFIG.search.transitionShortInMs;
         this.transition = true;
+        this.selectedLevel3 = '';
 
         setTimeout(() => {
             // create an illusion for search transition
