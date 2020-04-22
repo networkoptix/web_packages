@@ -107,6 +107,7 @@
 }
 
 .preview-wrapper {
+    background: $additional_light1;
     border-radius: 2px;
     border: 1px solid $light3;
     overflow: hidden;
@@ -154,25 +155,24 @@
       color: $dark9 !important;
       border-radius: 2px;
       font-size: 12px;
-
-      border: 1px solid $light4;
-      &:hover {
-          border: 1px solid $light6;
-      }
-
-      &:active, &.active{
-        border: 1px solid $light13;
+      width: 32px !important;
+      border: 1px solid transparent !important;
+      &:hover, &:active, &.active {
+        border: 1px solid transparent !important;
       }
   }
 
   .button {
       &-0 {
         background-color: #FFFFFF4D;
+        border: 1px solid $light4 !important;
         &:hover {
-            background-color: #FFFFFF66;
+            border: 1px solid $light6 !important;
+            background-color: #FFFFFF66 !important;
         }
         &:active, &.active{
             background-color: #FFFFFF80 !important;
+            border: 1px solid $light13 !important;
         }
 
       }
