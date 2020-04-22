@@ -535,7 +535,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
-            this.updateAlerts();
+            this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
         }
@@ -563,7 +563,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         ([cameraId, alertInfo]) =>
                             new Alert(cameraId, alertInfo, 'Camera')
                     );
-                    this.updateAlerts();
+                    if (!this.applyService.locked) {
+                        this.updateAlerts();
+                    }
                 },
                 () => {
                     if (!this.system.id) {
