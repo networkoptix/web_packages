@@ -19,7 +19,7 @@
     "RENAME": "Nimeä uudelleen",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
     "SUCCESSFULLY DISCONNECTED": "Järjestelmä irrotetaan onnistuneesti %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",

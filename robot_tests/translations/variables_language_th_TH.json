@@ -19,7 +19,7 @@
     "RENAME": "เปลี่ยนชื่อ",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
     "SUCCESSFULLY DISCONNECTED": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",

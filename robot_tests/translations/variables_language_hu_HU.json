@@ -19,7 +19,7 @@
     "RENAME": "Átnevezés",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "A rendszer leválasztására készül fiókjáról. Többé nem fog tudni kapcsolódni a rendszerhez. Folytatja?",
     "SUCCESSFULLY DISCONNECTED": "Rendszer sikeresen bontotta %PRODUCT_NAME% kapcsolatát",
     "ALREADY ACTIVATED TEXT": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",

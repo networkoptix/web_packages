@@ -19,7 +19,7 @@
     "RENAME": "Přejmenovat",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "Chystáte se odpojit systém od Vašeho účtu. K tomuto systému již nebudete mít přístup. Přejete si pokračovat?",
     "SUCCESSFULLY DISCONNECTED": "Systém byl úspěšně odpojen od %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Účet je již aktivován, nebo je potvrzovací kód nesprávný",

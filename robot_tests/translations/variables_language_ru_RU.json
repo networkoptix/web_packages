@@ -19,7 +19,7 @@
     "RENAME": "Переименовать",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "FULL INFO TEXT": "Full Info",
+    "DETAILED INFO TEXT": "Detailed Info",
     "DISCONNECT MODAL WARNING TEXT": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
     "SUCCESSFULLY DISCONNECTED": "Система успешно отключена от %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Учетная запись уже активирована или неверный код подтверждения",
