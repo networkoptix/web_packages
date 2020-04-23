@@ -225,6 +225,8 @@ export class DownloadComponent implements OnInit, OnDestroy {
                                 console.error(error);
                             });
                         return;
+                    } else if (result === 'register') {
+                        return;
                     }
 
                     this.canViewDownloads = true;

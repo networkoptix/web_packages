@@ -106,6 +106,11 @@ export class NxRegisterComponent implements OnInit {
             } catch (ex) {}
         }
 
+        const loginRegister = this.localStorage.get('loginRegister');
+        if (loginRegister) {
+            this.lockEmail = !!loginRegister;
+        }
+
         this.accountInfo = {
             email     : this.accountInfo.email || this.accountService.email,
             password  : '',
@@ -169,6 +174,7 @@ export class NxRegisterComponent implements OnInit {
                             this.localStorage.set('regActivated', 'activated');
                         });
                 } else {
+                    this.localStorage.remove('loginRegister');
                     this.uriService
                         .updateURI('/register/success', {}, true)
                         .catch(error => {
