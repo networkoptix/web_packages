@@ -39,6 +39,7 @@
                     name="serverUrl"
                     id="serverUrl"
                     type="url"
+                    [readonly]="checking"
                     placeholder="host:port"
                     (ngModelChange)="serverUrlChange(serverUrlInput)"
                     [ngModel]="machine.state.template.serverUrlInputValue"
