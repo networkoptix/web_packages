@@ -53,7 +53,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     canMerge: boolean;
     debugMode: boolean;
     betaMode: boolean;
-    isMaster: boolean;
     userDisconnectSystem: boolean;
     mergeTargetSystem: any;
     gettingSystemUsers: any;
@@ -524,7 +523,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.settingsService.mergeTarget || ''}`;
+        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }
