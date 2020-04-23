@@ -53,7 +53,7 @@ export class NxMenuService implements OnDestroy {
                                 haveNode = { ...node };
                                 haveNode.level3 = []; // remove items so we can all only matches
                             }
-                            haveNode.level3.push(...item);
+                            haveNode.level3.push(NxMenuService.highlighted(item, _filter));
                         }
                     });
                     if (haveNode && haveNode.level3 && haveNode.level3.length) {
@@ -66,5 +66,19 @@ export class NxMenuService implements OnDestroy {
         }
 
         return filteredContent;
+    }
+
+    private static highlighted(item, search) {
+        // eslint-disable-next-line no-useless-escape
+        let pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+        pattern = pattern.split(',').filter((t) => {
+            return t.length > 0;
+        }).join('|');
+
+        const regex = new RegExp(pattern, 'gi');
+        const newItem = { ...item };
+        newItem.label = item.label.replace(regex, (match) => `<span class="highlighted">${match}</span>`);
+
+        return newItem;
     }
 }
