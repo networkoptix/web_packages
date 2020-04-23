@@ -10,6 +10,7 @@ Resource     APIresource.robot
 Resource     ${variables_file}
 Resource     resources/health-monitor-resource.robot
 Resource     resources/system-server-resource.robot
+Resource     resources/system-camera-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 

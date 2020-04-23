@@ -279,3 +279,10 @@ Remove User
     ${resp}=   Post Request    Remove User session    /ec2/removeUser    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
+
+Get Cameras
+    [Arguments]    ${auth}    ${server url}
+    Create Digest Session    Get Cameras session   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Get Cameras session    /ec2/getCamerasEx
+    Should Be Equal As Strings    ${resp.status_code}    200
+    Return From Keyword    ${resp.json()}
