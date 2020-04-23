@@ -276,3 +276,16 @@
     height: 400px;
     margin-top: 40px;
 }
+
+.disabled-helper-block, .disabled-label {
+    opacity : 0.3;
+    cursor  : default;
+}
+
+.control-label {
+    color : $dark9;
+
+    &:hover {
+        color : $dark1;
+    }
+}
