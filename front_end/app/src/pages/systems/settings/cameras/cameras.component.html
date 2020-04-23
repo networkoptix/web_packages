@@ -175,7 +175,7 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper">
+                <div class="m-3 preview-wrapper" [style.height.px]="canvasHeight">
                     <div [style.max-width.px]="previewWrapperWidth" class="mx-auto overflow-hidden">
                         <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
                             <div class="d-flex forced-aspect-content">
