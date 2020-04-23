@@ -412,6 +412,7 @@ class ServerManager {
                 return Promise.reject(new Error(`Request to server has failed ${res}`));
             }
             this.servers = res;
+            return this.servers;
         });
         return serverSubscription;
     }
