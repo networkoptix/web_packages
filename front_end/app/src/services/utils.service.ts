@@ -27,6 +27,10 @@ export class NxUtilsService {
         this.momentWithLocale(locale);
     }
 
+    static cleanId(id) {
+        return id.replace(/{|}/g, '');
+    }
+
     static move(arr, oldIndex, newIndex): Array {
         while (oldIndex < 0) {
             oldIndex += arr.length;

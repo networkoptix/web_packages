@@ -16,6 +16,7 @@ import { NxApplyService, Watcher }     from '../../../../../services/apply.servi
 import { NxUriService }                from '../../../../../services/uri.service';
 import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 import { NxSettingsService }           from '../../settings.service';
+import { NxUtilsService }              from '../../../../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -121,6 +122,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         const { ip, port } = this.selectedServer;
         this.ipPortWatcher.value = port;
         this.selectedServer.ip = ip;
+        this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo !== '' ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
 
         this.checkIfOnline(this.selectedServer.id)

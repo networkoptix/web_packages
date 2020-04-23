@@ -385,7 +385,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
             if (this.system && this.system.users.length > 0) {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
-                    const id = user.id.replace(/{|}/g, '');
+                    const id = NxUtilsService.cleanId(user.id);
                     const node: any = {
                         additionalLabel : (this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label) || user.role.name,
                         id,
