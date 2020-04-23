@@ -19,7 +19,7 @@
     "RENAME": "שנה שם",
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
-    "DETAILED INFO TEXT": "Detailed Info",
+    "DETAILED INFO TEXT": "מידע מפורט",
     "DISCONNECT MODAL WARNING TEXT": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
     "SUCCESSFULLY DISCONNECTED": "המערכת התנתקה בהצלחה מ- %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "החשבון כבר הופעל או שקוד האישור שגוי",
