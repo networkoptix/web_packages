@@ -1,3 +1,4 @@
+/* eslint-disable */
 (function () {
 
     'use strict';
@@ -389,9 +390,6 @@
                         updateVideoSource($scope.positionProvider.liveMode ||
                         forceLive ? null : $scope.positionProvider.playedPosition);
                         $scope.crashCount += 1;
-                    }
-                    else {
-                        $scope.crashCount = 0;
                     }
                     return !showError;
                 }

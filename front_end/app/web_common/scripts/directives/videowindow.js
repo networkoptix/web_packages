@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import * as Hls from 'hls.js';
 
 (function () {
@@ -244,18 +244,17 @@ import * as Hls from 'hls.js';
                         function playerErrorHandler(error) {
                             scope.loading = false; // Some error happended - stop loading
                             resetPlayer();
-                            
+
                             scope
                                 .playerHandler(error)
                                 .then((response) => {
                                     scope.videoFlags.errorLoading = response;
-                                    
-                                    if (error.url === undefined || error.url === '') {
+                                    if (!error || error.url === undefined || error.url === '') {
                                         return;
                                     }
                                     
-                                    if (scope.videoFlags.errorLoading) {
-                                        $http
+                                    if ($window.jscd.os === 'iOS' || scope.videoFlags.errorLoading) {
+                                        return $http
                                             .get(error.url)
                                             .then((response) => {
                                                 scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
@@ -367,17 +366,17 @@ import * as Hls from 'hls.js';
                                                     // (switch to another camera)
                                                     return;
                                                 }
-        
+
                                                 var target = e.target;
-                                                if (target.error.url === undefined) {
+                                                if (target.error && target.error.url === undefined) {
                                                     target.error.url = target.currentSrc;
                                                 }
-    
+
                                                 // sometimes Error is thrown with currentSrc as baseURI (Firefox)
-                                                if (target.error.url === e.target.baseURI) {
+                                                if (target.error && target.error.url === e.target.baseURI) {
                                                     return;
                                                 }
-        
+
                                                 playerErrorHandler(target.error);
                                             });
                                         });
