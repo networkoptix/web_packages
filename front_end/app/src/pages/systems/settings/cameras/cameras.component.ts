@@ -287,6 +287,41 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return aspect > 1.5 ? narrowHeight : normalHeight;
     }
 
+    width$ = new BehaviorSubject(748);
+    get height() {
+        return this.getCanvasSize().height;
+    }
+
+    get width() {
+        return this.getCanvasSize().width;
+    }
+
+    handleResize({ width }) {
+        this.width$.next(width);
+        this.toggleMotionGrid();
+    }
+
+    getCanvasSize() {
+        const wrapperWidth = this.width$.value;
+        const maxHeight = 480;
+        const columns = 44;
+        const rows = 32;
+        const aspect = <number> this.selectedAspect.value;
+        const constrainedByHeight = wrapperWidth / aspect > maxHeight;
+        let height, width;
+
+        if (constrainedByHeight) {
+            const size = Math.floor(maxHeight / rows);
+            height = rows * size;
+            width = Math.floor(height * aspect / columns) * columns;
+        } else {
+            const size = Math.floor(wrapperWidth / columns);
+            width = columns * size;
+            height = Math.floor(width / aspect / rows) * rows;
+        }
+        return { width, height };
+    }
+
     get previewWrapperWidth() {
         return Math.ceil((this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight / 44) * 44;
     }
@@ -552,7 +587,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
-            const aspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0]
+            const aspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
             this.selectedAspect = aspect;
             this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];

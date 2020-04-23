@@ -175,27 +175,22 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper" [style.height.px]="canvasHeight">
-                    <div [style.max-width.px]="previewWrapperWidth" class="mx-auto overflow-hidden">
-                        <div class="forced-aspect" [ngClass]="'forced-aspect-' + aspectClass">
-                            <div class="d-flex forced-aspect-content">
-                                <nx-health-image [isPrimary]="true" 
-                                    [style.width.%]="100"
-                                    [motionPreview]="true" 
-                                    [preloader]="true" 
-                                    [state]="selectedCamera.status" 
-                                    [url]="motionPreviewImage"
-                                    (loaded)="toggleMotionGrid()"
-                                    [lightBackground]="true"></nx-health-image>
-                                <nx-motion-detection-overlay 
-                                    *ngIf="showOverlay"
-                                    (updateMask)="updateMask($event)"
-                                    [height]="canvasHeight" 
-                                    [width]="canvasWidth"
-                                    [sensitivityButtons$]="sensitivityButtons$"
-                                    [initialMask]="motionMaskWatcher.originalValue"></nx-motion-detection-overlay>
-                            </div>
-                        </div>
+                <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)">
+                    <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
+                        <nx-health-image [isPrimary]="true" 
+                            [motionPreview]="true" 
+                            [preloader]="true" 
+                            [state]="selectedCamera.status" 
+                            [url]="motionPreviewImage"
+                            (loaded)="toggleMotionGrid()"
+                            [lightBackground]="true"></nx-health-image>
+                        <nx-motion-detection-overlay 
+                            *ngIf="showOverlay"
+                            (updateMask)="updateMask($event)"
+                            [height]="height" 
+                            [width]="width"
+                            [sensitivityButtons$]="sensitivityButtons$"
+                            [initialMask]="motionMaskWatcher.originalValue"></nx-motion-detection-overlay>
                     </div>
                 </div>
                 <div class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper" (contextmenu)="preventContext($event)">

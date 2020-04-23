@@ -48,6 +48,7 @@
         "ngx-store": "2.1.0",
         "popper.js": "1.15.0",
         "rangeslider.js": "2.3.2",
+        "resize-observer-polyfill": "^1.5.1",
         "rxjs": "6.5.4",
         "rxjs-compat": "6.5.4",
         "screenfull": "5.0.2",
