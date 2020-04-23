@@ -447,13 +447,13 @@ class ServerManager {
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
             const recordingSettings: IRecordingSettings = {
-                recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
+                recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
                 fps       : this.parseFps(camera.scheduleTasks),
                 motionEnabled,
                 modes     : [
-                    { name: 'Record Always', id: 'RT_Always', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'Record Motion', id: 'RT_MotionOnly', value: (this.parseRecordingMode(camera, 'RT_Always') || this.parseRecordingMode(camera, 'RT_MotionAndLowQuality')) ? this.parseRecordingMode(camera, 'RT_Always') : 2, enabled: motionEnabled },
+                    { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                     {
                         name    : 'Record Motion + Low Quality',
                         id      : 'RT_MotionAndLowQuality',

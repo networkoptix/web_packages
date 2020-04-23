@@ -1,10 +1,6 @@
-export const recursiveJson = (value: string, cache = {}) => {
-    if (value in cache) {
-        return cache[value];
-    }
+export const recursiveJson = (value: string) => {
     try {
-        const parsed = JSON.parse(value, (_, value) => recursiveJson(value, cache));
-        cache[value] = parsed;
+        return JSON.parse(value, (_, value) => recursiveJson(value));
     } catch (err) {
         return value;
     }

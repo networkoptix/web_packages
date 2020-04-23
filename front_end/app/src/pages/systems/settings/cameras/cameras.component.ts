@@ -385,6 +385,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recording(value) {
+        if (value) {
+            if (this.motionEnabled) {
+                this.enableMotion();
+            } else {
+                this.disableMotion();
+            }
+        }
         this.recordingWatcher.value = value;
     }
 
@@ -449,12 +456,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.motionEnabledWatcher.value !== MotionType.noMotion;
     }
 
-    set motionEnabled(value) {
-        this.motionEnabledWatcher.value = !value ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
+    set motionEnabled(enabled) {
+        this.motionEnabledWatcher.value = !enabled ? MotionType.noMotion : this.motionEnabledWatcher.originalValue !== MotionType.noMotion
             ? this.motionEnabledWatcher.originalValue : this.getSupportedMotion();
 
         this.recordingModes = this.recordingModes.map(({ id, ...mode }) => ({
-            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || this.motionEnabled
+            ...mode, id, enabled: (id === 'RT_Always' || id === 'RT_Never') || enabled
         }));
     }
 
@@ -484,10 +491,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     disableMotion = () => {
-        this.motionType = MotionType.noMotion;
+        this.motionEnabled = false;
         this.recordingModes = this.recordingModes.map(({ name, id }) => {
             const enabled = id === 'RT_Always';
             const value =  enabled ? 2 : 0;
+            return { name, id, enabled, value };
+        });
+    }
+
+    enableMotion = () => {
+        this.motionEnabled = true;
+        this.recordingModes = this.recordingModes.map(({ name, id }) => {
+            const enabled = id === 'RT_Always' || this.motionEnabled;
+            const value =  id === 'RT_MotionOnly' ? 2 : 0;
             return { name, id, enabled, value };
         });
     }
