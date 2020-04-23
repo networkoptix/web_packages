@@ -1,6 +1,6 @@
 import { ElementRef }       from '@angular/core';
 import {
-    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject, empty
+    BehaviorSubject, Subscription, merge, fromEvent, Observable, Subject
 }                           from 'rxjs';
 import {
     switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
@@ -135,7 +135,7 @@ export class MotionMaskRenderer {
             )
         ); // For testing, will either remove or move into full UI observable later
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
-        const clickBuffer$ = clickAction$.pipe(debounceTime(50));
+        const clickBuffer$ = clickAction$.pipe(debounceTime(0));
 
         const initialHover = mouseState$.pipe(
             tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
