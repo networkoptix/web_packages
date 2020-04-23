@@ -58,6 +58,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
+    previewAspect = 'Auto';
 
     sensitivityColors = new Array(10);
 
@@ -551,7 +552,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
-            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
+            const aspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0]
+            this.selectedAspect = aspect;
+            this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
             this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
             this.recordingModes = this.selectedCamera.recordingSettings.modes;

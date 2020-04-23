@@ -19,7 +19,7 @@
     square: aspect === '1:1'
 }">
     <img *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
-        [style.height]="motionPreview ? '100%' : 'auto'"
+        [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"
         (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
