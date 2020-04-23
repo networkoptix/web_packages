@@ -704,3 +704,10 @@ Get the link from email
     Delete Email    ${email index}
     Close Mailbox
     [Return]    ${link}
+    
+Get Key from Value
+    [Arguments]    ${dict}   ${value}
+    @{dict keys} =    Get Dictionary Keys    ${dict}
+    FOR    ${key}     IN     @{dict keys}
+        Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
+    END

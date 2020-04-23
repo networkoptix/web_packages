@@ -93,14 +93,15 @@ Delete All Local Users
     Page Should Not Contain Element     ${locator}
     
 Verify Changed Info Via API
-    [Arguments]    ${new locals}    ${locals}
+    [Arguments]    ${new locals}
+    @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
         ${name state} =    Run Keyword And Return Status    Should Contain    &{node}[name]    ocal+
         Run Keyword If    &{node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
-    FOR    ${x}    IN    @{locals}
-        Keep in Dictionary    ${x}    name    fullName    permissions    email
+    FOR    ${user}    IN    @{locals}
+        Keep in Dictionary    ${user}    name    fullName    permissions    email
     END
     FOR    ${user}    IN    @{locals} 
         Should Contain    ${new locals}    ${user}     
@@ -567,11 +568,10 @@ Administrator can add, disable and enable Viewer
     
 Local User Test
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    @{new locals} =    Create List  
-    @{locals} =    Create List        
+    @{new locals} =    Create List         
     Log in to Auto Tests System    ${email}
     Click Link    ${USERS LIST LINK}
-    
+        
     Log    MODIFY LOCAL USERS VIA UI  
     FOR    ${user}    IN    @{local users}
         Wait Until Element is Visible    //span[text()="Local+${user}"]
@@ -629,7 +629,7 @@ Local User Test
         Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
-        ${reverse permission}=    Set Variable    &{reverse role names}[${new permission}]
+        ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]    
         #Set To Dictionary    &{new local}    
         #Set To Dictionary    &{old local}    name=Local+${user}    fullName=Local User    permissions=&{role names}[${user}]      email=noptixautoqa+local_${user}@gmail.com
@@ -637,7 +637,7 @@ Local User Test
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local} 
     END    
-    Verify Changed Info Via API    ${new locals}    ${locals}  
+    Verify Changed Info Via API    ${new locals} 
     Delete All Local Users    //span[contains(text(),"local+")]
 	        
     
