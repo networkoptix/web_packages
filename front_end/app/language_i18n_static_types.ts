@@ -617,10 +617,8 @@ export interface Search {
 export interface Servers {
     beginDetach:             string;
     beginReset:              string;
-    beginRestart:            string;
     detachSystemFailed:      string;
     detachSystemSuccess:     string;
-    getModuleFailed:         string;
     portWarning:             string;
     removeMediaserverFailed: string;
     resetFailed:             string;
@@ -1417,10 +1415,8 @@ const typeMap: any = {
     "Servers": o([
         { json: "beginDetach", js: "beginDetach", typ: "" },
         { json: "beginReset", js: "beginReset", typ: "" },
-        { json: "beginRestart", js: "beginRestart", typ: "" },
         { json: "detachSystemFailed", js: "detachSystemFailed", typ: "" },
         { json: "detachSystemSuccess", js: "detachSystemSuccess", typ: "" },
-        { json: "getModuleFailed", js: "getModuleFailed", typ: "" },
         { json: "portWarning", js: "portWarning", typ: "" },
         { json: "removeMediaserverFailed", js: "removeMediaserverFailed", typ: "" },
         { json: "resetFailed", js: "resetFailed", typ: "" },

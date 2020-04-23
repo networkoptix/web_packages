@@ -75,8 +75,7 @@ export class ResetServerModalContent {
                                 });
                         })
                             .catch(() => this.toastService.show(this.LANG.servers.restartFailed, options));
-                    })
-                        .catch(() => this.toastService.show(this.LANG.servers.getModuleFailed, options));
+                    });
                 })
                     .catch(() => this.toastService.show(this.LANG.servers.resetFailed, options));
             }, { successMessage: this.LANG.servers.beginReset });
