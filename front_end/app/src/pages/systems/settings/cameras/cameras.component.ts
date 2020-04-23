@@ -89,11 +89,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsub$),
                 distinctUntilChanged()
             ).subscribe(params => {
-                this.warnings = [];
-                this.errors = [];
-                this.showUnauthorized = false;
-                this.showOverlay = false;
                 if (params.cameraId) {
+                    this.warnings = [];
+                    this.errors = [];
+                    this.showUnauthorized = false;
+                    this.showOverlay = false;
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
@@ -107,28 +107,29 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 filter(data => data !== undefined)
             ).subscribe(system => {
                 this.settingsService.footerSubject.next(true);
-                this.system = system;
+                if (system) {
+                    this.system = system;
+                    this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
+                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+                            system.info.capabilities &&
+                            system.info.capabilities.vms_metrics) &&
+                            this.system.canViewInfo();
+                        this.initUpdateProcess();
+                        if (this.canSeeInfo) {
+                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                        }
+                    });
+                }
                 if (!this.system.isOnline) {
                     this.showPreloader = false;
                 }
-                this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
-                    this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
-                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                        system.info.capabilities &&
-                        system.info.capabilities.vms_metrics) &&
-                        this.system.canViewInfo();
-                    this.initUpdateProcess();
-                    if (this.canSeeInfo) {
-                        this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
-                    }
-                });
                 if (this.cameraSubscription) {
                     this.cameraSubscription.unsubscribe();
                 }
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
                         takeUntil(this.unsub$),
-                        distinctUntilChanged(),
                         map(system => {
                             if (!system.cameras) {
                                 throw system;
