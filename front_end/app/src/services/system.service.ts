@@ -965,9 +965,9 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => this.getServers())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
-                .catch(() => {
+                .catch((error) => {
                     this.isAvailable = false;
-                    this.lostConnection = true;
+                    this.lostConnection = error && error.data && error.data.resultCode === 'forbidden';
                 });
         }));
     }

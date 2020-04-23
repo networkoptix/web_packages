@@ -257,6 +257,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             if (this.system.users) {
                                 this.updateMenu();
                             }
+                            if (!this.system.isOnline) {
+                                this.ribbonService.hide();
+                                this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                            }
                         });
 
                     if (this.connectionSubscription) {
@@ -517,15 +521,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        if (!this.settingsService.mergeTarget) {
-            return;
-        }
-
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.settingsService.mergeTarget}`;
-        this.settingsService.mergeTarget = '';
+        const route = `${this.CONFIG.redirect.authorised}/${this.settingsService.mergeTarget || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }
