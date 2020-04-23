@@ -5,6 +5,7 @@ Resource     variables/health-monitor-variables.robot
 Resource     variables/restore-pass-variables.robot
 Resource     variables/change-pass-variables.robot
 Resource     variables/register-variables.robot
+Resource     variables/system-camera-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
