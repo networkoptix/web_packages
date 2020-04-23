@@ -11,7 +11,7 @@ import { NxSettingsService }            from '../settings.service';
 import { NxSystem }                     from '../../../../services/system.service';
 import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
 import { NxProcessService, Process }    from '../../../../services/process.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
+import { NxMenuService }                from '../../../../menu/menu.service';
 
 @Component({
     selector    : 'nx-cloud-storage',

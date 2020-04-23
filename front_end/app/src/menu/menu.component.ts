@@ -2,11 +2,12 @@ import {
     Component, Input, OnChanges, OnInit,
     SimpleChanges, ViewEncapsulation
 }                                    from '@angular/core';
+import { SubscriptionLike }          from 'rxjs';
+import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
-import { SubscriptionLike }          from 'rxjs';
-import { ActivatedRoute }            from '@angular/router';
+import { NxMenuService }             from './menu.service';
 
 /* Usage
  <nx-menu>
@@ -30,6 +31,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     isSearchable: boolean;
     transition: boolean;
 
+    menuContent: any = [];
     menuQuery: string;
     routeParamsSubscription: SubscriptionLike;
 
@@ -40,6 +42,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         private route: ActivatedRoute,
+        private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -62,6 +65,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
+            this.menuService.content = changes.content.currentValue.level1;
+            this.menuContent = this.menuService.fillerItems(this.menuQuery);
+
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
             this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
             this.selectedLevel3 = changes.content.currentValue.selectedDetailsSection;
@@ -80,7 +86,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         setTimeout(() => {
             // create an illusion for search transition
             this.menuQuery = model.query;
-            // this.searchMenu();
+            this.menuContent = this.menuService.fillerItems(this.menuQuery);
             this.transition = false;
         }, delay);
     }
@@ -119,6 +125,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     trackItem(index, item) {
         return item ? item.id : undefined;
+    }
+
+    searchOnFocus() {
+
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet

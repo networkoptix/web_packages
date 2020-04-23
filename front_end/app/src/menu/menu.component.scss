@@ -26,6 +26,13 @@
         background-color : rgba(#F0F3F4, 0.3);
     }
 
+    &-placeholder {
+        font-size  : 16px;
+        text-align : center;
+        margin-top : 16px;
+        color      : $light16;
+    }
+
     .level-1-container {
         display: flex;
         flex-direction: column;

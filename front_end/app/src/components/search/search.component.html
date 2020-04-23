@@ -8,6 +8,7 @@
                            (ngModelChange)="onSearchType($event)"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
                            [maxLength]="CONFIG.search.maxLength"
+                           (focus)="setOnFocus()"
                            type="text"
                            class="form-control search-input"
                            name="query"

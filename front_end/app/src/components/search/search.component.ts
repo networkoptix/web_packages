@@ -1,8 +1,8 @@
 import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
-    OnDestroy
-}                                         from '@angular/core';
+    OnDestroy, EventEmitter, Output
+} from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
@@ -67,6 +67,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() layoutMod: any; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
+
+    @Output() onFocus: EventEmitter<any> = new EventEmitter();
 
     public numberFilters = 0;
     public filterSelected: any;
@@ -378,6 +380,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     resetQuery() {
         this.localFilter.query = '';
         this.modelChanged(true);
+    }
+
+    setOnFocus() {
+        this.onFocus.emit();
     }
 
     setRouteParams(resetUri?): Promise<any> {

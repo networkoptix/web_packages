@@ -290,7 +290,7 @@ export const nxConfig: IConfig = {
         debounceTime        : 500, // ms
         maxLength           : 200,
         minSystems          : 9, // We need at least 9 system to enable search
-        transitionInMs      : 300,
+        transitionInMs      : 500,
         transitionShortInMs : 100
     },
     servers: {
