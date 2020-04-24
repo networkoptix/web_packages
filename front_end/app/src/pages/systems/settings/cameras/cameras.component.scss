@@ -279,12 +279,11 @@
     margin: 8px 0 0 0;
 
     &-section {
-        margin-right: 40px;
         display: flex;
         div {
             display: flex;
             flex-direction: column;
-            white-space: nowrap;
+            // white-space: nowrap;
 
             p {
                 margin-bottom: 4px;
@@ -316,6 +315,7 @@
         &-values {
             p {
                 @extend #medium13;
+                margin-right: 16px;
             }
         }
     }
