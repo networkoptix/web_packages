@@ -84,7 +84,6 @@ export interface Common {
     recordingSettingsWarning:  string;
     resolution:                Resolution;
     general:                   string;
-    maintenanceInProgress:     string;
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;
@@ -932,7 +931,6 @@ const typeMap: any = {
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
-        { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "" },
