@@ -241,6 +241,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.cameraNameWatcher.value = value;
     }
 
+    editMode = false;
+    handleBlur() {
+        console.log('no edit mode');
+        this.editMode = false;
+        this.handleBlankName();
+    }
+
+    handleFocus() {
+        console.log('edit mode');
+        this.editMode = true;
+    }
+
     handleBlankName() {
         if (!this.cameraName) {
             this.cameraName = this.cameraNameWatcher.originalValue;

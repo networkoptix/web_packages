@@ -33,8 +33,17 @@
                 <header>
                     <div class="header-top-bar">
                         <div class="header-title">
-                            <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" id="editable-title"></h2>
+                            <h2 NxEditable 
+                            [(content)]="cameraName" 
+                            (blur)="handleBlur()" 
+                            (focus)="handleFocus()"
+                            [hasError]="cameraName" 
+                            id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
+                        </div>
+                        <div class="edit-button" [ngClass]="{invisible: editMode}">
+                            <img src="/static/images/icons/edit.png" width="20" height="20"/>
+                            <!-- <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon> -->
                         </div>
                         <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
