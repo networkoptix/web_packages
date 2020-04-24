@@ -964,7 +964,7 @@ export class NxSystem extends System implements OnDestroy {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
-                .then(() => this.getServers())
+                .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch((error) => {
