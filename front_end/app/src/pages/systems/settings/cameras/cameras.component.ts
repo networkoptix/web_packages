@@ -287,7 +287,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return aspect > 1.5 ? narrowHeight : normalHeight;
     }
 
-    width$ = new BehaviorSubject(748);
+    width$ = new BehaviorSubject(0);
     get height() {
         return this.getCanvasSize().height;
     }
@@ -303,21 +303,22 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     getCanvasSize() {
         const wrapperWidth = this.width$.value;
-        const maxHeight = 480;
-        const columns = 44;
-        const rows = 32;
-        const aspect = <number> this.selectedAspect.value;
-        const constrainedByHeight = wrapperWidth / aspect > maxHeight;
+        const maxCanvasHeightinPixels = 480;
+        const columnsToRoundPixelsByMultiple = 44;
+        const RowsToRoundPixelsByMultiple = 32;
+        const defaultAspectRatio = 1.77778;
+        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
+        const constrainedByHeight = wrapperWidth / aspect > maxCanvasHeightinPixels;
         let height, width;
 
         if (constrainedByHeight) {
-            const size = Math.floor(maxHeight / rows);
-            height = rows * size;
-            width = Math.floor(height * aspect / columns) * columns;
+            const size = Math.floor(maxCanvasHeightinPixels / RowsToRoundPixelsByMultiple);
+            height = RowsToRoundPixelsByMultiple * size;
+            width = Math.floor(height * aspect / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
         } else {
-            const size = Math.floor(wrapperWidth / columns);
-            width = columns * size;
-            height = Math.floor(width / aspect / rows) * rows;
+            const size = Math.floor(wrapperWidth / columnsToRoundPixelsByMultiple);
+            width = columnsToRoundPixelsByMultiple * size;
+            height = Math.floor(width / aspect / RowsToRoundPixelsByMultiple) * RowsToRoundPixelsByMultiple;
         }
         return { width, height };
     }
