@@ -1,7 +1,7 @@
 import {
-    Component, Input, OnChanges,
-    OnInit, SimpleChanges
-}                                   from '@angular/core';
+    Component, EventEmitter, Input, OnChanges,
+    OnInit, Output, SimpleChanges
+} from '@angular/core';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
 
@@ -14,11 +14,15 @@ import { NxMenuService }            from '../menu.service';
     styleUrls   : ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
+    @Input() dropMode: boolean;
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
 
+    @Output() toggle: EventEmitter<any> = new EventEmitter();
+
     itemPath: string;
+    _toggle: boolean;
 
     CONFIG: IConfig;
 
@@ -26,6 +30,8 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
                 private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
+
+        this._toggle = false;
     }
 
     ngOnInit() {
@@ -42,5 +48,10 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     menuClick(sectionId) {
         this.menuService.setSection(sectionId);
+    }
+
+    toggleNode() {
+        this._toggle = !this._toggle;
+        this.toggle.emit(this._toggle);
     }
 }

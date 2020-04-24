@@ -10,15 +10,19 @@
 <div class="nx-menu" [ngClass]="{ 'mt-2 searchable' : isSearchable }">
     <div class="nx-menu-overlay" *ngIf="transition" ></div>
     <div class="nx-menu-placeholder" *ngIf="!menuContent.length" translate>Nothing found</div>
-    <div *ngFor="let item of menuContent">
+    <div *ngFor="let item of menuContent; let idx = index">
         <div class="level-1-container"
              [class.selected]="selectedLevel1 == item.id"
              *ngIf="menuQuery == '' || (menuQuery != '' && item.level3 && item.level3.length)">
 
-            <nx-level-1-item [item]="item"
-                             [base]="content.base"
-                             [selected]="selectedLevel1 == item.id || menuQuery != ''"
-                             *ngIf="item.id">
+            <nx-level-1-item
+                    class="position-relative"
+                    [dropMode]="isSearchable"
+                    [item]="item"
+                    [base]="content.base"
+                    [selected]="selectedLevel1 == item.id || menuQuery != ''"
+                    (toggle)="toggleItem($event, idx)"
+                    *ngIf="item.id">
             </nx-level-1-item>
 
             <div *ngIf="selectedLevel1 == item.id && menuQuery == ''">
@@ -48,8 +52,13 @@
                 </div>
             </div>
 
-            <div class="level-3-items" *ngIf="(selectedLevel1 == item.id || menuQuery != '') && item.level3"
-                [ngClass]="{ 'min-height-level-3': item.level3 && item.level3.length > 4 }">
+            <div class="level-3-items"
+                 *ngIf="(selectedLevel1 == item.id || menuQuery != '') && item.level3"
+                 [ngClass]="{
+                    'min-height-level-3': item.level3 && item.level3.length > 4,
+                    'toggle-level-3': item.toggle
+                 }">
+
                 <div class="top-shadow"></div>
                 <div class="scroll-area">
                     <div *ngFor="let details of item.level3; last as isLast; first as isFirst; trackBy: trackItem">

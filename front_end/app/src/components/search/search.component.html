@@ -2,11 +2,14 @@
     <div class="row m-0" [ngClass]="{'mb-2' : layout == 'selectors'}">
         <div class="col-12 p-0" *ngIf="layout != 'selectors'">
             <div class="d-block d-md-inline-flex flex-md-row w-100">
-                <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
+                <div class="search-group"
+                     [class]="layout"
+                     [ngClass]="{'mr-3' : layout == 'full'}">
+
                     <span class="glyphicon web-icon-search icon-search"></span>
                     <input [ngModel]="localFilter.query"
                            (ngModelChange)="onSearchType($event)"
-                           [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
+                           [ngClass]="{'non-empty': localFilter.query && localFilter.query != '', '': layout === 'search'}"
                            [maxLength]="CONFIG.search.maxLength"
                            (focus)="setOnFocus()"
                            type="text"

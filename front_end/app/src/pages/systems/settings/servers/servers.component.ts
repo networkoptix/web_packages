@@ -31,7 +31,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     advanced: boolean;
     params: Params;
-    parsedServerId: string;
     isOffline = false;
 
     private serverSubscription: Subscription;
@@ -65,11 +64,20 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.routeParamsSubscription = this.route
             .params
-            .subscribe(params => {
-                if (params.serverId) {
-                    this.menuService.setDetailsSection(params.serverId);
-                    this.serverIdFromParams = params.serverId;
-                    this.parsedServerId = params.serverId.replace(/\s|\{|\}/g, '');
+            .subscribe(routeParams => {
+                if (routeParams.serverId) {
+                    this.params = this.route.snapshot.queryParams;
+
+                    this.serverIdFromParams = routeParams.serverId
+                        .replace('%7B', '{')
+                        .replace('%7D', '}');
+
+                    if (this.serverIdFromParams.indexOf('?') > -1) {
+                        this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
+                    }
+
+                    this.menuService.setDetailsSection(this.serverIdFromParams);
+
                     this.setServer();
                 }
             });
@@ -141,7 +149,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             let server;
             if (this.serverIdFromParams) {
                 server = this.system.servers.find((server: any) => {
-                    return server.id === this.serverIdFromParams;
+                    const match = server.id === this.serverIdFromParams;
+                    return match;
                 });
             }
             if (typeof server === 'undefined') {

@@ -86,8 +86,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .params
             .subscribe(params => {
                 if (params.userId) {
-                    this.menuService.setDetailsSection(params.userId);
                     this.paramUser = params.userId;
+                    if (this.paramUser.indexOf('?') > -1) {
+                        this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
+                    }
+                    this.menuService.setDetailsSection(this.paramUser);
                     this.setUser();
                 }
             });

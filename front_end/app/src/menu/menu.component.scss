@@ -96,6 +96,11 @@
                 border-top: 1px solid $light6;
             }
         }
+
+        &.toggle-level-3 {
+            height     : 0;
+            min-height : auto;
+        }
     }
 
     nx-level-3-item {

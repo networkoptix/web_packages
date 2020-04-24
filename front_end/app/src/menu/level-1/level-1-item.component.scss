@@ -51,3 +51,36 @@ $item_height : 40px;
         justify-content : center;
     }
 }
+
+.search-results {
+    position : absolute;
+    display : flex;
+    flex-direction : row;
+    height : 100%;
+    align-items : center;
+    top   : 0;
+    right : 0;
+
+    &-label {
+        color : $light16;
+    }
+
+    .nav-arrow {
+        position : relative;
+        right    : auto;
+        bottom   : auto;
+        margin   : 0 8px 0 4px;
+
+        span {
+            background-color : $light16;
+        }
+
+        span:nth-child(odd) {
+            left : 2px;
+        }
+
+        span:nth-child(even) {
+            left : 40%;
+        }
+    }
+}

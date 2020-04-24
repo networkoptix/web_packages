@@ -1,7 +1,7 @@
 <a class="menu-level-3"
    [ngClass]="{'selected': selected, 'item-disabled': !isEnabled }"
    [id]="item.id"
-   [routerLink]="[itemPath]"
+   [routerLink]="itemPath"
    [queryParams]="item.query">
     <div *ngIf="first" class="top-shadow-cover"></div>
     <div class="ellipsis">

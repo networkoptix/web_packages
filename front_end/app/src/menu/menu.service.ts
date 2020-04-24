@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject }       from 'rxjs';
+import { NxUtilsService }        from '../services/utils.service';
 
 @Injectable({
     providedIn: 'root'
@@ -53,7 +54,9 @@ export class NxMenuService implements OnDestroy {
                                 haveNode = { ...node };
                                 haveNode.level3 = []; // remove items so we can all only matches
                             }
-                            haveNode.level3.push(NxMenuService.highlighted(item, _filter));
+                            const filteredItem = { ...item };
+                            filteredItem.query = { search: _filter };
+                            haveNode.level3.push(NxMenuService.highlighted(filteredItem, _filter));
                         }
                     });
                     if (haveNode && haveNode.level3 && haveNode.level3.length) {
@@ -68,6 +71,14 @@ export class NxMenuService implements OnDestroy {
         return filteredContent;
     }
 
+    cleanMenuContent(content) {
+        const clean = NxUtilsService.deepCopy(content);
+        return clean.map((node) => {
+            delete node.toggle;
+            return node;
+        });
+    }
+
     private static highlighted(item, search) {
         // eslint-disable-next-line no-useless-escape
         let pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
@@ -76,9 +87,8 @@ export class NxMenuService implements OnDestroy {
         }).join('|');
 
         const regex = new RegExp(pattern, 'gi');
-        const newItem = { ...item };
-        newItem.label = item.label.replace(regex, (match) => `<span class="highlighted">${match}</span>`);
+        item.label = item.label.replace(regex, (match) => `<span class="highlighted">${match}</span>`);
 
-        return newItem;
+        return item;
     }
 }

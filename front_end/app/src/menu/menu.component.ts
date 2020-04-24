@@ -8,6 +8,7 @@ import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
+import { NxUtilsService }            from '../services/utils.service';
 
 /* Usage
  <nx-menu>
@@ -30,6 +31,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     selectedLevel3: string;
     isSearchable: boolean;
     transition: boolean;
+    toggle: boolean;
 
     menuContent: any = [];
     menuQuery: string;
@@ -48,6 +50,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.LANG = languageService.getTranslations();
 
         this.isSearchable = false;
+        this.toggle = false;
     }
 
     ngOnInit() {
@@ -65,8 +68,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.content.currentValue) {
-            this.menuService.content = changes.content.currentValue.level1;
-            this.menuContent = this.menuService.fillerItems(this.menuQuery);
+            if (!NxUtilsService.isEqual(this.menuService.content, changes.content.currentValue.level1)) {
+                this.menuService.content = changes.content.currentValue.level1;
+            }
+
+            // Avoid unnecessary update and overwrite user choices
+            const filtered = this.menuService.fillerItems(this.menuQuery);
+            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
+            if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
+                this.menuContent = filtered;
+            }
 
             this.selectedLevel1 = changes.content.currentValue.selectedSection;
             this.selectedLevel2 = changes.content.currentValue.selectedSubSection;
@@ -128,7 +139,10 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     searchOnFocus() {
+    }
 
+    toggleItem(state, idx) {
+        this.menuContent[idx].toggle = state;
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet
