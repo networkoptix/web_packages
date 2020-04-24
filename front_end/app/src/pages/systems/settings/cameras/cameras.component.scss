@@ -6,19 +6,24 @@
     font-size: $font-size-base;
     color: $dark9;
     .header-top-bar {
+        width: 100%;
         display: flex;
         align-items: center;
+        justify-content: stretch;
         margin-bottom: 16px;
         .header-title {
+            width: 0;
             display: flex;
             align-items: start;
             flex-direction: column;
-            flex-grow: 1;
+            flex: 1 1 0;
             h2 {
+                max-width: 100%;
                 font-family: $font-family-regular;
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;
+                white-space: nowrap;
             }
         }
         .camera-buttons {
@@ -34,11 +39,14 @@
                 }
             }
             @extend #regular13;
+            flex: 0 0 auto;
             background-color: inherit;
             color: $light16;
             display: flex;
             align-items: center;
             white-space: nowrap;
+            padding-left: 8px;
+            padding-right: 0px;
             svg-icon {
                 svg {
                     height: 20px;
@@ -261,5 +269,63 @@
 
     &:hover {
         color : $dark1;
+    }
+}
+
+.details {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 8px 0 0 0;
+
+    &-section {
+        margin-right: 40px;
+        display: flex;
+        div {
+            display: flex;
+            flex-direction: column;
+            white-space: nowrap;
+
+            p {
+                margin-bottom: 4px;
+            }
+        }
+        &-keys {
+            p {
+                @extend #regular13;
+                position: relative;
+                display: flex;
+                justify-content: stretch;
+                & > * {
+                    flex-basis: 0;
+                    flex-grow: 0;
+                }
+                &:after {
+                    content: "";
+                    position: relative;
+                    display: inline-block;
+                    margin: 0 8px 4px 4px;
+                    border-bottom: 1px dotted $light3;
+                    z-index: 1;
+                    min-width: 16px;
+                    flex-basis: 1;
+                    flex-grow: 1;
+                }
+            }
+        }
+        &-values {
+            p {
+                @extend #medium13;
+            }
+        }
+    }
+}
+
+.image-dropdowns {
+    & > span {
+        width: 80px;
+    }
+    & > nx-select {
+        width: 240px;
     }
 }

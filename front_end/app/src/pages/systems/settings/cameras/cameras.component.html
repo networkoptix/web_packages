@@ -31,18 +31,18 @@
         <div class="col-12 camera-settings-info">
             <nx-block header-style="extended">
                 <header>
-                    <div class="header-top-bar d-flex justify-content-start">
+                    <div class="header-top-bar">
                         <div class="header-title">
                             <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" [maxLength]="45" id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
-                        <button class="camera-buttons pr-0"[routerLink]="cameraViewPath"  id="view-camera">
+                        <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>View</span>
                         </button>
-                        <button *ngIf="canSeeInfo" class="camera-buttons pr-0"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
+                        <button *ngIf="canSeeInfo" class="camera-buttons"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
                             </span>
@@ -51,29 +51,25 @@
                     </div>
                     <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="selectedCamera.previewUrl" 
                         class="mr-2" [lightBackground]="true" [aspect]="previewAspect"></nx-health-image>
-                    <div class="d-flex flex-row justify-content-stretch align-items-start flex-wrap">
-                        <div class="header-table col-3">
-                            <div class="header-table-cell">
-                                <span class="mr-2 cell-title text-nowrap" translate >Vendor</span>
-                                <span class="cell-ellipsis"></span>
-                                <span class="col-8 text-nowrap">{{selectedCamera.vendor || "-"}}</span>
+                    <div class="details">
+                        <div class="details-section">
+                            <div class="details-section-keys">
+                                <p translate>Vendor</p>
+                                <p translate>Model</p>
                             </div>
-                            <div class="header-table-cell">
-                                <span class="mr-2 cell-title text-nowrap" translate>Model</span>
-                                <span class="cell-ellipsis"></span>
-                                <span class="col-8 text-nowrap">{{selectedCamera.model || "-"}}</span>
+                            <div class="details-section-values">
+                                <p>{{ selectedCamera.vendor }}</p>
+                                <p>{{ selectedCamera.model}}</p>
                             </div>
                         </div>
-                        <div class="header-table col-6">
-                            <div class="header-table-cell">
-                                <span class="mr-2 cell-title text-nowrap" translate>IP Address</span>
-                                <span class="cell-ellipsis"></span>
-                                <span class="col-9 text-nowrap">{{selectedCamera.url || "-"}}</span>
+                        <div class="details-section">
+                            <div class="details-section-keys">
+                                <p translate>IP Address</p>
+                                <p translate>Server</p>
                             </div>
-                            <div class="header-table-cell">
-                                <span class="mr-2 cell-title" translate>Server</span>
-                                <span class="cell-ellipsis"></span>
-                                <span class="col-9">{{selectedCamera.parentName || "-"}}</span>
+                            <div class="details-section-values">
+                                <p>{{ selectedCamera.url }}</p>
+                                <p>{{ selectedCamera.parentName }}</p>
                             </div>
                         </div>
                     </div>
@@ -81,12 +77,12 @@
                 <ng-container *ngIf="system.isAdmin">
                     <nx-section>
                             <h4 class="mb-3" translate>Image</h4>
-                            <div class="d-flex justify-content-start col-6 align-items-center mb-2">
-                                <span class="col-3 text-nowrap text-right" translate>Aspect Ratio</span>
+                            <div class="d-flex justify-content-start align-items-center mb-2 image-dropdowns">
+                                <span class="text-nowrap text-right mr-2" translate>Aspect Ratio</span>
                                 <nx-select [selected]="false" [(ngModel)]="selectedAspect" [items]="aspectRatios" id="aspect-ratios"></nx-select>
                             </div>
-                            <div class="d-flex justify-content-start col-6 align-items-center">
-                                <span class="col-3 text-nowrap text-right" translate>Rotation</span>
+                            <div class="d-flex justify-content-start align-items-center image-dropdowns">
+                                <span class="text-nowrap text-right mr-2" translate>Rotation</span>
                                 <nx-select [selected]="false" [(ngModel)]="selectedRotation" [items]="rotations" id="rotations"></nx-select>
                             </div>
                     </nx-section>
