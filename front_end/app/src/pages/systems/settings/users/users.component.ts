@@ -19,6 +19,7 @@ import { NxUriService }                         from '../../../../services/uri.s
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
+import { NxUtilsService }                       from '../../../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -201,7 +202,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             let user;
             if (this.paramUser) {
                 user = this.system.users.find((user: any) => {
-                    return user.id.replace(/{|}/g, '') === this.paramUser;
+                    return NxUtilsService.cleanId(user.id) === this.paramUser;
                 });
             }
             if (typeof (user) === 'undefined') {
@@ -225,7 +226,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.deleteMessage = this.selectedUser.isCloud ?
                 this.LANG.system.users.cloudDelete : this.LANG.system.users.localDelete;
 
-            this.menuService.setDetailsSection(this.selectedUser.id.replace(/{|}/g, ''));
+            this.menuService.setDetailsSection(NxUtilsService.cleanId(this.selectedUser.id));
             // watchers set
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;

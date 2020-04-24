@@ -121,6 +121,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         if (!this.system.isAvailable && system && system.isAvailable) {
                             this.system = system;
                         }
+                        if (!this.system.isAvailable) {
+                            return;
+                        }
+
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
                         if (this.settingsSubscription) {
@@ -204,7 +208,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system.info.name = finalName;
                 }
 
-                this.pageService.setPageTitle(this.system.info.name + ' -');
+                this.pageService.setPageTitle(this.system.info.name);
                 this.systemsService.forceUpdateSystems(this.accountService.email);
             });
     }

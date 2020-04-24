@@ -1,11 +1,15 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
 import { NxProcessService }          from '../../services/process.service';
 import { NxToastService }            from '../toast.service';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { timer }                     from 'rxjs';
-import { delayWhen, retryWhen, map } from 'rxjs/operators';
+import {
+    delayWhen, retryWhen, map,
+    tap, mergeMap
+}                                    from 'rxjs/operators';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -28,6 +32,7 @@ export class RestartServerModalContent {
         languageService: NxLanguageProviderService,
         private activeModal: NgbActiveModal,
         private processService: NxProcessService,
+        private ribbonService: NxRibbonService,
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
@@ -35,7 +40,6 @@ export class RestartServerModalContent {
     }
 
     ngOnInit() {
-        let initialRuntimeId;
         const options      = {
             classname : this.CONFIG.toast.warning,
             autohide  : true,
@@ -43,38 +47,62 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                return this.system.getModuleInfo(this.serverId).toPromise().then(res => {
-                    initialRuntimeId = res.reply.runtimeId;
-                    return this.system.restartServer(this.serverId)
-                        .catch(() => {
-                            this.system.currentServerNotBusy = true;
-                            this.toastService.show(this.LANG.servers.restartFailed, options);
-                        });
-                })
+                return this.system.restartServer(this.serverId)
                     .catch(() => {
                         this.system.currentServerNotBusy = true;
-                        this.toastService.show(this.LANG.servers.getModuleFailed, options);
+                        this.toastService.show(this.LANG.servers.restartFailed, options);
                     });
-            }, { successMessage: this.LANG.servers.beginRestart })
+            })
             .then(() => {
                 this.close(this.CONFIG.servers.status.restarting);
-                const serverSubscription = this.system.getModuleInfo(this.serverId)
+                let isFirstTime = true;
+                const serverSubscription = this.system.getServers()
                     .pipe(
                         map((res: any) => {
-                            if (res.reply.id !== this.serverId) {
-                                throw Error('server id should be the same');
+                            if (isFirstTime) {
+                                isFirstTime = false;
+                                throw Error('retry once');
                             }
-                            if (res.reply.runtimeId === initialRuntimeId) {
-                                throw Error('runtime id should be different after restart');
+                            if (res) {
+                                const serverObj: { id?: string } = {};
+                                Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
+                                    serverObj[server[1].id] = server[1].status;
+                                });
+                                if (!serverObj[this.serverId]) {
+                                    throw Error('server not found');
+                                }
+                                if (serverObj[this.serverId] !== 'Online') {
+                                    throw Error('still restarting');
+                                }
+                                return serverObj;
                             }
                         }),
-                        retryWhen(errors =>
-                            errors.pipe(delayWhen(() =>
-                                timer(4000)
-                            ))
-                        )
+                        mergeMap(serverObj => {
+                            if (Object.keys(serverObj).length === 1) {
+                                return this.system.getInfo(true, false)
+                                    .then(system => {
+                                        if (!system.isOnline) {
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            throw Error('system is offline still');
+                                        }
+                                    })
+                                    .catch(err => { throw Error(err); });
+                            }
+                        }),
+                        retryWhen(errors => {
+                            return errors.pipe(
+                                tap(val => {
+                                    if ([502, 503].includes(val.status) && isFirstTime) {
+                                        isFirstTime = false;
+                                        this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                    }
+                                }),
+                                delayWhen(() => timer(4000))
+                            );
+                        })
                     )
                     .subscribe(() => {
+                        this.ribbonService.hide();
                         this.system.currentServerNotBusy = true;
                         this.system.systemInfo = this.system;
                         options.classname = this.CONFIG.toast.success;

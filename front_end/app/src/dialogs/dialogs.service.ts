@@ -171,6 +171,7 @@ export class NxDialogsService {
                 if (redirectClose && result === 'canceled') {
                     return this.router.navigate([this.CONFIG.redirect.unauthorised]);
                 }
+                return result;
             }, (reason) => {
                 this.closeResult = 'Dismissed';
             });

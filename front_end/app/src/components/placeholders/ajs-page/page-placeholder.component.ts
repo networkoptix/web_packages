@@ -119,11 +119,6 @@ export class NxAjsPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = '';
                     this.iconName = '404';
                     break;
-                case '503' :
-                    this.placeholderTitle = this.LANG.common.maintenanceInProgress;
-                    this.message = '%CONTENT%';
-                    this.iconName = 'Maintenance';
-                    break;
             }
         }
     }

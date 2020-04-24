@@ -103,13 +103,11 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     }
 
     checkError() {
-        setTimeout(() => {
-            if (this.hasError) {
-                this.addClass(this.errorClass);
-            } else {
-                this.removeClass(this.errorClass);
-            }
-        });
+        if (this.hasError) {
+            this.addClass(this.errorClass);
+        } else {
+            this.removeClass(this.errorClass);
+        }
     }
 
     // Helper methods for updating classes
@@ -155,6 +153,11 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
         if (typeof this.onTouched === 'function') {
             this.onTouched();
         }
+        this.elementRef.nativeElement.blur();
+        this.elementRef.nativeElement.innerHTML = '';
+        setTimeout(() => {
+            this.elementRef.nativeElement.innerHTML = this.content;
+        }, 0);
     }
 
     @HostListener('focus')
@@ -168,7 +171,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     @HostListener('keyup.enter')
     callOnEnter() {
         this.callOnTouched();
-        this.elementRef.nativeElement.blur();
     }
 
     // Other methods
