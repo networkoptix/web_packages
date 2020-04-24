@@ -146,7 +146,7 @@ function run_mediaserver() {
 }
 
 function stop_mediaserver() {
-    docker ps | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
+    docker ps -a | grep auto-nx-server- | awk '{print $1}' | xargs docker rm -f
 }
 
 function start_https_tunnel() {

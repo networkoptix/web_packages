@@ -127,11 +127,6 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = '';
                     this.iconName = '404';
                     break;
-                case '503' :
-                    this.placeholderTitle = this.LANG.common.maintenanceInProgress;
-                    this.message = '%CONTENT%';
-                    this.iconName = 'Maintenance';
-                    break;
                 case 'MERGE':
                     this.placeholderTitle = this.LANG.placeholderTexts.merge.title
                         .replace('{{systemName}}', this.data.systemName);

@@ -68,12 +68,123 @@ Check Special Hint
 
 Create Local Users via API
     [Arguments]    ${auth}    ${server}
-    @{local users} =    Create List    GlobalAdmin    GlobalEditCameras    GlobalControlVideoWall    GlobalViewArchive      GlobalExport    GlobalViewBookmarks    GlobalManageBookmarks    GlobalUserInput    GlobalAccessAllMedia    GlobalCustomUser
-    FOR   ${user}    IN    @{local users}
-        Save Local User    ${auth}    ${server}    ${user}    ${user}Permission    noptixautoqa+localuser_${user}@gmail.com    Local User    ${BASE PASSWORD}
-    END                
+    @{local users} =    Create List    cloudAdmin    viewer    liveViewer    advancedViewer    custom
+    FOR    ${user}    IN    @{local users}
+        Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
+    END               
     [return]    @{local users}
 
+Delete All Local Users
+    [Arguments]    ${locator}
+    Wait Until Element is Visible    ${locator}  
+    ${local users} =    Get Element Count     ${locator}  
+    #Click Element    ${locator}[1]
+    FOR    ${node}   IN RANGE   ${local users}
+        Wait Until Element is Visible    ${locator}
+        Click Element    ${locator} 
+        Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
+        Click Button    ${LOCAL USER DELETE BUTTON}
+        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON} 
+        Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Reload Page
+    END
+    Wait Until Element is Visible    //span[text()="admin"]
+    Page Should Not Contain Element     ${locator}
+    
+Verify Changed Info Via API
+    [Arguments]    ${new locals}
+    @{locals} =    Create List 
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    &{node}[name]    ocal+
+        Run Keyword If    &{node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+    END
+    FOR    ${user}    IN    @{locals}
+        Keep in Dictionary    ${user}    name    fullName    permissions    email
+    END
+    FOR    ${user}    IN    @{locals} 
+        Should Contain    ${new locals}    ${user}     
+        #${n} =    Evaluate    ${n}+1
+    END   
+
+Modify Local Users via Cloud UI
+    [Arguments]    ${local users}
+    @{new locals} =    Create List 
+    FOR    ${user}    IN    @{local users}
+        Wait Until Element is Visible    //span[text()="Local+${user}"]
+        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    &{role names}[${user}] 
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER LOGIN}
+	    ...    ${LOCAL USER NAME}
+	    ...    ${LOCAL USER EMAIL}
+	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+${user}
+	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
+	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
+	    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]
+        
+        ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
+        ${new full name} =    Change Full Name for Local User     ${user}    Changed User
+        ${new permission} =    Change Permission Level for Local User     ${user}    
+        ${new local user email} =     Change Email for Local User    ${user}    ${EMAIL VIEWER}
+	   
+	    Log    Save All Changes
+	    Click Button    //button[text()="Save"]
+        Wait Until Element is Visible    //span[text()="${new login}"]
+	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+	    Wait Until Textfield Contains    ${LOCAL USER NAME}    ${new full name}
+        Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
+        
+        Log    Change password for ${user}
+        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
+        Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
+        Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
+        Wait Until Element is Not Visible    //input[@id="newPassword"]
+        
+        ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
+        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]    
+        
+        Append To List    ${new locals}    ${new local}
+        #Append To List    @{old locals}    &{old local} 
+    END 
+    [Return]    ${new locals}
+    
+Change Login for Local User
+    [Arguments]    ${user}    ${new login}
+    Input Text    ${LOCAL USER LOGIN}     ${new login}
+    #Click Button    //button[text()="Save"]
+    ${new login} =    Convert To Lowercase    ${new login}
+	[Return]   ${new login} 
+	
+Change Full Name for Local User    
+    [Arguments]    ${user}    ${new full name}
+    Input Text    ${LOCAL USER NAME}     ${new full name}
+    [Return]    ${new full name}
+
+Change Permission Level for Local User    
+    [Arguments]    ${user}
+    @{permissions set} =    Get Dictionary Values    ${role names}
+    FOR    ${x}    IN RANGE    5
+        ${random int} =	    Evaluate	random.randint(0, 4)	modules=random 
+        ${new permission} =     Get From List    ${permissions set}    ${random int}
+        Exit For Loop If  '${new permission}' != '&{role names}[${user}]' 
+    END
+    # ${new permission} =    Set Variable If     '&{role names}[${user}]' == 'Viewer'    Live Viewer
+    # ...     '&{role names}[${user}]' != 'Viewer'    Viewer 
+    Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
+    Click Button    ${ACCESS LEVEL DROPDOWN}
+    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"] 
+    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"]
+    Sleep    .1
+    [Return]    ${new permission} 
+    
+Change Email for Local User
+    [Arguments]    ${user}    ${new email}
+    Input Text    ${LOCAL USER EMAIL}      ${new email}
+    ${new email} =    Convert To Lowercase    ${new email}
+    [Return]    ${new email}
+    
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
@@ -532,61 +643,14 @@ Administrator can add, disable and enable Viewer
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
     
-Local User Basic Test
-    ${auto sys auth} =    Set Variable    @{AUTO SYS AUTH}
-    @{local users} =    Create Local Users via API    ${auto sys auth}    ${AUTO SYS IP}
-    Log    Modify local users  
+Local User Test
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}
-    FOR    ${user}    IN    @{local users}
-        Wait Until Element is Visible    //span[text()="${user}"]
-        Run Keyword If    '${user}' == 'GlobalAccessAllMedia'    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Live Viewer 
-        ...    ELSE IF    '${user}' == 'GlobalAdmin'    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Administrator
-        ...    ELSE    Element Should Contain    //span[text()="${user}"]/following-sibling::span    Custom
-        Click Element    //span[text()="${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
-	    ...    ${LOCAL USER NAME}
-	    ...    ${LOCAL USER EMAIL}
-	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${user}
-	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
-	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+localuser_${user}@gmail.com
-	    Run Keyword If    '${user}' == 'GlobalAccessAllMedia'    Element Text Should Be    //*[@id="permissionsSelect"]/span    Live Viewer
-	    ...    ELSE IF    '${user}' == 'GlobalAdmin'    Element Text Should Be    //*[@id="permissionsSelect"]/span    Administrator
-	    ...    ELSE    Element Text Should Be    //*[@id="permissionsSelect"]/span    Custom
+    Click Link    ${USERS LIST LINK}      
+    ${new locals} =    Modify Local Users via Cloud UI    ${local users}     
+    Verify Changed Info Via API    ${new locals} 
+    Delete All Local Users    //span[contains(text(),"local+")]
+	        
     
-	    Log     Verify that you can change the login for ${user}
-	    ${new login} =    Set Variable   changedlogin_${user}
-	    Input Text    ${LOCAL USER LOGIN}     ${new login}
-	    Click Button    //button[text()="Save"]
-	    ${new login} =    Convert To Lowercase    ${new login}
-	    Wait Until Element is Visible    //span[text()="${new login}"]
-	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
+       
     
-	    Log     Verify that you can change permission level for ${user}
-	    ${new permission} =    Set Variable    Viewer
-	    Click Button    ${ACCESS LEVEL DROPDOWN}
-	    Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"] 
-	    Click Element    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"]
-	    Click Button    //button[text()="Save"]
-	    Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
-	    
-	    Log    Verify that you can change email for ${user}
-	    ${new local user email} =    Set Variable    ${EMAIL VIEWER}
-	    Input Text    ${LOCAL USER EMAIL}      ${new local user email}
-	    ${new local user email} =    Convert To Lowercase    ${new local user email} 
-	    Click Button    //button[text()="Save"]
-        
-        Log    Verify that you can change password for ${user}
-        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
-        Input Text    //input[@id="newPassword"]    newpassword
-        Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
-        
-        Log    Verify changed info via API    
-        ${users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-        ${users1} =    Convert To String    ${users}    
-        Should Contain   ${users1}    name': '${new login}
-	    Should Not Contain    ${users1}    name': '${user}
-	    Should Contain    ${users1}    email': '${new local user email}
-	    Should Not Contain    ${users1}   email': 'noptixautoqa+localuser_${user}@gmail.com	    
-    END

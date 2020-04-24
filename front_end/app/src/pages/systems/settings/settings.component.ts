@@ -51,7 +51,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     canMerge: boolean;
     debugMode: boolean;
     betaMode: boolean;
-    isMaster: boolean;
     userDisconnectSystem: boolean;
     mergeTargetSystem: any;
     gettingSystemUsers: any;
@@ -255,6 +254,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             if (this.system.users) {
                                 this.updateMenu();
                             }
+                            if (!this.system.isOnline) {
+                                this.ribbonService.hide();
+                                this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                            }
                         });
 
                     if (this.connectionSubscription) {
@@ -335,10 +338,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
-                    id    : this.CONFIG.menus.systemSettings.cameras.id,
-                    svg   : this.CONFIG.menus.systemSettings.cameras.icon,
-                    label : 'Cameras',
-                    path  : this.CONFIG.menus.systemSettings.cameras.path
+                    id     : this.CONFIG.menus.systemSettings.cameras.id,
+                    svg    : this.CONFIG.menus.systemSettings.cameras.icon,
+                    label  : 'Cameras',
+                    path   : this.CONFIG.menus.systemSettings.cameras.path,
+                    level3 : []
                 };
                 this.content.level1.push(camerasNode);
             }
@@ -356,6 +360,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     path            : `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
                     additionalLabel : camera.url.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)
                 }));
+            } else {
+                camerasNode.level3 = [];
             }
         } else {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
@@ -395,7 +401,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
             if (this.system && this.system.users.length > 0) {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
-                    const id = user.id.replace(/{|}/g, '');
+                    const id = NxUtilsService.cleanId(user.id);
                     const node: any = {
                         additionalLabel : (this.LANG.accessRoles[user.role.name] && this.LANG.accessRoles[user.role.name].label) || user.role.name,
                         id,
@@ -530,15 +536,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        if (!this.settingsService.mergeTarget) {
-            return;
-        }
-
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.settingsService.mergeTarget}`;
-        this.settingsService.mergeTarget = '';
+        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

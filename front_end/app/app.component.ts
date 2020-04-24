@@ -65,167 +65,178 @@ export class AppComponent {
         // this language will be used as a fallback when a translation
         // isn't found in the current language
         languageService.setDefaultLang('en_US');
-
         // @ts-ignore
-        languageService.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
-        this.LANG = languageService.getTranslations();
-        this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
+        // console.log(window.LANG, window.SETTINGS);
         // @ts-ignore
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
-
-        // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
-        // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
-        // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
-        const authUriSub = this.uriService.getURI()
-            .pipe(timeout(3000), finalize(() => authUriSub.unsubscribe()))
-            .subscribe(params => {
-                if (params.auth) {
-                    authUriSub.unsubscribe();
-                }
-                this.appStateService.ready = !params.auth;
-            }, () => {
-            });
-
-        this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
-
-        // TODO: Componentize this
-        this.allowedDevices = {
-            windows: {
-                ie      : 10,
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            mac: {
-                safari  : 10,
-                chrome  : 64,
-                firefox : 60
-            },
-            linux: {
-                chrome  : 64,
-                firefox : 60
-            }
-        };
-
-        this.deviceInfo = this.deviceService.getDeviceInfo();
-        let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
-
-        // Special case for Kyle's robot tests
-        // ... device detector doesn't detect it correctly
-        if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
-            allowedDevice = undefined;
-        }
-
-        if (allowedDevice !== undefined) {
-            const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
-            const majorVersion = this.deviceInfo.browser_version.split('.')[0];
-
-            if (majorVersion < allowedVersion) {
-                // redirect
-                this.location.go('/browser');
-            }
-        } // else -> unknown platform or device ... cross fingers and hope for the best
-
-        // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
-        // This was done every time a system is created. Its only need once
-        this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
-            if (option.permissions) {
-                option.permissions = option.permissions.split('|').sort().join('|');
-            }
-        });
-
-        // @ts-ignore
-        const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = window.SETTINGS;
-        this.CONFIG.company = {
-            copyrightYear,
-            links: {
-                privacy : privacyLink,
-                support : supportLink,
-                website : companyLink
-            },
-            name: companyName
-        };
-        // @ts-ignore
-        const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = window.SETTINGS;
-        this.CONFIG.cloudCapabilities = {
-            feedbackEnabled,
-            healthMonitor,
-            integrationStore: integrationStoreEnabled,
-            publicDownloads,
-            publicReleases,
-            cloudStorageEnabled,
-            cloudStorageSize
-        };
-        // @ts-ignore
-        const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;
-        this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
-            searchTags,
-            sortSupportedDevicesByPopularity,
-            supportedHardwareTypes,
-            supportedResolutions,
-            vendorsShown: parseInt(vendorsShown)
-        });
-        // @ts-ignore
-        const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
-        this.CONFIG.integration.filter = {
-            items      : integrationFilterItems,
-            limitation : integrationFilterLimitation
-        };
-        // @ts-ignore
-        if (window.SETTINGS.appTypesForPlatform) {
-            // @ts-ignore
-            Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
-                if (platform in this.CONFIG.downloads.groups && appTypes) {
-                    this.CONFIG.downloads.groups[platform].appTypes = appTypes;
-                }
-            });
-        }
-        // @ts-ignore
-        this.CONFIG.cloudName = window.SETTINGS.cloudName;
-        // @ts-ignore
-        this.CONFIG.footerItems = window.SETTINGS.footerItems;
-        // @ts-ignore
-        this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
-        // @ts-ignore
-        this.CONFIG.trialLicenseKey = window.SETTINGS.trialLicenseKey;
-        // @ts-ignore
-        this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
-        // @ts-ignore
-        this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
-        // @ts-ignore
-        this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
-        // @ts-ignore
-        this.CONFIG.vmsName = window.SETTINGS.vmsName;
-        // @ts-ignore
-        this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
-        // @ts-ignore
-        this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
-        // detect preview mode
-        if (window.location.href.indexOf('preview') >= 0) {
-            this.CONFIG.previewPath = 'preview';
-            this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
-        }
-
-        // (Smart check) Check if page is displayed inside an iframe
-        // this.isInIframe = (window.location !== window.parent.location);
-
-        // Route check if page is displayed inside an iframe
-        this.isInIframe = (window.location.pathname.indexOf('/embed') === 0);
-        if (this.isInIframe) {
+        if (window.LANG === undefined || window.SETTINGS === undefined) {
+            this.router.navigate(['/503'])
+                .catch((error) => console.error(error))
+                .finally(() => {
+                    this.appStateService.ready = true;
+                });
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
+            // @ts-ignore
+        } else if (window.LANG !== undefined && window.LANG !== undefined) {
+            // @ts-ignore
+            languageService.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
+            this.LANG = languageService.getTranslations();
+            this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
+            // @ts-ignore
+            this.pageService.setPageTitle(this.LANG.pageTitles.default);
+
+            // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
+            // This makes sure only the preloader is shown before the page is refreshed to a logged in state.
+            // After 3 seconds we unsubscribe to make sure we don't change the ready state while the app is already loaded
+            const authUriSub = this.uriService.getURI()
+                .pipe(timeout(3000), finalize(() => authUriSub.unsubscribe()))
+                .subscribe(params => {
+                    if (params.auth) {
+                        authUriSub.unsubscribe();
+                    }
+                    this.appStateService.ready = !params.auth;
+                }, () => {
+                });
+
+            this.scrollMechanicsService.setWindowSize(window.innerHeight, window.innerWidth);
+
+            // TODO: Componentize this
+            this.allowedDevices = {
+                windows: {
+                    ie: 10,
+                    safari: 10,
+                    chrome: 64,
+                    firefox: 60
+                },
+                mac: {
+                    safari: 10,
+                    chrome: 64,
+                    firefox: 60
+                },
+                linux: {
+                    chrome: 64,
+                    firefox: 60
+                }
+            };
+
+            this.deviceInfo = this.deviceService.getDeviceInfo();
+            let allowedDevice = this.allowedDevices[this.deviceInfo.os.toLowerCase()];
+
+            // Special case for Kyle's robot tests
+            // ... device detector doesn't detect it correctly
+            if (this.deviceInfo.userAgent.indexOf('HeadlessChrome') > -1) {
+                allowedDevice = undefined;
+            }
+
+            if (allowedDevice !== undefined) {
+                const allowedVersion = allowedDevice[this.deviceInfo.browser.toLowerCase()] || 0;
+                const majorVersion = this.deviceInfo.browser_version.split('.')[0];
+
+                if (majorVersion < allowedVersion) {
+                    // redirect
+                    this.location.go('/browser');
+                }
+            } // else -> unknown platform or device ... cross fingers and hope for the best
+
+            // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+            // This was done every time a system is created. Its only need once
+            this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+                if (option.permissions) {
+                    option.permissions = option.permissions.split('|').sort().join('|');
+                }
+            });
+
+            // @ts-ignore
+            const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = window.SETTINGS;
+            this.CONFIG.company = {
+                copyrightYear,
+                links: {
+                    privacy: privacyLink,
+                    support: supportLink,
+                    website: companyLink
+                },
+                name: companyName
+            };
+            // @ts-ignore
+            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = window.SETTINGS;
+            this.CONFIG.cloudCapabilities = {
+                feedbackEnabled,
+                healthMonitor,
+                integrationStore: integrationStoreEnabled,
+                publicDownloads,
+                publicReleases,
+                cloudStorageEnabled,
+                cloudStorageSize
+            };
+            // @ts-ignore
+            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
+            this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
+                searchTags,
+                sortSupportedDevicesByPopularity,
+                supportedHardwareTypes,
+                supportedResolutions,
+                vendorsShown: parseInt(vendorsShown)
+            });
+            // @ts-ignore
+            const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
+            this.CONFIG.integration.filter = {
+                items: integrationFilterItems,
+                limitation: integrationFilterLimitation
+            };
+            // @ts-ignore
+            if (window.SETTINGS.appTypesForPlatform) {
+                // @ts-ignore
+                Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
+                    if (platform in this.CONFIG.downloads.groups && appTypes) {
+                        this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+                    }
+                });
+            }
+            // @ts-ignore
+            this.CONFIG.cloudName = window.SETTINGS.cloudName;
+            // @ts-ignore
+            this.CONFIG.footerItems = window.SETTINGS.footerItems;
+            // @ts-ignore
+            this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
+            // @ts-ignore
+            this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
+            // @ts-ignore
+            this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+            // @ts-ignore
+            this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
+            // @ts-ignore
+            this.CONFIG.vmsName = window.SETTINGS.vmsName;
+            // @ts-ignore
+            this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
+            // @ts-ignore
+            this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+            // detect preview mode
+            if (window.location.href.indexOf('preview') >= 0) {
+                this.CONFIG.previewPath = 'preview';
+                this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+            }
+
+            // (Smart check) Check if page is displayed inside an iframe
+            // this.isInIframe = (window.location !== window.parent.location);
+
+            // Route check if page is displayed inside an iframe
+            this.isInIframe = (window.location.pathname.indexOf('/embed') === 0);
+            if (this.isInIframe) {
+                this.appStateService.setHeaderVisibility(false);
+                this.appStateService.setFooterVisibility(false);
+            }
+
+            // Updates query params for components without routes.
+            this.router.events.pipe(
+                filter((event: Event) => event instanceof ActivationStart)
+            ).subscribe(({snapshot: {queryParams}}: ActivationStart) => {
+                this.uriService.queryParams = queryParams;
+            });
+
+            fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
+                this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
+            });
         }
-
-        // Updates query params for components without routes.
-        this.router.events.pipe(
-            filter((event: Event) => event instanceof ActivationStart)
-        ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
-            this.uriService.queryParams = queryParams;
-        });
-
-        fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
-            this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
-        });
     }
 
     // Todo: Revisit using this when the hybrid app is killed.

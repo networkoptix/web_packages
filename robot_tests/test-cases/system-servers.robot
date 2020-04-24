@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Common Restart Logout    ${url}
+# Test Setup        Common Restart Logout    ${url}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
 Force Tags        system

@@ -109,14 +109,14 @@ export class NxSystemAPI {
     }
 
     private get(url: string, params?: any) {
-        const headers = new HttpHeaders();
+        let headers = new HttpHeaders();
         params = params || {};
 
         if (this.authGet) {
             params.auth = this.authGet;
         }
         if (this.serverId) {
-            headers.set('X-Runtime-Guid', this.serverId);
+            headers = headers.set('X-Server-Guid', this.serverId);
         }
 
         const fullUrl = `${this.urlBase}${url}`;
@@ -125,8 +125,8 @@ export class NxSystemAPI {
         );
     }
 
-    private post(url: string, data?: any, paramsToAdd?: any) {
-        const headers = new HttpHeaders();
+    private post(url: string, data?: any) {
+        let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         let params = new HttpParams();
         data = data || {};
@@ -139,7 +139,7 @@ export class NxSystemAPI {
             params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
-            headers.set('X-Runtime-Guid', this.serverId);
+            headers = headers.set('X-Server-guid', this.serverId);
         }
 
         return this.http.post(fullUrl, data, { params, headers }).pipe(

@@ -200,6 +200,11 @@ header {
                     @include ellipsis;
                     padding      : 0 rem(10px);
                 }
+
+                .text-muted {
+                    font-family: $font-family-regular;
+                    color : $light16 !important;
+                }
             }
 
             nx-checkbox {
@@ -278,8 +283,4 @@ nx-select.ng-invalid:not(.ng-untouched) {
 }
 .btn-dropdown-toggle {
     justify-content: unset;
-}
-
-.text-muted {
-    color : $light16 !important;
 }

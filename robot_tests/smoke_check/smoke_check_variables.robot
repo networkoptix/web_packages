@@ -14,11 +14,11 @@ ${restored password}       qweasd777$
 ${email password}    QWEasd!@#
 @{local auth}        admin    ${password}
 
-${server vms}      http://10.1.5.145
-${server users}    http://10.1.5.192
+${server vms}      http://10.1.5.114
+${server users}    http://10.1.5.187
 ${server port}     7001
 
-${system vms}      vpc3-ub18
-${system users}    vpc4-ub18
+${system vms}      smoke-vpc1
+${system users}    smoke-vpc2
 
 
