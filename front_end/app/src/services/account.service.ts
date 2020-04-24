@@ -170,6 +170,8 @@ export class NxAccountService implements OnDestroy {
                 .then(() => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
+                }, () => {
+                    return false;
                 });
         }
 
@@ -194,7 +196,13 @@ export class NxAccountService implements OnDestroy {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(this, true, true).then(() => this.get())
+                        .login(this, true, true).then((result) => {
+                            this.localStorageService.set('loginRegister', true);
+                            if (result === 'register') {
+                                return this.router.navigate(['/register']).then(() => result);
+                            }
+                            return this.get();
+                        })
                         .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
                         .finally(() => {
                             this.loginDialogActive = false;

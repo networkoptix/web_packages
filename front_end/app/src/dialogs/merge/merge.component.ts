@@ -41,6 +41,7 @@ export class MergeModalContent {
     tooManyServers: boolean;
     nonCloudMerge = false;
     peerSystemsLoaded = false;
+    checking = false;
     secondaryName: string;
 
     // static variables
@@ -244,6 +245,7 @@ export class MergeModalContent {
     initProcesses() {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
+                this.checking = true;
                 this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
                 if (!this.serverUrlInputExists) {
                     this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
@@ -252,6 +254,7 @@ export class MergeModalContent {
             }, { ignoreError: true })
             .then(
                 res => {
+                    this.checking = false;
                     if (res.error === '0') {
                         if (this.serverUrlInputExists) {
                             this.machine.transition('adminPassword');
@@ -263,6 +266,7 @@ export class MergeModalContent {
                     }
                 },
                 err => {
+                    this.checking = false;
                     if (err.message === 'Timeout has occurred') {
                         err.message = this.noServerFound;
                     }

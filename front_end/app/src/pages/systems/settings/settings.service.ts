@@ -14,22 +14,12 @@ export class NxSettingsService implements OnDestroy {
     systemSubject = new BehaviorSubject(undefined);
     selectedSectionSubject = new BehaviorSubject([]);
 
-    private _mergeTarget = '';
-
     constructor(private api: NxCloudApiService,
                 private accountService: NxAccountService,
                 private uriService: NxUriService,
                 private menuService: NxMenuService,
                 private dialogs: NxDialogsService
     ) {}
-
-    get mergeTarget() {
-        return this._mergeTarget;
-    }
-
-    set mergeTarget(target) {
-        this._mergeTarget = target;
-    }
 
     get system() {
         return this.systemSubject.getValue();

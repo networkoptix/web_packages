@@ -84,7 +84,6 @@ export interface Common {
     recordingSettingsWarning:  string;
     resolution:                Resolution;
     general:                   string;
-    maintenanceInProgress:     string;
     searchCamPlaceholder:      string;
     systemHasNoCameras:        string;
     systemHasNoCamerasMessage: string;
@@ -617,10 +616,8 @@ export interface Search {
 export interface Servers {
     beginDetach:             string;
     beginReset:              string;
-    beginRestart:            string;
     detachSystemFailed:      string;
     detachSystemSuccess:     string;
-    getModuleFailed:         string;
     portWarning:             string;
     removeMediaserverFailed: string;
     resetFailed:             string;
@@ -934,7 +931,6 @@ const typeMap: any = {
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
-        { json: "maintenanceInProgress", js: "maintenanceInProgress", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "" },
@@ -1417,10 +1413,8 @@ const typeMap: any = {
     "Servers": o([
         { json: "beginDetach", js: "beginDetach", typ: "" },
         { json: "beginReset", js: "beginReset", typ: "" },
-        { json: "beginRestart", js: "beginRestart", typ: "" },
         { json: "detachSystemFailed", js: "detachSystemFailed", typ: "" },
         { json: "detachSystemSuccess", js: "detachSystemSuccess", typ: "" },
-        { json: "getModuleFailed", js: "getModuleFailed", typ: "" },
         { json: "portWarning", js: "portWarning", typ: "" },
         { json: "removeMediaserverFailed", js: "removeMediaserverFailed", typ: "" },
         { json: "resetFailed", js: "resetFailed", typ: "" },

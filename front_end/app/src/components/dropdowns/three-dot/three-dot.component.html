@@ -1,4 +1,4 @@
-<div class="dropdown ali custom-drop-down" [ngClass]="{'show': show}" (nxClickElsewhere)="show = false" [id]="id">
+<div class="dropdown ali custom-drop-down" [ngClass]="{'show': show}" (nxClickElsewhere)="show = false" [id]="componentId">
     <button class="dot-menu" (click)="show = !show" type="button" data-toggle="dropdown"></button>
     <div class="dropdown-menu custom-menu" [style.display]="show ? 'inline-block' : 'none'">
         <ul class="dropdown-menu--list">

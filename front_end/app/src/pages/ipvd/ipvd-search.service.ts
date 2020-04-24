@@ -48,8 +48,12 @@ export class IpvdSearchService {
             } else {
                 // If no dash in query -> include results with and without dash
                 const queryLowerNoDashes = lowerNoDashes(query);
-                result = (lowerNoDashes(c.vendor).indexOf(queryLowerNoDashes) > -1 ||
-                    lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
+                result = (lowerNoDashes(c.vendor).indexOf(queryLowerNoDashes) > -1);
+                result = result || (lowerNoDashes(c.model).indexOf(queryLowerNoDashes) > -1);
+
+                result = result || c.analyticsEvents.find((event) => {
+                    return event.toLowerCase().includes(queryLowerNoDashes)
+                });
             }
 
             return (query.length === 0 || result || c.maxResolution.indexOf(query) > -1);

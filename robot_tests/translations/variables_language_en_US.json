@@ -60,6 +60,7 @@
     "ACCOUNT INFORMATION"                  :    "Account Information",
     "ACCOUNT SETTINGS TEXT"                :    "Account settings",
     "DELETE ACCOUNT TEXT"                  :    "Delete Account",
+    "EDIT CREDENTIALS TEXT"                :    "Edit Credentials",
 
     "EDIT USER BUTTON TEXT"                :    "Edit",
     "REMOVE USER BUTTON TEXT"              :    "Remove User",
@@ -70,6 +71,7 @@
     "DISCONNECT BUTTON TEXT"               :    "Disconnect",
     "SEND BUTTON TEXT"                     :    "Send",
     "DELETE BUTTON TEXT"                   :    "Delete",
+    "VIEW"                                 :    "View",
 
     "OWNER TEXT"                           :    "Owner",
     "ADMIN TEXT"                           :    "Administrator",

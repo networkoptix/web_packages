@@ -6,24 +6,24 @@ nx-three-dot {
 }
 
 .dot-menu {
-    padding: 16px;
-    margin: -8px;
+    width: 20px !important;
+    height: 20px !important;
     background: transparent;
     &:after {
         content: '\2807';
-        font-size: 1em;
+        font-size: 20px;
         color: $dark9;
-        transform: translateY(-50%);
     }
 }
 
 .custom-menu {
     width: auto !important;
-    transform: translateX(-100%);
     border-radius: 2px;
     border: none !important;
+    transform: translateX(calc(20px - 100%));
 }
 
 .custom-drop-down {
-    height: 18px;
+    height: 20px !important;
+    width: 20px !important;
 }

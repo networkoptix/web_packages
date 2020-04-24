@@ -3,6 +3,7 @@ import 'core-js/features/reflect';
 import 'core-js/features/object';   // IE 11 needs Object.entries
 import 'core-js/features/array';   // IE 11 needs includes()
 
+require('hidpi-canvas/dist/hidpi-canvas');
 require('zone.js/dist/zone');
 
 if (!Element.prototype.matches) {

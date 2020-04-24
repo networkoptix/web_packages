@@ -406,14 +406,15 @@ class ServerManager {
     }
 
     getServers() {
-        return this.mediaserver.getMediaServers().toPromise()
-            .then((result: any) => {
-                if (!result) {
-                    return Promise.reject(new Error(`Request to server has failed ${result}`));
-                }
-                this.servers = result;
-                return this.servers;
-            });
+        const serverSubscription = this.mediaserver.getMediaServers();
+        serverSubscription.subscribe((res: any) => {
+            if (!res) {
+                return Promise.reject(new Error(`Request to server has failed ${res}`));
+            }
+            this.servers = res;
+            return this.servers;
+        });
+        return serverSubscription;
     }
 
     getPreviewUrl(cameraId, time, width, height, rotate) {
@@ -442,18 +443,19 @@ class ServerManager {
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = audioSupported === '1';
-            const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
+            const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
+            const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
             const recordingSettings: IRecordingSettings = {
-                recording : !!camera.scheduleTasks.length && camera.scheduleEnabled,
+                recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
                 fps       : this.parseFps(camera.scheduleTasks),
                 motionEnabled,
                 modes     : [
-                    { name: 'Record Always', id: 'RT_Always', value: !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'Record Motion', id: 'RT_MotionOnly', value: (this.parseRecordingMode(camera, 'RT_Always') || this.parseRecordingMode(camera, 'RT_MotionAndLowQuality')) ? this.parseRecordingMode(camera, 'RT_Always') : 2, enabled: motionEnabled },
+                    { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                     {
                         name    : 'Record Motion + Low Quality',
                         id      : 'RT_MotionAndLowQuality',
@@ -965,9 +967,9 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => this.getServers())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
-                .catch(() => {
+                .catch((error) => {
                     this.isAvailable = false;
-                    this.lostConnection = true;
+                    this.lostConnection = error && error.data && error.data.resultCode === 'forbidden';
                 });
         }));
     }

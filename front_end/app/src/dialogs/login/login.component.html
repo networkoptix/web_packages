@@ -20,7 +20,7 @@
             <ng-container *ngIf="login_email.invalid">
                 <div *ngIf="login_email.errors.no_user" class="clearfix">
                     <div class="input-error float-left" translate>Account not found</div>
-                    <a class="float-right justify-content-end" routerLink="/register" (click)="activeModal.close()" translate>Create account</a>
+                    <a class="float-right justify-content-end" routerLink="/register" (click)="activeModal.close('register')" translate>Create account</a>
                 </div>
                 <div *ngIf="login_email.errors.not_activated" class="clearfix">
                     <div class="input-error float-left" translate>Account not activated</div>
