@@ -114,7 +114,6 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                 process_global_contexts(cloud_portal, integration_dict, current_version, False,
                                         global_contexts, global_contexts_dict)
 
-                integration_dict['mine'] = integration.id in user_assets
                 if show_drafts or show_pending:
                     integration_dict['pending'] = show_pending
                     integration_dict['draft'] = show_drafts
@@ -129,6 +128,8 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
             # Version key is used to check if the internal version has been changed for a specific state of the asset.
             integration_dict_copy = integration_dict.copy()
             del integration_dict_copy['version']
+            # Check if the integration belongs in the user's assets.
+            integration_dict_copy['mine'] = integration.id in user_assets
             integrations_json.append(integration_dict_copy)
 
     return integrations_json

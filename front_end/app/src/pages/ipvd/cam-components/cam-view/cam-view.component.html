@@ -43,15 +43,16 @@
             <div class="row">
                 <div class="col-7 card--body-heading">
                     <h4>
-                        <span *ngIf="activeCamera.analyticsEvents.length">{{activeCamera.analyticsEvents.length}}&nbsp;</span>
                         <span *ngIf="activeCamera.analyticsEvents.length == 0 || activeCamera.analyticsEvents.length > 1" translate>Analytics Events</span>
                         <span *ngIf="activeCamera.analyticsEvents.length == 1" translate>Analytics Event</span>
                     </h4>
                 </div>
             </div>
             <div class="row">
-                <div class="analytics-label col-7" *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow">
-                    <ng-container>{{event}}</ng-container>
+                <div class="col-12 mb-2 error-label disclaimer" translate>This information is based on what camera reports through API. Actual list of events supported by this camera may be different.</div>
+                <div class="analytics-label col-12"
+                     *ngFor="let event of activeCamera.analyticsEvents  | slice:0:analyticsToShow"
+                     [innerText]="event">
                 </div>
             </div>
 
@@ -63,9 +64,6 @@
             </div>
 
             <div class="row mt-2" *ngIf="showAllEvents">
-                <div class="col-12 mb-2 info-label" translate>
-                    Actual number of events supported by this camera may be bigger.
-                </div>
                 <div class="col-12">
                     <a href (click)="showAllEvents = false; analyticsToShow = CONFIG.ipvd.analyticsToShow; false"
                         translate>Collapse</a>
