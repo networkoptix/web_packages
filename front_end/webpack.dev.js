@@ -39,9 +39,16 @@ module.exports = merge( common, {
                 secure      : false
 
             },
+            // Used for getting local 503 page.
             {
-                context     : '/static/lang_en_US/views',
-                target      : localStatic,
+                context     : '/static/503.html',
+                target      : cloudInstance,
+                changeOrigin: true,
+                secure      : false
+            },
+            {
+                context     : '/static/lang_en_US/',
+                target      : localStatic, // change to cloudInstance for live value
                 pathRewrite : { '^/static/lang_en_US/views': '/views' },
                 changeOrigin: true,
                 secure      : false

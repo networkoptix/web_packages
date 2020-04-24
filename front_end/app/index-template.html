@@ -48,7 +48,11 @@
     var xhttpLanguage = new XMLHttpRequest();
     xhttpLanguage.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            window.LANG = JSON.parse(this.response);
+            try {
+                window.LANG = JSON.parse(this.response);
+            } catch (e) {
+                window.LANG = undefined;
+            }
         }
     };
     xhttpLanguage.open("GET", "/api/utils/language", false);
@@ -57,7 +61,11 @@
     var xhttpSettings = new XMLHttpRequest();
     xhttpSettings.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            window.SETTINGS = JSON.parse(this.response);
+            try {
+                window.SETTINGS = JSON.parse(this.response);
+            } catch (e) {
+                window.SETTINGS = undefined;
+            }
         }
     };
     xhttpSettings.open("GET", "/api/utils/settings", false);

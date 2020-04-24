@@ -25,7 +25,7 @@ export class NxPageService {
 
     setPageTitle(value: string, useAltTemplate?: boolean) {
         let title = value;
-        if (this.LANG && title !== this.LANG.pageTitles.default) {
+        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
             title = this.LANG.pageTitles.template.replace('{{title}}', value);
             if (useAltTemplate) {
                 title = title.replace('- ', '');
