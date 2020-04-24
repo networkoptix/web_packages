@@ -277,13 +277,14 @@ export class MotionMaskRenderer {
         currentMatrix = this.motionMask.maskMatrix.value,
         ctx = this.ctx,
         renderInstructions = this.maskRenderInstructions,
-        onlySelection = false
+        onlySelection = false,
+        shadow = false
     ) => {
         const instruction = () => {
             ctx.lineWidth = 1;
         };
         renderInstructions.push(instruction);
-        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row, ctx, renderInstructions, onlySelection)));
+        currentMatrix.forEach((_, row) => _.forEach(this.drawCell(currentMatrix, row, ctx, renderInstructions, onlySelection, shadow)));
     }
 
     /**
@@ -293,7 +294,9 @@ export class MotionMaskRenderer {
         maskMatrix: Mask, row: number,
         ctx = this.ctx,
         renderInstructions = this.maskRenderInstructions,
-        onlySelection = false) => (
+        onlySelection = false,
+        shadow = false
+    ) => (
         sensitivity: number,
         column: number
     ) => {
@@ -308,20 +311,20 @@ export class MotionMaskRenderer {
         const drawBottom =
             row !== this.rows - 1 &&
             sensitivity !== maskMatrix[row + 1][column];
-        const draw = (fromY, fromX, toY, toX, solid, sensitivity = 0) => {
+        const draw = (fromY, fromX, toY, toX, solid, sensitivity = 0, shadow = false) => {
             if (onlySelection && !solid) {
                 return;
             }
             const instruction = () => {
                 const selected = sensitivity >= 100;
-                ctx.strokeStyle = solid
+                ctx.strokeStyle = shadow ? 'black' : solid
                     ? selected
                         ? this.brandColor
                         : 'black'
                     : '#FFFFFF1A';
                 // ctx.shadowColor = 'black';
                 // ctx.shadowBlur = selected ? 1 : 0;
-                ctx.lineWidth = selected ? 2 : 1;
+                ctx.lineWidth = shadow ? 3.5 : selected ? 2 : 1;
                 ctx.beginPath();
                 ctx.moveTo(fromX, fromY);
                 ctx.lineTo(toX, toY);
@@ -329,12 +332,12 @@ export class MotionMaskRenderer {
             };
             renderInstructions.push(instruction);
         };
-        draw(bottom, right + 0.5, bottom, left + (drawBottom ? -0.5 : +0.5), drawBottom, Math.max(
-            maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity
-        ));
-        draw(top + 0.5, right, bottom + (drawRight ? +0.5 : -0.5), right, drawRight, Math.max(
-            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity
-        ));
+        draw(bottom, right + 0.5, bottom, left + 0.5, drawBottom, Math.max(
+            maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity), shadow
+        );
+        draw(top + 0.5, right, bottom + 0.5, right, drawRight, Math.max(
+            maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity), shadow
+        );
     };
 
     /**
@@ -411,11 +414,21 @@ export class MotionMaskRenderer {
 
     private updateSelection = (selectionZones) => {
         this.selectionRenderInstructions.push(() => this.selectionCtx.clearRect(0, 0, this.width, this.height));
+        // Draw the selection area shadows
         this.drawCells(
             this.motionMask.zonesToMatrix(selectionZones),
             this.selectionCtx,
             this.selectionRenderInstructions,
-            true);
+            true,
+            true
+        );
+        // Draw the selection area outline
+        this.drawCells(
+            this.motionMask.zonesToMatrix(selectionZones),
+            this.selectionCtx,
+            this.selectionRenderInstructions,
+            true
+        );
     }
 
     private renderSelection = () => this.selectionRenderInstructions.forEach(instruction => instruction());
