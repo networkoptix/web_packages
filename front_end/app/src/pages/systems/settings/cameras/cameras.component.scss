@@ -17,13 +17,14 @@
             align-items: start;
             flex-direction: column;
             flex: 1 1 0;
+            overflow: hidden;
             h2 {
                 max-width: 100%;
                 font-family: $font-family-regular;
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;
-                white-space: nowrap;
+                white-space: nowrap !important;
             }
         }
         .camera-buttons {

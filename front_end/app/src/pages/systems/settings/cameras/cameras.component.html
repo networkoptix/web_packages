@@ -33,7 +33,7 @@
                 <header>
                     <div class="header-top-bar">
                         <div class="header-title">
-                            <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" [maxLength]="45" id="editable-title"></h2>
+                            <h2 NxEditable [(content)]="cameraName" (blur)="handleBlankName()" [hasError]="cameraName" id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
