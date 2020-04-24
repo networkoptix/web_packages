@@ -9,24 +9,16 @@
         width: 100%;
         display: flex;
         align-items: center;
-        justify-content: stretch;
         margin-bottom: 16px;
         .header-title {
-            width: auto;
-            display: flex;
-            align-items: start;
-            flex-direction: column;
-            flex: 1 1 0;
-            overflow: hidden;
-            margin-left: -2px;
-            padding-left: 2px;
+            flex: 1;
+            min-width: 0;
+            text-align: left !important;
             h2 {
-                max-width: 100%;
                 font-family: $font-family-regular;
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;
-                white-space: nowrap !important;
             }
         }
         .camera-buttons {
@@ -42,7 +34,7 @@
                 }
             }
             @extend #regular13;
-            flex: 0 0 auto;
+            // flex: 0 0 auto;
             background-color: inherit;
             color: $light16;
             display: flex;
