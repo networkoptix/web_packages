@@ -443,7 +443,8 @@ class ServerManager {
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = audioSupported === '1';
-            const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120);
+            const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
+            const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
             // eslint-disable-next-line no-use-before-define
             const motionEnabled = camera.motionType !== MotionType.noMotion;
