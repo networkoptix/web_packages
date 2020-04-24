@@ -2,6 +2,7 @@
     &-initial {
         position: relative;
         cursor: pointer;
+        width: auto;
         &:hover {
             background: $additional_light2;
             border-radius: 2px;
@@ -23,11 +24,12 @@
         position: relative;
         border-radius: 2px;
         width: 100%;
-        padding-left: 4px;
+        padding: 0px;
         background: $additional_light1;
         border: 1px solid $blue1;
         background: #fffff7;
         overflow: hidden;
+        margin-left: -1px !important;
     }
 
     &-error {
