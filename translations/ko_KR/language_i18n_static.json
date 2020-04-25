@@ -136,7 +136,6 @@
             "low": "낮은"
         },
         "general": "General",
-        "maintenanceInProgress": "Maintenance is in progress",
         "searchCamPlaceholder": "검색",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",

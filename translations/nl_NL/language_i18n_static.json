@@ -136,7 +136,6 @@
             "low": "Lage"
         },
         "general": "Algemeen",
-        "maintenanceInProgress": "Onderhoud wordt uitgevoerd",
         "searchCamPlaceholder": "Zoeken",
         "systemHasNoCameras": "Geen camera's",
         "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
