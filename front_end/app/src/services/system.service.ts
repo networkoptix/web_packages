@@ -454,10 +454,10 @@ class ServerManager {
                 fps       : this.parseFps(camera.scheduleTasks),
                 motionEnabled,
                 modes     : [
-                    { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                    { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                     {
-                        name    : 'Record Motion + Low Quality',
+                        name    : 'motionLowRes',
                         id      : 'RT_MotionAndLowQuality',
                         value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
                         enabled : motionEnabled
