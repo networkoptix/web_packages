@@ -244,13 +244,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     editMode = false;
     handleBlur() {
-        console.log('no edit mode');
         this.editMode = false;
         this.handleBlankName();
     }
 
     handleFocus() {
-        console.log('edit mode');
         this.editMode = true;
     }
 
