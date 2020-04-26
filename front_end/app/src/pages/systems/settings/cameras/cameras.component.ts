@@ -453,6 +453,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recordingModes(value: IRecordingModes[]) {
+        if (!this.selectedFps) {
+            this.selectedFps = this.selectedCamera.maxFps;
+        }
+
+        if (this.selectedQuality.value === 'various') {
+            this.selectedQuality = this.streamQualities[1];
+        }
         this.recordingModesWatcher.value = value;
     }
 
@@ -480,7 +487,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set selectedFps(value) {
-        this.selectedFpsWatcher.value = value;
+        this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
     }
 
     get variousFps() {
@@ -608,7 +615,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
             this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
-            this.recordingModes = this.selectedCamera.recordingSettings.modes;
+            this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
             this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
