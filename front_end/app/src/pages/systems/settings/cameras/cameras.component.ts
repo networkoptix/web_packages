@@ -436,12 +436,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recording(value) {
-        if (value) {
-            if (this.motionEnabled) {
-                this.enableMotion();
-            } else {
-                this.disableMotion();
-            }
+        if (value === this.recording) {
+            return;
+        }
+        if (this.motionEnabled) {
+            this.enableMotion();
+        } else {
+            this.disableMotion();
         }
         this.recordingWatcher.value = value;
     }
@@ -610,7 +611,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingModes = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
-            this.recording = this.selectedCamera.recordingSettings.recording;
+            this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
