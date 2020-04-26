@@ -143,7 +143,7 @@
                             <h4 class="mb-3" translate>Quality</h4>
                             <div class="d-flex justify-content-start col-12 align-items-center mb-2">
                                 <span class="col-1 text-nowrap text-right" translate>FPS</span>
-                                <input type="number" id="fps" name="fps" min="1" step="1" max="30"
+                                <input type="number" id="fps" name="fps" min="1" step="1" [max]="selectedCamera.maxFps || 30"
                                    [placeholder]="selectedCamera.recordingSettings.fps === 'various' ? '- -' : selectedCamera.recordingSettings.fps + ' - ' + 'current' | translate"
                                    [(ngModel)]="selectedFps"
                                    class="form-control input-sm col-3"/>
