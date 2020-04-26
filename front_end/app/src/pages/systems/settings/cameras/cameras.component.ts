@@ -226,6 +226,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 this.setCamera();
                 this.toggleMotionGrid();
+                this.settingsService.system = this.system;
                 return res;
             }));
         });
@@ -263,6 +264,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const update = () => {
             this.showUnauthorized = false;
             setTimeout(this.setCamera, 1500);
+            this.settingsService.system = this.system;
         };
 
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
