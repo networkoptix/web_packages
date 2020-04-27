@@ -13,6 +13,7 @@ import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { recursiveJson }                   from '../utils/recursive-json';
+import { compareSemver }                   from '../utils/compare-semver';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -836,7 +837,9 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
+                const cloudSupportedVersion = '4.1';
+                this.cloudStorageCapable = this.moduleInfo && compareSemver(this.moduleInfo.version, cloudSupportedVersion) >= 0;
+                console.log(this.cloudStorageCapable);
                 this.mergeInfo = response.mergeInfo;
                 if (!suppressUpdate) {
                     this.systemInfo = this;
