@@ -1,7 +1,7 @@
 import {
     Component, ViewEncapsulation,
     Input, forwardRef, EventEmitter,
-    Output, SimpleChanges
+    Output, SimpleChanges, ViewChild
 }                            from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BaseDropdown }      from '../injDropdown';
@@ -41,6 +41,8 @@ export class NxGenericDropdown extends BaseDropdown {
     @Output() onSelected = new EventEmitter<string>();
     @Input() merge: boolean;
 
+    @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
+
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';
 
@@ -64,9 +66,15 @@ export class NxGenericDropdown extends BaseDropdown {
                 changes.selected.currentValue.name += `<span class="additional-help">${changes.selected.currentValue.help}</span>`;
             }
             this._selected = changes.selected.currentValue;
-
         } else if (!this.selected && !changes.selected.firstChange) {
             this._selected = { name: this.message, value: '0' };
+        }
+    }
+
+    handleKeyup(ev, item) {
+        if (ev.which === 13) {
+            this.show = false;
+            this.change(item);
         }
     }
 }

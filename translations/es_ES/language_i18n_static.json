@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
         "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- Valores diferentes -",
             "auto": "Auto",
@@ -136,7 +141,6 @@
             "low": "Bajo"
         },
         "general": "General",
-        "maintenanceInProgress": "El mantenimiento está en progreso",
         "searchCamPlaceholder": "Búsqueda",
         "systemHasNoCameras": "No hay cámaras",
         "systemHasNoCamerasMessage": "No hay cámaras accesibles para usted en el sistema. <br><br>Conecta algunas cámaras a la red local del servidor para que sean detectables o pida al administrador del sistema que cambie su nivel de acceso.",
@@ -219,7 +223,7 @@
             "differentOwners": "Sólo puede fusionar sistemas con el mismo propietario y estos propietarios de sistemas son diferentes.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Está a punto de fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.</p><p>Configuraciones y el nombre se tomarán de <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
             "mergeFailedTitle": "La fusión de sistemas falló",
             "noServerFound": "Servidor no encontrado",

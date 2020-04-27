@@ -186,6 +186,9 @@ export class MotionMaskRenderer {
                         true
                     );
                     if (action === 'select-start') {
+                        if (!shiftKey && !ctrlKey) {
+                            this.selectionZones.next([]);
+                        }
                         return mouseState$.pipe(
                             tap(({ x: mouseX, y: mouseY }) => {
                                 const x = Math.min(selectX, mouseX);
