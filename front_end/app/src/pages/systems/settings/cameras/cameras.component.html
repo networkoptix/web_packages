@@ -42,8 +42,7 @@
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <div class="edit-button" [ngClass]="{invisible: editMode}">
-                            <img src="/static/images/icons/edit.png" width="20" height="20"/>
-                            <!-- <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon> -->
+                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
                         </div>
                         <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
