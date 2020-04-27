@@ -56,6 +56,12 @@ ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL
 ...    advancedViewer=Advanced Viewer
 ...    custom=Custom
 
+&{role names}
+...    cloudaAdmin       Administrator
+...    viewer            Viewer
+...    liveViewer        Live Viewer
+...    advancedViewer    Advanced Viewer
+
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 3.0}              ${TEST EMAIL}+mergeowner3.0${BASE EMAIL DOMAIN}
@@ -88,8 +94,7 @@ ${SYSTEM NAME AUTO TESTS HEADER}      //header//li/a/span[text()="${AUTO TESTS}"
 ${SYSTEMS TILE}                       //div[contains(@class,'system-button')]
 ${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL NOT OWNER}')]
 ${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
-# Space to @class 'users ' is added due to the bug: CLOUD-4903
-${USER IN SYSTEM}                     //nx-level-3-item//span[@class='user ' and contains(text(),'%user%')]
+${USER IN SYSTEM}                     //nx-level-3-item//span[@class='user' and contains(text(),'%user%')]
 
 ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
 &{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin    custom=custom
