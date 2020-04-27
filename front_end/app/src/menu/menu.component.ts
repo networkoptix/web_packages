@@ -30,6 +30,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     selectedLevel2: string;
     selectedLevel3: string;
     isSearchable: boolean;
+    searchMode: boolean;
     transition: boolean;
     toggle: boolean;
 
@@ -49,6 +50,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
 
+        this.searchMode = false;
         this.isSearchable = false;
         this.toggle = false;
     }
@@ -60,9 +62,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                if (params.search) {
-                    this.menuQuery = params.search;
-                }
+                this.menuQuery = (params && params.search) ? params.search : '';
+                this.searchMode = (this.isSearchable && this.menuQuery !== '');
             });
     }
 

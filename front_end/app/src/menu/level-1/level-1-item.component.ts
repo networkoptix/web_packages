@@ -14,7 +14,7 @@ import { NxMenuService }            from '../menu.service';
     styleUrls   : ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
-    @Input() dropMode: boolean;
+    @Input() searchMode: boolean;
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;

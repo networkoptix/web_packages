@@ -21,7 +21,7 @@
         </div>
     </div>
 </a>
-<div class="search-results" *ngIf="dropMode">
+<div class="search-results" *ngIf="searchMode">
     <div class="search-results-label" *ngIf="_toggle">{{item.level3.length}} <span translate>result(s)</span></div>
     <div class="nav-arrow" [ngClass]="{ 'up': !_toggle }" (click)="toggleNode()">
         <span></span>

@@ -99,7 +99,7 @@
 
         &.toggle-level-3 {
             height     : 0;
-            min-height : auto;
+            min-height : auto !important;
         }
     }
 
