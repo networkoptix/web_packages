@@ -9,7 +9,7 @@ import { NxPageService }             from '../../../services/page.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxSystem, NxSystemService, ICamera } from '../../../services/system.service';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxProcessService }          from '../../../services/process.service';
@@ -331,7 +331,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(camerasNode);
             }
             if (this.system.cameras) {
-                const byParam = NxUtilsService.byParam((camera) => {
+                const byParam = NxUtilsService.byParam((camera: ICamera) => {
                     return camera.name;
                 }, NxUtilsService.sortASC);
                 this.system.cameras.sort(byParam);

@@ -1,12 +1,10 @@
-import { Inject, Injectable, LOCALE_ID }       from '@angular/core';
+import {
+    Inject, Injectable, LOCALE_ID
+}                                   from '@angular/core';
 import { NxConfigService, IConfig } from './nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
-import * as moment from 'moment';
-
-export interface Array {
-    move(arr: Array, oldIndex: number, newIndex: number): void;
-}
+import * as moment                  from 'moment';
 
 @Injectable({
     providedIn: 'root'
@@ -18,20 +16,21 @@ export class NxUtilsService {
     public static sortDESC = false;
     public momentWithLocale = moment
 
-    constructor(configService: NxConfigService,
-                private deviceService: DeviceDetectorService,
-                @Inject(LOCALE_ID) private locale: string,
-                @Inject(DOCUMENT) private document: Document
+    constructor(
+        configService: NxConfigService,
+        private deviceService: DeviceDetectorService,
+        @Inject(LOCALE_ID) private locale: string,
+        @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
         this.momentWithLocale(locale);
     }
 
-    static cleanId(id) {
+    static cleanId(id: string) {
         return id.replace(/{|}/g, '');
     }
 
-    static move(arr, oldIndex, newIndex): Array {
+    static move<T>(arr: T[], oldIndex: number, newIndex: number): T[] {
         while (oldIndex < 0) {
             oldIndex += arr.length;
         }
@@ -48,17 +47,17 @@ export class NxUtilsService {
         return arr;
     };
 
-    static isEqual(obj1, obj2) {
+    static isEqual<T>(obj1: T, obj2: T) {
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 
-    static deepCopy(obj = {}) {
+    static deepCopy<T extends {}>(obj: T): T {
         return JSON.parse(JSON.stringify(obj));
     }
 
     // Sort array of objects
-    static byParam(fn: (string) => number, order: boolean) {
-        return (a, b) => {
+    static byParam<Param extends any>(fn: (params: Param) => string | number, order: boolean) {
+        return (a: Param, b: Param) => {
             if (fn(a) < fn(b)) {
                 return (order) ? -1 : 1;
             }
@@ -69,8 +68,14 @@ export class NxUtilsService {
         };
     }
 
+    /**
+     * Looks to be unused
+     */
     public keepOriginalOrder = (a, b) => a.key;
 
+    /**
+     * Looks to be unused
+     */
     static byResolution(fn: (any) => any, order: boolean) {
         return (a, b) => {
             const x = fn(a).map(Number);
@@ -86,7 +91,7 @@ export class NxUtilsService {
         };
     }
 
-    static yesNo(bVal: boolean | undefined | null): string {
+    static yesNo<T>(bVal: T): string {
         if (bVal === undefined || bVal === null) {
             return 'Unknown';
         }
@@ -94,23 +99,23 @@ export class NxUtilsService {
         return bVal ? 'Yes' : 'No';
     }
 
-    static mod(n, m) {
+    static mod(n: number, m: number) {
         return ((n % m) + m) % m;
     }
 
+    /**
+     * Parse url string to:
+     *   href,
+     *   protocol -> match[1],
+     *   host     -> match[2],
+     *   hostname -> match[3],
+     *   port     -> match[4],
+     *   pathname -> match[5],
+     *   search   -> match[6],
+     *   hash     -> match[7]
+     *
+     * */
     static getRelativeLocation(href: string): string {
-        /*
-         * Parse url string to:
-         *   href,
-         *   protocol -> match[1],
-         *   host     -> match[2],
-         *   hostname -> match[3],
-         *   port     -> match[4],
-         *   pathname -> match[5],
-         *   search   -> match[6],
-         *   hash     -> match[7]
-         *
-         * */
         // eslint-disable-next-line no-useless-escape
         const match = href.match(/^(https?:)?\/\/(([^:\/?#]*)(?::([0-9]+))?)([\/]{0,1}[^?#]*)(\?[^#]*|)(#.*|)$/);
         if (match) {
@@ -160,13 +165,6 @@ export class NxUtilsService {
         return this.momentWithLocale().subtract(input).fromNow(!suffix);
     }
 
-    // TODO static string methods, still need to implmement pluralize and translate
-    public pluralize(qty: number, single, plural, zero = plural) {
-        return `${qty} ${qty === 0 ? zero : qty === single ? single : plural}`;
-    }
-
-    public translate = (str: string) => str // TODO: Need to figure out how to do translate pipe within function
-
     public isTablet() {
         return this.deviceService.isTablet();
     }
@@ -178,7 +176,7 @@ export class NxUtilsService {
     /**
      * Return IPv4 address or IPv6 address if none
      */
-    static formatURL(server) {
+    static formatURL<T extends any>(server: T) {
         function ipReducer(result: any, currentValue: any) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);
