@@ -4,7 +4,7 @@ import {
 }                           from 'rxjs';
 import {
     switchMap, pairwise, throttleTime, filter, distinctUntilChanged, map,
-    startWith, tap, buffer, debounceTime, withLatestFrom, takeUntil
+    startWith, tap, buffer, withLatestFrom, takeUntil, delay
 }                           from 'rxjs/operators';
 import { animationFrame }   from 'rxjs/internal/scheduler/animationFrame';
 import { Mask, Area }       from './motion-detection-types';
@@ -135,7 +135,7 @@ export class MotionMaskRenderer {
             )
         ); // For testing, will either remove or move into full UI observable later
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
-        const clickBuffer$ = clickAction$.pipe(debounceTime(0));
+        const clickBuffer$ = clickAction$.pipe(delay(0));
 
         const initialHover = mouseState$.pipe(
             tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
