@@ -4,14 +4,14 @@
     <div class="col-12 system-settings">
         <nx-block header-style="extended">
             <header>
-                <h2 class="system-name mb-2">{{system.info.name}}</h2>
+                <h2 class="system-name font-weight-bold mb-2">{{system.info.name}}</h2>
                 <span class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
-                        <span *ngIf="system.isMine" class="system-owner-bold" translate>you</span>
+                        <span *ngIf="system.isMine" class="font-weight-bold" translate>you</span>
                         <span *ngIf="!system.isMine">
-                            <span class="system-owner-bold">{{system.info.ownerFullName}}</span>
-                            <span>({{system.info.ownerAccountEmail}})</span>
+                            <span class="font-weight-bold">{{system.info.ownerFullName}}</span>
+                            <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
                         </span>
                     </span>
                 </span>
