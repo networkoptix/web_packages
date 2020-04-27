@@ -839,7 +839,6 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 const cloudSupportedVersion = '4.1';
                 this.cloudStorageCapable = this.moduleInfo && compareSemver(this.moduleInfo.version, cloudSupportedVersion) >= 0;
-                console.log(this.cloudStorageCapable);
                 this.mergeInfo = response.mergeInfo;
                 if (!suppressUpdate) {
                     this.systemInfo = this;
