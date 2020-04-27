@@ -1,9 +1,10 @@
 <label class="nx-radio" [for]="componentId" (click)="changeState()" [ngClass]="{'disabled': disabled}">
     <input type="radio"
-           [id]="componentId"
-           [value]="value"
-           [disabled]="disabled"
-           (click)="!disabled && changeState()">
+        #inputRadioFocus
+        [id]="componentId"
+        [value]="value"
+        [disabled]="disabled"
+        (click)="!disabled && changeState()">
 
     <span class="check"
           [ngClass]="state">

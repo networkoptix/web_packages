@@ -13,6 +13,7 @@ import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { recursiveJson }                   from '../utils/recursive-json';
+import { compareSemver }                   from '../utils/compare-semver';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -436,6 +437,7 @@ class ServerManager {
                 rotation,
                 overrideAr,
                 mediaCapabilities,
+                cameraAdvancedParams,
                 isAudioSupported: audioSupported,
                 ...parsedAddParams
             }: any = addParamsRaw.reduce((params, { name, value }) => (
@@ -443,6 +445,10 @@ class ServerManager {
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = audioSupported === '1';
+            const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
+            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
+            const _maxFps = primary && primary.value && primary.value.maxFps;
+            const maxFps = _maxFps || 30;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
@@ -454,17 +460,17 @@ class ServerManager {
                 fps       : this.parseFps(camera.scheduleTasks),
                 motionEnabled,
                 modes     : [
-                    { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                    { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                     {
-                        name    : 'Record Motion + Low Quality',
+                        name    : 'motionLowRes',
                         id      : 'RT_MotionAndLowQuality',
                         value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
                         enabled : motionEnabled
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
         });
         return this.cameras;
     }
@@ -831,7 +837,8 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
+                const cloudSupportedVersion = '4.1';
+                this.cloudStorageCapable = this.moduleInfo && compareSemver(this.moduleInfo.version, cloudSupportedVersion) >= 0;
                 this.mergeInfo = response.mergeInfo;
                 if (!suppressUpdate) {
                     this.systemInfo = this;
@@ -964,7 +971,7 @@ export class NxSystem extends System implements OnDestroy {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
-                .then(() => this.getServers())
+                .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch((error) => {
@@ -1136,6 +1143,7 @@ export interface ICamera {
     motionMask: string;
     motionType: MotionType;
     motionEnabled: boolean | string;
+    maxFps: number;
     mediaCapabilities: IMediaCapabilities;
     name: string;
     parentId: string;
@@ -1165,6 +1173,7 @@ export enum MotionType {
 
 export interface IMediaCapabilities {
     hasAudio: boolean;
+    streamCapabilities: any
 }
 
 export interface ITask {

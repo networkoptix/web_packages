@@ -29,7 +29,6 @@ export class NxCloudStorageComponent implements OnInit {
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
     updateEnabledUsageAndStats: Process;
-    cloudEnabled = false;
 
     // Constructor and class initialization methods
 
@@ -45,7 +44,6 @@ export class NxCloudStorageComponent implements OnInit {
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
-        this.cloudEnabled = !!this.CONFIG.cloudCapabilities.cloudStorageEnabled;
     }
 
     private setupDefaults({ configService, languageService }) {
@@ -58,6 +56,9 @@ export class NxCloudStorageComponent implements OnInit {
         this.system$.subscribe(system => {
             if (system === undefined) return;
             this.updateEnabledAndUsageStats();
+            if (system.cloudStorageCapable === undefined) {
+                system.getInfoAndPermissions();
+            }
         });
         this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
         this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.cloudStorage.id);
@@ -79,6 +80,10 @@ export class NxCloudStorageComponent implements OnInit {
 
     get isOwner() {
         return this.system$.value.isOwner;
+    }
+
+    get cloudEnabled() {
+        return this.system$.value.cloudStorageCapable;
     }
 
     public get cloudCapacity() {

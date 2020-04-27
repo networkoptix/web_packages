@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast הוא משאב אינטנסיבי ועשוי לגרום לבעיות בשרת שלך.",
         "recordingSettingsWarning": "אנא עדכן את הגדרות ההקלטה החסרות.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- ערכים שונים -",
             "auto": "אוטומטי",
@@ -136,7 +141,6 @@
             "low": "נמוך"
         },
         "general": "General",
-        "maintenanceInProgress": "Maintenance is in progress",
         "searchCamPlaceholder": "חיפוש",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
@@ -219,7 +223,7 @@
             "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
             "mergeSystemsTitle": "מזג את המערכת הנוכחית עם",
             "mergeFailedTitle": "מיזוג המערכת נכשל",
             "noServerFound": "לא נמצא שרת",

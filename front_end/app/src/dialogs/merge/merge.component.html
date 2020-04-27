@@ -21,6 +21,7 @@
         <ng-template #checkMergeBody>
             <p>{{machine.state.template.bodyTitle}}</p>
             <nx-select
+                #checkMergeDropdown
                 *ngIf="machine.state.show.systemDropdown"
                 class="mb-2"
                 id="system"
@@ -99,7 +100,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
@@ -115,7 +116,7 @@
         <p [innerHtml]="machine.state.template.urlErrorText"></p>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
@@ -130,13 +131,13 @@
         <p translate>Take system name and settings from</p>
         <div>
             <div class="radio-group">
-                <nx-radio name="firstSystem" [value]="system"
+                <nx-radio name="firstSystem" [value]="system" tabindex="0" autofocus #primaryRadio
                     [label]="system.name || system.info && system.info.name"
                     componentId="firstSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
             </div>
             <div class="radio-group">
-                <nx-radio name="secondSystem" [value]="targetSystem"
+                <nx-radio name="secondSystem" [value]="targetSystem" tabindex="0"
                     [label]="targetSystem.name || targetSystem.info && targetSystem.info.name"
                     componentId="secondSystem" [(ngModel)]="primarySystem"
                     (ngModelChange)="setSystems()"></nx-radio>
@@ -144,10 +145,10 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between">
-        <button class="btn btn-default svg-icon" (click)="goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
-        <button class="btn btn-primary svg-icon next-button" (click)="machine.transition('confirmMerge')">
+        <button class="btn btn-primary svg-icon next-button" type="button" (click)="machine.transition('confirmMerge')">
             <ng-container>{{ 'Next' | translate }}</ng-container>
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_right.svg'"
                 class="white-svg ml-2" [applyCss]="true"></svg-icon>
@@ -189,7 +190,7 @@
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
-        <button class="btn btn-default svg-icon" (click)="goBack()">
+        <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
             <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button

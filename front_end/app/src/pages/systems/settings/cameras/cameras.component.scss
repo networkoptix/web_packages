@@ -11,7 +11,7 @@
         align-items: center;
         margin-bottom: 16px;
         .header-title {
-            flex: 1;
+            flex: 0 1 auto;
             min-width: 0;
             text-align: left !important;
             h2 {
@@ -21,7 +21,17 @@
                 font-size: 24px;
             }
         }
+
+        .edit-button {
+            width: 40px;
+            flex: 1 0 auto;
+            display: flex;
+            padding-left: 8px;
+            justify-content: start;
+            align-items: center;
+        }
         .camera-buttons {
+            flex: 0 0 auto;
             &:hover {
                 color: $dark15;
                 svg-icon {

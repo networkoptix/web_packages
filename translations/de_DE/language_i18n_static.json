@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
         "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- Verschiedene Werte -",
             "auto": "Auto",
@@ -136,7 +141,6 @@
             "low": "Niedrig"
         },
         "general": "Allgemein",
-        "maintenanceInProgress": "Die Wartung ist im Gange",
         "searchCamPlaceholder": "Suche",
         "systemHasNoCameras": "Keine Kameras",
         "systemHasNoCamerasMessage": "Es gibt keine zugänglichen Kameras für Sie im System. <br><br>Schließen Sie einige Kameras an das lokale Netzwerk des Servers an, um sie erkennbar zu machen, oder bitten Sie den Systemadministrator, Ihre Zugriffsebene zu ändern.",
@@ -219,7 +223,7 @@
             "differentOwners": "Sie können nur Systeme mit demselben Besitzer zusammenführen, und diese Systembesitzer sind unterschiedlich.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen.</p><p>Einstellungen und der Name werden von <strong>{{primarySystem}}</strong> übernommen.</p>",
             "mergeSystemsTitle": "Aktuelles System zusammenführen mit",
             "mergeFailedTitle": "Systemzusammenführung fehlgeschlagen",
             "noServerFound": "Keine Server gefunden",
