@@ -45,6 +45,11 @@ export class NxMenuService implements OnDestroy {
         let filteredContent = [];
         if (filter) {
             const _filter = filter.toLowerCase();
+            // eslint-disable-next-line no-useless-escape
+            let pattern = _filter.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+            pattern = pattern.split(',').filter((t) => {
+                return t.length > 0;
+            }).join('|');
             this.content.forEach((node) => {
                 if (node.level3 && node.level3.length) {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
@@ -56,7 +61,7 @@ export class NxMenuService implements OnDestroy {
                             }
                             const filteredItem = { ...item };
                             filteredItem.query = { search: _filter };
-                            haveNode.level3.push(NxMenuService.highlighted(filteredItem, _filter));
+                            haveNode.level3.push(NxMenuService.highlighted(filteredItem, pattern));
                         }
                     });
                     if (haveNode && haveNode.level3 && haveNode.level3.length) {
@@ -79,13 +84,7 @@ export class NxMenuService implements OnDestroy {
         });
     }
 
-    private static highlighted(item, search) {
-        // eslint-disable-next-line no-useless-escape
-        let pattern = search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-        pattern = pattern.split(',').filter((t) => {
-            return t.length > 0;
-        }).join('|');
-
+    private static highlighted(item, pattern) {
         const regex = new RegExp(pattern, 'gi');
         item.label = item.label.replace(regex, (match) => `<span class="highlighted">${match}</span>`);
 
