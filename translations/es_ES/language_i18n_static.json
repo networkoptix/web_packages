@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
         "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- Valores diferentes -",
             "auto": "Auto",

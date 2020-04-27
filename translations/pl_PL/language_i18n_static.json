@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast wymaga dużej ilości zasobów i może powodować problemy na serwerze.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "– Different Values –",
             "auto": "Auto",

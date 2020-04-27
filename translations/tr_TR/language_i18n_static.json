@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast kaynak kullanımını arttırabilir ve sunucunuzda sorunlara neden olabilir.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "– Different Values –",
             "auto": "Oto",

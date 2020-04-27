@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "– Olika värden –",
             "auto": "Auto",

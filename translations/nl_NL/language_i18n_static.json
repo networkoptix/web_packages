@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
         "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- Verschillende waarden -",
             "auto": "Automatisch",

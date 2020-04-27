@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "– Different Values –",
             "auto": "tự động",
