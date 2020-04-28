@@ -4,7 +4,7 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
 import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { ICamera } from './system.service';
+import { ICamera, NxSystemUser, NxSystem } from './system.service';
 import { IParams } from '../components/search/search.component';
 
 interface User {
@@ -52,7 +52,7 @@ export class NxSystemAPI {
      *
      * TODO (v 3.2): Support websocket connection to server as well
      * */
-    private authGet: string;
+    authGet: string;
     private authPost: string;
     private authPlay: string;
 
@@ -77,7 +77,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: any) => any
+        unauthorizedCallback: (params: IParams) => any
     ) {
         this.http = http;
         this.CONFIG = configService;
@@ -94,7 +94,7 @@ export class NxSystemAPI {
         return urlBase;
     }
 
-    private generateGetUrl(url: string, data: any, absUrl?: boolean) {
+    private generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
         let params = new HttpParams();
         Object.keys(data).forEach((key: string) => {
             params = params.set(key, data[key]);
@@ -178,7 +178,7 @@ export class NxSystemAPI {
         this.urlBase = this.getUrlBase();
     }
 
-    private cleanId(id: string) {
+    cleanId(id: string) {
         return id.replace('{', '').replace('}', '');
     }
 
@@ -228,7 +228,7 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
-    private getRolePermissions(roleId) {
+    private getRolePermissions(roleId: string) {
         return this.get<AddResponseTypeHere>('/ec2/getUserRoles', { id: roleId });
     }
 
@@ -245,7 +245,7 @@ export class NxSystemAPI {
         });
     }
 
-    setAuthKeys(authGet, authPost, authPlay) {
+    setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;
@@ -262,24 +262,24 @@ export class NxSystemAPI {
         return this.get<AddResponseTypeHere>('/api/synchronizedTime');
     }
 
-    private updateOrGetSettings(updateParams) {
+    updateOrGetSettings(updateParams: IParams) {
         return this.get<AddResponseTypeHere>('/api/systemSettings', updateParams);
     }
 
-    private getStorages() {
+    getStorages() {
         return this.get<AddResponseTypeHere>('/api/storageSpace');
     }
 
-    private updateStorages(updateParams) {
+    updateStorages(updateParams: IParams) {
         return this.post<AddResponseTypeHere>('/ec2/saveStorages', updateParams);
     }
 
-    changePort(port) {
+    changePort(port: number) {
         return this.post<AddResponseTypeHere>('/api/configure', { port }).toPromise()
             .catch(err => Promise.reject(err));
     }
 
-    renameServer(serverId, serverName) {
+    renameServer(serverId: string, serverName: string) {
         return this.post<AddResponseTypeHere>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
@@ -292,19 +292,19 @@ export class NxSystemAPI {
         return this.get<AddResponseTypeHere>('/api/moduleInformation');
     }
 
-    detachFromSystem(currentPassword) {
+    detachFromSystem(currentPassword: string) {
         return this.post<AddResponseTypeHere>('/api/detachFromSystem', { currentPassword });
     }
 
-    removeMediaserver(serverId) {
+    removeMediaserver(serverId: string) {
         return this.post<AddResponseTypeHere>('/ec2/removeResource', { id: serverId });
     }
 
-    restoreFactorySettings(currentPassword) {
+    restoreFactorySettings(currentPassword: string) {
         return this.post<AddResponseTypeHere>('/api/restoreState', { currentPassword });
     }
 
-    logLevel(logId?, name?, value?) {
+    logLevel(logId?: string, name?: string, value?: string) {
         const params: any = { id: logId, name, value };
         Object.keys(params).forEach((key) => {
             if (params[key] === undefined) {
@@ -321,19 +321,19 @@ export class NxSystemAPI {
         return this.get<AddResponseTypeHere>('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
     }
 
-    saveUser(user) {
+    saveUser(user: NxSystemUser) {
         return this.post<AddResponseTypeHere>('/ec2/saveUser', this.cleanUserObject(user));
     }
 
-    deleteUser(userId) {
+    deleteUser(userId: string) {
         return this.post<AddResponseTypeHere>('/ec2/removeUser', { id: userId });
     }
 
-    isEmptyId(id) {
+    isEmptyId(id: string) {
         return !id || id === this.emptyId;
     }
 
-    cleanUserObject(user) { // Remove unnecessary fields from the object
+    cleanUserObject(user: NxSystemUser): NxSystemUser { // Remove unnecessary fields from the object
         const cleanedUser: any = {};
         if (user.id) {
             cleanedUser.id = user.id;
@@ -352,7 +352,7 @@ export class NxSystemAPI {
         return cleanedUser;
     }
 
-    userObject(fullName, email): User {
+    userObject(fullName: string, email: string): User {
         return {
             canBeEdited  : true,
             canBeDeleted : true,
@@ -370,7 +370,7 @@ export class NxSystemAPI {
     /* End of Working with users */
 
     /* Cameras and Servers */
-    getCameras(id?) {
+    getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
         return this.get<AddResponseTypeHere>('/ec2/getCamerasEx', params);
     }
@@ -390,7 +390,7 @@ export class NxSystemAPI {
         return this.post<AddResponseTypeHere>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
-    getMediaServers(id?, url?) {
+    getMediaServers(id?: string, url?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
         if (url) {
             return this.http.get<AddResponseTypeHere>(`${url}/ec2/getMediaServersEx`, { params });
@@ -410,7 +410,7 @@ export class NxSystemAPI {
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time?, width?, height?, rotate?) {
+    previewUrl(cameraId: string, time?: number, width?: number, height?: number, rotate?: number) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
@@ -441,7 +441,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(endpoint, data);
     }
 
-    hlsUrl(cameraId, position, resolution) {
+    hlsUrl(cameraId: string, position: string, resolution: string) {
         const data: any = {
             auth: this.authGet
         };
@@ -452,7 +452,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(url, data, true);
     }
 
-    webmUrl(cameraId, position, resolution, force) {
+    webmUrl(cameraId: string, position: string, resolution: string, force: boolean) {
         const data: any = {
             auth: this.authGet,
             resolution
@@ -467,7 +467,7 @@ export class NxSystemAPI {
     /* End of formatting urls */
 
     /* Working with archive */
-    getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType) {
+    getRecords(cameraId: string, startTime: number, endTime: number, detail: number, limit: number, label: string, periodsType: number) {
         const date = new Date();
         if (typeof (startTime) === 'undefined') {
             startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
@@ -498,7 +498,7 @@ export class NxSystemAPI {
 
     /* End of Working with archive */
 
-    setCameraPath(cameraId) {
+    setCameraPath(cameraId: string) {
         let systemLink = '';
         const route    = this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
 
@@ -537,7 +537,7 @@ export class NxSystemAPI {
         return this.get<AddResponseTypeHere>('/api/discoveredPeers', { showAddresses: true });
     }
 
-    mergeSystems(url, dryRun, currentPassword?) {
+    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
         const data = {
             url,
             currentPassword,
@@ -551,7 +551,7 @@ export class NxSystemAPI {
         return this.get<AddResponseTypeHere>('/ec2/mergeStatus');
     }
 
-    checkLocalAdminPassword(password) {
+    checkLocalAdminPassword(password: string) {
         const localPasswordUrl = this.urlBase.replace('/web', '');
         const httpOptions = {
             headers: new HttpHeaders({
@@ -567,14 +567,13 @@ export class NxSystemAPI {
 })
 export class NxSystemAPIService {
     CONFIG: IConfig;
-    location: any;
-    systemConnections: { [key: string]: NxSystemAPI };
+    systemConnections: { [serverId: string]: NxSystemAPI };
 
-    constructor(configService: NxConfigService,
-        location: Location,
-                private http: HttpClient
+    constructor(
+        configService: NxConfigService,
+        private location: Location,
+        private http: HttpClient
     ) {
-        this.location = location;
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
     }
@@ -582,7 +581,7 @@ export class NxSystemAPIService {
     createConnection(user: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (any) => any
+        unauthorizedCallback: (params?: any) => any
     ) {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {

@@ -1,10 +1,8 @@
 import { Injectable }               from '@angular/core';
 import { HttpClient }               from '@angular/common/http';
-import { Observable }               from 'rxjs';
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { AddResponseTypeHere }      from './system-api.service';
-import { NxSystem } from './system.service';
 import { NxSystemWithUserInfo } from './systems.service';
 
 @Injectable({

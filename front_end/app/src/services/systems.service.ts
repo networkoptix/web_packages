@@ -108,7 +108,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId: string, useCache = true): Observable<NxSystem> {
+    getSystem(systemId: string, useCache = true): Observable<NxSystemWithUserInfo> {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -201,5 +201,6 @@ export interface NxSystemWithUserInfo extends NxSystem {
     name: string;
     isMine: boolean;
     capabilities: any;
-
+    state: string;
+    stateOfHealth: string;
 }
