@@ -16,6 +16,7 @@ import { NxUriService }                                   from './uri.service';
 import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
 import { NxPollService }                                  from './poll.service';
 import { NxUtilsService }                                 from './utils.service';
+import { IParams } from '../components/search/search.component';
 
 export interface Account {
     email: string;
@@ -40,10 +41,10 @@ export class NxAccountService implements OnDestroy {
     private location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
     private loggingOut: boolean;
-    private requestingLogin: Promise<any>;
+    private requestingLogin: Promise<{data: {account: Account, resultCode: string}}>;
     private loginDialogActive: boolean;
 
-    private accountPoll: Observable<any>;
+    private accountPoll: Observable<Account | string>;
     private accountPollSubscription: Subscription;
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
@@ -95,13 +96,13 @@ export class NxAccountService implements OnDestroy {
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.uriService.queryParamsSubject.pipe(
             distinctUntilChanged()
-        ).subscribe((params: any) => {
+        ).subscribe((params: IParams) => {
             if (params.auth) {
                 this.handleAuthKeyLogin(params.auth);
             }
         });
 
-        this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
+        this.accountPoll = this.pollService.createPoll<Account>(this.cloudApi.account(), this.CONFIG.updateInterval);
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         setTimeout(() => {
@@ -133,7 +134,8 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.email = email;
     }
 
-    authKey() {
+    // Need to refine this, maybe will be resolved by defining cloudApi.authKey
+    authKey(): any {
         return this.cloudApi
             .authKey()
             .then((result: any) => {
@@ -145,7 +147,7 @@ export class NxAccountService implements OnDestroy {
         return this.cloudApi
             .visitedKey(key)
             .then((result: any) => {
-                return result.visited;
+                return !!result.visited;
             });
     }
 
@@ -153,7 +155,7 @@ export class NxAccountService implements OnDestroy {
         return this.cloudApi
             .checkCode(code)
             .then((result: any) => {
-                return result.emailExists;
+                return !!result.emailExists;
             });
     }
 
@@ -162,6 +164,7 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
+    // Need to refine return type here
     get(forceUpdate = false) {
         if (this.requestingLogin) {
             // login is requesting, so we wait
@@ -252,9 +255,9 @@ export class NxAccountService implements OnDestroy {
     login(email: string, password: string, remember: boolean) {
         this.sessionService.email = email;
 
-        this.requestingLogin = this.cloudApi
+        this.requestingLogin = <Promise<{data: {account: Account, resultCode: string}}>> this.cloudApi
             .login(email, password, remember)
-            .then((result: any) => {
+            .then((result) => {
                 if (!this.cloudApi.checkResponseHasError(result)) {
                     if (this.sessionService.loginState) {
                         // If the user that logged in matches the current session there's no need to show
@@ -300,7 +303,7 @@ export class NxAccountService implements OnDestroy {
         return atob(authKey).split(':');
     }
 
-    private loginWithAuthKey(authKey: string) {
+    private loginWithAuthKey(authKey: string): Promise<boolean> {
         const auth         = atob(authKey).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];
@@ -337,6 +340,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
+    // TODO: Need to refine return value
     logoutAuthorised() {
         return this.get()
             .then((account: Account) => {
@@ -444,7 +448,7 @@ export class NxAccountService implements OnDestroy {
                 this.logoutHelper(false);
                 return of('Error');
             })
-        ).subscribe((account) => {
+        ).subscribe((account: Account) => {
             this.account = account;
         });
     }
