@@ -5,7 +5,7 @@ import { NxRibbonService }           from '../../components/ribbon/ribbon.servic
 import { NxProcessService }          from '../../services/process.service';
 import { NxToastService }            from '../toast.service';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { timer }                     from 'rxjs';
+import { timer, of }                 from 'rxjs';
 import {
     delayWhen, retryWhen, map,
     tap, mergeMap
@@ -20,8 +20,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 export class RestartServerModalContent {
     @Input() system: any;
     @Input() serverName: string;
-    @Input() serverId;
-    @Input() closable;
+    @Input() serverId: string;
+    @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -51,6 +51,7 @@ export class RestartServerModalContent {
             }, { ignoreError: true })
             .then(
                 () => {
+                    this.system.currentBusyServerId = this.serverId;
                     this.close(this.CONFIG.servers.status.restarting);
                     let isFirstTime = true;
                     const serverSubscription = this.system.getServers()
@@ -85,6 +86,7 @@ export class RestartServerModalContent {
                                         })
                                         .catch(err => { throw Error(err); });
                                 }
+                                return of('');
                             }),
                             retryWhen(errors => {
                                 return errors.pipe(
