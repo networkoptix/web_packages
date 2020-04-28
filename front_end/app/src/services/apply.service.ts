@@ -23,9 +23,9 @@ import { Process, NxProcessService } from './process.service';
  * someVar.value = {data: 'test'};
  * @class
  */
-export class Watcher<T> {
+export class Watcher<T extends any> {
     originalValue: T;
-    valueSubject = new BehaviorSubject<any>(undefined);
+    valueSubject = new BehaviorSubject<T>(undefined);
 
     constructor(value?: T) {
         this.originalValue = value;
@@ -54,6 +54,9 @@ export class Watcher<T> {
     }
 }
 
+/**
+ * TODO: Unused, could probably remove
+ */
 export class ObjWatcher<Object> {
     originalValue: any = {};
     valueSubject = new BehaviorSubject({});
@@ -106,7 +109,7 @@ export class NxApplyService {
     applyComponentRef: ComponentRef<NxApplyComponent>;
     applyFunction: Process;
     component: ViewContainerRef;
-    discardFunction: () => void;
+    discardFunction: <T>(T) => void;
     lockedSubject = new BehaviorSubject<boolean>(undefined);
     popupActive = false;
     form: NgForm;
@@ -168,8 +171,8 @@ export class NxApplyService {
      */
     initPageWatcher(
         component: ViewContainerRef,
-        saveFunction: any,
-        discardFunction: () => void,
+        saveFunction: Process,
+        discardFunction: <T>(T) => void,
         watchers: Watcher<any>[],
         form?: NgForm
     ) {
@@ -237,7 +240,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
     }
 
-    private setDiscardFunction(func: any) {
+    private setDiscardFunction(func: <T>(T) => void) {
         this.discardFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
@@ -285,26 +288,4 @@ export class NxApplyService {
             this.touched();
         });
     }
-
-    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
-        this.addWatchers([...this.watchers, ...watchers]);
-        this.extendApplyFunction(applyFunction);
-        this.extendDiscardFunction(discardFunction);
-    }
-
-    private extendApplyFunction(applyFunction: Process) {
-        const prevApply: any = this.applyFunction;
-        this.setSaveFunction(this.processService.createProcess(() => {
-            applyFunction.run();
-            return prevApply.run();
-        }));
-    }
-
-    private extendDiscardFunction(discardFunction: () => void) {
-        const prevDiscard = this.discardFunction;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
-            prevDiscard();
-            discardFunction();
-        };
-    };
 }
