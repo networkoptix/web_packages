@@ -6,6 +6,7 @@ import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera, NxSystemUser, NxSystem } from './system.service';
 import { IParams } from '../components/search/search.component';
+import * as t from './system-api.types';
 
 interface User {
     canBeEdited: boolean;
@@ -229,7 +230,7 @@ export class NxSystemAPI {
     }
 
     private getRolePermissions(roleId: string) {
-        return this.get<AddResponseTypeHere>('/ec2/getUserRoles', { id: roleId });
+        return this.get<t.GetUserRoles>('/ec2/getUserRoles', { id: roleId });
     }
 
     // TODO: This doesn't look like it's being used
@@ -259,15 +260,15 @@ export class NxSystemAPI {
     }
 
     private getSystemTime() {
-        return this.get<AddResponseTypeHere>('/api/synchronizedTime');
+        return this.get<t.SystemTime>('/api/synchronizedTime');
     }
 
-    updateOrGetSettings(updateParams: IParams) {
-        return this.get<AddResponseTypeHere>('/api/systemSettings', updateParams);
+    private updateOrGetSettings(updateParams: Partial<t.Settings>) {
+        return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
-    getStorages() {
-        return this.get<AddResponseTypeHere>('/api/storageSpace');
+    private getStorages() {
+        return this.get<t.GetStorages[]>('/api/storageSpace');
     }
 
     updateStorages(updateParams: IParams) {
@@ -275,43 +276,44 @@ export class NxSystemAPI {
     }
 
     changePort(port: number) {
-        return this.post<AddResponseTypeHere>('/api/configure', { port }).toPromise()
+        return this.post<t.ApiConfigure>('/api/configure', { port }).toPromise()
             .catch(err => Promise.reject(err));
     }
 
     renameServer(serverId: string, serverName: string) {
-        return this.post<AddResponseTypeHere>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
+        return this.post<undefined>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
     restartServer() {
-        return this.post<AddResponseTypeHere>('/api/restart').toPromise()
+        return this.post<t.RestartServer>('/api/restart').toPromise()
             .catch(err => Promise.reject(err));
     }
 
     getModuleInfo() {
-        return this.get<AddResponseTypeHere>('/api/moduleInformation');
+        return this.get<t.ModuleInformation>('/api/moduleInformation');
     }
 
     detachFromSystem(currentPassword: string) {
-        return this.post<AddResponseTypeHere>('/api/detachFromSystem', { currentPassword });
+        return this.post<t.NormalResponse>('/api/detachFromSystem', { currentPassword });
     }
 
+    // will put in response type when we start using
     removeMediaserver(serverId: string) {
-        return this.post<AddResponseTypeHere>('/ec2/removeResource', { id: serverId });
+        return this.post('/ec2/removeResource', { id: serverId });
     }
 
     restoreFactorySettings(currentPassword: string) {
-        return this.post<AddResponseTypeHere>('/api/restoreState', { currentPassword });
+        return this.post('/api/restoreState', { currentPassword });
     }
 
     logLevel(logId?: string, name?: string, value?: string) {
-        const params: any = { id: logId, name, value };
+        const params: { id: string, name: string, value: string } = { id: logId, name, value };
         Object.keys(params).forEach((key) => {
             if (params[key] === undefined) {
                 delete params[key];
             }
         });
-        return this.get<AddResponseTypeHere>('/api/logLevel', params);
+        return this.get<t.LogLevel>('/api/logLevel', params);
     }
 
     /* End of Server settings */
