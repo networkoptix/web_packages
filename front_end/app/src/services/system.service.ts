@@ -1032,7 +1032,8 @@ export class NxSystem extends System implements OnDestroy {
 
     restartServer(serverId) {
         this.currentServerNotBusy = false;
-        return this.serverManager.restartServer(serverId);
+        return this.serverManager.restartServer(serverId)
+            .catch(err => Promise.reject(err));
     }
 
     detachFromSystem(serverId, currentPassword) {

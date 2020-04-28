@@ -47,69 +47,76 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
-                return this.system.restartServer(this.serverId)
-                    .catch(() => {
-                        this.system.currentServerNotBusy = true;
-                        this.toastService.show(this.LANG.servers.restartFailed, options);
-                    });
-            })
-            .then(() => {
-                this.close(this.CONFIG.servers.status.restarting);
-                let isFirstTime = true;
-                const serverSubscription = this.system.getServers()
-                    .pipe(
-                        map((res: any) => {
-                            if (isFirstTime) {
-                                isFirstTime = false;
-                                throw Error('retry once');
-                            }
-                            if (res) {
-                                const serverObj: { id?: string } = {};
-                                Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
-                                    serverObj[server[1].id] = server[1].status;
-                                });
-                                if (!serverObj[this.serverId]) {
-                                    throw Error('server not found');
+                return this.system.restartServer(this.serverId);
+            }, { ignoreError: true })
+            .then(
+                () => {
+                    this.close(this.CONFIG.servers.status.restarting);
+                    let isFirstTime = true;
+                    const serverSubscription = this.system.getServers()
+                        .pipe(
+                            map((res: any) => {
+                                if (isFirstTime) {
+                                    isFirstTime = false;
+                                    throw Error('retry once');
                                 }
-                                if (serverObj[this.serverId] !== 'Online') {
-                                    throw Error('still restarting');
-                                }
-                                return serverObj;
-                            }
-                        }),
-                        mergeMap(serverObj => {
-                            if (Object.keys(serverObj).length === 1) {
-                                return this.system.getInfo(true, false)
-                                    .then(system => {
-                                        if (!system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
-                                            throw Error('system is offline still');
-                                        }
-                                    })
-                                    .catch(err => { throw Error(err); });
-                            }
-                        }),
-                        retryWhen(errors => {
-                            return errors.pipe(
-                                tap(val => {
-                                    if ([502, 503].includes(val.status) && isFirstTime) {
-                                        isFirstTime = false;
-                                        this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                if (res) {
+                                    const serverObj: { id?: string } = {};
+                                    Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
+                                        serverObj[server[1].id] = server[1].status;
+                                    });
+                                    if (!serverObj[this.serverId]) {
+                                        throw Error('server not found');
                                     }
-                                }),
-                                delayWhen(() => timer(4000))
-                            );
-                        })
-                    )
-                    .subscribe(() => {
-                        this.ribbonService.hide();
-                        this.system.currentServerNotBusy = true;
-                        this.system.systemInfo = this.system;
-                        options.classname = this.CONFIG.toast.success;
-                        this.toastService.show(this.LANG.servers.restartSuccessful, options);
-                        serverSubscription.unsubscribe();
-                    });
-            });
+                                    if (serverObj[this.serverId] !== 'Online') {
+                                        throw Error('still restarting');
+                                    }
+                                    return serverObj;
+                                }
+                            }),
+                            mergeMap(serverObj => {
+                                if (Object.keys(serverObj).length === 1) {
+                                    return this.system.getInfo(true, false)
+                                        .then(system => {
+                                            if (!system.isOnline) {
+                                                this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                                throw Error('system is offline still');
+                                            }
+                                        })
+                                        .catch(err => { throw Error(err); });
+                                }
+                            }),
+                            retryWhen(errors => {
+                                return errors.pipe(
+                                    tap(val => {
+                                        if ([502, 503].includes(val.status) && isFirstTime) {
+                                            isFirstTime = false;
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                        }
+                                    }),
+                                    delayWhen(() => timer(4000))
+                                );
+                            })
+                        )
+                        .subscribe(() => {
+                            this.ribbonService.hide();
+                            this.system.currentServerNotBusy = true;
+                            this.system.systemInfo = this.system;
+                            options.classname = this.CONFIG.toast.success;
+                            this.toastService.show(this.LANG.servers.restartSuccessful, options);
+                            serverSubscription.unsubscribe();
+                        });
+                },
+                err => {
+                    this.system.currentServerNotBusy = true;
+                    let message = this.LANG.servers.restartFailed;
+                    if (err && (err.name === 'TimeoutError' || err.status === 503)) {
+                        message = this.LANG.servers.serverOffline;
+                        this.close(this.CONFIG.servers.status.offline);
+                    }
+                    this.toastService.show(message, options);
+                }
+            );
     }
 
     close(msg) {

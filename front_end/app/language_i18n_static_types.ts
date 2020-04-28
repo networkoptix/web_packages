@@ -631,6 +631,7 @@ export interface Servers {
     resetSuccessful:         string;
     restartFailed:           string;
     restartSuccessful:       string;
+    serverOffline:           string;
     servers:                 string;
     status:                  ServersStatus;
     successRename:           string;
@@ -1434,6 +1435,7 @@ const typeMap: any = {
         { json: "resetSuccessful", js: "resetSuccessful", typ: "" },
         { json: "restartFailed", js: "restartFailed", typ: "" },
         { json: "restartSuccessful", js: "restartSuccessful", typ: "" },
+        { json: "serverOffline", js: "serverOffline", typ: "" },
         { json: "servers", js: "servers", typ: "" },
         { json: "status", js: "status", typ: r("ServersStatus") },
         { json: "successRename", js: "successRename", typ: "" },
