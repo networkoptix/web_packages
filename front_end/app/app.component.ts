@@ -77,7 +77,7 @@ export class AppComponent {
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
             // @ts-ignore
-        } else if (window.LANG !== undefined && window.LANG !== undefined) {
+        } else if (window.LANG !== undefined && window.SETTINGS !== undefined) {
             // @ts-ignore
             languageService.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
             this.LANG = languageService.getTranslations();
