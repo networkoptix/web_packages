@@ -4,10 +4,14 @@ import { NxToastService }                      from '../dialogs/toast.service';
 import { NxCloudApiService }                   from './nx-cloud-api';
 import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
-import { LanguageI18NStaticTypes, ErrorCodes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+
+interface IErrorCodes {
+    [key: string]: string | Function
+}
 
 interface ProcessSettings {
-    errorCodes: Partial<ErrorCodes> | string;
+    errorCodes: IErrorCodes;
     errorMessage?: string;
     errorPrefix: string;
     holdAlerts: boolean;
@@ -18,30 +22,30 @@ interface ProcessSettings {
 }
 
 export class Process {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-    cloudApiService: NxCloudApiService;
-    sessionService: NxSessionService;
-    toastService: NxToastService;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
+    private cloudApiService: NxCloudApiService;
+    private sessionService: NxSessionService;
+    private toastService: NxToastService;
 
-    caller: () => void;
-    settings: ProcessSettings;
-    deferredPromise: {
+    private caller: (...args: any) => void;
+    private settings: ProcessSettings;
+    private deferredPromise: {
         promise: Promise<unknown>;
-        reject: any;
-        resolve: any;
+        reject: (...args: any) => void;
+        resolve: (...args: any) => void;
     };
 
-    /* process info */
-    success: boolean;
-    error: boolean;
-    processing: boolean;
-    finished: boolean;
-    errorData: any;
+    /* TODO: Never read, can probably be removed */
+    private success: boolean;
+    private error: boolean;
+    private processing: boolean;
+    private finished: boolean;
+    private errorData: any;
 
     /* process handlers */
-    successHandler: (any) => any;
-    errorHandler: (any) => any;
+    private successHandler: (...args: any) => void;
+    private errorHandler: (...args: any) => void;
 
     constructor(
         configService: NxConfigService,
@@ -49,8 +53,8 @@ export class Process {
         sessionService: NxSessionService,
         cloudApiService: NxCloudApiService,
         toastService: NxToastService,
-        caller,
-        settings
+        caller: (...args: any) => void,
+        settings: Partial<ProcessSettings>
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -61,7 +65,7 @@ export class Process {
         return this;
     }
 
-    init(caller, settings) {
+    init(caller: (...args: any) => void, settings: Partial<ProcessSettings>) {
         /*
          settings: {
          errorCodes,
@@ -91,6 +95,7 @@ export class Process {
     }
 
     run() {
+        // TODO: These don't seem to be used anywhere, could probably remove setting this values
         this.processing = true;
         this.error = false;
         this.success = false;
@@ -135,10 +140,10 @@ export class Process {
         });
     }
 
-    then(successHandler: (any) => any, errorHandler?: (any) => any) {
+    then(successHandler: (...args: any) => void, errorHandler?: (...args: any) => void) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler || (() => {
-        });
+        }) as (...args: any) => void;
         return this;
     }
 
@@ -221,7 +226,7 @@ export class NxProcessService {
         private toastService: NxToastService
     ) { }
 
-    createProcess(caller, settings?) {
+    createProcess(caller: (...args: any) => void, settings?: Partial<ProcessSettings>) {
         return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }

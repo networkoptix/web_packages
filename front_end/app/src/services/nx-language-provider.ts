@@ -8,7 +8,6 @@ import { BehaviorSubject }         from 'rxjs';
 })
 export class NxLanguageProviderService {
     LANG: LanguageI18NStaticTypes;
-    translations: any;
 
     translateSubject = new BehaviorSubject({});
 

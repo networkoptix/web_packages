@@ -9,7 +9,7 @@ export class NxHeaderService {
     CONFIG: IConfig;
 
     // Only to communicate with AJS
-    systemIdSubject = new BehaviorSubject(undefined);
+    systemIdSubject = new BehaviorSubject<string>(undefined);
 
     constructor(
         configService: NxConfigService

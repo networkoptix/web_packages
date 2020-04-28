@@ -35,10 +35,10 @@ export class NxPageService {
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.default });
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
     }
 }
