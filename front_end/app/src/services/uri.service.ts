@@ -48,13 +48,13 @@ export class NxUriService {
 
         replace = replace || false;
         // changes the route without moving from the current view
-        return new Promise((resolve, reject) => {
+        return new Promise<boolean>((resolve, reject) => {
             setTimeout(() => {
                 return this.router.navigate([navigateTo], {
                     queryParams,
-                    relativeTo         : this.route,
-                    replaceUrl         : replace,
-                    queryParamsHandling: 'merge'
+                    relativeTo          : this.route,
+                    replaceUrl          : replace,
+                    queryParamsHandling : 'merge'
                 }).then(success => {
                     resolve(success);
                 }, error => {
@@ -68,8 +68,8 @@ export class NxUriService {
         this.router
             .navigate([navigateTo], {
                 queryParams,
-                relativeTo: this.route,
-                replaceUrl: false
+                relativeTo : this.route,
+                replaceUrl : false
             })
             .catch(error => { console.error(error); });
     }
