@@ -5,6 +5,7 @@ import { from, of, throwError, Observable }    from 'rxjs';
 import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera } from './system.service';
+import { IParams } from '../components/search/search.component';
 
 interface User {
     canBeEdited: boolean;
@@ -20,7 +21,7 @@ interface User {
 }
 
 // Delete once response types have been declared and added.
-export type AddResponseTypeHere = any;
+export interface AddResponseTypeHere extends IParams {};
 
 export class NxSystemAPI {
     /*

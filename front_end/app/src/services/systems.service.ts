@@ -67,7 +67,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    forceUpdateSystems(userEmail?: string): Observable<NxSystem> {
+    forceUpdateSystems(userEmail?: string): Observable<NxSystemWithUserInfo[]> {
         if (userEmail) {
             this.currentUser = userEmail;
         }
@@ -78,7 +78,7 @@ export class NxSystemsService implements OnDestroy {
         }));
     }
 
-    forceUpdateSystemsAsPromise(userEmail?: string): Promise<NxSystem> {
+    forceUpdateSystemsAsPromise(userEmail?: string): Promise<NxSystemWithUserInfo[]> {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
