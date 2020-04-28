@@ -21,3 +21,6 @@ Verify Recording Options are Visible
     ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}
     ...    ${FPS INPUT}
     ...    ${QUALITY DROPDOWN}
+
+Enable Recording
+    Set Checkbox Value    ${RECORING CHECK BOX}//input    true
