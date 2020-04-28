@@ -23,10 +23,10 @@ export class NxSystemsService implements OnDestroy {
     currentUser: string;
     mergingSystems: Set<string>;
     // TODO: Having trouble creating type for systems and systemPoll
-    systems: any;
-    systemsPoll: Observable<NxSystem[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
+    systems: NxSystemWithUserInfo[];
+    systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
     systemsSubject = new ReplaySubject(0);
-    systemsMerging: { primary: any, secondary: any } = {
+    systemsMerging: { primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo } = {
         primary   : undefined,
         secondary : undefined
     };
@@ -47,7 +47,7 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
-    processMerge<T extends {primary: any, secondary: any}>(mergeInfo: T) {
+    processMerge<T extends {primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo}>(mergeInfo: T) {
         this.systemsMerging.primary = mergeInfo.primary;
         this.systemsMerging.secondary = mergeInfo.secondary;
     }
@@ -137,7 +137,7 @@ export class NxSystemsService implements OnDestroy {
         }
         this.activeSubscription = this.systemsPoll
             .pipe(
-                tap((systems: NxSystem[]) => this.processSystems(systems)),
+                tap((systems: NxSystemWithUserInfo[]) => this.processSystems(systems)),
                 distinctUntilChanged((a, b) => NxUtilsService.isEqual(a, b))
             )
             .subscribe(() => this.systemsSubject.next(this.systems));
@@ -155,7 +155,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    private processSystems(systems: NxSystem[]) {
+    private processSystems(systems: NxSystemWithUserInfo[]) {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
@@ -182,7 +182,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    private sortSystems(systems: NxSystem[], currentUserEmail: string): NxSystem[] {
+    private sortSystems(systems: NxSystemWithUserInfo[], currentUserEmail: string): NxSystemWithUserInfo[] {
         // Alphabet sorting
         const preSort = systems.sort((systemA, systemB) => {
             const systemAName = this.getSystemOwnerName(systemA, currentUserEmail, true);
@@ -195,4 +195,12 @@ export class NxSystemsService implements OnDestroy {
             return -systemA.usageFrequency < -systemB.usageFrequency ? -1 : 1;
         });
     }
+}
+
+export interface NxSystemWithUserInfo extends NxSystem {
+    ownerAccountEmail: string;
+    name: string;
+    isMine: boolean;
+    capabilities: any;
+
 }
