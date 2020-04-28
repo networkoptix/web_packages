@@ -161,6 +161,9 @@ export class LoginModalContent implements OnInit {
                 portalError: this.LANG.errorCodes.brokenAccount
             }
         }).then((result) => {
+            if (this.CONFIG.isLocal) {
+                return this.activeModal.close(result);
+            }
             this.activeModal.close();
             const isRootPath = ['/', ''].includes(this.locationService.path());
 

@@ -230,7 +230,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then((account) => {
-                if (account && account !== true) {
+                if (account && !this.CONFIG.isLocal) {
                     // Starts the systems poll if starting on a system.
                     if (!this.systemsService.systemsPoll.destination.observers.length) {
                         this.systemsService.getSystems(account.email);
@@ -274,14 +274,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .subscribe(_ => {
                             this.connectionLost();
                         });
-                } else {
-                    const mediaserver = this.systemApiService.createConnection(undefined, undefined, undefined, () => {});
+                } else if (this.CONFIG.isLocal) {
+                    this.systemsService.stopPoll();
                     // Todo: Find a way to call the login dialog and use the mediaserver object.
-                    mediaserver.login('systemLogin', 'systemPassword')
-                        .then((account) => {
-                            this.accountService.account = account;
-                            this.systemsService.stopPoll();
-                            this.system = this.systemService.createLocalSystem(mediaserver);
+                    this.accountService.requireLogin()
+                        .then(() => {
+                            this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi);
                             this.system.isAvailable = true;
                             this.system.isOnline = true;
                             this.settingsService.system = this.system;

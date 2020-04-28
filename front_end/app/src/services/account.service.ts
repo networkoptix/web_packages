@@ -16,6 +16,7 @@ import { NxUriService }                                   from './uri.service';
 import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
 import { NxPollService }                                  from './poll.service';
 import { NxUtilsService }                                 from './utils.service';
+import { NxSystemAPI, NxSystemAPIService }                from './system-api.service';
 
 export interface Account {
     email: string;
@@ -42,6 +43,7 @@ export class NxAccountService implements OnDestroy {
     loggingOut: boolean;
     requestingLogin: Promise<any>;
     loginDialogActive: boolean;
+    mediaServerApi: NxSystemAPI;
 
     private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
@@ -66,6 +68,7 @@ export class NxAccountService implements OnDestroy {
         private activatedRoute: ActivatedRoute,
         private appStateService: NxAppStateService,
         private pollService: NxPollService,
+        private nxSystemAPIService: NxSystemAPIService,
         injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
@@ -80,7 +83,7 @@ export class NxAccountService implements OnDestroy {
             .subscribe((loginState) => {
                 if (loginState === null) {
                     this.logout();
-                } else if (loginState !== '') {
+                } else if (loginState !== '' && !this.CONFIG.isLocal) {
                     this.get()
                         .then((account) => {
                             // prevent stale loginState
@@ -108,6 +111,8 @@ export class NxAccountService implements OnDestroy {
         // setTimeout(() => {
         this.dialogs = injector.get(NxDialogsService);
         this.applyService = injector.get(NxApplyService);
+        this.mediaServerApi = this.nxSystemAPIService
+            .createConnection(undefined, undefined, undefined, () => {});
         // });
     }
 
@@ -165,7 +170,7 @@ export class NxAccountService implements OnDestroy {
 
     get(forceUpdate = false) {
         if (this.CONFIG.isLocal) {
-            return Promise.resolve(this.account !== undefined ? this.account : true);
+            return Promise.resolve(this.account);
         }
         if (this.requestingLogin) {
             // login is requesting, so we wait
@@ -189,7 +194,7 @@ export class NxAccountService implements OnDestroy {
                 return account;
             })
             .catch(() => {
-                return undefined;
+                return this.account;
             });
     }
 
@@ -257,31 +262,22 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.email = email;
 
         if (this.CONFIG.isLocal) {
-            return Promise.resolve(false);
+            this.requestingLogin = this.mediaServerApi.login(email, password);
+        } else {
+            this.requestingLogin = this.cloudApi.login(email, password, remember);
         }
 
-        this.requestingLogin = this.cloudApi
-            .login(email, password, remember)
-            .then((result: any) => {
-                if (!this.cloudApi.checkResponseHasError(result)) {
-                    if (this.sessionService.loginState) {
-                        // If the user that logged in matches the current session there's no need to show
-                        // the logout dialog.
-                        if (result.email !== this.sessionService.loginState) {
-                            return this.logoutAuthorised();
-                        }
-
-                        return Promise.resolve({
-                            data: {
-                                account    : result,
-                                resultCode : this.CONFIG.responseOk
-                            }
-                        });
-                    }
-
-                    if (result.email) { // (result.data.resultCode === L.errorCodes.ok)
-                        this.sessionService.email = result.email;
-                        this.sessionService.loginState = result.email; // Forcing changing loginState to reload interface
+        return this.requestingLogin.then((result: any) => {
+            if (!this.cloudApi.checkResponseHasError(result)) {
+                if (this.CONFIG.isLocal) {
+                    this.account = result;
+                    this.sessionService.loginState = result.email || result.name;
+                }
+                if (this.sessionService.loginState) {
+                    // If the user that logged in matches the current session there's no need to show
+                    // the logout dialog.
+                    if (!this.CONFIG.isLocal && result.email !== this.sessionService.loginState) {
+                        return this.logoutAuthorised();
                     }
 
                     return Promise.resolve({
@@ -291,16 +287,27 @@ export class NxAccountService implements OnDestroy {
                         }
                     });
                 }
-                // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ error: { resultCode: result.resultCode } });
-            })
-            .catch((result: any) => {
-                if (this.cloudApi.checkResponseHasError(result.error)) {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    return Promise.reject({ resultCode: result.error.resultCode });
+
+                if (result.email || result.name) { // (result.data.resultCode === L.errorCodes.ok)
+                    this.sessionService.email = result.email;
+                    this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
                 }
-            });
-        return this.requestingLogin;
+
+                return Promise.resolve({
+                    data: {
+                        account    : result,
+                        resultCode : this.CONFIG.responseOk
+                    }
+                });
+            }
+            // eslint-disable-next-line prefer-promise-reject-errors
+            return Promise.reject({ error: { resultCode: result.resultCode } });
+        }).catch((result: any) => {
+            if (this.cloudApi.checkResponseHasError(result.error)) {
+                // eslint-disable-next-line prefer-promise-reject-errors
+                return Promise.reject({ resultCode: result.error.resultCode });
+            }
+        });
     }
 
     // Temporary aid for AJS

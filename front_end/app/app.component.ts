@@ -220,6 +220,8 @@ export class AppComponent {
                 // Todo: Clean up once there's a way to determine cloud portal vs webadmin.
                 this.CONFIG.isLocal = true;
                 this.CONFIG.menus.systemSettings.baseUrl = '/settings';
+                this.CONFIG.redirect.authorised = '/settings';
+                this.CONFIG.credentialsValidation.emailRegex = '.*';
             }
 
             // (Smart check) Check if page is displayed inside an iframe
