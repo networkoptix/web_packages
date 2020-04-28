@@ -3,6 +3,7 @@ import { HttpClient }               from '@angular/common/http';
 import { Observable }               from 'rxjs';
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
+import { AddResponseTypeHere }      from './system-api.service';
 
 @Injectable({
     providedIn: 'root'
@@ -31,30 +32,30 @@ export class NxCloudApiService {
         });
     }
 
-    getCommonPasswords(): Observable<any> {
+    getCommonPasswords(): Observable<AddResponseTypeHere> {
         return this.http.get('/static/scripts/commonPasswordsList.json');
     }
 
-    getIntegrations(): Observable<any> {
+    getIntegrations(): Observable<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/integrations');
     }
 
-    getIntegrationBy(id: number, status: string): Observable<any> {
+    getIntegrationBy(id: number, status: string): Observable<AddResponseTypeHere> {
         let uri = this.CONFIG.apiBase + '/integration/' + id;
         uri += (status) ? '?' + status : '';
 
         return this.http.get(uri);
     }
 
-    getIPVD(): Observable<any> {
+    getIPVD(): Observable<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/ipvd');
     }
 
-    getSystemAuth(systemId: string): Observable<any> {
+    getSystemAuth(systemId: string): Observable<AddResponseTypeHere> {
         return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/auth`);
     }
 
-    merge(masterSystemId: string, slaveSystemId: string, password: string): Promise<any> {
+    merge(masterSystemId: string, slaveSystemId: string, password: string): Promise<AddResponseTypeHere> {
         return this.http.post(`${this.CONFIG.apiBase}/systems/merge`, {
             master_system_id : masterSystemId,
             slave_system_id  : slaveSystemId,
@@ -62,7 +63,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    notificationSend(userEmail: string, type: string, message: string): Promise<any> {
+    notificationSend(userEmail: string, type: string, message: string): Promise<AddResponseTypeHere> {
         return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
             user_email: userEmail,
             type,
@@ -70,7 +71,7 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    reloadIPVD(): Observable<any> {
+    reloadIPVD(): Observable<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/ipvd', {});
     }
 
@@ -81,7 +82,7 @@ export class NxCloudApiService {
         lastName: string,
         subscribe: string,
         code: string
-    ): Promise<any> {
+    ): Promise<AddResponseTypeHere> {
         return this.http
             .post(this.CONFIG.apiBase + '/account/register',
                 {
@@ -95,12 +96,12 @@ export class NxCloudApiService {
             .toPromise();
     }
 
-    reactivateUser(userEmail: string): Promise<any> {
+    reactivateUser(userEmail: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/activate',
             { user_email: userEmail }).toPromise();
     }
 
-    renameSystem(systemId: string, systemName: string): Promise<any> {
+    renameSystem(systemId: string, systemName: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
         }).toPromise().then((result) => {
@@ -115,47 +116,47 @@ export class NxCloudApiService {
         message: string,
         userName?: string,
         userEmail?: string
-    ): Observable<any> {
+    ): Observable<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/feedback', {
             message, asset, type, userName, userEmail
         });
     }
 
-    systems(systemId?: string): Observable<any> {
+    systems(systemId?: string): Observable<AddResponseTypeHere> {
         if (systemId) {
             return this.http.get(this.CONFIG.apiBase + '/systems/' + systemId);
         }
         return this.http.get(this.CONFIG.apiBase + '/systems');
     }
 
-    users(systemId: string): Observable<any> {
+    users(systemId: string): Observable<AddResponseTypeHere> {
         return this.http.get(`${this.CONFIG.apiBase}/systems/${systemId}/users`);
     }
 
-    unshare(systemId: string, userEmail: string): Observable<any> {
+    unshare(systemId: string, userEmail: string): Observable<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
             user_email : userEmail,
             role       : this.CONFIG.accessRoles.unshare
         });
     }
 
-    authKey(): Promise<any> {
+    authKey(): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise();
     }
 
-    visitedKey(key: string): Promise<any> {
+    visitedKey(key: string): Promise<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
     }
 
-    checkCode(code: string): Promise<any> {
+    checkCode(code: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
     }
 
-    checkAuthCode(code: string): Promise<any> {
+    checkAuthCode(code: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
-    login(email: string, password: string, remember: boolean): Promise<any> {
+    login(email: string, password: string, remember: boolean): Promise<AddResponseTypeHere> {
         // clearCache();
         return this.http.post(this.CONFIG.apiBase + '/account/login', {
             email,
@@ -165,38 +166,38 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
-    logout(): Promise<any> {
+    logout(): Promise<AddResponseTypeHere> {
         // clearCache();
         return this.http.post(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
-    deleteCloudUser(password): Promise<any> {
+    deleteCloudUser(password): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
     }
 
-    account() {
+    account(): Observable<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/account');
     }
 
-    getLanguages(): Promise<any> {
+    getLanguages(): Promise<AddResponseTypeHere> {
         return this.http.get('/static/languages.json').toPromise();
     }
 
-    changeLanguage(language: string): Promise<any> {
+    changeLanguage(language: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
             language
         }).toPromise();
     }
 
-    getDownloads(): Promise<any> {
+    getDownloads(): Promise<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/utils/downloads').toPromise();
     }
 
-    getDownloadsHistory(build: string): Promise<any> {
+    getDownloadsHistory(build: string): Promise<AddResponseTypeHere> {
         return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
     }
 
-    accountPost(account: Account): Promise<any> {
+    accountPost(account: Account): Promise<AddResponseTypeHere> {
         // strip unnecessary account info
         const accountInfo = {
             email        : account.email,
@@ -210,39 +211,39 @@ export class NxCloudApiService {
         return this.http.post(this.CONFIG.apiBase + '/account', accountInfo).toPromise();
     }
 
-    changePassword(newPassword: string, oldPassword: string): Promise<any> {
+    changePassword(newPassword: string, oldPassword: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/changePassword', {
             new_password : newPassword,
             old_password : oldPassword
         }).toPromise();
     }
 
-    reactivate(userEmail: string): Promise<any> {
+    reactivate(userEmail: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
             user_email: userEmail
         }).toPromise();
     }
 
-    activate(code: string): Promise<any> {
+    activate(code: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/activate', {
             code
         }).toPromise();
     }
 
-    restorePasswordRequest(userEmail: string): Promise<any> {
+    restorePasswordRequest(userEmail: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
             user_email: userEmail
         }).toPromise();
     }
 
-    restorePassword(code: string, newPassword: string): Promise<any> {
+    restorePassword(code: string, newPassword: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
             new_password: newPassword
         }).toPromise();
     }
 
-    acceptAgreement(reviewId: string): Promise<any> {
+    acceptAgreement(reviewId: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/accept_agreement', {
             review_id: reviewId
         }).toPromise();
@@ -250,27 +251,27 @@ export class NxCloudApiService {
 
     // Cloud Storage
 
-    enableCloudStorage(systemId: string): Promise<any> {
+    enableCloudStorage(systemId: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/storage/create', {
             systemId
         }).toPromise();
     }
 
-    deleteCloudStorage(systemId: string, password: string): Promise<any> {
+    deleteCloudStorage(systemId: string, password: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/storage/delete', {
             systemId,
             password
         }).toPromise();
     }
 
-    moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<any> {
+    moveCloudStorage(sourceSystemId: string, destinationSystemId: string): Promise<AddResponseTypeHere> {
         return this.http.post(this.CONFIG.apiBase + '/storage/move', {
             sourceSystemId,
             destinationSystemId
         }).toPromise();
     }
 
-    getCloudStorageUsage(systemId: string): Promise<any> {
+    getCloudStorageUsage(systemId: string): Promise<AddResponseTypeHere> {
         // return Promise.resolve({
         //     enabled           : true,
         //     cloudCapacity     : 53687091200,
