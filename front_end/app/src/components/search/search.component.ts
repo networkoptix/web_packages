@@ -20,6 +20,7 @@ import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { debounceTime }                   from 'rxjs/operators';
 import { NxUtilsService }                 from '../../services/utils.service';
 import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_types';
+import { NxSearchService }                from '../../services/search.service';
 
 /* Usage
  <nx-search
@@ -96,6 +97,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private _route: ActivatedRoute,
         private location: Location,
         private uri: NxUriService,
+        private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
@@ -174,6 +176,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         if (this.params.search && this.params.search.length > 0) {
             this.localFilter.query = this.params.search;
+
+            NxSearchService.getMatchPatterns(this.localFilter);
         }
 
         if (this.localFilter.tags && this.localFilter.tags.length) {

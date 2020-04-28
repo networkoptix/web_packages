@@ -9,6 +9,7 @@ import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
 import { NxUtilsService }            from '../services/utils.service';
+import { NxSearchService }           from '../services/search.service';
 
 /* Usage
  <nx-menu>
@@ -35,7 +36,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
     toggle: boolean;
 
     menuContent: any = [];
-    menuQuery: string;
+    menuModel: any = {};
     routeParamsSubscription: SubscriptionLike;
 
     CONFIG: IConfig;
@@ -56,14 +57,16 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.menuQuery = '';
+        this.menuModel = {};
         this.isSearchable = (this.searchable !== undefined);
 
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                this.menuQuery = (params && params.search) ? params.search : '';
-                this.searchMode = (this.isSearchable && this.menuQuery !== '');
+                this.menuModel.query = (params && params.search) ? params.search : '';
+                this.searchMode = (this.isSearchable && this.menuModel.query !== '');
+                NxSearchService.getMatchPatterns(this.menuModel);
+                this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
             });
     }
 
@@ -74,7 +77,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
 
             // Avoid unnecessary update and overwrite user choices
-            const filtered = this.menuService.fillerItems(this.menuQuery);
+            const filtered = this.menuService.fillerItemsBy(this.menuModel);
             const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
             if (filtered.length !== this.menuContent.length || !NxUtilsService.isEqual(filtered, cleanMenuContent)) {
                 this.menuContent = filtered;
@@ -91,14 +94,15 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
+        // create an illusion for search transition
         const delay = model.query ? this.CONFIG.search.transitionInMs : this.CONFIG.search.transitionShortInMs;
         this.transition = true;
+
         this.selectedLevel3 = '';
+        this.menuModel = model;
 
         setTimeout(() => {
-            // create an illusion for search transition
-            this.menuQuery = model.query;
-            this.menuContent = this.menuService.fillerItems(this.menuQuery);
+            this.menuContent = this.menuService.fillerItemsBy(model);
             this.transition = false;
         }, delay);
     }

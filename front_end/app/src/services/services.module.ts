@@ -12,14 +12,15 @@ import { NxUrlProtocolService }      from './url-protocol.service';
 import { NxApplyService }            from './apply.service';
 import { NxHeaderService }           from './nx-header.service';
 import { NxScrollMechanicsService }  from './scroll-mechanics.service';
+import { NxSearchService }           from './search.service';
 
 @NgModule({
     imports: [
         CommonModule
     ],
-    declarations   : [],
-    entryComponents: [],
-    providers      : [
+    declarations    : [],
+    entryComponents : [],
+    providers       : [
         NxAppStateService,
         NxApplyService,
         NxLanguageProviderService,
@@ -27,10 +28,11 @@ import { NxScrollMechanicsService }  from './scroll-mechanics.service';
         NxUtilsService,
         NxPageService,
         NxSystemsService,
+        NxSearchService,
         NxAccountService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService,
+        NxScrollMechanicsService
     ],
     exports: []
 })
