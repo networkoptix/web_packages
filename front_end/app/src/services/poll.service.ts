@@ -25,7 +25,7 @@ export class NxPollService {
     constructor() {
     }
 
-    createPoll(apiCall: Observable<any>, intervalDelay: number): Observable<any> {
+    createPoll<T>(apiCall: Observable<T>, intervalDelay: number): Observable<T | string> {
         const load$    = new BehaviorSubject('');
         const refresh$ = of('').pipe(
             delay(intervalDelay),
