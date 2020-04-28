@@ -20,7 +20,7 @@ interface User {
 }
 
 // Delete once response types have been declared and added.
-export interface AddResponseTypeHere extends Object{};
+export type AddResponseTypeHere = any;
 
 export class NxSystemAPI {
     /*
