@@ -1,6 +1,9 @@
 @import '../../../../styles/typography';
 
 .system-settings {
+    .system-header-bold {
+        font-weight: bold;
+    }
     .system-name {
         @extend #medium24;
     }
