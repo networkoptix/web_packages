@@ -139,9 +139,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         return item ? item.id : undefined;
     }
 
-    searchOnFocus() {
-    }
-
     toggleItem(state, idx) {
         this.menuContent[idx].toggle = state;
     }

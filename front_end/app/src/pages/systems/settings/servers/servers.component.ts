@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy }  from '@angular/core';
+import { Component, OnDestroy, OnInit }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
-import { NxConfigService, IConfig }      from '../../../../services/nx-config';
+import { IConfig, NxConfigService }      from '../../../../services/nx-config';
 import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }             from '../settings.service';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
@@ -11,7 +11,7 @@ import { NxUtilsService }                from '../../../../services/utils.servic
 import { NxApplyService }                from '../../../../services/apply.service';
 import { NxUriService }                  from '../../../../services/uri.service';
 import { Subscription }                  from 'rxjs';
-import { filter, map, delay, retryWhen } from 'rxjs/operators';
+import { delay, filter, map, retryWhen } from 'rxjs/operators';
 import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 
@@ -149,8 +149,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             let server;
             if (this.serverIdFromParams) {
                 server = this.system.servers.find((server: any) => {
-                    const match = server.id === this.serverIdFromParams;
-                    return match;
+                    return server.id === this.serverIdFromParams;
                 });
             }
             if (typeof server === 'undefined') {

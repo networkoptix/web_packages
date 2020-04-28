@@ -17,9 +17,9 @@ import { NxUtilsService }            from '../../../services/utils.service';
 import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
-import { Subscription }    from 'rxjs';
-import { filter, take }    from 'rxjs/operators';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Subscription }              from 'rxjs';
+import { filter }                    from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 

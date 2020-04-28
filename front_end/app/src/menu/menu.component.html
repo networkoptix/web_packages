@@ -2,7 +2,6 @@
         *ngIf="isSearchable || false"
         (ngModelChange)="modelChanged($event)"
         [ngModel]="menuQuery"
-        (onFocus)="searchOnFocus()"
         layout="search"
         name="menuQuery">
 </nx-search>
