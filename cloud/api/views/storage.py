@@ -41,11 +41,11 @@ def delete(request):
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
 def move(request):
-    require_params(request, ['sourceSystemId', 'destinationSystemId'])
+    require_params(request, ['destinationSystemId', 'sourceSystemId'])
     cloud_api.Storage.move(request.session['login'],
                            request.session['password'],
-                           request.data.get('sourceSystemId'),
-                           request.data.get('destinationSystemId'))
+                           request.data.get('destinationSystemId'),
+                           request.data.get('sourceSystemId'))
     return api_success()
 
 
