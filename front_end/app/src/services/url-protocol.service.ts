@@ -43,9 +43,9 @@ export class NxUrlProtocolService {
         }
 
         const source = {
-            from   : fromLocation || 'portal',
-            context: contextParam || 'none',
-            isApp  : false
+            from    : fromLocation || 'portal',
+            context : contextParam || 'none',
+            isApp   : false
         };
         source.isApp = (source.from === 'client' || source.from === 'mobile');
         return source;
@@ -53,14 +53,14 @@ export class NxUrlProtocolService {
 
     generateLink(linkSettings: linkSettings = {}) {
         let settings = {
-            native          : true,
-            from            : 'portal', // client, mobile, portal, webadmin
-            context         : undefined,
-            command         : 'client', // client, cloud, system
-            systemId        : undefined,
-            action          : undefined,
-            actionParameters: {}, // Object with parameters
-            auth            : true // true for request, null for skipping, string for specific value
+            native           : true,
+            from             : 'portal', // client, mobile, portal, webadmin
+            context          : undefined,
+            command          : 'client', // client, cloud, system
+            systemId         : undefined,
+            action           : undefined,
+            actionParameters : {}, // Object with parameters
+            auth             : true // true for request, null for skipping, string for specific value
         };
 
         if (linkSettings.systemId) {
@@ -105,7 +105,7 @@ export class NxUrlProtocolService {
         return url;
     }
 
-    getLink(linkSettings: linkSettings): Promise<any> {
+    getLink(linkSettings: linkSettings): Promise<{link: string, authKey: string | undefined}> {
         return new Promise((resolve, reject) => {
             this.accountService
                 .authKey()
@@ -117,8 +117,8 @@ export class NxUrlProtocolService {
                     });
                 }).catch(() => {
                     resolve({
-                        link   : this.generateLink(linkSettings),
-                        authKey: undefined
+                        link    : this.generateLink(linkSettings),
+                        authKey : undefined
                     });
                 });
         });
@@ -137,6 +137,7 @@ export class NxUrlProtocolService {
             // ugly thing!
             // see CLOUD-716 for more information
 
+            // TODO: Add type to returned promise, low priority
             return new Promise<any>((resolve, reject) => {
                 /* The browser opens a dialog that we cannot directly detect or get a response from.
                  * However, when the browser dialog opens it causes the page to blur so we use that to detect what
