@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy }                       from '@angular/core';
-import { of, ReplaySubject, Observable, Subscription } from 'rxjs';
+import { of, ReplaySubject, Observable, Subscription, BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map, tap }              from 'rxjs/operators';
 import { NxConfigService, IConfig }                    from './nx-config';
 import { NxLanguageProviderService }                   from './nx-language-provider';
@@ -24,7 +24,7 @@ export class NxSystemsService implements OnDestroy {
     mergingSystems: Set<string>;
     // TODO: Having trouble creating type for systems and systemPoll
     systems: any;
-    systemsPoll: any;
+    systemsPoll: Observable<NxSystem[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
     systemsSubject = new ReplaySubject(0);
     systemsMerging: { primary: any, secondary: any } = {
         primary   : undefined,
@@ -47,7 +47,7 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems = new Set();
     }
 
-    processMerge(mergeInfo: any) {
+    processMerge<T extends {primary: any, secondary: any}>(mergeInfo: T) {
         this.systemsMerging.primary = mergeInfo.primary;
         this.systemsMerging.secondary = mergeInfo.secondary;
     }
@@ -68,7 +68,7 @@ export class NxSystemsService implements OnDestroy {
         }
     }
 
-    forceUpdateSystems(userEmail?: string): Observable<any> {
+    forceUpdateSystems(userEmail?: string): Observable<NxSystem> {
         if (userEmail) {
             this.currentUser = userEmail;
         }
@@ -79,7 +79,7 @@ export class NxSystemsService implements OnDestroy {
         }));
     }
 
-    forceUpdateSystemsAsPromise(userEmail?: string): Promise<any> {
+    forceUpdateSystemsAsPromise(userEmail?: string): Promise<NxSystem> {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
@@ -101,7 +101,7 @@ export class NxSystemsService implements OnDestroy {
         return system.ownerAccountEmail;
     }
 
-    getMySystems(currentUserEmail: string, currentSystemId: string) {
+    getMySystems(currentUserEmail: string, currentSystemId: string): NxSystem[] {
         return this.systems.filter((system) => {
             return system.ownerAccountEmail === currentUserEmail && system.id !== currentSystemId;
         }).sort((a, b) => {
@@ -109,7 +109,7 @@ export class NxSystemsService implements OnDestroy {
         });
     }
 
-    getSystem(systemId: string, useCache = true) {
+    getSystem(systemId: string, useCache = true): Observable<NxSystem> {
         let system;
         if (this.systems && this.systems.length > 0) {
             system = this.systems.find((system) => {
@@ -150,8 +150,8 @@ export class NxSystemsService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.systemsPoll) {
-            this.systemsPoll.unsubscribe();
+        if (this.activeSubscription) {
+            this.stopPoll();
         }
     }
 

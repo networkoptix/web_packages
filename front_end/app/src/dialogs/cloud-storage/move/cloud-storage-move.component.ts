@@ -115,7 +115,7 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
-        this.systemsService.getSystem(value).toPromise().then(({ state }) => {
+        this.systemsService.getSystem(value).toPromise().then(({ info: { state } }) => {
             if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
             } else {

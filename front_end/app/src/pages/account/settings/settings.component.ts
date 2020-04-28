@@ -92,7 +92,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                             return false;
                         });
                 }
-                return this.systemsService.forceUpdateSystemsAsPromise();
+                return !!this.systemsService.forceUpdateSystemsAsPromise();
             }).finally(() => {
                 this.accountService.get(true);
             });
