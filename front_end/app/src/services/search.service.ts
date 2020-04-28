@@ -71,7 +71,7 @@ export class NxSearchService {
         match = model.query
             .trim()
             .replace(/\+/g, ' ')
-            .split(/[\s,]/g)
+            .split(/[\s,+]/g)
             .filter((elm) => {
                 return elm !== '';
             });
