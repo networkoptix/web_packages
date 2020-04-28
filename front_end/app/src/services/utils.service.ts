@@ -10,7 +10,7 @@ import * as moment                  from 'moment';
     providedIn: 'root'
 })
 export class NxUtilsService {
-    CONFIG: IConfig;
+    private CONFIG: IConfig;
 
     public static sortASC = true;
     public static sortDESC = false;

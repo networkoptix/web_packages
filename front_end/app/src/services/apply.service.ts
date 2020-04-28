@@ -8,7 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
-import { Process, NxProcessService } from './process.service';
+import { Process }                              from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -106,21 +106,20 @@ export class ObjWatcher<Object> {
  * @class
  */
 export class NxApplyService {
-    applyComponentRef: ComponentRef<NxApplyComponent>;
-    applyFunction: Process;
-    component: ViewContainerRef;
-    discardFunction: <T>(T) => void;
-    lockedSubject = new BehaviorSubject<boolean>(undefined);
-    popupActive = false;
-    form: NgForm;
+    private applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyFunction: Process;
+    private component: ViewContainerRef;
+    private discardFunction: <T>(T) => void;
+    private lockedSubject = new BehaviorSubject<boolean>(undefined);
+    private popupActive = false;
+    private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
-                private processService: NxProcessService) {
-    }
+    ) {}
 
     get locked() {
         return this.lockedSubject.getValue();
@@ -156,7 +155,7 @@ export class NxApplyService {
         this.setWarn('');
     }
 
-    touched() {
+    private touched() {
         this.locked = true;
     }
 

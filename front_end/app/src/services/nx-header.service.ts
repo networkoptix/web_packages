@@ -6,7 +6,7 @@ import { BehaviorSubject }          from 'rxjs';
     providedIn: 'root'
 })
 export class NxHeaderService {
-    CONFIG: IConfig;
+    private CONFIG: IConfig;
 
     // Only to communicate with AJS
     systemIdSubject = new BehaviorSubject<string>(undefined);

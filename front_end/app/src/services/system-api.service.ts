@@ -52,20 +52,19 @@ export class NxSystemAPI {
     private authPost: string;
     private authPlay: string;
 
-    readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+    private readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
 
-    CONFIG: IConfig;
-    http: HttpClient;
-    location: Location;
+    private CONFIG: IConfig;
+    private http: HttpClient;
+    private location: Location;
 
-    abortReason: string;
-    serverId: string;
-    systemId: string;
-    currentUser: any;
-    userEmail: string;
-    userRequest: any;
-    urlBase: string;
-    unauthorizedCallback: any;
+    private serverId: string;
+    private systemId: string;
+    private currentUser: any;
+    private userEmail: string;
+    private userRequest: any;
+    private urlBase: string;
+    private unauthorizedCallback: any;
 
     constructor(
         http: HttpClient,
@@ -174,11 +173,11 @@ export class NxSystemAPI {
         this.urlBase = this.getUrlBase();
     }
 
-    cleanId(id) {
+    private cleanId(id) {
         return id.replace('{', '').replace('}', '');
     }
 
-    apiHost() {
+    private apiHost() {
         if (this.systemId) {
             return this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId);
         }
@@ -191,7 +190,7 @@ export class NxSystemAPI {
         return { authGet, authPost, authPlay };
     }
 
-    getCurrentUser(forceReload?: boolean): Promise<any> {
+    private getCurrentUser(forceReload?: boolean): Promise<any> {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
@@ -223,11 +222,11 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
-    getRolePermissions(roleId) {
+    private getRolePermissions(roleId) {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    checkPermissions(flag) {
+    private checkPermissions(flag) {
         // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
         return this.getCurrentUser().then((user: any) => {
             if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
@@ -248,23 +247,23 @@ export class NxSystemAPI {
     /* End of Authentication  */
 
     /* Server settings */
-    getServerTimes() {
+    private getServerTimes() {
         return this.get('/ec2/getTimeOfServers');
     }
 
-    getSystemTime() {
+    private getSystemTime() {
         return this.get('/api/synchronizedTime');
     }
 
-    updateOrGetSettings(updateParams) {
+    private updateOrGetSettings(updateParams) {
         return this.get('/api/systemSettings', updateParams);
     }
 
-    getStorages() {
+    private getStorages() {
         return this.get('/api/storageSpace');
     }
 
-    updateStorages(updateParams) {
+    private updateStorages(updateParams) {
         return this.post('/ec2/saveStorages', updateParams);
     }
 

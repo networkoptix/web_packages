@@ -52,7 +52,7 @@ export class AppComponent {
         private deviceService: DeviceDetectorService,
         private location: Location,
         private applyService: NxApplyService,
-        private appStateService: NxAppStateService,
+        public appStateService: NxAppStateService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
         private ribbonService: NxRibbonService,
@@ -103,19 +103,19 @@ export class AppComponent {
             // TODO: Componentize this
             this.allowedDevices = {
                 windows: {
-                    ie: 10,
-                    safari: 10,
-                    chrome: 64,
-                    firefox: 60
+                    ie      : 10,
+                    safari  : 10,
+                    chrome  : 64,
+                    firefox : 60
                 },
                 mac: {
-                    safari: 10,
-                    chrome: 64,
-                    firefox: 60
+                    safari  : 10,
+                    chrome  : 64,
+                    firefox : 60
                 },
                 linux: {
-                    chrome: 64,
-                    firefox: 60
+                    chrome  : 64,
+                    firefox : 60
                 }
             };
 
@@ -147,18 +147,18 @@ export class AppComponent {
             });
 
             // @ts-ignore
-            const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = window.SETTINGS;
+            const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = window.SETTINGS;
             this.CONFIG.company = {
                 copyrightYear,
                 links: {
-                    privacy: privacyLink,
-                    support: supportLink,
-                    website: companyLink
+                    privacy : privacyLink,
+                    support : supportLink,
+                    website : companyLink
                 },
                 name: companyName
             };
             // @ts-ignore
-            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = window.SETTINGS;
+            const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = window.SETTINGS;
             this.CONFIG.cloudCapabilities = {
                 feedbackEnabled,
                 healthMonitor,
@@ -169,7 +169,7 @@ export class AppComponent {
                 cloudStorageSize
             };
             // @ts-ignore
-            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
+            const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;
             this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
                 searchTags,
                 sortSupportedDevicesByPopularity,
@@ -178,10 +178,10 @@ export class AppComponent {
                 vendorsShown: parseInt(vendorsShown)
             });
             // @ts-ignore
-            const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
+            const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
             this.CONFIG.integration.filter = {
-                items: integrationFilterItems,
-                limitation: integrationFilterLimitation
+                items      : integrationFilterItems,
+                limitation : integrationFilterLimitation
             };
             // @ts-ignore
             if (window.SETTINGS.appTypesForPlatform) {
@@ -229,7 +229,7 @@ export class AppComponent {
             // Updates query params for components without routes.
             this.router.events.pipe(
                 filter((event: Event) => event instanceof ActivationStart)
-            ).subscribe(({snapshot: {queryParams}}: ActivationStart) => {
+            ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
                 this.uriService.queryParams = queryParams;
             });
 

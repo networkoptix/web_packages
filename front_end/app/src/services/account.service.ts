@@ -1,7 +1,7 @@
 import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
-import { ActivatedRoute, Router }                         from '@angular/router';
+import { Router }                                         from '@angular/router';
 import { NxConfigService, IConfig }                       from './nx-config';
 import { NxCloudApiService }                              from './nx-cloud-api';
 import { NxLanguageProviderService }                      from './nx-language-provider';
@@ -35,13 +35,13 @@ export interface Account {
     providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-    location: Location;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
+    private location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
-    loggingOut: boolean;
-    requestingLogin: Promise<any>;
-    loginDialogActive: boolean;
+    private loggingOut: boolean;
+    private requestingLogin: Promise<any>;
+    private loginDialogActive: boolean;
 
     private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
@@ -63,7 +63,6 @@ export class NxAccountService implements OnDestroy {
         private uriService: NxUriService,
         private localStorageService: LocalStorageService,
         private router: Router,
-        private activatedRoute: ActivatedRoute,
         private appStateService: NxAppStateService,
         private pollService: NxPollService,
         injector: Injector
@@ -116,11 +115,11 @@ export class NxAccountService implements OnDestroy {
         this.queryParamSubscription.unsubscribe();
     }
 
-    get account() {
+    private get account() {
         return this.accountSubject.getValue();
     }
 
-    set account(account: Account) {
+    private set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
@@ -158,7 +157,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    clearLoginState() {
+    private clearLoginState() {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
@@ -301,7 +300,7 @@ export class NxAccountService implements OnDestroy {
         return atob(authKey).split(':');
     }
 
-    loginWithAuthKey(authKey: string) {
+    private loginWithAuthKey(authKey: string) {
         const auth         = atob(authKey).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];

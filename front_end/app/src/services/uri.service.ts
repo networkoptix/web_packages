@@ -10,10 +10,11 @@ export class NxUriService {
 
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
-    constructor(private router: Router,
-                private route: ActivatedRoute,
-                @Inject(PLATFORM_ID) private platformId: object) {
-    }
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        @Inject(PLATFORM_ID) private platformId: object
+    ) {}
 
     get queryParams() {
         return this.queryParamsSubject.getValue();

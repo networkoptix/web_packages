@@ -30,7 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private sub: Subscription;
     private platform: any;
     private activeOs: string;
-    private canViewDownloads: boolean;
+    public canViewDownloads: boolean;
     private paramPlatform: string;
 
     CONFIG: IConfig;

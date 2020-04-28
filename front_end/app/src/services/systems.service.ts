@@ -17,12 +17,11 @@ import { NxSystem }                                    from './system.service';
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-    activeSubscription: Subscription;
-    currentUser: string;
-    mergingSystems: Set<string>;
-    // TODO: Having trouble creating type for systems and systemPoll
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
+    private activeSubscription: Subscription;
+    private currentUser: string;
+    private mergingSystems: Set<string>;
     systems: NxSystemWithUserInfo[];
     systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
     systemsSubject = new ReplaySubject(0);
@@ -56,7 +55,7 @@ export class NxSystemsService implements OnDestroy {
         this.mergingSystems.add(systemId);
     }
 
-    removeFromMergeList(systemId: string) {
+    private removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
             const options = {

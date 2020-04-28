@@ -8,10 +8,12 @@ import { Account }                  from './account.service';
     providedIn: 'root'
 })
 export class NxCloudApiService {
-    CONFIG: IConfig;
+    private CONFIG: IConfig;
 
-    constructor(configService: NxConfigService,
-                private http: HttpClient) {
+    constructor(
+        configService: NxConfigService,
+        private http: HttpClient
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

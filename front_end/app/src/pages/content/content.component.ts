@@ -21,8 +21,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 
 export class NxContentComponent implements OnInit {
-    private title: string;
-    private body: SafeHtml;
+    public title: string;
+    public body: SafeHtml;
     private staticHTML: string;
     private articleParam: string;
     private state: string;
@@ -30,14 +30,14 @@ export class NxContentComponent implements OnInit {
     private langCode: string;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private loaded = false;
+    public loaded = false;
     private staticContent: any;
 
     private agreement: boolean;
     private agreementDetails: any = {};
     private account: any;
-    private showAgree = false;
-    private agreeProcess: any;
+    public showAgree = false;
+    public agreeProcess: any;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
