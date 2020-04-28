@@ -68,7 +68,7 @@ export class AppComponent {
         // @ts-ignore
         // console.log(window.LANG, window.SETTINGS);
         // @ts-ignore
-        if (window.LANG === undefined || window.SETTINGS === undefined) {
+        if (window.LANG === undefined && window.SETTINGS === undefined) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
                 .finally(() => {
@@ -77,7 +77,7 @@ export class AppComponent {
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
             // @ts-ignore
-        } else if (window.LANG !== undefined && window.LANG !== undefined) {
+        } else if (window.LANG !== undefined || window.SETTINGS !== undefined) {
             // @ts-ignore
             languageService.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
             this.LANG = languageService.getTranslations();
@@ -103,19 +103,19 @@ export class AppComponent {
             // TODO: Componentize this
             this.allowedDevices = {
                 windows: {
-                    ie: 10,
-                    safari: 10,
-                    chrome: 64,
-                    firefox: 60
+                    ie      : 10,
+                    safari  : 10,
+                    chrome  : 64,
+                    firefox : 60
                 },
                 mac: {
-                    safari: 10,
-                    chrome: 64,
-                    firefox: 60
+                    safari  : 10,
+                    chrome  : 64,
+                    firefox : 60
                 },
                 linux: {
-                    chrome: 64,
-                    firefox: 60
+                    chrome  : 64,
+                    firefox : 60
                 }
             };
 
@@ -137,83 +137,89 @@ export class AppComponent {
                     this.location.go('/browser');
                 }
             } // else -> unknown platform or device ... cross fingers and hope for the best
-
-            // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
-            // This was done every time a system is created. Its only need once
-            this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
-                if (option.permissions) {
-                    option.permissions = option.permissions.split('|').sort().join('|');
-                }
-            });
-
             // @ts-ignore
-            const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = window.SETTINGS;
-            this.CONFIG.company = {
-                copyrightYear,
-                links: {
-                    privacy: privacyLink,
-                    support: supportLink,
-                    website: companyLink
-                },
-                name: companyName
-            };
-            // @ts-ignore
-            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = window.SETTINGS;
-            this.CONFIG.cloudCapabilities = {
-                feedbackEnabled,
-                healthMonitor,
-                integrationStore: integrationStoreEnabled,
-                publicDownloads,
-                publicReleases,
-                cloudStorageEnabled,
-                cloudStorageSize
-            };
-            // @ts-ignore
-            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = window.SETTINGS;
-            this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
-                searchTags,
-                sortSupportedDevicesByPopularity,
-                supportedHardwareTypes,
-                supportedResolutions,
-                vendorsShown: parseInt(vendorsShown)
-            });
-            // @ts-ignore
-            const {integrationFilterItems, integrationFilterLimitation} = window.SETTINGS;
-            this.CONFIG.integration.filter = {
-                items: integrationFilterItems,
-                limitation: integrationFilterLimitation
-            };
-            // @ts-ignore
-            if (window.SETTINGS.appTypesForPlatform) {
-                // @ts-ignore
-                Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
-                    if (platform in this.CONFIG.downloads.groups && appTypes) {
-                        this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+            if (window.SETTINGS !== undefined) {
+                // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+                // This was done every time a system is created. Its only need once
+                this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+                    if (option.permissions) {
+                        option.permissions = option.permissions.split('|').sort().join('|');
                     }
                 });
-            }
-            // @ts-ignore
-            this.CONFIG.cloudName = window.SETTINGS.cloudName;
-            // @ts-ignore
-            this.CONFIG.footerItems = window.SETTINGS.footerItems;
-            // @ts-ignore
-            this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
-            // @ts-ignore
-            this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
-            // @ts-ignore
-            this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
-            // @ts-ignore
-            this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
-            // @ts-ignore
-            this.CONFIG.vmsName = window.SETTINGS.vmsName;
-            // @ts-ignore
-            this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
-            // @ts-ignore
-            this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
-            // detect preview mode
-            if (window.location.href.indexOf('preview') >= 0) {
-                this.CONFIG.previewPath = 'preview';
-                this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+
+                // @ts-ignore
+                const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = window.SETTINGS;
+                this.CONFIG.company = {
+                    copyrightYear,
+                    links: {
+                        privacy : privacyLink,
+                        support : supportLink,
+                        website : companyLink
+                    },
+                    name: companyName
+                };
+                // @ts-ignore
+                const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = window.SETTINGS;
+                this.CONFIG.cloudCapabilities = {
+                    feedbackEnabled,
+                    healthMonitor,
+                    integrationStore: integrationStoreEnabled,
+                    publicDownloads,
+                    publicReleases,
+                    cloudStorageEnabled,
+                    cloudStorageSize
+                };
+                // @ts-ignore
+                const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = window.SETTINGS;
+                this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
+                    searchTags,
+                    sortSupportedDevicesByPopularity,
+                    supportedHardwareTypes,
+                    supportedResolutions,
+                    vendorsShown: parseInt(vendorsShown)
+                });
+                // @ts-ignore
+                const { integrationFilterItems, integrationFilterLimitation } = window.SETTINGS;
+                this.CONFIG.integration.filter = {
+                    items      : integrationFilterItems,
+                    limitation : integrationFilterLimitation
+                };
+                // @ts-ignore
+                if (window.SETTINGS.appTypesForPlatform) {
+                    // @ts-ignore
+                    Object.entries(window.SETTINGS.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
+                        if (platform in this.CONFIG.downloads.groups && appTypes) {
+                            this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+                        }
+                    });
+                }
+                // @ts-ignore
+                this.CONFIG.cloudName = window.SETTINGS.cloudName;
+                // @ts-ignore
+                this.CONFIG.footerItems = window.SETTINGS.footerItems;
+                // @ts-ignore
+                this.CONFIG.googleTagManagerId = window.SETTINGS.googleTagManagerId;
+                // @ts-ignore
+                this.CONFIG.pushConfig = window.SETTINGS.pushConfig;
+                // @ts-ignore
+                this.CONFIG.testedOperatingSystems = window.SETTINGS.testedOperatingSystems;
+                // @ts-ignore
+                this.CONFIG.trafficRelayHost = window.SETTINGS.trafficRelayHost;
+                // @ts-ignore
+                this.CONFIG.vmsName = window.SETTINGS.vmsName;
+                // @ts-ignore
+                this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
+                // @ts-ignore
+                this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+                // detect preview mode
+                if (window.location.href.indexOf('preview') >= 0) {
+                    this.CONFIG.previewPath = 'preview';
+                    this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+                }
+            } else {
+                // Todo: Clean up once there's a way to determine cloud portal vs webadmin.
+                this.CONFIG.isLocal = true;
+                this.CONFIG.menus.systemSettings.baseUrl = '/settings';
             }
 
             // (Smart check) Check if page is displayed inside an iframe
@@ -229,7 +235,7 @@ export class AppComponent {
             // Updates query params for components without routes.
             this.router.events.pipe(
                 filter((event: Event) => event instanceof ActivationStart)
-            ).subscribe(({snapshot: {queryParams}}: ActivationStart) => {
+            ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
                 this.uriService.queryParams = queryParams;
             });
 

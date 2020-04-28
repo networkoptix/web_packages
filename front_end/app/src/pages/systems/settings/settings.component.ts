@@ -22,6 +22,7 @@ import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxSystemAPIService }        from '../../../services/system-api.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -42,7 +43,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     content: any = {};
 
     account: any;
-    system: NxSystem;
+    system: NxSystem|any;
     gettingSystem: any;
     systems: any;
     deletingSystem: any;
@@ -90,6 +91,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private systemService: NxSystemService,
+                private systemApiService: NxSystemAPIService,
                 private systemsService: NxSystemsService,
                 private settingsService: NxSettingsService,
                 private processService: NxProcessService,
@@ -125,8 +127,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.ribbonService.hide();
                 this.systemNoAccess = false;
                 this.menuVisible = false;
-                this.getSystemInfo();
+            } else {
+                this.systemId = '';
             }
+            this.getSystemInfo();
         });
 
         this.content = {
@@ -226,7 +230,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then((account) => {
-                if (account) {
+                if (account && account !== true) {
                     // Starts the systems poll if starting on a system.
                     if (!this.systemsService.systemsPoll.destination.observers.length) {
                         this.systemsService.getSystems(account.email);
@@ -246,8 +250,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             // if system is removed while on page, redirects to systems page
                             if (
                                 this.system && this.systemsService.systems &&
-                                !this.systemsService.systems.some(system => system.id === this.system.id)
-                            ) {
+                                !this.systemsService.systems.some(system => system.id === this.system.id) &&
+                                !this.CONFIG.isLocal) {
                                 this.uriService.updateURI('/systems');
                             }
                             if (this.system.isAvailable) {
@@ -270,6 +274,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .subscribe(_ => {
                             this.connectionLost();
                         });
+                } else {
+                    const mediaserver = this.systemApiService.createConnection(undefined, undefined, undefined, () => {});
+                    // Todo: Find a way to call the login dialog and use the mediaserver object.
+                    mediaserver.login('systemLogin', 'systemPassword')
+                        .then((account) => {
+                            this.accountService.account = account;
+                            this.systemsService.stopPoll();
+                            this.system = this.systemService.createLocalSystem(mediaserver);
+                            this.system.isAvailable = true;
+                            this.system.isOnline = true;
+                            this.settingsService.system = this.system;
+                            this.systemReady();
+                            this.systemSubscription = this.system.infoSubject.subscribe(() => {
+                                this.updateMenu();
+                            });
+                        })
+                        .catch((err) => console.log(err));
                 }
             });
     }

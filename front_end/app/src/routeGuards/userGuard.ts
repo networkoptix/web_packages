@@ -27,9 +27,14 @@ export class UserGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const systemId = route.pathFromRoot.find((snapshot: any) => {
-            return snapshot.params.systemId;
-        }).params.systemId;
+        let systemId;
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve(true);
+        } else {
+            systemId = route.pathFromRoot.find((snapshot: any) => {
+                return snapshot.params.systemId;
+            }).params.systemId;
+        }
 
         return this.accountService
             .get()

@@ -185,15 +185,16 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (account) {
                         this.dropdownsVisible = true;
-                        this.systemsService.getSystem(account.email);
-
                         this.loginState = true;
                         this.renderer.removeClass(document.body, 'anonymous');
                         this.renderer.addClass(document.body, 'authorized');
-                        this.systemsService
-                            .forceUpdateSystems(loginState)
-                            .toPromise()
-                            .then(() => this.updateActive());
+                        if (!this.CONFIG.isLocal) {
+                            this.systemsService.getSystem(account.email);
+                            this.systemsService
+                                .forceUpdateSystems(loginState)
+                                .toPromise()
+                                .then(() => this.updateActive());
+                        }
                     } else {
                         this.loginState = false;
                         this.renderer.removeClass(document.body, 'authorized');

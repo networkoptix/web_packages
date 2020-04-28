@@ -33,7 +33,7 @@ module.exports = merge( common, {
                 secure      : false
             },
             {
-                context     : ['/api/', '/gateway/', '/admin/'],
+                context     : ['/api/', '/gateway/', '/admin/', '/ec2/'],
                 target      : cloudInstance,
                 changeOrigin: true,
                 secure      : false

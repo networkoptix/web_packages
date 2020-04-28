@@ -2,9 +2,11 @@ import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
-import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
+import { flatMap, map, mergeMap, retryWhen, timeout } from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera } from './system.service';
+
+import * as md5 from 'md5';
 
 interface User {
     canBeEdited: boolean;
@@ -80,6 +82,17 @@ export class NxSystemAPI {
         this.CONFIG = configService;
         this.location = location;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
+    }
+
+    private cookieLogin(auth) {
+        return this.post('/api/cookieLogin', { auth });
+    }
+
+    private digest(login: string, password: string, realm: string, nonce: string, method?: string) {
+        method = md5(`${method || 'GET'}:`);
+        const digest = md5(`${login}:${realm}:${password}`);
+        const authDigest = md5(`${digest}:${nonce}:${method}`);
+        return btoa(`${login}:${nonce}:${authDigest}`);
     }
 
     private getUrlBase() {
@@ -223,8 +236,42 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
+    getNonce(login: string, url?: string) {
+        const params: any = {
+            userName: login
+        };
+        if (url) {
+            if (url.indexOf('http') < 0) {
+                url = 'http://' + url;
+            }
+            params.url = url;
+        }
+        const nonceType = url ? 'getRemoteNonce' : 'getNonce';
+        return this.get(`/api/${nonceType}`, params);
+    }
+
     getRolePermissions(roleId) {
         return this.get('/ec2/getUserRoles', { id: roleId });
+    }
+
+    login(login: string, password: string) {
+        let auth, authPost, authRtsp, nonce, realm;
+        return this.getNonce(login).pipe(
+            flatMap((response : any) => {
+                nonce = response.reply.nonce;
+                realm = response.reply.realm;
+                auth = this.digest(login, password, realm, nonce);
+                authPost = this.digest(login, password, realm, nonce, 'POST');
+                authRtsp = this.digest(login, password, realm, nonce, 'PLAY');
+                return this.cookieLogin(auth);
+            }),
+            flatMap((data: any) => {
+                if (data.error !== '0') {
+                    return Promise.reject(data.data);
+                }
+                this.setAuthKeys(auth, authPost, authRtsp);
+                return of(data.reply);
+            })).toPromise();
     }
 
     checkPermissions(flag) {

@@ -105,10 +105,10 @@ export class NxAccountService implements OnDestroy {
         this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
-        setTimeout(() => {
-            this.dialogs = injector.get(NxDialogsService);
-            this.applyService = injector.get(NxApplyService);
-        });
+        // setTimeout(() => {
+        this.dialogs = injector.get(NxDialogsService);
+        this.applyService = injector.get(NxApplyService);
+        // });
     }
 
     ngOnDestroy() {
@@ -164,6 +164,9 @@ export class NxAccountService implements OnDestroy {
     }
 
     get(forceUpdate = false) {
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve(this.account !== undefined ? this.account : true);
+        }
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -215,7 +218,7 @@ export class NxAccountService implements OnDestroy {
     redirectAuthorised() {
         this.get()
             .then((account: Account) => {
-                if (account) {
+                if (account && !this.CONFIG.isLocal) {
                     this.router
                         .navigate([this.CONFIG.redirect.authorised])
                         .catch(error => {
@@ -252,6 +255,10 @@ export class NxAccountService implements OnDestroy {
 
     login(email: string, password: string, remember: boolean) {
         this.sessionService.email = email;
+
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve(false);
+        }
 
         this.requestingLogin = this.cloudApi
             .login(email, password, remember)

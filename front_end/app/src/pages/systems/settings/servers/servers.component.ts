@@ -81,8 +81,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
 
                 if (!system.permissions || !system.permissions.editUsers) {
+                    const systemId = this.system.id ? `/${this.system.id}` : '';
                     this.uriService
-                        .updateURI('systems/' + this.system.id, {})
+                        .updateURI(this.CONFIG.menus.systemSettings.baseUrl + systemId, {})
                         .catch(error => {
                             console.error(error);
                         });
@@ -147,9 +148,9 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
             if (typeof server === 'undefined') {
                 if (this.system.servers.length > 0) {
                     server = this.system.servers[0];
-
+                    const systemId = this.system.id ? `/${this.system.id}` : '';
                     this.uriService
-                        .updateURI(`systems/${this.system.id}/servers/${server.id}`)
+                        .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/servers/${server.id}`)
                         .catch(error => {
                             console.error(error);
                         });

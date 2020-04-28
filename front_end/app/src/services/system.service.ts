@@ -390,8 +390,7 @@ class ServerManager {
                     .createConnection(
                         this.currentUserEmail,
                         this.systemId,
-                        server.id,
-                        () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
+                        server.id, () => this.cloudApi.getSystemAuth(this.systemId).toPromise().then((authKeys: any) => {
                             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
                             return Promise.resolve(true);
                         })
@@ -796,6 +795,9 @@ export class NxSystem extends System implements OnDestroy {
         if (!force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve(true);
+        }
         return this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
             return Promise.resolve(true);
@@ -807,7 +809,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
+        const cloudStorageEnabled = this.CONFIG.cloudCapabilities && this.CONFIG.cloudCapabilities.cloudStorageEnabled;
+        const systemHasCloudStorage = this.systemInfo && this.systemInfo.cloudStorageSystemEnabled;
+        return cloudStorageEnabled && this.isMine || this.isAdmin && systemHasCloudStorage;
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false): any {
@@ -844,6 +848,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getInfo(force?, useCache = true, suppressUpdate = false) {
+        if (this.CONFIG.isLocal) {
+            return Promise.resolve();
+        }
         if (force) {
             this.infoPromise = undefined;
         }
@@ -1074,6 +1081,7 @@ export class NxSystemService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     private systemsCache: { [key: string]: System };
+    private system: NxSystem;
 
     constructor(configService: NxConfigService,
                 private languageService: NxLanguageProviderService,
@@ -1103,6 +1111,20 @@ export class NxSystemService {
         system.lostConnection = false;
         system.startPoll();
         return system;
+    }
+
+    createLocalSystem(mediaServer: NxSystemAPI) {
+        if (this.system !== undefined) {
+            return this.system;
+        }
+        this.system = new NxSystem(
+            this.CONFIG, this.LANG,
+            this.cloudApi, this.systemApiService,
+            this.pollService, this.systemsService,
+            '', '', '');
+        this.system.mediaserver = mediaServer;
+        this.system.startPoll();
+        return this.system;
     }
 }
 

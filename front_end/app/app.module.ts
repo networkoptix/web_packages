@@ -19,7 +19,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AppComponent }      from './app.component';
 import { ComponentsModule }  from './src/components/components.module';
 import { DialogsModule }     from './src/dialogs/dialogs.module';
-import { PagesModule }       from './src/pages/pages.module';
+import { WebadminPageModule }       from './src/pages/webadmin-page.module';
 import { DirectivesModule }  from './src/directives/directives.module';
 import { PipesModule }       from './src/pipes/pipes.module';
 import { NxConfigService }   from './src/services/nx-config';
@@ -66,7 +66,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         InputTrimModule,
         ComponentsModule,
         DialogsModule,
-        PagesModule,
+        WebadminPageModule,
         DirectivesModule,
         PipesModule,
         ServiceModule,

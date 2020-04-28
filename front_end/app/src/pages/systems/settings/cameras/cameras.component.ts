@@ -111,14 +111,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 if (system) {
                     this.system = system;
                     this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
-                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                        const systemId = this.system.id ? `/${this.system.id}` : '';
+                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + systemId + '/view/' + this.parsedCameraId;
                         this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                            system.info.capabilities &&
-                            system.info.capabilities.vms_metrics) &&
+                            this.system.info.capabilities &&
+                            this.system.info.capabilities.vms_metrics) &&
                             this.system.canViewInfo();
                         this.initUpdateProcess();
                         if (this.canSeeInfo) {
-                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
                         }
                     });
                 }
@@ -576,9 +577,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
             if (cameraIndex === -1) {
                 cameraIndex = 0;
+                const systemId = this.system.id;
+                const urlSystem = systemId ? `/${systemId}` : '';
                 this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
                 this.uriService
-                    .updateURI(`systems/${this.system.id}/cameras/${this.parsedCameraId}`)
+                    .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${urlSystem}/cameras/${this.parsedCameraId}`)
                     .catch(error => {
                         console.error(error);
                     });

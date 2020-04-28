@@ -100,9 +100,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-
+                    const systemId = this.system.id ? `/${this.system.id}` : '';
                     this.uriService
-                        .updateURI('systems/' + this.system.id, {})
+                        .updateURI(this.CONFIG.menus.systemSettings.baseUrl + systemId, {})
                         .catch(error => {
                             console.error(error);
                         });
@@ -175,9 +175,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 delete this.locked[user.email];
                 this.paramUser = this.nextUserId;
-
+                const systemId = this.system.id ? `/${this.system.id}` : '';
                 this.uriService
-                    .updateURI(`systems/${this.system.id}/users/${this.nextUserId}`)
+                    .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/users/${this.nextUserId}`)
                     .catch(error => {
                         console.error(error);
                     });
@@ -208,9 +208,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             if (typeof (user) === 'undefined') {
                 user = this.system.users[0];
                 const userId = this.system.mediaserver.cleanId(user.id);
-
+                const systemId = this.system.id ? `/${this.system.id}` : '';
                 this.uriService
-                    .updateURI(`systems/${this.system.id}/users/${userId}`)
+                    .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/users/${userId}`)
                     .catch(error => {
                         console.error(error);
                     });

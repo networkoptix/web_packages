@@ -28,6 +28,7 @@ export interface BaseConfig {
     // This is on line 107
     integration: Integration | any;
     ipvd: Ipvd;
+    isLocal: boolean;
     layout: Layout;
     maxServers: number;
     meta: Meta;
