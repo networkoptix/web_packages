@@ -1,9 +1,9 @@
 // Add interfaces here for cloud api request
 
-export interface NormalResponse {
+export interface NormalResponse<Reply = {}> {
     error: string,
     errorString: string,
-    reply: {}
+    reply: Reply
 };
 
 interface Permissions {
@@ -129,19 +129,14 @@ export interface SystemTime extends NormalResponse {
     }
 };
 
-export interface GetUserRoles extends NormalResponse {
-    reply: {
-        id: string,
-        name: string,
-        permissions: Permissions
-    }
-};
+export interface UserPermissions extends Permissions {
+    id: string,
+    name: string,
+}
 
-export interface SystemSettings extends NormalResponse {
-    reply: {
-        settings: Settings
-    }
-};
+export interface GetUserRoles extends NormalResponse<UserPermissions> {};
+
+export interface SystemSettings extends NormalResponse<Settings> {};
 
 interface Params {
     name: string,
