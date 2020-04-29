@@ -6,7 +6,8 @@
 		"changePassword": "Wachtwoord wijzigen",
 		"newPasswordLabel": "Nieuw wachtwoord",
 		"saveChanges": "Opslaan",
-		"accountSettings": "Accountinstellingen"
+		"accountSettings": "Accountinstellingen",
+		"agreementAccepted": "De overeenkomst is geaccepteerd"
 	},
 	"activeActions": {
 		"sendConfirm": "Activatielink opnieuw verzenden",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Zoek",
-		"search_ipvd": "Zoeken op model of fabrikant",
 		"filter applied": "filter toegepast",
 		"filters applied": "filters toegepast",
 		"Any": "Elk",
@@ -288,7 +288,7 @@
 		"cantEditYourself": "Het wijzigen van eigen machtigingen is niet toegestaan",
 		"cantEditAdmin": "Deze gebruiker heeft beheerdersrechten",
 		"cantOpenClient": "%VMS_NAME% applicatie is niet gedetecteerd.",
-		"lostConnection": "Verbinding met {{systemName}} verloren",
+		"lostConnection": "Verbinding met {{systemName}} verbroken",
 		"thisSystem": "het systeem",
 		"oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
 		"DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",

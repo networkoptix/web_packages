@@ -6,7 +6,8 @@
 		"changePassword": "パスワードを変更",
 		"newPasswordLabel": "新規パスワード",
 		"saveChanges": "保存",
-		"accountSettings": "アカウント設定"
+		"accountSettings": "アカウント設定",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "アクティベーションリンクを再送信",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "検索",
-		"search_ipvd": "モデルまたはメーカーで検索",
 		"filter applied": "フィルターが適用されました",
 		"filters applied": "フィルターが適用されました",
 		"Any": "全て",
@@ -172,25 +172,25 @@
 	"pageTitles": {
 		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"about": "About",
+		"about": "について",
 		"registerSuccess": "ようこそ",
 		"register": "アカウントを作成",
-		"changePassword": "Change password",
-		"account": "Account settings",
-		"systems": "Systems",
-		"system": "System",
+		"changePassword": "パスワードの変更",
+		"account": "アカウント設定",
+		"systems": "システム",
+		"system": "システム",
 		"systemName": "{{systemName}}",
-		"systemShare": "Share System",
-		"activate": "Activate account",
-		"activateSent": "Activate account",
-		"activateSuccess": "Account activated",
-		"activateCode": "Activate account",
-		"restorePassword": "Reset password",
-		"restorePasswordSuccess": "Password saved",
-		"restorePasswordCode": "Reset password",
-		"view": "View cameras",
+		"systemShare": "共有システム",
+		"activate": "アクティベート アカウント",
+		"activateSent": "アクティベート アカウント",
+		"activateSuccess": "アカウント アクティベート",
+		"activateCode": "アクティベート アカウント",
+		"restorePassword": "パスワードリセット",
+		"restorePasswordSuccess": "パスワードを保存",
+		"restorePasswordCode": "パスワードリセット",
+		"view": "カメラを表示",
 		"debug": "デバッグ",
-		"login": "Log in",
+		"login": "ログイン",
 		"download": "%VMS_NAME% をダウンロード",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "ページが見つかりません",
@@ -238,7 +238,7 @@
 				"ipvd_feedback_device": "{{asset}} についてのフィードバック"
 			},
 			"subject": {
-				"sales_inquiry": "{{asset}} 販売問い合わせ",
+				"sales_inquiry": "{{asset}}販売問い合わせ",
 				"technical_inquiry": "Technical inquiry for {{asset}}",
 				"integration_feedback": "{{asset}} 統合のためのフィードバック",
 				"ipvd_feedback_page": "カメラページへのフィードバック",
@@ -502,5 +502,5 @@
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "システムアドミニストレーションのクラウドタブに移動",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "「システムを %CLOUD_NAME% に接続」を押します",
 	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+	"phoneNumberWithLabel": "電話： {{number}}"
 }

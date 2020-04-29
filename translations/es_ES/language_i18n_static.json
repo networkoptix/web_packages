@@ -6,7 +6,8 @@
 		"changePassword": "Cambiar contraseña",
 		"newPasswordLabel": "Nueva contraseña",
 		"saveChanges": "Guardar",
-		"accountSettings": "Ajustes de cuenta"
+		"accountSettings": "Ajustes de cuenta",
+		"agreementAccepted": "El acuerdo ha sido aceptado"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar enlace de activación",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Búsqueda",
-		"search_ipvd": "Búsqueda por modelo o fabricante",
 		"filter applied": "filtro aplicado",
 		"filters applied": "filtros aplicados",
 		"Any": "Cualquiera",

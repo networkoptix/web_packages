@@ -6,7 +6,8 @@
 		"changePassword": "Change Password",
 		"newPasswordLabel": "New password",
 		"saveChanges": "Save",
-		"accountSettings": "Account Settings"
+		"accountSettings": "Account Settings",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Resend activation link",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Search",
-		"search_ipvd": "Search by model or manufacturer",
 		"filter applied": "filter applied",
 		"filters applied": "filters applied",
 		"Any": "Any",
@@ -181,13 +181,13 @@
 		"system": "System",
 		"systemName": "{{systemName}}",
 		"systemShare": "Share System",
-		"activate": "Activate account",
-		"activateSent": "Activate account",
+		"activate": "Activate Account",
+		"activateSent": "Activate Account",
 		"activateSuccess": "Account activated",
-		"activateCode": "Activate account",
-		"restorePassword": "Reset password",
+		"activateCode": "Activate Account",
+		"restorePassword": "Reset Password",
 		"restorePasswordSuccess": "Password saved",
-		"restorePasswordCode": "Reset password",
+		"restorePasswordCode": "Reset Password",
 		"view": "View cameras",
 		"debug": "Debug",
 		"login": "Log in",

@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.asset }}:
+Hei, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}): llä on seuraava myyntiin liittyvä kysymys {{ message.asset }}: sta:
 <pre>{{ message.message }}</pre>

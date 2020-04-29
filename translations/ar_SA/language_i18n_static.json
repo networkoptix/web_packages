@@ -6,7 +6,8 @@
 		"changePassword": "Change Password",
 		"newPasswordLabel": "New password",
 		"saveChanges": "Save",
-		"accountSettings": "Account Settings"
+		"accountSettings": "Account Settings",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "إعادة إرسال رابط التنشيط",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Search",
-		"search_ipvd": "Search by model or manufacturer",
 		"filter applied": "filter applied",
 		"filters applied": "filters applied",
 		"Any": "Any",
@@ -172,7 +172,7 @@
 	"pageTitles": {
 		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"about": "About",
+		"about": "نبذة",
 		"registerSuccess": "Welcome to",
 		"register": "Create account in",
 		"changePassword": "Change password",

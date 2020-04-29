@@ -6,7 +6,8 @@
 		"changePassword": "Vaihda salasana",
 		"newPasswordLabel": "Uusi salasana",
 		"saveChanges": "Tallenna",
-		"accountSettings": "Tilin asetukset"
+		"accountSettings": "Tilin asetukset",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "Lähetä aktivointilinkki uudelleen",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Etsi",
-		"search_ipvd": "Hae mallin tai valmistajan mukaan",
 		"filter applied": "suodatinta käytetty",
 		"filters applied": "suodattimia käytetty",
 		"Any": "Mikä tahansa",
@@ -172,25 +172,25 @@
 	"pageTitles": {
 		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"about": "About",
+		"about": "Tietoja",
 		"registerSuccess": "Tervetuloa",
 		"register": "Luo tili",
-		"changePassword": "Change password",
-		"account": "Account settings",
-		"systems": "Systems",
-		"system": "System",
+		"changePassword": "Vaihda salasana",
+		"account": "Tilin asetukset",
+		"systems": "Järjestelmät",
+		"system": "Järjestelmä",
 		"systemName": "{{systemName}}",
-		"systemShare": "Share System",
+		"systemShare": "Jaa järjestelmä",
 		"activate": "Activate account",
 		"activateSent": "Activate account",
 		"activateSuccess": "Account activated",
 		"activateCode": "Activate account",
-		"restorePassword": "Reset password",
+		"restorePassword": "Vaihda salasana",
 		"restorePasswordSuccess": "Password saved",
-		"restorePasswordCode": "Reset password",
-		"view": "View cameras",
+		"restorePasswordCode": "Vaihda salasana",
+		"view": "Näytä kamerat",
 		"debug": "Vianetsintä",
-		"login": "Log in",
+		"login": "Kirjaudu sisään",
 		"download": "Lataa %VMS_NAME%",
 		"downloadPlatform": "Lataa %VMS_NAME% ",
 		"pageNotFound": "Sivua ei löydy",
@@ -502,5 +502,5 @@
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Siirry \"Cloud\" -välilehdelle \"System Administration\" -valintaikkunassa",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Paina \"Yhdistä järjestelmä %CLOUD_NAME%\"",
 	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+	"phoneNumberWithLabel": "Puh: {{number}}"
 }

@@ -6,7 +6,8 @@
 		"changePassword": "Ändra lösenord",
 		"newPasswordLabel": "Nytt lösenord",
 		"saveChanges": "Spara",
-		"accountSettings": "Kontoinställningar"
+		"accountSettings": "Kontoinställningar",
+		"agreementAccepted": "Avtal har accepterats"
 	},
 	"activeActions": {
 		"sendConfirm": "Skicka aktiveringslänk igen",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "Sök",
-		"search_ipvd": "Sök efter modell eller tillverkare",
 		"filter applied": "filter används",
 		"filters applied": "filter används",
 		"Any": "Någon",

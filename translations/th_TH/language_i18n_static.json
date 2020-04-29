@@ -6,7 +6,8 @@
 		"changePassword": "เปลี่ยนรหัสผ่าน",
 		"newPasswordLabel": "สร้างรหัสผ่านใหม่",
 		"saveChanges": "บันทึก",
-		"accountSettings": "การตั้งค่าบัญชี"
+		"accountSettings": "การตั้งค่าบัญชี",
+		"agreementAccepted": "Agreement has been accepted"
 	},
 	"activeActions": {
 		"sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
@@ -17,7 +18,6 @@
 	"clientProtocol": "%CLIENT_PROTOCOL%:",
 	"search": {
 		"Search": "ค้นหา",
-		"search_ipvd": "ค้นหาตามรุ่นหรือผู้ผลิต",
 		"filter applied": "ใช้ตัวกรอง",
 		"filters applied": "ใช้ตัวกรอง",
 		"Any": "รายการใดก็ได้",
@@ -172,25 +172,25 @@
 	"pageTitles": {
 		"template": "{{title}} - %CLOUD_NAME%",
 		"default": "%CLOUD_NAME%",
-		"about": "About",
+		"about": "เกี่ยวกับ",
 		"registerSuccess": "ขอต้อนรับสู่:",
 		"register": "สร้างบัญชี",
-		"changePassword": "Change password",
+		"changePassword": "เปลี่ยนรหัสผ่าน",
 		"account": "Account settings",
-		"systems": "Systems",
-		"system": "System",
+		"systems": "ระบบ",
+		"system": "ระบบ",
 		"systemName": "{{systemName}}",
 		"systemShare": "Share System",
-		"activate": "Activate account",
-		"activateSent": "Activate account",
+		"activate": "เปิดใช้งานบัญชี",
+		"activateSent": "เปิดใช้งานบัญชี",
 		"activateSuccess": "Account activated",
-		"activateCode": "Activate account",
-		"restorePassword": "Reset password",
-		"restorePasswordSuccess": "Password saved",
-		"restorePasswordCode": "Reset password",
-		"view": "View cameras",
+		"activateCode": "เปิดใช้งานบัญชี",
+		"restorePassword": "รีเซ็ตรหัสผ่าน",
+		"restorePasswordSuccess": "บันทึกรหัสผ่านแล้ว",
+		"restorePasswordCode": "รีเซ็ตรหัสผ่าน",
+		"view": "ดูกล้อง",
 		"debug": "การ​แก้ไข​จุด​บกพร่อง",
-		"login": "Log in",
+		"login": "ลงชื่อเข้าสู่ระบบ",
 		"download": "ดาวน์โหลด %VMS_NAME%",
 		"downloadPlatform": "Download %VMS_NAME% for ",
 		"pageNotFound": "ไม่พบหน้านี้",
@@ -502,5 +502,5 @@
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
 	"topXByVolume": "Top {{value}} by volume:",
-	"phoneNumberWithLabel": "Tel: {{number}}"
+	"phoneNumberWithLabel": "โทร: {{number}}"
 }
