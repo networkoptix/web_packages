@@ -3,7 +3,8 @@ import { HttpClient }               from '@angular/common/http';
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { AddResponseTypeHere }      from './system-api.service';
-import { NxSystemWithUserInfo } from './systems.service';
+import { NxSystemWithUserInfo }     from './systems.service';
+import * as t                       from './nx-cloud-api.types';
 
 @Injectable({
     providedIn: 'root'
@@ -180,7 +181,7 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        return this.http.get<AddResponseTypeHere>('/static/languages.json').toPromise();
+        return this.http.get<t.ILanguages>('/static/languages.json').toPromise();
     }
 
     changeLanguage(language: string) {
