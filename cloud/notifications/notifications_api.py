@@ -1,5 +1,6 @@
 import django
 import json
+import traceback
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from urllib.parse import quote_plus
@@ -71,7 +72,7 @@ def send_feedback(event_type, asset_id, data):
     feedback.send()
 
 
-# Push Notications
+# Push Notifications
 
 def _read_push_result(notification_object):
     result_data = notification_object.result_data
@@ -88,9 +89,11 @@ def _write_push_result(notification_object, result_data):
     notification_object.save()
 
 
-def log_push_result(notification_object, message, level=logging.INFO, device_token=None):
+def log_push_result(notification_object, message, level=logging.INFO, device_token=None, stack_trace=False):
     result_data = _read_push_result(notification_object)
     log_message = f'Push Notification: {notification_object.id}, {message}'
+    if stack_trace:
+        log_message += f'\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
     logger.log(level, log_message)
 
     if device_token:
@@ -116,7 +119,7 @@ def get_system_with_users(notification_object, request_data):
     try:
         if 'system' in request_data:
             if request_data['system']['id'] == notification_object.raw_system_id:
-                system = request_data['system']
+                system = request_data['system'].copy()
             else:
                 log_push_result(notification_object, 'System credentials do not match target system')
                 return None
@@ -188,10 +191,10 @@ def set_subscriptions_from_targets(notification_object, request_data):
     for target in targets:
         log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
 
-    matching_devices = PushDevice.objects.filter(
+    return PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,
-        active=True, user__is_active=True, application_id=notification_object.customization.name
+        application_id=notification_object.customization.name
     ).distinct()
-    notification_object.devices.set(matching_devices)
+    # notification_object.devices.set(matching_devices)
 
-    return notification_object.devices.exists()
+    # return matching_devices.values_list('id', flat=True)

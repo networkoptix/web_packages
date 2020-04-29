@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
-from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
+from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
 from push_notifications.models import GCMDevice
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
@@ -215,6 +215,12 @@ class PushDevice(GCMDevice):
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
 
+    def send_message(self, *args, **kwargs):
+        try:
+            return super().send_message(*args, **kwargs)
+        except GCMError as gcm_error:
+            return gcm_error.args[0]
+
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
@@ -231,6 +237,7 @@ class PushNotification(models.Model):
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
+    count = models.IntegerField(default=0)
 
     def clean(self):
         if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
@@ -249,11 +256,11 @@ class PushNotification(models.Model):
             url = url.replace(system_id, relay_host)
         return url
 
-    def send_notifications(self, device_tokens=None):
+    def send_notifications(self, device_tokens=None, devices=None):
         if device_tokens:
-            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
-        else:
-            devices = self.devices.all()
+            devices = PushDevice.objects.filter(id__in=device_tokens)
+        # else:
+        #     devices = self.devices.all()
 
         title = self.title or None
         body = self.body or None
@@ -269,8 +276,10 @@ class PushNotification(models.Model):
         data_devices = devices.filter(type=PushDevice.TYPES.data)
 
         notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+
         payload['caption'] = title or ''
         payload['description'] = body or ''
+
         data_response = data_devices.send_message(None, title=None, extra=payload, **options)
 
         return notification_response, data_response

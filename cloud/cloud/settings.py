@@ -41,6 +41,7 @@ SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
+PUSH_WORKER = 'push-notification' in sys.argv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
@@ -167,6 +168,7 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+CONN_MAX_AGE = None
 cloud_db = conf['cloud_database']
 
 if cloud_db and cloud_db['host'] != '$DB_HOST':
@@ -207,6 +209,12 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "TIMEOUT": None
     },
+    "push_authentication": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "TIMEOUT": 60 * 60 * 24  # 1 day
+    },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
         "TIMEOUT": 15 * 60,  # 15 minutes
@@ -224,7 +232,7 @@ DEPLOYMENT_READY = 'ready'
 if LOCAL_ENVIRONMENT:
     conf["cloud_db"]["url"] = 'https://cloud-test.hdw.mx/cdb'
 
-    # BROKER_URL = 'sqs://...'
+    # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
     # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
     # Or go through file history in source control to find the last time it was here
@@ -374,26 +382,31 @@ HOOK_EVENTS = {
 
 # Configure AWS SQS
 # Broker_url = 'sqs://{aws_access_key_id}:{aws_secret_access_key}@'
-# BROKER_TRANSPORT_OPTIONS
+# CELERY_BROKER_TRANSPORT_OPTIONS
 #   queue_name_prefix allows you to name the queue for sqs
 #   region allows you to specify the aws region
 
 
-BROKER_URL = os.getenv('QUEUE_BROKER_URL')
-BROKER_CONNECTION_MAX_RETRIES = 1
-if not BROKER_URL:
-    BROKER_URL = 'sqs://'
+CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
+if not CELERY_BROKER_URL:
+    CELERY_BROKER_URL = 'sqs://'
 
-BROKER_TRANSPORT_OPTIONS = {
+CELERY_BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
 }
 
-RESULT_PERSISTENT = True
+CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_SEND_EVENTS = False
-CELERYD_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages it wants
-BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+CELERY_WORKER_SEND_TASK_EVENTS = False
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages as it wants
+CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+if PUSH_WORKER:
+    CELERY_WORKER_CONCURRENCY = 2
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 30
+    CELERY_RESULT_BACKEND = None
+
 
 # / End of Celery settings section
 
