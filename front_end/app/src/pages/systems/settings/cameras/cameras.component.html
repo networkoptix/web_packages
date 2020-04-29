@@ -102,7 +102,7 @@
                                 [disabled]="!selectedCamera.isAudioSupported">
                             </nx-checkbox>
                             <label class="control-label mb-0"
-                                [ngClass]="!selectedCamera.audioEnabled ? 'disabled-label' : ''"
+                                [ngClass]="!selectedCamera.isAudioSupported ? 'disabled-label' : ''"
                                 for="audioEnabled">
                                 <span translate>Enable Audio</span>
                             </label>

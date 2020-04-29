@@ -210,7 +210,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
-                audioEnabled    : this.audioEnabled.value,
+                audioEnabled    : this.audioEnabledWatcher.value,
                 overrideAr      : `${this.selectedAspectWatcher.value}` || '',
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
@@ -612,7 +612,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedAspect = aspect;
             this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
-            this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
+            this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;

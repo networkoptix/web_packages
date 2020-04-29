@@ -444,7 +444,7 @@ class ServerManager {
                 { ...params, [name]: recursiveJson(value) }
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
-            const isAudioSupported = audioSupported === '1';
+            const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
             const _maxFps = primary && primary.value && primary.value.maxFps;
