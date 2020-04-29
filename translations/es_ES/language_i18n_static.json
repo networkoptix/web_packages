@@ -586,7 +586,7 @@
         "resetSuccessful": "El servidor {{ serverName }} se ha restablecido a los valores predeterminados.",
         "restartFailed": "Hubo un problema al reiniciar el servidor.",
         "restartSuccessful": "El servidor se reinició correctamente.",
-        "serverOffline": "Server is offline.",
+        "serverOffline": "Servidor está desconectado.",
         "servers": "Servidores",
         "status": {
             "checking": "comprobando...",

@@ -586,7 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} har återställts till standardinställningar.",
         "restartFailed": "Det gick inte att starta om servern.",
         "restartSuccessful": "Servern har startat om.",
-        "serverOffline": "Server is offline.",
+        "serverOffline": "Servern är offline.",
         "servers": "Servrar",
         "status": {
             "checking": "kontrollerar...",
