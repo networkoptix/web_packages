@@ -158,7 +158,7 @@ export class NxCloudApiService {
 
     login(email: string, password: string, remember: boolean) {
         // clearCache();
-        return this.http.post<AddResponseTypeHere>(this.CONFIG.apiBase + '/account/login', {
+        return this.http.post<Account>(this.CONFIG.apiBase + '/account/login', {
             email,
             password,
             remember,

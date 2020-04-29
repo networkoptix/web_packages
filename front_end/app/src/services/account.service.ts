@@ -18,7 +18,7 @@ import { NxPollService }                                  from './poll.service';
 import { NxUtilsService }                                 from './utils.service';
 import { IParams } from '../components/search/search.component';
 
-export interface Account {
+export class Account {
     email: string;
     // eslint-disable-next-line camelcase
     first_name: string;
@@ -164,12 +164,11 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    // Need to refine return type here
-    get(forceUpdate = false) {
+    get(forceUpdate = false): Promise<Account | false> {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
-                .then(() => {
+                .then((): any => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
@@ -257,7 +256,7 @@ export class NxAccountService implements OnDestroy {
 
         this.requestingLogin = <Promise<{data: {account: Account, resultCode: string}}>> this.cloudApi
             .login(email, password, remember)
-            .then((result) => {
+            .then((result: any): any => {
                 if (!this.cloudApi.checkResponseHasError(result)) {
                     if (this.sessionService.loginState) {
                         // If the user that logged in matches the current session there's no need to show
