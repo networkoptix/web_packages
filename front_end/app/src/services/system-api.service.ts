@@ -263,11 +263,11 @@ export class NxSystemAPI {
         return this.get<t.SystemTime>('/api/synchronizedTime');
     }
 
-    private updateOrGetSettings(updateParams: Partial<t.Settings>) {
+    public updateOrGetSettings(updateParams: Partial<t.Settings>) {
         return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
-    private getStorages() {
+    public getStorages() {
         return this.get<t.GetStorages[]>('/api/storageSpace');
     }
 
