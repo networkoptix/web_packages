@@ -8,5 +8,5 @@ import { BaseDropdown }     from '../injDropdown';
 })
 
 export class NxNavLocationDropdown extends BaseDropdown {
-    @Input() location: any;
+    @Input() location: Location;
 }

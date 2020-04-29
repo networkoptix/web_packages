@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxAccountService }          from '../../services/account.service';
+import { NxAccountService, }          from '../../services/account.service';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { ActivatedRoute }            from '@angular/router';
 import { NxUriService }              from '../../services/uri.service';
