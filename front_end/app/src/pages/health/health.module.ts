@@ -26,10 +26,28 @@ import { FormsModule }                  from '@angular/forms';
 import { NxSystemAlertCardComponent }   from './card/card.component';
 import { PipesModule }                  from '../../pipes/pipes.module';
 import { NxUpdateInfoComponent }        from './update-info/update-info.component';
+import { NxConfigService }              from '../../services/nx-config';
 
-const appRoutes: Routes = [
+const CONFIG = new NxConfigService().getConfig();
+const appRoutes: Routes = !CONFIG.isLocal ? [
     {
         path    : 'systems/:systemId/health', component: NxHealthComponent, canActivate: [AuthGuard, HMGuard],
+        children : [
+            {
+                path: '', component: NxSystemAlertsComponent,
+                pathMatch: 'full'
+            },
+            {
+                path: 'alerts', component: NxSystemAlertsComponent,
+            },
+            {
+                path: ':metric', component: NxSystemMetricsComponent,
+            }
+        ]
+    }
+] : [
+    {
+        path    : 'health', component: NxHealthComponent, canActivate: [AuthGuard, HMGuard],
         children : [
             {
                 path: '', component: NxSystemAlertsComponent,

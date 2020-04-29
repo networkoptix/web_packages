@@ -222,6 +222,9 @@ export class AppComponent {
                 this.CONFIG.menus.systemSettings.baseUrl = '/settings';
                 this.CONFIG.redirect.authorised = '/settings';
                 this.CONFIG.credentialsValidation.emailRegex = '.*';
+                this.CONFIG.viewsDir = 'static/views/';
+                // @ts-ignore
+                this.CONFIG.commonViewsDir = 'web_common/views/';
             }
 
             // (Smart check) Check if page is displayed inside an iframe

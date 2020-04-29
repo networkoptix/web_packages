@@ -29,6 +29,9 @@ export class HMGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        if (this.CONFIG.isLocal) {
+            return true;
+        }
         const systemId = route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
         }).params.systemId;

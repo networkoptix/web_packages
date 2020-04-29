@@ -178,6 +178,15 @@ window.L = {};
                     .when('/systems/:systemId/health/:metric', {
                         template: ''
                     })
+                    .when('/health', {
+                        template: ''
+                    })
+                    .when('/health/alerts', {
+                        template: ''
+                    })
+                    .when('/health/:metric', {
+                        template: ''
+                    })
                     .when('/systems/:systemId', {
                         template: ''
                     })
