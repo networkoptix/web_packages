@@ -46,14 +46,20 @@ Detailed Info
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
 
-Apect Ratio
+Aspect Ratio
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    # change Ratio
-    # check ratio changed
-    # change back
+    Select Camera By Name    good cam
+    Change Aspect Ratio    1:1
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    @{auth}=    Create List    admin    ${BASE PASSWORD}
+    ${json}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${server aspect ratio}=   Get Aspect Ratio    ${json}    good cam
+    Should Be Equal    ${server aspect ratio}    1
+    Change Aspect Ratio    Auto
     # check ration changed
 
 Rotation
@@ -61,10 +67,15 @@ Rotation
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    # change rotation
-    # check rotation changed
-    # change back
-    # check rotation changed
+    Select Camera By Name    good cam
+    Change Rotation    90˚
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    @{auth}=    Create List    admin    ${BASE PASSWORD}
+    ${json}=   Get Cameras    ${auth}    ${AUTO SYS IP}
+    ${server rotation}=   Get Rotation    ${json}    good cam
+    Should Be Equal    ${server rotation}    90˚
+    Change Rotation    Auto
 
 Audio enable Disabled
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
@@ -155,6 +166,11 @@ Disabled Motion With Recording
 
     Record motion and record motion low quality radio buttons should be disabled
 
-
-
-# Offline Info?
+Placeholder shows when system is offline
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Wait Until Elements are Visible
+    ...    ${OFFLINE PLACEHOLDER IAMGE}
+    ...    ${OFFLINE TITLE}
+    ...    ${OFFLINE MESSAGE}
