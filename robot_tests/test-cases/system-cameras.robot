@@ -55,12 +55,15 @@ Aspect Ratio
     Change Aspect Ratio    1:1
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    @{auth}=    Create List    admin    ${BASE PASSWORD}
-    ${json}=   Get Cameras    ${auth}    ${AUTO SYS IP}
-    ${server aspect ratio}=   Get Aspect Ratio    ${json}    good cam
-    Should Be Equal    ${server aspect ratio}    1
+    Aspect Ratio Should Be    1:1
+    Reload Page
+    Aspect Ratio Should Be    1:1
     Change Aspect Ratio    Auto
-    # check ration changed
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Aspect Ratio Should Be    Auto
+    Reload Page
+    Aspect Ratio Should Be    Auto
 
 Rotation
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
@@ -69,13 +72,19 @@ Rotation
     Verify on Cameras Page
     Select Camera By Name    good cam
     Change Rotation    90˚
+    Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
-    @{auth}=    Create List    admin    ${BASE PASSWORD}
-    ${json}=   Get Cameras    ${auth}    ${AUTO SYS IP}
-    ${server rotation}=   Get Rotation    ${json}    good cam
-    Should Be Equal    ${server rotation}    90˚
+    Rotation Should Be    90˚
+    Reload Page
+    Rotation Should Be    90˚
     Change Rotation    Auto
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Rotation Should Be    Auto
+    Reload Page
+    Rotation Should Be    Auto
 
 Audio enable Disabled
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
@@ -94,7 +103,37 @@ Audio unavailable
     Verify on Cameras Page
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOCK}//label[@disabled]
 
-# Authentication
+Edit credentials form Close and Cancel buttons
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Click Button    ${EDIT CREDENTIALS X BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Click Button    ${EDIT CREDENTIALS CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+Changing credentials from valid to invalid ones makes the camera unauthorized
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwer
+    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
+    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+
+Changing credentials from invalid ones to valid ones makes the camera authorized
 Record Always
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -105,6 +144,7 @@ Record Always
     Click Element    ${RECORD ALWAYS RADIO BUTTON}
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+
 Record Motion
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -152,6 +192,31 @@ Change Quality
     Click Button    ${SYSTEM SAVE}
 
 Enable/disable motion detection
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera By Name    good cam
+    Verify on Cameras Page
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Not Visible    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Reload Page
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
+    Reload Page
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
 
 Disabled Motion With Recording
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
