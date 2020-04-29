@@ -3,7 +3,7 @@ import {
     OnDestroy, ViewEncapsulation
 }                                                from '@angular/core';
 import { ActivatedRoute, Router }                from '@angular/router';
-import { NxAccountService }                      from '../../services/account.service';
+import { NxAccountService, Account }             from '../../services/account.service';
 import { NxConfigService, IConfig }              from '../../services/nx-config';
 import { NxSystem, NxSystemService }             from '../../services/system.service';
 import { NxMenuService }                         from '../../components/menu/menu.service';
@@ -35,7 +35,7 @@ import { LanguageI18NStaticTypes }               from '../../../language_i18n_st
 export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    account: any;
+    account: Account;
     system: NxSystem|any;
     server: NxSystemAPI;
 

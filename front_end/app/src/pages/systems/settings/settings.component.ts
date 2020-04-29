@@ -9,9 +9,11 @@ import { NxPageService }             from '../../../services/page.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxSystem, NxSystemService, ICamera } from '../../../services/system.service';
+import {
+    NxSystem, NxSystemService, ICamera
+}                                    from '../../../services/system.service';
 import { NxSystemsService }          from '../../../services/systems.service';
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService, Account } from '../../../services/account.service';
 import { NxProcessService }          from '../../../services/process.service';
 import { NxUtilsService }            from '../../../services/utils.service';
 import { NxUriService }              from '../../../services/uri.service';
@@ -41,7 +43,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     plugin: any;
     content: any = {};
 
-    account: any;
+    account: Account;
     system: NxSystem;
     gettingSystem: any;
     systems: any;
