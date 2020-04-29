@@ -6,7 +6,6 @@ import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera, NxSystemUser, NxSystem } from './system.service';
 import { IParams } from '../components/search/search.component';
-import * as t from './system-api.types';
 
 interface User {
     canBeEdited: boolean;

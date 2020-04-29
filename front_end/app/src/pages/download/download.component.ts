@@ -206,7 +206,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then(account => {
-                this.canSeeHistory = (this.CONFIG.cloudCapabilities.publicReleases ||
+                this.canSeeHistory = (!!this.CONFIG.cloudCapabilities.publicReleases ||
                         account &&
                         (account.is_superuser ||
                         account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1));

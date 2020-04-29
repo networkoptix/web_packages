@@ -132,7 +132,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.healthService.ready = false;
                 this.hasServerError = false;
                 this.outdatedVersion = false;
-                if (typeof account !== 'undefined') {
+                if (account && typeof account !== 'undefined') {
                     this.account = account;
                     this.system = this.systemService.createSystem(account.email, systemId);
                     this.menu.base = `${this.CONFIG.menus.systemSettings.baseUrl}${this.system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;
