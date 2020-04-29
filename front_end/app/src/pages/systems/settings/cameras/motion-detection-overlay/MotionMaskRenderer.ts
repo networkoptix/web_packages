@@ -100,7 +100,7 @@ export class MotionMaskRenderer {
                 buffer[2].type === 'mousedown' &&
                 buffer[3].type === 'mouseup';
             const click = firstClick;
-            const start = buffer[0].type === 'mousedown';
+            const start = buffer[0] && buffer[0].type === 'mousedown';
             if (doubleClick) {
                 return 'double-click';
             }
@@ -165,15 +165,15 @@ export class MotionMaskRenderer {
                 map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
                     let width = 1;
                     let height = 1;
-                    const x = Math.min(curX, prev.x);
-                    const y = Math.min(curY, prev.y);
+                    const x = Math.max(Math.min(curX, prev.x), 0);
+                    const y = Math.max(Math.min(curY, prev.y), 0);
                     if (action === 'select-end') {
                         width =
-                            Math.max(curX, prev.x) - Math.min(curX, prev.x) + 1;
+                            Math.max(curX, prev.x) - Math.min(Math.max(curX, 0), prev.x) + 1;
                         height =
-                            Math.max(curY, prev.y) - Math.min(curY, prev.y) + 1;
+                            Math.max(curY, prev.y) - Math.min(Math.max(curY, 0), prev.y) + 1;
                     }
-                    return { action, x, y, selectX: curX, selectY: curY, width, height, ...keyStates };
+                    return { action, x, y, selectX: Math.max(curX, 0), selectY: Math.max(curY, 0), width, height, ...keyStates };
                 }),
                 switchMap(({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
                     const prevSelections = this.selectionZones.value;
