@@ -168,7 +168,6 @@ WSGI_APPLICATION = 'cloud.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-CONN_MAX_AGE = None
 cloud_db = conf['cloud_database']
 
 if cloud_db and cloud_db['host'] != '$DB_HOST':
