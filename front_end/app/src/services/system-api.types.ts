@@ -1,5 +1,11 @@
 // Add interfaces here for cloud api request
 
+/**
+ * Base response type, accepts a generic type/interface that gets assigned to the reply property.
+ * Usage example below.
+ *
+ * export interface GetUserRoles extends NormalResponse<UserPermissions> {}
+ */
 export interface NormalResponse<Reply = {}> {
     error: string,
     errorString: string,
