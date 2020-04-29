@@ -786,3 +786,32 @@ Modify All Settings for Local Users
     Verify Changed Info Via API    ${new locals}
     Delete All Local Users    //span[contains(text(),"local+")]
       
+Disable Enable Local User
+    [Tags]    local user
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Log in to Auto Tests System    ${email}
+    Click Link    ${USERS LIST LINK}      
+    Click Element    //span[contains(text(),"Local+")]
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    ${name} =    Get Text    //h2[@class="user-email"]
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${False}
+    END
+    Should Be True   ${state} == ${False}
+    Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    Wait Until Elements Are Visible    ${ACCOUNT SAVE}
+    Click Button    ${ACCOUNT SAVE}
+    Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
+    ${name} =    Get Text    //h2[@class="user-email"]
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR     ${user}    IN    @{users}
+        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        Exit For Loop If    ${state} == ${True}
+    END
+    Should Be True    ${state} == ${True}
+    Delete All Local Users    //span[contains(text(),"ocal+")]
