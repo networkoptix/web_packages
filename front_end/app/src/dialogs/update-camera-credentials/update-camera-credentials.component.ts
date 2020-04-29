@@ -36,9 +36,9 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
     ngOnInit() {
         this.update = this.processService.createProcess(() => {
             return this.system.updateCameraSettings(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
-                .then(_ => this.system.getCameras().then(_ => {
+                .then(_ => new Promise(resolve => setTimeout(resolve, 1500, this.system.getCameras().then(_ => {
                     this.system.systemInfo = this.system;
-                }));
+                }))));
         }).then(() => {
             this.activeModal.close();
             this.updateCallback();
