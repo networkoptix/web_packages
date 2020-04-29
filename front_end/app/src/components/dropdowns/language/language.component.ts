@@ -8,17 +8,18 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { NxConfigService }           from '../../../services/nx-config';
 import { BaseDropdown }              from '../injDropdown';
+import { ILanguages }                from '../../../services/nx-cloud-api.types';
 
 @Component({
-    selector     : 'nx-language-select',
-    templateUrl  : 'language.component.html',
-    styleUrls    : ['language.component.scss'],
-    encapsulation: ViewEncapsulation.None,
-    providers    : [
+    selector      : 'nx-language-select',
+    templateUrl   : 'language.component.html',
+    styleUrls     : ['language.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
         {
-            provide    : NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => NxLanguageDropdown),
-            multi      : true
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxLanguageDropdown),
+            multi       : true
         }
     ]
 })
@@ -35,11 +36,11 @@ export class NxLanguageDropdown extends BaseDropdown {
     direction: string;
     langCode: string;
     activeLanguage = {
-        language: '',
-        name    : ''
+        language : '',
+        name     : ''
     };
 
-    languages = [];
+    languages: ILanguages = [];
     languagesCol1 = [];
     languagesCol2 = [];
 
@@ -98,7 +99,7 @@ export class NxLanguageDropdown extends BaseDropdown {
 
         this.cloudApi
             .getLanguages()
-            .then((data: any) => {
+            .then((data) => {
                 this.languages = data;
                 this.languages.sort(NxUtilsService.byParam((lang) => {
                     return lang.language;

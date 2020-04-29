@@ -24,7 +24,7 @@ export class NxSystemsService implements OnDestroy {
     private mergingSystems: Set<string>;
     systems: NxSystemWithUserInfo[];
     systemsPoll: Observable<NxSystemWithUserInfo[]> | any; // TODO: Remove any once resolve type issue with settings.compontent.ts line 123
-    systemsSubject = new ReplaySubject(0);
+    systemsSubject = new ReplaySubject<NxSystemWithUserInfo[]>(0);
     systemsMerging: { primary: NxSystemWithUserInfo, secondary: NxSystemWithUserInfo } = {
         primary   : undefined,
         secondary : undefined

@@ -3,23 +3,23 @@ import { Router }                    from '@angular/router';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxConfigService }           from '../../../services/nx-config';
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService, Account } from '../../../services/account.service';
 import { NxSessionService }          from '../../../services/session.service';
 import { BaseDropdown }              from '../injDropdown';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-account-settings-select',
-    templateUrl: 'account-settings.component.html',
-    styleUrls  : ['account-settings.component.scss']
+    selector    : 'nx-account-settings-select',
+    templateUrl : 'account-settings.component.html',
+    styleUrls   : ['account-settings.component.scss']
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown {
-    settings = {
-        email       : '',
-        is_staff    : false,
-        is_superuser: false
+    settings: Pick<Account, 'email' | 'is_staff' | 'is_superuser'> = {
+        email        : '',
+        is_staff     : false,
+        is_superuser : false
     };
 
     private loginSubscription: Subscription;
@@ -38,15 +38,15 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
-                        email       : account.email,
-                        is_staff    : account.is_staff,
-                        is_superuser: account.is_superuser
+                        email        : account.email,
+                        is_staff     : account.is_staff,
+                        is_superuser : account.is_superuser
                     };
                 } else {
                     this.settings = {
-                        email       : '',
-                        is_staff    : false,
-                        is_superuser: false
+                        email        : '',
+                        is_staff     : false,
+                        is_superuser : false
                     };
                 }
             });
