@@ -51,7 +51,7 @@ export class RestartServerModalContent {
             }, { ignoreError: true })
             .then(
                 () => {
-                    this.system.currentBusyServerId = this.serverId;
+                    this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);
                     let isFirstTime = true;
                     const serverSubscription = this.system.getServers()
@@ -103,6 +103,7 @@ export class RestartServerModalContent {
                         .subscribe(() => {
                             this.ribbonService.hide();
                             this.system.currentServerNotBusy = true;
+                            this.system.currentBusyServerIds.delete(this.serverId);
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
                             this.toastService.show(this.LANG.servers.restartSuccessful, options);
@@ -111,6 +112,7 @@ export class RestartServerModalContent {
                 },
                 err => {
                     this.system.currentServerNotBusy = true;
+                    this.system.currentBusyServerIds.delete(this.serverId);
                     let message = this.LANG.servers.restartFailed;
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline;

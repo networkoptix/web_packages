@@ -630,7 +630,7 @@ export class NxSystem extends System implements OnDestroy {
     currentUserEmail: string;
     mediaserver: any;
     currentServerNotBusy: boolean;
-    currentBusyServerId: string;
+    currentBusyServerIds = new Set();
     moduleInfo: any;
 
     infoPromise: any;
