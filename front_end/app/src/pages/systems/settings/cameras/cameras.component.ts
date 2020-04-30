@@ -210,7 +210,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             const cameraSettings: Pick<ICamera, 'id' | 'name' | 'audioEnabled' | 'scheduleEnabled' | 'overrideAr' | 'rotation' | 'motionType' | 'motionMask'> = {
                 id              : this.selectedCamera.id,
                 name            : this.cameraNameWatcher.value,
-                audioEnabled    : this.audioEnabled.value,
+                audioEnabled    : this.audioEnabledWatcher.value,
                 overrideAr      : `${this.selectedAspectWatcher.value}` || '',
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
@@ -226,6 +226,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 this.setCamera();
                 this.toggleMotionGrid();
+                this.settingsService.system = this.system;
                 return res;
             }));
         });
@@ -241,6 +242,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.cameraNameWatcher.value = value;
     }
 
+    editMode = false;
+    handleBlur() {
+        this.editMode = false;
+        this.handleBlankName();
+    }
+
+    handleFocus() {
+        this.editMode = true;
+    }
+
     handleBlankName() {
         if (!this.cameraName) {
             this.cameraName = this.cameraNameWatcher.originalValue;
@@ -250,7 +261,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateCredentials() {
         const update = () => {
             this.showUnauthorized = false;
-            setTimeout(this.setCamera, 1500);
+            return this.system.getCameras().then(() => {
+                this.setCamera(true);
+                this.reload += 1;
+                this.settingsService.system = this.system;
+            });
         };
 
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
@@ -336,7 +351,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
     }
 
-    get motionPreviewImage() {
+    private get _preview() {
         return this.system.getPreviewUrl(
             this.selectedCamera.id,
             null,
@@ -344,6 +359,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.maxHeight * 2,
             0
         );
+    }
+
+    private reload = 0;
+
+    get motionPreviewImage() {
+        return this._preview + `&reload=${this.reload}`;
     }
 
     toggleMotionGrid() {
@@ -422,12 +443,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recording(value) {
-        if (value) {
-            if (this.motionEnabled) {
-                this.enableMotion();
-            } else {
-                this.disableMotion();
-            }
+        if (value === this.recording) {
+            return;
+        }
+        if (this.motionEnabled) {
+            this.enableMotion();
+        } else {
+            this.disableMotion();
         }
         this.recordingWatcher.value = value;
     }
@@ -438,6 +460,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recordingModes(value: IRecordingModes[]) {
+        if (!this.selectedFps) {
+            this.selectedFps = this.selectedCamera.maxFps;
+        }
+
+        if (this.selectedQuality.value === 'various') {
+            this.selectedQuality = this.streamQualities[1];
+        }
         this.recordingModesWatcher.value = value;
     }
 
@@ -465,7 +494,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set selectedFps(value) {
-        this.selectedFpsWatcher.value = value;
+        this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
     }
 
     get variousFps() {
@@ -565,8 +594,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.unsub$.next(true);
     }
 
-    setCamera = () => {
-        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
+    setCamera = (forceUpdate = false) => {
+        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id && !forceUpdate) {
             return;
         }
 
@@ -592,11 +621,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedAspect = aspect;
             this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
-            this.audioEnabled = !!(this.selectedCamera.isAudioSupported && this.selectedCamera.audioEnabled);
-            this.recordingModes = this.selectedCamera.recordingSettings.modes;
+            this.audioEnabled = this.selectedCamera.audioEnabled;
+            this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
-            this.recording = this.selectedCamera.recordingSettings.recording;
+            this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;

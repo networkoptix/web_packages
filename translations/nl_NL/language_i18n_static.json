@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Een Chromecast vraagt veel resources en kan tot prestatieproblemen lijden op uw server.",
         "recordingSettingsWarning": "Werk ontbrekende opname-instellingen bij.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "- Verschillende waarden -",
             "auto": "Automatisch",
@@ -136,7 +141,6 @@
             "low": "Lage"
         },
         "general": "Algemeen",
-        "maintenanceInProgress": "Onderhoud wordt uitgevoerd",
         "searchCamPlaceholder": "Zoeken",
         "systemHasNoCameras": "Geen camera's",
         "systemHasNoCamerasMessage": "Er zijn geen toegankelijke camera's voor u in het systeem. <br><br>Verbind een paar camera's met het lokale netwerk van de server om ze te ontdekken, of vraag de systeembeheerder om uw toegangsniveau te wijzigen.",
@@ -582,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} is gereset naar de standaardwaarden.",
         "restartFailed": "Er is een probleem opgetreden bij het herstarten van de server.",
         "restartSuccessful": "Server is succesvol opnieuw gestart.",
+        "serverOffline": "Server is offline.",
         "servers": "Servers",
         "status": {
             "checking": "controleren...",

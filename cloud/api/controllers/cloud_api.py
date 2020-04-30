@@ -383,6 +383,16 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
+    def _merge(email, password, master_storage_id, slave_storage_id):
+        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages"
+        body = {
+            "id": slave_storage_id
+        }
+        return put_wrapper(request, json=body, auth=(HTTPDigestAuth(email, password)))
+
+    @staticmethod
+    @validate_response
+    @lower_case_email
     def _move(email, password, storage_id, system_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/"
         body = {
@@ -441,20 +451,23 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def merge(email, password, master_storage_id, slave_storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}"
-        body = {
-            "id": slave_storage_id
-        }
-        return put_wrapper(request, json=body, auth=(HTTPDigestAuth(email, password)))
+    def move(email, password, destination_system_id, source_system_id):
+        source_storages = Storage.list_system_storages(email, password, source_system_id)
+        destination_storages = Storage.list_system_storages(email, password, destination_system_id)
 
-    @staticmethod
-    @validate_response
-    @lower_case_email
-    def move(email, password, source_system_id, destination_system_id):
-        storages = Storage.list_system_storages(email, password, source_system_id)
-        for storage in storages:
-            Storage._move(email, password, storage['id'], destination_system_id)
+        if len(source_storages) == 0:
+            raise APIRequestException('Source System has no storages')
+
+        if len(destination_storages) == 0:
+            for storage in source_storages:
+                storage_id = storage['id']
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._move(email, password, destination_system_id, storage_id)
+
+        else:
+            destination_storage_id = destination_storages[0]['id']
+            for storage in source_storages:
+                Storage._merge(email, password, destination_storage_id, storage['id'])
         return True
 
     @staticmethod

@@ -410,6 +410,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path            : 'users/' + id,
                         svgIcon         : 'user'
                     };
+                    if (!user.isCloud && user.name === 'admin') {
+                        node.additionalLabel = 'Owner';
+                    }
                     if (user.isCloud) {
                         node.svgIcon = '';
                         node.icon = 'glyphicon-cloud';
@@ -489,43 +492,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     getCameraStatusIcon({ status }) {
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
-
-    /**
-     * Return IPv4 address or IPv6 address if none
-     */
-    formatURL(server) {
-        function ipReducer(result: any, currentValue: any) {
-            if (currentValue[0] === '[') {
-                result.ipv6.push(currentValue);
-            } else {
-                result.ipv4.push(currentValue);
-            }
-            return result;
-        }
-
-        const addr = server.networkAddresses.split(';');
-        const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
-
-        if (addresses.ipv4.length > 0) {
-            const [ip, port] = addresses.ipv4[0].split(':');
-            server.ip = ip;
-            server.port = port || '';
-        } else if (addresses.ipv6.length > 0) {
-            if (addresses.ipv6[0].indexOf('[') === 0) {
-                const [ip, port] = addresses.ipv6[0].split(']:');
-                server.ip = ip.substring(1);
-                server.port = port || '';
-            } else {
-                server.ip = addresses.ipv6[0];
-                server.port = '';
-            }
-        } else {
-            server.ip = 'N/A';
-            server.port = '';
-        }
-
-        return server;
-    };
 
     cleanUrl() {
         return this.router

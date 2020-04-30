@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
+        "recordingModes": {
+            "always": "Spela alltid in",
+            "motion": "Spela endast in rörelse",
+            "motionLowRes": "Rörelse + Låg uppl"
+        },
         "resolution": {
             "various": "– Olika värden –",
             "auto": "Auto",
@@ -136,7 +141,6 @@
             "low": "Låg"
         },
         "general": "Allmänt",
-        "maintenanceInProgress": "Underhåll pågår",
         "searchCamPlaceholder": "Sök",
         "systemHasNoCameras": "Inga kameror",
         "systemHasNoCamerasMessage": "Det finns inga tillgängliga kameror för dig i systemet. <br><br>Anslut några kameror till serverns lokala nätverk för att göra dem upptäckbara eller be systemadministratören att ändra din åtkomstnivå.",
@@ -582,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} har återställts till standardinställningar.",
         "restartFailed": "Det gick inte att starta om servern.",
         "restartSuccessful": "Servern har startat om.",
+        "serverOffline": "Servern är offline.",
         "servers": "Servrar",
         "status": {
             "checking": "kontrollerar...",

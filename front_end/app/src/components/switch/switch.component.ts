@@ -27,7 +27,6 @@ export class NxSwitchComponent implements OnInit, ControlValueAccessor, Validato
     @Input() disabled: any;
     @Output() onClick = new EventEmitter<boolean>();
     @Input() label: string;
-    @Input() id: string
 
     private checked: boolean;
     private invalid: boolean;

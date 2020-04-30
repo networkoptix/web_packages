@@ -29,6 +29,7 @@ export interface BaseConfig {
     integration: Integration | any;
     ipvd: Ipvd;
     layout: Layout;
+    maintenanceTimeout: number;
     maxServers: number;
     meta: Meta;
     menus: Menus;

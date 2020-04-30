@@ -1,7 +1,7 @@
 import {
     Component, Input, Output,
     EventEmitter, forwardRef,
-    OnInit, ViewEncapsulation
+    OnInit, ViewEncapsulation, ViewChild
 } from '@angular/core';
 import {
     NG_VALUE_ACCESSOR, ControlValueAccessor,
@@ -38,13 +38,15 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @Input() disabled: any;
     @Output() onClick = new EventEmitter<string>();
 
+    @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;
+
     public state: string;
-    private _value: any;    // ngModel representation
+    private _value: any; // ngModel representation
     private _rbxStates = {
-        rbFalse   : 'unchecked',
-        rbTrue    : 'checked',
-        rbDisabled: 'disabled',
-        rbOrElse  : 'tristate'
+        rbFalse    : 'unchecked',
+        rbTrue     : 'checked',
+        rbDisabled : 'disabled',
+        rbOrElse   : 'tristate'
     };
 
     // the method set in registerOnChange to emit changes back to the form

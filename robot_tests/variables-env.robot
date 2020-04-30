@@ -8,7 +8,7 @@ ${CLOUD DEV3 AUTO SYSTEM}             http://10.1.5.160:7001
 ${CLOUD TEST REGISTER}                https://cloud-test.hdw.mx/register
 ${CLOUD STAGE}                        https://cloud-stage.hdw.mx
 ${DOWNLOADS DOMAIN}                   updates.networkoptix.com
-${ENV}                                ${CLOUD DEV} 
+${ENV}                                ${CLOUD TEST} 
 #${AUTO SYS IP}                        ${CLOUD TEST AUTO SYSTEM}
 ${AUTO TESTS DEV2 IP}                 https://10.1.5.147
 ${AUTO TESTS DEV2 PORT}               7001
@@ -88,8 +88,7 @@ ${SYSTEM NAME AUTO TESTS HEADER}      //header//li/a/span[text()="${AUTO TESTS}"
 ${SYSTEMS TILE}                       //div[contains(@class,'system-button')]
 ${NOT OWNER IN SYSTEM}                //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL NOT OWNER}')]
 ${VIEWER IN SYSTEM}                   //div[@process-loading='gettingSystemUsers']//tbody//tr//td[contains(text(),'${EMAIL VIEWER}')]
-# Space to @class 'users ' is added due to the bug: CLOUD-4903
-${USER IN SYSTEM}                     //nx-level-3-item//span[@class='user ' and contains(text(),'%user%')]
+${USER IN SYSTEM}                     //nx-level-3-item//span[@class='user' and contains(text(),'%user%')]
 
 ${DIFFERENT OWNER TITLE}              ${SYSTEMS TILE}//h2[text()='different owner']
 &{ACCESS ROLES}                       liveViewer=liveViewer    viewer=viewer    advancedViewer=advancedViewer    admin=cloudAdmin    custom=custom

@@ -1,9 +1,9 @@
-<div [ngClass]="{'switch-with-label': label}" (click)="changeState($event)" [id]="id">
+<div [ngClass]="{'switch-with-label': label}" (click)="changeState($event)" [id]="componentId">
     <div class="switch position-relative">
         <label class="switch-element" [ngClass]="{'disabled': disabled}">
             <input type="checkbox"
                 [ngClass]="{'selected' : value}"
-                [id]="componentId"
+                [id]="componentId + '-switch'"
                 [attr.checked]="value ? '': null"
                 (click)="preventBubbling($event)"
                 [attr.disabled]="disabled ? '' : null">
