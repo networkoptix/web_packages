@@ -77,33 +77,6 @@ Check Special Hint
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
     ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
 
-Create Local Users via API
-    [Arguments]    ${auth}    ${server}
-    @{local users} =    Create List    cloudAdmin    viewer    liveViewer    advancedViewer    #custom (due to 4960)
-    FOR    ${user}    IN    @{local users}
-        Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
-    END               
-    [return]    @{local users}
-
-Delete All Local Users
-    [Arguments]    ${locator}
-    Wait Until Element is Visible    ${locator}  
-    ${local users} =    Get Element Count     ${locator} 
-    #Click Element    ${locator}[1]
-    FOR    ${node}   IN RANGE   ${local users}
-        Wait Until Element is Visible    ${locator}
-        Click Element    ${locator} 
-        Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
-        Click Button    ${LOCAL USER DELETE BUTTON}
-        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON} 
-        Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
-        Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
-        Sleep    2
-        Reload Page
-    END
-    Wait Until Element is Visible    //span[text()="admin"]
-    Page Should Not Contain Element     ${locator}
-    
 Verify Changed Info Via API
     [Arguments]    ${new locals}
     @{locals} =    Create List 
@@ -695,7 +668,7 @@ Cloud Owner Can Change Local User Login
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}   
+    Go To Users List   
     Verify In Local Users UI    ${local users}    ${email}   
     @{new locals} =    Create List 
     FOR    ${user}    IN    @{local users}  
@@ -719,7 +692,7 @@ Cloud Owner Can Change Local User Full Name
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List 
     FOR    ${user}    IN    @{local users}
@@ -742,7 +715,7 @@ Cloud Owner Can Change Local User Email
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List 
     FOR    ${user}    IN    @{local users}
@@ -764,7 +737,7 @@ Cloud Owner Can Change Local User Permissions
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List 
     FOR    ${user}    IN    @{local users}
@@ -790,15 +763,20 @@ Cloud Owner Can Change Local User Password
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
-    @{new locals} =    Create List 
     FOR    ${user}    IN    @{local users}
         Log    Change password for ${user}
+        Click Element    //span[text()="Local+${user}"]
+        Wait Until Elements Are Visible
+	    ...    ${LOCAL USER LOGIN}
         Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
         Wait Until Element is Not Visible    //input[@id="newPassword"]
+        Sleep    5
+        @{new auth} =    Create List    Local+${user}     ${ALT PASSWORD} 
+        ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
     END
     Delete All Local Users    //span[contains(text(),"ocal+")]
     
@@ -806,7 +784,7 @@ Cloud Owner Can Modify All Settings for Local Users
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}     
     Verify Changed Info Via API    ${new locals}
     Delete All Local Users    //span[contains(text(),"local+")]
@@ -815,7 +793,7 @@ Cloud Owner Can Disable Enable Local User
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}      
+    Go To Users List      
     Click Element    //span[contains(text(),"Local+")]
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
@@ -845,7 +823,7 @@ Cloud Admininstrator Can Change Settings For Non Admin Local Users
     [Tags]    local user
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${EMAIL ADMIN} 
-    Click Link    ${USERS LIST LINK}
+    Go To Users List
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
@@ -861,6 +839,6 @@ Cloud Admininstrator Can Change Settings For Non Admin Local Users
     Run Keyword and Expect Error    *    Delete All Local Users    //span[contains(text(),"ocal+")]
     Log Out
     Log in to Auto Tests System    ${email} 
-    Click Link    ${USERS LIST LINK}
+    Go To Users List
     Delete All Local Users    //span[contains(text(),"ocal+")]
     
