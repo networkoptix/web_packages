@@ -4,31 +4,38 @@ import { Injectable }  from '@angular/core';
     providedIn: 'root'
 })
 export class NxSearchService {
-    constructor(
-    ) {
-
-    }
-
     static findMatch(searchFor, model) {
-        if (model.queryExactMatch) {
+        const _searchFor = searchFor && searchFor.toLowerCase();
 
+        if (!_searchFor) {
+            return false;
+        }
+
+        if (model.queryExactMatch) {
+            return model.queryExactMatch.every(queryTerm => {
+                return (searchFor.includes(queryTerm)); // case sensitive!
+            });
         }
 
         if (model.queryEndsWith) {
-
+            return (_searchFor.indexOf(model.queryEndsWith) === _searchFor.length - model.queryEndsWith[0].length); // queryEndsWith have only one item
         }
 
         if (model.queryStartsWith) {
-
+            return (_searchFor.indexOf(model.queryStartsWith) === 0); // queryStartsWith have only one item
         }
 
         if (model.queryOrMatch) {
-
+            let isMatch = false;
+            model.queryOrMatch.forEach(queryTerm => {
+                isMatch = isMatch || (_searchFor.includes(queryTerm));
+            });
+            return isMatch;
         }
 
         if (model.queryAndMatch) {
             return model.queryAndMatch.every(queryTerm => {
-                return (searchFor && searchFor.toLowerCase().includes(queryTerm));
+                return (_searchFor.includes(queryTerm));
             });
         }
 
@@ -44,25 +51,28 @@ export class NxSearchService {
 
         // "EXACT" match
         let match = model.query.match(/"(.+?)"/g);
-        if (match && match[0]) {
-            model.queryExactMatch = match[0];
+        if (match) {
+            model.queryExactMatch = match.map((searchTerm) => searchTerm.replace(/"/g, ''));
             return;
         }
 
         // "WILDCARD" match
         if (model.query.indexOf('*') === 0) {
-            model.queryEndsWith = model.query.substring(1);
+            model.queryEndsWith = [model.query.substring(1).toLowerCase()];
             return;
         }
 
         if (model.query.indexOf('*') === model.query.length - 1) {
-            model.queryStartsWith = model.query.slice(0, -1);
+            model.queryStartsWith = [model.query.slice(0, -1).toLowerCase()];
             return;
         }
 
         // "OR" match
         if (model.query.indexOf('|') > 0) { // not starting with pipe
-            match = model.query.match(/([\w-]+)/g);
+            match = model.query
+                .toLowerCase()
+                .match(/([\w-]+)/g);
+
             model.queryOrMatch = match || '';
             return;
         }
@@ -70,6 +80,7 @@ export class NxSearchService {
         // "AND" match (default)
         match = model.query
             .trim()
+            .toLowerCase()
             .replace(/\+/g, ' ')
             .split(/[\s,+]/g)
             .filter((elm) => {

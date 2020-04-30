@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject }       from 'rxjs';
 import { NxUtilsService }        from '../services/utils.service';
 import { NxSearchService }       from '../services/search.service';
+import { isArray }               from 'rxjs/internal-compatibility';
 
 @Injectable({
     providedIn: 'root'
@@ -53,14 +54,16 @@ export class NxMenuService implements OnDestroy {
                 if (node.level3 && node.level3.length) {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
                     node.level3.forEach((item) => {
-                        // TODO: searching currently only by label
-                        //  ... need to clarify search fields with APats - menu items have only label and id
-                        if (NxSearchService.findMatch(item.label, model)) {
+                        let searchAggregate = item.label;
+                        searchAggregate += (item.additionalLabel) ? ' ' + item.additionalLabel : '';
+                        searchAggregate += (model.query.length > 10 && item.id) ? ' ' + item.id : '';
+
+                        if (NxSearchService.findMatch(searchAggregate, model)) {
                             if (!haveNode) {
                                 haveNode = { ...node };
                                 haveNode.level3 = []; // remove items so we can all only matches
                             }
-                            const filteredItem = { ...item };
+                            const filteredItem = NxUtilsService.deepCopy(item);
                             filteredItem.query = { search: model.query };
                             haveNode.level3.push(this.highlighted(filteredItem));
                         }
@@ -97,6 +100,13 @@ export class NxMenuService implements OnDestroy {
 
     private highlighted(item) {
         item.label = item.label.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+        if (item.additionalLabel) {
+            if (isArray(item.additionalLabel)) {
+                item.additionalLabel[0] = item.additionalLabel[0].replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+            } else {
+                item.additionalLabel = item.additionalLabel.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+            }
+        }
 
         return item;
     }

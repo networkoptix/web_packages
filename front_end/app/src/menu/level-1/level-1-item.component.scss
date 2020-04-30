@@ -15,6 +15,7 @@ $item_height : 40px;
     padding-left     : $item_height;
     padding-right    : .5rem;
     border-radius    : 2px;
+    cursor           : pointer;
 
     &:hover {
         background-color : $additional_light3;
@@ -40,6 +41,10 @@ $item_height : 40px;
 
     &.selected {
         background-color : $light5;
+    }
+
+    &.collapsed {
+        background-color : $light4;
     }
 
     &-alerts {
@@ -70,6 +75,7 @@ $item_height : 40px;
         right    : auto;
         bottom   : auto;
         margin   : 0 8px 0 4px;
+        cursor   : pointer;
 
         span {
             background-color : $light16;

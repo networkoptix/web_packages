@@ -1,9 +1,10 @@
 import {
     Component, EventEmitter, Input, OnChanges,
     OnInit, Output, SimpleChanges
-} from '@angular/core';
+}                                   from '@angular/core';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
+import { Router }                   from '@angular/router';
 
 /* Usage
  */
@@ -27,6 +28,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     CONFIG: IConfig;
 
     constructor(configService: NxConfigService,
+                private router: Router,
                 private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
@@ -47,7 +49,14 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     menuClick(sectionId) {
-        this.menuService.setSection(sectionId);
+        if (!this.searchMode) {
+            this.menuService.setSection(sectionId);
+            this.router
+                .navigate([this.itemPath], { queryParams: { search: this.item.query } })
+                .catch((ex) => console.error(ex));
+        } else {
+            this.toggleNode();
+        }
     }
 
     toggleNode() {

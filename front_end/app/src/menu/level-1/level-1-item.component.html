@@ -1,10 +1,9 @@
 
 <a class="menu-level-1 ellipsis"
-   [ngClass]="{'selected': selected }"
+   [ngClass]="{'selected': selected, 'collapsed': _toggle}"
    [id]="item.id"
-   (click)="menuClick(item.id)"
-   [routerLink]="itemPath"
-   [queryParams]="item.query">
+   (click)="menuClick(item.id)">
+
     <div class="menu-level-1-icon" *ngIf="item.icon">
         <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
     </div>
