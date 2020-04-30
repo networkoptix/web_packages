@@ -59,6 +59,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
     previewAspect = 'Auto';
+    availableLicenses = 0;
 
     sensitivityColors = new Array(10);
 
@@ -446,6 +447,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (value === this.recording) {
             return;
         }
+
+        if (value && !this.availableLicenses) {
+            this.recordingWatcher.value = true;
+            setTimeout(() => {
+                this.recordingWatcher.value = false;
+            }, 500);
+            return;
+        }
+
         if (this.motionEnabled) {
             this.enableMotion();
         } else {
@@ -632,6 +642,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
+            this.system.getLicenseChannels().then(({ available }) => {
+                this.availableLicenses = available;
+            });
         }
     }
 

@@ -298,6 +298,14 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    getLicenses() {
+        return this.get('/ec2/getLicenses');
+    }
+
+    activateLicense(key) {
+        return this.post('/api/activateLicense', { licenseKey: key });
+    }
+
     logLevel(logId?, name?, value?) {
         const params: any = { id: logId, name, value };
         Object.keys(params).forEach((key) => {
