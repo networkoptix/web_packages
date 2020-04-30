@@ -261,8 +261,11 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateCredentials() {
         const update = () => {
             this.showUnauthorized = false;
-            setTimeout(this.setCamera, 1500);
-            this.settingsService.system = this.system;
+            return this.system.getCameras().then(() => {
+                this.setCamera(true);
+                this.reload += 1;
+                this.settingsService.system = this.system;
+            });
         };
 
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
@@ -348,7 +351,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
     }
 
-    get motionPreviewImage() {
+    private get _preview() {
         return this.system.getPreviewUrl(
             this.selectedCamera.id,
             null,
@@ -356,6 +359,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.maxHeight * 2,
             0
         );
+    }
+
+    private reload = 0;
+
+    get motionPreviewImage() {
+        return this._preview + `&reload=${this.reload}`;
     }
 
     toggleMotionGrid() {
@@ -585,8 +594,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.unsub$.next(true);
     }
 
-    setCamera = () => {
-        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id) {
+    setCamera = (forceUpdate = false) => {
+        if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id && !forceUpdate) {
             return;
         }
 

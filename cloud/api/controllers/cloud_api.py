@@ -384,7 +384,7 @@ class Storage(object):
     @validate_response
     @lower_case_email
     def _merge(email, password, master_storage_id, slave_storage_id):
-        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}"
+        request = f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages"
         body = {
             "id": slave_storage_id
         }
@@ -454,15 +454,20 @@ class Storage(object):
     def move(email, password, destination_system_id, source_system_id):
         source_storages = Storage.list_system_storages(email, password, source_system_id)
         destination_storages = Storage.list_system_storages(email, password, destination_system_id)
-        if len(destination_storages) == 0:
-            raise APIRequestException('Destination system has no storages')
 
         if len(source_storages) == 0:
             raise APIRequestException('Source System has no storages')
 
-        destination_storage_id = destination_storages[0]['id']
-        for storage in source_storages:
-            Storage._merge(email, password, destination_storage_id, storage['id'])
+        if len(destination_storages) == 0:
+            for storage in source_storages:
+                storage_id = storage['id']
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._move(email, password, destination_system_id, storage_id)
+
+        else:
+            destination_storage_id = destination_storages[0]['id']
+            for storage in source_storages:
+                Storage._merge(email, password, destination_storage_id, storage['id'])
         return True
 
     @staticmethod
