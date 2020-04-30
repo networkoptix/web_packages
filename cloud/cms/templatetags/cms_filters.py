@@ -89,3 +89,8 @@ def modulo(value, arg):
 @register.filter
 def nice_multiselect(multiselect_record):
     return ', '.join(json.loads(multiselect_record.value))
+
+
+@register.filter
+def get_form_item(form, key):
+    return form[key]

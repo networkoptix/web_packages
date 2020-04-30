@@ -381,6 +381,7 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
     data_structure.unique = record.get("unique", False)
     data_structure.description = record.get("description", "")
     data_structure.placeholder = record.get("placeholder", "")
+    data_structure.fieldset = record.get("fieldset", "")
     data_structure.type = DataStructure.get_type_by_name(record.get("type", "text"))
 
     data_structure.meta_settings = record.get("meta", {})

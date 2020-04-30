@@ -146,7 +146,6 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'vendors_shown': asset.read_global_value("%VENDORS_SHOWN%"),
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
-                'push_subscription_auto_active': asset.read_global_value("%PUSH_SUB_ACTIVE%"),
                 'push_config': public_push_config,
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
@@ -598,6 +597,7 @@ class DataStructure(models.Model):
     public = models.BooleanField(default=True)
     deprecated = models.BooleanField(default=False)
     protected = models.BooleanField(default=False)
+    fieldset = models.CharField(blank=True, max_length=255)
 
     def __str__(self):
         return self.name
