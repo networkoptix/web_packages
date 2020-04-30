@@ -1356,7 +1356,7 @@ interface _ParsedAddParams {
     cameraAdvancedParams: CameraAdvancedParams;
     cameraCapabilities: number;
     compatibleAnalyticsEngines: any[];
-    defaultCredentials: string;
+    credentials: string;
     driverClass: string;
     firmware: string;
     hasDualStreaming: number;
