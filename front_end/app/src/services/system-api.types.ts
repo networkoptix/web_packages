@@ -1,5 +1,3 @@
-// Add interfaces here for cloud api request
-
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
  * Usage example below.

@@ -1,8 +1,4 @@
-// Add interfaces here for cloud api request
-import { IParams } from "../components/search/search.component";
-
 export interface ILanguage{
-    // TODO: Placeholder
     language: string;
     name: string;
 }
