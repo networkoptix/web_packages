@@ -79,6 +79,7 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
         label = ""
         placeholder = ""
         protected = False
+        fieldset = ""
         if db_structure:
             label = db_structure.label if db_structure.label != name else ''
             value = db_structure.default if not DataStructure.is_file_or_image(db_structure.type) else ""
@@ -92,6 +93,7 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
             optional = db_structure.optional
             protected = db_structure.protected
             placeholder = db_structure.placeholder
+            fieldset = db_structure.fieldset
 
         data_structure = OrderedDict([
             ("label", label),
@@ -103,7 +105,8 @@ def find_structure(name, context, structure_type, asset_type, meta=None,
             ("advanced", advanced),
             ("optional", optional),
             ("public", True),
-            ("protected", protected)
+            ("protected", protected),
+            ("fieldset", fieldset)
         ])
 
         if DataStructure.get_type_by_name(structure_type) == DataStructure.DATA_TYPES.image or\

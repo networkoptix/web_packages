@@ -514,6 +514,7 @@ class AssetAdmin(CMSAdmin):
         context['site_header'] = admin.site.site_header
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
+        context['can_edit_datastructure'] = request.user.has_perm('cms.change_datastructure')
 
         form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
         form.add_fields(asset, target_context, Language.objects.get(code=context['language_code']), request.user)

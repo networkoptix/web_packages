@@ -620,7 +620,8 @@
             "description": "Allows all users to view the downloads page. If unchecked users must have a special permission to view the downloads page.",
             "advanced": true,
             "optional": true,
-            "type": "check_box"
+            "type": "check_box",
+            "fieldset": "Downloads"
           },
           {
             "label": "Public Release History",
@@ -629,7 +630,8 @@
             "description": "Allows all users to view the release history page. If unchecked users must have a special permission to view the release history page.",
             "advanced": true,
             "optional": true,
-            "type": "check_box"
+            "type": "check_box",
+            "fieldset": "Downloads"
           },
           {
             "label": "Downloads per platform",
@@ -646,7 +648,8 @@
                 "sdk",
                 "windows"
               ]
-            }
+            },
+            "fieldset": "Downloads"
           },
           {
             "label": "Tested Operating Systems",
@@ -660,7 +663,8 @@
               "macos": "OS X 10.13: \"High Sierra\", 10.14: “Mojave”, 10.15 “Catalina”.",
               "sdk": "C++ cross platform SDK",
               "windows": "Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607"
-            }
+            },
+            "fieldset": "Downloads"
           },
           {
             "label": "AppTypes per platform",
@@ -674,7 +678,8 @@
               "macos": ["client"],
               "sdk": ["metadata_sdk", "storage_sdk", "video_source_sdk"],
               "windows": ["bundle", "client", "server"]
-            }
+            },
+            "fieldset": "Downloads"
           },
           {
             "label": "Enable feedback endpoint",
@@ -683,7 +688,8 @@
             "type": "check_box",
             "value": true,
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Features"
           },
           {
             "label": "Enable integration store",
@@ -692,7 +698,8 @@
             "type": "check_box",
             "value": false,
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Features"
           },
           {
             "label": "Enable ipvd page",
@@ -701,7 +708,8 @@
             "type": "check_box",
             "value": true,
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Features"
           },
           {
             "label": "Enable health monitoring",
@@ -710,7 +718,8 @@
             "type": "check_box",
             "value": false,
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Features"
           },
           {
             "label": "Enable cloud storage",
@@ -719,7 +728,8 @@
             "type": "check_box",
             "value": false,
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Features"
           },
           {
             "name": "supportEmail",
@@ -734,15 +744,6 @@
             }
           },
           {
-            "label": "Push Notifications Auto-Enabled",
-            "name": "%PUSH_SUB_ACTIVE%",
-            "description": "Enable push notifications from all systems by default for existing devices. Otherwise, they are only enabled for system owners by default. A device's notification settings always take priority over this if they are set.",
-            "type": "check_box",
-            "value": "false",
-            "optional": false,
-            "advanced": true
-          },
-          {
             "label": "Push Notifications Configuration",
             "name": "%PUSH_CONFIG%",
             "description": "Backend API Settings for push notifications",
@@ -751,7 +752,8 @@
             "type": "object",
             "value": {
               "FCM_API_KEY": "AAAAkheYdWQ:APA91bEGYOZ_evrmTB2kc_6jRTVrLRdlXIE2vzjvFD1bb-mHLt80BMUIRfGhxJ3w442DvO1GKkJaI-P3PWTnwylQo2DZi236gGPLL0MFQImkxUJ-p6fEbVxKDHydELUWadhMemJETz1e"
-            }
+            },
+            "fieldset": "Push Notifications"
           },
           {
             "label": "Push Notifications Web Configuration",
@@ -768,7 +770,8 @@
               "storageBucket": "nx-push-test.appspot.com",
               "messagingSenderId": "627461092708",
               "appId": "1:627461092708:web:1b140238961b4213"
-            }
+            },
+            "fieldset": "Push Notifications"
           },
           {
             "label": "Push Customization",
@@ -776,7 +779,8 @@
             "description": "If there is no unique mobile customization for this portal, enter the name of the customization that notifications should be targeted to.",
             "type": "text",
             "optional": true,
-            "advanced": true
+            "advanced": true,
+            "fieldset": "Push Notifications"
           },
           {
             "label": "Google Tag Manager ID",
