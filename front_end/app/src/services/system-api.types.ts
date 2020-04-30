@@ -361,11 +361,11 @@ interface ManifestReplyObjects {
     id: string,
     name: string,
     resource: string,
-    values: [
+    values: [ // TODO-CLIFF: Typescript will treat [Type] as a tuple, should probably be Array<Type> or Type[]
         {
             id: string,
             name: string,
-            values: [
+            values: [ // TODO-CLIFF: Typescript will treat [Type] as a tuple, should probably be Array<Type> or Type[]
                 {
                     description: string,
                     display: string,
@@ -378,7 +378,7 @@ interface ManifestReplyObjects {
     ]
 }
 
-interface ValuesReply {
+interface ValuesReply { // TODO-CLIFF: I would probably make an interface for camera, networkInterface, servers, storage, and systemsInfo to make this a little more readable.
     cameras: {
         [id: string]: {
             _: {

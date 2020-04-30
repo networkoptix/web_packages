@@ -9,7 +9,7 @@ export interface ILanguage{
 
 export type ILanguages = ILanguage[];
 
-export interface NormalResponse {
+export interface NormalResponse { // TODO-CLIFF: I would maybe change the name on this since system-api.types exports an interface with the same name
     errorClass: string,
     errorDetail: number,
     errorText: string,
@@ -66,7 +66,7 @@ export interface SystemAuth {
     authPlay: string
 };
 
-export interface IPVDCameras {
+export interface IPVDCameras { // TODO-CLIFF: I would maybe make interfaces for camera, firmware, and vendor.
     cameras: {
         vendor: string,
         model: string,
@@ -195,7 +195,7 @@ export interface AccountEdit {
 export interface CloudStorage {
     freeSpace: string,
     id: string,
-    ioDevices: [
+    ioDevices: [ // TODO-CLIFF: Typescript treats [Type] as a tupple, this should probably be Array<Type> or Type[]
         {
             dataUrl: string,
             region: string,

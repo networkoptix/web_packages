@@ -37,7 +37,7 @@ export class NxCloudApiService {
     }
 
     getIntegrations() {
-        return this.http.get(this.CONFIG.apiBase + '/integrations');
+        return this.http.get<t.Integration>(this.CONFIG.apiBase + '/integrations');
     }
 
     getIntegrationBy(id: number, status: string) {
@@ -64,7 +64,7 @@ export class NxCloudApiService {
     }
 
     notificationSend(userEmail: string, type: string, message: string) {
-        return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
+        return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, { // TODO-CLIFF: Is there a response type we can use here?
             user_email: userEmail,
             type,
             message
@@ -135,18 +135,18 @@ export class NxCloudApiService {
     }
 
     unshare(systemId: string, userEmail: string) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', { // TODO-CLIFF: Is there a response type we can use here?
             user_email : userEmail,
             role       : this.CONFIG.accessRoles.unshare
         });
     }
 
     authKey() {
-        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise();
+        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
     }
 
     visitedKey(key: string) {
-        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
+        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
     }
 
     checkCode(code: string) {
@@ -154,7 +154,7 @@ export class NxCloudApiService {
     }
 
     checkAuthCode(code: string) {
-        return this.http.post(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
+        return this.http.post(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
     }
 
     login(email: string, password: string, remember: boolean) {
@@ -185,7 +185,7 @@ export class NxCloudApiService {
     }
 
     changeLanguage(language: string) {
-        return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
+        return this.http.post(this.CONFIG.apiBase + '/utils/language/', { // TODO-CLIFF: Is there a response type we can use here?
             language
         }).toPromise();
     }
@@ -195,7 +195,7 @@ export class NxCloudApiService {
     }
 
     getDownloadsHistory(build: string) {
-        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
     }
 
     accountPost(account: Account) {
@@ -245,7 +245,7 @@ export class NxCloudApiService {
     }
 
     acceptAgreement(reviewId: string) {
-        return this.http.post(this.CONFIG.apiBase + '/accept_agreement', {
+        return this.http.post(this.CONFIG.apiBase + '/accept_agreement', { // TODO-CLIFF: Is there a response type we can use here?
             review_id: reviewId
         }).toPromise();
     }

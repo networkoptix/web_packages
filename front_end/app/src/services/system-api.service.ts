@@ -21,7 +21,7 @@ interface User {
     fullName: string;
 }
 
-// Delete once response types have been declared and added.
+// TODO-CLIFF: Remove this once all refrences removed
 export interface AddResponseTypeHere extends IParams {};
 
 export class NxSystemAPI {
@@ -112,7 +112,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get<ReturnType>(url: string, params?: any) {
+    private get<ResponseType>(url: string, params?: any) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -124,12 +124,12 @@ export class NxSystemAPI {
         }
 
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.get<ReturnType>(fullUrl, { headers, params }).pipe(
+        return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
 
-    private post<ReturnType>(url: string, data?: any) {
+    private post<ResponseType>(url: string, data?: any) {
         let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         const params: any = {};
@@ -142,7 +142,7 @@ export class NxSystemAPI {
             headers = headers.set('X-Server-guid', this.serverId);
         }
 
-        return this.http.post<ReturnType>(fullUrl, data, { params, headers }).pipe(
+        return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)
         );
@@ -255,8 +255,8 @@ export class NxSystemAPI {
     /* End of Authentication  */
 
     /* Server settings */
-    private getServerTimes<ReturnType>() {
-        return this.get<ReturnType>('/ec2/getTimeOfServers');
+    private getServerTimes() {
+        return this.get<t.SystemTime>('/ec2/getTimeOfServers');
     }
 
     private getSystemTime() {
@@ -272,7 +272,7 @@ export class NxSystemAPI {
     }
 
     updateStorages(updateParams: IParams) {
-        return this.post<AddResponseTypeHere>('/ec2/saveStorages', updateParams);
+        return this.post<AddResponseTypeHere>('/ec2/saveStorages', updateParams); // TODO-CLIFF: This one still needs a response type
     }
 
     changePort(port: number) {
@@ -281,7 +281,7 @@ export class NxSystemAPI {
     }
 
     renameServer(serverId: string, serverName: string) {
-        return this.post<undefined>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
+        return this.post<undefined>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise(); // TODO-CLIFF: this endpoint returns a reply that has the id
     }
 
     restartServer() {
@@ -378,7 +378,7 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        return this.getRequestAggregator(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
+        return this.getRequestAggregator<[t.SystemTime, t.GetCameras]>(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
             .pipe(map(({ reply }: any) => {
                 return ([reply['ec2/getTimeOfServers'].reply, reply['ec2/getCamerasEx']]);
             }));
