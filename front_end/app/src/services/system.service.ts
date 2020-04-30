@@ -13,7 +13,6 @@ import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { recursiveJson }                   from '../utils/recursive-json';
-import { compareSemver }                   from '../utils/compare-semver';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
