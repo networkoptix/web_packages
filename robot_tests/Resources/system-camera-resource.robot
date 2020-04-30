@@ -39,22 +39,27 @@ Select Camera By Name
     Click Link    //nx-level-3-item/a//span[contains(text(),"${camera name}")]/../..
 
 Change Aspect Ratio
-    [Arguments]    ${desired ratio}
+    [Arguments]    ${expected ratio}
     Click Button    ${ASPECT RATIO DROPDOWN}
-    Click Link    ${ASPECT RATIO DROPDOWN}/following-sibling::div//span[contains(text(),"${desired ratio}")]/..
+    Click Link    ${ASPECT RATIO DROPDOWN}/following-sibling::div//span[contains(text(),"${expected ratio}")]/..
 
 Aspect Ratio Should Be
     [Arguments]    ${expected ratio}
     Wait Until Element is Visible    ${ASPECT RATIO DROPDOWN}/span[contains(text(),"${expected ratio}")]
 
 Change Rotation
-    [Arguments]    ${desired rotation}
+    [Arguments]    ${expected rotation}
     Click Button    ${ROTATION DROPDOWN}
-    Click Link    ${ROTATION DROPDOWN}/following-sibling::div//span[contains(text(),"${desired rotation}")]/..
+    Click Link    ${ROTATION DROPDOWN}/following-sibling::div//span[contains(text(),"${expected rotation}")]/..
 
 Rotation Should Be
     [Arguments]    ${expected rotation}
     Wait Until Element is Visible    ${ROTATION DROPDOWN}/span[contains(text(),"${expected rotation}")]
+
+Audo Enabled Should Be
+    [Arguments]    ${expected state}
+    ${current state}=   ${Get Checkbox Value    ${ENABLE AUDIO CHECKBOCK}
+    Should Be Equal    ${expected state}    ${current state}
 
 Get Recording Status
 

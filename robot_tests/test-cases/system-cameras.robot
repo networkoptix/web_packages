@@ -90,11 +90,13 @@ Audio enable Disabled
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Select Camera by Name    good cam
     Verify on Cameras Page
-    # enable
-    # check Enabled
-    # Disable
-    # check Disable
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    True
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Audio Enabled Should Be    True
 
 Audio unavailable
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
@@ -134,6 +136,8 @@ Changing credentials from valid to invalid ones makes the camera unauthorized
 
 
 Changing credentials from invalid ones to valid ones makes the camera authorized
+
+
 Record Always
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
