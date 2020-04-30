@@ -873,6 +873,7 @@ export class NxSystem extends System implements OnDestroy {
             let usersPromise: Promise<any>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
+                    this.getUsersCachedInCloud();
                     this.isAvailable = true;
                 }).catch(() => {
                     return this.getUsersCachedInCloud();
@@ -1045,10 +1046,6 @@ export class NxSystem extends System implements OnDestroy {
 
     getPeerSystems() {
         return this.mediaserver.getPeerSystems();
-    }
-
-    checkLocalAdminPassword(password: string) {
-        return this.mediaserver.checkLocalAdminPassword(password);
     }
 
     logLevel(serverId: string) {

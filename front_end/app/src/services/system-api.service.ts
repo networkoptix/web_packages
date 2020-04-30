@@ -320,15 +320,15 @@ export class NxSystemAPI {
 
     /* Working with users */
     getAggregatedUsersData() {
-        return this.get<AddResponseTypeHere>('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
+        return this.get<t.AggregatedUsers>('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
     }
 
     saveUser(user: NxSystemUser) {
-        return this.post<AddResponseTypeHere>('/ec2/saveUser', this.cleanUserObject(user));
+        return this.post<t.ChangedIdReturned>('/ec2/saveUser', this.cleanUserObject(user));
     }
 
     deleteUser(userId: string) {
-        return this.post<AddResponseTypeHere>('/ec2/removeUser', { id: userId });
+        return this.post<t.ChangedIdReturned>('/ec2/removeUser', { id: userId });
     }
 
     isEmptyId(id: string) {
@@ -374,7 +374,7 @@ export class NxSystemAPI {
     /* Cameras and Servers */
     getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
-        return this.get<AddResponseTypeHere>('/ec2/getCamerasEx', params);
+        return this.get<t.GetCameras>('/ec2/getCamerasEx', params);
     }
 
     getCamerasWithSeverTime(): Observable<any> {
@@ -385,28 +385,28 @@ export class NxSystemAPI {
     }
 
     setResourceParams(params: ResourceParam[]) {
-        return this.post<AddResponseTypeHere>('/ec2/setResourceParams', params);
+        return this.post<t.EmptyObjectReturned>('/ec2/setResourceParams', params);
     }
 
     updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera>) {
-        return this.post<AddResponseTypeHere>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
+        return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
     getMediaServers(id?: string, url?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
         if (url) {
-            return this.http.get<AddResponseTypeHere>(`${url}/ec2/getMediaServersEx`, { params });
+            return this.http.get<t.GetMediaServers>(`${url}/ec2/getMediaServersEx`, { params });
         } else {
-            return this.get<AddResponseTypeHere>('/ec2/getMediaServersEx', params);
+            return this.get<t.GetMediaServers>('/ec2/getMediaServersEx', params);
         }
     }
 
     getMediaServersAndCameras() {
-        return this.get<AddResponseTypeHere>('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
+        return this.get<t.AggregatedServersAndCameras>('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
     }
 
     getResourceTypes() {
-        return this.get<AddResponseTypeHere>('/ec2/getResourceTypes');
+        return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
 
     /* End of Cameras and Servers */
@@ -495,7 +495,7 @@ export class NxSystemAPI {
             params.limit = limit;
         }
         // RecordedTimePeriods
-        return this.get<AddResponseTypeHere>(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
+        return this.get(`/ec2/recordedTimePeriods?flat&keepSmallChunks&${label || ''}`, params);
     }
 
     /* End of Working with archive */
@@ -517,26 +517,26 @@ export class NxSystemAPI {
 
     /* Health Monitor */
     getHealthManifest() {
-        return this.get<AddResponseTypeHere>('/ec2/metrics/manifest');
+        return this.get<t.Manifests>('/ec2/metrics/manifest');
     }
 
     getHealthValues() {
-        return this.get<AddResponseTypeHere>('/ec2/metrics/values');
+        return this.get<t.Values>('/ec2/metrics/values');
         // return this.http.get<AddResponseTypeHere>('/getdata');
     }
 
     getHealthAlarms() {
-        return this.get<AddResponseTypeHere>('/ec2/metrics/alarms');
+        return this.get<t.Alarms>('/ec2/metrics/alarms');
     }
 
     getAggregateHealthReport() {
-        return this.get<AddResponseTypeHere>('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
+        return this.get<t.AggregatedHealthReport>('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
     }
     // End of Health Monitor
 
     /** Merge Systems */
     getPeerSystems() {
-        return this.get<AddResponseTypeHere>('/api/discoveredPeers', { showAddresses: true });
+        return this.get<t.DiscoveredPeers>('/api/discoveredPeers', { showAddresses: true });
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
@@ -546,21 +546,11 @@ export class NxSystemAPI {
             takeRemoteSettings: false,
             dryRun
         };
-        return this.post<AddResponseTypeHere>('/api/mergeSystems', data);
+        return this.post<t.MergeSystems>('/api/mergeSystems', data);
     }
 
     checkMergeStatus() {
-        return this.get<AddResponseTypeHere>('/ec2/mergeStatus');
-    }
-
-    checkLocalAdminPassword(password: string) {
-        const localPasswordUrl = this.urlBase.replace('/web', '');
-        const httpOptions = {
-            headers: new HttpHeaders({
-                Authorization: 'Basic ' + btoa(`admin:${password}`)
-            })
-        };
-        return this.http.get<AddResponseTypeHere>(`${localPasswordUrl}/api/`, httpOptions);
+        return this.get<t.MergeStatus>('/ec2/mergeStatus');
     }
 }
 
