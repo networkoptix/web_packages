@@ -1,9 +1,9 @@
 <nx-search
         *ngIf="isSearchable || false"
         (ngModelChange)="modelChanged($event)"
-        [ngModel]="menuQuery"
+        [ngModel]="menuModel.query"
         layout="search"
-        name="menuQuery">
+        name="menuModel.query">
 </nx-search>
 
 <div class="nx-menu" [ngClass]="{ 'mt-2 searchable' : isSearchable }">
@@ -12,19 +12,19 @@
     <div *ngFor="let item of menuContent; let idx = index">
         <div class="level-1-container"
              [class.selected]="selectedLevel1 == item.id"
-             *ngIf="menuQuery == '' || (menuQuery != '' && item.level3 && item.level3.length)">
+             *ngIf="menuModel.query == '' || (menuModel.query != '' && item.level3 && item.level3.length)">
 
             <nx-level-1-item
                     class="position-relative"
                     [searchMode]="searchMode"
                     [item]="item"
                     [base]="content.base"
-                    [selected]="selectedLevel1 == item.id || menuQuery != ''"
+                    [selected]="selectedLevel1 == item.id || menuModel.query != ''"
                     (toggle)="toggleItem($event, idx)"
                     *ngIf="item.id">
             </nx-level-1-item>
 
-            <div *ngIf="selectedLevel1 == item.id && menuQuery == ''">
+            <div *ngIf="selectedLevel1 == item.id && menuModel.query == ''">
                 <div class="container-buttons"
                      *ngIf=" subLevelButtonsFor(item).length">
                     <nx-menu-button
@@ -37,7 +37,7 @@
                                      [ngClass]="{ 'last-level-2': isLast }"
                                      [base]="content.base"
                                      [selected]="selectedLevel2 == subItem.id"
-                                     *ngIf="menuQuery == ''">
+                                     *ngIf="menuModel.query == ''">
                     </nx-level-2-item>
 
                     <div class="level-3-items">
@@ -52,7 +52,7 @@
             </div>
 
             <div class="level-3-items"
-                 *ngIf="(selectedLevel1 == item.id || menuQuery != '') && item.level3"
+                 *ngIf="(selectedLevel1 == item.id || menuModel.query != '') && item.level3"
                  [ngClass]="{
                     'min-height-level-3': item.level3 && item.level3.length > 4,
                     'toggle-level-3': item.toggle

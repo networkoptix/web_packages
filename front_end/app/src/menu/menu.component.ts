@@ -57,7 +57,9 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.menuModel = {};
+        this.menuModel = {
+            query: ''
+        };
         this.isSearchable = (this.searchable !== undefined);
 
         this.routeParamsSubscription = this.route
@@ -98,7 +100,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
         const delay = model.query ? this.CONFIG.search.transitionInMs : this.CONFIG.search.transitionShortInMs;
         this.transition = true;
 
-        this.selectedLevel3 = '';
         this.menuModel = model;
 
         setTimeout(() => {

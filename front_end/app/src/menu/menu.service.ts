@@ -99,7 +99,10 @@ export class NxMenuService implements OnDestroy {
     }
 
     private highlighted(item) {
-        item.label = item.label.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+        if (item.label) {
+            item.label = item.label.replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
+        }
+
         if (item.additionalLabel) {
             if (isArray(item.additionalLabel)) {
                 item.additionalLabel[0] = item.additionalLabel[0].replace(this.regex, (match) => `<span class="highlighted">${match}</span>`);
