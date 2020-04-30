@@ -21,7 +21,6 @@ interface User {
     fullName: string;
 }
 
-// TODO-CLIFF: Remove this once all refrences removed
 export interface AddResponseTypeHere extends IParams {};
 
 export class NxSystemAPI {
@@ -268,11 +267,11 @@ export class NxSystemAPI {
     }
 
     public getStorages() {
-        return this.get<t.GetStorages[]>('/api/storageSpace');
+        return this.get<Array<t.GetStorages>>('/api/storageSpace');
     }
 
     updateStorages(updateParams: IParams) {
-        return this.post<AddResponseTypeHere>('/ec2/saveStorages', updateParams); // TODO-CLIFF: This one still needs a response type
+        return this.post<any>('/ec2/saveStorages', updateParams);
     }
 
     changePort(port: number) {
@@ -281,7 +280,7 @@ export class NxSystemAPI {
     }
 
     renameServer(serverId: string, serverName: string) {
-        return this.post<undefined>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise(); // TODO-CLIFF: this endpoint returns a reply that has the id
+        return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
     restartServer() {

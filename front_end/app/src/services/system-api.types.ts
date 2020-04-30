@@ -361,162 +361,168 @@ interface ManifestReplyObjects {
     id: string,
     name: string,
     resource: string,
-    values: [ // TODO-CLIFF: Typescript will treat [Type] as a tuple, should probably be Array<Type> or Type[]
-        {
+    values: {
+        id: string,
+        name: string,
+        values: {
+            description: string,
+            display: string,
+            format: string,
             id: string,
-            name: string,
-            values: [ // TODO-CLIFF: Typescript will treat [Type] as a tuple, should probably be Array<Type> or Type[]
-                {
-                    description: string,
-                    display: string,
-                    format: string,
-                    id: string,
-                    name: string
-                }
-            ]
-        }
-    ]
+            name: string
+        }[]
+    }[]
 }
 
-interface ValuesReply { // TODO-CLIFF: I would probably make an interface for camera, networkInterface, servers, storage, and systemsInfo to make this a little more readable.
-    cameras: {
-        [id: string]: {
-            _: {
-                name: string,
-                thumbnail: string
-            },
-            availability: {
-                ipConflicts: number,
-                ipConflicts3min: number,
-                offlineEvents: number,
-                status: string,
-                streamIssues: number,
-                streamIssues1h: number
-            },
-            info: {
-                firmware: string,
-                ip: string,
-                model: string,
-                recording: string,
-                server: string,
-                type: string,
-                vendor: string
-            },
-            secondaryStream: {
-                recommendedMaxSecondaryResolution: string
-            },
-            storage: {
-                hasArchiveRotated: boolean
-            }
-        }
-    },
-    networkInterfaces: {
-        [id: string]: {
-            _: { name: string },
-            info: {
-                displayAddress: string,
-                otherAddresses: string[],
-                server: string,
-                state: string
-            },
-            rates: {
-                inBps: number,
-                inBps1m: number,
-                outBps: number,
-                outBps1m: number
-            }
+interface Cameras {
+    [id: string]: {
+        _: {
+            name: string,
+            thumbnail: string
         },
-    },
-    servers: {
-        [id: string]: {
-            _: { name: string },
-            activity: {
-                actionsTriggered: number,
-                actionsTriggered1m: number,
-                activePlugins: string,
-                apiCalls: number,
-                apiCalls1m: number,
-                thumbnails: number,
-                thumbnails1m: number,
-                transactionsPerSecond: number,
-                transactionsPerSecond1m: number
-            },
-            availability: {
-                offlineEvents: number,
-                status: string,
-                uptimeS?: number
-            },
-            info: {
-                cpu: string,
-                cpuCores?: number,
-                os: string,
-                osTime?: string,
-                publicIp: string,
-                ram: number,
-                vmsTime?: string,
-                vmsTimeChanged?: number,
-                vmsTimeChanged24h?: number
-            },
-            load: {
-                cameras: number,
-                cpuUsageP?: number,
-                decodedPixels?: number,
-                decodingSpeed3s?: number,
-                decodingThreads?: number,
-                encodedPixels?: number,
-                encodingSpeed3s?: number,
-                encodingThreads?: number,
-                incomingConnections?: number,
-                logLevel?: string,
-                outgoingConnections?: number,
-                primaryStreams?: number,
-                ramUsageB?: number,
-                ramUsageP?: number,
-                secondaryStreams?: number,
-                serverCpuUsageP?: number,
-                serverRamUsage?: number,
-                serverRamUsageP?: number,
-                threads?: number
-            }
-        }
-    },
-    storage: {
-        [id: string]: {
-            _: { name: string },
-            activity: {
-                readRateBps: number,
-                readRateBps1m: number,
-                transactionsPerSecond: number,
-                writeRateBps: number,
-                writeRateBps1m: number
-            },
-            info: {
-                server: string,
-                type: string
-            },
-            space: { totalSpaceB: number },
-            state: {
-                issues: number,
-                issues24h: number,
-                status: string,
-                systemStatus: string
-            }
-        }
-    },
-    systems: {
-        [id: string]: {
-            info: {
-                cameras: number,
-                name: string,
-                recommendedMaxCameras: number,
-                recommendedMaxServers: number,
-                servers: number,
-                storages: number,
-                users: number,
-                version: string
-            }
+        availability: {
+            ipConflicts: number,
+            ipConflicts3min: number,
+            offlineEvents: number,
+            status: string,
+            streamIssues: number,
+            streamIssues1h: number
+        },
+        info: {
+            firmware: string,
+            ip: string,
+            model: string,
+            recording: string,
+            server: string,
+            type: string,
+            vendor: string
+        },
+        secondaryStream: {
+            recommendedMaxSecondaryResolution: string
+        },
+        storage: {
+            hasArchiveRotated: boolean
         }
     }
+}
+
+interface NetworkInterfaces {
+    [id: string]: {
+        _: { name: string },
+        info: {
+            displayAddress: string,
+            otherAddresses: string[],
+            server: string,
+            state: string
+        },
+        rates: {
+            inBps: number,
+            inBps1m: number,
+            outBps: number,
+            outBps1m: number
+        }
+    },
+}
+
+interface Servers {
+    [id: string]: {
+        _: { name: string },
+        activity: {
+            actionsTriggered: number,
+            actionsTriggered1m: number,
+            activePlugins: string,
+            apiCalls: number,
+            apiCalls1m: number,
+            thumbnails: number,
+            thumbnails1m: number,
+            transactionsPerSecond: number,
+            transactionsPerSecond1m: number
+        },
+        availability: {
+            offlineEvents: number,
+            status: string,
+            uptimeS?: number
+        },
+        info: {
+            cpu: string,
+            cpuCores?: number,
+            os: string,
+            osTime?: string,
+            publicIp: string,
+            ram: number,
+            vmsTime?: string,
+            vmsTimeChanged?: number,
+            vmsTimeChanged24h?: number
+        },
+        load: {
+            cameras: number,
+            cpuUsageP?: number,
+            decodedPixels?: number,
+            decodingSpeed3s?: number,
+            decodingThreads?: number,
+            encodedPixels?: number,
+            encodingSpeed3s?: number,
+            encodingThreads?: number,
+            incomingConnections?: number,
+            logLevel?: string,
+            outgoingConnections?: number,
+            primaryStreams?: number,
+            ramUsageB?: number,
+            ramUsageP?: number,
+            secondaryStreams?: number,
+            serverCpuUsageP?: number,
+            serverRamUsage?: number,
+            serverRamUsageP?: number,
+            threads?: number
+        }
+    }
+}
+
+interface Storage {
+    [id: string]: {
+        _: { name: string },
+        activity: {
+            readRateBps: number,
+            readRateBps1m: number,
+            transactionsPerSecond: number,
+            writeRateBps: number,
+            writeRateBps1m: number
+        },
+        info: {
+            server: string,
+            type: string
+        },
+        space: { totalSpaceB: number },
+        state: {
+            issues: number,
+            issues24h: number,
+            status: string,
+            systemStatus: string
+        }
+    }
+}
+
+interface SystemInfo {
+    [id: string]: {
+        info: {
+            cameras: number,
+            name: string,
+            recommendedMaxCameras: number,
+            recommendedMaxServers: number,
+            servers: number,
+            storages: number,
+            users: number,
+            version: string
+        }
+    }
+}
+
+interface ValuesReply {
+    cameras: Cameras,
+    networkInterfaces: NetworkInterfaces,
+    servers: Servers,
+    storage: Storage,
+    systems: SystemInfo
 }
 
 export interface Alarms extends NormalResponse<AlarmsReply> {};

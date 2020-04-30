@@ -26,7 +26,7 @@ export class NxCloudApiService {
     }
 
     disconnect(systemId: string, password: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/disconnect', {
             system_id: systemId,
             password
         });
@@ -56,7 +56,7 @@ export class NxCloudApiService {
     }
 
     merge(masterSystemId: string, slaveSystemId: string, password: string) {
-        return this.http.post<t.NormalResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
+        return this.http.post<t.CloudResponse>(`${this.CONFIG.apiBase}/systems/merge`, {
             master_system_id : masterSystemId,
             slave_system_id  : slaveSystemId,
             password
@@ -64,7 +64,7 @@ export class NxCloudApiService {
     }
 
     notificationSend(userEmail: string, type: string, message: string) {
-        return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, { // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post(`${this.CONFIG.apiBase.replace('/api', '/notifications')}/send`, {
             user_email: userEmail,
             type,
             message
@@ -98,12 +98,12 @@ export class NxCloudApiService {
     }
 
     reactivateUser(userEmail: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/activate',
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/activate',
             { user_email: userEmail }).toPromise();
     }
 
     renameSystem(systemId: string, systemName: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/systems/' + systemId + '/name', {
             name: systemName
         }).toPromise().then((result) => {
             this.systems('clearCache');
@@ -118,7 +118,7 @@ export class NxCloudApiService {
         userName?: string,
         userEmail?: string
     ) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/feedback', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/feedback', {
             message, asset, type, userName, userEmail
         });
     }
@@ -135,26 +135,26 @@ export class NxCloudApiService {
     }
 
     unshare(systemId: string, userEmail: string) {
-        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', { // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post(this.CONFIG.apiBase + '/systems/' + systemId + '/users', {
             user_email : userEmail,
             role       : this.CONFIG.accessRoles.unshare
         });
     }
 
     authKey() {
-        return this.http.post(this.CONFIG.apiBase + '/account/authKey', {}).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post<t.AuthKey>(this.CONFIG.apiBase + '/account/authKey', {}).toPromise();
     }
 
     visitedKey(key: string) {
-        return this.http.get(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.get<t.VisitedKey>(this.CONFIG.apiBase + '/utils/visitedKey/?key=' + encodeURIComponent(key)).toPromise();
     }
 
     checkCode(code: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/checkCode', { code }).toPromise();
     }
 
     checkAuthCode(code: string) {
-        return this.http.post(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post<t.AuthCode>(this.CONFIG.apiBase + '/account/checkAuthCode', { code }).toPromise();
     }
 
     login(email: string, password: string, remember: boolean) {
@@ -169,11 +169,11 @@ export class NxCloudApiService {
 
     logout() {
         // clearCache();
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/logout', {}).toPromise();
     }
 
     deleteCloudUser(password) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
     }
 
     account() {
@@ -185,7 +185,7 @@ export class NxCloudApiService {
     }
 
     changeLanguage(language: string) {
-        return this.http.post(this.CONFIG.apiBase + '/utils/language/', { // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post(this.CONFIG.apiBase + '/utils/language/', {
             language
         }).toPromise();
     }
@@ -195,7 +195,7 @@ export class NxCloudApiService {
     }
 
     getDownloadsHistory(build: string) {
-        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise(); // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.get(this.CONFIG.apiBase + '/utils/downloads/' + (build || 'history')).toPromise();
     }
 
     accountPost(account: Account) {
@@ -213,39 +213,39 @@ export class NxCloudApiService {
     }
 
     changePassword(newPassword: string, oldPassword: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/changePassword', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/changePassword', {
             new_password : newPassword,
             old_password : oldPassword
         }).toPromise();
     }
 
     reactivate(userEmail: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/activate', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/activate', {
             user_email: userEmail
         }).toPromise();
     }
 
     activate(code: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/activate', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/activate', {
             code
         }).toPromise();
     }
 
     restorePasswordRequest(userEmail: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
             user_email: userEmail
         }).toPromise();
     }
 
     restorePassword(code: string, newPassword: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/restorePassword', {
             code,
             new_password: newPassword
         }).toPromise();
     }
 
     acceptAgreement(reviewId: string) {
-        return this.http.post(this.CONFIG.apiBase + '/accept_agreement', { // TODO-CLIFF: Is there a response type we can use here?
+        return this.http.post(this.CONFIG.apiBase + '/accept_agreement', {
             review_id: reviewId
         }).toPromise();
     }
@@ -259,14 +259,14 @@ export class NxCloudApiService {
     }
 
     deleteCloudStorage(systemId: string, password: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/storage/delete', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/delete', {
             systemId,
             password
         }).toPromise();
     }
 
     moveCloudStorage(sourceSystemId: string, destinationSystemId: string) {
-        return this.http.post<t.NormalResponse>(this.CONFIG.apiBase + '/storage/move', {
+        return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/storage/move', {
             sourceSystemId,
             destinationSystemId
         }).toPromise();

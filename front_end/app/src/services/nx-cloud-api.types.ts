@@ -9,23 +9,33 @@ export interface ILanguage{
 
 export type ILanguages = ILanguage[];
 
-export interface NormalResponse { // TODO-CLIFF: I would maybe change the name on this since system-api.types exports an interface with the same name
+export interface CloudResponse {
     errorClass: string,
     errorDetail: number,
     errorText: string,
     resultCode: string
 };
 
+export interface AuthKey {
+    'auth_key': string
+};
+
+export interface VisitedKey {
+    visited: boolean
+};
+
+export interface AuthCode {
+    email: string
+};
+
 export interface Integration {
     information: {
         name: string,
         shortDescription: string,
-        type: [
-            {
-                id: string,
-                label: string,
-            }
-        ],
+        type: {
+            id: string,
+            label: string,
+        }[],
         tags: string,
         companyName: string,
         companyWeb: string,
@@ -66,48 +76,54 @@ export interface SystemAuth {
     authPlay: string
 };
 
-export interface IPVDCameras { // TODO-CLIFF: I would maybe make interfaces for camera, firmware, and vendor.
-    cameras: {
-        vendor: string,
-        model: string,
-        count: number,
-        primaryCodec: string,
-        secondaryCodec: string,
-        maxResolution: string,
-        sndResolution: string,
-        maxFps: number,
-        isDualStreamingSupported: boolean,
-        isIoSupported: boolean,
-        isMdSupported: boolean,
-        isPtzSupported: boolean,
-        isAudioSupported: boolean,
-        isTwAudioSupported: boolean,
-        isAptzSupported: boolean,
-        isMultiSensor: boolean,
-        isFisheye: boolean,
-        firmwares: {
-            count: number,
-            name: string,
-            percentage: string,
-            barLength: number
-        }[],
-        notes: string,
-        timestamp: string,
-        hardwareType: string,
-        aliases: string,
-        analyticsEvents: string[],
-        isAnalyticsSupported: boolean,
-        maxFirmwareCount: number,
-        totalCameraCount: number,
-        isH265: boolean,
-        hardwareTypeId: string,
-        resolutionArea: number,
-        sortKey: string
-    }[],
-    vendors: {
-        name: string,
-        count: number
-    }[],
+interface Firmwares {
+    count: number,
+    name: string,
+    percentage: string,
+    barLength: number
+}
+
+interface Cameras {
+    vendor: string,
+    model: string,
+    count: number,
+    primaryCodec: string,
+    secondaryCodec: string,
+    maxResolution: string,
+    sndResolution: string,
+    maxFps: number,
+    isDualStreamingSupported: boolean,
+    isIoSupported: boolean,
+    isMdSupported: boolean,
+    isPtzSupported: boolean,
+    isAudioSupported: boolean,
+    isTwAudioSupported: boolean,
+    isAptzSupported: boolean,
+    isMultiSensor: boolean,
+    isFisheye: boolean,
+    firmwares: Firmwares[],
+    notes: string,
+    timestamp: string,
+    hardwareType: string,
+    aliases: string,
+    analyticsEvents: string[],
+    isAnalyticsSupported: boolean,
+    maxFirmwareCount: number,
+    totalCameraCount: number,
+    isH265: boolean,
+    hardwareTypeId: string,
+    resolutionArea: number,
+    sortKey: string
+}
+
+interface Vendors {
+    name: string,
+    count: number
+}
+
+export interface IPVDCameras {
+    cameras: Cameras[],
+    vendors: Vendors[],
     analytics: string[],
     'num_cameras': number,
     cached: boolean
@@ -195,19 +211,17 @@ export interface AccountEdit {
 export interface CloudStorage {
     freeSpace: string,
     id: string,
-    ioDevices: [ // TODO-CLIFF: Typescript treats [Type] as a tupple, this should probably be Array<Type> or Type[]
-        {
-            dataUrl: string,
-            region: string,
-            type: string,
-        }
-    ],
+    ioDevices: {
+        dataUrl: string,
+        region: string,
+        type: string,
+    }[],
     owner: string,
     systems: string[],
     totalSpace: string,
 };
 
-export interface CloudStorageUsage extends NormalResponse {
+export interface CloudStorageUsage extends CloudResponse {
     enabled: boolean,
     cloudCapacity: string,
     currentRecordings: number,
