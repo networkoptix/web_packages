@@ -44,7 +44,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         const [loginName, password] = (this.camera.parsedAddParams && this.camera.parsedAddParams.credentials || ':').split(':');
         this.currentCredentials = { loginName, password };
         this.cameraLoginCredentials = loginName;
-        this.cameraPasswordCredentials = password;
+        this.cameraPasswordCredentials = loginName && password;
         this.update = this.processService.createProcess(() => {
             if (this.cameraLoginCredentials === this.currentCredentials.loginName &&
                 this.cameraPasswordCredentials === this.currentCredentials.password
