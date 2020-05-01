@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-# Test Setup        Common Restart Logout    ${url}
+Test Setup        Server Settings Test Setup    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
 Force Tags        system
@@ -12,11 +12,15 @@ ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
 
-*** Test Cases ***
-Rename server close button works
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+*** Keywords ***
+Server Settings Test Setup
+    [Arguments]    ${email}    ${system id}
+    Log in to user and system    ${email}    ${system id}
     Wait Until Element is Visible    ${SERVERS LINK}
     Click Link    ${SERVERS LINK}
+
+*** Test Cases ***
+Rename server close button works
     Verify on Servers Page
     Verify Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -24,9 +28,6 @@ Rename server close button works
     Click Button    ${RENAME CLOSE BUTTON}
 
 Rename server cancel button works
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Verify Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -35,9 +36,6 @@ Rename server cancel button works
     Element Should Not be Visible    ${RENAME SERVER FORM}
 
 Rename server requires a name
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Verify Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -48,9 +46,6 @@ Rename server requires a name
     Element Text Should Be    ${RENAME ERROR TEXT}    ${SERVER NAME REQUIRED}
 
 Server name can be changed
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Verify Enabled
     Click Button    ${RENAME SERVER BUTTON}
@@ -67,15 +62,13 @@ Server name can be changed
 
 
 Restart server
-    Log in to user system and servers    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Restart server
     Wait
     verify back online
 
 Change port
-    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page
     Verify Enabled
@@ -94,9 +87,6 @@ Change port
     # check status
 
 Full info 1 server
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health/servers
@@ -106,9 +96,7 @@ Full info 1 server
 
 
 Full info 2 servers
-    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 2
     Verify on Servers Page
     Click Button    ${SERVER DETAILED INFO BUTTON}
@@ -118,9 +106,7 @@ Full info 2 servers
     Wait Until Element is Visible    ${HM DETAILS PANEL}/../..//div[@class="panel-title"]/span[contains(text(),"Server 2")]
 
 Offline system server settings
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${SERVER NOT ACCESIBLE IMAGE}
     Element Should not be Visible    ${PORT INPUT}
     Element Should not be Visible    ${RENAME SERVER BUTTON}
@@ -128,9 +114,7 @@ Offline system server settings
     Element Should not be Visible    ${SERVER DETAILED INFO BUTTON}
 
 Offline two servers
-    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
-    Wait Until Element is Visible    ${SERVERS LINK}
-    Click Link    ${SERVERS LINK}
+    [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Select Server By Name    Server 1
     Verify on Servers Page
     Wait Until Elements are Visible    ${CHECK STATUS BUTTON}    ${OFFLINE BADGE}
@@ -141,25 +125,25 @@ Offline two servers
     Element Should Not be Visible    ${SYSTEM NAME OFFLINE}
 
 Owner has Access
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${SERVERS LINK}
 
 Admin has Access
-    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL ADMIN}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${SERVERS LINK}
 
 Viewer does not have Access
-    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element Should not be Visible    ${SERVERS LINK}
 
 Advanced Viewer does not have Access
-    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL ADV VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element Should not be Visible    ${SERVERS LINK}
 
 Live Viewer does not have Access
-    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL LIVE VIEWER}    ${AUTO TESTS SYSTEM ID}
     Element Should not be Visible    ${SERVERS LINK}
 
 Custom User does not have Access
-    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL CUSTOM}    ${AUTO TESTS SYSTEM ID}
     Element Should not be Visible    ${SERVERS LINK}
