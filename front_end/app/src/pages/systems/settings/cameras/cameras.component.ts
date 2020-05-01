@@ -324,17 +324,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         const RowsToRoundPixelsByMultiple = 32;
         const defaultAspectRatio = 1.77778;
         const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
-        const constrainedByHeight = wrapperWidth / aspect > maxCanvasHeightinPixels;
+        const rotation = <number> this.selectedRotation.value || 0;
+        const aspectWithRotation = <number>rotation % 180 ? 1 / aspect : aspect;
+        const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightinPixels;
         let height, width;
 
         if (constrainedByHeight) {
             const size = Math.floor(maxCanvasHeightinPixels / RowsToRoundPixelsByMultiple);
             height = RowsToRoundPixelsByMultiple * size;
-            width = Math.floor(height * aspect / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
+            width = Math.floor(height * aspectWithRotation / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
         } else {
             const size = Math.floor(wrapperWidth / columnsToRoundPixelsByMultiple);
             width = columnsToRoundPixelsByMultiple * size;
-            height = Math.floor(width / aspect / RowsToRoundPixelsByMultiple) * RowsToRoundPixelsByMultiple;
+            height = Math.floor(width / aspectWithRotation / RowsToRoundPixelsByMultiple) * RowsToRoundPixelsByMultiple;
         }
         return { width, height };
     }
@@ -358,7 +360,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             null,
             (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight * 2,
             this.maxHeight * 2,
-            0
+            <number> this.selectedRotation.value || 0
         );
     }
 
