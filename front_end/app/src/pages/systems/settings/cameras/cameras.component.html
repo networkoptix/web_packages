@@ -57,8 +57,14 @@
                             <span class="ml-1" translate>Detailed Info</span>
                         </button>
                     </div>
-                    <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="motionPreviewImage" 
-                        class="mr-2" [lightBackground]="true" [aspect]="previewAspect"></nx-health-image>
+                    <div [style.width.px]="previewWidth">
+                        <nx-health-image [isPrimary]="true" 
+                            aspect="override"
+                            [preloader]="true" 
+                            [state]="selectedCamera.status" 
+                            [url]="motionPreviewImage"
+                            [lightBackground]="true"></nx-health-image>
+                    </div>
                     <div class="details">
                         <div class="details-section">
                             <div class="details-section-keys">
