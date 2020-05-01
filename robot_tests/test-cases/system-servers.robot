@@ -72,9 +72,19 @@ Restart server
     Wait
     verify back online
 
-# Change port
-#     Log in to user system and servers    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-#     Verify on Servers Page
+Change port
+    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    Wait Until Element is Visible    ${SERVERS LINK}
+    Click Link    ${SERVERS LINK}
+    Select Server By Name    Server 2
+    Verify on Servers Page
+    Verify Enabled
+    Change Port To    7004
+    @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
+    Get Cameras    ${auth}    http://10.1.5.126:7004
+    Change Port To    7001
+    @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
+    Get Cameras    ${auth}    http://10.1.5.126:7003
 
 # Check staus
     # Log in to user system and servers    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}

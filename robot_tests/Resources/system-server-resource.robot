@@ -30,3 +30,10 @@ Select Server By Name
     [Arguments]    ${server name}
     Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${server name}")]
     Click Link    //nx-level-3-item/a//span[contains(text(),"${server name}")]/../..
+
+Change Port To
+    [Arguments]    ${port}
+    Input Text    ${PORT INPUT}    ${port}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
