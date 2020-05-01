@@ -28,10 +28,7 @@ import { LayoutModule }      from '@angular/cdk/layout';
 import { WINDOWS_PROVIDERS } from './src/services/window-provider';
 import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard }         from './src/routeGuards/authGuard';
-import { HMGuard }           from './src/routeGuards/hmGuard';
-import { UserGuard }         from './src/routeGuards/userGuard';
-import { AdminGuard }         from './src/routeGuards/adminGuard';
-import { CloudStorageGuard } from './src/routeGuards/cloudStorageGuard';
+import { SystemGuard }       from './src/routeGuards/systemGuard';
 
 // AoT requires an exported function for factories
 
@@ -50,7 +47,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 }
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         BrowserAnimationsModule,
@@ -58,8 +55,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         LayoutModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
-            cookieName: 'csrftoken',
-            headerName: 'X-CSRFToken'
+            cookieName : 'csrftoken',
+            headerName : 'X-CSRFToken'
         }),
         WebStorageModule,
         OrderModule,
@@ -98,10 +95,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             useFactory: initializeApp
         },
         AuthGuard,
-        HMGuard,
-        UserGuard,
-        AdminGuard,
-        CloudStorageGuard
+        SystemGuard
     ],
     declarations   : [
         AppComponent

@@ -10,7 +10,7 @@ import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
 
 import { AuthGuard }  from '../../routeGuards/authGuard';
-import { HMGuard }    from '../../routeGuards/hmGuard';
+import { SystemGuard } from '../../routeGuards/systemGuard';
 
 import { NxHealthComponent }            from './health.component';
 import { NxSystemAlertsComponent }      from './alerts/alerts.component';
@@ -29,17 +29,18 @@ import { NxUpdateInfoComponent }        from './update-info/update-info.componen
 
 const appRoutes: Routes = [
     {
-        path    : 'systems/:systemId/health', component: NxHealthComponent, canActivate: [AuthGuard, HMGuard],
-        children : [
+        path        : 'systems/:systemId/health',
+        component   : NxHealthComponent,
+        canActivate : [AuthGuard, SystemGuard],
+        children    : [
             {
-                path: '', component: NxSystemAlertsComponent,
-                pathMatch: 'full'
+                path: '', component: NxSystemAlertsComponent, pathMatch: 'full'
             },
             {
-                path: 'alerts', component: NxSystemAlertsComponent,
+                path: 'alerts', component: NxSystemAlertsComponent
             },
             {
-                path: ':metric', component: NxSystemMetricsComponent,
+                path: ':metric', component: NxSystemMetricsComponent
             }
         ]
     }
