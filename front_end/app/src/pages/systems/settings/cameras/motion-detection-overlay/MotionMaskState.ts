@@ -4,8 +4,8 @@ import { Mask, Area, AreaTuple }    from './motion-detection-types';
 import { takeUntil, skip }          from 'rxjs/operators';
 
 export class MotionMaskState {
-    private columns = 44;
-    private rows = 32;
+    public columns: number = 44;
+    public rows: number = 32;
     public maskMatrix: BehaviorSubject<Mask>;
     public maskZones: BehaviorSubject<Area[]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
@@ -15,16 +15,20 @@ export class MotionMaskState {
         public canvas: ElementRef<HTMLCanvasElement>,
         public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>,
         private unsub$: Subject<boolean>,
-        updateMask: EventEmitter<string>
+        updateMask: EventEmitter<string>,
+        private rotation: number = 0
     ) {
-        const parsedInitial = this.initialToMaskZones(initialMask);
+        const aspectChange = rotation % 180;
+        this.columns = aspectChange ? 32 : 44;
+        this.rows = aspectChange ? 44 : 32;
+        const parsedInitial = this.initialToMaskZones(initialMask, this.rotation);
         this.maskZones = new BehaviorSubject(parsedInitial);
         this.maskMatrix = new BehaviorSubject(
             this.zonesToMatrix(parsedInitial)
         );
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.zonesToMatrix(zones);
+            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation);
             const latestZones = this.matrixToZones(matrix);
             const maskString = latestZones.map(
                 ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
@@ -39,20 +43,46 @@ export class MotionMaskState {
      * @param mask initial mask from server
      */
     public reInitialize(mask: string) {
-        const parsedInitial = this.initialToMaskZones(mask);
+        const parsedInitial = this.initialToMaskZones(mask, this.rotation);
         this.maskZones.next(parsedInitial);
         this.maskMatrix.next(this.zonesToMatrix(parsedInitial));
     }
 
     // Init Methods
-    private initialToMaskZones(initial: string): Area[] {
+    private initialToMaskZones(initial: string, rotate): Area[] {
         const zones = initial.split(';').map((area) => {
             const areaTuples = <AreaTuple>(
                 area.split(',').map((numString) => parseInt(numString))
             );
             return new Area(...areaTuples);
         });
-        return this.sortedZones(zones);
+
+        const matrix = this.zonesToMatrix(zones);
+        const rotatedMatrix = this.rotateMatrix(matrix, rotate);
+        const rotatedZones = this.matrixToZones(rotatedMatrix);
+        return this.sortedZones(rotatedZones);
+    }
+
+    rotateMatrix(matrix: number[][], rotation: number) {
+        if (rotation % 180) {
+            matrix = matrix.reverse();
+            const temp: number[][] = new Array(44).fill(new Array(32).fill(0));
+            const originalColumns = 44;
+            const originalRows = 32;
+            for (let column = 0; column < originalRows; column++) {
+                for (let row = 0; row < originalColumns; row++) {
+                    // TODO-CHRIS: Not sure why this isn't working, need to fix
+                    temp[row][column] = matrix[row][column];
+                }
+            };
+            console.log(temp);
+            matrix = temp;
+        }
+        if (rotation >= 180) {
+            matrix = matrix.reverse();
+        }
+
+        return matrix;
     }
 
     initSensitivityButtons = () => {
@@ -101,7 +131,7 @@ export class MotionMaskState {
 
     // Transform utilities
     public zonesToMatrix(zones: Area[]): Mask {
-        let matrix: Mask = new Array(32).fill(new Array(44).fill(0));
+        let matrix: Mask = new Array(this.rows).fill(new Array(this.columns).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);
         }

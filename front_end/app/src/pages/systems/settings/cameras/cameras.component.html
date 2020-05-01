@@ -203,6 +203,7 @@
                             (updateMask)="updateMask($event)"
                             [height]="height" 
                             [width]="width"
+                            [rotation]="this.selectedRotation.value || 0"
                             [sensitivityButtons$]="sensitivityButtons$"
                             [initialMask]="motionMaskWatcher.originalValue"></nx-motion-detection-overlay>
                     </div>
