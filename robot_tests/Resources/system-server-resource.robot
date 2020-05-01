@@ -4,8 +4,12 @@ Verify on Servers Page
     ...    ${PORT INPUT}
     ...    ${RENAME SERVER BUTTON}
     ...    ${RESTART SESRVER BUTTON}
-    ...    ${FULL INFO BUTTON}
+    ...    ${SERVER DETAILED INFO BUTTON}
 
+Verify Enabled
+    Wait Until Element is Enabled    ${PORT INPUT}
+    Wait Until Element is Enabled    ${RENAME SERVER BUTTON}
+    Wait Until Element is Enabled    ${RESTART SESRVER BUTTON}
 Log in to user and system
     [Arguments]    ${user}    ${system id}
     Log in    ${user}    ${password}
@@ -21,3 +25,8 @@ Verify Rename Dialog
     ...    ${RENAME CANCEL BUTTON}
     ...    ${RENAME CLOSE BUTTON}
     ...    ${$RENAME SERVER INPUT}
+
+Select Server By Name
+    [Arguments]    ${server name}
+    Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${server name}")]
+    Click Link    //nx-level-3-item/a//span[contains(text(),"${server name}")]/../..
