@@ -79,7 +79,7 @@ export class MotionMaskState {
             matrix = temp;
         }
         if (rotation >= 180) {
-            matrix = matrix.reverse();
+            matrix = matrix.reverse().map(row => row.reverse());
         }
 
         return matrix;
