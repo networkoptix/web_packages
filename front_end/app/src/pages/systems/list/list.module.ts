@@ -8,7 +8,7 @@ import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
 import { DirectivesModule }       from '../../../directives/directives.module';
 import { ComponentsModule }       from '../../../components/components.module';
-import { AuthGuard }              from '../../../routeGuards/authGuard';
+import { AuthGuard }              from '../../../routeGuards';
 import { NxSettingsModule }       from '../settings/settings.module';
 import { NxSystemsListComponent } from './list.component';
 
