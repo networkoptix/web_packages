@@ -28,7 +28,7 @@ export class MotionMaskState {
         );
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation);
+            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation, true);
             const latestZones = this.matrixToZones(matrix);
             const maskString = latestZones.map(
                 ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
@@ -63,19 +63,19 @@ export class MotionMaskState {
         return this.sortedZones(rotatedZones);
     }
 
-    rotateMatrix(matrix: number[][], rotation: number) {
+    rotateMatrix(matrix: number[][], rotation: number, toLandscape = false) {
+        if (!(rotation % 360)) return matrix;
+        if (rotation % 360 === 180) return matrix.reverse().map(row => row.reverse());
         if (rotation % 180) {
-            const rows = 44;
-            const columns = 32;
-            const rotated = Array(rows).fill(Array(columns).fill(0));
-            matrix = rotated;
-            // Need to handle rotation here
+            const rows = toLandscape ? 32 : 44;
+            const columns = toLandscape ? 44 : 32;
+            const rotated = Array(rows).fill(Array(columns).fill(0)).map((_, column) => _.map((_, row) => matrix[row][column]));
+            if (rotation % 360 === 90) {
+                return rotated.map(row => row.reverse());
+            } else {
+                return rotated.reverse();
+            }
         }
-        if (rotation >= 180) {
-            matrix = matrix.reverse().map(row => row.reverse());
-        }
-
-        return matrix;
     }
 
     initSensitivityButtons = () => {
@@ -124,7 +124,9 @@ export class MotionMaskState {
 
     // Transform utilities
     public zonesToMatrix(zones: Area[]): Mask {
-        let matrix: Mask = new Array(this.rows).fill(new Array(this.columns).fill(0));
+        const rows = this.rotation % 180 ? 44 : 32;
+        const columns = this.rotation % 180 ? 32 : 44;
+        let matrix: Mask = new Array(rows).fill(new Array(columns).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);
         }
@@ -140,7 +142,7 @@ export class MotionMaskState {
             let width = 1;
             let height = 1;
             while (
-                column + width < this.columns &&
+                column + width < maskMatrix[0].length &&
                 matrix[row][column + width] === sensitivity
             ) {
                 // Find row with matching sensitivity
@@ -148,7 +150,7 @@ export class MotionMaskState {
                 width++;
             }
             while (
-                row + height < this.rows &&
+                row + height < maskMatrix.length &&
                 matrix[row + height]
                     .slice(column, column + width)
                     .every((cell) => cell !== false && cell === sensitivity)
