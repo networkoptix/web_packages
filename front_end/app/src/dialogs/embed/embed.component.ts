@@ -8,6 +8,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { IParams } from '../../components/search/search.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,7 +24,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     auth: any;
-    params: any;
+    params: IParams;
     embedUrl: string;
     private formChangesSubscription: Subscription;
 
@@ -69,6 +70,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         let uri   = '';
 
         for (const paramsKey in params) {
+            // eslint-disable-next-line no-prototype-builtins
             if (params.hasOwnProperty(paramsKey)) {
                 // filter checkboxes in form
                 if (this.params[paramsKey] !== undefined && !params[paramsKey]) {

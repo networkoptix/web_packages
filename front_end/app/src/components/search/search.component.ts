@@ -45,7 +45,7 @@ import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_ty
 
  */
 
-interface Params {
+export interface IParams {
     [key: string]: any;
 }
 
@@ -381,7 +381,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     setRouteParams(resetUri?): Promise<any> {
-        const queryParams: Params = {};
+        const queryParams: IParams = {};
 
         let selectedTags;
         queryParams.tags = undefined;

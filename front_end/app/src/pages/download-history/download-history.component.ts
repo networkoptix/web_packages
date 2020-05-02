@@ -22,15 +22,15 @@ import angular = require('angular');
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'download-history',
-    templateUrl: 'download-history.component.html',
-    styleUrls  : ['download-history.component.scss']
+    selector    : 'download-history',
+    templateUrl : 'download-history.component.html',
+    styleUrls   : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub: any;
     private build: any;
-    private canViewRelease: boolean;
+    public canViewRelease: boolean;
     readonly releases = 'releases';
 
     CONFIG: IConfig;

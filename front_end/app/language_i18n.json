@@ -230,7 +230,7 @@
     "Try Again": "Try Again",
     "UNAVAILABLE": "UNAVAILABLE",
     "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>": "Update them to the <a routerLink=\"/download\" target=\"_blank\">latest build</a>",
-    "Update your system to the latest build to enable Cloud Storage.": "Update your system to the latest build to enable Cloud Storage.",
+    "Update your system to the <a routerLink=\"/download\" target=\"_blank\">latest build</a> to enable Cloud Storage.": "Update your system to the <a routerLink=\"/download\" target=\"_blank\">latest build</a> to enable Cloud Storage.",
     "Updated": "Updated",
     "Use Shift + Wheel for horizontal scrolling.": "Use Shift + Wheel for horizontal scrolling.",
     "User disabled": "User disabled",

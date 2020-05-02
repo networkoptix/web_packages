@@ -34,13 +34,13 @@ import { BaseDropdown }              from '../injDropdown';
     ]
 })
 
-export class NxMultiSelectDropdown extends BaseDropdown {
-    @Input() id: any;
-    @Input('items') itemsOrig: any;
-    @Input() canSelectAll: any;
-    @Input() canSearch: any;
+export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
+    @Input() id: string;
+    @Input('items') itemsOrig: Item[];
+    @Input() canSelectAll: boolean;
+    @Input() canSearch: boolean;
 
-    public items: any = {};
+    public items: Item[] = [];
     public filter: string;
     public textSelected: any = {};
 
@@ -78,7 +78,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         return false;
     }
 
-    change(evt, item) {
+    change(evt, item: Item) {
         const index = this.innerValue.indexOf(item.id);
         if (index > -1) {
             this.innerValue.splice(index, 1);
@@ -101,7 +101,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         });
     }
 
-    trackItem(index, item) {
+    trackItem(index, item: Item) {
         return item ? item.id : undefined;
     }
 

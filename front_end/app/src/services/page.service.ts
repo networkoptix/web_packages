@@ -7,8 +7,8 @@ import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
     providedIn: 'root'
 })
 export class NxPageService {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
 
     constructor(
         configService: NxConfigService,
@@ -35,10 +35,10 @@ export class NxPageService {
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.default });
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
     }
 }

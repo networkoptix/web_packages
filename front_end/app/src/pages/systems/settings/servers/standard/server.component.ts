@@ -165,7 +165,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         return this.system.getServers().toPromise()
             .then(res => {
                 if (res) {
-                    const servers = Object.entries(res).map(server => server[1]);
+                    const servers: any = Object.entries(res).map(server => server[1]);
                     this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
                         ? '' : this.CONFIG.servers.status.offline);
                 }
@@ -182,7 +182,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.system.getServers().toPromise()
             .then(res => {
                 if (res) {
-                    const servers = Object.entries(res).map(server => server[1]);
+                    const servers: any = Object.entries(res).map(server => server[1]);
                     const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
                     setTimeout(() => {
                         this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);

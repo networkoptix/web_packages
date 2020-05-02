@@ -6,11 +6,11 @@ import { BehaviorSubject }           from 'rxjs';
     providedIn: 'root'
 })
 export class NxAppStateService {
-    CONFIG: IConfig;
+    private CONFIG: IConfig;
 
     footerVisibleSubject = new BehaviorSubject(true);
     headerVisibleSubject = new BehaviorSubject(true);
-    readySubject = new BehaviorSubject(false);
+    private readySubject = new BehaviorSubject(false);
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
