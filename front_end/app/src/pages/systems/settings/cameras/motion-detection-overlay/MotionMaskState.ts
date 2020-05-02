@@ -65,18 +65,11 @@ export class MotionMaskState {
 
     rotateMatrix(matrix: number[][], rotation: number) {
         if (rotation % 180) {
-            matrix = matrix.reverse();
-            const temp: number[][] = new Array(44).fill(new Array(32).fill(0));
-            const originalColumns = 44;
-            const originalRows = 32;
-            for (let column = 0; column < originalRows; column++) {
-                for (let row = 0; row < originalColumns; row++) {
-                    // TODO-CHRIS: Not sure why this isn't working, need to fix
-                    temp[row][column] = matrix[row][column];
-                }
-            };
-            console.log(temp);
-            matrix = temp;
+            const rows = 44;
+            const columns = 32;
+            const rotated = Array(rows).fill(Array(columns).fill(0));
+            matrix = rotated;
+            // Need to handle rotation here
         }
         if (rotation >= 180) {
             matrix = matrix.reverse().map(row => row.reverse());
