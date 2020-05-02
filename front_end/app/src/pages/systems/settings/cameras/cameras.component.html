@@ -128,7 +128,9 @@
                         <div>
                             <nx-switch [(ngModel)]="recording" [label]="'Recording' | translate" componentId="recording"></nx-switch>
                             <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses}">{{
-                                availableLicenses > 0 ? ('1 professional license channel will be used' | translate)  : 'Professional license is required' | translate
+                                availableLicenses > 0 ? 
+                                ('1 professional license channel will be used' | translate)  : 
+                                ('Professional license is required' | translate)
                             }}</div>
                         </div>
                     </div>
