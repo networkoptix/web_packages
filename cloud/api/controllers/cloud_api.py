@@ -393,7 +393,7 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def _move(email, password, storage_id, system_id):
+    def _move(email, password, system_id, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/systems/"
         body = {
             "id": system_id
@@ -403,7 +403,7 @@ class Storage(object):
     @staticmethod
     @validate_response
     @lower_case_email
-    def _remove_from_system(email, password, storage_id, system_id):
+    def _remove_from_system(email, password, system_id, storage_id):
         request = f"{CLOUD_STORAGE_URL}/{storage_id}/system/{system_id}"
         return delete_wrapper(request, auth=HTTPDigestAuth(email, password))
 
@@ -427,7 +427,7 @@ class Storage(object):
         for storage in storages:
             storage_id = storage.get('id')
             logger.debug(f"Removing storage: {storage_id} from the system {system_id}")
-            Storage._remove_from_system(email, password, storage_id, system_id)
+            Storage._remove_from_system(email, password, system_id, storage_id)
             Storage._delete(email, password, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
@@ -465,13 +465,15 @@ class Storage(object):
         if len(destination_storages) == 0:
             for storage in source_storages:
                 storage_id = storage['id']
-                Storage._remove_from_system(email, password, storage_id, source_system_id)
-                Storage._move(email, password, storage_id, destination_system_id)
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._move(email, password, destination_system_id, storage_id)
 
         else:
             destination_storage_id = destination_storages[0]['id']
             for storage in source_storages:
-                Storage._merge(email, password, destination_storage_id, storage['id'])
+                storage_id = storage['id']
+                Storage._remove_from_system(email, password, source_system_id, storage_id)
+                Storage._merge(email, password, destination_storage_id, storage_id)
         return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
