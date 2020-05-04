@@ -3,12 +3,13 @@ import {
 }                                       from '@angular/core';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { NxSystem }                     from '../../../../../services/system.service';
-import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
-import { NxLanguageProviderService }    from '../../../../../services/nx-language-provider';
-import { Watcher }                      from '../../../../../services/apply.service';
-import { NxProcessService, Process }    from '../../../../../services/process.service';
+import {
+    NxSystem, Watcher,
+    NxLanguageProviderService,
+    NxProcessService, Process
+}                                       from '../../../../../services';
 import { NxDialogsService }             from '../../../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({

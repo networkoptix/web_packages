@@ -3,20 +3,21 @@ import {
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
     ViewChild, ElementRef, AfterViewInit
-}                                   from '@angular/core';
-import { Location }                 from '@angular/common';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { DeviceDetectorService }    from 'ngx-device-detector';
-import { NxConfigService, IConfig } from '../../../../services/nx-config';
-import { NxUtilsService }           from '../../../../services/utils.service';
-import { NxUriService }             from '../../../../services/uri.service';
-import { NxHealthService }          from '../../health.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
-import { SubscriptionLike }         from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
-import { NxHealthLayoutService }    from '../../health-layout.service';
-import { delay }                    from 'rxjs/operators';
-import { NxRibbonService }          from '../../../../components/ribbon/ribbon.service';
+}                                 from '@angular/core';
+import { Location }               from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DeviceDetectorService }  from 'ngx-device-detector';
+import {
+    NxConfigService, IConfig,
+    NxUtilsService, NxUriService,
+    NxScrollMechanicsService
+}                                 from '../../../../services';
+import { NxHealthService }        from '../../health.service';
+import { NxHealthLayoutService }  from '../../health-layout.service';
+import { NxRibbonService }        from '../../../../components/ribbon/ribbon.service';
+import { SubscriptionLike }       from 'rxjs';
+import { delay }                  from 'rxjs/operators';
+import { AutoUnsubscribe }        from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;

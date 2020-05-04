@@ -5,7 +5,7 @@ import {
 import { BehaviorSubject, Subject }      from 'rxjs';
 import { MotionMaskState }      from './MotionMaskState';
 import { MotionMaskRenderer }   from './MotionMaskRenderer';
-import { NxConfigService, IConfig } from '../../../../../services/nx-config';
+import { NxConfigService, IConfig } from '../../../../../services';
 
 @Component({
     selector        : 'nx-motion-detection-overlay',

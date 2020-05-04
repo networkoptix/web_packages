@@ -2,12 +2,12 @@ import {
     Component, Input, ViewEncapsulation
 }                                                from '@angular/core';
 import { Location }                              from '@angular/common';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { NgForm }                                from '@angular/forms';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { Process }                               from '../../services/process.service';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
-import { Process } from '../../services/process.service';
 
 @Component({
     selector : 'nx-modal-apply-content',

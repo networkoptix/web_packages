@@ -2,7 +2,7 @@ import {
     Component, Input, OnChanges,
     SimpleChanges, ViewEncapsulation
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxConfigService, IConfig } from '../../services';
 
 /* Usage
  <nx-menu>

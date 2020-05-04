@@ -28,7 +28,7 @@ import { NxHealthComponent } from '../app/src/pages/health/health.component';
 import { AuthGuard } from '../app/src/routeGuards/authGuard';
 
 // Services
-import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { WINDOWS_PROVIDERS } from '../app/src/services';
 import { NxHealthModule } from '../app/src/pages/health/health.module';
 import { NxSystemAlertsComponent } from '../app/src/pages/health/alerts/alerts.component';
 import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metrics.component';

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
 import { NxMenuService }                from '../../../../components/menu/menu.service';
-import { NxConfigService, IConfig }              from '../../../../services/nx-config';
+import { NxConfigService, IConfig }     from '../../../../services';
 
 @Component({
     selector: 'setup-component',
@@ -10,7 +10,6 @@ import { NxConfigService, IConfig }              from '../../../../services/nx-c
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {
-
     plugin: any = {};
 
     CONFIG: IConfig;
@@ -24,7 +23,6 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     constructor(private integrationService: IntegrationService,
                 private menuService: NxMenuService,
                 private configService: NxConfigService) {
-
         this.setupDefaults();
     }
 
@@ -37,4 +35,3 @@ export class NxSetupComponent implements OnInit, OnDestroy {
     onSubmit() {
     }
 }
-

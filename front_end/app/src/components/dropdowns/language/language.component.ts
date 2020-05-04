@@ -2,13 +2,13 @@ import {
     Component, ViewEncapsulation,
     Input, forwardRef
 }                                    from '@angular/core';
-import { NxUtilsService }            from '../../../services/utils.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
-import { NxConfigService }           from '../../../services/nx-config';
 import { BaseDropdown }              from '../injDropdown';
-import { ILanguages }                from '../../../services/nx-cloud-api.types';
+import {
+    NxUtilsService, NxCloudApiService,
+    NxLanguageProviderService,
+    NxConfigService, ILanguages
+}                                    from '../../../services';
 
 @Component({
     selector      : 'nx-language-select',

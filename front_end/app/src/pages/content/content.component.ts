@@ -1,18 +1,21 @@
-import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Location } from '@angular/common';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxPageService } from '../../services/page.service';
-import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inject } from '@angular/core';
-import { ComponentsModule } from '../../components/components.module';
-import { SessionStorageService } from 'ngx-store';
-import { WINDOW } from '../../services/window-provider';
-import { NxAccountService, Account } from '../../services/account.service';
-import { NxProcessService } from '../../services/process.service';
-import { NxCloudApiService } from '../../services/nx-cloud-api';
+import {
+    Component, OnInit, Compiler,
+    NgModule, ViewChild, ViewContainerRef, Inject
+}                                  from '@angular/core';
+import { ActivatedRoute, Router }  from '@angular/router';
+import { HttpClient, HttpParams }  from '@angular/common/http';
+import { Location }                from '@angular/common';
+import { DomSanitizer, SafeHtml }  from '@angular/platform-browser';
+import { SessionStorageService }   from 'ngx-store';
+import {
+    NxLanguageProviderService, WINDOW,
+    NxConfigService, IConfig,
+    NxPageService, NxProcessService,
+    NxAccountService, Account,
+    NxCloudApiService
+}                                  from '../../services';
+import { ComponentsModule }        from '../../components/components.module';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector   : 'content-component',

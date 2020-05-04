@@ -3,27 +3,24 @@ import {
     OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxPageService }             from '../../../services/page.service';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxPageService, NxSystemsService,
+    NxSystem, NxSystemService, ICamera,
+    NxAccountService, Account,
+    NxProcessService, NxUtilsService,
+    NxUriService, NxScrollMechanicsService
+}                                    from '../../../services';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '../../../components/menu/menu.service';
-import {
-    NxSystem, NxSystemService, ICamera
-}                                    from '../../../services/system.service';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxProcessService }          from '../../../services/process.service';
-import { NxUtilsService }            from '../../../services/utils.service';
-import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({

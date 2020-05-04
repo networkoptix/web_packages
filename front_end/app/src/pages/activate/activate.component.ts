@@ -1,17 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
+import { ActivatedRoute, Router }   from '@angular/router';
+import { SessionStorageService }    from 'ngx-store';
 
-import { NxUriService }              from '../../services/uri.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { SessionStorageService }     from 'ngx-store';
-import { NxAccountService }          from '../../services/account.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import {
+    NxPageService, NxProcessService,
+    NxLanguageProviderService, NxUriService,
+    NxUrlProtocolService, NxAccountService,
+    NxConfigService, IConfig,
+    NxCloudApiService
+}                                   from '../../services';
+import { NxDialogsService }         from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-activate-component',

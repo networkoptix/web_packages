@@ -1,10 +1,12 @@
-import { ElementRef, Injectable }   from '@angular/core';
-import { BehaviorSubject }          from 'rxjs';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { NxHealthService }          from './health.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { debounceTime }             from 'rxjs/operators';
-import { NxRibbonService }          from '../../components/ribbon/ribbon.service';
+import { ElementRef, Injectable } from '@angular/core';
+import {
+    NxScrollMechanicsService,
+    NxConfigService, IConfig
+}                                 from '../../services';
+import { NxHealthService }        from './health.service';
+import { BehaviorSubject }        from 'rxjs';
+import { debounceTime }           from 'rxjs/operators';
+import { NxRibbonService }        from '../../components/ribbon/ribbon.service';
 
 @Injectable({
     providedIn: 'root'

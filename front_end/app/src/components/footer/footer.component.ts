@@ -3,8 +3,9 @@ import {
     OnDestroy, OnInit
 }                                   from '@angular/core';
 import { DomSanitizer }             from '@angular/platform-browser';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxAppStateService }        from '../../services/nx-app-state.service';
+import {
+    NxConfigService, IConfig, NxAppStateService
+}                                   from '../../services';
 import { Subscription }             from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 

@@ -1,12 +1,16 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewEncapsulation } from '@angular/core';
-import { Subscription, timer } from 'rxjs';
-import { NxUtilsService } from '../../../services/utils.service';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
-import { NxHealthService } from '../health.service';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxRibbonService } from '../../../components/ribbon/ribbon.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import {
+    Component, EventEmitter,
+    OnDestroy, OnInit, Output
+}                                  from '@angular/core';
+import { Subscription, timer }     from 'rxjs';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService
+}                                  from '../../../services';
+import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { NxHealthService }         from '../health.service';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({

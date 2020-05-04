@@ -1,12 +1,11 @@
 import {
-    Component, Input, Renderer2, OnInit, ViewChild
+    Component, Input, OnInit, ViewChild
 }                                      from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService, Process }   from '../../services/process.service';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
+import { ICamera, NxSystem }           from '../../services';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
-import { ICamera, NxSystem }           from '../../services/system.service';
 
 @Component({
     selector    : 'nx-modal-rename-content',

@@ -7,15 +7,16 @@ import {
     Injector
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { DropdownItem }              from '../../../components/dropdowns/generic/dropdown.component';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxProcessService, Process }          from '../../../services/process.service';
+import { NxProcessService, Process } from '../../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
-import { NxSystem }                  from '../../../services/system.service';
+import {
+    NxConfigService, IConfig, NxSystem
+}                                    from '../../../services';
 import { NxDialogsService }          from '../../dialogs.service';
 
 @Component({

@@ -1,28 +1,30 @@
 import {
     Component, OnDestroy, OnInit, Inject, ViewContainerRef
 }                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxSettingsService }         from '../settings.service';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { NxMenuService }             from '../../../../components/menu/menu.service';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { ActivatedRoute }            from '@angular/router';
 import {
-    NxSystem, ICamera, StreamQuality, IRecordingSettings, ITask, IRecordingModes, MotionType
-}                                    from '../../../../services/system.service';
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxSystem, ICamera, StreamQuality,
+    IRecordingSettings, ITask,
+    IRecordingModes, MotionType,
+    NxUriService, WINDOW,
+    Watcher, NxApplyService,
+    Process, NxProcessService
+}                                    from '../../../../services';
+import { NxSettingsService }         from '../settings.service';
+import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { NxHealthService }           from '../../../health/health.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
     Subscription, BehaviorSubject, Subject
 }                                    from 'rxjs';
 import {
-    filter, map, retryWhen, delay, distinctUntilChanged, takeUntil
+    filter, map, retryWhen, delay,
+    distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
-import { ActivatedRoute }            from '@angular/router';
-import { NxUriService }              from '../../../../services/uri.service';
 
-import { NxHealthService }           from '../../../health/health.service';
-import { WINDOW }                    from '../../../../services/window-provider';
-import { Watcher, NxApplyService }   from '../../../../services/apply.service';
-import { Process, NxProcessService } from '../../../../services/process.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 
 @Component({
     selector    : 'nx-cameras-component',

@@ -6,17 +6,17 @@ import { ActivatedRoute }              from '@angular/router';
 import { of, interval }                from 'rxjs';
 import { delayWhen, catchError }       from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { NxConfigService, IConfig }    from '../../../../../services/nx-config';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxProcessService, NxSystem,
+    NxApplyService, Watcher,
+    NxUriService, NxUtilsService
+}                                      from '../../../../../services';
 import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
-import { NxLanguageProviderService }   from '../../../../../services/nx-language-provider';
 import { NxMenuService }               from '../../../../../components/menu/menu.service';
-import { NxProcessService }            from '../../../../../services/process.service';
-import { NxSystem }                    from '../../../../../services/system.service';
-import { NxApplyService, Watcher }     from '../../../../../services/apply.service';
-import { NxUriService }                from '../../../../../services/uri.service';
-import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 import { NxSettingsService }           from '../../settings.service';
-import { NxUtilsService }              from '../../../../../services/utils.service';
+import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({

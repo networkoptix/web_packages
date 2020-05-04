@@ -6,19 +6,18 @@ import {
     ActivatedRoute, NavigationEnd,
     Event, Router, RoutesRecognized
 }                                    from '@angular/router';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxAppStateService }         from '../../services/nx-app-state.service';
-import { NxAccountService }          from '../../services/account.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxSessionService }          from '../../services/session.service';
-import { NxSystemsService }          from '../../services/systems.service';
 import { LocalStorageService }       from 'ngx-store';
-import { Subscription, timer }       from 'rxjs';
-import { NxHeaderService }           from '../../services/nx-header.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { Subscription, timer }       from 'rxjs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import {
+    NxConfigService, IConfig,
+    NxAppStateService, NxAccountService,
+    NxSessionService, NxSystemsService,
+    NxHeaderService, NxLanguageProviderService,
+    NxSystem, NxSystemService
+}                                    from '../../services';
 
 @AutoUnsubscribe()
 @Component({

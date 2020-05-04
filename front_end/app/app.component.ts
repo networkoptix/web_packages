@@ -1,21 +1,18 @@
 import { Location }                                from '@angular/common';
 import { Component, HostListener, Inject }         from '@angular/core';
+import { ActivationStart, Event, Router }          from '@angular/router';
 import { CookieService }                           from 'ngx-cookie-service';
 import { DeviceDetectorService }                   from 'ngx-device-detector';
-import { ActivationStart, Event, Router }          from '@angular/router';
 import { filter, debounceTime, timeout, finalize } from 'rxjs/operators';
-import { WINDOW }                                  from './src/services/window-provider';
-import { NxLanguageProviderService }               from './src/services/nx-language-provider';
-import { NxConfigService, IConfig }                from './src/services/nx-config';
-import { NxApplyService }                          from './src/services/apply.service';
-import { NxRibbonService }                         from './src/components/ribbon/ribbon.service';
-import { NxAppStateService }                       from './src/services/nx-app-state.service';
 import { fromEvent, Subscription }                 from 'rxjs';
-import { NxScrollMechanicsService }                from './src/services/scroll-mechanics.service';
-import { NxUriService }                            from './src/services/uri.service';
-import { NxPageService }                           from './src/services/page.service';
-import { NxSystemRole }                            from './src/services/system.service';
 import { LanguageI18NStaticTypes }                 from './language_i18n_static_types';
+import {
+    WINDOW, NxLanguageProviderService,
+    NxConfigService, IConfig, NxApplyService,
+    NxAppStateService, NxScrollMechanicsService,
+    NxUriService, NxPageService, NxSystemRole
+}                                                  from './src/services';
+import { NxRibbonService }                         from './src/components/ribbon/ribbon.service';
 
 @Component({
     selector : 'nx-app',

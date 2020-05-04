@@ -1,17 +1,18 @@
 import { Component, LOCALE_ID, Inject, OnInit } from '@angular/core';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
-import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
-import { BehaviorSubject }              from 'rxjs';
-import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
-import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
-import { NxUtilsService }               from '../../../../services/utils.service';
-import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxSettingsService }            from '../settings.service';
-import { NxSystem }                     from '../../../../services/system.service';
-import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
-import { NxProcessService, Process }    from '../../../../services/process.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxUtilsService, NxSystem,
+    NxCloudApiService,
+    NxProcessService, Process
+}                                  from '../../../../services';
+import { NxDialogsService }        from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }       from '../settings.service';
+import { NxMenuService }           from '../../../../components/menu/menu.service';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { fromBits }                from '../../../../utils/transform-tools/from-bits';
+import { wrapWithPercent }         from '../../../../utils/transform-tools/wrap-with-percent';
+import { BehaviorSubject }         from 'rxjs';
 
 @Component({
     selector    : 'nx-cloud-storage',

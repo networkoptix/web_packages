@@ -1,10 +1,14 @@
-import { Compiler, Component, Injector, NgModule, NgModuleRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { Router } from '@angular/router';
-import { NxPageService } from '../../services/page.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import {
+    Compiler, Component, Injector, NgModule,
+    NgModuleRef, ViewChild, ViewContainerRef
+}                                  from '@angular/core';
+import { Router }                  from '@angular/router';
+import { Title }                   from '@angular/platform-browser';
+import {
+    NxPageService, NxConfigService,
+    IConfig, NxAppStateService
+}                                  from '../../services';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { NxAppStateService } from '../../services/nx-app-state.service';
-import { Title } from '@angular/platform-browser';
 
 @Component({
     selector   : 'nx-503',

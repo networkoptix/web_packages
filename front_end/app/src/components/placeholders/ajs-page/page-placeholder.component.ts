@@ -1,11 +1,12 @@
 import {
     Component, Input, OnDestroy, OnInit,
     ViewEncapsulation
-} from '@angular/core';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
+}                                    from '@angular/core';
+import {
+    NxLanguageProviderService, IConfig,
+    NxConfigService, NxScrollMechanicsService
+}                                    from '../../../services';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
