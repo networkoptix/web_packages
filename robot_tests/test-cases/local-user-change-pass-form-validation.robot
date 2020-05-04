@@ -1,8 +1,10 @@
 *** Settings ***
 Resource          ../resource.robot
 Resource          ../resources/change-pass-form-validation-resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Setup
 Suite Teardown    Delete All Local Users
+Test Template     Test Passwords Invalid
+Test Teardown     Run Keyword If Test Failed    Restart
 Force Tags        form    Threaded File
 
 *** Variables ***
@@ -70,16 +72,28 @@ Good 4 QWE123!@#                              ${BASE PASSWORD}        ${upper nu
 *** Keywords ***
 Test Passwords Invalid
     [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Log in to Auto Tests System    ${EMAIL OWNER}
+    [Arguments]    ${old pw}    ${new pw}
+    ${user} =    Set Variable    cloudAdmin
+    Log    Change password for ${user}
+    Click Element    //span[text()="Local+${user}"]
+    Wait Until Elements Are Visible
+    ...    ${LOCAL USER LOGIN}
+    Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
+    Input Text    //input[@id="newPassword"]    ${new pw}
+    Check New Password Outline    ${new pw}
+    Click Button    //form[@name="changePasswordForm"]//button[text()="Cancel"]
+    
+Restart
+    Click Button    //form[@name="changePasswordForm"]//button[text()="Cancel"]
+    Delete All Local Users
+    Common Restart Logout    ${url}
+    Setup
+    
+Setup
+    Open Browser and go to URL    ${url}
+    @{local users} =    Create List    cloudAdmin    viewer
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}     button=None
+    Wait Until Element is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}      
-    FOR    ${user}    IN    @{local users}
-        Log    Change password for ${user}
-        Click Element    //span[text()="Local+${user}"]
-        Wait Until Elements Are Visible
-	    ...    ${LOCAL USER LOGIN}
-        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
-        Input Text    //input[@id="newPassword"]    ${new pw}
-        Check New Password Outline    ${new pw}
-    END
-    Delete All Local Users    //span[contains(text(),"ocal+")]

@@ -1,6 +1,6 @@
 *** Settings ***
 Resource          ../resource.robot
-Suite Setup       Open Browser and go to URL    ${url}
+Suite Setup       Setup
 Test Setup        Restart
 Test Teardown     Run Keyword If Test Failed    Reset DB and Open New Browser On Failure
 Suite Teardown    Run Keywords    Close All Browsers    Remove Temporary Users
@@ -14,6 +14,10 @@ ${url}         ${ENV}
 @{TMP USERS}
 
 *** Keywords ***
+Setup
+    Open Browser and go to URL    ${url}
+    Pop From Dictionary    ${role names}    custom    #due to bug 4960
+    
 Log in to Auto Tests System
     [Arguments]    ${email}
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
@@ -666,7 +670,8 @@ Administrator can add, disable and enable Viewer
     
 Cloud Owner Can Change Local User Login
     [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List   
     Verify In Local Users UI    ${local users}    ${email}   
@@ -689,8 +694,9 @@ Cloud Owner Can Change Local User Login
     Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Change Local User Full Name
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user   
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
@@ -712,8 +718,9 @@ Cloud Owner Can Change Local User Full Name
     Delete All Local Users    //span[contains(text(),"ocal+")]	
     
 Cloud Owner Can Change Local User Email
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user   
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
@@ -734,8 +741,9 @@ Cloud Owner Can Change Local User Email
     Delete All Local Users    //span[contains(text(),"ocal+")]    
     
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user   
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
@@ -760,8 +768,9 @@ Cloud Owner Can Change Local User Permissions
     Delete All Local Users    //span[contains(text(),"ocal+")] 
     
 Cloud Owner Can Change Local User Password
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user    
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     Verify In Local Users UI    ${local users}    ${email}
@@ -781,8 +790,9 @@ Cloud Owner Can Change Local User Password
     Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Cloud Owner Can Modify All Settings for Local Users
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user  
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}     
@@ -790,8 +800,9 @@ Cloud Owner Can Modify All Settings for Local Users
     Delete All Local Users    //span[contains(text(),"local+")]
       
 Cloud Owner Can Disable Enable Local User
-    [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    [Tags]    local user   
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List      
     Click Element    //span[contains(text(),"Local+")]
@@ -821,7 +832,8 @@ Cloud Owner Can Disable Enable Local User
     
 Cloud Admininstrator Can Change Settings For Non Admin Local Users
     [Tags]    local user
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${EMAIL ADMIN} 
     Go To Users List
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
