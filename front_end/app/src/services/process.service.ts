@@ -1,6 +1,6 @@
 import { Injectable }                          from '@angular/core';
 import { NxLanguageProviderService }           from './nx-language-provider';
-import { NxToastService }                      from '../dialogs';
+import { NxToastService }                      from '../dialogs/toast.service';
 import { NxCloudApiService }                   from './nx-cloud-api';
 import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
