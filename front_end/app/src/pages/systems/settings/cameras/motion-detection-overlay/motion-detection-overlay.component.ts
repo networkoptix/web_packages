@@ -16,7 +16,7 @@ import { NxConfigService, IConfig } from '../../../../../services/nx-config';
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;
     @Input() width: number;
-    @Input() initialMask: string;
+    @Input() initialMask: string = '';
     @Input() rotation: number = 0;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
