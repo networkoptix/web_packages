@@ -710,6 +710,9 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.cameras;
     }
 
+    /**
+     * TODO: Need to update this method once better license information is available from server with details on license types.
+     */
     getLicenseChannels(): Promise<{total: number, used: number, available: number}> {
         return this.serverManager.getLicenses().then((licenses: any[]) => {
             const parsedLicenses = licenses.map(this.parseLicense);
