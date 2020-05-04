@@ -59,7 +59,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
     availableLicenses = 0;
-
+    systemOffline: boolean;
     sensitivityColors = new Array(10);
 
     constructor(
@@ -110,7 +110,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
+                    this.systemOffline = !system.isOnline;
                     this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
+                        if (!system.isOnline) {
+                            this.showPreloader = false;
+                            this.systemOffline = true;
+                        }
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
                         this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
                             system.info.capabilities &&
@@ -121,9 +126,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
                         }
                     });
-                }
-                if (!this.system.isOnline) {
+                } else {
                     this.showPreloader = false;
+                    this.systemOffline = true;
                 }
                 if (this.cameraSubscription) {
                     this.cameraSubscription.unsubscribe();
@@ -143,11 +148,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         if (this.system.currentServerNotBusy) {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
-                            } else {
-                                this.showPreloader = false;
                             }
                             this.setCamera();
                         }
+                        this.showPreloader = false;
                     });
             });
         this.initUpdateProcess();
