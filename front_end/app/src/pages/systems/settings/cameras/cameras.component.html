@@ -3,7 +3,7 @@
     <div class="col-12 loader-div" *ngIf="showPreloader">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
-    <ng-container *ngIf="selectedCamera && system.isOnline">
+    <ng-container *ngIf="!noCameras && selectedCamera && system.isOnline">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -201,7 +201,7 @@
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
                         <nx-motion-detection-overlay 
-                            *ngIf="showOverlay"
+                            *ngIf="showOverlay && selectedCamera && !noCameras && !systemOffline"
                             (updateMask)="updateMask($event)"
                             [height]="height" 
                             [width]="width"
