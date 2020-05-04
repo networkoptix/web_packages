@@ -51,17 +51,20 @@ export class RestartServerModalContent {
             }, { ignoreError: true })
             .then(
                 () => {
-                    this.system.currentBusyServerId = this.serverId;
+                    this.system.currentBusyServerIds.add(this.serverId);
                     this.close(this.CONFIG.servers.status.restarting);
                     let isFirstTime = true;
+                    let systemOfflineShown = false;
                     const serverSubscription = this.system.getServers()
                         .pipe(
                             map((res: any) => {
+                                // first response comes back with restarted server as online erroneously
                                 if (isFirstTime) {
                                     isFirstTime = false;
                                     throw Error('retry once');
                                 }
                                 if (res) {
+                                    // maps server status into serverObj
                                     const serverObj: { id?: string } = {};
                                     Object.entries(res).forEach((server: [string, { id: string, status: string}]) => {
                                         serverObj[server[1].id] = server[1].status;
@@ -76,7 +79,9 @@ export class RestartServerModalContent {
                                 }
                             }),
                             mergeMap(serverObj => {
-                                if (Object.keys(serverObj).length === 1) {
+                                /** if only online server within system, then server may come online before system comes back online */
+                                const numOnline = Object.values(serverObj).filter(status => status === 'Online').length;
+                                if (numOnline === 1) {
                                     return this.system.getInfo(true, false)
                                         .then(system => {
                                             if (!system.isOnline) {
@@ -89,10 +94,13 @@ export class RestartServerModalContent {
                                 return of('');
                             }),
                             retryWhen(errors => {
+                                /** If single server system or only online server, system goes offline
+                                 * systemOfflineShown used to stop block from running constantly while offline
+                                 * Otherwise, catches all other errors and retries every 4 seconds */
                                 return errors.pipe(
                                     tap(val => {
-                                        if ([502, 503].includes(val.status) && isFirstTime) {
-                                            isFirstTime = false;
+                                        if (!systemOfflineShown && [502, 503].includes(val.status)) {
+                                            systemOfflineShown = true;
                                             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
                                         }
                                     }),
@@ -103,6 +111,7 @@ export class RestartServerModalContent {
                         .subscribe(() => {
                             this.ribbonService.hide();
                             this.system.currentServerNotBusy = true;
+                            this.system.currentBusyServerIds.delete(this.serverId);
                             this.system.systemInfo = this.system;
                             options.classname = this.CONFIG.toast.success;
                             this.toastService.show(this.LANG.servers.restartSuccessful, options);
@@ -111,6 +120,7 @@ export class RestartServerModalContent {
                 },
                 err => {
                     this.system.currentServerNotBusy = true;
+                    this.system.currentBusyServerIds.delete(this.serverId);
                     let message = this.LANG.servers.restartFailed;
                     if (err && (err.name === 'TimeoutError' || err.status === 503)) {
                         message = this.LANG.servers.serverOffline;

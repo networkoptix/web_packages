@@ -50,11 +50,11 @@ ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL
 ...    custom=GlobalViewArchivePermission
     
 &{role names}
-...    cloudAdmin=Administrator
-...    viewer=Viewer
-...    liveViewer=Live Viewer
-...    advancedViewer=Advanced Viewer
-...    custom=Custom
+...    cloudAdmin=${ADMIN TEXT}
+...    viewer=${VIEWER TEXT}
+...    liveViewer=${LIVE VIEWER TEXT}
+...    advancedViewer=${ADV VIEWER TEXT}
+...    custom=${CUSTOM TEXT}
 
 ${EMAIL MERGE OWNER 1}                ${TEST EMAIL}+mergeowner1${BASE EMAIL DOMAIN}
 ${EMAIL MERGE OWNER 2}                ${TEST EMAIL}+mergeowner2${BASE EMAIL DOMAIN}

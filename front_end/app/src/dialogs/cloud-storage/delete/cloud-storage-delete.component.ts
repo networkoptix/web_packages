@@ -57,14 +57,10 @@ export class CloudStorageDeleteModalContent implements OnInit {
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.auth.password = '';
-
-                    this.renderer.selectRootElement('#password').focus();
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
                 }
             },
-            // TODO: These messages and errorCodes will be implemented on a future ticket
             successMessage : this.LANG.dialogs.cloudStorage.remove.success,
             errorPrefix    : this.LANG.dialogs.cloudStorage.remove.errorPrefix
         }).then(() => {

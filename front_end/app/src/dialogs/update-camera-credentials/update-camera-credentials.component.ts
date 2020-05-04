@@ -22,6 +22,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
 
     LANG: LanguageI18NStaticTypes;
     update: Process;
+    currentCredentials: {loginName: string, password: string};
     cameraLoginCredentials = '';
     cameraPasswordCredentials = '';
 
@@ -33,8 +34,23 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         this.LANG = languageService.getTranslations();
     }
 
+    clearPassword() {
+        if (this.cameraPasswordCredentials === '******') {
+            this.cameraPasswordCredentials = '';
+        }
+    }
+
     ngOnInit() {
+        const [loginName, password] = (this.camera.parsedAddParams && this.camera.parsedAddParams.credentials || ':').split(':');
+        this.currentCredentials = { loginName, password };
+        this.cameraLoginCredentials = loginName;
+        this.cameraPasswordCredentials = loginName && password;
         this.update = this.processService.createProcess(() => {
+            if (this.cameraLoginCredentials === this.currentCredentials.loginName &&
+                this.cameraPasswordCredentials === this.currentCredentials.password
+            ) {
+                return Promise.resolve();
+            }
             return this.system.updateCameraSettings(this.camera.id, { credentials: `${this.cameraLoginCredentials}:${this.cameraPasswordCredentials}` })
                 .then(_ => new Promise(resolve => setTimeout(resolve, 1500, this.system.getCameras().then(_ => {
                     this.system.systemInfo = this.system;

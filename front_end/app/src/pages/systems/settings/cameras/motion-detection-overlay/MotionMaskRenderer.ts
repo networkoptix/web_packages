@@ -15,24 +15,37 @@ export class MotionMaskRenderer {
     private cellHeight: number;
     private height: number;
     private width: number;
-    private columns = 44;
-    private rows = 32;
     private ctx: CanvasRenderingContext2D;
     private maskZones: BehaviorSubject<Area[]>;
     private selectionZones: BehaviorSubject<Area[]>;
     public canvas: ElementRef<HTMLCanvasElement>;
     public selectionCanvas: ElementRef<HTMLCanvasElement>;
     private selectionCtx: CanvasRenderingContext2D;
+    private matrixSubscription: Subscription;
     public renderer: Subscription;
     public selectionRenderer: Subscription;
     public interactions: Subscription;
     private brandColor: string;
 
+    public columns = 44
+
+    public rows = 32
+
     constructor(
         private motionMask: MotionMaskState,
         private sensitivityColors: string[],
         private unsub$: Subject<boolean>
-    ) {}
+    ) {
+        this.matrixSubscription = this.motionMask.maskMatrix.pipe(takeUntil(this.unsub$)).subscribe(matrix => {
+            const columns = matrix[0].length;
+            const rows = matrix.length;
+
+            if (rows !== this.rows && columns !== this.columns) {
+                this.columns = columns;
+                this.rows = rows;
+            }
+        });
+    }
 
     // Init methods
     public initCanvas = (canvas: ElementRef<HTMLCanvasElement>, selectionCanvas: ElementRef<HTMLCanvasElement>) => {

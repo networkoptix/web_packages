@@ -57,8 +57,14 @@
                             <span class="ml-1" translate>Detailed Info</span>
                         </button>
                     </div>
-                    <nx-health-image [isPrimary]="true" [preloader]="true" [state]="selectedCamera.status" [url]="motionPreviewImage" 
-                        class="mr-2" [lightBackground]="true" [aspect]="previewAspect"></nx-health-image>
+                    <div [style.width.px]="previewWidth">
+                        <nx-health-image [isPrimary]="true" 
+                            aspect="override"
+                            [preloader]="true" 
+                            [state]="selectedCamera.status" 
+                            [url]="motionPreviewImage"
+                            [lightBackground]="true"></nx-health-image>
+                    </div>
                     <div class="details">
                         <div class="details-section">
                             <div class="details-section-keys">
@@ -119,7 +125,14 @@
             <nx-block header-style="no-padding">
                 <header>
                     <div class="d-flex align-items-center">
-                        <nx-switch [(ngModel)]="recording" [label]="'Recording'" componentId="recording"></nx-switch>
+                        <div>
+                            <nx-switch [(ngModel)]="recording" [label]="'Recording' | translate" componentId="recording"></nx-switch>
+                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses}">{{
+                                availableLicenses > 0 ? 
+                                ('1 professional license channel will be used' | translate)  : 
+                                ('Professional license is required' | translate)
+                            }}</div>
+                        </div>
                     </div>
                 </header>
                 <ng-container *ngIf="recording">
@@ -192,8 +205,9 @@
                             (updateMask)="updateMask($event)"
                             [height]="height" 
                             [width]="width"
+                            [rotation]="this.selectedRotation.value || 0"
                             [sensitivityButtons$]="sensitivityButtons$"
-                            [initialMask]="motionMaskWatcher.originalValue"></nx-motion-detection-overlay>
+                            [initialMask]="motionMaskWatcher.value"></nx-motion-detection-overlay>
                     </div>
                 </div>
                 <div class="ml-3  mb-3 mr-3 d-flex justify-content-between button-wrapper" (contextmenu)="preventContext($event)">

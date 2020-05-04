@@ -17,6 +17,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @Input() height: number;
     @Input() width: number;
     @Input() initialMask: string;
+    @Input() rotation: number = 0;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
     @ViewChild('selectionCanvas') selectionCanvas: ElementRef<HTMLCanvasElement>;
@@ -64,7 +65,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     // Init methods
     private initMask() {
         this.motionMask = new MotionMaskState(
-            this.initialMask, this.motionCanvas, this.sensitivityButtons$, this.unsub$, this.updateMask
+            this.initialMask, this.motionCanvas, this.sensitivityButtons$, this.unsub$, this.updateMask, this.rotation
         );
     }
 

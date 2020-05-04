@@ -711,3 +711,29 @@ Get Key from Value
     FOR    ${key}     IN     @{dict keys}
         Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
     END
+    
+Create Local Users via API
+    [Arguments]    ${auth}    ${server}    ${local users}
+    FOR    ${user}    IN    @{local users}
+        Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
+    END               
+    [return]    @{local users}
+    
+Delete All Local Users
+    [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
+    Wait Until Element is Visible    ${locator}  
+    ${local users} =    Get Element Count     ${locator} 
+    #Click Element    ${locator}[1]
+    FOR    ${node}   IN RANGE   ${local users}
+        Wait Until Element is Visible    ${locator}
+        Click Element    ${locator} 
+        Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
+        Click Button    ${LOCAL USER DELETE BUTTON}
+        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON} 
+        Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
+        Sleep    2
+        Reload Page
+    END
+    Wait Until Element is Visible    //span[text()="admin"]
+    Page Should Not Contain Element     ${locator}

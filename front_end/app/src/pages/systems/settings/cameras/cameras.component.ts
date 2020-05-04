@@ -58,7 +58,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
-    previewAspect = 'Auto';
+    availableLicenses = 0;
 
     sensitivityColors = new Array(10);
 
@@ -242,6 +242,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.cameraNameWatcher.value = value;
     }
 
+    get previewWidth() {
+        const height = 120;
+        const defaultAspectRatio = 1.77778;
+        const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
+        const rotated = <number> this.selectedRotation.value % 180;
+        return rotated ? height / aspect : aspect * height;
+    }
+
     editMode = false;
     handleBlur() {
         this.editMode = false;
@@ -319,21 +327,24 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     getCanvasSize() {
         const wrapperWidth = this.width$.value;
         const maxCanvasHeightinPixels = 480;
-        const columnsToRoundPixelsByMultiple = 44;
-        const RowsToRoundPixelsByMultiple = 32;
+        const rotation = <number> this.selectedRotation.value || 0;
+        const rotated = <number>rotation % 180;
+        const columnsToRoundPixelsByMultiple = rotated ? 32 : 44;
+        const RowsToRoundPixelsByMultiple = rotated ? 44 : 32;
         const defaultAspectRatio = 1.77778;
         const aspect = <number> this.selectedAspect.value || defaultAspectRatio;
-        const constrainedByHeight = wrapperWidth / aspect > maxCanvasHeightinPixels;
+        const aspectWithRotation = rotated ? 1 / aspect : aspect;
+        const constrainedByHeight = wrapperWidth / aspectWithRotation > maxCanvasHeightinPixels;
         let height, width;
 
         if (constrainedByHeight) {
             const size = Math.floor(maxCanvasHeightinPixels / RowsToRoundPixelsByMultiple);
             height = RowsToRoundPixelsByMultiple * size;
-            width = Math.floor(height * aspect / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
+            width = Math.floor(height * aspectWithRotation / columnsToRoundPixelsByMultiple) * columnsToRoundPixelsByMultiple;
         } else {
             const size = Math.floor(wrapperWidth / columnsToRoundPixelsByMultiple);
             width = columnsToRoundPixelsByMultiple * size;
-            height = Math.floor(width / aspect / RowsToRoundPixelsByMultiple) * RowsToRoundPixelsByMultiple;
+            height = Math.floor(width / aspectWithRotation / RowsToRoundPixelsByMultiple) * RowsToRoundPixelsByMultiple;
         }
         return { width, height };
     }
@@ -357,7 +368,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             null,
             (this.selectedAspect.value as number || this.aspectRatios[1].value as number) * this.maxHeight * 2,
             this.maxHeight * 2,
-            0
+            <number> this.selectedRotation.value || 0
         );
     }
 
@@ -446,6 +457,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (value === this.recording) {
             return;
         }
+
+        if (value && !this.availableLicenses) {
+            this.recordingWatcher.value = true;
+            setTimeout(() => {
+                this.recordingWatcher.value = false;
+            }, 500);
+            return;
+        }
+
         if (this.motionEnabled) {
             this.enableMotion();
         } else {
@@ -619,7 +639,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.cameraName = this.selectedCamera.name;
             const aspect = this.aspectRatios.find(({ value: id }) => id === this.selectedCamera.overrideAr) || this.aspectRatios[0];
             this.selectedAspect = aspect;
-            this.previewAspect = aspect.name;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === this.selectedCamera.rotation) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
@@ -632,6 +651,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
+            this.system.getLicenseChannels().then(({ available }) => {
+                this.availableLicenses = available;
+            });
         }
     }
 

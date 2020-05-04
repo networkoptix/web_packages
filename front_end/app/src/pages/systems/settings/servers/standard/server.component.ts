@@ -162,7 +162,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
         this.serverUnavailable = this.serverOffline ||
-            (!this.system.currentServerNotBusy && this.selectedServer.id === this.system.currentBusyServerId);
+            (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
     }
 
     checkIfOnline(serverId) {
