@@ -714,7 +714,6 @@ Get Key from Value
     
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${local users}
-    # @{local users} =    Create List    cloudAdmin    viewer    liveViewer    advancedViewer    #custom (due to 4960)
     FOR    ${user}    IN    @{local users}
         Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
     END               
