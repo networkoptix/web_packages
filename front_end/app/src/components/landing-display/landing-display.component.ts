@@ -23,7 +23,7 @@ export class NxLandingDisplayComponent implements AfterViewInit {
     constructor(private _compiler: Compiler,
                 private _injector: Injector,
                 private _m: NgModuleRef<any>,
-                private configService: NxConfigService
+                configService: NxConfigService
     ) {
         this.CONFIG = configService.getConfig();
     }

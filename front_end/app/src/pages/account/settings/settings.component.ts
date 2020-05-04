@@ -10,11 +10,11 @@ import {
 }                                    from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService, Account } from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { ActivatedRoute }            from '@angular/router';
 import { LocalStorageService }       from 'ngx-store';
-import { NxProcessService }          from '../../../services/process.service';
+import { NxProcessService, Process } from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxMenuService }             from '../../../menu/menu.service';
@@ -40,12 +40,12 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    account: any = {};
-    save: any;
+    account: Account;
+    save: Process;
     langCode: string;
     isSystemOwner = true;
 
-    watchers: any = {
+    watchers = {
         firstName : new Watcher<string>(),
         lastName  : new Watcher<string>(),
         langCode  : new Watcher<string>()
@@ -92,7 +92,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                             return false;
                         });
                 }
-                return this.systemsService.forceUpdateSystemsAsPromise();
+                return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
             }).finally(() => {
                 this.accountService.get(true);
             });

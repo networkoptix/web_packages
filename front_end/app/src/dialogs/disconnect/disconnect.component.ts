@@ -9,9 +9,9 @@ import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-disconnect-content',
-    templateUrl: 'disconnect.component.html',
-    styleUrls  : []
+    selector : 'nx-modal-disconnect-content',
+    templateUrl : 'disconnect.component.html',
+    styleUrls : []
 })
 export class DisconnectModalContent {
     @Input() systemId;
@@ -29,7 +29,7 @@ export class DisconnectModalContent {
 
     constructor(
         language: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private renderer: Renderer2
@@ -46,8 +46,8 @@ export class DisconnectModalContent {
 
             return this.cloudApiService.disconnect(this.systemId, this.auth.password).toPromise();
         }, {
-            ignoreUnauthorized: true,
-            errorCodes        : {
+            ignoreUnauthorized : true,
+            errorCodes         : {
                 wrongPassword: () => {
                     this.wrongPassword = true;
                     this.auth.password = '';
@@ -55,8 +55,8 @@ export class DisconnectModalContent {
                     this.renderer.selectRootElement('#password').focus();
                 }
             },
-            successMessage: this.LANG.toastMessage.system.disconnected.success,
-            errorPrefix   : this.LANG.errorCodes.cantDisconnectSystemPrefix
+            successMessage : this.LANG.toastMessage.system.disconnected.success,
+            errorPrefix    : this.LANG.errorCodes.cantDisconnectSystemPrefix
         }).then(() => {
             this.activeModal.close(true);
         });

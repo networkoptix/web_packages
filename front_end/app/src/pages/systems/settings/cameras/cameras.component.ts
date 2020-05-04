@@ -512,7 +512,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     recordingSettings: IRecordingSettings;
 
     // Motion Detection
-    motionEnabledWatcher: Watcher<string> = new Watcher()
+    motionEnabledWatcher: Watcher<MotionType> = new Watcher()
     get motionEnabled() {
         return this.motionEnabledWatcher.value !== MotionType.noMotion;
     }

@@ -1,11 +1,7 @@
-import {
-    Component, OnInit, AfterViewInit,
-    ViewChild, ViewContainerRef,
-    ViewChildren, QueryList
-}                                    from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService }          from '../../../services/account.service';
+import { NxAccountService, Account } from '../../../services/account.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { ActivatedRoute }            from '@angular/router';
 import { NxProcessService }          from '../../../services/process.service';
@@ -32,7 +28,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     LANG: LanguageI18NStaticTypes;
     form: NgForm;
 
-    account: any = {};
+    account: Account;
     pass: any = {};
 
     changePassword: any;
@@ -96,8 +92,10 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         this.accountService
             .get()
             .then((account) => {
-                this.account = account;
-                this.setOriginal();
+                if (account) {
+                    this.account = account;
+                    this.setOriginal();
+                }
             });
 
         this.applyService.setVisible();

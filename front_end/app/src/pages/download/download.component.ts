@@ -30,7 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     private sub: Subscription;
     private platform: any;
     private activeOs: string;
-    private canViewDownloads: boolean;
+    public canViewDownloads: boolean;
     private paramPlatform: string;
 
     CONFIG: IConfig;
@@ -206,7 +206,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         this.accountService
             .get()
             .then(account => {
-                this.canSeeHistory = (this.CONFIG.cloudCapabilities.publicReleases ||
+                this.canSeeHistory = (!!this.CONFIG.cloudCapabilities.publicReleases ||
                         account &&
                         (account.is_superuser ||
                         account.permissions.indexOf(this.CONFIG.permissions.canViewRelease) > -1));

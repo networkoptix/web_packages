@@ -10,6 +10,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxAccountService }          from '../../services/account.service';
 
 export interface MessageParams {
     disclaimer: string;
@@ -30,7 +31,7 @@ interface Subject {
     styleUrls  : []
 })
 export class MessageModalContent implements OnInit {
-    @Input() account;
+    @Input() account: NxAccountService;
     @Input() messageType;
     @Input() data;
     @Input() closable;

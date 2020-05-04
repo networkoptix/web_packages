@@ -8,7 +8,7 @@ import { Component, OnInit, Compiler, NgModule, ViewChild, ViewContainerRef, Inj
 import { ComponentsModule } from '../../components/components.module';
 import { SessionStorageService } from 'ngx-store';
 import { WINDOW } from '../../services/window-provider';
-import { NxAccountService } from '../../services/account.service';
+import { NxAccountService, Account } from '../../services/account.service';
 import { NxProcessService } from '../../services/process.service';
 import { NxCloudApiService } from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
@@ -21,8 +21,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 })
 
 export class NxContentComponent implements OnInit {
-    private title: string;
-    private body: SafeHtml;
+    public title: string;
+    public body: SafeHtml;
     private staticHTML: string;
     private articleParam: string;
     private state: string;
@@ -30,14 +30,14 @@ export class NxContentComponent implements OnInit {
     private langCode: string;
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private loaded = false;
+    public loaded = false;
     private staticContent: any;
 
     private agreement: boolean;
     private agreementDetails: any = {};
-    private account: any;
-    private showAgree = false;
-    private agreeProcess: any;
+    private account: Account;
+    public showAgree = false;
+    public agreeProcess: any;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
@@ -92,8 +92,10 @@ export class NxContentComponent implements OnInit {
 
     ngAfterViewInit(): void {
         this.accountService.get().then(account => {
-            this.account = account;
-            this.subscribeParams();
+            if (account) {
+                this.account = account;
+                this.subscribeParams();
+            }
         });
     }
 

@@ -12,6 +12,7 @@ import { NxSystemsService }            from '../../services/systems.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 import StateMachine                    from './stateMachine';
 import State                           from './stateForMergeDialog';
+import { NxAccountService }            from '../../services/account.service';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -27,7 +28,7 @@ export class MergeModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    account: any;
+    account: NxAccountService;
     checkMergeabilityProcess: any;
     checkPasswordProcess: any;
     mergingProcess: any;

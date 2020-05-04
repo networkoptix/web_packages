@@ -8,7 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
-import { Process, NxProcessService } from './process.service';
+import { Process }                              from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -23,9 +23,9 @@ import { Process, NxProcessService } from './process.service';
  * someVar.value = {data: 'test'};
  * @class
  */
-export class Watcher<T> {
+export class Watcher<T extends any> {
     originalValue: T;
-    valueSubject = new BehaviorSubject<any>(undefined);
+    valueSubject = new BehaviorSubject<T>(undefined);
 
     constructor(value?: T) {
         this.originalValue = value;
@@ -54,6 +54,9 @@ export class Watcher<T> {
     }
 }
 
+/**
+ * TODO: Unused, could probably remove
+ */
 export class ObjWatcher<Object> {
     originalValue: any = {};
     valueSubject = new BehaviorSubject({});
@@ -103,21 +106,20 @@ export class ObjWatcher<Object> {
  * @class
  */
 export class NxApplyService {
-    applyComponentRef: ComponentRef<NxApplyComponent>;
-    applyFunction: Process;
-    component: ViewContainerRef;
-    discardFunction: () => void;
-    lockedSubject = new BehaviorSubject<boolean>(undefined);
-    popupActive = false;
-    form: NgForm;
+    private applyComponentRef: ComponentRef<NxApplyComponent>;
+    private applyFunction: Process;
+    private component: ViewContainerRef;
+    private discardFunction: <T>(T) => void;
+    private lockedSubject = new BehaviorSubject<boolean>(undefined);
+    private popupActive = false;
+    private form: NgForm;
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
-                private processService: NxProcessService) {
-    }
+    ) {}
 
     get locked() {
         return this.lockedSubject.getValue();
@@ -153,7 +155,7 @@ export class NxApplyService {
         this.setWarn('');
     }
 
-    touched() {
+    private touched() {
         this.locked = true;
     }
 
@@ -168,8 +170,8 @@ export class NxApplyService {
      */
     initPageWatcher(
         component: ViewContainerRef,
-        saveFunction: any,
-        discardFunction: () => void,
+        saveFunction: Process,
+        discardFunction: <T>(T) => void,
         watchers: Watcher<any>[],
         form?: NgForm
     ) {
@@ -237,7 +239,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
     }
 
-    private setDiscardFunction(func: any) {
+    private setDiscardFunction(func: <T>(T) => void) {
         this.discardFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
@@ -285,26 +287,4 @@ export class NxApplyService {
             this.touched();
         });
     }
-
-    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
-        this.addWatchers([...this.watchers, ...watchers]);
-        this.extendApplyFunction(applyFunction);
-        this.extendDiscardFunction(discardFunction);
-    }
-
-    private extendApplyFunction(applyFunction: Process) {
-        const prevApply: any = this.applyFunction;
-        this.setSaveFunction(this.processService.createProcess(() => {
-            applyFunction.run();
-            return prevApply.run();
-        }));
-    }
-
-    private extendDiscardFunction(discardFunction: () => void) {
-        const prevDiscard = this.discardFunction;
-        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
-            prevDiscard();
-            discardFunction();
-        };
-    };
 }

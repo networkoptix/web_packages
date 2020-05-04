@@ -3,7 +3,7 @@ import {
     OnDestroy, ViewEncapsulation
 }                                                from '@angular/core';
 import { ActivatedRoute, Router }                from '@angular/router';
-import { NxAccountService }                      from '../../services/account.service';
+import { NxAccountService, Account }             from '../../services/account.service';
 import { NxConfigService, IConfig }              from '../../services/nx-config';
 import { NxSystem, NxSystemService }             from '../../services/system.service';
 import { NxMenuService }                         from '../../menu/menu.service';
@@ -35,7 +35,7 @@ import { LanguageI18NStaticTypes }               from '../../../language_i18n_st
 export class NxHealthComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    account: any;
+    account: Account;
     system: NxSystem|any;
     server: NxSystemAPI;
 
@@ -132,7 +132,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 this.healthService.ready = false;
                 this.hasServerError = false;
                 this.outdatedVersion = false;
-                if (typeof account !== 'undefined') {
+                if (account && typeof account !== 'undefined') {
                     this.account = account;
                     this.system = this.systemService.createSystem(account.email, systemId);
                     this.menu.base = `${this.CONFIG.menus.systemSettings.baseUrl}${this.system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;
