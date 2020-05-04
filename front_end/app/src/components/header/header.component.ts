@@ -9,7 +9,7 @@ import {
 import { LocalStorageService }       from 'ngx-store';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { Subscription, timer }       from 'rxjs';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxDialogsService }          from '../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import {
     NxConfigService, IConfig,

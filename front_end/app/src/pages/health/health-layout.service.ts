@@ -6,7 +6,7 @@ import {
 import { NxHealthService }        from './health.service';
 import { BehaviorSubject }        from 'rxjs';
 import { debounceTime }           from 'rxjs/operators';
-import { NxRibbonService }        from '../../components/ribbon/ribbon.service';
+import { NxRibbonService }        from '../../components/ribbon';
 
 @Injectable({
     providedIn: 'root'

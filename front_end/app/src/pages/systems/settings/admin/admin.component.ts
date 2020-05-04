@@ -7,10 +7,10 @@ import {
     NxAccountService, NxProcessService,
     NxSystem, NxCloudApiService,
     NxUriService
-}       from '../../../../services';
-import { NxDialogsService }               from '../../../../dialogs/dialogs.service';
+}                                         from '../../../../services';
+import { NxDialogsService }               from '../../../../dialogs';
 import { NxSettingsService }              from '../settings.service';
-import { NxMenuService }                  from '../../../../components/menu/menu.service';
+import { NxMenuService }                  from '../../../../components/menu';
 import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 import { Subscription }                   from 'rxjs';
 import { filter, auditTime }              from 'rxjs/operators';

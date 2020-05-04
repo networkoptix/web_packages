@@ -3,7 +3,7 @@ import {
     ViewEncapsulation, OnDestroy
 }                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxDialogsService }          from '../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import {
     NxConfigService, IConfig,

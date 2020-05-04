@@ -15,7 +15,7 @@ import {
     NxScrollMechanicsService, NxCloudApiService
 }              from '../../services';
 import { IpvdSearchService }                     from './ipvd-search.service';
-import { NxDialogsService }                      from '../../dialogs/dialogs.service';
+import { NxDialogsService }                      from '../../dialogs';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 import { MessageParams }                         from '../../dialogs/message/message.component';
 import { SubscriptionLike }                      from 'rxjs';

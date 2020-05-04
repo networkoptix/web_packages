@@ -6,7 +6,7 @@ import {
     tap, mergeMap
 }                                    from 'rxjs/operators';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
+import { NxRibbonService }           from '../../components/ribbon';
 import { NxProcessService }          from '../../services/process.service';
 import { NxConfigService, IConfig }  from '../../services';
 import { NxToastService }            from '../toast.service';

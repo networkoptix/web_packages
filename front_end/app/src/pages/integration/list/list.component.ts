@@ -6,7 +6,7 @@ import {
     NxConfigService, IConfig,
     NxLanguageProviderService
 }                                  from '../../../services';
-import { NxRibbonService }         from '../../../components/ribbon/ribbon.service';
+import { NxRibbonService }         from '../../../components/ribbon';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 @Component({

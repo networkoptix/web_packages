@@ -12,7 +12,7 @@ import {
     NxLanguageProviderService,
     NxScrollMechanicsService
 }                                  from '../../../services';
-import { NxMenuService }           from '../../../components/menu/menu.service';
+import { NxMenuService }           from '../../../components/menu';
 import { NxHealthService }         from '../health.service';
 import { NxHealthLayoutService }   from '../health-layout.service';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';

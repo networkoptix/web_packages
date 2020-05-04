@@ -16,8 +16,8 @@ import {
     NxScrollMechanicsService, NxUriService,
     NxLanguageProviderService, WINDOW
 }             from '../../services';
-import { NxMenuService }                         from '../../components/menu/menu.service';
-import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
+import { NxMenuService }                         from '../../components/menu';
+import { NxRibbonService }                       from '../../components/ribbon';
 import { NxHealthService }                       from './health.service';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 import { of, Subscription, throwError }          from 'rxjs';

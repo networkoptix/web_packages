@@ -14,7 +14,7 @@ import {
 }                                 from '../../../../services';
 import { NxHealthService }        from '../../health.service';
 import { NxHealthLayoutService }  from '../../health-layout.service';
-import { NxRibbonService }        from '../../../../components/ribbon/ribbon.service';
+import { NxRibbonService }        from '../../../../components/ribbon';
 import { SubscriptionLike }       from 'rxjs';
 import { delay }                  from 'rxjs/operators';
 import { AutoUnsubscribe }        from 'ngx-auto-unsubscribe';

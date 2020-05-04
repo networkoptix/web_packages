@@ -13,9 +13,9 @@ import {
     NxProcessService, NxUriService,
     NxApplyService, Watcher
 }                                               from '../../../../services';
-import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
+import { NxDialogsService }                     from '../../../../dialogs';
 import { NxSettingsService }                    from '../settings.service';
-import { NxMenuService }                        from '../../../../components/menu/menu.service';
+import { NxMenuService }                        from '../../../../components/menu';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';

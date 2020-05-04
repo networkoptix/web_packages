@@ -6,9 +6,9 @@ import {
     NxCloudApiService,
     NxProcessService, Process
 }                                  from '../../../../services';
-import { NxDialogsService }        from '../../../../dialogs/dialogs.service';
+import { NxDialogsService }        from '../../../../dialogs';
 import { NxSettingsService }       from '../settings.service';
-import { NxMenuService }           from '../../../../components/menu/menu.service';
+import { NxMenuService }           from '../../../../components/menu';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
 import { fromBits }                from '../../../../utils/transform-tools/from-bits';
 import { wrapWithPercent }         from '../../../../utils/transform-tools/wrap-with-percent';

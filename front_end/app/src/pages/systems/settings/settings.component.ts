@@ -12,11 +12,12 @@ import {
     NxProcessService, NxUtilsService,
     NxUriService, NxScrollMechanicsService
 }                                    from '../../../services';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import {
+    NxDialogsService, NxToastService
+}                                    from '../../../dialogs';
 import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxToastService }            from '../../../dialogs/toast.service';
+import { NxMenuService }             from '../../../components/menu';
+import { NxRibbonService }           from '../../../components/ribbon';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';

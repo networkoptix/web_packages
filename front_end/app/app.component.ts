@@ -12,7 +12,7 @@ import {
     NxAppStateService, NxScrollMechanicsService,
     NxUriService, NxPageService, NxSystemRole
 }                                                  from './src/services';
-import { NxRibbonService }                         from './src/components/ribbon/ribbon.service';
+import { NxRibbonService }                         from './src/components/ribbon';
 
 @Component({
     selector : 'nx-app',

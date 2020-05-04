@@ -9,10 +9,10 @@ import {
     NxLanguageProviderService,
     NxAccountService, NxPageService
 }                                       from '../../../services';
-import { NxRibbonService }              from '../../../components/ribbon/ribbon.service';
+import { NxRibbonService }              from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
-import { NxMenuService }                from '../../../components/menu/menu.service';
-import { NxDialogsService }             from '../../../dialogs/dialogs.service';
+import { NxMenuService }                from '../../../components/menu';
+import { NxDialogsService }             from '../../../dialogs';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 

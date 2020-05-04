@@ -13,9 +13,9 @@ import {
     Process, NxProcessService
 }                                    from '../../../../services';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../../components/menu';
 import { NxHealthService }           from '../../../health/health.service';
-import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxDialogsService }          from '../../../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
     Subscription, BehaviorSubject, Subject

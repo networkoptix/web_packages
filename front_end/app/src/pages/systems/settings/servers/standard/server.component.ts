@@ -13,8 +13,8 @@ import {
     NxApplyService, Watcher,
     NxUriService, NxUtilsService
 }                                      from '../../../../../services';
-import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
-import { NxMenuService }               from '../../../../../components/menu/menu.service';
+import { NxDialogsService }            from '../../../../../dialogs';
+import { NxMenuService }               from '../../../../../components/menu';
 import { NxSettingsService }           from '../../settings.service';
 import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 
