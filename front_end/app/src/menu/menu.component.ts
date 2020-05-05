@@ -9,7 +9,7 @@ import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
 import {
     NxLanguageProviderService,
-    NxUtilsService, NxSearchService
+    NxUtilsService, NxSearchService, NxSystem
 }                                    from '../services';
 
 /* Usage
@@ -24,6 +24,7 @@ import {
     encapsulation : ViewEncapsulation.None
 })
 export class NxMenuComponent implements OnInit, OnChanges {
+    @Input() system: NxSystem;
     @Input() content: any;
     @Input() searchable: any;
 

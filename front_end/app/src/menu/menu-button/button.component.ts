@@ -1,5 +1,8 @@
 import { Component, Input }  from '@angular/core';
 import { NxSettingsService } from '../../pages/systems/settings/settings.service';
+import { NxDialogsService }  from '../../dialogs';
+import { NxUriService }      from '../../services';
+import { NxMenuService }     from '../menu.service';
 
 // TODO: Do we really need this? -- TT
 @Component({
@@ -10,13 +13,29 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
 })
 export class NxMenuButtonComponent {
     @Input() button;
+    @Input() system;
 
-    constructor(private settingsService: NxSettingsService) {}
+    constructor(
+        private dialogs: NxDialogsService,
+        private uriService: NxUriService,
+        private menuService: NxMenuService
+    ) {}
 
     action() {
         if (this.button.id === 'addUser') {
             // Handling promise to satisfy the linter.
-            this.settingsService.addUser().then(() => {});
+            this.dialogs.addUser(this.system)
+                .then((userId) => {
+                    if (userId) {
+                        userId = this.system.mediaserver.cleanId(userId);
+                        this.menuService.setDetailsSection(userId);
+
+                        this.uriService
+                            .updateURI(`systems/${this.system.id}/users/${userId}`)
+                            .catch(error => console.error(error));
+                    }
+                })
+                .catch(err => console.error(err));
         }
     }
 }

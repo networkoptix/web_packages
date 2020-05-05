@@ -3,25 +3,21 @@ import {
     OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxPageService, NxSystemsService,
-    NxSystem, NxSystemService, ICamera,
-    NxAccountService, Account,
-    NxProcessService, NxUtilsService,
-    NxUriService, NxScrollMechanicsService
+    NxLanguageProviderService, NxPageService,
+    NxSystemsService, NxAccountService, Account,
+    NxProcessService, NxUtilsService, NxUriService,
+    NxScrollMechanicsService, NxSystem, NxSystemService, ICamera
 }                                    from '../../../services';
-import {
-    NxDialogsService, NxToastService
-}                                    from '../../../dialogs';
+import { NxDialogsService, NxToastService }  from '../../../dialogs';
 import { NxSettingsService }         from './settings.service';
 import { NxMenuService }             from '../../../menu';
 import { NxRibbonService }           from '../../../components/ribbon';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -69,7 +65,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults(configService) {
+    private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.systemNoAccess = false;
@@ -100,14 +96,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
 
-        this.setupDefaults(configService);
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
-        debugger;
         this.pageService.setDesktopLayout();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
