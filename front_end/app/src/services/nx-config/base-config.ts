@@ -83,6 +83,7 @@ export interface AccessRoles {
     default: string;
     custom: string;
     editUserPermissionFlag: string;
+    editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];

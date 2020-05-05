@@ -88,6 +88,7 @@ class SystemPermissions {
     editAdmins = false;
     editUsers = false;
     isAdmin = false;
+    editCameras = false;
 }
 
 class System implements SystemInterface {
@@ -170,16 +171,19 @@ class UserManager {
     checkPermissions() {
         const isMine                         = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins : isMine,
-            editUsers  : isMine,
-            isAdmin    : isMine
+            editAdmins  : isMine,
+            editUsers   : isMine,
+            isAdmin     : isMine,
+            editCameras : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
             permissions.isAdmin = this.isAdmin(this.currentUser);
+            permissions.editCameras = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editCameraPermissionFlag) >= 0;
         } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole.toLowerCase()) > -1) {
             permissions.editUsers = true;
             permissions.isAdmin = true;
+            permissions.editCameras = true;
         }
         this.permissions = permissions;
     }
