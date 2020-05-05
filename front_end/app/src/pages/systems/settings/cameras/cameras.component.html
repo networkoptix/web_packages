@@ -201,7 +201,7 @@
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
                         <nx-motion-detection-overlay 
-                            *ngIf="showOverlay && selectedCamera && !noCameras"
+                            *ngIf="showOverlay && selectedCamera && !noCameras && this.motionMaskWatcher.value"
                             (updateMask)="updateMask($event)"
                             [height]="height" 
                             [width]="width"

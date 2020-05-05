@@ -110,19 +110,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
-                    this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
-                        if (!system.isOnline) {
+                    this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
+                        if (!this.system.isOnline) {
                             this.showPreloader = false;
-                            this.noCameras = system.cameras && system.cameras.length === 0;
+                            this.noCameras = this.system.cameras && this.system.cameras.length === 0;
                         }
-                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
+                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
                         this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                            system.info.capabilities &&
-                            system.info.capabilities.vms_metrics) &&
+                            this.system.info.capabilities &&
+                            this.system.info.capabilities.vms_metrics) &&
                             this.system.canViewInfo();
                         this.initUpdateProcess();
                         if (this.canSeeInfo) {
-                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
                         }
                     });
                 } else {
@@ -659,6 +659,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.applyService.setVisible();
             this.system.getLicenseChannels().then(({ available }) => {
                 this.availableLicenses = available;
+            }).catch(_ => {
+                this.availableLicenses = 0;
             });
         } else {
             this.noCameras = true;
