@@ -440,12 +440,20 @@ class ServerManager {
                 rotation,
                 overrideAr,
                 mediaCapabilities,
-                cameraAdvancedParams,
                 isAudioSupported: audioSupported,
                 ...parsedAddParams
-            }: any = addParamsRaw.reduce((params, { name, value }) => (
-                { ...params, [name]: recursiveJson(value) }
-            ), {});
+            }: any = addParamsRaw.filter(({ name }) => [
+                'rotation',
+                'overrideAr',
+                'mediaCapbilities',
+                'isAudioSupported',
+                'supportedMotion',
+                'motionStream',
+                'credentials'
+            ].includes(name)).reduce((params, { name, value }) => {
+                params[name] = value;
+                return params;
+            }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
@@ -1362,7 +1370,6 @@ export interface BitrateInfos {
 interface _ParsedAddParams {
     DeviceUrl: string;
     VideoLayout: string;
-    cameraAdvancedParams: CameraAdvancedParams;
     cameraCapabilities: number;
     compatibleAnalyticsEngines: any[];
     credentials: string;
