@@ -351,7 +351,7 @@ export class MotionMaskRenderer {
         draw(bottom, right + 0.5, bottom, left + 0.5, drawBottom, Math.max(
             maskMatrix[Math.min(row + 1, this.rows - 1)][column], sensitivity), shadow
         );
-        draw(top + 0.5, right, bottom + 0.5, right, drawRight, Math.max(
+        draw(top + (drawRight ? -0.5 : 0.5), right, bottom + 0.5, right, drawRight, Math.max(
             maskMatrix[row][Math.min(column + 1, this.columns - 1)], sensitivity), shadow
         );
     };
