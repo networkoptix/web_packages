@@ -1,1 +1,13 @@
+@import '../../../../styles/typography';
 
+.system-settings {
+    .system-header-bold {
+        font-weight: bold;
+    }
+    .system-name {
+        @extend #medium24;
+    }
+    .system-owner {
+        @extend #regular13;
+    }
+}

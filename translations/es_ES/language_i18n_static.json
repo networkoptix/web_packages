@@ -128,9 +128,9 @@
         "chromeCastWarning": "Chromecast consume muchos recursos y puede causar problemas en tu servidor.",
         "recordingSettingsWarning": "Actualice la configuración de grabación que falta.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Grabar Siempre",
+            "motion": "Grabar solo movimiento",
+            "motionLowRes": "Movimiento + Bajo-Res"
         },
         "resolution": {
             "various": "- Valores diferentes -",
@@ -586,6 +586,7 @@
         "resetSuccessful": "El servidor {{ serverName }} se ha restablecido a los valores predeterminados.",
         "restartFailed": "Hubo un problema al reiniciar el servidor.",
         "restartSuccessful": "El servidor se reinició correctamente.",
+        "serverOffline": "Servidor está desconectado.",
         "servers": "Servidores",
         "status": {
             "checking": "comprobando...",

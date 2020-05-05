@@ -47,6 +47,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     detachDisabled: boolean;
     resetDisabled: boolean;
     portChangeDisabled: boolean;
+    serverUnavailable: boolean;
     serverOffline: boolean;
     canSeeInfo: boolean;
     fullInfoPath: string;
@@ -60,6 +61,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
+        this.serverUnavailable = true;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
         this.canSeeInfo = false;
@@ -128,7 +130,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error));
 
-        this.renameDisabled = !this.system.permissions.editAdmins;
+        this.renameDisabled = !this.system.permissions.isAdmin;
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
@@ -159,6 +161,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
         this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
+        this.serverUnavailable = this.serverOffline ||
+            (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
     }
 
     checkIfOnline(serverId) {

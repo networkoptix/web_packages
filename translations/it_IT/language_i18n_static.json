@@ -151,7 +151,7 @@
         "systemOffline": "Il sistema è offline",
         "systemOfflineMessage": "Questo sistema è offline e al momento non è accessibile.",
         "systemServerError": "Errore interno del server",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Si è verificato un errore, riprova più tardi. Se il problema persiste, contattare il team di supporto.",
         "systemUnreachable": "Il sistema è inaccessibile",
         "unknown": "Sconosciuto",
         "voiceCommands": {
@@ -586,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
         "restartFailed": "There was a problem restarting the server.",
         "restartSuccessful": "Server has successfully restarted.",
+        "serverOffline": "Il server è offline.",
         "servers": "Servers",
         "status": {
             "checking": "checking...",

@@ -25,7 +25,7 @@ import { HealthMonitorComponent } from './health-monitor.component';
 import { NxHealthComponent } from '../app/src/pages/health/health.component';
 
 // Route guards
-import { AuthGuard } from '../app/src/routeGuards/authGuard';
+import { AuthGuard } from '../app/src/routeGuards';
 
 // Services
 import { WINDOWS_PROVIDERS } from '../app/src/services';

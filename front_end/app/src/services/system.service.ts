@@ -13,7 +13,6 @@ import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { recursiveJson }                   from '../utils/recursive-json';
-import { compareSemver }                   from '../utils/compare-semver';
 import { IParams } from '../components/search/search.component';
 
 export interface NxSystemRole extends PredefinedRole {
@@ -443,7 +442,7 @@ class ServerManager {
                 { ...params, [name]: recursiveJson(value) }
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
-            const isAudioSupported = audioSupported === '1';
+            const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
             const _maxFps = primary && primary.value && primary.value.maxFps;
@@ -555,6 +554,10 @@ class ServerManager {
         }
     }
 
+    getLicenses() {
+        return this.mediaserver.getLicenses().toPromise();
+    }
+
     getModuleInfo(serverId?: string) {
         if (serverId) {
             return this.mediaserverConnections[serverId].getModuleInfo();
@@ -620,6 +623,7 @@ export class NxSystem extends System implements OnDestroy {
     currentUserEmail: string;
     mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
+    currentBusyServerIds = new Set();
     moduleInfo: any; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
@@ -696,6 +700,30 @@ export class NxSystem extends System implements OnDestroy {
 
     get cameras() {
         return this.serverManager.cameras;
+    }
+
+    /**
+     * TODO: Need to update this method once better license information is available from server with details on license types.
+     */
+    getLicenseChannels(): Promise<{total: number, used: number, available: number}> {
+        return this.serverManager.getLicenses().then((licenses: any[]) => {
+            const parsedLicenses = licenses.map(this.parseLicense);
+            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION }) => {
+                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
+                return activeLicense ? qty + parseInt(COUNT) : qty;
+            }, 0);
+            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const available = total - used;
+            return { total, used, available };
+        });
+    }
+
+    parseLicense({ key, licenseBlock }: { key: string, licenseBlock: string }) {
+        const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
+            const [curKey, curVal] = current.split('=');
+            return { ...parsed, [curKey]: curVal };
+        }, {});
+        return { key, ...parsedBlock };
     }
 
     // End of userManager get functions
@@ -800,7 +828,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        return this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine || this.isAdmin && this.systemInfo.cloudStorageSystemEnabled;
+        return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
+            (this.isAdmin && this.systemInfo.cloudStorageSystemEnabled) ||
+            (this.systemInfo.cloudStorageCapable && this.isMine);
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
@@ -824,8 +854,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
-                const cloudSupportedVersion = '4.1';
-                this.cloudStorageCapable = this.moduleInfo && compareSemver(this.moduleInfo.version, cloudSupportedVersion) >= 0;
+                this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
                 if (!suppressUpdate) {
                     this.systemInfo = this;
@@ -1019,7 +1048,8 @@ export class NxSystem extends System implements OnDestroy {
 
     restartServer(serverId: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.restartServer(serverId);
+        return this.serverManager.restartServer(serverId)
+            .catch(err => Promise.reject(err));
     }
 
     detachFromSystem(serverId: string, currentPassword: string) {
@@ -1314,7 +1344,7 @@ interface _ParsedAddParams {
     cameraAdvancedParams: CameraAdvancedParams;
     cameraCapabilities: number;
     compatibleAnalyticsEngines: any[];
-    defaultCredentials: string;
+    credentials: string;
     driverClass: string;
     firmware: string;
     hasDualStreaming: number;

@@ -71,6 +71,6 @@ export class Nx503Component {
             }).catch((e) => console.error(e));
         setTimeout(() => {
             this.router.navigate(['/']).catch(() => console.log('Error navigating to the index'));
-        }, 60000);
+        }, this.CONFIG.maintenanceTimeout);
     }
 }

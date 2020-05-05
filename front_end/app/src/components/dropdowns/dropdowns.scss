@@ -76,6 +76,11 @@ header {
         background-color : $light4;
         width            : 100%;
         max-width        : 100%;
+
+        &.btn.btn-dropdown-toggle span .text-muted {
+            @extend #regular14;
+            color: $light16 !important;
+        }
         
         &::after {
             display : none !important; // hide standard arrow

@@ -83,7 +83,7 @@ export class NxCloudStorageComponent implements OnInit {
         return this.system$.value.isOwner;
     }
 
-    get cloudEnabled() {
+    get systemCloudStorageCapable() {
         return this.system$.value.cloudStorageCapable;
     }
 

@@ -586,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
         "restartFailed": "There was a problem restarting the server.",
         "restartSuccessful": "Server has successfully restarted.",
+        "serverOffline": "Server is offline.",
         "servers": "Servers",
         "status": {
             "checking": "checking...",

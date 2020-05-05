@@ -150,6 +150,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     searchParam = undefined;
                     this.search();
                 }
+
+                this.setLayout();
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {

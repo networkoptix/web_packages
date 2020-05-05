@@ -80,8 +80,6 @@ export class NxRestoreComponent implements OnInit {
             restoreCode: this.uriParamCode
         };
 
-        this.localStorage.remove('email');
-
         this.restoring = (this.uriParam === 'restoring');
         this.restoringSuccess = (this.uriParam === 'restoringSuccess');
         this.changeSuccess = (this.uriParam === 'changeSuccess');

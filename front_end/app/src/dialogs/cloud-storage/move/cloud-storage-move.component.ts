@@ -65,14 +65,12 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.systemsService.getMySystems(this.userEmail, this.systemId);
             this.systemsService.systemsSubject.subscribe((systems: any[]) => {
                 // Generate dropdown items
-                const processedSystems: DropdownItem[] = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth: state }) => ({
+                this.targetSystems = systems.filter(({ id }) => id !== this.systemId).map(({ id: value, name, stateOfHealth: state }) => ({
                     value,
                     state,
                     name: `<span>${name}</span><span class="${state === 'offline' ? 'text-muted' : ''}"> – ${state}</span>`
                 }));
 
-                const otherSystems = [{ name: 'horizontal' }, { value: 'otherSystem', name: this.LANG.dialogs.cloudStorage.otherSystem }];
-                this.targetSystems = [...processedSystems, ...otherSystems];
                 this.setTargetSystem(this.targetSystems[0]);
                 if (systems && this.targetSystems.length < 2) {
                     // Display noOtherSystemsError when current system is the only system

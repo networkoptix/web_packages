@@ -16,10 +16,12 @@
     'thumbnail-preview': !lightBackground,
     wide: aspect === '16:9' || aspect === 'Auto',
     normal: aspect === '4:3',
-    square: aspect === '1:1'
+    square: aspect === '1:1',
+    fill: aspect === 'override'
 }">
     <img *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
+        [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"
         (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
