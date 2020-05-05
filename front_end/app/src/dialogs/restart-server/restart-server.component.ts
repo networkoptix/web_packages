@@ -75,23 +75,19 @@ export class RestartServerModalContent {
                                     if (serverObj[this.serverId] !== 'Online') {
                                         throw Error('still restarting');
                                     }
-                                    return serverObj;
                                 }
                             }),
-                            mergeMap(serverObj => {
-                                /** if only online server within system, then server may come online before system comes back online */
-                                const numOnline = Object.values(serverObj).filter(status => status === 'Online').length;
-                                if (numOnline === 1) {
-                                    return this.system.getInfo(true, false)
-                                        .then(system => {
-                                            if (!system.isOnline) {
-                                                this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
-                                                throw Error('system is offline still');
-                                            }
-                                        })
-                                        .catch(err => { throw Error(err); });
-                                }
-                                return of('');
+                            mergeMap(() => {
+                                // make sure that system is online
+                                return this.system.getInfo(true, false)
+                                    .then(system => {
+                                        this.system = system;
+                                        if (!system.isOnline) {
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            throw Error('system is offline still');
+                                        }
+                                    })
+                                    .catch(err => { throw Error(err); });
                             }),
                             retryWhen(errors => {
                                 /** If single server system or only online server, system goes offline
