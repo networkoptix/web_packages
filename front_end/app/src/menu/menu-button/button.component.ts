@@ -1,5 +1,4 @@
 import { Component, Input }  from '@angular/core';
-import { NxSettingsService } from '../../pages/systems/settings/settings.service';
 import { NxDialogsService }  from '../../dialogs';
 import { NxUriService }      from '../../services';
 import { NxMenuService }     from '../menu.service';

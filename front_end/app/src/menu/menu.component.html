@@ -4,12 +4,13 @@
         [ngModel]="menuModel.query"
         (onFocusOut)="resetNav()"
         (onFocus)="setNav()"
+        class="d-block mb-2"
         layout="search"
         name="menuModel.query">
 </nx-search>
 
 <div class="nx-menu"
-     [ngClass]="{ 'mt-2 searchable' : isSearchable }" #menuWrapper>
+     [ngClass]="{ 'mb-2 searchable' : searchMode }" #menuWrapper>
 
     <div class="nx-menu-overlay" *ngIf="transition" ></div>
     <div class="nx-menu-placeholder" *ngIf="!menuContent.length" translate>Nothing found</div>
