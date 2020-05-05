@@ -683,7 +683,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .subscribe(
                 result => {
                     const alerts = result.reply['ec2/metrics/alarms'].reply.cameras;
-                    this.alerts = Object.entries(alerts).map(
+                    this.alerts = Object.entries(alerts || {}).map(
                         ([cameraId, alertInfo]) =>
                             new Alert(cameraId, alertInfo, 'Camera')
                     );
