@@ -1,5 +1,6 @@
-<a class="menu-level-3"
-   [ngClass]="{'selected': selected, 'item-disabled': !isEnabled }"
+<a class="menu-level-3 alternative"
+   [ngClass]="{'selected': selected, 'item-disabled': !isEnabled, 'focus': menuNavItemId === item.id}"
+   tabindex="{{ selected ? '-1': undefined }}"
    [id]="item.id"
    [routerLink]="itemPath"
    [queryParams]="item.query">

@@ -3,7 +3,7 @@
 }
 
 [data-whatintent='keyboard'] button:focus:not([disabled]):not(.disabled),
-[data-whatintent='keyboard'] a:focus:not([disabled]):not(.disabled) {
+[data-whatintent='keyboard'] a:focus:not([disabled]):not(.disabled):not(.alternative) {
     outline : none !important;
     @extend #outline;
 

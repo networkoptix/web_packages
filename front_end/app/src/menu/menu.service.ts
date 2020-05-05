@@ -11,6 +11,7 @@ export class NxMenuService implements OnDestroy {
     selectedSubSectionSubject = new BehaviorSubject([]);
     selectedDetailsSection = new BehaviorSubject([]);
     contentSubject = new BehaviorSubject([]);
+    navItemSubject = new BehaviorSubject('');
 
     private regex: any;
 
@@ -23,6 +24,14 @@ export class NxMenuService implements OnDestroy {
 
     get content() {
         return this.contentSubject.getValue();
+    }
+
+    set navItemId(id) {
+        this.navItemSubject.next(id);
+    }
+
+    get navItemId() {
+        return this.navItemSubject.getValue();
     }
 
     setSection(section) {
@@ -42,6 +51,22 @@ export class NxMenuService implements OnDestroy {
         this.selectedSubSectionSubject.unsubscribe();
         this.selectedDetailsSection.unsubscribe();
         this.contentSubject.unsubscribe();
+    }
+
+    getItemBy(id) {
+        for (const node of this.content) {
+            if (node.level3 && node.level3.length) {
+                const match = node.level3.filter((item) => {
+                    return item.id === id;
+                });
+
+                if (match.length) {
+                    return match[0];
+                }
+            }
+        }
+
+        return undefined;
     }
 
     fillerItemsBy(model) {

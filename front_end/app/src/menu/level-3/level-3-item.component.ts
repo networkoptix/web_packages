@@ -1,28 +1,38 @@
 import {
     Component, Input, OnInit,
-    OnChanges, SimpleChanges
-}                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services';
+    OnChanges, SimpleChanges, OnDestroy
+} from '@angular/core';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxMenuService }            from '../menu.service';
+import { SubscriptionLike }         from 'rxjs';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 
 /* Usage
  */
 
+@AutoUnsubscribe()
 @Component({
     selector    : 'nx-level-3-item',
     templateUrl : 'level-3-item.component.html',
     styleUrls   : ['level-3-item.component.scss']
 })
-export class NxLevel3ItemComponent implements OnInit, OnChanges {
+export class NxLevel3ItemComponent implements OnInit, OnChanges, OnDestroy {
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
     @Input() first: boolean;
 
-    itemPath: string;
-    isEnabled: boolean;
     CONFIG: IConfig;
 
-    constructor(configService: NxConfigService
+    itemPath: string;
+    isEnabled: boolean;
+    menuNavItemId: string;
+
+    navItemSubscription: SubscriptionLike;
+
+    constructor(
+        configService: NxConfigService,
+        private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -31,7 +41,13 @@ export class NxLevel3ItemComponent implements OnInit, OnChanges {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
+
+        this.navItemSubscription = this.menuService.navItemSubject.subscribe(() => {
+            this.menuNavItemId = this.menuService.navItemId;
+        });
     }
+
+    ngOnDestroy(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.item && changes.item.previousValue && changes.item.previousValue.isEnabled !== changes.item.currentValue.isEnabled) {

@@ -7,7 +7,7 @@ import { NxMenuService }     from '../menu.service';
 // TODO: Do we really need this? -- TT
 @Component({
     selector : 'nx-menu-button',
-    template : `<button class="btn btn-menu btn-clear"
+    template : `<button class="inset btn btn-menu btn-clear"
                        [disabled]="button.disabled"
                        (click)="action()">{{button.label}}</button>`
 })

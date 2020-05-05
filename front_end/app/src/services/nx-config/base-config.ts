@@ -461,7 +461,7 @@ export interface ServersStatus {
     online: string;
     offline: string;
     restarting: string;
-    reseting: string;
+    resetting: string;
     checking: string;
 }
 
@@ -1087,7 +1087,7 @@ const typeMap: any = {
         { json: 'online', js: 'online', typ: '' },
         { json: 'offline', js: 'offline', typ: '' },
         { json: 'restarting', js: 'restarting', typ: '' },
-        { json: 'reseting', js: 'reseting', typ: '' },
+        { json: 'resetting', js: 'resetting', typ: '' },
         { json: 'checking', js: 'checking', typ: '' }
     ], false),
     System: o([

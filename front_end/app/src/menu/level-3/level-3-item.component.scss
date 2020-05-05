@@ -16,6 +16,25 @@
     overflow         : hidden;
     line-height      : 26px;
 
+    &.alternative {
+        &.focus {
+            &, * {
+                // overwrite whatinput's focus outline
+                background-color : $light6;
+                outline          : none !important;
+                box-shadow       : none !important;
+            }
+        }
+        &:focus {
+            &, * {
+                // overwrite whatinput's focus outline
+                background-color : $light6;
+                outline          : none !important;
+                box-shadow       : none !important;
+            }
+        }
+    }
+
     &:hover {
         &, * {
             background-color: $light6 !important;

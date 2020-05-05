@@ -70,6 +70,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() dataLoaded: boolean;
 
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
+    @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
 
     public numberFilters = 0;
     public filterSelected: any;
@@ -390,6 +391,10 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.onFocus.emit();
     }
 
+    setOnFocusOut() {
+        this.onFocusOut.emit();
+    }
+
     setRouteParams(resetUri?): Promise<any> {
         const queryParams: IParams = {};
 
@@ -447,5 +452,13 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         return this.localFilter.tags && this.localFilter.tags.length ||
             this.localFilter.selects && this.localFilter.selects.length ||
             this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
+
+    navArrow(direction) {
+        this.searchService.navDirection = direction;
+    }
+
+    navSelect() {
+        this.searchService.navSelected();
     }
 }

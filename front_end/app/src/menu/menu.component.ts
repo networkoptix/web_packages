@@ -1,10 +1,11 @@
 import {
-    Component, Input, OnChanges, OnInit,
-    SimpleChanges, ViewEncapsulation
-}                                    from '@angular/core';
-import { SubscriptionLike }          from 'rxjs';
-import { ActivatedRoute }            from '@angular/router';
-import { NxConfigService, IConfig }  from '../services/nx-config';
+    Component, ElementRef, HostListener, Input, OnChanges, OnInit,
+    SimpleChanges, ViewChild, ViewEncapsulation
+} from '@angular/core';
+import { SubscriptionLike }         from 'rxjs';
+import { ActivatedRoute, Router }   from '@angular/router';
+import { NxConfigService, IConfig } from '../services/nx-config';
+import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
 import {
@@ -39,16 +40,25 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     menuContent: any = [];
     menuModel: any = {};
+    navItems: any = [];
+    navItemIdx: number;
+
     routeParamsSubscription: SubscriptionLike;
+    navDirectionSubscription: SubscriptionLike;
+    navSelectionSubscription: SubscriptionLike;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
+    @ViewChild('menuWrapper') menuWrapper: ElementRef;
+
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
+        private router: Router,
         private route: ActivatedRoute,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
+        private searchService: NxSearchService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -72,6 +82,47 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 NxSearchService.getMatchPatterns(this.menuModel);
                 this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
             });
+
+        this.navDirectionSubscription = this.searchService.navDirectionSubject
+            .subscribe(() => {
+                if (this.navItems.length) {
+                    this.menuService.navItemId = this.assignItemId();
+                    // skip selected item
+                    if (this.menuService.navItemId === this.selectedLevel3) {
+                        this.menuService.navItemId = this.assignItemId();
+                    }
+                }
+            });
+
+        this.navSelectionSubscription = this.searchService.navSelectionSubject
+            .subscribe(() => {
+                const item = this.menuService.getItemBy(this.navItems[this.navItemIdx].id);
+                if (item) {
+                    this.router
+                        .navigate([`${this.content.base}/${item.path}`], { queryParams: { search: this.menuModel.query } })
+                        .catch((ex) => {
+                            console.error(ex);
+                        });
+                }
+            });
+    }
+
+    private resetNav() {
+        this.navItemIdx = 0;
+        this.menuService.navItemId = undefined;
+    }
+
+    private setNav() {
+        this.modelChanged(this.menuModel);
+    }
+
+    private assignItemId() {
+        if (this.searchService.navDirection === 'UP') {
+            this.navItemIdx = (this.navItemIdx > 0) ? --this.navItemIdx : this.navItems.length - 1;
+        } else {
+            this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
+        }
+        return this.navItems[this.navItemIdx].id;
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -107,6 +158,13 @@ export class NxMenuComponent implements OnInit, OnChanges {
         setTimeout(() => {
             this.menuContent = this.menuService.fillerItemsBy(model);
             this.transition = false;
+
+            this.navItems = [];
+            if (model.query !== '') {
+                this.navItems = this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3');
+                this.navItemIdx = 0;
+                this.menuService.navItemId = this.navItems[this.navItemIdx].id;
+            }
         }, delay);
     }
 
@@ -148,6 +206,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     toggleItem(state, idx) {
         this.menuContent[idx].toggle = state;
+    }
+
+    @HostListener('mousemove', ['$event'])
+    onMouseMove(event: MouseEvent) {
+        this.menuService.navItemId = undefined;
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet

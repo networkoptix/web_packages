@@ -305,7 +305,7 @@ export const nxConfig: IConfig = {
             online     : 'online',
             offline    : 'offline',
             restarting : 'restarting',
-            reseting   : 'reseting',
+            resetting   : 'resetting',
             checking   : 'checking'
         }
     },

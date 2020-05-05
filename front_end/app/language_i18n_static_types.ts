@@ -640,7 +640,7 @@ export interface Servers {
 export interface ServersStatus {
     checking:   string;
     offline:    string;
-    reseting:   string;
+    resetting:  string;
     restarting: string;
 }
 
@@ -1443,7 +1443,7 @@ const typeMap: any = {
     "ServersStatus": o([
         { json: "checking", js: "checking", typ: "" },
         { json: "offline", js: "offline", typ: "" },
-        { json: "reseting", js: "reseting", typ: "" },
+        { json: "resetting", js: "resetting", typ: "" },
         { json: "restarting", js: "restarting", typ: "" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([

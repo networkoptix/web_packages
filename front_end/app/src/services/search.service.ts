@@ -1,9 +1,29 @@
-import { Injectable }  from '@angular/core';
+import { Injectable }                                 from '@angular/core';
+import { BehaviorSubject, Subject, SubscriptionLike } from 'rxjs';
+import { AutoUnsubscribe }                            from 'ngx-auto-unsubscribe';
 
+@AutoUnsubscribe()
 @Injectable({
     providedIn: 'root'
 })
 export class NxSearchService {
+    navDirectionSubject = new BehaviorSubject('');
+    navSelectionSubject = new Subject();
+
+    set navDirection(dir: string) {
+        this.navDirectionSubject.next(dir);
+    }
+
+    get navDirection(): string {
+        return this.navDirectionSubject.getValue();
+    }
+
+    navSelected() {
+        this.navSelectionSubject.next();
+    }
+
+    ngOnDestroy() {}
+
     static findMatch(searchFor, model) {
         const _searchFor = searchFor && searchFor.toLowerCase();
 
