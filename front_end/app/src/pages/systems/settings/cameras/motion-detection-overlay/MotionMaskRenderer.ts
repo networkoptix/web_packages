@@ -27,9 +27,8 @@ export class MotionMaskRenderer {
     public interactions: Subscription;
     private brandColor: string;
 
-    public columns = 44
-
-    public rows = 32
+    public columns = MotionMaskState.matrixColumns
+    public rows = MotionMaskState.matrixRows
 
     constructor(
         private motionMask: MotionMaskState,
