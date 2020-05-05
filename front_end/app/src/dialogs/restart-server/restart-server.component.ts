@@ -1,6 +1,6 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { timer }                     from 'rxjs';
+import { of, timer }                 from 'rxjs';
 import {
     delayWhen, retryWhen, map,
     tap, mergeMap
