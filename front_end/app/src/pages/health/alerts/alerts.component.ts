@@ -10,7 +10,7 @@ import {
     NxUriService, NxUtilsService,
     NxScrollMechanicsService
 }                                from '../../../services';
-import { NxMenuService }         from '../../../components/menu';
+import { NxMenuService }         from '../../../menu';
 import { NxHealthService }       from '../health.service';
 import { NxHealthLayoutService } from '../health-layout.service';
 import { of, SubscriptionLike }  from 'rxjs';

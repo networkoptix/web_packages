@@ -1,32 +1,4 @@
 import {
-<<<<<<< HEAD
-    Component,
-    OnInit,
-    AfterViewInit,
-    ViewContainerRef,
-    ViewChild,
-    ViewChildren,
-    QueryList,
-    OnDestroy
-}                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { ActivatedRoute }            from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
-import { NxProcessService, Process } from '../../../services/process.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../menu/menu.service';
-import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NgForm }                    from '@angular/forms';
-import { first }                     from 'rxjs/operators';
-import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-=======
     Component, OnInit,
     AfterViewInit, ViewChild,
     ViewContainerRef, OnDestroy,
@@ -44,12 +16,11 @@ import {
     NxApplyService, Watcher
 }                                  from '../../../services';
 import { NxDialogsService }        from '../../../dialogs';
-import { NxMenuService }           from '../../../components/menu';
+import { NxMenuService }           from '../../../menu';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { Subscription }            from 'rxjs';
 import { first }                   from 'rxjs/operators';
 import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
->>>>>>> cloud_20.2
 
 @AutoUnsubscribe()
 @Component({

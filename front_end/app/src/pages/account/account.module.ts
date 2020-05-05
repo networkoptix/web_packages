@@ -5,15 +5,14 @@ import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
-
-
-import { ComponentsModule }      from '../../components/components.module';
-import { ApplyGuard, AuthGuard } from '../../routeGuards';
+import { ComponentsModule }              from '../../components/components.module';
+import { ApplyGuard, AuthGuard }         from '../../routeGuards';
 import {
     NxAccountComponent,
     NxAccountSettingsModule, NxAccountSettingsComponent,
     NxAccountPasswordModule, NxAccountPasswordComponent
-} from './';
+}                                        from './';
+import { MenuModule }                    from '../../menu';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {

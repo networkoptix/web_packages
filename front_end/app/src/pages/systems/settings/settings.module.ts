@@ -7,7 +7,10 @@ import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }            from '@ngx-translate/core';
 import { ComponentsModule }           from '../../../components/components.module';
 import { NxNoSystemsComponent }       from '../no-systems/no-systems.component';
-import { ApplyGuard, AuthGuard, SystemGuard } from '../../../routeGuards';
+import { MenuModule }                 from '../../../menu';
+import {
+    ApplyGuard, AuthGuard, SystemGuard
+}                                     from '../../../routeGuards';
 import {
     NxSystemSettingsComponent,
     NxSystemAdminModule, NxSystemAdminComponent,
@@ -15,7 +18,7 @@ import {
     NxCloudStorageModule, NxCloudStorageComponent,
     NxSystemServersModule, NxSystemServersComponent,
     NxSystemUsersModule, NxSystemUsersComponent
-} from './';
+}                                      from './';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -95,7 +98,7 @@ const appRoutes: Routes = [
         NxSystemSettingsComponent,
         NxNoSystemsComponent
     ],
-    bootstrap: [],
+    bootstrap       : [],
     entryComponents : [
         NxSystemSettingsComponent
     ],

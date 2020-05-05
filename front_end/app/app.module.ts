@@ -23,6 +23,7 @@ import { DialogsModule }          from './src/dialogs/dialogs.module';
 import { PagesModule }            from './src/pages/pages.module';
 import { DirectivesModule }       from './src/directives/directives.module';
 import { PipesModule }            from './src/pipes/pipes.module';
+import { MenuModule }             from './src/menu';
 import {
     NxConfigService,
     ServiceModule,

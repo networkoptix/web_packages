@@ -14,7 +14,7 @@ import {
     Process, NxProcessService
 }                                    from '../../../../services';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../components/menu';
+import { NxMenuService }             from '../../../../menu';
 import { NxHealthService }           from '../../../health/health.service';
 import { NxDialogsService }          from '../../../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';

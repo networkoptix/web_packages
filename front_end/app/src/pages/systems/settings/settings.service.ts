@@ -5,7 +5,7 @@ import {
     NxAccountService, NxUriService
 }                                from '../../../services';
 import { NxDialogsService }      from '../../../dialogs';
-import { NxMenuService }         from '../../../components/menu';
+import { NxMenuService }         from '../../../menu';
 
 @Injectable({
     providedIn: 'root'

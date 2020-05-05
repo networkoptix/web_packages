@@ -12,7 +12,7 @@ import {
     NxApplyService, Watcher
 }                                  from '../../../services';
 import { NxDialogsService }        from '../../../dialogs';
-import { NxMenuService }           from '../../../components/menu';
+import { NxMenuService }           from '../../../menu';
 import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 import { first }                   from 'rxjs/operators';
 
