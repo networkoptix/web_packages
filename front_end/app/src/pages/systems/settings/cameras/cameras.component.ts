@@ -59,7 +59,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
     availableLicenses = 0;
-    systemOffline = true;
     noCameras = false;
     sensitivityColors = new Array(10);
 
@@ -111,11 +110,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
-                    this.systemOffline = false;
                     this.system.getInfoAndPermissions(false).catch(() => {}).then((system: NxSystem) => {
                         if (!system.isOnline) {
                             this.showPreloader = false;
-                            this.systemOffline = true;
                             this.noCameras = system.cameras && system.cameras.length === 0;
                         }
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + system.id + '/view/' + this.parsedCameraId;
@@ -130,7 +127,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     });
                 } else {
                     this.showPreloader = false;
-                    this.systemOffline = true;
                     this.noCameras = false;
                 }
                 if (this.cameraSubscription) {
@@ -279,7 +275,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.showUnauthorized = false;
             return this.system.getCameras().then(() => {
                 this.setCamera(true);
-                this.reload += 1;
+                setTimeout(() => {
+                    this.reload += 1;
+                }, 1500);
                 this.settingsService.system = this.system;
             });
         };

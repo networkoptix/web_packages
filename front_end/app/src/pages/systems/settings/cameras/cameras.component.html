@@ -1,9 +1,9 @@
 <div *ngIf="system" class="row auth-visible">
-    <nx-page-placeholder *ngIf="(systemOffline || !systemOffline && noCameras) && !showPreloader" class="placeholder-section" [type]="systemOffline ? 'OFFLINE' : 'NO_CAMS'" ></nx-page-placeholder>
+    <nx-page-placeholder *ngIf="(!system.isOnline || system.isOnline && noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'OFFLINE' : 'NO_CAMS'" ></nx-page-placeholder>
     <div class="col-12 loader-div" *ngIf="showPreloader">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
-    <ng-container *ngIf="!noCameras && selectedCamera && !systemOffline">
+    <ng-container *ngIf="!noCameras && selectedCamera && system.isOnline">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -201,7 +201,7 @@
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
                         <nx-motion-detection-overlay 
-                            *ngIf="showOverlay && selectedCamera && !noCameras && !systemOffline"
+                            *ngIf="showOverlay && selectedCamera && !noCameras"
                             (updateMask)="updateMask($event)"
                             [height]="height" 
                             [width]="width"
