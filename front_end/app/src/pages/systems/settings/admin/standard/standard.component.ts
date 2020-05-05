@@ -130,7 +130,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                  */
                 if (isNaN(curr)) {
                     sw[setting].value = curr === 'true';
-                } else {
+                } else if (this.limitSessionTimeUnits) {
                     curr = parseInt(curr);
                     this.sessionLimitToggle = Boolean(curr);
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;

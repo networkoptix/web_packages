@@ -30,6 +30,7 @@ import {
 }                                 from './src/services';
 import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard, SystemGuard } from './src/routeGuards';
+import { WebadminPageModule}      from './src/pages/webadmin-page.module';
 
 // AoT requires an exported function for factories
 

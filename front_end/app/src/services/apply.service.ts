@@ -262,7 +262,9 @@ export class NxApplyService {
     }
 
     public setWarn(message: string) {
-        (<NxApplyComponent> this.applyComponentRef.instance).warn = message;
+        if (this.applyComponentRef) {
+            (<NxApplyComponent> this.applyComponentRef.instance).warn = message;
+        }
     }
 
     /**

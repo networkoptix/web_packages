@@ -830,6 +830,9 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
+        if (this.CONFIG.isLocal) {
+            return false;
+        }
         return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
             (this.isAdmin && this.systemInfo.cloudStorageSystemEnabled) ||
             (this.systemInfo.cloudStorageCapable && this.isMine);
@@ -868,9 +871,9 @@ export class NxSystem extends System implements OnDestroy {
             });
     }
 
-    getInfo(force?, useCache = true, suppressUpdate = false): Promise<Partial<NxSystemWithUserInfo>> {
+    getInfo(force?, useCache = true, suppressUpdate = false): Promise<Partial<NxSystemWithUserInfo|any>> {
         if (this.CONFIG.isLocal) {
-            return Promise.resolve();
+            return Promise.resolve(undefined);
         }
         if (force) {
             this.infoPromise = undefined;
@@ -907,7 +910,6 @@ export class NxSystem extends System implements OnDestroy {
             let usersPromise: Promise<any>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
-                    this.getUsersCachedInCloud();
                     this.isAvailable = true;
                 }).catch(() => {
                     return this.getUsersCachedInCloud();

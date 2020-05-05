@@ -4,11 +4,12 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
 import { flatMap, map, mergeMap, retryWhen, timeout } from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { ICamera, NxSystemUser, NxSystem } from './system.service';
+import { ICamera, NxSystemUser } from './system.service';
 import { IParams } from '../components/search/search.component';
 import * as t from './system-api.types';
 
 import * as md5 from 'md5';
+import { Account } from './account.service';
 
 interface User {
     canBeEdited: boolean;
@@ -259,7 +260,7 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    private login(login: string, password: string) {
+    login(login: string, password: string): Promise<{data: {account: Account, resultCode: string}}|any> {
         let auth, authPost, authRtsp, nonce, realm;
         return this.getNonce(login).pipe(
             flatMap((response : any) => {
@@ -292,7 +293,7 @@ export class NxSystemAPI {
         });
     }
 
-    private setAuthKeys(authGet: string, authPost: string, authPlay: string) {
+    setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;

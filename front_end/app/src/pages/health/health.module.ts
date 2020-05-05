@@ -21,6 +21,7 @@ import {
     NxImageComponent, NxImageSectionComponent,
     NxSystemAlertCardComponent, NxUpdateInfoComponent
 } from './';
+import { NxConfigService } from '../../services/nx-config';
 
 const CONFIG = new NxConfigService().getConfig();
 const appRoutes: Routes = !CONFIG.isLocal ? [

@@ -42,7 +42,7 @@ export class NxAccountService implements OnDestroy {
     private location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
     private loggingOut: boolean;
-    private requestingLogin: Promise<{data: {account: Account, resultCode: string}}>;
+    private requestingLogin: any;
     private loginDialogActive: boolean;
     mediaServerApi: NxSystemAPI;
 
@@ -265,8 +265,7 @@ export class NxAccountService implements OnDestroy {
         if (this.CONFIG.isLocal) {
             this.requestingLogin = this.mediaServerApi.login(email, password);
         } else {
-            this.requestingLogin = <Promise<{data: {account: Account, resultCode: string}}>> this.cloudApi
-                .login(email, password, remember);
+            this.requestingLogin = this.cloudApi.login(email, password, remember);
         }
 
         return this.requestingLogin.then((result: any) => {

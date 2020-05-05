@@ -14,9 +14,7 @@ import { NxSystemAdminComponent }           from './settings/admin/admin.compone
 import { NxSystemUsersComponent }           from './settings/users/users.component';
 import { NxSystemServersComponent }         from './settings/servers/servers.component';
 import { NxNoSystemsComponent }             from './no-systems/no-systems.component';
-import { ApplyGuard }                       from '../../routeGuards/applyGuard';
-import { AuthGuard }                        from '../../routeGuards/authGuard';
-import { UserGuard }                        from '../../routeGuards/userGuard';
+import { ApplyGuard, AuthGuard, SystemGuard } from '../../routeGuards';
 import { NxCamerasComponent } from './settings/cameras/cameras.component';
 import { NxCamerasModule } from './settings/cameras/cameras.module';
 
@@ -36,13 +34,13 @@ const appRoutes: Routes = [
                 path          : 'users',
                 component     : NxSystemUsersComponent,
                 canDeactivate : [ApplyGuard],
-                canActivate   : [UserGuard]
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'users/:userId',
                 component     : NxSystemUsersComponent,
                 canDeactivate : [ApplyGuard],
-                canActivate   : [UserGuard]
+                canActivate   : [SystemGuard]
             },
             {
                 path          : 'servers',
