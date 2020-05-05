@@ -1,19 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
-import { map }                          from 'rxjs/operators';
-import { combineLatest, Subscription }  from 'rxjs';
 import { DomSanitizer }                 from '@angular/platform-browser';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { combineLatest, Subscription }  from 'rxjs';
+import { map }                          from 'rxjs/operators';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxAccountService, NxPageService
+}                                       from '../../../services';
+import { NxRibbonService }              from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
-import { NxRibbonService }              from '../../../components/ribbon/ribbon.service';
-import { NxConfigService, IConfig }     from '../../../services/nx-config';
-import { MessageParams }                from '../../../dialogs/message/message.component';
-import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
-import { NxMenuService }                from '../../../menu/menu.service';
-import { NxDialogsService }             from '../../../dialogs/dialogs.service';
-import { NxAccountService }             from '../../../services/account.service';
-import { NxPageService }                from '../../../services/page.service';
+import { NxMenuService }                from '../../../components/menu';
+import { NxDialogsService }             from '../../../dialogs';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
+import { MessageParams }                from '../../../dialogs/message/message.component';
 
 @AutoUnsubscribe()
 @Component({

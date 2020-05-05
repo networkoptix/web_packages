@@ -2,7 +2,7 @@ import {
     Component, Input, OnInit,
     OnChanges, SimpleChanges
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxConfigService, IConfig } from '../../../services';
 
 /* Usage
  */

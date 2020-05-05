@@ -3,27 +3,25 @@ import {
     OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxPageService }             from '../../../services/page.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
 import {
-    NxSystem, NxSystemService, ICamera
-}                                    from '../../../services/system.service';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxProcessService }          from '../../../services/process.service';
-import { NxUtilsService }            from '../../../services/utils.service';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
-import { NxToastService }            from '../../../dialogs/toast.service';
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxPageService, NxSystemsService,
+    NxSystem, NxSystemService, ICamera,
+    NxAccountService, Account,
+    NxProcessService, NxUtilsService,
+    NxUriService, NxScrollMechanicsService
+}                                    from '../../../services';
+import {
+    NxDialogsService, NxToastService
+}                                    from '../../../dialogs';
+import { NxSettingsService }         from './settings.service';
+import { NxMenuService }             from '../../../components/menu';
+import { NxRibbonService }           from '../../../components/ribbon';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -396,6 +394,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         path            : 'users/' + id,
                         svgIcon         : 'user'
                     };
+                    if (!user.isCloud && user.name === 'admin') {
+                        node.additionalLabel = 'Owner';
+                    }
                     if (user.isCloud) {
                         node.svgIcon = '';
                         node.icon = 'glyphicon-cloud';
@@ -475,43 +476,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     getCameraStatusIcon({ status }) {
         return this.CONFIG.menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
-
-    /**
-     * Return IPv4 address or IPv6 address if none
-     */
-    formatURL(server) {
-        function ipReducer(result: any, currentValue: any) {
-            if (currentValue[0] === '[') {
-                result.ipv6.push(currentValue);
-            } else {
-                result.ipv4.push(currentValue);
-            }
-            return result;
-        }
-
-        const addr = server.networkAddresses.split(';');
-        const addresses = addr.reduce(ipReducer, { ipv4: [], ipv6: [] });
-
-        if (addresses.ipv4.length > 0) {
-            const [ip, port] = addresses.ipv4[0].split(':');
-            server.ip = ip;
-            server.port = port || '';
-        } else if (addresses.ipv6.length > 0) {
-            if (addresses.ipv6[0].indexOf('[') === 0) {
-                const [ip, port] = addresses.ipv6[0].split(']:');
-                server.ip = ip.substring(1);
-                server.port = port || '';
-            } else {
-                server.ip = addresses.ipv6[0];
-                server.port = '';
-            }
-        } else {
-            server.ip = 'N/A';
-            server.port = '';
-        }
-
-        return server;
-    };
 
     cleanUrl() {
         return this.router

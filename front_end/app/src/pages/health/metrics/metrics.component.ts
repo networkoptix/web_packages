@@ -2,22 +2,23 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                    from '@angular/core';
-import { ActivatedRoute }            from '@angular/router';
-import { Location }                  from '@angular/common';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxMenuService }             from '../../../menu/menu.service';
-import { NxHealthService }           from '../health.service';
-import { NxUriService }              from '../../../services/uri.service';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { of, SubscriptionLike }      from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
-import { delay, throttleTime }       from 'rxjs/operators';
-import { NxHealthLayoutService }     from '../health-layout.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+}                                  from '@angular/core';
+import { ActivatedRoute }          from '@angular/router';
+import { Location }                from '@angular/common';
+import {
+    NxAccountService, NxUriService,
+    NxConfigService, IConfig,
+    NxSystem, NxSystemService,
+    NxLanguageProviderService,
+    NxScrollMechanicsService
+}                                  from '../../../services';
+import { NxMenuService }           from '../../../components/menu';
+import { NxHealthService }         from '../health.service';
+import { NxHealthLayoutService }   from '../health-layout.service';
+import { delay, throttleTime }     from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+import { of, SubscriptionLike }    from 'rxjs';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -149,6 +150,8 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                     searchParam = undefined;
                     this.search();
                 }
+
+                this.setLayout();
             });
 
         this.windowSizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(({ width }) => {

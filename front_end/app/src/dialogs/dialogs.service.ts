@@ -3,10 +3,18 @@ import { DOCUMENT, Location }          from '@angular/common';
 import { DomSanitizer }                from '@angular/platform-browser';
 import { NgbModal }                    from '@ng-bootstrap/ng-bootstrap';
 import { Router }                      from '@angular/router';
+import {
+    BehaviorSubject, SubscriptionLike
+}                                      from 'rxjs';
+import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 import { NxToastService }              from './toast.service';
-import { NxConfigService, IConfig }    from '../services/nx-config';
+import {
+    NxConfigService, IConfig, NxAccountService,
+    NxSystem, ICamera
+}                                      from '../services';
 import { NxLanguageProviderService }   from '../services/nx-language-provider';
-import { NxAccountService }            from '../services/account.service';
+import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
+
 import { LoginModalContent }           from './login/login.component';
 import { GenericModalContent }         from './generic/generic.component';
 import { AddUserModalContent }         from './add-user/add-user.component';
@@ -23,18 +31,13 @@ import { DetachServerModalContent }    from './detach-server/detach-server.compo
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
-import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
 import {
-    CloudStorageDeleteModalContent, CloudStorageMoveModalContent
+    CloudStorageDeleteModalContent,
+    CloudStorageMoveModalContent
 }                                      from './cloud-storage';
 import {
     UpdateCameraCredentialsModalContent
 }                                      from './update-camera-credentials/update-camera-credentials.component';
-import {
-    BehaviorSubject, SubscriptionLike
-}                                      from 'rxjs';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { NxSystem, ICamera }           from '../services/system.service';
 
 import './../dialogs/dialogs.scss';
 

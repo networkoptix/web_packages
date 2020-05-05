@@ -3,13 +3,13 @@ import { Router }                       from '@angular/router';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { IntegrationService }           from './integration.service';
-import { NxUriService }                 from '../../services/uri.service';
-import { NxConfigService, IConfig }     from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxUtilsService }               from '../../services/utils.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import {
+    NxUriService, NxAccountService,
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxPageService, NxUtilsService
+}                                       from '../../services';
+import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({

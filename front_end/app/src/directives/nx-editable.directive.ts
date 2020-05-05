@@ -23,7 +23,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
             <h2 NxEditable
                 [(content)]="model"
                 [hasError]="booleanIfError"
-                [maxLength]="number"
                 class="nothing-special-here"
                 initialClass ="optional-initial-class"
                 editClass="optional-edit-class"
@@ -45,7 +44,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     @Input() initialClass = 'editable-directive-initial';
     @Input() errorClass = 'editable-directive-error';
     @Input() hasError: boolean;
-    @Input() maxLength: number;
     @HostBinding('attr.innerHTML') innerHTML;
 
     private _elementClass: string[] = [];
@@ -71,9 +69,7 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
     }
 
     set content(curValue) {
-        if (!this.maxLength || curValue.length <= this.maxLength) {
-            this.contentValue = curValue;
-        }
+        this.contentValue = curValue;
         this.contentChange.emit(this.contentValue);
         this.elementRef.nativeElement[this.propValueAccessor] = this.innerHTML = this.contentValue;
     }

@@ -6,12 +6,12 @@ import {
     OnInit
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxProcessService, Process }          from '../../../services/process.service';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { BehaviorSubject }           from 'rxjs';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../../services/process.service';
 import { NxSystem }                  from '../../../services/system.service';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-modal-cloud-storage-delete-content',
@@ -57,14 +57,10 @@ export class CloudStorageDeleteModalContent implements OnInit {
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                wrongPassword: () => {
-                    this.wrongPassword = true;
-                    this.auth.password = '';
-
-                    this.renderer.selectRootElement('#password').focus();
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
                 }
             },
-            // TODO: These messages and errorCodes will be implemented on a future ticket
             successMessage : this.LANG.dialogs.cloudStorage.remove.success,
             errorPrefix    : this.LANG.dialogs.cloudStorage.remove.errorPrefix
         }).then(() => {

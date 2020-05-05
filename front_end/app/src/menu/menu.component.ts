@@ -5,11 +5,12 @@ import {
 import { SubscriptionLike }          from 'rxjs';
 import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService, IConfig }  from '../services/nx-config';
-import { NxLanguageProviderService } from '../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
-import { NxUtilsService }            from '../services/utils.service';
-import { NxSearchService }           from '../services/search.service';
+import {
+    NxLanguageProviderService,
+    NxUtilsService, NxSearchService
+}                                    from '../services';
 
 /* Usage
  <nx-menu>

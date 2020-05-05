@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
     Component,
     OnInit,
     AfterViewInit,
@@ -25,6 +26,30 @@ import { first }                     from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+=======
+    Component, OnInit,
+    AfterViewInit, ViewChild,
+    ViewContainerRef, OnDestroy,
+    ViewChildren, QueryList
+}                                  from '@angular/core';
+import { ActivatedRoute }          from '@angular/router';
+import { NgForm }                  from '@angular/forms';
+import { LocalStorageService }     from 'ngx-store';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService, NxPageService,
+    NxAccountService, Account,
+    NxProcessService, Process,
+    NxCloudApiService, NxSystemsService,
+    NxApplyService, Watcher
+}                                  from '../../../services';
+import { NxDialogsService }        from '../../../dialogs';
+import { NxMenuService }           from '../../../components/menu';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { Subscription }            from 'rxjs';
+import { first }                   from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+>>>>>>> cloud_20.2
 
 @AutoUnsubscribe()
 @Component({

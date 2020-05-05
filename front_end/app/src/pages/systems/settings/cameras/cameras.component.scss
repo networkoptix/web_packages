@@ -334,3 +334,15 @@
         width: 240px;
     }
 }
+
+.recording-hint {
+    @extend #regular13;
+    margin: -8px 0 16px 64px;
+    pointer-events: none;
+}
+
+.grayscale {
+    div.switch:before {
+        filter: grayscale(1) !important;
+    }
+}

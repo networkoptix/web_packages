@@ -3,27 +3,26 @@ import {
     OnDestroy, ViewEncapsulation
 }                                                from '@angular/core';
 import { ActivatedRoute, Router }                from '@angular/router';
-import { NxAccountService, Account }             from '../../services/account.service';
-import { NxConfigService, IConfig }              from '../../services/nx-config';
-import { NxSystem, NxSystemService }             from '../../services/system.service';
-import { NxMenuService }                         from '../../menu/menu.service';
-import { NxHealthService }                       from './health.service';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxUtilsService }                        from '../../services/utils.service';
-import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import { NxRibbonService }                       from '../../components/ribbon/ribbon.service';
-import { of, Subscription, throwError }          from 'rxjs';
-import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
-import { NxSystemAPI, NxSystemAPIService }       from '../../services/system-api.service';
-import { NxAppStateService }                     from '../../services/nx-app-state.service';
 import { BreakpointObserver }                    from '@angular/cdk/layout';
-import { WINDOW }                                from '../../services/window-provider';
 import { DOCUMENT }                              from '@angular/common';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
-import { NxUriService }                          from '../../services/uri.service';
-import { flatMap }                               from 'rxjs/operators';
+import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
+import {
+    NxAccountService, Account,
+    NxConfigService, IConfig,
+    NxSystem, NxSystemService,
+    NxUtilsService, NxAppStateService,
+    NxSystemAPI, NxSystemAPIService,
+    NxScrollMechanicsService, NxUriService,
+    NxLanguageProviderService, WINDOW
+}             from '../../services';
+import { NxMenuService }                         from '../../components/menu';
+import { NxRibbonService }                       from '../../components/ribbon';
+import { NxHealthService }                       from './health.service';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
+import { of, Subscription, throwError }          from 'rxjs';
+import { flatMap }                               from 'rxjs/operators';
+import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({

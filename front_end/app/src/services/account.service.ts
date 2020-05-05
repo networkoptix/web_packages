@@ -5,7 +5,7 @@ import { Router }                                         from '@angular/router'
 import { NxConfigService, IConfig }                       from './nx-config';
 import { NxCloudApiService }                              from './nx-cloud-api';
 import { NxLanguageProviderService }                      from './nx-language-provider';
-import { NxDialogsService }                               from '../dialogs/dialogs.service';
+import { NxDialogsService }                               from '../dialogs';
 import { NxSessionService }                               from './session.service';
 import { NxApplyService }                                 from './apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -16,7 +16,7 @@ import { NxUriService }                                   from './uri.service';
 import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
 import { NxPollService }                                  from './poll.service';
 import { NxUtilsService }                                 from './utils.service';
-import { IParams } from '../components/search/search.component';
+import { IParams }                                        from '../components/search/search.component';
 
 export class Account {
     email: string;

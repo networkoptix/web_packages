@@ -1,19 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                             from '@angular/common';
-import { ActivatedRoute, Router }               from '@angular/router';
-import { NxConfigService, IConfig }                      from '../../../services/nx-config';
-import { NxLanguageProviderService }            from '../../../services/nx-language-provider';
-
-import { NxPageService }        from '../../../services/page.service';
-import { NxDialogsService }     from '../../../dialogs/dialogs.service';
-import { NxSystemsService }     from '../../../services/systems.service';
-import { NxAccountService }     from '../../../services/account.service';
-import { NxUrlProtocolService } from '../../../services/url-protocol.service';
-import { NxProcessService }     from '../../../services/process.service';
-import { debounceTime }         from 'rxjs/operators';
-import { Subject, Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { Location }                     from '@angular/common';
+import { ActivatedRoute, Router }       from '@angular/router';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxPageService, NxSystemsService,
+    NxAccountService, NxProcessService,
+    NxUrlProtocolService
+}                                       from '../../../services';
+import { NxDialogsService }             from '../../../dialogs';
+import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
+import { debounceTime }                 from 'rxjs/operators';
+import { Subject, Subscription }        from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({

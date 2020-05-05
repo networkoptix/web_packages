@@ -1,25 +1,22 @@
-import { Injectable, NgModule }                  from '@angular/core';
-import { CommonModule }                          from '@angular/common';
-import { BrowserModule }                         from '@angular/platform-browser';
-import { UpgradeModule }                         from '@angular/upgrade/static';
-import { Resolve, Router, RouterModule, Routes } from '@angular/router';
-import { FormsModule }                           from '@angular/forms';
+import { Injectable, NgModule }          from '@angular/core';
+import { CommonModule }                  from '@angular/common';
+import { BrowserModule }                 from '@angular/platform-browser';
+import { UpgradeModule }                 from '@angular/upgrade/static';
+import { Resolve, RouterModule, Routes } from '@angular/router';
+import { FormsModule }                   from '@angular/forms';
+import { TranslateModule }               from '@ngx-translate/core';
 
-import { NxAccountComponent } from './account.component';
 
-import { TranslateModule }            from '@ngx-translate/core';
-import { ComponentsModule }           from '../../components/components.module';
-import { NxAccountSettingsComponent } from './settings/settings.component';
-import { NxAccountPasswordComponent } from './password/password.component';
-import { NxAccountSettingsModule }    from './settings/settings.module';
-import { NxAccountPasswordModule }    from './password/password.module';
-import { ApplyGuard }                 from '../../routeGuards/applyGuard';
-import { AuthGuard }                  from '../../routeGuards/authGuard';
-import { MenuModule }                 from '../../menu/menu.module';
+import { ComponentsModule }      from '../../components/components.module';
+import { ApplyGuard, AuthGuard } from '../../routeGuards';
+import {
+    NxAccountComponent,
+    NxAccountSettingsModule, NxAccountSettingsComponent,
+    NxAccountPasswordModule, NxAccountPasswordComponent
+} from './';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
-
     constructor() {}
 
     resolve() {
@@ -34,7 +31,7 @@ const appRoutes: Routes = [
             { path: '', component: NxAccountSettingsComponent, canDeactivate: [ApplyGuard] },
             { path: 'password', component: NxAccountPasswordComponent, canDeactivate: [ApplyGuard] }
         ]
-    },
+    }
 ];
 
 @NgModule({
@@ -55,7 +52,7 @@ const appRoutes: Routes = [
         TypeResolver
     ],
     declarations   : [
-        NxAccountComponent,
+        NxAccountComponent
     ],
     bootstrap      : [],
     entryComponents: [

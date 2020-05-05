@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject }       from 'rxjs';
-import { NxCloudApiService }     from '../../../services/nx-cloud-api';
-import { NxDialogsService }      from '../../../dialogs/dialogs.service';
-import { NxAccountService }      from '../../../services/account.service';
-import { NxUriService }          from '../../../services/uri.service';
-import { NxMenuService }         from '../../../menu/menu.service';
+import {
+    NxCloudApiService,
+    NxAccountService, NxUriService
+}                                from '../../../services';
+import { NxDialogsService }      from '../../../dialogs';
+import { NxMenuService }         from '../../../components/menu';
 
 @Injectable({
     providedIn: 'root'

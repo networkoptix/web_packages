@@ -7,22 +7,21 @@ import {
 import { isPlatformBrowser, Location }           from '@angular/common';
 import { BreakpointObserver, BreakpointState }   from '@angular/cdk/layout';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+    NxConfigService, IConfig,
+    NxUriService, NxUtilsService,
+    NxLanguageProviderService,
+    NxAccountService, NxPageService,
+    NxScrollMechanicsService, NxCloudApiService
+}              from '../../services';
 import { IpvdSearchService }                     from './ipvd-search.service';
+import { NxDialogsService }                      from '../../dialogs';
+import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 import { MessageParams }                         from '../../dialogs/message/message.component';
-import { NxConfigService, IConfig }              from '../../services/nx-config';
-import { NxUriService }                          from '../../services/uri.service';
-import { NxUtilsService }                        from '../../services/utils.service';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
-import { NxDialogsService }                      from '../../dialogs/dialogs.service';
-import { NxAccountService }                      from '../../services/account.service';
 import { SubscriptionLike }                      from 'rxjs';
 import { isArray }                               from 'rxjs/internal-compatibility';
-import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
-import { NxPageService }                         from '../../services/page.service';
 import { delay }                                 from 'rxjs/operators';
-import { NxCloudApiService }                     from '../../services/nx-cloud-api';
-import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
+import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
 
 interface Params {
     [key: string]: any;

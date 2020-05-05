@@ -4,17 +4,17 @@ import {
 } from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { NxConfigService, IConfig }    from '../../../../../services/nx-config';
-import { NxDialogsService }            from '../../../../../dialogs/dialogs.service';
-import { NxLanguageProviderService }   from '../../../../../services/nx-language-provider';
-import { NxMenuService }               from '../../../../../menu/menu.service';
-import { NxProcessService }            from '../../../../../services/process.service';
-import { NxSystem }                    from '../../../../../services/system.service';
-import { NxApplyService, Watcher }     from '../../../../../services/apply.service';
-import { NxUriService }                from '../../../../../services/uri.service';
-import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxProcessService, NxSystem,
+    NxApplyService, Watcher,
+    NxUriService, NxUtilsService
+}                                      from '../../../../../services';
+import { NxDialogsService }            from '../../../../../dialogs';
+import { NxMenuService }               from '../../../../../components/menu';
 import { NxSettingsService }           from '../../settings.service';
-import { NxUtilsService }              from '../../../../../services/utils.service';
+import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -45,6 +45,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     detachDisabled: boolean;
     resetDisabled: boolean;
     portChangeDisabled: boolean;
+    serverUnavailable: boolean;
     serverOffline: boolean;
     canSeeInfo: boolean;
     fullInfoPath: string;
@@ -58,6 +59,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = true;
         this.resetDisabled = true;
         this.portChangeDisabled = true;
+        this.serverUnavailable = true;
         // this.debugMode = this.CONFIG.clientMode.debug;
         this.menuService.setSection('servers');
         this.canSeeInfo = false;
@@ -126,7 +128,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error));
 
-        this.renameDisabled = !this.system.permissions.editAdmins;
+        this.renameDisabled = !this.system.permissions.isAdmin;
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
@@ -157,6 +159,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.selectedServer.shownStatus = status ? this.LANG.servers.status[status] : '';
         this.serverOffline = [this.CONFIG.servers.status.offline, this.CONFIG.servers.status.checking]
             .includes(this.selectedServer.internalStatus);
+        this.serverUnavailable = this.serverOffline ||
+            (!this.system.currentServerNotBusy && this.system.currentBusyServerIds.has(this.selectedServer.id));
     }
 
     checkIfOnline(serverId) {

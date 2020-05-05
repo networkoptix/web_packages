@@ -2,10 +2,12 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
-}                                   from '@angular/core';
-import { NxConfigService, IConfig }          from '../../../../services/nx-config';
-import { NxHealthService }          from '../../health.service';
-import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
+}                                from '@angular/core';
+import {
+    NxConfigService, IConfig,
+    NxScrollMechanicsService
+}                                from '../../../../services';
+import { NxHealthService }       from '../../health.service';
 import { NxHealthLayoutService } from '../../health-layout.service';
 
 @Component({

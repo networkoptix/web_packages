@@ -11,12 +11,12 @@ import { ComponentsModule }   from '../../components/components.module';
 import { DialogsModule }      from '../../dialogs/dialogs.module';
 import { PipesModule }        from '../../pipes/pipes.module';
 import { NxAccountComponent } from '../account/account.component';
-import { AuthGuard }          from '../../routeGuards/authGuard';
-import { NxGridLayoutModule } from "../layout/layout.module";
+import { AuthGuard }          from '../../routeGuards';
+import { NxGridLayoutModule } from '../layout/layout.module';
 
 const appRoutes: Routes = [
     {
-        path: 'sandbox', component: NxSandboxComponent, canActivate: [AuthGuard],
+        path: 'sandbox', component: NxSandboxComponent, canActivate: [AuthGuard]
     }
 ];
 
@@ -32,11 +32,11 @@ const appRoutes: Routes = [
         PipesModule,
 
         RouterModule.forChild(appRoutes),
-        NxGridLayoutModule,
+        NxGridLayoutModule
     ],
     providers      : [],
     declarations   : [
-        NxSandboxComponent,
+        NxSandboxComponent
     ],
     bootstrap      : [],
     entryComponents: [

@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireMessaging }         from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders }      from '@angular/common/http';
+import {
+    NxSystemsService, NxAccountService
+}                                       from '../../services';
 import { timer }                        from 'rxjs/observable/timer';
-import { NxSystemsService }             from '../../services/systems.service';
-import { NxAccountService }             from '../../services/account.service';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { Router }                       from '@angular/router';

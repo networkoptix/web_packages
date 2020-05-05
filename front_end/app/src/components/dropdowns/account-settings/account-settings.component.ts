@@ -1,12 +1,13 @@
 import { Component }                 from '@angular/core';
 import { Router }                    from '@angular/router';
-import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { NxConfigService }           from '../../../services/nx-config';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxSessionService }          from '../../../services/session.service';
+import { Subscription }              from 'rxjs';
 import { BaseDropdown }              from '../injDropdown';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import {
+    NxConfigService, NxSessionService,
+    NxAccountService, Account,
+    NxLanguageProviderService
+}                                    from '../../../services';
 
 @AutoUnsubscribe()
 @Component({

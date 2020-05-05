@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
-import { NxConfigService, IConfig }                                from '../../../../services/nx-config';
-import { NxUtilsService }                                 from '../../../../services/utils.service';
-import { NxHealthService } from '../../health.service';
+import { NxConfigService, IConfig, NxUtilsService }       from '../../../../services';
+import { NxHealthService }                                from '../../health.service';
 
 @Component({
     selector     : 'nx-single-entity',

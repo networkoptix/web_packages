@@ -1,18 +1,20 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList } from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService, Account } from '../../../services/account.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { ActivatedRoute }            from '@angular/router';
-import { NxProcessService }          from '../../../services/process.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../menu/menu.service';
-import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NgForm }                    from '@angular/forms';
-import { first }                     from 'rxjs/operators';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import {
+    Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList
+}                                  from '@angular/core';
+import { ActivatedRoute }          from '@angular/router';
+import { NgForm }                  from '@angular/forms';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxAccountService, Account,
+    NxProcessService, NxCloudApiService,
+    NxSystemsService, NxPageService,
+    NxApplyService, Watcher
+}                                  from '../../../services';
+import { NxDialogsService }        from '../../../dialogs';
+import { NxMenuService }           from '../../../components/menu';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { first }                   from 'rxjs/operators';
 
 @Component({
     selector    : 'nx-account-password-component',

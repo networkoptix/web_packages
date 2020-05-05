@@ -7,15 +7,15 @@ import { isPlatformBrowser, Location }           from '@angular/common';
 import { filter }                                from 'rxjs/operators';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorService }        from 'ngx-device-detector';
-import { NxConfigService, IConfig }              from '../../services/nx-config';
-import { NxLanguageProviderService }    from '../../services/nx-language-provider';
-import { NxAccountService }             from '../../services/account.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
-import { NxUriService }                 from '../../services/uri.service';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxAccountService, NxCloudApiService,
+    NxPageService, NxUriService
+}                                  from '../../services';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Subscription }            from 'rxjs';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({

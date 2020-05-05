@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../menu/menu.service';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
+import { NxMenuService }                from '../../../../components/menu';
+import { NxConfigService, IConfig }     from '../../../../services';
 
 @Component({
     selector    : 'overview-component',
@@ -23,7 +23,6 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     constructor(private integrationService: IntegrationService,
                 private menuService: NxMenuService,
                 private configService: NxConfigService) {
-
         this.setupDefaults();
     }
 
@@ -36,4 +35,3 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
     onSubmit() {
     }
 }
-

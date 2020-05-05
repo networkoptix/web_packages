@@ -1,11 +1,11 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { NxToastService }            from '../toast.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { timer }                     from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxProcessService }          from '../../services/process.service';
+import { NxConfigService, IConfig }  from '../../services';
+import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({

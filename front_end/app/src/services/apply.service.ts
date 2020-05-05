@@ -4,7 +4,7 @@ import {
 }                                               from '@angular/core';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
 import { distinctUntilChanged, filter, skip }   from 'rxjs/operators';
-import { NxDialogsService }                     from '../dialogs/dialogs.service';
+import { NxDialogsService }                     from '../dialogs';
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';

@@ -3,8 +3,11 @@ import { BrowserModule, Title }                                           from '
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
 import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
-import { HttpClient, HttpClientModule, HttpClientXsrfModule }             from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule }                         from '@angular/common/http';
 import { FormsModule }                                                    from '@angular/forms';
+import { AngularFireModule, FirebaseOptionsToken }                        from '@angular/fire';
+import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
+import { LayoutModule }                                                   from '@angular/cdk/layout';
 
 import { InputTrimModule }                  from 'ng2-trim-directive';
 import { NgbToast, NgbModal }               from '@ng-bootstrap/ng-bootstrap';
@@ -13,26 +16,20 @@ import { DeviceDetectorModule }             from 'ngx-device-detector';
 import { TranslateModule }                  from '@ngx-translate/core';
 import { CookieService }                    from 'ngx-cookie-service';
 import { WebStorageModule }                 from 'ngx-store';
-import { AngularFireModule, FirebaseOptionsToken } from '@angular/fire';
-import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
-import { AppComponent }      from './app.component';
-import { ComponentsModule }  from './src/components/components.module';
-import { DialogsModule }     from './src/dialogs/dialogs.module';
-import { MenuModule }        from './src/menu/menu.module';
-import { PagesModule }       from './src/pages/pages.module';
-import { DirectivesModule }  from './src/directives/directives.module';
-import { PipesModule }       from './src/pipes/pipes.module';
-import { NxConfigService }   from './src/services/nx-config';
-import { ServiceModule }     from './src/services/services.module';
-import { LayoutModule }      from '@angular/cdk/layout';
-import { WINDOWS_PROVIDERS } from './src/services/window-provider';
-import { initializeApp }     from './src/pages/push-notifications/push-notifications.module';
-import { AuthGuard }         from './src/routeGuards/authGuard';
-import { HMGuard }           from './src/routeGuards/hmGuard';
-import { UserGuard }         from './src/routeGuards/userGuard';
-import { AdminGuard }         from './src/routeGuards/adminGuard';
-import { CloudStorageGuard } from './src/routeGuards/cloudStorageGuard';
+import { AppComponent }           from './app.component';
+import { ComponentsModule }       from './src/components/components.module';
+import { DialogsModule }          from './src/dialogs/dialogs.module';
+import { PagesModule }            from './src/pages/pages.module';
+import { DirectivesModule }       from './src/directives/directives.module';
+import { PipesModule }            from './src/pipes/pipes.module';
+import {
+    NxConfigService,
+    ServiceModule,
+    WINDOWS_PROVIDERS
+}                                 from './src/services';
+import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
+import { AuthGuard, SystemGuard } from './src/routeGuards';
 
 // AoT requires an exported function for factories
 
@@ -51,7 +48,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 }
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         BrowserAnimationsModule,
@@ -100,10 +97,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             useFactory : initializeApp
         },
         AuthGuard,
-        HMGuard,
-        UserGuard,
-        AdminGuard,
-        CloudStorageGuard
+        SystemGuard
     ],
     declarations   : [
         AppComponent

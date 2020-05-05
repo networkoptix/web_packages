@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
+import { Component, OnInit }       from '@angular/core';
+import { Router }                  from '@angular/router';
+import { LocalStorageService }     from 'ngx-store';
 
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxAccountService }          from '../../services/account.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { LocalStorageService }       from 'ngx-store';
+import {
+    NxConfigService, IConfig,
+    NxAccountService, NxPageService,
+    NxLanguageProviderService
+}  from '../../services';
+import { NxDialogsService }        from '../../dialogs';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({

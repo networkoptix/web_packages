@@ -1,18 +1,16 @@
-import { Injectable }                from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate,
-    Router,
-    RouterStateSnapshot,
-    UrlTree
+    CanActivate, Router,
+    RouterStateSnapshot, UrlTree
 }                                    from '@angular/router';
+import { Injectable }                from '@angular/core';
 import { Observable }                from 'rxjs';
 import { NxAccountService }          from '../services/account.service';
 import { NxConfigService, IConfig }  from '../services/nx-config';
 import { NxSystem, NxSystemService } from '../services/system.service';
 
 @Injectable()
-export class HMGuard implements CanActivate {
+export class SystemGuard implements CanActivate {
     CONFIG: IConfig;
     system: NxSystem;
 
@@ -29,26 +27,27 @@ export class HMGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+        const routesChecked = ['users', 'cloud-storage', 'health'];
+        const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
         }).params.systemId;
 
-        return this.accountService
+        return systemId && currentRoute && this.accountService
             .get()
             .then(account => {
                 if (account) {
                     this.system = this.systemService.createSystem(account.email, systemId);
-                    return this.system
-                        .getInfoAndPermissions()
+                    return this.system.getInfoAndPermissions()
                         .then((system) => {
-                            const canView = system.canViewInfo();
-                            if (!canView) {
-                                return this.router.navigate([`/systems/${systemId}`]);
-                            }
-                            return canView;
-                        }, _ => {
-                            return this.router.navigate([`/systems/${systemId}`]);
-                        });
+                            const canViewChecks = {
+                                users           : system.permissions.editUsers,
+                                'cloud-storage' : system.canUserViewCloudStorage(),
+                                health          : system.canViewInfo()
+                            };
+                            return canViewChecks[currentRoute] || this.router.navigate([`/systems/${systemId}`]);
+                        })
+                        .catch(() => this.router.navigate([`/systems/${systemId}`]));
                 }
             });
     }

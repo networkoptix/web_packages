@@ -2,15 +2,15 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
-}                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
-import { NxUriService }              from '../../../../services/uri.service';
-import { Subscription }              from 'rxjs';
-import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { delay }                     from 'rxjs/operators';
+}                                  from '@angular/core';
+import {
+    NxConfigService, IConfig, NxScrollMechanicsService,
+    NxLanguageProviderService, NxUriService
+}                                  from '../../../../services';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { Subscription }            from 'rxjs';
+import { delay }                   from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
