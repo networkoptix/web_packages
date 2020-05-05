@@ -1,13 +1,14 @@
 import { Component, Inject } from '@angular/core';
-import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
-import { NxConfigService, IConfig } from '../app/src/services/nx-config';
+import {
+    NxLanguageProviderService,
+    NxConfigService, IConfig,
+    NxScrollMechanicsService,
+    NxAppStateService, WINDOW
+}                            from '../app/src/services';
 import '../app/styles/main.scss';
 import 'bootstrap';
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { NxScrollMechanicsService } from '../app/src/services/scroll-mechanics.service';
-import { NxAppStateService } from '../app/src/services/nx-app-state.service';
-import { WINDOW } from '../app/src/services/window-provider';
+import { fromEvent }         from 'rxjs';
+import { debounceTime }      from 'rxjs/operators';
 
 @Component({
     selector: 'health-monitor-app',

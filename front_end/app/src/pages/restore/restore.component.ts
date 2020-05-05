@@ -1,16 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
+import { LocalStorageService }      from 'ngx-store';
 
-import { NxUriService }              from '../../services/uri.service';
-import { NxPageService }             from '../../services/page.service';
-import { NxDialogsService }          from '../../dialogs/dialogs.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
-import { LocalStorageService }       from 'ngx-store';
-import { NxConfigService, IConfig }           from '../../services/nx-config';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxAccountService }          from '../../services/account.service';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import {
+    NxUriService, NxPageService,
+    NxLanguageProviderService,
+    NxProcessService, NxCloudApiService,
+    NxConfigService, IConfig,
+    NxAccountService
+}              from '../../services';
+import { NxDialogsService }         from '../../dialogs';
+import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-restore-component',
@@ -79,8 +79,6 @@ export class NxRestoreComponent implements OnInit {
             email      : this.localStorage.get('email') || '',
             restoreCode: this.uriParamCode
         };
-
-        this.localStorage.remove('email');
 
         this.restoring = (this.uriParam === 'restoring');
         this.restoringSuccess = (this.uriParam === 'restoringSuccess');

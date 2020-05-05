@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxConfigService, IConfig } from '../../../services';
 
 // TODO: need to style component
 

@@ -4,8 +4,8 @@ import { Mask, Area, AreaTuple }    from './motion-detection-types';
 import { takeUntil, skip }          from 'rxjs/operators';
 
 export class MotionMaskState {
-    private columns = 44;
-    private rows = 32;
+    public columns: number = 44;
+    public rows: number = 32;
     public maskMatrix: BehaviorSubject<Mask>;
     public maskZones: BehaviorSubject<Area[]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
@@ -15,16 +15,20 @@ export class MotionMaskState {
         public canvas: ElementRef<HTMLCanvasElement>,
         public sensitivityButtons$: BehaviorSubject<boolean | number | 'reset'>,
         private unsub$: Subject<boolean>,
-        updateMask: EventEmitter<string>
+        updateMask: EventEmitter<string>,
+        private rotation: number = 0
     ) {
-        const parsedInitial = this.initialToMaskZones(initialMask);
+        const aspectChange = rotation % 180;
+        this.columns = aspectChange ? 32 : 44;
+        this.rows = aspectChange ? 44 : 32;
+        const parsedInitial = this.initialToMaskZones(initialMask, this.rotation);
         this.maskZones = new BehaviorSubject(parsedInitial);
         this.maskMatrix = new BehaviorSubject(
             this.zonesToMatrix(parsedInitial)
         );
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.zonesToMatrix(zones);
+            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation, true);
             const latestZones = this.matrixToZones(matrix);
             const maskString = latestZones.map(
                 ({ sensitivity, x, y, width, height }) => `${sensitivity},${x},${y},${width},${height}`
@@ -39,20 +43,39 @@ export class MotionMaskState {
      * @param mask initial mask from server
      */
     public reInitialize(mask: string) {
-        const parsedInitial = this.initialToMaskZones(mask);
+        const parsedInitial = this.initialToMaskZones(mask, this.rotation);
         this.maskZones.next(parsedInitial);
         this.maskMatrix.next(this.zonesToMatrix(parsedInitial));
     }
 
     // Init Methods
-    private initialToMaskZones(initial: string): Area[] {
+    private initialToMaskZones(initial: string, rotate): Area[] {
         const zones = initial.split(';').map((area) => {
             const areaTuples = <AreaTuple>(
                 area.split(',').map((numString) => parseInt(numString))
             );
             return new Area(...areaTuples);
         });
-        return this.sortedZones(zones);
+
+        const matrix = this.zonesToMatrix(zones);
+        const rotatedMatrix = this.rotateMatrix(matrix, rotate);
+        const rotatedZones = this.matrixToZones(rotatedMatrix);
+        return this.sortedZones(rotatedZones);
+    }
+
+    rotateMatrix(matrix: number[][], rotation: number, toLandscape = false) {
+        if (!(rotation % 360)) return matrix;
+        if (rotation % 360 === 180) return matrix.reverse().map(row => row.reverse());
+        if (rotation % 180) {
+            const rows = toLandscape ? 32 : 44;
+            const columns = toLandscape ? 44 : 32;
+            const rotated = Array(rows).fill(Array(columns).fill(0)).map((_, column) => _.map((_, row) => matrix[row][column]));
+            if (rotation % 360 === 90) {
+                return rotated.map(row => row.reverse());
+            } else {
+                return rotated.reverse();
+            }
+        }
     }
 
     initSensitivityButtons = () => {
@@ -101,7 +124,9 @@ export class MotionMaskState {
 
     // Transform utilities
     public zonesToMatrix(zones: Area[]): Mask {
-        let matrix: Mask = new Array(32).fill(new Array(44).fill(0));
+        const rows = this.rotation % 180 ? 44 : 32;
+        const columns = this.rotation % 180 ? 32 : 44;
+        let matrix: Mask = new Array(rows).fill(new Array(columns).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);
         }
@@ -117,7 +142,7 @@ export class MotionMaskState {
             let width = 1;
             let height = 1;
             while (
-                column + width < this.columns &&
+                column + width < maskMatrix[0].length &&
                 matrix[row][column + width] === sensitivity
             ) {
                 // Find row with matching sensitivity
@@ -125,7 +150,7 @@ export class MotionMaskState {
                 width++;
             }
             while (
-                row + height < this.rows &&
+                row + height < maskMatrix.length &&
                 matrix[row + height]
                     .slice(column, column + width)
                     .every((cell) => cell !== false && cell === sensitivity)

@@ -5,14 +5,16 @@ import {
 import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxModalGenericComponent }   from '../generic/generic.component';
 import { LocalStorageService }       from 'ngx-store';
-import { NxProcessService }          from '../../services/process.service';
+import {
+    NxConfigService, IConfig,
+    NxUtilsService, NxAccountService
+}                                    from '../../services';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxModalGenericComponent }   from '../generic/generic.component';
 
 @Component({
     selector    : 'ngbd-modal-content',
@@ -20,8 +22,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class LoginModalContent implements OnInit {
-    @Input() account;
-    @Input() login;
+    @Input() account: NxAccountService;
+    @Input() login: Process;
     @Input() cancellable;
     @Input() closable;
     @Input() keepPage;

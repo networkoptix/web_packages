@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
-import { NxConfigService, IConfig } from '../app/src/services/nx-config';
+import { NxLanguageProviderService, NxConfigService, IConfig } from '../app/src/services';
 import '../app/styles/main.scss';
 import 'bootstrap';
 

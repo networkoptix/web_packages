@@ -1,11 +1,11 @@
 import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
-import { ActivatedRoute, Router }                         from '@angular/router';
+import { Router }                                         from '@angular/router';
 import { NxConfigService, IConfig }                       from './nx-config';
 import { NxCloudApiService }                              from './nx-cloud-api';
 import { NxLanguageProviderService }                      from './nx-language-provider';
-import { NxDialogsService }                               from '../dialogs/dialogs.service';
+import { NxDialogsService }                               from '../dialogs';
 import { NxSessionService }                               from './session.service';
 import { NxApplyService }                                 from './apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -17,8 +17,9 @@ import { LanguageI18NStaticTypes }                        from '../../language_i
 import { NxPollService }                                  from './poll.service';
 import { NxUtilsService }                                 from './utils.service';
 import { NxSystemAPI, NxSystemAPIService }                from './system-api.service';
+import { IParams }                                        from '../components/search/search.component';
 
-export interface Account {
+export class Account {
     email: string;
     // eslint-disable-next-line camelcase
     first_name: string;
@@ -36,16 +37,16 @@ export interface Account {
     providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-    location: Location;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
+    private location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
-    loggingOut: boolean;
-    requestingLogin: Promise<any>;
-    loginDialogActive: boolean;
+    private loggingOut: boolean;
+    private requestingLogin: Promise<{data: {account: Account, resultCode: string}}>;
+    private loginDialogActive: boolean;
     mediaServerApi: NxSystemAPI;
 
-    private accountPoll: Observable<any>;
+    private accountPoll: Observable<Account | string>;
     private accountPollSubscription: Subscription;
     private loginSubscription: Subscription;
     private queryParamSubscription: Subscription;
@@ -65,7 +66,6 @@ export class NxAccountService implements OnDestroy {
         private uriService: NxUriService,
         private localStorageService: LocalStorageService,
         private router: Router,
-        private activatedRoute: ActivatedRoute,
         private appStateService: NxAppStateService,
         private pollService: NxPollService,
         private nxSystemAPIService: NxSystemAPIService,
@@ -99,13 +99,13 @@ export class NxAccountService implements OnDestroy {
         // Handles login with auth param everywhere.
         this.queryParamSubscription = this.uriService.queryParamsSubject.pipe(
             distinctUntilChanged()
-        ).subscribe((params: any) => {
+        ).subscribe((params: IParams) => {
             if (params.auth) {
                 this.handleAuthKeyLogin(params.auth);
             }
         });
 
-        this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
+        this.accountPoll = this.pollService.createPoll<Account>(this.cloudApi.account(), this.CONFIG.updateInterval);
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
@@ -121,11 +121,11 @@ export class NxAccountService implements OnDestroy {
         this.queryParamSubscription.unsubscribe();
     }
 
-    get account() {
+    private get account() {
         return this.accountSubject.getValue();
     }
 
-    set account(account: Account) {
+    private set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
@@ -139,7 +139,8 @@ export class NxAccountService implements OnDestroy {
         this.sessionService.email = email;
     }
 
-    authKey() {
+    // Need to refine this, maybe will be resolved by defining cloudApi.authKey
+    authKey(): any {
         return this.cloudApi
             .authKey()
             .then((result: any) => {
@@ -151,7 +152,7 @@ export class NxAccountService implements OnDestroy {
         return this.cloudApi
             .visitedKey(key)
             .then((result: any) => {
-                return result.visited;
+                return !!result.visited;
             });
     }
 
@@ -159,23 +160,23 @@ export class NxAccountService implements OnDestroy {
         return this.cloudApi
             .checkCode(code)
             .then((result: any) => {
-                return result.emailExists;
+                return !!result.emailExists;
             });
     }
 
-    clearLoginState() {
+    private clearLoginState() {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
 
-    get(forceUpdate = false) {
+    get(forceUpdate = false): Promise<Account | false> {
         if (this.CONFIG.isLocal) {
             return Promise.resolve(this.account);
         }
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
-                .then(() => {
+                .then((): any => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
@@ -264,7 +265,8 @@ export class NxAccountService implements OnDestroy {
         if (this.CONFIG.isLocal) {
             this.requestingLogin = this.mediaServerApi.login(email, password);
         } else {
-            this.requestingLogin = this.cloudApi.login(email, password, remember);
+            this.requestingLogin = <Promise<{data: {account: Account, resultCode: string}}>> this.cloudApi
+                .login(email, password, remember);
         }
 
         return this.requestingLogin.then((result: any) => {
@@ -315,7 +317,7 @@ export class NxAccountService implements OnDestroy {
         return atob(authKey).split(':');
     }
 
-    loginWithAuthKey(authKey: string) {
+    private loginWithAuthKey(authKey: string): Promise<boolean> {
         const auth         = atob(authKey).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];
@@ -352,6 +354,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
+    // TODO: Need to refine return value
     logoutAuthorised() {
         return this.get()
             .then((account: Account) => {
@@ -459,7 +462,7 @@ export class NxAccountService implements OnDestroy {
                 this.logoutHelper(false);
                 return of('Error');
             })
-        ).subscribe((account) => {
+        ).subscribe((account: Account) => {
             this.account = account;
         });
     }

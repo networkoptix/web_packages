@@ -5,7 +5,7 @@ import {
     ViewChild,
     ViewContainerRef
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxConfigService, IConfig } from '../../services';
 
 @Component({
     selector: 'landing-display-component',
@@ -23,7 +23,7 @@ export class NxLandingDisplayComponent implements AfterViewInit {
     constructor(private _compiler: Compiler,
                 private _injector: Injector,
                 private _m: NgModuleRef<any>,
-                private configService: NxConfigService
+                configService: NxConfigService
     ) {
         this.CONFIG = configService.getConfig();
     }

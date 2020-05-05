@@ -82,6 +82,7 @@ export interface Common {
     cameraStates:              CameraStates;
     chromeCastWarning:         string;
     recordingSettingsWarning:  string;
+    recordingModes:            RecordingModes;
     resolution:                Resolution;
     general:                   string;
     searchCamPlaceholder:      string;
@@ -139,6 +140,12 @@ export interface CameraStates {
     offline:             string;
     ubuntuNX:            string;
     unauthorized:        string;
+}
+
+export interface RecordingModes {
+    always:       string;
+    motion:       string;
+    motionLowRes: string;
 }
 
 export interface Resolution {
@@ -624,6 +631,7 @@ export interface Servers {
     resetSuccessful:         string;
     restartFailed:           string;
     restartSuccessful:       string;
+    serverOffline:           string;
     servers:                 string;
     status:                  ServersStatus;
     successRename:           string;
@@ -929,6 +937,7 @@ const typeMap: any = {
         { json: "cameraStates", js: "cameraStates", typ: r("CameraStates") },
         { json: "chromeCastWarning", js: "chromeCastWarning", typ: "" },
         { json: "recordingSettingsWarning", js: "recordingSettingsWarning", typ: "" },
+        { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "" },
@@ -981,6 +990,11 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "" },
         { json: "ubuntuNX", js: "ubuntuNX", typ: "" },
         { json: "unauthorized", js: "unauthorized", typ: "" },
+    ], false),
+    "RecordingModes": o([
+        { json: "always", js: "always", typ: "" },
+        { json: "motion", js: "motion", typ: "" },
+        { json: "motionLowRes", js: "motionLowRes", typ: "" },
     ], false),
     "Resolution": o([
         { json: "various", js: "various", typ: "" },
@@ -1421,6 +1435,7 @@ const typeMap: any = {
         { json: "resetSuccessful", js: "resetSuccessful", typ: "" },
         { json: "restartFailed", js: "restartFailed", typ: "" },
         { json: "restartSuccessful", js: "restartSuccessful", typ: "" },
+        { json: "serverOffline", js: "serverOffline", typ: "" },
         { json: "servers", js: "servers", typ: "" },
         { json: "status", js: "status", typ: r("ServersStatus") },
         { json: "successRename", js: "successRename", typ: "" },

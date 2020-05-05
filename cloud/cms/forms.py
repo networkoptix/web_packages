@@ -75,6 +75,7 @@ class CustomContextForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(CustomContextForm, self).__init__(*args, **kwargs)  # 'send_cloud_notification'
         self.fields['language'].choices = get_languages_list()
+        self.fieldsets = {}
 
     def remove_language(self):
         super(CustomContextForm, self)
@@ -82,6 +83,7 @@ class CustomContextForm(forms.Form):
 
     def add_fields(self, asset, context, language, user):
         data_structures = context.datastructure_set.all()
+        fieldsets = {None: []}
 
         if len(data_structures) < 1:
             return
@@ -217,6 +219,19 @@ class CustomContextForm(forms.Form):
                                                                widget=widget_type,
                                                                disabled=disabled,
                                                                validators=[validator])
+
+        for data_structure in data_structures:
+            if data_structure.name in self.fields:
+                fieldset = data_structure.fieldset or None
+                if fieldset in fieldsets:
+                    fieldsets[fieldset].append(data_structure.name)
+                else:
+                    fieldsets[fieldset] = [data_structure.name]
+
+        if not fieldsets[None]:
+            del fieldsets[None]
+
+        self.fieldsets = fieldsets
 
 
 class AssetSettingsForm(forms.Form):

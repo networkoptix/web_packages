@@ -1,21 +1,20 @@
 import { Component, OnDestroy, OnInit }   from '@angular/core';
 import { Params, Router, ActivatedRoute } from '@angular/router';
-import { NxConfigService, IConfig }       from '../../../../services/nx-config';
-import { NxPageService }                  from '../../../../services/page.service';
-import { NxDialogsService }               from '../../../../dialogs/dialogs.service';
+import {
+    NxConfigService, IConfig,
+    NxPageService, NxSystemsService,
+    NxLanguageProviderService,
+    NxAccountService, NxProcessService,
+    NxSystem, NxCloudApiService,
+    NxUriService
+}                                         from '../../../../services';
+import { NxDialogsService }               from '../../../../dialogs';
 import { NxSettingsService }              from '../settings.service';
-import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
-import { NxMenuService }                  from '../../../../components/menu/menu.service';
-import { NxSystemsService }               from '../../../../services/systems.service';
-import { NxAccountService }               from '../../../../services/account.service';
-import { NxProcessService }               from '../../../../services/process.service';
-import { NxSystem }                       from '../../../../services/system.service';
+import { NxMenuService }                  from '../../../../components/menu';
+import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 import { Subscription }                   from 'rxjs';
 import { filter, auditTime }              from 'rxjs/operators';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
-import { NxCloudApiService }              from '../../../../services/nx-cloud-api';
-import { NxUriService }                   from '../../../../services/uri.service';
 
 interface Settings {
     disconnectDisabled: boolean;

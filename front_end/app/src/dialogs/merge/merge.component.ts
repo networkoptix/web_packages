@@ -1,6 +1,11 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import {
+    Component, Input, ViewChild,
+    ChangeDetectorRef
+}                                      from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }    from '../../services/nx-config';
+import {
+    NxConfigService, IConfig, NxAccountService
+}                                      from '../../services';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
 import { NxProcessService }            from '../../services/process.service';
@@ -24,7 +29,7 @@ export class MergeModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    account: any;
+    account: NxAccountService;
     checkMergeabilityProcess: any;
     checkPasswordProcess: any;
     mergingProcess: any;
@@ -67,14 +72,17 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
-    @ViewChild('confirmMergeForm') mergeForm: HTMLFormElement;
+    @ViewChild('checkMergeDropdown') mergeDropdown: any;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
+    @ViewChild('primaryRadio') primaryRadio: any;
+    @ViewChild('confirmMerge') confirmMerge: HTMLFormElement;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,
         private cloudApi: NxCloudApiService,
+        private cdRef: ChangeDetectorRef,
         private processService: NxProcessService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService
@@ -365,10 +373,10 @@ export class MergeModalContent {
                             : this.CONFIG.system.status.slave
                     });
                 } else if (res.errorString === 'Wrong username or password.') {
-                    this.mergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
+                    this.confirmMerge.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
                 } else if (res.errorString) {
-                    this.mergeForm.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
+                    this.confirmMerge.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.unknownError });
                 }
             }, (error) => {
@@ -505,9 +513,12 @@ export class MergeModalContent {
     }
 
     goBack(serverUrlError?) {
-        this.mergeForm && this.mergeForm.form.markAsUntouched();
+        this.confirmMerge && this.confirmMerge.form.markAsUntouched();
         this.adminPassword && this.adminPassword.form.markAsUntouched();
         this.machine.goBack();
+        this.cdRef.detectChanges();
+        this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+        this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
         const { template } = this.machine.state;
         if (serverUrlError) {
             this.updateShow(this.serverUrlMergeError, {
@@ -629,6 +640,7 @@ export class MergeModalContent {
     setSystems() {
         this.primarySystem = this.primarySystem.id === this.system.id ? this.system : this.targetSystem;
         this.secondarySystem = this.primarySystem.id === this.system.id ? this.targetSystem : this.system;
+        this.getSecondaryName();
     }
 
     serverUrlChange(input) {

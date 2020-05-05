@@ -1,30 +1,26 @@
 import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    ViewContainerRef,
-    ViewChild,
-    ViewChildren,
-    QueryList,
-    OnDestroy
-} from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { NxAccountService }          from '../../../services/account.service';
-import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { ActivatedRoute }            from '@angular/router';
-import { LocalStorageService }       from 'ngx-store';
-import { NxProcessService }          from '../../../services/process.service';
-import { NxCloudApiService }         from '../../../services/nx-cloud-api';
-import { NxSystemsService }          from '../../../services/systems.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
-import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxPageService }             from '../../../services/page.service';
-import { NgForm }                    from '@angular/forms';
-import { first }                     from 'rxjs/operators';
-import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+    Component, OnInit,
+    AfterViewInit, ViewChild,
+    ViewContainerRef, OnDestroy,
+    ViewChildren, QueryList
+}                                  from '@angular/core';
+import { ActivatedRoute }          from '@angular/router';
+import { NgForm }                  from '@angular/forms';
+import { LocalStorageService }     from 'ngx-store';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService, NxPageService,
+    NxAccountService, Account,
+    NxProcessService, Process,
+    NxCloudApiService, NxSystemsService,
+    NxApplyService, Watcher
+}                                  from '../../../services';
+import { NxDialogsService }        from '../../../dialogs';
+import { NxMenuService }           from '../../../components/menu';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+import { Subscription }            from 'rxjs';
+import { first }                   from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
@@ -40,12 +36,12 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    account: any = {};
-    save: any;
+    account: Account;
+    save: Process;
     langCode: string;
     isSystemOwner = true;
 
-    watchers: any = {
+    watchers = {
         firstName : new Watcher<string>(),
         lastName  : new Watcher<string>(),
         langCode  : new Watcher<string>()
@@ -92,7 +88,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                             return false;
                         });
                 }
-                return this.systemsService.forceUpdateSystemsAsPromise();
+                return this.systemsService.forceUpdateSystemsAsPromise() as Promise<any>;
             }).finally(() => {
                 this.accountService.get(true);
             });

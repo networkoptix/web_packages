@@ -2,20 +2,21 @@ import {
     Component, Input, ViewEncapsulation
 }                                                from '@angular/core';
 import { Location }                              from '@angular/common';
-import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService }             from '../../services/nx-language-provider';
 import { DomSanitizer }                          from '@angular/platform-browser';
 import { NgForm }                                from '@angular/forms';
+import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { Process }                               from '../../services/process.service';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-apply-content',
-    templateUrl: 'apply.component.html',
-    styleUrls  : []
+    selector : 'nx-modal-apply-content',
+    templateUrl : 'apply.component.html',
+    styleUrls : []
 })
-export class ApplyModalContent {
-    @Input() applyFunc: any;
-    @Input() discardFunc: any;
+export class ApplyModalContent<Apply extends Process, Discard extends Function> {
+    @Input() applyFunc: Apply;
+    @Input() discardFunc: Discard;
     @Input() form: NgForm;
 
     constructor(
@@ -45,20 +46,21 @@ export class ApplyModalContent {
 }
 
 @Component({
-    selector     : 'nx-modal-apply',
-    template     : '',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls    : []
+    selector      : 'nx-modal-apply',
+    template      : '',
+    encapsulation : ViewEncapsulation.None,
+    styleUrls     : []
 })
 
 export class NxModalApplyComponent {
     modalRef: NgbModalRef;
     LANG: LanguageI18NStaticTypes;
 
-    constructor(private domSanitizer: DomSanitizer,
-                private location: Location,
-                private modalService: NgbModal,
-                private language: NxLanguageProviderService
+    constructor(
+        private domSanitizer: DomSanitizer,
+        private location: Location,
+        private modalService: NgbModal,
+        private language: NxLanguageProviderService
     ) {
         this.LANG = this.language.getTranslations();
     }
@@ -66,8 +68,8 @@ export class NxModalApplyComponent {
     private dialog(applyFunc, discardFunc) {
         this.modalRef = this.modalService.open(ApplyModalContent,
             {
-                windowClass: 'modal-holder',
-                backdrop   : 'static'
+                windowClass : 'modal-holder',
+                backdrop    : 'static'
             });
         this.modalRef.componentInstance.applyFunc = applyFunc;
         this.modalRef.componentInstance.discardFunc = discardFunc;

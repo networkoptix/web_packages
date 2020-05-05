@@ -20,7 +20,7 @@ import { DetachServerModalContent }    from './detach-server/detach-server.compo
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
-import { NxDialogsService }            from './dialogs.service';
+import { NxDialogsService }            from './';
 import { RouterModule }                from '@angular/router';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
 import {

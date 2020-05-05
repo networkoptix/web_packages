@@ -1,16 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router }            from '@angular/router';
-import { NxPageService }             from '../../services/page.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxAccountService }          from '../../services/account.service';
-import { LocalStorageService }       from 'ngx-store';
-import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxProcessService }          from '../../services/process.service';
-import { NxUriService }              from '../../services/uri.service';
-import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxDialogsService } from '../../dialogs/dialogs.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { ActivatedRoute, Router }       from '@angular/router';
+import { LocalStorageService }          from 'ngx-store';
+import {
+    NxPageService, NxAccountService,
+    NxLanguageProviderService,
+    NxUrlProtocolService, NxUriService,
+    NxProcessService, NxCloudApiService,
+    NxConfigService, IConfig
+}                                       from '../../services';
+import { NxDialogsService }             from '../../dialogs';
+import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-register-component',

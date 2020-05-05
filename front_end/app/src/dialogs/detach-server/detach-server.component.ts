@@ -3,13 +3,13 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxToastService }            from '../toast.service';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxConfigService, IConfig }  from '../../services';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-modal-detach-server-content',
-    templateUrl: 'detach-server.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-detach-server-content',
+    templateUrl : 'detach-server.component.html',
+    styleUrls   : []
 })
 export class DetachServerModalContent {
     @Input() system: any;
@@ -25,7 +25,7 @@ export class DetachServerModalContent {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private toastService: NxToastService
     ) {
@@ -37,9 +37,9 @@ export class DetachServerModalContent {
         this.detachServer = this.processService
             .createProcess(() => {
                 const options = {
-                    classname: this.CONFIG.toast.warning,
-                    autohide : true,
-                    delay    : this.CONFIG.alertTimeout
+                    classname : this.CONFIG.toast.warning,
+                    autohide  : true,
+                    delay     : this.CONFIG.alertTimeout
                 };
                 return this.system.detachFromSystem(this.serverId, this.password).toPromise()
                     .then(res => {

@@ -1,13 +1,14 @@
 import {
     Component, OnInit, Inject, Input, ViewContainerRef,
     ViewChild, ElementRef, OnChanges, SimpleChanges
-}                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
-import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
-import { NxSystem }                  from '../../../../../services/system.service';
-import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
-import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+}                                  from '@angular/core';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxProcessService, NxSystem,
+    NxApplyService, Watcher
+}                                  from '../../../../../services';
+import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 
 @Component({
     selector    : 'nx-system-standard-admin-component',
@@ -37,13 +38,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
-        autoDiscoveryEnabled        : new Watcher<boolean>(),
-        statisticsAllowed           : new Watcher<boolean>(),
-        cameraSettingsOptimization  : new Watcher<boolean>(),
-        auditTrailEnabled           : new Watcher<boolean>(),
-        trafficEncryptionForced     : new Watcher<boolean>(),
-        videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitMinutes         : new Watcher<number>()
+        autoDiscoveryEnabled         : new Watcher<boolean>(),
+        statisticsAllowed            : new Watcher<boolean>(),
+        cameraSettingsOptimization   : new Watcher<boolean>(),
+        auditTrailEnabled            : new Watcher<boolean>(),
+        trafficEncryptionForced      : new Watcher<boolean>(),
+        videoTrafficEncryptionForced : new Watcher<boolean>(),
+        sessionLimitMinutes          : new Watcher<number>()
     };
 
     readonly minutes: string = 'minutes';

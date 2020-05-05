@@ -1,17 +1,18 @@
 import { Component, LOCALE_ID, Inject, OnInit } from '@angular/core';
-import { NxConfigService, IConfig }     from '../../../../services/nx-config';
-import { NxLanguageProviderService }    from '../../../../services/nx-language-provider';
-import { NxDialogsService }             from '../../../../dialogs/dialogs.service';
-import { BehaviorSubject }              from 'rxjs';
-import { fromBits }                     from '../../../../utils/transform-tools/from-bits';
-import { wrapWithPercent }              from '../../../../utils/transform-tools/wrap-with-percent';
-import { NxUtilsService }               from '../../../../services/utils.service';
-import { LanguageI18NStaticTypes }      from '../../../../../language_i18n_static_types';
-import { NxSettingsService }            from '../settings.service';
-import { NxSystem }                     from '../../../../services/system.service';
-import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
-import { NxProcessService, Process }    from '../../../../services/process.service';
-import { NxMenuService }                from '../../../../components/menu/menu.service';
+import {
+    NxConfigService, IConfig,
+    NxLanguageProviderService,
+    NxUtilsService, NxSystem,
+    NxCloudApiService,
+    NxProcessService, Process
+}                                  from '../../../../services';
+import { NxDialogsService }        from '../../../../dialogs';
+import { NxSettingsService }       from '../settings.service';
+import { NxMenuService }           from '../../../../components/menu';
+import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
+import { fromBits }                from '../../../../utils/transform-tools/from-bits';
+import { wrapWithPercent }         from '../../../../utils/transform-tools/wrap-with-percent';
+import { BehaviorSubject }         from 'rxjs';
 
 @Component({
     selector    : 'nx-cloud-storage',
@@ -29,7 +30,6 @@ export class NxCloudStorageComponent implements OnInit {
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
     updateEnabledUsageAndStats: Process;
-    cloudEnabled = false;
 
     // Constructor and class initialization methods
 
@@ -45,7 +45,6 @@ export class NxCloudStorageComponent implements OnInit {
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
-        this.cloudEnabled = !!this.CONFIG.cloudCapabilities.cloudStorageEnabled;
     }
 
     private setupDefaults({ configService, languageService }) {
@@ -58,6 +57,9 @@ export class NxCloudStorageComponent implements OnInit {
         this.system$.subscribe(system => {
             if (system === undefined) return;
             this.updateEnabledAndUsageStats();
+            if (system.cloudStorageCapable === undefined) {
+                system.getInfoAndPermissions();
+            }
         });
         this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
         this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.cloudStorage.id);
@@ -79,6 +81,10 @@ export class NxCloudStorageComponent implements OnInit {
 
     get isOwner() {
         return this.system$.value.isOwner;
+    }
+
+    get systemCloudStorageCapable() {
+        return this.system$.value.cloudStorageCapable;
     }
 
     public get cloudCapacity() {

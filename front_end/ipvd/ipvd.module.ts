@@ -38,7 +38,7 @@ import { CsvButtonComponent } from '../app/src/pages/ipvd/cam-components/csv-but
 import { BoolIconComponent } from '../app/src/pages/ipvd/cam-components/bool-icon/bool-icon.component';
 
 // Services
-import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { WINDOWS_PROVIDERS } from '../app/src/services';
 
 @NgModule({
     imports: [

@@ -4,7 +4,9 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }                    from '@angular/forms';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
+import {
+    NxConfigService, IConfig, NxAccountService
+}                                    from '../../services';
 import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxProcessService }          from '../../services/process.service';
@@ -30,7 +32,7 @@ interface Subject {
     styleUrls  : []
 })
 export class MessageModalContent implements OnInit {
-    @Input() account;
+    @Input() account: NxAccountService;
     @Input() messageType;
     @Input() data;
     @Input() closable;

@@ -1,15 +1,19 @@
-import { ElementRef, Injectable }   from '@angular/core';
-import { BehaviorSubject }          from 'rxjs';
-import { NxScrollMechanicsService } from '../../services/scroll-mechanics.service';
-import { NxHealthService }          from './health.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { debounceTime }             from 'rxjs/operators';
-import { NxRibbonService }          from '../../components/ribbon/ribbon.service';
+import { ElementRef, Injectable } from '@angular/core';
+import {
+    NxScrollMechanicsService,
+    NxConfigService, IConfig
+}                                 from '../../services';
+import { NxHealthService }        from './health.service';
+import { BehaviorSubject }        from 'rxjs';
+import { debounceTime }           from 'rxjs/operators';
+import { NxRibbonService }        from '../../components/ribbon';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxHealthLayoutService {
+    private static ELEMENT_SEARCH_HEIGHT = 40; // px
+
     CONFIG: IConfig;
     previousActiveEntity = undefined;
     activeEntitySubject = new BehaviorSubject(undefined);
@@ -162,7 +166,9 @@ export class NxHealthLayoutService {
         });
 
         this.tableWidthSubject.subscribe((width) => this.setSearchWidth(width));
-        this.activeEntitySubject.subscribe(() => this.setTableDimensions());
+        this.activeEntitySubject.subscribe((entity) => {
+            this.setTableDimensions();
+        });
     }
 
     resetActiveEntity() {
@@ -184,9 +190,11 @@ export class NxHealthLayoutService {
         if (this.metricsValuesCount === 1) {
             this.fixedLayoutClass = 'fixedLayout--no-panel';
         } else {
-            const elementSearchHeight = this.searchElement ? this.searchElement.nativeElement.offsetHeight : 0;
             if (!this.mobileDetailMode) {
-                this.dimensions = [elementSearchHeight + 16];
+                // In case metric  (w/ table) was already initialized and
+                // switching between single and multiple entities, layout will report 0 height for search.
+                // metric pages have search component always so to avoid unnecessary complications I'll hardcode it -- TT
+                this.dimensions = [NxHealthLayoutService.ELEMENT_SEARCH_HEIGHT + 16]; // [elementSearchHeight + 16]
             }
             this.setLayout();
         }
@@ -207,8 +215,10 @@ export class NxHealthLayoutService {
         // to report 0 height initially and screw pageSize calc.
         //
         if (!table || table.offsetLeft === 0 && tableHeader.innerText.length && !tableHeader.offsetHeight) {
-            setTimeout(() => this.setTableDimensions());
-            this.healthService.tableReady = false;
+            if (this.metricsValuesCount > 1) { // short circuit single entity - this was going until metric w/ page is loaded -- TT
+                setTimeout(() => this.setTableDimensions());
+                this.healthService.tableReady = false;
+            }
             return;
         }
 

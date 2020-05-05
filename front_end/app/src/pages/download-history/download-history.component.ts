@@ -1,36 +1,36 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, PLATFORM_ID
-} from '@angular/core';
+}                                                               from '@angular/core';
 import { ActivatedRoute, ActivationEnd, Router }                from '@angular/router';
 import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
 import { isNumeric }                                            from 'rxjs/util/isNumeric';
 import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }                                      from '../../services/nx-config';
-import { NxLanguageProviderService }                            from '../../services/nx-language-provider';
-import { NxAccountService }                                     from '../../services/account.service';
-import { NxCloudApiService }                                    from '../../services/nx-cloud-api';
-import { NxUriService }                                         from '../../services/uri.service';
-import { filter }                                               from 'rxjs/operators';
-import { Subscription } from 'rxjs';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { NxPageService } from '../../services/page.service';
+
+import {
+    NxConfigService, IConfig, NxLanguageProviderService,
+    NxAccountService, NxCloudApiService,
+    NxUriService, NxPageService
+}                                  from '../../services';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Subscription }            from 'rxjs';
+import { filter }                  from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 import isArray = require('core-js/features/array/is-array');
 import angular = require('angular');
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'download-history',
-    templateUrl: 'download-history.component.html',
-    styleUrls  : ['download-history.component.scss']
+    selector    : 'download-history',
+    templateUrl : 'download-history.component.html',
+    styleUrls   : ['download-history.component.scss']
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
     private sub: any;
     private build: any;
-    private canViewRelease: boolean;
+    public canViewRelease: boolean;
     readonly releases = 'releases';
 
     CONFIG: IConfig;

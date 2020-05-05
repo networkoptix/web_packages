@@ -1,18 +1,19 @@
 import { NxConfigService, IConfig }        from './nx-config';
 import { NxLanguageProviderService }       from './nx-language-provider';
 import { NxCloudApiService }               from './nx-cloud-api';
-import { NxSystemsService }                from './systems.service';
+import { NxSystemsService, NxSystemWithUserInfo }                from './systems.service';
 import { Injectable, OnDestroy }           from '@angular/core';
 import {
     NxSystemAPIService, NxSystemAPI, ResourceParam
 }                                          from './system-api.service';
-import { BehaviorSubject, from, of }       from 'rxjs';
+import { BehaviorSubject, from, of, Subscription, Observable }       from 'rxjs';
 import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { recursiveJson }                   from '../utils/recursive-json';
+import { IParams } from '../components/search/search.component';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -66,20 +67,26 @@ export interface NxSystemServer {
     osInfo: string;
     parentId: string;
     status: string;
-    storage: any[];
+    storage: any[]; // TODO: Can probably remove
     systemInfo: string;
     typeId: string;
     url: string;
     version: string;
 }
+/**
+ * This type needs to be defined
+ */
+interface IMergeInfo {
+    [key: string]: any
+}
 
-interface SystemInterface {
+class SystemInterface {
     canMerge: boolean;
     cloudStorageCapable: boolean;
     id: string;
-    info: any;
+    info: Partial<NxSystemWithUserInfo>;
     isOnline: boolean;
-    mergeInfo: any;
+    mergeInfo: IMergeInfo;
     stateMessage: string;
     servers: NxSystemServer[];
 }
@@ -90,19 +97,12 @@ class SystemPermissions {
     isAdmin = false;
 }
 
-class System implements SystemInterface {
+class System extends SystemInterface {
     protected _isAvailable: boolean;
-    canMerge: boolean;
-    cloudStorageCapable: boolean;
     cloudStorageSystemEnabled = false;
-    id: string;
-    info: any;
-    isOnline: boolean;
-    mergeInfo: any;
-    stateMessage: string;
-    servers: NxSystemServer[];
 
     constructor() {
+        super();
         this.canMerge = false;
         this.id = '';
         this.info = undefined;
@@ -116,7 +116,7 @@ class System implements SystemInterface {
 class UserManager {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private mediaserver: any;
+    private mediaserver: NxSystemAPI;
     private _ownerEmail: string;
     private _accessRole: string;
     accessRoles: NxSystemRole[];
@@ -126,7 +126,7 @@ class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver, currentUserEmail: string) {
+    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI, currentUserEmail: string) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;
@@ -184,7 +184,7 @@ class UserManager {
         this.permissions = permissions;
     }
 
-    deleteUser(removedUser: NxSystemUser): string {
+    deleteUser(removedUser: NxSystemUser) {
         return this.mediaserver.deleteUser(removedUser.id).toPromise()
             .then(data => {
                 this.users = this.users.filter((user) => {
@@ -216,7 +216,7 @@ class UserManager {
         return role || roles[roles.length - 1];
     }
 
-    getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string> {
+    getUsersDataFromTheSystem(): Promise<NxSystemUser[] | string | false> {
         return this.mediaserver.getAggregatedUsersData().toPromise().then((result: any) => {
             if (!result) {
                 // eslint-disable-next-line prefer-promise-reject-errors
@@ -312,7 +312,7 @@ class UserManager {
         }
 
         if (!user.id) {
-            let existingUser = this.users.find((u) => {
+            let existingUser: Partial<NxSystemUser> = this.users.find((u) => {
                 return user.email === u.email;
             });
             if (!existingUser) { // user not found - create a new one
@@ -368,8 +368,7 @@ class UserManager {
 
 class ServerManager {
     mediaserverConnections: {
-        // Need to fine proper type for connection
-        [key: string]: any
+        [serverId: string]: NxSystemAPI
     };
 
     servers: NxSystemServer[];
@@ -420,12 +419,12 @@ class ServerManager {
         return this.mediaserver.previewUrl(cameraId, time, width, height, rotate);
     }
 
-    async getCameras(): Promise<ICamera[]> {
+    async getCameras() {
         const [servers, cameras] = await this.mediaserver.getCamerasWithSeverTime().toPromise();
         if (!cameras) {
             return Promise.reject(new Error(`Request to server has failed ${cameras}`));
         }
-        this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
+        this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }) => {
             const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
             const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
             const vmsDate = new Date(serverTime);
@@ -435,13 +434,18 @@ class ServerManager {
                 rotation,
                 overrideAr,
                 mediaCapabilities,
+                cameraAdvancedParams,
                 isAudioSupported: audioSupported,
                 ...parsedAddParams
             }: any = addParamsRaw.reduce((params, { name, value }) => (
                 { ...params, [name]: recursiveJson(value) }
             ), {});
             const parentName = this.servers.find(server => server.id === parentId).name;
-            const isAudioSupported = audioSupported === '1';
+            const isAudioSupported = !!audioSupported;
+            const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
+            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
+            const _maxFps = primary && primary.value && primary.value.maxFps;
+            const maxFps = _maxFps || 30;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
@@ -453,22 +457,22 @@ class ServerManager {
                 fps       : this.parseFps(camera.scheduleTasks),
                 motionEnabled,
                 modes     : [
-                    { name: 'Record Always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
-                    { name: 'Record Motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
+                    { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
+                    { name: 'motion', id: 'RT_MotionOnly', value: this.parseRecordingMode(camera, 'RT_MotionOnly'), enabled: motionEnabled },
                     {
-                        name    : 'Record Motion + Low Quality',
+                        name    : 'motionLowRes',
                         id      : 'RT_MotionAndLowQuality',
                         value   : !motionEnabled ? 0 : this.parseRecordingMode(camera, 'RT_MotionAndLowQuality'),
                         enabled : motionEnabled
                     }
                 ]
             };
-            return { ...camera, id, parentId, dayOfWeek, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
+            return { ...camera, id, parentId, dayOfWeek, maxFps, addParamsRaw, motionEnabled, recordingSettings, parsedAddParams, isAudioSupported, secondsToday, parentName, previewUrl, rotation, status, overrideAr, mediaCapabilities };
         });
         return this.cameras;
     }
 
-    updateCameraSettings(resourceId: string, params: Object) {
+    updateCameraSettings(resourceId: string, params: IParams) {
         const mappedParams: ResourceParam[] = Object.entries(params).map(([name, value]) => ({ name, value, resourceId }));
         return this.mediaserver.setResourceParams(mappedParams).toPromise();
     }
@@ -506,7 +510,7 @@ class ServerManager {
         return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
     }
 
-    private parseRecordingQuality(schedule: ITask[]): StreamQuality {
+    private parseRecordingQuality(schedule: ITask[]) {
         const streamQualities: StreamQuality[] = ['low', 'normal', 'high', 'highest'];
         let quality: StreamQuality = schedule.length ? 'various' : 'high';
         for (const stream of streamQualities) {
@@ -549,7 +553,11 @@ class ServerManager {
         }
     }
 
-    getModuleInfo(serverId?) {
+    getLicenses() {
+        return this.mediaserver.getLicenses().toPromise();
+    }
+
+    getModuleInfo(serverId?: string) {
         if (serverId) {
             return this.mediaserverConnections[serverId].getModuleInfo();
         } else {
@@ -557,16 +565,16 @@ class ServerManager {
         }
     }
 
-    changeServerPort(port, serverId) {
+    changeServerPort(port: number, serverId: string) {
         return this.mediaserverConnections[serverId].changePort(port)
             .catch(err => Promise.reject(err));
     }
 
-    logLevel(serverId) {
+    logLevel(serverId: string) {
         return this.mediaserverConnections[serverId].logLevel().toPromise();
     }
 
-    setLogLevels(serverId, loggers) {
+    setLogLevels(serverId: string, loggers: IParams) {
         const promises = [];
 
         loggers.forEach((logger) => {
@@ -582,50 +590,44 @@ class ServerManager {
             });
     };
 
-    renameServer(serverId, serverName) {
+    renameServer(serverId: string, serverName: string) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
         return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
     }
 
-    restartServer(serverId) {
+    restartServer(serverId: string) {
         return this.mediaserverConnections[serverId].restartServer()
             .catch(err => Promise.reject(err));
     }
 
-    detachFromSystem(serverId, currentPassword) {
+    detachFromSystem(serverId: string, currentPassword: string) {
         return this.mediaserverConnections[serverId].detachFromSystem(currentPassword);
     }
 
-    removeMediaserver(serverId) {
+    removeMediaserver(serverId: string) {
         return this.mediaserver.removeMediaserver(serverId);
     }
 
-    restoreFactorySettings(serverId, currentPassword) {
+    restoreFactorySettings(serverId: string, currentPassword: string) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
     }
 }
 
 export class NxSystem extends System implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
-    private cloudApi: NxCloudApiService;
-    private systemApiService: any;
-    private pollService: any;
-    private systemsService: any;
     private userManager: UserManager;
     private serverManager: ServerManager;
     private _subscribersCount = new BehaviorSubject<number>(0);
 
-    activeSubscription: any;
+    activeSubscription: Subscription;
     currentUserEmail: string;
-    mediaserver: any;
+    mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
-    moduleInfo: any;
+    currentBusyServerIds = new Set();
+    moduleInfo: any; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
 
-    infoPromise: any;
-    usersPromise: any;
-    systemPoll: any;
-
+    infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
+    usersPromise: Promise<void>;
+    systemPoll: Subscription | Observable<string | NxSystem>;
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
 
@@ -699,6 +701,30 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.cameras;
     }
 
+    /**
+     * TODO: Need to update this method once better license information is available from server with details on license types.
+     */
+    getLicenseChannels(): Promise<{total: number, used: number, available: number}> {
+        return this.serverManager.getLicenses().then((licenses: any[]) => {
+            const parsedLicenses = licenses.map(this.parseLicense);
+            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION }) => {
+                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
+                return activeLicense ? qty + parseInt(COUNT) : qty;
+            }, 0);
+            const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
+            const available = total - used;
+            return { total, used, available };
+        });
+    }
+
+    parseLicense({ key, licenseBlock }: { key: string, licenseBlock: string }) {
+        const parsedBlock: any = licenseBlock.split('\n').reduce((parsed, current) => {
+            const [curKey, curVal] = current.split('=');
+            return { ...parsed, [curKey]: curVal };
+        }, {});
+        return { key, ...parsedBlock };
+    }
+
     // End of userManager get functions
 
     // Start of serverManager functions
@@ -708,23 +734,18 @@ export class NxSystem extends System implements OnDestroy {
 
     // End of serverManager functions
 
-    constructor(CONFIG: IConfig,
-        LANG: LanguageI18NStaticTypes,
-        cloudApi: NxCloudApiService,
-        systemApiService: NxSystemAPIService,
-        pollService: NxPollService,
-        systemsService: NxSystemsService,
+    constructor(
+        private CONFIG: IConfig,
+        private LANG: LanguageI18NStaticTypes,
+        private cloudApi: NxCloudApiService,
+        private systemApiService: NxSystemAPIService,
+        private pollService: NxPollService,
+        private systemsService: NxSystemsService,
         currentUserEmail: string,
         systemId?: string,
         serverId?: string
     ) {
         super();
-        this.CONFIG = CONFIG;
-        this.LANG = LANG;
-        this.cloudApi = cloudApi;
-        this.systemApiService = systemApiService;
-        this.pollService = pollService;
-        this.systemsService = systemsService;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId);
         // this._subscribersCount.subscribe((subscribers) => {
@@ -743,12 +764,12 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     ngOnDestroy() {
-        if (this.systemPoll) {
+        if (this.systemPoll instanceof Subscription) {
             this.systemPoll.unsubscribe();
         }
     }
 
-    initSystem(currentUserEmail, systemId?, serverId?) {
+    initSystem(currentUserEmail: string, systemId?: string, serverId?: string) {
         this.id = systemId || serverId;
         this.isAvailable = false;
         this.isOnline = false;
@@ -780,7 +801,7 @@ export class NxSystem extends System implements OnDestroy {
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
-        this.systemPoll = this.pollService.createPoll(this.update(), this.CONFIG.updateInterval);
+        this.systemPoll = this.pollService.createPoll<any>(this.update(), this.CONFIG.updateInterval);
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail);
         this.serverManager = new ServerManager(
             this.mediaserver,
@@ -791,7 +812,7 @@ export class NxSystem extends System implements OnDestroy {
         );
     }
 
-    updateSystemAuth(force?) {
+    updateSystemAuth(force?: boolean) {
         if (!force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
@@ -809,15 +830,15 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canUserViewCloudStorage() {
-        const cloudStorageEnabled = this.CONFIG.cloudCapabilities && this.CONFIG.cloudCapabilities.cloudStorageEnabled;
-        const systemHasCloudStorage = this.systemInfo && this.systemInfo.cloudStorageSystemEnabled;
-        return cloudStorageEnabled && this.isMine || this.isAdmin && systemHasCloudStorage;
+        return (this.CONFIG.cloudCapabilities.cloudStorageEnabled && this.isMine) ||
+            (this.isAdmin && this.systemInfo.cloudStorageSystemEnabled) ||
+            (this.systemInfo.cloudStorageCapable && this.isMine);
     }
 
-    getInfoAndPermissions(useCache = true, suppressUpdate = false): any {
+    getInfoAndPermissions(useCache = true, suppressUpdate = false) {
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
-            .then((response: any) => {
+            .then((response) => {
                 const error = this.cloudApi.checkResponseHasError(response);
                 if (error) {
                     return Promise.reject(error);
@@ -843,11 +864,11 @@ export class NxSystem extends System implements OnDestroy {
                 if (!this.userManager.accessRole) {
                     this.userManager.accessRole = this.info.accessRole;
                 }
-                return Promise.resolve(this);
+                return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
             });
     }
 
-    getInfo(force?, useCache = true, suppressUpdate = false) {
+    getInfo(force?, useCache = true, suppressUpdate = false): Promise<Partial<NxSystemWithUserInfo>> {
         if (this.CONFIG.isLocal) {
             return Promise.resolve();
         }
@@ -862,7 +883,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.infoPromise;
     }
 
-    getUsersCachedInCloud() {
+    getUsersCachedInCloud(): Promise<NxSystemUser[]> {
         this.isAvailable = false;
         return this.cloudApi.users(this.id).toPromise().then((data: any) => {
             if (data && data.resultCode === 'forbidden') {
@@ -881,11 +902,12 @@ export class NxSystem extends System implements OnDestroy {
         return this.userManager.getUsersDataFromTheSystem();
     }
 
-    getUsers(reload?) {
+    getUsers(reload?): Promise<void> {
         if (!this.usersPromise || reload) {
             let usersPromise: Promise<any>;
             if (this.isOnline) { // Two separate cases - either we get info from the system (presuming it has actual names)
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
+                    this.getUsersCachedInCloud();
                     this.isAvailable = true;
                 }).catch(() => {
                     return this.getUsersCachedInCloud();
@@ -910,7 +932,7 @@ export class NxSystem extends System implements OnDestroy {
 
     getSystem() {
         return this.serverManager.getModuleInfo()
-            .pipe(tap((moduleInfo: any) => {
+            .pipe(tap(moduleInfo => {
                 this.moduleInfo = moduleInfo.reply;
             })).toPromise()
             .catch(err => {
@@ -939,8 +961,7 @@ export class NxSystem extends System implements OnDestroy {
         if (this.subscriberCount === 0) {
             if (this.mediaserver.authGet) {
                 this.subscriberCount++;
-                this.activeSubscription = this.systemPoll
-                    .subscribe(() => {});
+                this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => {});
             } else {
                 setTimeout(() => this.startPoll(), 1000);
             }
@@ -953,10 +974,10 @@ export class NxSystem extends System implements OnDestroy {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
         } else {
-            if (this.systemPoll) {
+            if (this.systemPoll instanceof Subscription) {
                 this.systemPoll.unsubscribe();
             }
-            if (this.activeSubscription) {
+            if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }
 
@@ -971,7 +992,7 @@ export class NxSystem extends System implements OnDestroy {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false, true)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
-                .then(() => this.getServers())
+                .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch((error) => {
@@ -981,11 +1002,11 @@ export class NxSystem extends System implements OnDestroy {
         }));
     }
 
-    updateOrGetSystemSettings(updateParams = {}) {
+    updateOrGetSystemSettings<T>(updateParams?: T) {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    updateOrGetSystemStorage(updateParams?) {
+    updateOrGetSystemStorage<T>(updateParams?: T) {
         if (updateParams) {
             return this.mediaserver.updateStorages(updateParams);
         }
@@ -996,7 +1017,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.initSystemMediaServers();
     }
 
-    getPreviewUrl(cameraId, time, width = 640, height = 480, rotate = 0) {
+    getPreviewUrl(cameraId: string, time: number, width = 640, height = 480, rotate = 0) {
         return this.serverManager.getPreviewUrl(cameraId, time, width, height, rotate);
     }
 
@@ -1004,7 +1025,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getCameras();
     }
 
-    updateCameraSettings(id: string, params: Object) {
+    updateCameraSettings(id: string, params: IParams) {
         return this.serverManager.updateCameraSettings(id, params);
     }
 
@@ -1016,40 +1037,41 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getServers();
     }
 
-    getModuleInfo(serverId?) {
+    getModuleInfo(serverId?: string) {
         return this.serverManager.getModuleInfo(serverId);
     }
 
-    changeServerPort(port, serverId) {
+    changeServerPort(port: number, serverId: string) {
         return this.serverManager.changeServerPort(port, serverId);
     }
 
-    renameServer(serverId, serverName) {
+    renameServer(serverId: string, serverName: string) {
         return this.serverManager.renameServer(serverId, serverName)
             .then(() => this.update().toPromise())
             .catch(err => Promise.reject(err));
     }
 
-    restartServer(serverId) {
+    restartServer(serverId: string) {
         this.currentServerNotBusy = false;
-        return this.serverManager.restartServer(serverId);
+        return this.serverManager.restartServer(serverId)
+            .catch(err => Promise.reject(err));
     }
 
-    detachFromSystem(serverId, currentPassword) {
+    detachFromSystem(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
         return this.serverManager.detachFromSystem(serverId, currentPassword);
     }
 
-    removeMediaserver(serverId) {
+    removeMediaserver(serverId: string) {
         return this.serverManager.removeMediaserver(serverId);
     }
 
-    restoreFactorySettings(serverId, currentPassword) {
+    restoreFactorySettings(serverId: string, currentPassword: string) {
         this.currentServerNotBusy = false;
         return this.serverManager.restoreFactorySettings(serverId, currentPassword);
     }
 
-    mergeSystems(url, dryRun, currentPassword?) {
+    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
         return this.mediaserver.mergeSystems(url, dryRun, currentPassword);
     }
 
@@ -1061,15 +1083,11 @@ export class NxSystem extends System implements OnDestroy {
         return this.mediaserver.getPeerSystems();
     }
 
-    checkLocalAdminPassword(password) {
-        return this.mediaserver.checkLocalAdminPassword(password);
-    }
-
-    logLevel(serverId) {
+    logLevel(serverId: string) {
         return this.serverManager.logLevel(serverId);
     }
 
-    setLogLevels(serverId, loggers) {
+    setLogLevels(serverId: string, loggers: IParams) {
         return this.serverManager.setLogLevels(serverId, loggers);
     }
 }
@@ -1080,22 +1098,24 @@ export class NxSystem extends System implements OnDestroy {
 export class NxSystemService {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    private systemsCache: { [key: string]: System };
     private system: NxSystem;
+    private systemsCache: { [systemId: string]: NxSystem };
 
-    constructor(configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
-                private cloudApi: NxCloudApiService,
-                private systemApiService: NxSystemAPIService,
-                private pollService: NxPollService,
-                private systemsService: NxSystemsService) {
+    constructor(
+        configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        private cloudApi: NxCloudApiService,
+        private systemApiService: NxSystemAPIService,
+        private pollService: NxPollService,
+        private systemsService: NxSystemsService
+    ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.getTranslations();
         this.systemsCache = {};
     }
 
-    createSystem(currentUserEmail, systemId, serverId?) {
-        let system;
+    createSystem(currentUserEmail: string, systemId: string, serverId?: string) {
+        let system: NxSystem;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
             system = this.systemsCache[id];
@@ -1158,6 +1178,7 @@ export interface ICamera {
     motionMask: string;
     motionType: MotionType;
     motionEnabled: boolean | string;
+    maxFps: number;
     mediaCapabilities: IMediaCapabilities;
     name: string;
     parentId: string;
@@ -1187,6 +1208,7 @@ export enum MotionType {
 
 export interface IMediaCapabilities {
     hasAudio: boolean;
+    streamCapabilities: any
 }
 
 export interface ITask {
@@ -1342,7 +1364,7 @@ interface _ParsedAddParams {
     cameraAdvancedParams: CameraAdvancedParams;
     cameraCapabilities: number;
     compatibleAnalyticsEngines: any[];
-    defaultCredentials: string;
+    credentials: string;
     driverClass: string;
     firmware: string;
     hasDualStreaming: number;

@@ -2,11 +2,12 @@ import {
     Injectable, OnChanges,
     SimpleChanges, OnDestroy, OnInit
 }                                    from '@angular/core';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { ControlValueAccessor }      from '@angular/forms';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
+import {
+    NxLanguageProviderService,
+    NxConfigService, IConfig, Watcher
+}                                    from '../../services';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { Watcher }                   from '../../services/apply.service';
 
 const noop = () => {
 };

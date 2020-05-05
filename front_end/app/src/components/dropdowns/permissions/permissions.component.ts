@@ -3,9 +3,10 @@ import {
     Input, Output, EventEmitter,
     SimpleChanges
 }                                    from '@angular/core';
-import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import {
+    NxLanguageProviderService, NxConfigService
+}                                    from '../../../services';
 import { BaseDropdown }              from '../injDropdown';
-import { NxConfigService }           from '../../../services/nx-config';
 
 @Component({
     selector     : 'nx-permissions-select',

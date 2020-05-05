@@ -16,6 +16,11 @@ def get_variables(cloud_url, test_email):
     u = t.json()
     systemIds["AUTOTESTS OFFLINE SYSTEM ID"] = u["systems"][0]["id"]
 
+    #get the system id for the system with the 2serveranchor email and add it to the dictionary
+    t = requests.post("{}/cdb/system/get".format(cloud_url), auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    u = t.json()
+    systemIds["AUTOTESTS 2 SERVER SYSTEM ID"] = u["systems"][0]["id"]
+
     #return the dictionary as variables into robot
     return systemIds
 

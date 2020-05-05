@@ -30,6 +30,7 @@ export interface BaseConfig {
     ipvd: Ipvd;
     isLocal: boolean;
     layout: Layout;
+    maintenanceTimeout: number;
     maxServers: number;
     meta: Meta;
     menus: Menus;

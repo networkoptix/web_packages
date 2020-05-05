@@ -3,8 +3,9 @@ import {
     OnChanges, SimpleChanges,
     ViewEncapsulation
 }                                    from '@angular/core';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import {
+    NxConfigService, IConfig, NxLanguageProviderService
+}                                    from '../../services';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({

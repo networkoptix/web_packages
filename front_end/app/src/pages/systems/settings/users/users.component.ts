@@ -5,21 +5,20 @@ import {
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { filter }                               from 'rxjs/operators';
-import { NxConfigService, IConfig }             from '../../../../services/nx-config';
-import { NxPageService }                        from '../../../../services/page.service';
-import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
+import {
+    NxConfigService, IConfig,
+    NxPageService, NxAccountService,
+    NxLanguageProviderService, NxUtilsService,
+    NxSystem, NxSystemRole, NxSystemUser,
+    NxProcessService, NxUriService,
+    NxApplyService, Watcher
+}                                               from '../../../../services';
+import { NxDialogsService }                     from '../../../../dialogs';
 import { NxSettingsService }                    from '../settings.service';
-import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
-import { NxMenuService }                        from '../../../../components/menu/menu.service';
-import { NxAccountService }                     from '../../../../services/account.service';
-import { NxProcessService }                     from '../../../../services/process.service';
-import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
-import { NxApplyService, Watcher }              from '../../../../services/apply.service';
-import { NxUriService }                         from '../../../../services/uri.service';
+import { NxMenuService }                        from '../../../../components/menu';
+import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
-import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
-import { NxUtilsService }                       from '../../../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -248,9 +247,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     setPermission(role: NxSystemRole | any) {
         const userRole = role && role.name ? role.name : this.selectedUser.accessRole;
-        this.accessDescription = this.LANG.accessRoles[userRole] ?
-            this.LANG.accessRoles[userRole].description :
-            this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.LANG.accessRoles[userRole]
+            ? this.LANG.accessRoles[userRole].description
+            : this.LANG.accessRoles.customRole.description;
         this.selectedUser.role = role;
         this.userRole.value = role.name;
     }

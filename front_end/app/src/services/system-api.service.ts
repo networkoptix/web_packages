@@ -4,7 +4,9 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
 import { flatMap, map, mergeMap, retryWhen, timeout } from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { ICamera } from './system.service';
+import { ICamera, NxSystemUser, NxSystem } from './system.service';
+import { IParams } from '../components/search/search.component';
+import * as t from './system-api.types';
 
 import * as md5 from 'md5';
 
@@ -20,6 +22,8 @@ interface User {
     name: string;
     fullName: string;
 }
+
+export interface AddResponseTypeHere extends IParams {};
 
 export class NxSystemAPI {
     /*
@@ -50,24 +54,23 @@ export class NxSystemAPI {
      *
      * TODO (v 3.2): Support websocket connection to server as well
      * */
-    private authGet: string;
+    authGet: string;
     private authPost: string;
     private authPlay: string;
 
-    readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
+    private readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
 
-    CONFIG: IConfig;
-    http: HttpClient;
-    location: Location;
+    private CONFIG: IConfig;
+    private http: HttpClient;
+    private location: Location;
 
-    abortReason: string;
-    serverId: string;
-    systemId: string;
-    currentUser: any;
-    userEmail: string;
-    userRequest: any;
-    urlBase: string;
-    unauthorizedCallback: any;
+    private serverId: string;
+    private systemId: string;
+    private currentUser: User;
+    private userEmail: string;
+    private userRequest: Promise<User>;
+    private urlBase: string;
+    private unauthorizedCallback: (params: any) => any;
 
     constructor(
         http: HttpClient,
@@ -76,7 +79,7 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (any) => any
+        unauthorizedCallback: (params: IParams) => any
     ) {
         this.http = http;
         this.CONFIG = configService;
@@ -104,7 +107,7 @@ export class NxSystemAPI {
         return urlBase;
     }
 
-    private generateGetUrl(url: string, data: any, absUrl?: boolean) {
+    private generateGetUrl(url: string, data: IParams, absUrl?: boolean) {
         let params = new HttpParams();
         Object.keys(data).forEach((key: string) => {
             params = params.set(key, data[key]);
@@ -121,7 +124,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get(url: string, params?: any) {
+    private get<ResponseType>(url: string, params?: any) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -133,12 +136,12 @@ export class NxSystemAPI {
         }
 
         const fullUrl = `${this.urlBase}${url}`;
-        return this.http.get(fullUrl, { headers, params }).pipe(
+        return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
 
-    private post(url: string, data?: any) {
+    private post<ResponseType>(url: string, data?: any) {
         let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         const params: any = {};
@@ -151,12 +154,13 @@ export class NxSystemAPI {
             headers = headers.set('X-Server-guid', this.serverId);
         }
 
-        return this.http.post(fullUrl, data, { params, headers }).pipe(
+        return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)
         );
     }
 
+    // TODO: Need to figure out how to type this
     private retryHandler(request) {
         return request.pipe(mergeMap((error: any, attempt: number) => {
             if (attempt === 0) {
@@ -170,15 +174,15 @@ export class NxSystemAPI {
         }));
     }
 
-    private getRequestAggregator(requests: string[]) {
+    private getRequestAggregator<AggregatedType>(requests: string[]) {
         const concatRequests = encodeURI(requests.map((request) => {
             return `exec_cmd=${request}`;
         }).join('&')).replace('/', '%2F');
         const url = `/api/aggregator?${concatRequests}`;
-        return this.get(url);
+        return this.get<AggregatedType>(url);
     }
 
-    init(userEmail, systemId, serverId, unauthorizedCallback) {
+    init(userEmail: string, systemId: string, serverId: string, unauthorizedCallback: (params: any) => void) {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
         this.systemId = systemId;
@@ -187,11 +191,12 @@ export class NxSystemAPI {
         this.urlBase = this.getUrlBase();
     }
 
-    cleanId(id) {
+    cleanId(id: string) {
         return id.replace('{', '').replace('}', '');
     }
 
-    apiHost() {
+    // TODO: Doesn't look like this is being used, maybe delete
+    private apiHost() {
         if (this.systemId) {
             return this.CONFIG.trafficRelayHost.replace('{host}', window.location.host).replace('{systemId}', this.systemId);
         }
@@ -204,7 +209,7 @@ export class NxSystemAPI {
         return { authGet, authPost, authPlay };
     }
 
-    getCurrentUser(forceReload?: boolean): Promise<any> {
+    private getCurrentUser(forceReload?: boolean) {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
@@ -216,15 +221,15 @@ export class NxSystemAPI {
             return this.userRequest;
         }
         if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
-            this.userRequest = this.get('/ec2/getUsers').toPromise()
+            this.userRequest = this.get<User>('/ec2/getUsers').toPromise()
                 .then((result: any) => {
-                    this.currentUser = result.find((user) => {
+                    this.currentUser = result.find((user: User) => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
                     });
                     return this.currentUser;
                 });
         } else { // Local system mode ???
-            this.userRequest = this.get('/api/getCurrentUser').toPromise()
+            this.userRequest = this.get<User>('/api/getCurrentUser').toPromise()
                 .then((result) => {
                     this.currentUser = result;
                     return this.currentUser;
@@ -236,7 +241,7 @@ export class NxSystemAPI {
         return this.userRequest;
     }
 
-    getNonce(login: string, url?: string) {
+    private getNonce(login: string, url?: string) {
         const params: any = {
             userName: login
         };
@@ -250,11 +255,11 @@ export class NxSystemAPI {
         return this.get(`/api/${nonceType}`, params);
     }
 
-    getRolePermissions(roleId) {
+    private getRolePermissions(roleId: string) {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    login(login: string, password: string) {
+    private login(login: string, password: string) {
         let auth, authPost, authRtsp, nonce, realm;
         return this.getNonce(login).pipe(
             flatMap((response : any) => {
@@ -274,7 +279,8 @@ export class NxSystemAPI {
             })).toPromise();
     }
 
-    checkPermissions(flag) {
+    // TODO: This doesn't look like it's being used
+    private checkPermissions(flag) {
         // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
         return this.getCurrentUser().then((user: any) => {
             if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
@@ -286,7 +292,7 @@ export class NxSystemAPI {
         });
     }
 
-    setAuthKeys(authGet, authPost, authPlay) {
+    private setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;
         this.authPost = authPost;
         this.authPlay = authPlay;
@@ -295,86 +301,95 @@ export class NxSystemAPI {
     /* End of Authentication  */
 
     /* Server settings */
-    getServerTimes() {
-        return this.get('/ec2/getTimeOfServers');
+    private getServerTimes() {
+        return this.get<t.SystemTime>('/ec2/getTimeOfServers');
     }
 
-    getSystemTime() {
-        return this.get('/api/synchronizedTime');
+    private getSystemTime() {
+        return this.get<t.SystemTime>('/api/synchronizedTime');
     }
 
-    updateOrGetSettings(updateParams) {
-        return this.get('/api/systemSettings', updateParams);
+    public updateOrGetSettings(updateParams: Partial<t.Settings>) {
+        return this.get<t.SystemSettings>('/api/systemSettings', updateParams);
     }
 
-    getStorages() {
-        return this.get('/api/storageSpace');
+    public getStorages() {
+        return this.get<Array<t.GetStorages>>('/api/storageSpace');
     }
 
-    updateStorages(updateParams) {
-        return this.post('/ec2/saveStorages', updateParams);
+    updateStorages(updateParams: IParams) {
+        return this.post<any>('/ec2/saveStorages', updateParams);
     }
 
-    changePort(port) {
-        return this.post('/api/configure', { port }).toPromise()
+    changePort(port: number) {
+        return this.post<t.ApiConfigure>('/api/configure', { port }).toPromise()
             .catch(err => Promise.reject(err));
     }
 
-    renameServer(serverId, serverName) {
-        return this.post('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
+    renameServer(serverId: string, serverName: string) {
+        return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', { serverId, serverName }).toPromise();
     }
 
     restartServer() {
-        return this.post('/api/restart').toPromise()
+        return this.post<t.RestartServer>('/api/restart').toPromise()
             .catch(err => Promise.reject(err));
     }
 
     getModuleInfo() {
-        return this.get('/api/moduleInformation');
+        return this.get<t.ModuleInformation>('/api/moduleInformation');
     }
 
-    detachFromSystem(currentPassword) {
-        return this.post('/api/detachFromSystem', { currentPassword });
+    detachFromSystem(currentPassword: string) {
+        return this.post<t.NormalResponse>('/api/detachFromSystem', { currentPassword });
     }
 
-    removeMediaserver(serverId) {
+    // will put in response type when we start using
+    removeMediaserver(serverId: string) {
         return this.post('/ec2/removeResource', { id: serverId });
     }
 
-    restoreFactorySettings(currentPassword) {
+    restoreFactorySettings(currentPassword: string) {
         return this.post('/api/restoreState', { currentPassword });
     }
 
-    logLevel(logId?, name?, value?) {
-        const params: any = { id: logId, name, value };
+    getLicenses() {
+        return this.get('/ec2/getLicenses');
+    }
+
+    activateLicense(key) {
+        return this.post('/api/activateLicense', { licenseKey: key });
+    }
+
+    logLevel(logId?: string, name?: string, value?: string) {
+        const params: { id: string, name: string, value: string } = { id: logId, name, value };
         Object.keys(params).forEach((key) => {
             if (params[key] === undefined) {
                 delete params[key];
             }
         });
-        return this.get('/api/logLevel', params);
+        return this.get<t.LogLevel>('/api/logLevel', params);
     }
 
     /* End of Server settings */
 
     /* Working with users */
     getAggregatedUsersData() {
-        return this.get('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
+        return this.get<t.AggregatedUsers>('/api/aggregator?exec_cmd=ec2%2FgetUsers&exec_cmd=ec2%2FgetPredefinedRoles&exec_cmd=ec2%2FgetUserRoles');
     }
 
-    saveUser(user) {
-        return this.post('/ec2/saveUser', this.cleanUserObject(user));
+    saveUser(user: NxSystemUser) {
+        return this.post<t.ChangedIdReturned>('/ec2/saveUser', this.cleanUserObject(user));
     }
 
-    deleteUser(userId) {
-        return this.post('/ec2/removeUser', { id: userId });
+    deleteUser(userId: string) {
+        return this.post<t.ChangedIdReturned>('/ec2/removeUser', { id: userId });
     }
 
-    isEmptyId(id) {
+    isEmptyId(id: string) {
         return !id || id === this.emptyId;
     }
 
-    cleanUserObject(user) { // Remove unnecessary fields from the object
+    cleanUserObject(user: NxSystemUser): NxSystemUser { // Remove unnecessary fields from the object
         const cleanedUser: any = {};
         if (user.id) {
             cleanedUser.id = user.id;
@@ -393,7 +408,7 @@ export class NxSystemAPI {
         return cleanedUser;
     }
 
-    userObject(fullName, email): User {
+    userObject(fullName: string, email: string): User {
         return {
             canBeEdited  : true,
             canBeDeleted : true,
@@ -411,47 +426,47 @@ export class NxSystemAPI {
     /* End of Working with users */
 
     /* Cameras and Servers */
-    getCameras(id?) {
+    getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
-        return this.get('/ec2/getCamerasEx', params);
+        return this.get<t.GetCameras>('/ec2/getCamerasEx', params);
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        return this.getRequestAggregator(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
+        return this.getRequestAggregator<[t.SystemTime, t.GetCameras]>(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
             .pipe(map(({ reply }: any) => {
                 return ([reply['ec2/getTimeOfServers'].reply, reply['ec2/getCamerasEx']]);
             }));
     }
 
     setResourceParams(params: ResourceParam[]) {
-        return this.post('/ec2/setResourceParams', params);
+        return this.post<t.EmptyObjectReturned>('/ec2/setResourceParams', params);
     }
 
     updateRecordingSettings({ id: cameraId, name: cameraName, ...params }: Partial<ICamera>) {
-        return this.post('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
+        return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', { cameraName, cameraId, ...params });
     }
 
-    getMediaServers(id?, url?) {
+    getMediaServers(id?: string, url?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
         if (url) {
-            return this.http.get(`${url}/ec2/getMediaServersEx`, { params });
+            return this.http.get<t.GetMediaServers>(`${url}/ec2/getMediaServersEx`, { params });
         } else {
-            return this.get('/ec2/getMediaServersEx', params);
+            return this.get<t.GetMediaServers>('/ec2/getMediaServersEx', params);
         }
     }
 
     getMediaServersAndCameras() {
-        return this.get('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
+        return this.get<t.AggregatedServersAndCameras>('/api/aggregator?exec_cmd=ec2%2FgetMediaServersEx&exec_cmd=ec2%2FgetCamerasEx');
     }
 
     getResourceTypes() {
-        return this.get('/ec2/getResourceTypes');
+        return this.get<t.GetResourceTypes>('/ec2/getResourceTypes');
     }
 
     /* End of Cameras and Servers */
 
     /* Formatting urls */
-    previewUrl(cameraId, time?, width?, height?, rotate?) {
+    previewUrl(cameraId: string, time?: number, width?: number, height?: number, rotate?: number) {
         const data: any = {
             cameraId: this.cleanId(cameraId)
         };
@@ -482,7 +497,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(endpoint, data);
     }
 
-    hlsUrl(cameraId, position, resolution) {
+    hlsUrl(cameraId: string, position: string, resolution: string) {
         const data: any = {
             auth: this.authGet
         };
@@ -493,7 +508,7 @@ export class NxSystemAPI {
         return this.generateGetUrl(url, data, true);
     }
 
-    webmUrl(cameraId, position, resolution, force) {
+    webmUrl(cameraId: string, position: string, resolution: string, force: boolean) {
         const data: any = {
             auth: this.authGet,
             resolution
@@ -508,7 +523,7 @@ export class NxSystemAPI {
     /* End of formatting urls */
 
     /* Working with archive */
-    getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType) {
+    getRecords(cameraId: string, startTime: number, endTime: number, detail: number, limit: number, label: string, periodsType: number) {
         const date = new Date();
         if (typeof (startTime) === 'undefined') {
             startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
@@ -539,7 +554,7 @@ export class NxSystemAPI {
 
     /* End of Working with archive */
 
-    setCameraPath(cameraId) {
+    setCameraPath(cameraId: string) {
         let systemLink = '';
         const route    = this.location.path().indexOf('/embed') === 0 ? '/embed/' : '';
 
@@ -556,50 +571,40 @@ export class NxSystemAPI {
 
     /* Health Monitor */
     getHealthManifest() {
-        return this.get('/ec2/metrics/manifest');
+        return this.get<t.Manifests>('/ec2/metrics/manifest');
     }
 
     getHealthValues() {
-        return this.get('/ec2/metrics/values');
-        // return this.http.get('/getdata');
+        return this.get<t.Values>('/ec2/metrics/values');
+        // return this.http.get<AddResponseTypeHere>('/getdata');
     }
 
     getHealthAlarms() {
-        return this.get('/ec2/metrics/alarms');
+        return this.get<t.Alarms>('/ec2/metrics/alarms');
     }
 
     getAggregateHealthReport() {
-        return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
+        return this.get<t.AggregatedHealthReport>('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
     }
     // End of Health Monitor
 
     /** Merge Systems */
     getPeerSystems() {
-        return this.get('/api/discoveredPeers', { showAddresses: true });
+        return this.get<t.DiscoveredPeers>('/api/discoveredPeers', { showAddresses: true });
     }
 
-    mergeSystems(url, dryRun, currentPassword?) {
+    mergeSystems(url: string, dryRun: string, currentPassword?: string) {
         const data = {
             url,
             currentPassword,
             takeRemoteSettings: false,
             dryRun
         };
-        return this.post('/api/mergeSystems', data);
+        return this.post<t.MergeSystems>('/api/mergeSystems', data);
     }
 
     checkMergeStatus() {
-        return this.get('/ec2/mergeStatus');
-    }
-
-    checkLocalAdminPassword(password) {
-        const localPasswordUrl = this.urlBase.replace('/web', '');
-        const httpOptions = {
-            headers: new HttpHeaders({
-                Authorization: 'Basic ' + btoa(`admin:${password}`)
-            })
-        };
-        return this.http.get(`${localPasswordUrl}/api/`, httpOptions);
+        return this.get<t.MergeStatus>('/ec2/mergeStatus');
     }
 }
 
@@ -608,14 +613,13 @@ export class NxSystemAPI {
 })
 export class NxSystemAPIService {
     CONFIG: IConfig;
-    location: any;
-    systemConnections: { [key: string]: NxSystemAPI };
+    systemConnections: { [serverId: string]: NxSystemAPI };
 
-    constructor(configService: NxConfigService,
-        location: Location,
-                private http: HttpClient
+    constructor(
+        configService: NxConfigService,
+        private location: Location,
+        private http: HttpClient
     ) {
-        this.location = location;
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
     }
@@ -623,7 +627,7 @@ export class NxSystemAPIService {
     createConnection(user: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (any) => any
+        unauthorizedCallback: (params?: any) => any
     ) {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {

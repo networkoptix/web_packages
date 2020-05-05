@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast är resursintensiv och kan orsaka problem på din server.",
         "recordingSettingsWarning": "Vänligen uppdatera saknade inspelningsinställningar.",
+        "recordingModes": {
+            "always": "Spela alltid in",
+            "motion": "Spela endast in rörelse",
+            "motionLowRes": "Rörelse + Låg uppl"
+        },
         "resolution": {
             "various": "– Olika värden –",
             "auto": "Auto",
@@ -136,7 +141,6 @@
             "low": "Låg"
         },
         "general": "Allmänt",
-        "maintenanceInProgress": "Underhåll pågår",
         "searchCamPlaceholder": "Sök",
         "systemHasNoCameras": "Inga kameror",
         "systemHasNoCamerasMessage": "Det finns inga tillgängliga kameror för dig i systemet. <br><br>Anslut några kameror till serverns lokala nätverk för att göra dem upptäckbara eller be systemadministratören att ändra din åtkomstnivå.",
@@ -219,7 +223,7 @@
             "differentOwners": "Du kan bara slå samman system med samma ägare och dessa systemägare är olika.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
             "noServerFound": "Inga servrar hittades",
@@ -582,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} har återställts till standardinställningar.",
         "restartFailed": "Det gick inte att starta om servern.",
         "restartSuccessful": "Servern har startat om.",
+        "serverOffline": "Servern är offline.",
         "servers": "Servrar",
         "status": {
             "checking": "kontrollerar...",

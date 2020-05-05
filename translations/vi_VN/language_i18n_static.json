@@ -127,6 +127,11 @@
         },
         "chromeCastWarning": "Chromecast tốn nhiều tài nguyên và có thể gây ra sự cố trên máy chủ của bạn.",
         "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingModes": {
+            "always": "Record always",
+            "motion": "Record only motion",
+            "motionLowRes": "Motion + low-res"
+        },
         "resolution": {
             "various": "– Different Values –",
             "auto": "tự động",
@@ -136,7 +141,6 @@
             "low": "Cao (H)"
         },
         "general": "General",
-        "maintenanceInProgress": "Maintenance is in progress",
         "searchCamPlaceholder": "Tìm kiếm",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
@@ -582,6 +586,7 @@
         "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
         "restartFailed": "There was a problem restarting the server.",
         "restartSuccessful": "Server has successfully restarted.",
+        "serverOffline": "Server is offline.",
         "servers": "Servers",
         "status": {
             "checking": "checking...",

@@ -9,11 +9,13 @@ import {
     NG_VALIDATORS,
     Validator, FormControl, NgModel
 } from '@angular/forms';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxCloudApiService }        from '../../services/nx-cloud-api';
 import { Subscription }             from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
+import {
+    NxConfigService, IConfig,
+    NxCloudApiService
+}                                   from '../../services';
 
 @AutoUnsubscribe()
 @Component({

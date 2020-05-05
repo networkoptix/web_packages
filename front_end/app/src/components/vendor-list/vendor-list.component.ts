@@ -6,11 +6,11 @@ import {
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { ActivatedRoute }            from '@angular/router';
 import { Subscription }              from 'rxjs';
-import { NxConfigService, IConfig }  from '../../services/nx-config';
-import { NxUriService }              from '../../services/uri.service';
-import { NxUtilsService }            from '../../services/utils.service';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import {
+    NxConfigService, IConfig, NxUriService,
+    NxUtilsService, NxLanguageProviderService
+}                                    from '../../services';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 /* USAGE

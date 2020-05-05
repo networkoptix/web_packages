@@ -46,50 +46,200 @@ Detailed Info
     Click Button    ${CAMERAS DETAILED INFO BUTTON}
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
 
-Apect Ratio
+Aspect Ratio
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    # change Ratio
-    # check ratio changed
-    # change back
-    # check ration changed
+    Select Camera By Name    good cam
+    Change Aspect Ratio    1:1
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Aspect Ratio Should Be    1:1
+    Reload Page
+    Aspect Ratio Should Be    1:1
+    Change Aspect Ratio    Auto
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Aspect Ratio Should Be    Auto
+    Reload Page
+    Aspect Ratio Should Be    Auto
 
 Rotation
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    # change rotation
-    # check rotation changed
-    # change back
-    # check rotation changed
+    Select Camera By Name    good cam
+    Change Rotation    90˚
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Rotation Should Be    90˚
+    Reload Page
+    Rotation Should Be    90˚
+    Change Rotation    Auto
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Rotation Should Be    Auto
+    Reload Page
+    Rotation Should Be    Auto
 
 Audio enable Disabled
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
+    Select Camera by Name    good cam
     Verify on Cameras Page
-    # enable
-    # check Enabled
-    # Disable
-    # check Disable
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    True
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Audio Enabled Should Be    True
 
-Audo unavailable
+Audio unavailable
     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    # check enable audio checkbox is not clickable
+    Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOCK}//label[@disabled]
 
-# Authentication
-# Record Always
-# Record Motion
-# Record Motion + Low Quality
-# Change FPS
-# Change Quality
-# Disabled Motion With Recording
-# Enabled Motion
+Edit credentials form Close and Cancel buttons
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
 
-# Offline Info?
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Click Button    ${EDIT CREDENTIALS X BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Click Button    ${EDIT CREDENTIALS CANCEL BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+Changing credentials from valid to invalid ones makes the camera unauthorized
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    good cam
+    Click Button    ${EDIT CREDENTIALS BUTTON}
+    Verify Authentication Form
+    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwer
+    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
+    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
+    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+
+
+Changing credentials from invalid ones to valid ones makes the camera authorized
+
+
+Record Always
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Enable Recording
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
+    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+Record Motion
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Enable Recording
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
+    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+Record Motion + Low Quality
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Enable Recording
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
+    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+Change FPS
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Enable Recording
+    Wait Until Element is Visible    ${FPS INPUT}
+    Click Element    ${FPS INPUT}
+    Input Text    ${FPS INPUT}    20
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+Change Quality
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Enable Recording
+    Wait Until Element is Visible    ${FPS INPUT}
+    Click Element    ${FPS INPUT}
+    Input Text    ${FPS INPUT}    20
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+Enable/disable motion detection
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Select Camera By Name    good cam
+    Verify on Cameras Page
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Not Visible    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Reload Page
+    Wait Until Element is Visible    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${ENABLE MOTION DETECTION BUTTON}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
+    Reload Page
+    Wait Until Elements are Visible
+    ...    ${CANVAS}
+    ...    ${DOT-MENU}
+
+Disabled Motion With Recording
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Click Button    ${DOT-MENU}
+    Wait Until Element is Visible    ${DISABLE MOTION DETECTION LINK}
+    Click Link    ${DISABLE MOTION DETECTION LINK}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+
+    Record motion and record motion low quality radio buttons should be disabled
+
+Placeholder shows when system is offline
+    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Wait Until Elements are Visible
+    ...    ${OFFLINE PLACEHOLDER IAMGE}
+    ...    ${OFFLINE TITLE}
+    ...    ${OFFLINE MESSAGE}

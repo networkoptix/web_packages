@@ -8,17 +8,17 @@ import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }      from '@ngx-translate/core';
 import { Angular2CsvModule }    from 'angular2-csv';
 
-import { NxIpvdComponent }    from './ipvd.component';
-import { ComponentsModule }   from '../../components/components.module';
-import { DirectivesModule }   from '../../directives/directives.module';
-import { CamTableComponent }  from './cam-components/cam-table/cam-table.component';
-import { CamViewComponent }   from './cam-components/cam-view/cam-view.component';
-import { CsvButtonComponent } from './cam-components/csv-button/csv-button.component';
-import { BoolIconComponent }  from './cam-components/bool-icon/bool-icon.component';
+import { ComponentsModule }     from '../../components/components.module';
+import { DirectivesModule }     from '../../directives/directives.module';
+import {
+    NxIpvdComponent, CamTableComponent,
+    CamViewComponent, CsvButtonComponent,
+    BoolIconComponent
+}                               from './';
 
 const appRoutes: Routes = [
     { path: 'ipvd', component: NxIpvdComponent },
-    { path: 'embed/ipvd', component: NxIpvdComponent },
+    { path: 'embed/ipvd', component: NxIpvdComponent }
 ];
 
 @NgModule({
@@ -42,7 +42,7 @@ const appRoutes: Routes = [
         CamTableComponent,
         CamViewComponent,
         CsvButtonComponent,
-        BoolIconComponent,
+        BoolIconComponent
     ],
     bootstrap      : [],
     entryComponents: [

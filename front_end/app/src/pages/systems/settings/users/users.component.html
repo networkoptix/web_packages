@@ -33,7 +33,7 @@
                     </nx-permissions-select>
                 </div>
                 <ng-template #roleName>
-                    <h4 #roleName>{{ selectedUser.role.name }}</h4>
+                    <h4 #roleName>{{ !selectedUser.isCloud && selectedUser.name === 'admin' ? 'Owner' : selectedUser.role.name }}</h4>
                 </ng-template>
                 <div>
                     <span class="help-block pt-0" [innerHtml]="accessDescription"></span>

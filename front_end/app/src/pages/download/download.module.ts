@@ -1,21 +1,20 @@
 import { Injectable, NgModule }  from '@angular/core';
 import { CommonModule }          from '@angular/common';
 import { BrowserModule }         from '@angular/platform-browser';
-
 import {
     Router, Resolve,
     RouterModule, Routes
 }                                from '@angular/router';
+import { FormsModule }           from '@angular/forms';
 import { NgbModule }             from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }       from '@ngx-translate/core';
 
 import { EMPTY as empty }        from 'rxjs';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { FormsModule }           from '@angular/forms';
-import { TranslateModule }       from '@ngx-translate/core';
 
 import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
-import { NxConfigService } from '../../services/nx-config';
+import { NxConfigService }       from '../../services';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
