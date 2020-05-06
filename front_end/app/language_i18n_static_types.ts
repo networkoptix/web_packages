@@ -47,13 +47,14 @@ export interface AccessRole {
 }
 
 export interface LanguageI18NStaticTypesAccount {
-    accountSavedSuccess: string;
-    accountSettings:     string;
-    activationLinkSent:  string;
-    agreementAccepted:   string;
-    changePassword:      string;
-    newPasswordLabel:    string;
-    saveChanges:         string;
+    accountSavedSuccess:    string;
+    accountSettings:        string;
+    activationLinkSent:     string;
+    agreementAccepted:      string;
+    changePassword:         string;
+    newPasswordLabel:       string;
+    passwordChangedSuccess: string;
+    saveChanges:            string;
 }
 
 export interface ActiveActions {
@@ -912,6 +913,7 @@ const typeMap: any = {
         { json: "agreementAccepted", js: "agreementAccepted", typ: "" },
         { json: "changePassword", js: "changePassword", typ: "" },
         { json: "newPasswordLabel", js: "newPasswordLabel", typ: "" },
+        { json: "passwordChangedSuccess", js: "passwordChangedSuccess", typ: "" },
         { json: "saveChanges", js: "saveChanges", typ: "" },
     ], false),
     "ActiveActions": o([

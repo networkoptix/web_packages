@@ -165,7 +165,7 @@ class UserManager {
     }
 
     isOwner(user: NxSystemUser) {
-        return user.email === this._ownerEmail;
+        return user.isCloud && user.email === this._ownerEmail;
     }
 
     checkPermissions() {
@@ -263,7 +263,7 @@ class UserManager {
 
             const isAdmin      = this.isAdmin(user);
             const isCloudOwner = this.isOwner(user);
-            const isMe         = user.email === this.currentUserEmail;
+            const isMe         = user.isCloud && user.email === this.currentUserEmail;
             if (isMe) {
                 this.currentUser = user;
                 this.accessRole = user.accessRole;
@@ -307,9 +307,6 @@ class UserManager {
         let userCreated = false;
         if (user.email === this.currentUserEmail) {
             if (user.isCloud) {
-                // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode: 'cantEditYourself' });
-            } else {
                 // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
             }
