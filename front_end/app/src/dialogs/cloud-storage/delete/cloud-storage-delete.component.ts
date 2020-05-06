@@ -71,6 +71,9 @@ export class CloudStorageDeleteModalContent implements OnInit {
                     return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
                 },
                 cloudInvalidResponse: () => {
+                    this.wrongPassword = true;
+                    this.deleteForm.controls.password.setErrors({ password: true });
+                    this.renderer.selectRootElement('#password').focus();
                     return this.LANG.errorCodes.notAuthorized;
                 },
                 networkConnection: () => {
