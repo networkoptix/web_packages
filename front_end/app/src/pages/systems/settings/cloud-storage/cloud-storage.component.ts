@@ -12,6 +12,7 @@ import { NxSystem }                     from '../../../../services/system.servic
 import { NxCloudApiService }            from '../../../../services/nx-cloud-api';
 import { NxProcessService, Process }    from '../../../../services/process.service';
 import { NxMenuService }                from '../../../../components/menu/menu.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector    : 'nx-cloud-storage',
@@ -40,7 +41,8 @@ export class NxCloudStorageComponent implements OnInit {
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
+        private route: ActivatedRoute
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -83,7 +85,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     get systemCloudStorageCapable() {
-        return this.system$.value.cloudStorageCapable;
+        return this.system$.value.cloudStorageCapable || this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
     }
 
     public get cloudCapacity() {
