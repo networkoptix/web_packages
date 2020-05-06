@@ -11,6 +11,7 @@ Resource     ${variables_file}
 Resource     resources/health-monitor-resource.robot
 Resource     resources/system-server-resource.robot
 Resource     resources/system-camera-resource.robot
+Resource     resources/ipvd-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -110,7 +111,7 @@ Log In
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-#    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 
 Log In With Remember Me
@@ -704,32 +705,32 @@ Get the link from email
     Delete Email    ${email index}
     Close Mailbox
     [Return]    ${link}
-    
+
 Get Key from Value
     [Arguments]    ${dict}   ${value}
     @{dict keys} =    Get Dictionary Keys    ${dict}
     FOR    ${key}     IN     @{dict keys}
         Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
     END
-    
+
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${local users}
     FOR    ${user}    IN    @{local users}
         Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
-    END               
+    END
     [return]    @{local users}
-    
+
 Delete All Local Users
     [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
-    Wait Until Element is Visible    ${locator}  
-    ${local users} =    Get Element Count     ${locator} 
+    Wait Until Element is Visible    ${locator}
+    ${local users} =    Get Element Count     ${locator}
     #Click Element    ${locator}[1]
     FOR    ${node}   IN RANGE   ${local users}
         Wait Until Element is Visible    ${locator}
-        Click Element    ${locator} 
+        Click Element    ${locator}
         Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
         Click Button    ${LOCAL USER DELETE BUTTON}
-        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON} 
+        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON}
         Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
         Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
         Sleep    2

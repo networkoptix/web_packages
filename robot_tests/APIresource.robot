@@ -143,7 +143,7 @@ Register New User and Activate the Account
 
 Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
-    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Go To    ${ENV}
     Validate Log Out
