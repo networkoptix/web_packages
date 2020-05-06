@@ -82,7 +82,14 @@ export class CloudStorageMoveModalContent implements OnInit {
 
         // Move Process
         this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
-            // TODO: These messages and errorCodes will be implemented on a future ticket
+            errorCodes: {
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                }
+            },
             successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
             errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
         }).then(() => {

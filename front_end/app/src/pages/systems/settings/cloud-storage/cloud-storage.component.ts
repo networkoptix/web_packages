@@ -171,8 +171,16 @@ export class NxCloudStorageComponent implements OnInit {
             // }
             return this.cloudApiService.enableCloudStorage(this.systemId);
         }, {
-            successMessage : 'Cloud Storage Enabled',
-            errorPrefix    : 'Error Enabling Cloud Storage'
+            errorCodes: {
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                }
+            },
+            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success,
+            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix
         }).then(() => {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();

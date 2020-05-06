@@ -207,10 +207,14 @@
             "moveCloudStorage": {
                 "title": "Move Cloud Storage",
                 "success": "Storage succesfully moved",
-                "errorPrefix": "Cloud storage move error",
+                "errorPrefix": "Error moving cloud storage",
                 "status": {
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Cloud Storage Enabled",
+                "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
                 "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
@@ -420,7 +424,8 @@
         "wrongAuthCode": "Code is expired or incorrect",
         "wrongCode": "Account is already activated or confirmation code is incorrect",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
-        "wrongParameters": "Some parameters on the form are incorrect"
+        "wrongParameters": "Some parameters on the form are incorrect",
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Access Control",

@@ -12,6 +12,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { BehaviorSubject }           from 'rxjs';
 import { NxSystem }                  from '../../../services/system.service';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
 
 @Component({
     selector    : 'nx-modal-cloud-storage-delete-content',
@@ -24,6 +25,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     wrongPassword: boolean;
     delete: Process;
 
@@ -34,13 +36,16 @@ export class CloudStorageDeleteModalContent implements OnInit {
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
-    constructor(public activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private renderer: Renderer2,
-                private cloudApiService: NxCloudApiService
+    constructor(
+        config: NxConfigService,
+        language: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private renderer: Renderer2,
+        private cloudApiService: NxCloudApiService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
+        this.CONFIG = config.getConfig();
     }
 
     ngOnInit() {
@@ -55,10 +60,13 @@ export class CloudStorageDeleteModalContent implements OnInit {
             const { LANG } = this;
             return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
+            // ignoreUnauthorized : true,
+            errorCodes: {
                 cloudInvalidResponse: () => {
                     return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
                 }
             },
             successMessage : this.LANG.dialogs.cloudStorage.remove.success,

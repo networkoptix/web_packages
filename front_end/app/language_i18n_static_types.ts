@@ -204,11 +204,17 @@ export interface CloudStorage {
     available:             string;
     camera:                string;
     cameras:               string;
-    remove:                Remove;
+    remove:                EnableCloudStorage;
     activationError:       NoSettings;
     systemDisconnectError: NoSettings;
     moveCloudStorage:      MoveCloudStorage;
+    enableCloudStorage:    EnableCloudStorage;
     noOtherSystemsError:   NoOtherSystemsError;
+}
+
+export interface EnableCloudStorage {
+    success:     string;
+    errorPrefix: string;
 }
 
 export interface MoveCloudStorage {
@@ -224,11 +230,6 @@ export interface MoveCloudStorageStatus {
 
 export interface NoOtherSystemsError {
     message: string;
-}
-
-export interface Remove {
-    success:     string;
-    errorPrefix: string;
 }
 
 export interface DialogsMerge {
@@ -447,6 +448,7 @@ export interface ErrorCodes {
     wrongCode:                           string;
     wrongCodeRestore:                    string;
     wrongParameters:                     string;
+    networkConnection:                   string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -1050,11 +1052,16 @@ const typeMap: any = {
         { json: "available", js: "available", typ: "" },
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
-        { json: "remove", js: "remove", typ: r("Remove") },
+        { json: "remove", js: "remove", typ: r("EnableCloudStorage") },
         { json: "activationError", js: "activationError", typ: r("NoSettings") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
+        { json: "enableCloudStorage", js: "enableCloudStorage", typ: r("EnableCloudStorage") },
         { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
+    ], false),
+    "EnableCloudStorage": o([
+        { json: "success", js: "success", typ: "" },
+        { json: "errorPrefix", js: "errorPrefix", typ: "" },
     ], false),
     "MoveCloudStorage": o([
         { json: "title", js: "title", typ: "" },
@@ -1067,10 +1074,6 @@ const typeMap: any = {
     ], false),
     "NoOtherSystemsError": o([
         { json: "message", js: "message", typ: "" },
-    ], false),
-    "Remove": o([
-        { json: "success", js: "success", typ: "" },
-        { json: "errorPrefix", js: "errorPrefix", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
@@ -1270,6 +1273,7 @@ const typeMap: any = {
         { json: "wrongCode", js: "wrongCode", typ: "" },
         { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "" },
         { json: "wrongParameters", js: "wrongParameters", typ: "" },
+        { json: "networkConnection", js: "networkConnection", typ: "" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "" },
