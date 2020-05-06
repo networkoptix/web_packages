@@ -41,6 +41,7 @@ export class NxRadioComponent implements OnInit, ControlValueAccessor, Validator
     @ViewChild('inputRadioFocus') inputRadio: HTMLFormElement;
 
     public state: string;
+
     private _value: any; // ngModel representation
     private _rbxStates = {
         rbFalse    : 'unchecked',

@@ -30,9 +30,10 @@ export class PushComponent implements OnInit, OnDestroy {
     private sendStatus: string;
     private receivedMessages: any;
     private subChanges: boolean;
-    private account: any;
     private timeSubscription: Subscription;
     private tokenSubscription: Subscription;
+
+    public account: any;
 
     private setupDefaults() {
         this.notification = {

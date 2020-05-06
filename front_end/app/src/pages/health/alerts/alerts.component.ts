@@ -74,7 +74,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 private location: Location,
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
-                private healthService: NxHealthService,
+                public healthService: NxHealthService,
                 private uriService: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private healthLayoutService: NxHealthLayoutService

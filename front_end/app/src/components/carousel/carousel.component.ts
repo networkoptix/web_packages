@@ -31,10 +31,11 @@ const config = new NxConfigService().config;
 export class NxCarouselComponent implements OnInit {
     @Input() screenshots: any;
 
-    images: any = [];
-    private currentIndex = 0;
-    private imageCount: number;
+    public imageCount: number;
 
+    private currentIndex = 0;
+
+    images: any = [];
     caption: string;
 
     constructor() {

@@ -217,8 +217,3 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
 })
 export class ComponentsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.directives')
-    .directive('nxAjsPagePlaceholder', downgradeComponent({ component: NxAjsPagePlaceholderComponent }) as angular.IDirectiveFactory);

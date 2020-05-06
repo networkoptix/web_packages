@@ -18,7 +18,6 @@ import { filter }                  from 'rxjs/operators';
 import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 import isArray = require('core-js/features/array/is-array');
-import angular = require('angular');
 
 @AutoUnsubscribe()
 @Component({
@@ -87,7 +86,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     private getAvailableDownloadTypes(data) {
         this.noteTypes = [];
-        angular.forEach(data, (noteType, name) => {
+        data.forEach((noteType, name) => {
             if (isArray(noteType) && noteType.length) {
                 this.noteTypes.push(name);
             }

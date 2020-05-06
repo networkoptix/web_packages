@@ -105,8 +105,3 @@ import {
 })
 export class DialogsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.services')
-    .service('nxDialogsService', downgradeInjectable(NxDialogsService));

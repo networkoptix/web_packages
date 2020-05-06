@@ -22,7 +22,7 @@ export class RenameServerModalContent {
 
     constructor(
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService
     ) {
         this.LANG = languageService.getTranslations();

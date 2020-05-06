@@ -36,8 +36,8 @@ export class Account {
     providedIn: 'root'
 })
 export class NxAccountService implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     private location: Location;
     accountSubject = new BehaviorSubject<Account | undefined>(undefined);
     private loggingOut: boolean;

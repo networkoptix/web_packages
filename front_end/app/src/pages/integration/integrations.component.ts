@@ -19,11 +19,12 @@ import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_type
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    private allElements: any;
-    private elements: any;
+    public allElements: any;
+    public elements: any;
+
     private emptyFilter: any = {};
     private filterModel: any = {};
 
@@ -33,11 +34,11 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     account: any;
 
     selectors = {
-        access   : false,
-        analytics: false,
-        cameras  : false,
-        home     : false,
-        psim     : false,
+        access    : false,
+        analytics : false,
+        cameras   : false,
+        home      : false,
+        psim      : false
     };
 
     private setupDefaults(configService) {
@@ -114,7 +115,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
         this.CONFIG.integration.filter.items.forEach(item => {
             if (item.enabled || (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)) {
-                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
+                this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 

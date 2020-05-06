@@ -84,7 +84,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private healthService: NxHealthService,
                 private uri: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+                public healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();

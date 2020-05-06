@@ -1,10 +1,9 @@
-import { Component }                 from '@angular/core';
-import { Router }                    from '@angular/router';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { Subscription }              from 'rxjs';
-import { BaseDropdown }              from '../injDropdown';
+import { Component }       from '@angular/core';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { Subscription }    from 'rxjs';
+import { BaseDropdown }    from '../injDropdown';
 import {
-    NxConfigService, NxSessionService,
+    NxConfigService,
     NxAccountService, Account,
     NxLanguageProviderService
 }                                    from '../../../services';
@@ -25,11 +24,10 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
 
     private loginSubscription: Subscription;
 
-    constructor(private accountService: NxAccountService,
-                private languageService: NxLanguageProviderService,
-                private configService: NxConfigService,
-                private sessionService: NxSessionService,
-                private router: Router
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService,
+        private accountService: NxAccountService
     ) {
         super(languageService, configService);
     }
@@ -55,5 +53,10 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
 
     logout(): void {
         this.accountService.logout(false);
+    }
+
+    hide() {
+        this.show = false;
+        return false;
     }
 }

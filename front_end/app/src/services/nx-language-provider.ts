@@ -7,7 +7,7 @@ import { BehaviorSubject }         from 'rxjs';
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
-    private LANG: LanguageI18NStaticTypes;
+    LANG: LanguageI18NStaticTypes;
 
     translateSubject = new BehaviorSubject({});
 

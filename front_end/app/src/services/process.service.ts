@@ -22,8 +22,9 @@ interface ProcessSettings {
 }
 
 export class Process {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     private cloudApiService: NxCloudApiService;
     private sessionService: NxSessionService;
     private toastService: NxToastService;

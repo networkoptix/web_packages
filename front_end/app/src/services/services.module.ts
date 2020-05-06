@@ -30,22 +30,9 @@ import { NxScrollMechanicsService }  from './scroll-mechanics.service';
         NxAccountService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService,
+        NxScrollMechanicsService
     ],
     exports: []
 })
 export class ServiceModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.services')
-    .service('nxLanguageService', downgradeInjectable(NxLanguageProviderService))
-    .service('nxConfigService', downgradeInjectable(NxConfigService))
-    .service('nxPageService', downgradeInjectable(NxPageService))
-    .service('nxAppStateService', downgradeInjectable(NxAppStateService))
-    .service('nxAccountService', downgradeInjectable(NxAccountService))
-    .service('nxUrlProtocolService', downgradeInjectable(NxUrlProtocolService))
-    .service('nxHeaderService', downgradeInjectable(NxHeaderService))
-    .service('nxUtilsService', downgradeInjectable(NxUtilsService))
-    .service('nxSystemsService', downgradeInjectable(NxSystemsService));

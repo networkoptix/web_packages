@@ -62,8 +62,3 @@ const appRoutes: Routes = [
 })
 export class DownloadHistoryModule {
 }
-
-// declare var angular: angular.IAngularStatic;
-// angular
-//     .module('cloudApp.directives')
-//     .directive('downloadHistory', downgradeComponent({component: DownloadHistoryComponent}) as angular.IDirectiveFactory);

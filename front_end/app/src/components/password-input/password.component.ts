@@ -48,14 +48,15 @@ export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAcces
     clicked: boolean = false;
     tagWidth: number;
 
-    private value: string;
+    public value: string;
+
     private passwordSubscription: Subscription;
 
     @ViewChild('addons') addons : ElementRef;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    public onTouchedCallback = () => {
     };
 
     private onChangeCallback = (_: any) => {

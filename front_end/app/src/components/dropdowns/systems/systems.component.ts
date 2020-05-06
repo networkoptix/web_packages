@@ -74,4 +74,9 @@ export class NxSystemsDropdown extends BaseDropdown {
         this.activeSystem = (changes.activeSystem) ? changes.activeSystem.currentValue : this.activeSystem;
         this.systemCounter = this.systems.length;
     }
+
+    hide() {
+        this.show = false;
+        return false;
+    }
 }

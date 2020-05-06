@@ -98,7 +98,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private router: Router,
                 private route: ActivatedRoute,
                 private location: Location,
-                private healthService: NxHealthService,
+                public healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
                 private healthLayoutService: NxHealthLayoutService

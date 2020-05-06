@@ -5,7 +5,6 @@
     <button class="btn btn-dropdown-toggle dropdown-toggle"
             [disabled]="disabled"
             (click)="show = !show"
-            [ngClass]="{'ng-invalid': !isValid}"
             type="button" id="permissionsSelect" data-toggle="dropdown">
 
         <span class="ellipsis" [innerHtml]="selection"></span>

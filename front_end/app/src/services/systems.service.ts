@@ -17,8 +17,8 @@ import { NxSystem }                                    from './system.service';
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     private activeSubscription: Subscription;
     private currentUser: string;
     private mergingSystems: Set<string>;

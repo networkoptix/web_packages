@@ -114,8 +114,9 @@ class System extends SystemInterface {
 }
 
 class UserManager {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     private mediaserver: NxSystemAPI;
     private _ownerEmail: string;
     private _accessRole: string;
@@ -615,6 +616,9 @@ class ServerManager {
 }
 
 export class NxSystem extends System implements OnDestroy {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     private userManager: UserManager;
     private serverManager: ServerManager;
     private _subscribersCount = new BehaviorSubject<number>(0);
@@ -736,8 +740,8 @@ export class NxSystem extends System implements OnDestroy {
     // End of serverManager functions
 
     constructor(
-        private CONFIG: IConfig,
-        private LANG: LanguageI18NStaticTypes,
+        CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
@@ -749,6 +753,9 @@ export class NxSystem extends System implements OnDestroy {
         super();
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId);
+
+        this.CONFIG = CONFIG;
+        this.LANG = LANG;
         // this._subscribersCount.subscribe((subscribers) => {
         //     console.log(`Current Subscribers for ${systemId || serverId}: ${subscribers}`);
         // });

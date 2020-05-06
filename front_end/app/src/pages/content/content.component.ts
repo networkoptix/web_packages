@@ -18,22 +18,24 @@ import { ComponentsModule }        from '../../components/components.module';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'content-component',
-    templateUrl: 'content.component.html',
-    styleUrls : ['content.component.scss']
+    selector    : 'content-component',
+    templateUrl : 'content.component.html',
+    styleUrls   : ['content.component.scss']
 })
 
 export class NxContentComponent implements OnInit {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     public title: string;
     public body: SafeHtml;
+    public loaded = false;
+
     private staticHTML: string;
     private articleParam: string;
     private state: string;
     private id: string;
     private langCode: string;
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
-    public loaded = false;
     private staticContent: any;
 
     private agreement: boolean;
@@ -166,7 +168,7 @@ export class NxContentComponent implements OnInit {
         this.compileStaticArticle(templateUrl);
     }
 
-    compileStaticArticle(templateUrl) {
+    compileStaticArticle(templateUrl: string) {
         @Component({ templateUrl })
         class TemplateComponent {
             @ViewChild('title', { static: true }) title;

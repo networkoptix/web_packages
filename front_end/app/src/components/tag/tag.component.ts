@@ -36,7 +36,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
-    private badgeType: string;
+    public badgeType: string;
 
     constructor() {}
 

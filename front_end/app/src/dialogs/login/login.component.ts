@@ -57,10 +57,10 @@ export class LoginModalContent implements OnInit {
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
-        private activeModal: NgbActiveModal,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
+        public activeModal: NgbActiveModal,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();

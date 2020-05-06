@@ -39,11 +39,11 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private value: string;
+    public value: string;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    public onTouchedCallback = () => {
     };
 
     private onChangeCallback = (_: any) => {
