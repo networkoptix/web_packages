@@ -412,7 +412,7 @@ class ServerManager {
             if (!res) {
                 return Promise.reject(new Error(`Request to server has failed ${res}`));
             }
-            this.servers = res;
+            this.servers = res.sort(NxUtilsService.byParam(server => server.name, NxUtilsService.sortASC));
             return this.servers;
         });
         return serverSubscription;
