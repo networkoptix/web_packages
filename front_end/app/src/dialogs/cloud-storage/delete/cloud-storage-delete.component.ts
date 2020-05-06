@@ -62,7 +62,6 @@ export class CloudStorageDeleteModalContent implements OnInit {
             const { LANG } = this;
             return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
-            // ignoreUnauthorized : true,
             errorCodes: {
                 500: () => {
                     return this.LANG.common.systemServerError;
