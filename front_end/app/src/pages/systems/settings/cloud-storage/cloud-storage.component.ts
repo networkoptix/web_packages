@@ -25,7 +25,7 @@ export class NxCloudStorageComponent implements OnInit {
     system$: BehaviorSubject<NxSystem>;
 
     usageStats: IUsageStats;
-    _cloudCapacity: number;
+    _cloudCapacity: number = 0;
     cloudStorageSystemEnabled$: BehaviorSubject<boolean | string> = new BehaviorSubject('loading');
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
@@ -54,6 +54,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     private init() {
+        this.usageStats = emptyUsage;
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
             if (system === undefined) return;

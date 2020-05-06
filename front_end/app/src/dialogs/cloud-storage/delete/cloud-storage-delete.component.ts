@@ -51,7 +51,9 @@ export class CloudStorageDeleteModalContent implements OnInit {
     ngOnInit() {
         this.auth.password = '';
         this.system$.subscribe(system => {
-            this.systemId = system.id;
+            if (system && system.id) {
+                this.systemId = system.id;
+            };
         });
 
         this.delete = this.processService.createProcess(() => {
@@ -62,6 +64,12 @@ export class CloudStorageDeleteModalContent implements OnInit {
         }, {
             // ignoreUnauthorized : true,
             errorCodes: {
+                500: () => {
+                    return this.LANG.common.systemServerError;
+                },
+                notFound: () => {
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                },
                 cloudInvalidResponse: () => {
                     return this.LANG.errorCodes.notAuthorized;
                 },

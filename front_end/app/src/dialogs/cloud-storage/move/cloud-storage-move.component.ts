@@ -37,7 +37,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     systemId = '';
     userEmail = '';
     target$ = new BehaviorSubject('');
-    targetOnline$ = new BehaviorSubject(false);
+    targetOnline$ = new BehaviorSubject(true);
     showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
@@ -59,6 +59,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     ngOnInit() {
         this.system$.subscribe(system => {
+            if (!system || !system.id) return;
             this.systemId = system.id;
             this.userEmail = system.currentUserEmail;
             this.systemsService.getMySystems(this.userEmail, this.systemId);
@@ -83,6 +84,12 @@ export class CloudStorageMoveModalContent implements OnInit {
         // Move Process
         this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
             errorCodes: {
+                500: () => {
+                    return this.LANG.common.systemServerError;
+                },
+                notFound: () => {
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                },
                 cloudInvalidResponse: () => {
                     return this.LANG.errorCodes.notAuthorized;
                 },
@@ -115,11 +122,6 @@ export class CloudStorageMoveModalContent implements OnInit {
     setTargetSystem({ value, state }: DropdownItem) {
         this.target$.next(value);
         this.targetOnline$.next(state !== 'offline');
-        if (value === 'otherSystem') {
-            // TODO: Moving to a system that isn't already setup on cloud wasn't in spec, should it be implemented?
-            this.errorText = "this isn't implemented, not sure if it should be";
-        }
-
         this.systemsService.getSystem(value).toPromise().then(({ state }) => {
             if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;

@@ -221,6 +221,7 @@ export interface MoveCloudStorage {
     title:       string;
     success:     string;
     errorPrefix: string;
+    notFound:    string;
     status:      MoveCloudStorageStatus;
 }
 
@@ -1067,6 +1068,7 @@ const typeMap: any = {
         { json: "title", js: "title", typ: "" },
         { json: "success", js: "success", typ: "" },
         { json: "errorPrefix", js: "errorPrefix", typ: "" },
+        { json: "notFound", js: "notFound", typ: "" },
         { json: "status", js: "status", typ: r("MoveCloudStorageStatus") },
     ], false),
     "MoveCloudStorageStatus": o([

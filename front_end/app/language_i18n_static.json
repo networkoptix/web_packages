@@ -208,6 +208,7 @@
                 "title": "Move Cloud Storage",
                 "success": "Storage succesfully moved",
                 "errorPrefix": "Error moving cloud storage",
+                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
                 "status": {
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }
