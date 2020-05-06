@@ -526,6 +526,10 @@
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
+        },
         "merge": {
             "title": "This system is being merged to {{systemName}}.",
             "message": {

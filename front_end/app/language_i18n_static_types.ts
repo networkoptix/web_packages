@@ -103,7 +103,7 @@ export interface Common {
 }
 
 export interface CommonAccount {
-    created:   Server;
+    created:   NoSettings;
     activated: Activated;
 }
 
@@ -111,7 +111,7 @@ export interface Activated {
     title: string;
 }
 
-export interface Server {
+export interface NoSettings {
     title:   string;
     message: string;
 }
@@ -204,8 +204,8 @@ export interface CloudStorage {
     camera:                string;
     cameras:               string;
     remove:                Remove;
-    activationError:       Server;
-    systemDisconnectError: Server;
+    activationError:       NoSettings;
+    systemDisconnectError: NoSettings;
     moveCloudStorage:      MoveCloudStorage;
     noOtherSystemsError:   NoOtherSystemsError;
 }
@@ -562,8 +562,9 @@ export interface PasswordRequirements {
 }
 
 export interface PlaceholderTexts {
-    merge:  PlaceholderTextsMerge;
-    server: Server;
+    noSettings: NoSettings;
+    merge:      PlaceholderTextsMerge;
+    server:     NoSettings;
 }
 
 export interface PlaceholderTextsMerge {
@@ -957,13 +958,13 @@ const typeMap: any = {
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
     ], false),
     "CommonAccount": o([
-        { json: "created", js: "created", typ: r("Server") },
+        { json: "created", js: "created", typ: r("NoSettings") },
         { json: "activated", js: "activated", typ: r("Activated") },
     ], false),
     "Activated": o([
         { json: "title", js: "title", typ: "" },
     ], false),
-    "Server": o([
+    "NoSettings": o([
         { json: "title", js: "title", typ: "" },
         { json: "message", js: "message", typ: "" },
     ], false),
@@ -1048,8 +1049,8 @@ const typeMap: any = {
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
         { json: "remove", js: "remove", typ: r("Remove") },
-        { json: "activationError", js: "activationError", typ: r("Server") },
-        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Server") },
+        { json: "activationError", js: "activationError", typ: r("NoSettings") },
+        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
         { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
     ], false),
@@ -1375,8 +1376,9 @@ const typeMap: any = {
         { json: "weakMessage", js: "weakMessage", typ: "" },
     ], false),
     "PlaceholderTexts": o([
+        { json: "noSettings", js: "noSettings", typ: r("NoSettings") },
         { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
-        { json: "server", js: "server", typ: r("Server") },
+        { json: "server", js: "server", typ: r("NoSettings") },
     ], false),
     "PlaceholderTextsMerge": o([
         { json: "title", js: "title", typ: "" },
