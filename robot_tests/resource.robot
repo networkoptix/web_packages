@@ -366,14 +366,14 @@ Get Cloud User Role
     [Arguments]    ${auth}    ${email}    ${system id}
     @{users}=   Get Cloud System Users   ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        Run Keyword If   '&{user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
+        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
     END
 
 Get Cloud User Id By Email
    [Arguments]    ${auth}    ${email}    ${system id}
    @{users}=   Get Cloud System Users    ${auth}    ${system id}
    FOR    ${user}    IN    @{users}
-       Run Keyword If   '&{user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
+       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
    END
 
 Change User Permissions
@@ -565,7 +565,7 @@ User is in cloud system
     [Arguments]    ${user email}    ${system id}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        ${status}=   Run keyword and return status    Should be equal as strings   '&{user}[accountEmail]'    '${user email}'
+        ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
         Run Keyword If   ${status}    Exit For Loop
     END
     [Return]    ${status}
@@ -573,7 +573,7 @@ User is in cloud system
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}
     ${is there}=   User is in cloud system    ${email}    ${system id}
-    Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
+    Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}

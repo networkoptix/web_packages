@@ -151,7 +151,8 @@ Log Out via API
 
 Evaluate Auto System Settings via API
     [Arguments]    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}     disable_warnings=1
+    # This need to be fixed in CLOUD-4798
+    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}

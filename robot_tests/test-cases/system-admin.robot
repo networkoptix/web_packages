@@ -39,7 +39,7 @@ Check System Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO TESTS DEV2 IP}    ${AUTO TESTS DEV2 PORT}    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    10.1.5.169    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
     FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
@@ -299,7 +299,7 @@ Clicking save in rename dialog renames system
 
     Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}   ${AUTO TESTS}
     ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    &{settings}[name]    ${AUTO TESTS}
+    Should be equal as strings    ${settings}[name]    ${AUTO TESTS}
 
 Should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    Threaded
@@ -487,7 +487,7 @@ Owner can disconnect System from Cloud
     [Tags]    C41883   C47020
     Log    Step 1
     Log in to Auto Tests System    ${EMAIL OWNER}
-    ${old cloud system id}=   Get Cloud System Id    ${AUTO TESTS DEV 2 IP}:${AUTO TESTS DEV 2 PORT}    ${AUTO SYS AUTH}
+    ${old cloud system id}=   Get Cloud System Id    ${AUTO SYS IP}    ${AUTO SYS AUTH}
     Click Button    ${DISCONNECT FROM NX}
     Validate Disconnect Form
 
@@ -499,11 +499,11 @@ Owner can disconnect System from Cloud
     Run keyword and continue on failure    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${AUTO TESTS}"]
 
     # Restarting the server is to let it know the cloud system is unbound
-    Restart Server    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}
+    Restart Server    ${AUTO SYS IP}    ${AUTO SYS AUTH}
     Sleep    30
 
     Log     C47020: checking that system is disconnected from cloud on the server side
-    ${cloud system id}=   Get Cloud System Id    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}
+    ${cloud system id}=   Get Cloud System Id    ${AUTO SYS IP}    ${AUTO SYS AUTH}
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     Log    Step 3
@@ -513,7 +513,7 @@ Owner can disconnect System from Cloud
     END
 
     Log    Test teardown: get system and system users back to cloud
-    ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   ${AUTO TESTS DEV2 IP}    ${AUTO TESTS DEV2 PORT}    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
+    ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   10.1.5.169    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
     FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
         Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
     END

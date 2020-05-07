@@ -45,4 +45,4 @@ Language can be changed on landing page
     [Tags]    C41549
     Open Browser and go to URL    ${url}
     Set Language Anonymous    de_DE
-    Wait Until Element is Visible    //form[@name='loginForm']//nx-process-button//button[contains(text(),"Account erstellen")]
+    Wait Until Element is Visible    //header//a/span[contains(text(),"Account erstellen")]
