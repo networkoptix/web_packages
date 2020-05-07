@@ -2,19 +2,27 @@
     <div class="row m-0" [ngClass]="{'mb-2' : layout == 'selectors'}">
         <div class="col-12 p-0" *ngIf="layout != 'selectors'">
             <div class="d-block d-md-inline-flex flex-md-row w-100">
-                <div class="search-group" [ngClass]="{'mr-3' : layout == 'full'}">
+                <div class="search-group"
+                     [class]="layout"
+                     [ngClass]="{'mr-3' : layout == 'full'}">
+
                     <span class="glyphicon web-icon-search icon-search"></span>
                     <input [ngModel]="localFilter.query"
                            (ngModelChange)="onSearchType($event)"
                            [ngClass]="{'non-empty': localFilter.query && localFilter.query != ''}"
                            [maxLength]="CONFIG.search.maxLength"
+                           (focus)="setOnFocus()"
+                           (focusout)="setOnFocusOut()"
+                           (keyup.arrowup)="navArrow('UP')"
+                           (keyup.arrowdown)="navArrow('DOWN')"
+                           (keyup.enter)="navSelect()"
                            type="text"
                            class="form-control search-input"
                            name="query"
                            autocomplete="off"
                            [placeholder]="placeholder"/>
 
-                    <button class="search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
+                    <button class="inset search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
                         <span class="web-icon-close"></span>
                     </button>
                 </div>

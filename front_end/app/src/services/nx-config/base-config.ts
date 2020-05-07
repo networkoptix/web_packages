@@ -441,6 +441,8 @@ export interface Search {
     debounceTime: number;
     maxLength: number;
     minSystems: number;
+    transitionInMs: number;
+    transitionShortInMs: number;
 }
 
 export interface Servers {
@@ -459,7 +461,7 @@ export interface ServersStatus {
     online: string;
     offline: string;
     restarting: string;
-    reseting: string;
+    resetting: string;
     checking: string;
 }
 
@@ -1068,7 +1070,9 @@ const typeMap: any = {
     Search: o([
         { json: 'debounceTime', js: 'debounceTime', typ: 0 },
         { json: 'maxLength', js: 'maxLength', typ: 0 },
-        { json: 'minSystems', js: 'minSystems', typ: 0 }
+        { json: 'minSystems', js: 'minSystems', typ: 0 },
+        { json: 'transitionInMs', js: 'transitionInMs', typ: 0 },
+        { json: 'transitionShortInMs', js: 'transitionShortInMs', typ: 0 }
     ], false),
     Servers: o([
         { json: 'port', js: 'port', typ: r('Port') },
@@ -1083,7 +1087,7 @@ const typeMap: any = {
         { json: 'online', js: 'online', typ: '' },
         { json: 'offline', js: 'offline', typ: '' },
         { json: 'restarting', js: 'restarting', typ: '' },
-        { json: 'reseting', js: 'reseting', typ: '' },
+        { json: 'resetting', js: 'resetting', typ: '' },
         { json: 'checking', js: 'checking', typ: '' }
     ], false),
     System: o([

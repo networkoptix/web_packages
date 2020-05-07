@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../components/menu';
+import { NxMenuService }                from '../../../../menu';
 import { NxConfigService, IConfig }     from '../../../../services';
 
 @Component({
-    selector: 'setup-component',
-    templateUrl: 'setup.component.html',
-    styleUrls: ['setup.component.scss']
+    selector    : 'setup-component',
+    templateUrl : 'setup.component.html',
+    styleUrls   : ['setup.component.scss']
 })
 
 export class NxSetupComponent implements OnInit, OnDestroy {

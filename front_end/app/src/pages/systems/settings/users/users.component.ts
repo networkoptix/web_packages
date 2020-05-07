@@ -15,16 +15,16 @@ import {
 }                                               from '../../../../services';
 import { NxDialogsService }                     from '../../../../dialogs';
 import { NxSettingsService }                    from '../settings.service';
-import { NxMenuService }                        from '../../../../components/menu';
+import { NxMenuService }                        from '../../../../menu';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-user-component',
-    templateUrl: 'users.component.html',
-    styleUrls  : ['users.component.scss'],
+    selector    : 'nx-system-user-component',
+    templateUrl : 'users.component.html',
+    styleUrls   : ['users.component.scss']
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
@@ -86,8 +86,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .params
             .subscribe(params => {
                 if (params.userId) {
-                    this.menuService.setDetailsSection(params.userId);
                     this.paramUser = params.userId;
+                    if (this.paramUser.indexOf('?') > -1) {
+                        this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
+                    }
+                    this.menuService.setDetailsSection(this.paramUser);
                     this.setUser();
                 }
             });

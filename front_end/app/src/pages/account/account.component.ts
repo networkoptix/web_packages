@@ -10,16 +10,16 @@ import {
     NxSystemsService
 }                                  from '../../services';
 import { NxDialogsService }        from '../../dialogs';
-import { NxMenuService }           from '../../components/menu';
+import { NxMenuService }           from '../../menu';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
 import { Subscription }            from 'rxjs';
 import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'account',
-    templateUrl: 'account.component.html',
-    styleUrls  : ['account.component.scss']
+    selector    : 'account',
+    templateUrl : 'account.component.html',
+    styleUrls   : ['account.component.scss']
 })
 
 export class NxAccountComponent implements OnInit, OnDestroy {
@@ -37,29 +37,30 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     changePassword: any;
     private menuDetailSubscription: Subscription;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-
+    private setupDefaults() {
         this.pass = {
-            password   : '',
-            newPassword: ''
+            password    : '',
+            newPassword : ''
         };
     }
 
-    constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private localStorage: LocalStorageService,
-                private processService: NxProcessService,
-                private cloudApiService: NxCloudApiService,
-                private language: NxLanguageProviderService,
-                private systemsService: NxSystemsService,
-                private accountService: NxAccountService,
-                private dialogs: NxDialogsService,
-                private uriService: NxUriService,
-                private menuService: NxMenuService,
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private localStorage: LocalStorageService,
+        private processService: NxProcessService,
+        private cloudApiService: NxCloudApiService,
+        private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
+        private dialogs: NxDialogsService,
+        private uriService: NxUriService,
+        private menuService: NxMenuService
     ) {
-        this.setupDefaults(configService);
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.getTranslations();
+
+        this.setupDefaults();
     }
 
     ngOnDestroy() {}
@@ -78,24 +79,24 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             return;
         }
         this.content = {
-            base: accountMenu.baseUrl,
-            selectedSection   : accountMenu.settings.id,
-            level1            : [
+            base            : accountMenu.baseUrl,
+            selectedSection : accountMenu.settings.id,
+            level1          : [
                 {
-                    id   : accountMenu.settings.id,
-                    icon : accountMenu.icon,
-                    label: this.account.email,
-                    path : accountMenu.settings.path,
-                    level3: [
+                    id     : accountMenu.settings.id,
+                    icon   : accountMenu.icon,
+                    label  : this.account.email,
+                    path   : accountMenu.settings.path,
+                    level3 : [
                         {
-                            id: accountMenu.settings.id,
-                            label: this.LANG.account.accountSettings,
-                            path: accountMenu.settings.path
+                            id    : accountMenu.settings.id,
+                            label : this.LANG.account.accountSettings,
+                            path  : accountMenu.settings.path
                         },
                         {
-                            id: accountMenu.password.id,
-                            label: this.LANG.account.changePassword,
-                            path: accountMenu.password.path
+                            id    : accountMenu.password.id,
+                            label : this.LANG.account.changePassword,
+                            path  : accountMenu.password.path
                         }
                     ]
                 }
@@ -106,7 +107,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             .selectedDetailsSection
             .subscribe(selection => {
                 this.content.selectedDetailsSection = selection;
-                this.content = {...this.content}; // trigger onChange
+                this.content = { ...this.content }; // trigger onChange
                 this.menuReady = true;
             });
     }

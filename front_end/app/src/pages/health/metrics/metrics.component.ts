@@ -12,13 +12,13 @@ import {
     NxLanguageProviderService,
     NxScrollMechanicsService
 }                                  from '../../../services';
-import { NxMenuService }           from '../../../components/menu';
+import { NxMenuService }           from '../../../menu';
 import { NxHealthService }         from '../health.service';
 import { NxHealthLayoutService }   from '../health-layout.service';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { of, SubscriptionLike }    from 'rxjs';
 import { delay, throttleTime }     from 'rxjs/operators';
 import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+import { of, SubscriptionLike }    from 'rxjs';
+import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
 
 interface Params {
     [key: string]: any;
@@ -26,10 +26,10 @@ interface Params {
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-system-metrics-component',
-    templateUrl : 'metrics.component.html',
-    styleUrls : ['metrics.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-system-metrics-component',
+    templateUrl   : 'metrics.component.html',
+    styleUrls     : ['metrics.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
