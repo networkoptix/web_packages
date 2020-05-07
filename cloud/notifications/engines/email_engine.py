@@ -8,6 +8,9 @@ from cms.models import cloud_portal_customization_cache, check_update_cache, get
 from cms.controllers import filldata 
 from django.core.cache import cache
 
+import logging
+logger = logging.getLogger(__name__)
+
 
 def email_cache(customization_name, cache_type, value=None, force=None):
     data = cache.get('email_cache')
@@ -51,6 +54,7 @@ def send(email, msg_type, message, language_code, customization_name):
     config = {
         'portal_url': customization_cache["portal_url"]
     }
+    logger(f"{customization_name} - {config}")
 
     subject = get_email_title(customization_name, language_code, msg_type)
     subject = pystache.render(subject, {"message": message, "config": config})

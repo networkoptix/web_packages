@@ -250,7 +250,7 @@ USE_L10N = True
 
 USE_TZ = False
 
-LOG_LEVEL = 'INFO' if DEBUG else 'WARNING'
+LOG_LEVEL = 'INFO' if False and DEBUG else 'WARNING'
 
 LOGGING = {
     'version': 1,
