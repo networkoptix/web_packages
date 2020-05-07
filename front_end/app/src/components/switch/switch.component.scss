@@ -26,7 +26,11 @@
         &:hover {
             .switch {
                 .switch-element {
-                    .slider {
+                    .slider {    
+                        &.disable {
+                            background-color: $light6 !important;
+                        }
+                    
                         background-color: $red_l2;
                     }
                     input.selected + .slider {
@@ -59,6 +63,12 @@
     left: 0;
     right: 0;
     bottom: 0;
+    &.disable {
+        background-color: $light8;
+        &:hover {
+            background-color: $light6 !important;
+        }
+    }
     background-color: $red_l1;
 
     &:hover {
@@ -78,16 +88,26 @@
 }
 
 input.selected + .slider {
+    &.disable {
+        background-color: $light8;
+        &:hover {
+            background-color: $light6 !important;
+        }
+    }
     background-color: $green_main;
-
     &:hover {
         background-color: $green_l1;
     }
 }
 
 input:focus + .slider {
+    &.disable {
+    background-color: $light8;
+        &:hover {
+            background-color: $light6 !important;
+        }
+    }
     box-shadow: 0 0 1px $green_l1;
-
     &:hover {
         box-shadow: 0 0 1px $green_l1;
     }
@@ -121,6 +141,9 @@ input.selected + .slider:before {
 
 .bar {
     @extend .slider-icon;
+    &.disable {
+        background: $light12;
+    }
     background: $green_l2;
     width: 2px;
     left: 8px;
@@ -128,6 +151,9 @@ input.selected + .slider:before {
 
 .circle {
     @extend .slider-icon;
+    &.disable {
+        border: 2px solid $light12;
+    }
     border: 2px solid $red_d1;
     border-radius: 50%;
     width: 9px;

@@ -459,19 +459,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingWatcher.value;
     }
 
+    shakeHint = false;
+    flashHint(flash = false) {
+        if (!flash) return;
+        this.shakeHint = true;
+        setTimeout(() => {
+            this.shakeHint = false;
+        }, 500);
+    }
+
     set recording(value) {
         if (value === this.recording) {
             return;
         }
-
-        if (value && !this.availableLicenses) {
-            this.recordingWatcher.value = true;
-            setTimeout(() => {
-                this.recordingWatcher.value = false;
-            }, 500);
-            return;
-        }
-
         if (this.motionEnabled) {
             this.enableMotion();
         } else {

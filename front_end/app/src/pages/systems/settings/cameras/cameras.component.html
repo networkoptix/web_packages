@@ -124,8 +124,13 @@
                 <header>
                     <div class="d-flex align-items-center">
                         <div>
-                            <nx-switch [(ngModel)]="recording" [label]="'Recording' | translate" componentId="recording"></nx-switch>
-                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses}">{{
+                            <nx-switch 
+                                [(ngModel)]="recording" 
+                                [label]="'Recording' | translate" 
+                                componentId="recording" 
+                                [disabled]="availableLicenses === 0"  
+                                (click)="flashHint(!this.recording && !this.availableLicenses)"></nx-switch>
+                            <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses, 'shake-hint': shakeHint}">{{
                                 availableLicenses > 0 ? 
                                 ('1 professional license channel will be used' | translate)  : 
                                 ('Professional license is required' | translate)
