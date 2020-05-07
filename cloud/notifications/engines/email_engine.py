@@ -54,7 +54,8 @@ def send(email, msg_type, message, language_code, customization_name):
     config = {
         'portal_url': customization_cache["portal_url"]
     }
-    logger(f"{customization_name} - {config}")
+    logger.debug(customization_cache)
+    logger.debug(f"{customization_name} - {config}")
 
     subject = get_email_title(customization_name, language_code, msg_type)
     subject = pystache.render(subject, {"message": message, "config": config})
