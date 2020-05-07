@@ -727,9 +727,7 @@ export class NxSystem extends System implements OnDestroy {
             const parsedLicenses = licenses.map(this.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
                 const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
-                // CLASS digital is for professional license
-                // refer to vms/libs/common/src/licensing/license.cpp licenseTypeInfo
-                return activeLicense && CLASS === 'digital' ? qty + parseInt(COUNT) : qty;
+                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
             const available = total - used;
