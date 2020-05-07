@@ -1,19 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularFireMessaging }         from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders }      from '@angular/common/http';
-import {
-    NxSystemsService, NxAccountService
-}                                       from '../../services';
 import { timer }                        from 'rxjs/observable/timer';
 import { Subscription }                 from 'rxjs';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { Router }                       from '@angular/router';
+import { NxSystemsService }             from '../../services/systems.service';
+import { NxAccountService }             from '../../services/account.service';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'push-notifications-component',
-    templateUrl: 'push-notifications.component.html',
-    styleUrls: ['push-notifications.component.scss']
+    selector    : 'push-notifications-component',
+    templateUrl : 'push-notifications.component.html',
+    styleUrls   : ['push-notifications.component.scss']
 })
 
 export class PushComponent implements OnInit, OnDestroy {

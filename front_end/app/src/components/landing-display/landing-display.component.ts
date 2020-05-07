@@ -5,7 +5,7 @@ import {
     ViewChild,
     ViewContainerRef
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
     selector: 'landing-display-component',

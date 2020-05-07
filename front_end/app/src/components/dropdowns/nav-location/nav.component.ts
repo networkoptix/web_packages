@@ -1,6 +1,7 @@
-import { Component, Input }                           from '@angular/core';
-import { BaseDropdown }                               from '../injDropdown';
-import { NxConfigService, NxLanguageProviderService } from '../../../services';
+import { Component, Input }          from '@angular/core';
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-nav-location',

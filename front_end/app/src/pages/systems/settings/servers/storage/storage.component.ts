@@ -1,15 +1,16 @@
 import {
-    Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
-}                                       from '@angular/core';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import {
-    NxSystem, Watcher,
-    NxLanguageProviderService,
-    NxProcessService, Process
-}                                       from '../../../../../services';
-import { NxDialogsService }             from '../../../../../dialogs';
-import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
+    Component, Inject, OnDestroy,
+    LOCALE_ID, Input, OnChanges,
+    SimpleChanges
+}                                    from '@angular/core';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { Watcher }                   from '../../../../../services/apply.service';
+import { NxDialogsService }          from '../../../../../dialogs';
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({

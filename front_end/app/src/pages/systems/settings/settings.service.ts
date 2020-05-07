@@ -1,11 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject }       from 'rxjs';
-import {
-    NxCloudApiService,
-    NxAccountService, NxUriService
-}                                from '../../../services';
 import { NxDialogsService }      from '../../../dialogs';
 import { NxMenuService }         from '../../../components/menu';
+import { NxCloudApiService }     from '../../../services/nx-cloud-api';
+import { NxAccountService }      from '../../../services/account.service';
+import { NxUriService }          from '../../../services/uri.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,21 +1,26 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, PLATFORM_ID
-}                                                               from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router }                from '@angular/router';
-import { DOCUMENT, isPlatformBrowser, Location, TitleCasePipe } from '@angular/common';
-import { isNumeric }                                            from 'rxjs/util/isNumeric';
-import { NgbTabChangeEvent, NgbTabset }                         from '@ng-bootstrap/ng-bootstrap';
-
+}                                       from '@angular/core';
 import {
-    NxConfigService, IConfig, NxLanguageProviderService,
-    NxAccountService, NxCloudApiService,
-    NxUriService, NxPageService
-}                                  from '../../services';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { filter }                  from 'rxjs/operators';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+    ActivatedRoute, ActivationEnd, Router
+}                                       from '@angular/router';
+import {
+    DOCUMENT, isPlatformBrowser,
+    Location, TitleCasePipe
+}                                       from '@angular/common';
+import { isNumeric }                    from 'rxjs/util/isNumeric';
+import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }     from '../../services/nx-config';
+import { NxAccountService }             from '../../services/account.service';
+import { NxPageService }                from '../../services/page.service';
+import { NxCloudApiService }            from '../../services/nx-cloud-api';
+import { NxUriService }                 from '../../services/uri.service';
+import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+import { Subscription }                 from 'rxjs';
+import { filter }                       from 'rxjs/operators';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 
 import isArray = require('core-js/features/array/is-array');
 

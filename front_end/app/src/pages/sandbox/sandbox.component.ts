@@ -1,7 +1,7 @@
 import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { NxProcessService }              from '../../services';
+import { NxProcessService }              from '../../services/process.service';
 import { NxDialogsService }              from '../../dialogs';
 
 @Component({

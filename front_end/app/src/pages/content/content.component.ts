@@ -1,21 +1,21 @@
 import {
     Component, OnInit, Compiler,
     NgModule, ViewChild, ViewContainerRef, Inject
-}                                  from '@angular/core';
-import { ActivatedRoute, Router }  from '@angular/router';
-import { HttpClient, HttpParams }  from '@angular/common/http';
-import { Location }                from '@angular/common';
-import { DomSanitizer, SafeHtml }  from '@angular/platform-browser';
-import { SessionStorageService }   from 'ngx-store';
-import {
-    NxLanguageProviderService, WINDOW,
-    NxConfigService, IConfig,
-    NxPageService, NxProcessService,
-    NxAccountService, Account,
-    NxCloudApiService
-}                                  from '../../services';
-import { ComponentsModule }        from '../../components/components.module';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { HttpClient, HttpParams }    from '@angular/common/http';
+import { Location }                  from '@angular/common';
+import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
+import { SessionStorageService }     from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService, Account } from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { WINDOW }                    from '../../services/window-provider';
+import { ComponentsModule }          from '../../components/components.module';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector    : 'content-component',
@@ -169,29 +169,29 @@ export class NxContentComponent implements OnInit {
     }
 
     compileStaticArticle(templateUrl: string) {
-        @Component({ templateUrl })
-        class TemplateComponent {
-            @ViewChild('title', { static: true }) title;
-        }
-
-        @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
-        class TemplateModule {}
-
-        this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
-            const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
-
-            const component = this.dynamicTemplate.createComponent(factory);
-            this.loaded = true;
-
-            const title = component.instance.title.nativeElement;
-            if (title) {
-                this.pageService.setPageTitle(title.innerText);
-            }
-
-            /* If content was successfully compiled from static files,
-                add to staticContent so we don't do an API call each time we switch pages */
-            this.staticContent[this.articleParam] = true;
-            this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-        }).catch(() => this.router.navigate([this.CONFIG.redirect.page404]));
+        // @Component({ templateUrl: (templateUrl + '') })
+        // class TemplateComponent {
+        //     @ViewChild('title', { static: true }) title;
+        // }
+        //
+        // @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
+        // class TemplateModule {}
+        //
+        // this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
+        //     const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
+        //
+        //     const component = this.dynamicTemplate.createComponent(factory);
+        //     this.loaded = true;
+        //
+        //     const title = component.instance.title.nativeElement;
+        //     if (title) {
+        //         this.pageService.setPageTitle(title.innerText);
+        //     }
+        //
+        //     /* If content was successfully compiled from static files,
+        //         add to staticContent so we don't do an API call each time we switch pages */
+        //     this.staticContent[this.articleParam] = true;
+        //     this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
+        // }).catch(() => this.router.navigate([this.CONFIG.redirect.page404]));
     }
 }

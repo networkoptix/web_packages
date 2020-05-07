@@ -5,14 +5,12 @@ import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-
-import { NxSandboxComponent } from './sandbox.component';
-import { ComponentsModule }   from '../../components/components.module';
-import { DialogsModule }      from '../../dialogs/dialogs.module';
-import { PipesModule }        from '../../pipes/pipes.module';
-import { NxAccountComponent } from '../account/account.component';
-import { AuthGuard }          from '../../routeGuards';
-import { NxGridLayoutModule } from '../layout/layout.module';
+import { NxSandboxComponent }   from './sandbox.component';
+import { ComponentsModule }     from '../../components/components.module';
+import { DialogsModule }        from '../../dialogs/dialogs.module';
+import { PipesModule }          from '../../pipes/pipes.module';
+import { AuthGuard }            from '../../routeGuards';
+import { NxGridLayoutModule }   from '../layout/layout.module';
 
 const appRoutes: Routes = [
     {

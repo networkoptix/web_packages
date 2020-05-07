@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { IntegrationService }           from './integration.service';
 import {
-    NxUriService, NxAccountService,
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxPageService, NxUtilsService
-}                                       from '../../services';
-import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { IntegrationService }        from './integration.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxUriService }              from '../../services/uri.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxUtilsService }            from '../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({

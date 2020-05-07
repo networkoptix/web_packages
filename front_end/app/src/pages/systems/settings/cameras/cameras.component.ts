@@ -2,29 +2,31 @@ import {
     Component, OnDestroy, OnInit, Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../services/process.service';
+import { WINDOW }                    from '../../../../services/window-provider';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxSystem, ICamera, StreamQuality,
-    IRecordingSettings, ITask,
-    IRecordingModes, MotionType,
-    NxUriService, WINDOW,
-    Watcher, NxApplyService,
-    Process, NxProcessService
-}                                    from '../../../../services';
+    ICamera, IRecordingModes,
+    IRecordingSettings,
+    ITask, MotionType,
+    NxSystem, StreamQuality
+}                                    from '../../../../services/system.service';
+import { NxDialogsService }          from '../../../../dialogs';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../components/menu';
+import { NxUriService }              from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
-import { NxDialogsService }          from '../../../../dialogs';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
-    Subscription, BehaviorSubject, Subject
+    Subscription, BehaviorSubject,
+    Subject
 }                                    from 'rxjs';
 import {
     filter, map, retryWhen, delay,
     distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
-
 
 @Component({
     selector    : 'nx-cameras-component',

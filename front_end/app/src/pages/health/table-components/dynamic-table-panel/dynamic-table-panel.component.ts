@@ -2,18 +2,16 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
-}                                from '@angular/core';
-import {
-    NxConfigService, IConfig,
-    NxScrollMechanicsService
-}                                from '../../../../services';
-import { NxHealthService }       from '../../health.service';
-import { NxHealthLayoutService } from '../../health-layout.service';
+}                                   from '@angular/core';
+import { NxHealthService }          from '../../health.service';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 @Component({
-    selector   : 'nx-dynamic-table-panel-component',
-    templateUrl: './dynamic-table-panel.component.html',
-    styleUrls  : ['./dynamic-table-panel.component.scss']
+    selector    : 'nx-dynamic-table-panel-component',
+    templateUrl : './dynamic-table-panel.component.html',
+    styleUrls   : ['./dynamic-table-panel.component.scss']
 })
 export class NxDynamicTablePanelComponent implements AfterViewInit {
 

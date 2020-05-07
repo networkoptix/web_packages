@@ -1,20 +1,25 @@
-import { Component, OnDestroy, OnInit }   from '@angular/core';
-import { Params, Router, ActivatedRoute } from '@angular/router';
 import {
-    NxConfigService, IConfig,
-    NxPageService, NxSystemsService,
-    NxLanguageProviderService,
-    NxAccountService, NxProcessService,
-    NxSystem, NxCloudApiService,
-    NxUriService
-}                                         from '../../../../services';
-import { NxDialogsService }               from '../../../../dialogs';
-import { NxSettingsService }              from '../settings.service';
-import { NxMenuService }                  from '../../../../components/menu';
-import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
-import { Subscription }                   from 'rxjs';
-import { filter, auditTime }              from 'rxjs/operators';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import {
+    Params, Router, ActivatedRoute
+}                                    from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService }          from '../../../../services/process.service';
+import { NxSystem }                  from '../../../../services/system.service';
+import { NxDialogsService }          from '../../../../dialogs';
+import { NxSettingsService }         from '../settings.service';
+import { NxMenuService }             from '../../../../components/menu';
+import { Subscription }              from 'rxjs';
+import { filter, auditTime }         from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxPageService }             from '../../../../services/page.service';
+import { NxSystemsService }          from '../../../../services/systems.service';
+import { NxAccountService }          from '../../../../services/account.service';
+import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
+import { NxUriService }              from '../../../../services/uri.service';
 
 interface Settings {
     disconnectDisabled: boolean;

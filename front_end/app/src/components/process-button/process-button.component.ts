@@ -2,7 +2,7 @@ import {
     Component, OnInit, Input,
     ViewEncapsulation
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
     selector     : 'nx-process-button',

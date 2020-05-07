@@ -5,8 +5,6 @@ import { UpgradeModule }                 from '@angular/upgrade/static';
 import { Resolve, RouterModule, Routes } from '@angular/router';
 import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
-
-
 import { ComponentsModule }      from '../../components/components.module';
 import { ApplyGuard, AuthGuard } from '../../routeGuards';
 import {

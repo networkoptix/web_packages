@@ -8,13 +8,11 @@ import {
 }                                      from 'rxjs';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 import { NxToastService }              from './toast.service';
-import {
-    NxConfigService, IConfig, NxAccountService,
-    NxSystem, ICamera
-}                                      from '../services';
 import { NxLanguageProviderService }   from '../services/nx-language-provider';
+import { NxConfigService, IConfig }    from '../services/nx-config';
+import { NxAccountService }            from '../services/account.service';
+import { NxSystem, ICamera }           from '../services/system.service';
 import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
-
 import { LoginModalContent }           from './login/login.component';
 import { GenericModalContent }         from './generic/generic.component';
 import { AddUserModalContent }         from './add-user/add-user.component';

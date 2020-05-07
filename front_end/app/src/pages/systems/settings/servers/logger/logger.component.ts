@@ -5,11 +5,9 @@ import {
 }                                    from '@angular/core';
 import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import {
-    IConfig, NxConfigService,
-    NxLanguageProviderService,
-    NxProcessService
-}                                    from '../../../../../services';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 

@@ -1,0 +1,62 @@
+{
+  "/api/utils/language": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/utils/language": "/language_compiled.json"
+    }
+  },
+  "/api/*": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/gateway/*": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/admin/*": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/503.html": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/static/lang_en_US/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static/lang_en_US/views": "/views"
+    }
+  },
+  "/static/images/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static/images": "/images"
+    }
+  },
+  "/static/": {
+    "target": "http://localhost:9000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/static": ""
+    }
+  }
+}

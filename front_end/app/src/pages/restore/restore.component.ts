@@ -1,16 +1,15 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { LocalStorageService }      from 'ngx-store';
-
-import {
-    NxUriService, NxPageService,
-    NxLanguageProviderService,
-    NxProcessService, NxCloudApiService,
-    NxConfigService, IConfig,
-    NxAccountService
-}              from '../../services';
-import { NxDialogsService }         from '../../dialogs';
-import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
+import { Component, Input, OnInit }  from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUriService }              from '../../services/uri.service';
+import { NxDialogsService }          from '../../dialogs';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-restore-component',

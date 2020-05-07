@@ -1,17 +1,19 @@
-import { Component, Inject } from '@angular/core';
-import { HttpClient }        from '@angular/common/http';
-import { filter }            from 'rxjs/operators';
-
-import {
-    NxLanguageProviderService, Watcher,
-    NxCloudApiService, NxAccountService,
-    NxPageService, NxProcessService,
-    NxConfigService, IConfig,
-    NxSystemsService, NxSystem,
-    NxUrlProtocolService, WINDOW
-}                                  from '../../services';
-import { NxDialogsService }        from '../../dialogs';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, Inject }         from '@angular/core';
+import { HttpClient }                from '@angular/common/http';
+import { filter }                    from 'rxjs/operators';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { Watcher }                   from '../../services/apply.service';
+import { NxSystemsService }          from '../../services/systems.service';
+import { NxSystem }                  from '../../services/system.service';
+import { NxDialogsService }          from '../../dialogs';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { WINDOW }                    from '../../services/window-provider';
 
 @Component({
     selector: 'nx-debug',

@@ -2,20 +2,19 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                from '@angular/core';
-import { ActivatedRoute }        from '@angular/router';
-import { Location }              from '@angular/common';
-import {
-    NxConfigService, IConfig,
-    NxUriService, NxUtilsService,
-    NxScrollMechanicsService
-}                                from '../../../services';
-import { NxMenuService }         from '../../../components/menu';
-import { NxHealthService }       from '../health.service';
-import { NxHealthLayoutService } from '../health-layout.service';
-import { of, SubscriptionLike }  from 'rxjs';
-import { delay, throttleTime }   from 'rxjs/operators';
-import { AutoUnsubscribe }       from 'ngx-auto-unsubscribe';
+}                                   from '@angular/core';
+import { ActivatedRoute }           from '@angular/router';
+import { Location }                 from '@angular/common';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxUriService }             from '../../../services/uri.service';
+import { NxMenuService }            from '../../../components/menu';
+import { NxHealthService }          from '../health.service';
+import { NxHealthLayoutService }    from '../health-layout.service';
+import { of, SubscriptionLike }     from 'rxjs';
+import { delay, throttleTime }      from 'rxjs/operators';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { NxUtilsService }           from '../../../services/utils.service';
+import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;

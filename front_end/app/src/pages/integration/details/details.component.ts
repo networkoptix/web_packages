@@ -4,11 +4,10 @@ import { DomSanitizer }                 from '@angular/platform-browser';
 import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 import { combineLatest, Subscription }  from 'rxjs';
 import { map }                          from 'rxjs/operators';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxAccountService, NxPageService
-}                                       from '../../../services';
+import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }     from '../../../services/nx-config';
+import { NxAccountService }             from '../../../services/account.service';
+import { NxPageService }                from '../../../services/page.service';
 import { NxRibbonService }              from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
 import { NxMenuService }                from '../../../components/menu';

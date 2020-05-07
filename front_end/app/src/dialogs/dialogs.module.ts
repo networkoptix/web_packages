@@ -10,7 +10,6 @@ import { RemoveUserModalContent }      from './remove-user/remove-user.component
 import { MergeModalContent }           from './merge/merge.component';
 import { MessageModalContent }         from './message/message.component';
 import { EmbedModalContent }           from './embed/embed.component';
-import { downgradeInjectable }         from '@angular/upgrade/static';
 import { FormsModule, EmailValidator } from '@angular/forms';
 import { TranslateModule }             from '@ngx-translate/core';
 import { ClipboardModule }             from 'ngx-clipboard';

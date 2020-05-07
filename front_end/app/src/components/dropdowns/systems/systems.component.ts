@@ -3,15 +3,14 @@ import {
     Input, SimpleChanges
 }                                    from '@angular/core';
 import { BaseDropdown }              from '../injDropdown';
-import {
-    NxLanguageProviderService,
-    NxConfigService, NxUriService
-}                                    from '../../../services';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxUriService }              from '../../../services/uri.service';
 
 @Component({
-    selector   : 'nx-systems',
-    templateUrl: 'systems.component.html',
-    styleUrls  : ['systems.component.scss']
+    selector    : 'nx-systems',
+    templateUrl : 'systems.component.html',
+    styleUrls   : ['systems.component.scss']
 })
 
 export class NxSystemsDropdown extends BaseDropdown {

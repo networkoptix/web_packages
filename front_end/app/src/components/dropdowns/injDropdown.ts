@@ -3,10 +3,9 @@ import {
     SimpleChanges, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ControlValueAccessor }      from '@angular/forms';
-import {
-    NxLanguageProviderService,
-    NxConfigService, IConfig, Watcher
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { Watcher }                   from '../../services/apply.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 const noop = () => {

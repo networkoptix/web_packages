@@ -7,15 +7,10 @@ import { BreakpointObserver }                    from '@angular/cdk/layout';
 import { DOCUMENT }                              from '@angular/common';
 import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
-import {
-    NxAccountService, Account,
-    NxConfigService, IConfig,
-    NxSystem, NxSystemService,
-    NxUtilsService, NxAppStateService,
-    NxSystemAPI, NxSystemAPIService,
-    NxScrollMechanicsService, NxUriService,
-    NxLanguageProviderService, WINDOW
-}             from '../../services';
+import { NxLanguageProviderService }             from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }              from '../../services/nx-config';
+import { NxAccountService, Account }             from '../../services/account.service';
+import { NxUriService }                          from '../../services/uri.service';
 import { NxMenuService }                         from '../../components/menu';
 import { NxRibbonService }                       from '../../components/ribbon';
 import { NxHealthService }                       from './health.service';
@@ -23,6 +18,12 @@ import { LanguageI18NStaticTypes }               from '../../../language_i18n_st
 import { of, Subscription, throwError }          from 'rxjs';
 import { flatMap }                               from 'rxjs/operators';
 import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
+import { NxSystem, NxSystemService }             from '../../services/system.service';
+import { NxUtilsService }                        from '../../services/utils.service';
+import { NxAppStateService }                     from '../../services/nx-app-state.service';
+import { NxSystemAPI, NxSystemAPIService }       from '../../services/system-api.service';
+import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
+import { WINDOW }                                from '../../services/window-provider';
 
 @AutoUnsubscribe()
 @Component({

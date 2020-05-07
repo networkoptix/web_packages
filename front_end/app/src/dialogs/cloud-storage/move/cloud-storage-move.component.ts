@@ -14,10 +14,9 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { BehaviorSubject }           from 'rxjs';
-import {
-    NxConfigService, IConfig, NxSystem
-}                                    from '../../../services';
 import { NxDialogsService }          from '../../dialogs.service';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxSystem }                  from '../../../services/system.service';
 
 @Component({
     selector    : 'nx-cloud-storage-move-content',

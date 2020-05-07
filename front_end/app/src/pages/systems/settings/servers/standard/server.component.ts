@@ -1,22 +1,20 @@
 import {
     Component, OnInit, Inject,
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
-} from '@angular/core';
-import { ActivatedRoute }              from '@angular/router';
-import { of, interval }                from 'rxjs';
-import { delayWhen, catchError }       from 'rxjs/operators';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxProcessService, NxSystem,
-    NxApplyService, Watcher,
-    NxUriService, NxUtilsService
-}                                      from '../../../../../services';
-import { NxDialogsService }            from '../../../../../dialogs';
-import { NxMenuService }               from '../../../../../components/menu';
-import { NxSettingsService }           from '../../settings.service';
-import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxProcessService }          from '../../../../../services/process.service';
+import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
+import { NxDialogsService }          from '../../../../../dialogs';
+import { NxMenuService }             from '../../../../../components/menu';
+import { NxSettingsService }         from '../../settings.service';
+import { NxSystem }                  from '../../../../../services/system.service';
+import { NxUriService }              from '../../../../../services/uri.service';
+import { NxUtilsService }            from '../../../../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({

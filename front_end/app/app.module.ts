@@ -23,13 +23,11 @@ import { DialogsModule }          from './src/dialogs/dialogs.module';
 import { PagesModule }            from './src/pages/pages.module';
 import { DirectivesModule }       from './src/directives/directives.module';
 import { PipesModule }            from './src/pipes/pipes.module';
-import {
-    NxConfigService,
-    ServiceModule,
-    WINDOWS_PROVIDERS
-}                                 from './src/services';
 import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard, SystemGuard } from './src/routeGuards';
+import { NxConfigService }        from './src/services/nx-config';
+import { ServiceModule }          from './src/services/services.module';
+import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
 
 // AoT requires an exported function for factories
 

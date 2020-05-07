@@ -5,26 +5,27 @@ import {
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { filter }                               from 'rxjs/operators';
-import {
-    NxConfigService, IConfig,
-    NxPageService, NxAccountService,
-    NxLanguageProviderService, NxUtilsService,
-    NxSystem, NxSystemRole, NxSystemUser,
-    NxProcessService, NxUriService,
-    NxApplyService, Watcher
-}                                               from '../../../../services';
 import { NxDialogsService }                     from '../../../../dialogs';
 import { NxSettingsService }                    from '../settings.service';
 import { NxMenuService }                        from '../../../../components/menu';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
+import { NxConfigService, IConfig }             from '../../../../services/nx-config';
+import { NxPageService }                        from '../../../../services/page.service';
+import { NxAccountService }                     from '../../../../services/account.service';
+import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
+import { NxUtilsService }                       from '../../../../services/utils.service';
+import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
+import { NxProcessService }                     from '../../../../services/process.service';
+import { NxUriService }                         from '../../../../services/uri.service';
+import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-system-user-component',
-    templateUrl: 'users.component.html',
-    styleUrls  : ['users.component.scss'],
+    selector    : 'nx-system-user-component',
+    templateUrl : 'users.component.html',
+    styleUrls   : ['users.component.scss'],
 })
 
 export class NxSystemUsersComponent implements OnInit, OnDestroy {

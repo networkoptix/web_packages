@@ -9,15 +9,13 @@ import {
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import {
-    IConfig, NxConfigService,
-    NxLanguageProviderService,
-    NxProcessService
-}                                    from '../../../../../services';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { NxSettingsService }         from '../../settings.service';
 import { NxMenuService }             from '../../../../../components/menu';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxProcessService }          from '../../../../../services/process.service';
 
 @AutoUnsubscribe()
 @Component({

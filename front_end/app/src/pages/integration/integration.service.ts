@@ -1,11 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy }    from '@angular/core';
 import {
     BehaviorSubject, Observable, Subscription
-}                                from 'rxjs';
-import {
-    NxCloudApiService, NxUtilsService,
-    NxConfigService, IConfig
-}                                from '../../services';
+}                                   from 'rxjs';
+import { NxCloudApiService }        from '../../services/nx-cloud-api';
+import { NxUtilsService }           from '../../services/utils.service';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 interface Platform {
     file: string;

@@ -1,8 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { NxHealthService } from '../../health.service';
+import {
+    AfterViewInit, Component,
+    ElementRef, Input, OnChanges,
+    OnDestroy, ViewChild
+}                                  from '@angular/core';
+import { NxHealthService }         from '../../health.service';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { debounceTime }            from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 interface ThumbNail {
     loaded: boolean;
@@ -12,9 +16,9 @@ interface ThumbNail {
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-image-section',
-    templateUrl: './image-section.component.html',
-    styleUrls: ['./image-section.component.scss']
+    selector    : 'nx-image-section',
+    templateUrl : './image-section.component.html',
+    styleUrls   : ['./image-section.component.scss']
 })
 export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
     @Input() cameraInfo: any;
@@ -58,9 +62,9 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
             .map((cameraProp: any) => {
                 const time = cameraProp.thumbnail.text;
                 return {
-                    loaded: false,
+                    loaded : false,
                     time,
-                    url: this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
+                    url : this.healthService.system.mediaserver.previewUrl(this.cameraId, time)
                 };
             }).sort((a: any, b: any) => {
                 if (a.time === 'now') {
@@ -71,7 +75,6 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDest
                 return a.time < b.time ? -1 : 1;
             });
     }
-
 
     showPreloader() {
         setTimeout(() => this.ready = this.thumbnails.every((thumbnail) => thumbnail.loaded));

@@ -5,10 +5,10 @@ import {
     delayWhen, retryWhen, map,
     tap, mergeMap
 }                                    from 'rxjs/operators';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxRibbonService }           from '../../components/ribbon';
 import { NxProcessService }          from '../../services/process.service';
-import { NxConfigService, IConfig }  from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 

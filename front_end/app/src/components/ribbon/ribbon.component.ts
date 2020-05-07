@@ -1,13 +1,12 @@
 import {
     Component, OnDestroy, OnInit, ViewEncapsulation
-}                                       from '@angular/core';
-import { NxRibbonService }              from './ribbon.service';
-import { distinctUntilChanged }         from 'rxjs/operators';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import {
-    NxConfigService, IConfig, NxUtilsService
-}                                       from '../../services';
+}                                   from '@angular/core';
+import { NxRibbonService }          from './ribbon.service';
+import { distinctUntilChanged }     from 'rxjs/operators';
+import { Subscription }             from 'rxjs';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxUtilsService }           from '../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({

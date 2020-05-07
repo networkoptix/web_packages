@@ -4,11 +4,10 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }                    from '@angular/forms';
-import {
-    NxConfigService, IConfig, NxAccountService
-}                                    from '../../services';
-import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { WINDOW }                    from '../../services/window-provider';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';

@@ -1,18 +1,19 @@
 import { Component, OnInit, OnDestroy }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService, NxSystem,
-    NxProcessService, NxUtilsService,
-    NxApplyService, NxUriService
-}      from '../../../../services';
+import { NxConfigService, IConfig }      from '../../../../services/nx-config';
+import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
+import { NxProcessService }              from '../../../../services/process.service';
+import { NxApplyService }                from '../../../../services/apply.service';
 import { NxDialogsService }              from '../../../../dialogs';
 import { NxSettingsService }             from '../settings.service';
 import { NxMenuService }                 from '../../../../components/menu';
-import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { Subscription }                  from 'rxjs';
 import { filter, map, delay, retryWhen } from 'rxjs/operators';
 import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
+import { NxSystem }                      from '../../../../services/system.service';
+import { NxUtilsService }                from '../../../../services/utils.service';
+import { NxUriService }                  from '../../../../services/uri.service';
 
 @AutoUnsubscribe()
 @Component({

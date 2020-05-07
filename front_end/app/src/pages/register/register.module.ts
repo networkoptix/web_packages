@@ -1,17 +1,15 @@
-import { Injectable, NgModule }                          from '@angular/core';
-import { CommonModule }                                  from '@angular/common';
-import { BrowserModule }                                 from '@angular/platform-browser';
-import { UpgradeModule }                                 from '@angular/upgrade/static';
-import { ActivatedRoute, Resolve, RouterModule, Routes } from '@angular/router';
-import { FormsModule }                                   from '@angular/forms';
-import { ComponentsModule }                              from '../../components/components.module';
-
-import { LandingModule }       from '../landing/landing.module';
-import { DirectivesModule }    from '../../directives/directives.module';
-import { NxRegisterComponent } from './register.component';
-import { TranslateModule }     from '@ngx-translate/core';
-import { InputTrimModule }     from 'ng2-trim-directive';
-import { LocalStorageService } from 'ngx-store';
+import { Injectable, NgModule }          from '@angular/core';
+import { CommonModule }                  from '@angular/common';
+import { BrowserModule }                 from '@angular/platform-browser';
+import { UpgradeModule }                 from '@angular/upgrade/static';
+import { Resolve, RouterModule, Routes } from '@angular/router';
+import { FormsModule }                   from '@angular/forms';
+import { ComponentsModule }              from '../../components/components.module';
+import { LandingModule }                 from '../landing/landing.module';
+import { DirectivesModule }              from '../../directives/directives.module';
+import { NxRegisterComponent }           from './register.component';
+import { TranslateModule }               from '@ngx-translate/core';
+import { InputTrimModule }               from 'ng2-trim-directive';
 
 @Injectable()
 export class SuccessResolver implements Resolve<any> {
