@@ -2,40 +2,27 @@ import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
-import { NxConfigService, IConfig }                       from './nx-config';
-import { NxCloudApiService }                              from './nx-cloud-api';
-import { NxLanguageProviderService }                      from './nx-language-provider';
-import { NxDialogsService }                               from '../dialogs';
-import { NxSessionService }                               from './session.service';
-import { NxApplyService }                                 from './apply.service';
+import { NxConfigService, IConfig }                       from '../nx-config';
+import { NxCloudApiService }                              from '../nx-cloud-api';
+import { NxLanguageProviderService }                      from '../nx-language-provider';
+import { NxDialogsService }                               from '../../dialogs';
+import { NxSessionService }                               from '../session.service';
+import { NxApplyService }                                 from '../apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
-import { WINDOW }                                         from './window-provider';
-import { NxAppStateService }                              from './nx-app-state.service';
-import { NxUriService }                                   from './uri.service';
-import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
-import { NxPollService }                                  from './poll.service';
-import { NxUtilsService }                                 from './utils.service';
-import { IParams }                                        from '../components/search/search.component';
-
-export class Account {
-    email: string;
-    // eslint-disable-next-line camelcase
-    first_name: string;
-    // eslint-disable-next-line camelcase
-    last_name: string;
-    language: string;
-    // eslint-disable-next-line camelcase
-    is_staff: boolean;
-    // eslint-disable-next-line camelcase
-    is_superuser: boolean;
-    permissions: string[];
-}
+import { WINDOW }                                         from '../window-provider';
+import { NxAppStateService }                              from '../nx-app-state.service';
+import { NxUriService }                                   from '../uri.service';
+import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
+import { NxPollService }                                  from '../poll.service';
+import { NxUtilsService }                                 from '../utils.service';
+import { IParams }                                        from '../../components/search/search.component';
+import { Account }                                        from './account';
 
 @Injectable({
     providedIn: 'root'
 })
-export class NxAccountService implements OnDestroy {
+export abstract class BaseAccount implements OnDestroy {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     private location: Location;
@@ -197,7 +184,7 @@ export class NxAccountService implements OnDestroy {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(this, true, true).then((result) => {
+                        .login(<any> this, true, true).then((result) => {
                             this.localStorageService.set('loginRegister', true);
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);
@@ -314,7 +301,7 @@ export class NxAccountService implements OnDestroy {
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
-                    .login(this, true, true)
+                    .login(<any> this, true, true)
                     .catch(() => {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
