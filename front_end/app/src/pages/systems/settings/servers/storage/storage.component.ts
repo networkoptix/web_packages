@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { Watcher }                   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()

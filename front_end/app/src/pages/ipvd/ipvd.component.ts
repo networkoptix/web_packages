@@ -20,7 +20,7 @@ import { NxPageService }             from '../../services/page.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUriService }              from '../../services/uri.service';
 import { IpvdSearchService }         from './ipvd-search.service';
-import { NxDialogsService }          from '../../dialogs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { MessageParams }             from '../../dialogs/message/message.component';
 import { SubscriptionLike }          from 'rxjs';

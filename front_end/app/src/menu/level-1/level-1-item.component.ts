@@ -2,7 +2,7 @@ import {
     Component, EventEmitter, Input, OnChanges,
     OnInit, Output, SimpleChanges
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
 import { Router }                   from '@angular/router';
 

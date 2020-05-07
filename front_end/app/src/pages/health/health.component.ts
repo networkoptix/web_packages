@@ -11,7 +11,7 @@ import { NxLanguageProviderService }             from '../../services/nx-languag
 import { NxConfigService, IConfig }              from '../../services/nx-config';
 import { NxAccountService, Account }             from '../../services/account.service';
 import { NxUriService }                          from '../../services/uri.service';
-import { NxMenuService }                         from '../../components/menu';
+import { NxMenuService }                         from '../../menu';
 import { NxRibbonService }                       from '../../components/ribbon';
 import { NxHealthService }                       from './health.service';
 import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';

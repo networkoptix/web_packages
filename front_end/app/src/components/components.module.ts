@@ -43,7 +43,6 @@ import { NxAjsPagePlaceholderComponent }      from './placeholders/ajs-page/page
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
-import { downgradeComponent }                 from '@angular/upgrade/static';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
 
 @NgModule({

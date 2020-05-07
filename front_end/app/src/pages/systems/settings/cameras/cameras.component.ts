@@ -15,9 +15,9 @@ import {
     ITask, MotionType,
     NxSystem, StreamQuality
 }                                    from '../../../../services/system.service';
-import { NxDialogsService }          from '../../../../dialogs';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
-import { NxMenuService }             from '../../../../components/menu';
+import { NxMenuService }             from '../../../../menu';
 import { NxUriService }              from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import {

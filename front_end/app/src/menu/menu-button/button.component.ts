@@ -1,6 +1,6 @@
 import { Component, Input }  from '@angular/core';
-import { NxDialogsService }  from '../../dialogs';
-import { NxUriService }      from '../../services';
+import { NxDialogsService }  from '../../dialogs/dialogs.service';
+import { NxUriService }      from '../../services/uri.service';
 import { NxMenuService }     from '../menu.service';
 
 // TODO: Do we really need this? -- TT

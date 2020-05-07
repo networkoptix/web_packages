@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxAccountService }          from '../../../services/account.service';
 import { NxUriService }              from '../../../services/uri.service';
-import { NxMenuService }             from '../../../components/menu';
+import { NxMenuService }             from '../../../menu';
 import { NxHealthService }           from '../health.service';
 import { NxHealthLayoutService }     from '../health-layout.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';

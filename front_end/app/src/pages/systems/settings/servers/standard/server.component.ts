@@ -9,8 +9,8 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
-import { NxDialogsService }          from '../../../../../dialogs';
-import { NxMenuService }             from '../../../../../components/menu';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../../../menu';
 import { NxSettingsService }         from '../../settings.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUriService }              from '../../../../../services/uri.service';

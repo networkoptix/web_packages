@@ -7,9 +7,10 @@ import { NxConfigService, IConfig }           from '../../../services/nx-config'
 import { NxLanguageProviderService }          from '../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }            from '../../../../language_i18n_static_types';
 import { NxProcessService }                   from '../../../services/process.service';
-import { NxDialogsService, NxToastService }   from '../../../dialogs';
+import { NxDialogsService }                   from '../../../dialogs/dialogs.service';
+import { NxToastService }                     from '../../../dialogs/toast.service';
 import { NxSettingsService }                  from './settings.service';
-import { NxMenuService }                      from '../../../components/menu';
+import { NxMenuService }                      from '../../../menu';
 import { NxRibbonService }                    from '../../../components/ribbon';
 import { Subscription }                       from 'rxjs';
 import { filter }                             from 'rxjs/operators';

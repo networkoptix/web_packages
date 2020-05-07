@@ -5,9 +5,9 @@ import { NxLanguageProviderService }     from '../../../../services/nx-language-
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxProcessService }              from '../../../../services/process.service';
 import { NxApplyService }                from '../../../../services/apply.service';
-import { NxDialogsService }              from '../../../../dialogs';
+import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }             from '../settings.service';
-import { NxMenuService }                 from '../../../../components/menu';
+import { NxMenuService }                 from '../../../../menu';
 import { Subscription }                  from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';

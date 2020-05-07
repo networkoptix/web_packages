@@ -19,7 +19,7 @@ import { DetachServerModalContent }    from './detach-server/detach-server.compo
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
-import { NxDialogsService }            from './';
+import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
 import { AngularSvgIconModule }        from 'angular-svg-icon';
 import {
@@ -29,14 +29,12 @@ import {
 import {
     ApplyModalContent,
     NxModalApplyComponent
-}                                      from './apply/apply.component';
-import {
-    CloudStorageMoveModalContent,
-    CloudStorageDeleteModalContent
-}                                      from './cloud-storage';
+}                                         from './apply/apply.component';
 import {
     UpdateCameraCredentialsModalContent
-}                                      from './update-camera-credentials/update-camera-credentials.component';
+}                                         from './update-camera-credentials/update-camera-credentials.component';
+import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
+import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
 
 @NgModule({
     imports: [

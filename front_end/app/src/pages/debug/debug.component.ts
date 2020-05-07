@@ -11,7 +11,7 @@ import { NxUrlProtocolService }      from '../../services/url-protocol.service';
 import { Watcher }                   from '../../services/apply.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import { NxSystem }                  from '../../services/system.service';
-import { NxDialogsService }          from '../../dialogs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { WINDOW }                    from '../../services/window-provider';
 

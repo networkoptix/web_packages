@@ -11,7 +11,7 @@ import { NxPageService }                from '../../../services/page.service';
 import { NxRibbonService }              from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
 import { NxMenuService }                from '../../../menu';
-import { NxDialogsService }             from '../../../dialogs';
+import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 

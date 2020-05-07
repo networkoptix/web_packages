@@ -5,7 +5,7 @@ import { Router }                                         from '@angular/router'
 import { NxConfigService, IConfig }                       from './nx-config';
 import { NxCloudApiService }                              from './nx-cloud-api';
 import { NxLanguageProviderService }                      from './nx-language-provider';
-import { NxDialogsService }                               from '../dialogs';
+import { NxDialogsService }                               from '../dialogs/dialogs.service';
 import { NxSessionService }                               from './session.service';
 import { NxApplyService }                                 from './apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';

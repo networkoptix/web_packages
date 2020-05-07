@@ -11,8 +11,8 @@ import { NxProcessService }          from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
-import { NxDialogsService }          from '../../../dialogs';
-import { NxMenuService }             from '../../../components/menu';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { first }                     from 'rxjs/operators';
 

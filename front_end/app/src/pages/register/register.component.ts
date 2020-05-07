@@ -9,7 +9,7 @@ import { NxProcessService }             from '../../services/process.service';
 import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { NxUrlProtocolService }         from '../../services/url-protocol.service';
-import { NxDialogsService }             from '../../dialogs';
+import { NxDialogsService }             from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 
 @Component({

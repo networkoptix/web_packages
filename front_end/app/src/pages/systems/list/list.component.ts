@@ -9,7 +9,7 @@ import { NxAccountService }          from '../../../services/account.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NxProcessService }          from '../../../services/process.service';
 import { NxUrlProtocolService }      from '../../../services/url-protocol.service';
-import { NxDialogsService }          from '../../../dialogs';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { debounceTime }              from 'rxjs/operators';
 import { Subject, Subscription }     from 'rxjs';

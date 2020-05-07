@@ -9,14 +9,13 @@ import { AngularFireModule, FirebaseOptionsToken }                        from '
 import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
 import { LayoutModule }                                                   from '@angular/cdk/layout';
 
-import { InputTrimModule }                  from 'ng2-trim-directive';
-import { NgbToast, NgbModal }               from '@ng-bootstrap/ng-bootstrap';
-import { OrderModule }                      from 'ngx-order-pipe';
-import { DeviceDetectorModule }             from 'ngx-device-detector';
-import { TranslateModule }                  from '@ngx-translate/core';
-import { CookieService }                    from 'ngx-cookie-service';
-import { WebStorageModule }                 from 'ngx-store';
-
+import { InputTrimModule }        from 'ng2-trim-directive';
+import { NgbToast, NgbModal }     from '@ng-bootstrap/ng-bootstrap';
+import { OrderModule }            from 'ngx-order-pipe';
+import { DeviceDetectorModule }   from 'ngx-device-detector';
+import { TranslateModule }        from '@ngx-translate/core';
+import { CookieService }          from 'ngx-cookie-service';
+import { WebStorageModule }       from 'ngx-store';
 import { AppComponent }           from './app.component';
 import { ComponentsModule }       from './src/components/components.module';
 import { DialogsModule }          from './src/dialogs/dialogs.module';
@@ -28,6 +27,7 @@ import { AuthGuard, SystemGuard } from './src/routeGuards';
 import { NxConfigService }        from './src/services/nx-config';
 import { ServiceModule }          from './src/services/services.module';
 import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
+import { MenuModule }             from './src/menu';
 
 // AoT requires an exported function for factories
 
