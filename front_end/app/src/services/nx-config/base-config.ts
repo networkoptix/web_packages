@@ -10,6 +10,7 @@
 import { Watcher } from '../apply.service';
 
 export interface BaseConfig {
+    isLocal: boolean;
     commonPasswordsList?: string[];
     capabilities?: Capabilities;
     viewsDir?: string;

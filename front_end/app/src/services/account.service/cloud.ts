@@ -1,3 +1,7 @@
 import { BaseAccount } from './base';
 
-export abstract class CloudAccount extends BaseAccount {}
+export class CloudAccount extends BaseAccount implements BaseAccount {
+    customCloudMethod() {
+        return 2;
+    }
+}

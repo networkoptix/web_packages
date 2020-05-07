@@ -19,9 +19,6 @@ import { NxUtilsService }                                 from '../utils.service
 import { IParams }                                        from '../../components/search/search.component';
 import { Account }                                        from './account';
 
-@Injectable({
-    providedIn: 'root'
-})
 export abstract class BaseAccount implements OnDestroy {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
@@ -96,6 +93,10 @@ export abstract class BaseAccount implements OnDestroy {
             this.dialogs = injector.get(NxDialogsService);
             this.applyService = injector.get(NxApplyService);
         });
+    }
+
+    customCloudMethod() {
+        return 4;
     }
 
     ngOnDestroy() {

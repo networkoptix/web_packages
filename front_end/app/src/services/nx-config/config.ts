@@ -1,6 +1,7 @@
 import { IConfig } from './config-types';
 
 export const nxConfig: IConfig = {
+    isLocal      : false,
     alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
     animations   : {
         carouselImage: {

@@ -1,3 +1,3 @@
 import { BaseAccount } from './base';
 
-export abstract class LocalAccount extends BaseAccount {};
+export class LocalAccount extends BaseAccount implements BaseAccount {};
