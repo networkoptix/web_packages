@@ -106,6 +106,4 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
 })
 
 export class AppModule {
-    ngDoBootstrap() {
-    }
 }

@@ -17,6 +17,7 @@ import { BehaviorSubject }           from 'rxjs';
 import { NxDialogsService }          from '../../dialogs.service';
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxSystem }                  from '../../../services/system.service';
+import { NxApplyService }            from '../../../services/apply.service';
 
 @Component({
     selector    : 'nx-cloud-storage-move-content',
@@ -41,6 +42,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
+
     constructor(configService: NxConfigService,
         languageService: NxLanguageProviderService,
         public activeModal: NgbActiveModal,

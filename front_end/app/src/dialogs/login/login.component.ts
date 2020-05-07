@@ -14,6 +14,8 @@ import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxModalGenericComponent }   from '../generic/generic.component';
+import { NxDialogsService }          from '../dialogs.service';
+import { NxApplyService }            from '../../services/apply.service';
 
 @Component({
     selector    : 'ngbd-modal-content',
