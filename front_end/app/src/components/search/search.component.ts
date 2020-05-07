@@ -1,8 +1,8 @@
 import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
-    OnDestroy
-}                                         from '@angular/core';
+    OnDestroy, EventEmitter, Output
+} from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
@@ -20,6 +20,7 @@ import { NxScrollMechanicsService }       from '../../services/scroll-mechanics.
 import { NxUriService }                   from '../../services/uri.service';
 import { NxUtilsService }                 from '../../services/utils.service';
 import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_types';
+import { NxSearchService }                from '../../services/search.service';
 
 /* Usage
  <nx-search
@@ -68,6 +69,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     @Input() placeholder: any;
     @Input() dataLoaded: boolean;
 
+    @Output() onFocus: EventEmitter<any> = new EventEmitter();
+    @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
+
     public numberFilters = 0;
     public filterSelected: any;
     public localFilter: any = {};
@@ -94,6 +98,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private _route: ActivatedRoute,
         private location: Location,
         private uri: NxUriService,
+        private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
@@ -172,6 +177,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
 
         if (this.params.search && this.params.search.length > 0) {
             this.localFilter.query = this.params.search;
+
+            NxSearchService.getMatchPatterns(this.localFilter);
         }
 
         if (this.localFilter.tags && this.localFilter.tags.length) {
@@ -380,6 +387,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         this.modelChanged(true);
     }
 
+    setOnFocus() {
+        this.onFocus.emit();
+    }
+
+    setOnFocusOut() {
+        this.onFocusOut.emit();
+    }
+
     setRouteParams(resetUri?): Promise<any> {
         const queryParams: IParams = {};
 
@@ -437,5 +452,13 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         return this.localFilter.tags && this.localFilter.tags.length ||
             this.localFilter.selects && this.localFilter.selects.length ||
             this.localFilter.multiselects && this.localFilter.multiselects.length;
+    }
+
+    navArrow(direction) {
+        this.searchService.navDirection = direction;
+    }
+
+    navSelect() {
+        this.searchService.navSelected();
     }
 }

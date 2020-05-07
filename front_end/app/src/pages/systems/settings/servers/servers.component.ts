@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy }  from '@angular/core';
+import { Component, OnDestroy, OnInit }  from '@angular/core';
 import { ActivatedRoute, Params }        from '@angular/router';
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
@@ -9,7 +9,7 @@ import { NxDialogsService }              from '../../../../dialogs';
 import { NxSettingsService }             from '../settings.service';
 import { NxMenuService }                 from '../../../../components/menu';
 import { Subscription }                  from 'rxjs';
-import { filter, map, delay, retryWhen } from 'rxjs/operators';
+import { delay, filter, map, retryWhen } from 'rxjs/operators';
 import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';
@@ -31,7 +31,6 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
     advanced: boolean;
     params: Params;
-    parsedServerId: string;
     isOffline = false;
 
     private serverSubscription: Subscription;
@@ -65,11 +64,20 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.routeParamsSubscription = this.route
             .params
-            .subscribe(params => {
-                if (params.serverId) {
-                    this.menuService.setDetailsSection(params.serverId);
-                    this.serverIdFromParams = params.serverId;
-                    this.parsedServerId = params.serverId.replace(/\s|\{|\}/g, '');
+            .subscribe(routeParams => {
+                if (routeParams.serverId) {
+                    this.params = this.route.snapshot.queryParams;
+
+                    this.serverIdFromParams = routeParams.serverId
+                        .replace('%7B', '{')
+                        .replace('%7D', '}');
+
+                    if (this.serverIdFromParams.indexOf('?') > -1) {
+                        this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
+                    }
+
+                    this.menuService.setDetailsSection(this.serverIdFromParams);
+
                     this.setServer();
                 }
             });

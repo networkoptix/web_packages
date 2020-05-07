@@ -61,6 +61,7 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         OrderModule,
         InputTrimModule,
         ComponentsModule,
+        MenuModule,
         DialogsModule,
         PagesModule,
         DirectivesModule,
@@ -71,14 +72,14 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         TranslateModule.forRoot(),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
-            initialNavigation        : true,
-            scrollPositionRestoration: 'enabled',
-            anchorScrolling          : 'enabled',
-            enableTracing            : false
+            initialNavigation         : true,
+            scrollPositionRestoration : 'enabled',
+            anchorScrolling           : 'enabled',
+            enableTracing             : false
         })
     ],
-    entryComponents: [],
-    providers      : [
+    entryComponents : [],
+    providers       : [
         NgbToast,
         NgbModal,
         Location,
@@ -89,9 +90,9 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         { provide: LocationStrategy, useClass: PathLocationStrategy },
         { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
         {
-            provide   : FirebaseOptionsToken,
-            deps      : [NxConfigService],
-            useFactory: initializeApp
+            provide    : FirebaseOptionsToken,
+            deps       : [NxConfigService],
+            useFactory : initializeApp
         },
         AuthGuard,
         SystemGuard

@@ -240,7 +240,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         return this.dialogs
             .resetServer(this.system, id, name)
             // will take some time to reset and then restart the server
-            .then(() => this.setStatus('reseting'));
+            .then(() => this.setStatus('resetting'));
     }
 
     storePreviousValue(e) {

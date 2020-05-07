@@ -1,15 +1,41 @@
-@import '../../styles/mixins';
+@import '../styles/mixins';
 
 :host {
     min-height: 0;
 }
 
 .nx-menu {
+    position : relative;
     border-radius : 0 0 2px 2px;
     display: flex;
     flex-direction: column;
     max-height: 100%;
     overflow-y: auto;
+
+    &.searchable {
+        .level-1-container {
+            margin-bottom: .5rem;
+
+            .menu-level-1.selected:hover {
+                background-color: $light5;
+            }
+        }
+    }
+
+    &-overlay {
+        position         : absolute;
+        height           : 100%;
+        width            : 100%;
+        z-index          : 999;
+        background-color : rgba(#F0F3F4, 0.3);
+    }
+
+    &-placeholder {
+        font-size  : 16px;
+        text-align : center;
+        margin-top : 16px;
+        color      : $light16;
+    }
 
     .level-1-container {
         display: flex;
@@ -74,17 +100,22 @@
                 border-top: 1px solid $light6;
             }
         }
+
+        &.toggle-level-3 {
+            height     : 0;
+            min-height : auto !important;
+        }
     }
 
     nx-level-3-item {
         display: block;
     }
-    
+
     .container-buttons {
         background-color : $light5;
         padding          : 0 .75rem .5rem;
     }
-    
+
     .last-level-2 {
         padding-bottom   : .5rem;
         background-color : $light4;

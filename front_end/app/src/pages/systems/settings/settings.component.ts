@@ -68,8 +68,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
+    private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.systemNoAccess = false;
@@ -82,29 +81,32 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuVisible = true;
     }
 
-    constructor(configService: NxConfigService,
-                private route: ActivatedRoute,
-                private accountService: NxAccountService,
-                private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private systemService: NxSystemService,
-                private systemsService: NxSystemsService,
-                private settingsService: NxSettingsService,
-                private processService: NxProcessService,
-                private uriService: NxUriService,
-                private menuService: NxMenuService,
-                private ribbonService: NxRibbonService,
-                private router: Router,
-                private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        private route: ActivatedRoute,
+        private accountService: NxAccountService,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
+        private settingsService: NxSettingsService,
+        private processService: NxProcessService,
+        private uriService: NxUriService,
+        private menuService: NxMenuService,
+        private ribbonService: NxRibbonService,
+        private router: Router,
+        private toastService: NxToastService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.setupDefaults(configService);
+        this.LANG = languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
     }
@@ -215,7 +217,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.system.stopPoll();
+        if (this.system) {
+            this.system.stopPoll();
+        }
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }

@@ -20,3 +20,4 @@ export * from './uri.service';
 export * from './url-protocol.service';
 export * from './utils.service';
 export * from './window-provider';
+export * from './search.service';

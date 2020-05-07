@@ -4,9 +4,9 @@ import { NxMenuService }                from '../../../../components/menu';
 import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 
 @Component({
-    selector: 'overview-component',
-    templateUrl: 'overview.component.html',
-    styleUrls: ['overview.component.scss']
+    selector    : 'overview-component',
+    templateUrl : 'overview.component.html',
+    styleUrls   : ['overview.component.scss']
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {

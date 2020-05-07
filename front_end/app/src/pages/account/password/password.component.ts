@@ -17,9 +17,9 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 import { first }                     from 'rxjs/operators';
 
 @Component({
-    selector : 'nx-account-password-component',
+    selector    : 'nx-account-password-component',
     templateUrl : 'password.component.html',
-    styleUrls : ['password.component.scss']
+    styleUrls   : ['password.component.scss']
 })
 
 export class NxAccountPasswordComponent implements OnInit, AfterViewInit {

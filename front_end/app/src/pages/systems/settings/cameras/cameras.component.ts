@@ -1,5 +1,6 @@
 import {
-    Component, OnDestroy, OnInit, Inject, ViewContainerRef
+    Component, OnDestroy, OnInit,
+    Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';

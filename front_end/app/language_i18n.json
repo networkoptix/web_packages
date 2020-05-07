@@ -151,6 +151,7 @@
     "Next": "Next",
     "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Nothing Found",
+    "Nothing found": "Nothing found",
     "Now even more options for your data storage. Start using our convenient and secure cloud storage service.": "Now even more options for your data storage. Start using our convenient and secure cloud storage service.",
     "OFFLINE": "OFFLINE",
     "OK": "OK",
@@ -258,5 +259,6 @@
     "current": "current",
     "devices": "devices",
     "manufacturers": "manufacturers",
+    "result(s)": "result(s)",
     "you": "you"
 }

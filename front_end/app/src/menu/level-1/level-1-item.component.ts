@@ -1,31 +1,39 @@
 import {
-    Component, Input, OnChanges,
-    OnInit, SimpleChanges
+    Component, EventEmitter, Input, OnChanges,
+    OnInit, Output, SimpleChanges
 }                                   from '@angular/core';
 import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
+import { Router }                   from '@angular/router';
 
 /* Usage
  */
 
 @Component({
-    selector   : 'nx-level-1-item',
-    templateUrl: 'level-1-item.component.html',
-    styleUrls  : ['level-1-item.component.scss']
+    selector    : 'nx-level-1-item',
+    templateUrl : 'level-1-item.component.html',
+    styleUrls   : ['level-1-item.component.scss']
 })
 export class NxLevel1ItemComponent implements OnInit, OnChanges {
+    @Input() searchMode: boolean;
     @Input() base: any = {};
     @Input() item: any = {};
     @Input() selected: boolean;
 
+    @Output() toggle: EventEmitter<any> = new EventEmitter();
+
     itemPath: string;
+    _toggle: boolean;
 
     CONFIG: IConfig;
 
     constructor(configService: NxConfigService,
+                private router: Router,
                 private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
+
+        this._toggle = false;
     }
 
     ngOnInit() {
@@ -41,6 +49,18 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     menuClick(sectionId) {
-        this.menuService.setSection(sectionId);
+        if (!this.searchMode) {
+            this.menuService.setSection(sectionId);
+            this.router
+                .navigate([this.itemPath], { queryParams: { search: this.item.query } })
+                .catch((ex) => console.error(ex));
+        } else {
+            this.toggleNode();
+        }
+    }
+
+    toggleNode() {
+        this._toggle = !this._toggle;
+        this.toggle.emit(this._toggle);
     }
 }
