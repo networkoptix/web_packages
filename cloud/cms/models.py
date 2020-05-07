@@ -69,18 +69,19 @@ def get_asset_by_revision(version_id):
 
 def update_global_cache(customization, version_id):
     global_cache = caches['global']
-    global_cache.set(customization, version_id)
+    global_cache.set(f'global_version_{customization}', version_id)
 
 
 def check_update_cache(customization, version_id):
     global_cache = caches['global']
-    global_id = global_cache.get(customization)
+    global_id = global_cache.get(f'global_version_{customization}')
 
     return version_id != global_id, global_id
 
 
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
-    data = cache.get(customization_name)
+    customization_cache = caches['customization']
+    data = customization_cache.get(f'customization_{customization_name}', dict())
     asset = get_cloud_portal_asset(customization_name)
 
     if data and 'version_id' in data and not force:
@@ -153,7 +154,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'integration_store_enabled': integration_store_enabled
             }
         }
-        cache.set(customization_name, data)
+        customization_cache.set(f'customization_{customization_name}', data)
         update_global_cache(customization, data['version_id'])
 
     if value:
