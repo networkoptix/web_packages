@@ -432,7 +432,7 @@ class ServerManager {
             let dayOfWeek;
             let secondsToday;
             if (server) {
-                const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
+                const { timeZoneOffset, vmsTime } = server;
                 const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
                 const vmsDate = new Date(serverTime);
                 dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
