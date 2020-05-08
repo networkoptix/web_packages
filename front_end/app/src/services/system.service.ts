@@ -737,7 +737,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getLicenses().then((licenses: any[]) => {
             const parsedLicenses = licenses.map(this.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
-                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
+                const activeLicense = !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
