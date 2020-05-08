@@ -125,7 +125,7 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FRO
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='undefined']
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='user-active-status']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
 ${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
