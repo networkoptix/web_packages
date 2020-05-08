@@ -218,7 +218,7 @@ Language is changeable on the account page
         ...    Wait Until Element is Visible    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Click Element    //nx-language-select//button/following-sibling::ul//span[@lang='${lang}']/..
-        Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    ${ACCOUNT SAVE}
+        Run Keyword Unless    "${lang}"=="${LANGUAGE}"    Click Button    //nx-apply//nx-process-button//button
         Sleep    1    #to allow the system to change languages
         Run Keyword Unless    "${lang}"=="${LANGUAGE}"
         ...    Wait Until Element is Visible    //header/span[text()='${account}']
@@ -229,7 +229,7 @@ Language is changeable on the account page
     ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
     Click Element
     ...    //nx-language-select//button/following-sibling::ul//span[@lang='${LANGUAGE}']/..
-    Click Button    ${ACCOUNT SAVE}
+    Click Button    //nx-apply//nx-process-button//button
     Sleep    1
     Verify in Account Page
     Wait Until Element is Visible    //header/span[text()='${ACCOUNT INFORMATION}']

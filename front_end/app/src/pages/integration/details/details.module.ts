@@ -8,10 +8,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NxIntegrationDetailsComponent } from './details.component';
 
-import { TranslateModule }      from '@ngx-translate/core';
-import { ComponentsModule }     from '../../../components/components.module';
-import { NxOverviewComponent }  from './overview/overview.component';
-import { NxSetupComponent }     from './setup/setup.component';
+import { TranslateModule }     from '@ngx-translate/core';
+import { ComponentsModule }    from '../../../components/components.module';
+import { NxOverviewComponent } from './overview/overview.component';
+import { NxSetupComponent }    from './setup/setup.component';
+import { MenuModule }          from '../../../menu/menu.module';
 
 const appRoutes: Routes = [
     {
@@ -24,7 +25,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports        : [
+    imports: [
         CommonModule,
         BrowserModule,
         UpgradeModule,
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
         TranslateModule,
         ComponentsModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers      : [],
     declarations   : [

@@ -12,14 +12,18 @@ import { NxUrlProtocolService }      from './url-protocol.service';
 import { NxApplyService }            from './apply.service';
 import { NxHeaderService }           from './nx-header.service';
 import { NxScrollMechanicsService }  from './scroll-mechanics.service';
+import { CloudAccount }              from './account.service/cloud';
+import { LocalAccount }              from './account.service/local';
+import { nxConfig }                  from './nx-config/config';
+import { NxSearchService }           from './search.service';
 
 @NgModule({
     imports: [
         CommonModule
     ],
-    declarations   : [],
-    entryComponents: [],
-    providers      : [
+    declarations : [],
+    entryComponents : [],
+    providers : [
         NxAppStateService,
         NxApplyService,
         NxLanguageProviderService,
@@ -27,10 +31,15 @@ import { NxScrollMechanicsService }  from './scroll-mechanics.service';
         NxUtilsService,
         NxPageService,
         NxSystemsService,
-        NxAccountService,
+        {
+            provide  : NxAccountService,
+            // TODO: Checking nxConfig.isLocal will probably be replaced with checking for a build flag
+            useClass : nxConfig.isLocal ? LocalAccount : CloudAccount
+        },
+        NxSearchService,
         NxUrlProtocolService,
         NxHeaderService,
-        NxScrollMechanicsService,
+        NxScrollMechanicsService
     ],
     exports: []
 })

@@ -70,6 +70,7 @@
         "agreementAccepted": "De overeenkomst is geaccepteerd",
         "changePassword": "Wijzig wachtwoord",
         "newPasswordLabel": "Nieuw wachtwoord",
+        "passwordChangedSuccess": "Password successfully saved",
         "saveChanges": "Opslaan"
     },
     "activeActions": {
@@ -206,10 +207,15 @@
             "moveCloudStorage": {
                 "title": "Cloud-opslag verplaatsen",
                 "success": "Opslag met succes verplaatst",
-                "errorPrefix": "Fout bij verplaatsen cloudopslag",
+                "errorPrefix": "Error moving cloud storage",
+                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
                 "status": {
                     "offline": "Cloud opslag kan niet worden verplaatst naar offline systemen."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Cloud Storage Enabled",
+                "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
                 "message": "Je kunt alleen cloud opslag verplaatsen tussen systemen waar je eigenaar van bent. <br/><br/>Verbind een systeem met %CLOUD_NAME% door gebruik te maken van uw cloud-account om er gebruik van te kunnen maken."
@@ -419,7 +425,8 @@
         "wrongAuthCode": "Code is verlopen of onjuist",
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
-        "wrongParameters": "Sommige parameters op het formulier zijn onjuist"
+        "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -526,6 +533,10 @@
         "weakMessage": "Gebruik cijfers, hoofdletters, kleine letters en speciale tekens om uw wachtwoord sterker te maken"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
+        },
         "merge": {
             "title": "Dit systeem wordt samengevoegd met {{systemName}}.",
             "message": {

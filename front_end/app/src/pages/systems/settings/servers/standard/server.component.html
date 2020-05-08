@@ -1,5 +1,5 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="sectional-div server-placeholder" type="SERVER_OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
+    <nx-page-placeholder class="sectional-div server-placeholder" type="OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
     <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !selectedServer">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
@@ -15,7 +15,7 @@
                                 tag: true,
                                 offline: serverOffline,
                                 online: selectedServer.internalStatus === CONFIG.servers.status.restarting
-                                    || selectedServer.internalStatus === CONFIG.servers.status.reseting,
+                                    || selectedServer.internalStatus === CONFIG.servers.status.resetting,
                                 checking: checking
                             }">
                             {{ selectedServer.shownStatus }}

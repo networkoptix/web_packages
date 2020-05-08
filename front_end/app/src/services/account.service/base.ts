@@ -1,75 +1,64 @@
-import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
+import { Inject, OnDestroy, Injector }                    from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
-import { NxConfigService, IConfig }                       from './nx-config';
-import { NxCloudApiService }                              from './nx-cloud-api';
-import { NxLanguageProviderService }                      from './nx-language-provider';
-import { NxDialogsService }                               from '../dialogs';
-import { NxSessionService }                               from './session.service';
-import { NxApplyService }                                 from './apply.service';
+import { NxConfigService, IConfig }                       from '../nx-config';
+import { NxCloudApiService }                              from '../nx-cloud-api';
+import { NxLanguageProviderService }                      from '../nx-language-provider';
+import { NxDialogsService }                               from '../../dialogs';
+import { NxSessionService }                               from '../session.service';
+import { NxApplyService }                                 from '../apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subscription }  from 'rxjs';
-import { WINDOW }                                         from './window-provider';
-import { NxAppStateService }                              from './nx-app-state.service';
-import { NxUriService }                                   from './uri.service';
-import { LanguageI18NStaticTypes }                        from '../../language_i18n_static_types';
-import { NxPollService }                                  from './poll.service';
-import { NxUtilsService }                                 from './utils.service';
-import { NxSystemAPI, NxSystemAPIService }                from './system-api.service';
-import { IParams }                                        from '../components/search/search.component';
+import { WINDOW }                                         from '../window-provider';
+import { NxAppStateService }                              from '../nx-app-state.service';
+import { NxUriService }                                   from '../uri.service';
+import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
+import { NxPollService }                                  from '../poll.service';
+import { NxUtilsService }                                 from '../utils.service';
+import { IParams }                                        from '../../components/search/search.component';
+import { Account }                                        from './account';
+import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
 
-export class Account {
-    email: string;
-    // eslint-disable-next-line camelcase
-    first_name: string;
-    // eslint-disable-next-line camelcase
-    last_name: string;
-    language: string;
-    // eslint-disable-next-line camelcase
-    is_staff: boolean;
-    // eslint-disable-next-line camelcase
-    is_superuser: boolean;
-    permissions: string[];
-}
+/**
+ * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.
+ * CloudAccount and LocalAccount overrides should maintiain same interface
+ * as BaseAccount.
+ */
+export abstract class BaseAccount implements OnDestroy {
+    protected CONFIG: IConfig;
+    protected LANG: LanguageI18NStaticTypes;
+    protected location: Location;
+    accountSubject = new BehaviorSubject<Account>(undefined);
+    protected loggingOut: boolean;
+    protected requestingLogin: any;
+    protected loginDialogActive: boolean;
 
-@Injectable({
-    providedIn: 'root'
-})
-export class NxAccountService implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
-    private location: Location;
-    accountSubject = new BehaviorSubject<Account | undefined>(undefined);
-    private loggingOut: boolean;
-    private requestingLogin: any;
-    private loginDialogActive: boolean;
-    mediaServerApi: NxSystemAPI;
-
-    private accountPoll: Observable<Account | string>;
-    private accountPollSubscription: Subscription;
-    private loginSubscription: Subscription;
-    private queryParamSubscription: Subscription;
+    protected accountPoll: Observable<Account | string>;
+    protected accountPollSubscription: Subscription;
+    protected loginSubscription: Subscription;
+    protected queryParamSubscription: Subscription;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    private dialogs: NxDialogsService;
-    private applyService: NxApplyService;
+    protected dialogs: NxDialogsService;
+    protected applyService: NxApplyService;
+    public mediaServerApi: NxSystemAPI;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
-        @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window,
-        private cloudApi: NxCloudApiService,
-        private sessionService: NxSessionService,
-        private uriService: NxUriService,
-        private localStorageService: LocalStorageService,
-        private router: Router,
-        private appStateService: NxAppStateService,
-        private pollService: NxPollService,
-        private nxSystemAPIService: NxSystemAPIService,
-        injector: Injector
+        @Inject(DOCUMENT) protected document: Document,
+        @Inject(WINDOW) protected window: Window,
+        protected cloudApi: NxCloudApiService,
+        protected sessionService: NxSessionService,
+        protected uriService: NxUriService,
+        protected localStorageService: LocalStorageService,
+        protected router: Router,
+        protected appStateService: NxAppStateService,
+        protected pollService: NxPollService,
+        injector: Injector,
+        protected nxSystemAPIService: NxSystemAPIService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
@@ -121,11 +110,11 @@ export class NxAccountService implements OnDestroy {
         this.queryParamSubscription.unsubscribe();
     }
 
-    private get account() {
+    protected get account() {
         return this.accountSubject.getValue();
     }
 
-    private set account(account: Account) {
+    protected set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
@@ -135,36 +124,26 @@ export class NxAccountService implements OnDestroy {
         return this.sessionService.email;
     }
 
-    set email(email: string) {
+    set email(email) {
         this.sessionService.email = email;
     }
 
-    // Need to refine this, maybe will be resolved by defining cloudApi.authKey
-    authKey(): any {
-        return this.cloudApi
-            .authKey()
-            .then((result: any) => {
-                return result.auth_key;
-            });
+    async authKey() {
+        const { auth_key: auth } = await this.cloudApi.authKey();
+        return auth;
     }
 
-    checkVisitedKey(key: string) {
-        return this.cloudApi
-            .visitedKey(key)
-            .then((result: any) => {
-                return !!result.visited;
-            });
+    async checkVisitedKey(key: string) {
+        const { visited } = await this.cloudApi.visitedKey(key);
+        return !!visited;
     }
 
-    checkCode(code: string) {
-        return this.cloudApi
-            .checkCode(code)
-            .then((result: any) => {
-                return !!result.emailExists;
-            });
+    async checkCode(code: string) {
+        const { emailExists } = await this.cloudApi.checkCode(code) as any;
+        return !!emailExists;
     }
 
-    private clearLoginState() {
+    protected clearLoginState() {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
@@ -176,7 +155,7 @@ export class NxAccountService implements OnDestroy {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
-                .then((): any => {
+                .then(() => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
@@ -205,7 +184,7 @@ export class NxAccountService implements OnDestroy {
                 if (!account && !this.loginDialogActive) {
                     this.loginDialogActive = true;
                     return this.dialogs
-                        .login(this, true, true).then((result) => {
+                        .login(<any> this, true, true).then((result) => {
                             this.localStorageService.set('loginRegister', true);
                             if (result === 'register') {
                                 return this.router.navigate(['/register']).then(() => result);
@@ -316,7 +295,7 @@ export class NxAccountService implements OnDestroy {
         return atob(authKey).split(':');
     }
 
-    private loginWithAuthKey(authKey: string): Promise<boolean> {
+    protected loginWithAuthKey(authKey: string): Promise<boolean> {
         const auth         = atob(authKey).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];
@@ -328,7 +307,7 @@ export class NxAccountService implements OnDestroy {
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
-                    .login(this, true, true)
+                    .login(<any> this, true, true)
                     .catch(() => {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
@@ -389,7 +368,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    private handleAuthKeyLogin(auth: string) {
+    protected handleAuthKeyLogin(auth: string) {
         this.get()
             .then((account: Account) => {
                 if (!account) {
@@ -435,7 +414,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    private logoutHelper(doNotRedirect: boolean) {
+    protected logoutHelper(doNotRedirect: boolean) {
         this.cloudApi
             .logout()
             .finally(() => {
@@ -454,7 +433,7 @@ export class NxAccountService implements OnDestroy {
             });
     }
 
-    private startAccountPoll() {
+    protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
             catchError(() => {
@@ -466,10 +445,14 @@ export class NxAccountService implements OnDestroy {
         });
     }
 
-    private stopAccountPoll() {
+    protected stopAccountPoll() {
         if (this.accountPollSubscription) {
             this.account = undefined;
             this.accountPollSubscription.unsubscribe();
         }
+    }
+
+    serviceInstance() {
+        return 'is base';
     }
 }

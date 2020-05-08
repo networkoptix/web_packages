@@ -11,16 +11,16 @@ import {
 }                                       from '../../../services';
 import { NxRibbonService }              from '../../../components/ribbon';
 import { IntegrationService }           from '../integration.service';
-import { NxMenuService }                from '../../../components/menu';
+import { NxMenuService }                from '../../../menu';
 import { NxDialogsService }             from '../../../dialogs';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'integration-detail-component',
-    templateUrl: 'details.component.html',
-    styleUrls  : ['details.component.scss']
+    selector    : 'integration-detail-component',
+    templateUrl : 'details.component.html',
+    styleUrls   : ['details.component.scss']
 })
 
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {

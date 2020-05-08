@@ -289,9 +289,11 @@ export const nxConfig: IConfig = {
     },
     showHeaderAndFooter : true,
     search              : {
-        debounceTime : 500, // ms
-        maxLength    : 200,
-        minSystems   : 9 // We need at least 9 system to enable search
+        debounceTime        : 500, // ms
+        maxLength           : 200,
+        minSystems          : 9, // We need at least 9 system to enable search
+        transitionInMs      : 500,
+        transitionShortInMs : 100
     },
     servers: {
         checkStatusTimeout : 3400,
@@ -304,7 +306,7 @@ export const nxConfig: IConfig = {
             online     : 'online',
             offline    : 'offline',
             restarting : 'restarting',
-            reseting   : 'reseting',
+            resetting   : 'resetting',
             checking   : 'checking'
         }
     },
@@ -369,6 +371,7 @@ export const nxConfig: IConfig = {
         default                   : 'Viewer',
         custom                    : 'custom',
         editUserPermissionFlag    : 'GlobalAdminPermission',
+        editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
         globalAdminPermissionFlag : 'GlobalAdminPermission',
         customPermission          : {
             name        : 'Custom',

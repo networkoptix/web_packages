@@ -49,6 +49,7 @@
     "Clear Selection": "Clear Selection",
     "Close": "Close",
     "Cloud Storage": "Cloud Storage",
+    "Cloud storage cannot be moved to offline systems.": "Cloud storage cannot be moved to offline systems.",
     "Cloud storage will be removed from this system": "Cloud storage will be removed from this system",
     "Cloud users will not be transferred to the new system.": "Cloud users will not be transferred to the new system.",
     "Collapse": "Collapse",
@@ -151,6 +152,7 @@
     "Next": "Next",
     "No unsaved changes": "No unsaved changes",
     "Nothing Found": "Nothing Found",
+    "Nothing found": "Nothing found",
     "Now even more options for your data storage. Start using our convenient and secure cloud storage service.": "Now even more options for your data storage. Start using our convenient and secure cloud storage service.",
     "OFFLINE": "OFFLINE",
     "OK": "OK",
@@ -205,7 +207,7 @@
     "Settings": "Settings",
     "Settings displayed below are advanced.": "Settings displayed below are advanced.",
     "Show All": "Show All",
-    "Some of the servers in this System have outdated software versions and can not be merged.": "Some of the servers in this System have outdated software versions and can not be merged.",
+    "Some of the servers in this system have an outdated software version and can't be merged.": "Some of the servers in this system have an outdated software version and can't be merged.",
     "Storage Locations": "Storage Locations",
     "Subject": "Subject",
     "Support": "Support",
@@ -258,5 +260,6 @@
     "current": "current",
     "devices": "devices",
     "manufacturers": "manufacturers",
+    "result(s)": "result(s)",
     "you": "you"
 }

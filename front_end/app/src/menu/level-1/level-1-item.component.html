@@ -1,10 +1,9 @@
 
-<a class="menu-level-1 ellipsis"
-   [ngClass]="{'selected': selected }"
+<a class="inset menu-level-1 ellipsis"
+   [ngClass]="{'selected': selected, 'collapsed': _toggle}"
    [id]="item.id"
-   (click)="menuClick(item.id)"
-   [routerLink]="[itemPath]"
-   [queryParams]="item.query">
+   (click)="menuClick(item.id)">
+
     <div class="menu-level-1-icon" *ngIf="item.icon">
         <span class="m-0 glyphicon" [ngClass]="item.icon"></span>
     </div>
@@ -21,3 +20,10 @@
         </div>
     </div>
 </a>
+<div class="search-results" *ngIf="searchMode">
+    <div class="search-results-label" *ngIf="_toggle">{{item.level3.length}} <span translate>result(s)</span></div>
+    <div class="nav-arrow" [ngClass]="{ 'up': !_toggle }" (click)="toggleNode()">
+        <span></span>
+        <span></span>
+    </div>
+</div>

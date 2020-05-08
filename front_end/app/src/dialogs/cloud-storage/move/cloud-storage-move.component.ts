@@ -38,7 +38,7 @@ export class CloudStorageMoveModalContent implements OnInit {
     systemId = '';
     userEmail = '';
     target$ = new BehaviorSubject('');
-    targetOnline$ = new BehaviorSubject(false);
+    targetOnline$ = new BehaviorSubject(true);
     showNoOtherSystems = false;
 
     @ViewChild('moveForm') moveForm: HTMLFormElement;
@@ -60,6 +60,7 @@ export class CloudStorageMoveModalContent implements OnInit {
 
     ngOnInit() {
         this.system$.subscribe(system => {
+            if (!system || !system.id) return;
             this.systemId = system.id;
             this.userEmail = system.currentUserEmail;
             this.systemsService.getMySystems(this.userEmail, this.systemId);
@@ -83,7 +84,20 @@ export class CloudStorageMoveModalContent implements OnInit {
 
         // Move Process
         this.move = this.processService.createProcess(() => this.cloudApiService.moveCloudStorage(this.systemId, this.currentTarget), {
-            // TODO: These messages and errorCodes will be implemented on a future ticket
+            errorCodes: {
+                500: () => {
+                    return this.LANG.common.systemServerError;
+                },
+                notFound: () => {
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                },
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                }
+            },
             successMessage : this.LANG.dialogs.cloudStorage.moveCloudStorage.success,
             errorPrefix    : this.LANG.dialogs.cloudStorage.moveCloudStorage.errorPrefix
         }).then(() => {
@@ -114,7 +128,7 @@ export class CloudStorageMoveModalContent implements OnInit {
             this.errorText = "this isn't implemented, not sure if it should be";
         }
 
-        this.systemsService.getSystem(value).toPromise().then(({ info: { state } }) => {
+        this.systemsService.getSystem(value).toPromise().then(({ state }) => {
             if (state === 'offline') {
                 this.errorText = this.LANG.dialogs.cloudStorage.moveCloudStorage.status.offline;
             } else {

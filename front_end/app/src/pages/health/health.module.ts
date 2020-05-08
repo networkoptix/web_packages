@@ -1,15 +1,14 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }          from '@angular/forms';
-
-import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }      from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NgxFileDropModule }    from 'ngx-file-drop';
-
+import { NgModule }               from '@angular/core';
+import { CommonModule }           from '@angular/common';
+import { BrowserModule }          from '@angular/platform-browser';
+import { UpgradeModule }          from '@angular/upgrade/static';
+import { RouterModule, Routes }   from '@angular/router';
+import { FormsModule }            from '@angular/forms';
+import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }        from '@ngx-translate/core';
+import { AngularSvgIconModule }   from 'angular-svg-icon';
+import { NgxFileDropModule }      from 'ngx-file-drop';
+import { MenuModule }             from '../../menu';
 import { ComponentsModule }       from '../../components/components.module';
 import { AuthGuard, SystemGuard } from '../../routeGuards';
 import { PipesModule }            from '../../pipes/pipes.module';
@@ -73,7 +72,8 @@ const appRoutes: Routes = !CONFIG.isLocal ? [
         NgxFileDropModule,
         PipesModule,
 
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers      : [],
     declarations   : [

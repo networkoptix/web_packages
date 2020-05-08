@@ -39,9 +39,10 @@ Check for file by OS
 
 Check other packages
     ${packages}    Get WebElements    ${other packages}
-    :FOR  ${element}  IN  @{packages}
-    \  ${url}    Get Element Attribute    ${element}    href
-    \  Check File Exists    ${url}
+    FOR  ${element}  IN  @{packages}
+        ${url}    Get Element Attribute    ${element}    href
+        Check File Exists    ${url}
+    END
 
 *** Test Cases ***
 Download link is in the footer
@@ -86,10 +87,10 @@ Make sure each tab changes the text to show the corresponding OS and url
     Go to download page
     Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${WINDOWS TAB}
     Click Link    ${WINDOWS TAB}
-    Wait Until Element Is Visible    ${UBUNTU TAB}
-    Click Link    ${UBUNTU TAB}
+    Wait Until Element Is Visible    ${LINUX TAB}
+    Click Link    ${LINUX TAB}
     Wait Until Location Is    ${url}/download/linux
-    Wait Until Elements Are Visible    ${DOWNLOAD UBUNTU VMS LINK}    ${MAC OS TAB}
+    Wait Until Elements Are Visible    ${DOWNLOAD LINUX VMS LINK}    ${MAC OS TAB}
     Click Link    ${MAC OS TAB}
     Wait Until Location Is    ${url}/download/macos
     Wait Until Elements Are Visible    ${DOWNLOAD MAC OS VMS LINK}    ${MAC OS TAB}
@@ -103,7 +104,7 @@ Validate the windows download links
 Validate the ubuntu download links
     [tags]    C41552
     Go to download page
-    Check for file by OS    UBUNTU
+    Check for file by OS    LINUX
     Check other packages
 
 Validate the mac download links

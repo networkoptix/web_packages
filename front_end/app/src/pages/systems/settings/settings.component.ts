@@ -13,16 +13,14 @@ import {
     NxUriService, NxScrollMechanicsService,
     NxSystemAPIService
 }                                    from '../../../services';
-import {
-    NxDialogsService, NxToastService
-}                                    from '../../../dialogs';
+import { NxDialogsService, NxToastService }  from '../../../dialogs';
 import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../components/menu';
+import { NxMenuService }             from '../../../menu';
 import { NxRibbonService }           from '../../../components/ribbon';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { filter }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
 @AutoUnsubscribe()
 @Component({
@@ -70,8 +68,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
 
-    private setupDefaults(configService) {
-        this.CONFIG = configService.getConfig();
+    private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
         this.betaMode = this.CONFIG.clientMode.beta;
         this.systemNoAccess = false;
@@ -87,7 +84,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     constructor(configService: NxConfigService,
                 private route: ActivatedRoute,
                 private accountService: NxAccountService,
-                private language: NxLanguageProviderService,
+                private languageService: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,
                 private systemService: NxSystemService,
@@ -102,12 +99,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private toastService: NxToastService,
                 private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.setupDefaults(configService);
+        this.LANG = languageService.getTranslations();
+        this.CONFIG = configService.getConfig();
+
+        this.setupDefaults();
     }
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.LANG = this.language.getTranslations();
         this.pageService.setPageTitle(this.LANG.pageTitles.system);
         this.init();
     }
@@ -220,7 +219,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.system.stopPoll();
+        if (this.system) {
+            this.system.stopPoll();
+        }
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }
@@ -336,8 +337,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
-
-        if (this.system.permissions.isAdmin) {
+        if (this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -451,11 +451,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
-                const byParam = NxUtilsService.byParam((server) => {
-                    return server.name;
-                }, NxUtilsService.sortASC);
-                this.system.servers.sort(byParam);
-
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
@@ -508,7 +503,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem.id || ''}`;
+        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

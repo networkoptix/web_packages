@@ -78,6 +78,22 @@
             }
         }
 
+        // overwrite input style by layout
+        &.search {
+            .icon-search {
+                margin-top : 7px;
+            }
+
+            .search-input {
+                @extend #regular14;
+                height : 32px;
+            }
+
+            .search-clear {
+                height : 32px;
+            }
+        }
+
         .search-clear {
             position    : absolute;
             right       : 0;

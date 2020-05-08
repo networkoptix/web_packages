@@ -11,7 +11,7 @@ import * as t from './system-api.types';
 import * as md5 from 'md5';
 import { Account } from './account.service';
 
-interface User {
+export interface User {
     canBeEdited: boolean;
     canBeDeleted: boolean;
     email: string;
@@ -210,7 +210,7 @@ export class NxSystemAPI {
         return { authGet, authPost, authPlay };
     }
 
-    private getCurrentUser(forceReload?: boolean) {
+    public getCurrentUser(forceReload?: boolean) {
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;

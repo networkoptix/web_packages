@@ -17,6 +17,7 @@ import { NxNoSystemsComponent }             from './no-systems/no-systems.compon
 import { ApplyGuard, AuthGuard, SystemGuard } from '../../routeGuards';
 import { NxCamerasComponent } from './settings/cameras/cameras.component';
 import { NxCamerasModule } from './settings/cameras/cameras.module';
+import { MenuModule } from '../../menu';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -79,7 +80,8 @@ const appRoutes: Routes = [
         NxSystemUsersModule,
         NxSystemServersModule,
         NxCamerasModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(appRoutes),
+        MenuModule
     ],
     providers: [
         ApplyGuard

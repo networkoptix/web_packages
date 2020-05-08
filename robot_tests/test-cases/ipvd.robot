@@ -1,7 +1,7 @@
 *** Settings ***
 Library           OperatingSystem
 Library           DateTime
-Resource          ../ipvd_resource.robot
+Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        Restart
 Suite Teardown    Close All Browsers
@@ -37,6 +37,7 @@ IPVD landing page actions
     Click Element    ${IPVD MANUFACTURERS PANE}//div[contains(text(), '${vendor}')]
     Element Text Should Be    //nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER MFR} – ${vendor}
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[1]
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[1]    ${vendor}
     Validate Landing Page Objects are not Visible
 
@@ -48,6 +49,7 @@ IPVD landing page actions
     Click Element    ${IPVD DEVICES PANE}//div[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
     Element Text Should Be    //ipvd/div/div[1]/nx-search/div/div/div[1]/div/div[2]/span[1]
     ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
+    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}/td[3]
     Element Text Should Be    ${IPVD TABLE FIRST ITEM}/td[3]    Encoder
     Validate Landing Page Objects are not Visible
 
