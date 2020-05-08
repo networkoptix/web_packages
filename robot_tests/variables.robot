@@ -548,5 +548,6 @@ ${LOCAL USER LOGIN}                  //input[@id='name']
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
+${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button

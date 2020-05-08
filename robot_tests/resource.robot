@@ -737,4 +737,51 @@ Delete All Local Users
         Reload Page
     END
     Wait Until Element is Visible    //span[text()="admin"]
-    Page Should Not Contain Element     ${locator}
+    Page Should Not Contain Element     ${locator}  
+    
+Check Password Badge
+    [arguments]    ${pass}    ${click}
+    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${click}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${click}
+
+Move focus and check badge
+    [Arguments]    ${badge}    ${click}
+    Element Should Be Visible    ${badge}
+    Click Element    ${click}
+    Element Should Be Visible    ${badge}
+    
+Move focus and check element
+    [Arguments]    ${element}    ${click}
+    Click Element    ${click}
+    Wait Until Element is Visible    ${element}
+    
+Check Password Outline
+    [Arguments]    ${pass}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
+    ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
+    ...    ELSE IF    '''${pass}'''=='''${7char password}'''
+    ...    Element Should Be Visible    ${PASSWORD TOO SHORT}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}
+    ...    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
+    ...    ELSE IF    '''${pass}'''=='''${common password}'''
+    ...    Element Should Be Visible    ${PASSWORD TOO COMMON}
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}
+    ...    Element Should Be Visible    ${PASSWORD IS WEAK}
+
+Check New Password Outline
+    [Arguments]    ${new pw}    ${click}    ${input}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
+    ...    //nx-password-input[@name='newPassword' and contains(@class, 'ng-invalid')]//input[@id="newPassword"]
+    # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${click}
+    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Move focus and check element    ${PASSWORD TOO SHORT}    ${click}
+    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${click}
+    ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${click}
+    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${click}
+# ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
