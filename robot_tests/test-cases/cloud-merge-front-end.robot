@@ -12,17 +12,16 @@ ${email 1 owner}           qaburbank+mergeowner1@gmail.com
 ${email 2 owner}           qaburbank+mergeowner2@gmail.com
 ${password}                ${BASE PASSWORD}
 @{auth}                    admin    ${BASE PASSWORD}
-${server 1 ip}             http://10.1.5.125     # VMS 4.1
-${server 2 ip}             http://10.1.5.151     # VMS 4.1
-${server 3 ip}             http://10.1.5.145     # VMS 4.0
-${server 4 ip}             http://10.1.5.192     # VMS 4.0
-${server 5 ip}             http://10.1.5.163     # VMS 3.2
+${server 1 ip}             http://10.1.5.125:7001     # VMS 4.1
+${server 2 ip}             http://10.1.5.151:7001     # VMS 4.1
+${server 3 ip}             http://10.1.5.145:7001     # VMS 4.0
+${server 4 ip}             http://10.1.5.192:7001     # VMS 4.0
+${server 5 ip}             http://10.1.5.163:7001     # VMS 3.2
 ${server 1 name}           vpc1-ub18
 ${server 2 name}           vpc2-ub18
 ${server 3 name}           vpc3-ub18
 ${server 4 name}           vpc4-ub18
 ${server 5 name}           vpc5-ub18
-${server port}             7001
 
 ${docker 3.2 server ip}    http://10.1.5.158
 ${docker server name}      docker_3_2
@@ -138,37 +137,37 @@ Reset Systems State
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     Disconnect all systems from the account    ${email 2 owner}    ${password}
     FOR    ${i}    IN RANGE    1  5
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
     Close Browser
     Open Browser and go to url    ${ENV}
 
 *** Test Cases ***
 Merge button should be available if there is only one system connected to cloud
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
     # Sometimes system settings and merge button are not loaded without restarting the servers
     # and reloading the system's page after. See CLOUD-4758
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
     Sleep    60
     Reload Page
     Validate System Page
 
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
-    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server 1 ip}:${server port}    ${auth}
-    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server 1 ip}:${server port}    ${password}     ${server 1 name}
+    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server 1 ip}    ${auth}
+    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server 1 ip}    ${password}     ${server 1 name}
 
 
 # Positive cases
 Owner can merge two 4.1 systems
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
-    Connect system to cloud    ${auth}    ${server 2 ip}    ${server port}    ${server 2 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 2 ip}        ${server 2 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
     Wait Until Elements Are Visible    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]    ${SYSTEMS TILE}//h2[contains(text(),"${server 2 name}")]
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
-    Restart Server    ${server 2 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
+    Restart Server    ${server 2 ip}    ${auth}
     Sleep    120
 
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]
@@ -189,19 +188,19 @@ Owner can merge two 4.1 systems
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN RANGE    1  3
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 Owner can merge two 4.0 systems
-    Connect system to cloud    ${auth}    ${server 3 ip}    ${server port}    ${server 3 name}    ${email 1 owner}    ${password}
-    Connect system to cloud    ${auth}    ${server 4 ip}    ${server port}    ${server 4 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 3 ip}        ${server 3 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 4 ip}        ${server 4 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 3 name}")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 4 name}")]
-    Restart Server    ${server 3 ip}:${server port}    ${auth}
-    Restart Server    ${server 4 ip}:${server port}    ${auth}
+    Restart Server    ${server 3 ip}    ${auth}
+    Restart Server    ${server 4 ip}    ${auth}
     Sleep    120
 
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"${server 3 name}")]
@@ -221,14 +220,14 @@ Owner can merge two 4.0 systems
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN RANGE    3  5
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 Owner can merge 4.1 with local 4.1 system
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
     Sleep    60
     Reload Page
 
@@ -236,7 +235,7 @@ Owner can merge 4.1 with local 4.1 system
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
 
-    Choose System From Dropdown    ${server 2 name}    ${server 2 ip}    ${server port}    check url=${True}
+    Choose System From Dropdown    ${server 2 name}    ${server 2 ip}        check url=${True}
     Validate Check Merge Dialog
     Click Button    ${MERGE NEXT BUTTON}
     Validate Admin Password Dialog
@@ -266,14 +265,14 @@ Owner can merge 4.1 with local 4.1 system
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN RANGE    1  3
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 Owner can merge 4.0 with local 4.0 system
-    Connect system to cloud    ${auth}    ${server 3 ip}    ${server port}    ${server 3 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 3 ip}        ${server 3 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
-    Restart Server    ${server 3 ip}:${server port}    ${auth}
+    Restart Server    ${server 3 ip}    ${auth}
     Sleep    60
     Reload Page
 
@@ -281,7 +280,7 @@ Owner can merge 4.0 with local 4.0 system
     Click Button    ${MERGE BUTTON SYSTEM}
     Validate Check Merge Dialog
 
-    Choose System From Dropdown    ${server 4 name}    ${server 4 ip}    ${server port}    check url=${True}
+    Choose System From Dropdown    ${server 4 name}    ${server 4 ip}        check url=${True}
     Validate Check Merge Dialog
     Click Button    ${MERGE NEXT BUTTON}
     Validate Admin Password Dialog
@@ -301,20 +300,20 @@ Owner can merge 4.0 with local 4.0 system
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN RANGE    3  5
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 # Negative cases
 Invalid and empty password
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
-    Connect system to cloud    ${auth}    ${server 2 ip}    ${server port}    ${server 2 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 2 ip}        ${server 2 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 2 name}")]
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
-    Restart Server    ${server 2 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
+    Restart Server    ${server 2 ip}    ${auth}
     Sleep    60
 
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]
@@ -341,15 +340,15 @@ Invalid and empty password
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN RANGE    1  3
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 Invalid and empty URLs
     [Tags]    inc
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
     Sleep    60
 
     Reload Page
@@ -379,18 +378,18 @@ Invalid and empty URLs
     # Teardown
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
-    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
 
 Incompatible Servers
-    Connect system to cloud    ${auth}    ${server 1 ip}    ${server port}    ${server 1 name}    ${email 1 owner}    ${password}
-    Connect system to cloud    ${auth}    ${server 3 ip}    ${server port}    ${server 3 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 1 ip}        ${server 1 name}    ${email 1 owner}    ${password}
+    Connect system to cloud    ${auth}    ${server 3 ip}        ${server 3 name}    ${email 1 owner}    ${password}
     Log In    ${email 1 owner}    ${password}
     Wait Until Elements Are Visible
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]
     ...    ${SYSTEMS TILE}//h2[contains(text(),"${server 3 name}")]
-    Restart Server    ${server 1 ip}:${server port}    ${auth}
-    Restart Server    ${server 2 ip}:${server port}    ${auth}
+    Restart Server    ${server 1 ip}    ${auth}
+    Restart Server    ${server 2 ip}    ${auth}
     Sleep    60
 
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"${server 1 name}")]
@@ -433,8 +432,8 @@ Incompatible Servers
     Log Out
     Disconnect all systems from the account    ${email 1 owner}    ${password}
     FOR    ${i}    IN    1    3
-        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}:${server port}    ${auth}
-        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}:${server port}    ${password}     ${server ${i} name}
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
     END
 
 

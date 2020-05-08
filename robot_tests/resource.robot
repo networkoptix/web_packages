@@ -366,14 +366,14 @@ Get Cloud User Role
     [Arguments]    ${auth}    ${email}    ${system id}
     @{users}=   Get Cloud System Users   ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
+        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    ${user}[accessRole]
     END
 
 Get Cloud User Id By Email
    [Arguments]    ${auth}    ${email}    ${system id}
    @{users}=   Get Cloud System Users    ${auth}    ${system id}
    FOR    ${user}    IN    @{users}
-       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
+       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
    END
 
 Change User Permissions
@@ -716,7 +716,7 @@ Get Key from Value
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${local users}
     FOR    ${user}    IN    @{local users}
-        Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
     END
     [return]    @{local users}
 

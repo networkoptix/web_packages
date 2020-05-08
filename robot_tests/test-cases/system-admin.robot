@@ -513,7 +513,7 @@ Owner can disconnect System from Cloud
     END
 
     Log    Test teardown: get system and system users back to cloud
-    ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   10.1.5.169    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
+    ${cloud system id}=   Connect system to cloud    ${AUTO SYS AUTH}   ${AUTO SYS IP}    ${AUTO TESTS}    ${EMAIL OWNER}    ${password}
     FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
         Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
     END

@@ -49,18 +49,18 @@ Should confirm, if owner deletes system (You are going to disconnect your system
     [Tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
     Click Element    ${DISCONNECT FORM}
-    Click Button    ${DISCONNECT FORM CANCEL}
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Page Does Not Contain Element    ${BACKDROP}
 
 Should confirm, if not owner deletes system (You will lose access to this system)
     [Tags]    Threaded
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
     Click Element    ${DISCONNECT FORM}
-    Click Button    ${DISCONNECT FORM CANCEL}
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 Share button should be disabled
@@ -170,14 +170,14 @@ Owner is able to rename offline system via Cloud
 
     # Make sure new name is saved
     ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
-    Should be equal as strings    &{system info}[name]     ${new name}
+    Should be equal as strings    ${system info}[name]     ${new name}
 
     # Return to initial name
     Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${current name}
 
     # Make sure old name is saved
     ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
-    Should be equal as strings    &{system info}[name]     ${current name}
+    Should be equal as strings    ${system info}[name]     ${current name}
 
 Does not show Share button to viewer, advanced viewer, live viewer
     [Tags]    Threaded
