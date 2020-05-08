@@ -27,7 +27,8 @@
 
             ],
             "styles": [
-              "app/styles/main.scss"
+              "app/styles/main.scss",
+              "app/fonts/fonts.css"
             ],
             "scripts": []
           },

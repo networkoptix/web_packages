@@ -13,6 +13,7 @@ export interface BaseConfig {
     commonPasswordsList?: string[];
     capabilities?: Capabilities;
     viewsDir?: string;
+    viewsDirCommon?: string;
     previewPath?: string;
     alertTimeout: number;
     animations: Animations;
@@ -46,6 +47,7 @@ export interface BaseConfig {
     footerItems: any;
     googleTagManagerId: string;
     pushConfig: string;
+    testedOperatingSystems: string;
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;
@@ -763,6 +765,7 @@ const typeMap: any = {
         { json: 'footerItems', js: 'footerItems', typ: '' },
         { json: 'googleTagManagerId', js: 'googleTagManagerId', typ: '' },
         { json: 'pushConfig', js: 'pushConfig', typ: '' },
+        { json: 'testedOperatingSystems', js: 'testedOperatingSystems', typ: '' },
         { json: 'trafficRelayHost', js: 'trafficRelayHost', typ: '' },
         { json: 'vmsName', js: 'vmsName', typ: '' },
         { json: 'accessRoles', js: 'accessRoles', typ: r('AccessRoles') },

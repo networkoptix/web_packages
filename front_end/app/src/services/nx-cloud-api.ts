@@ -18,6 +18,10 @@ export class NxCloudApiService {
         this.CONFIG = configService.getConfig();
     }
 
+    getLanguage() {
+        return this.http.get('/api/utils/language');
+    }
+
     checkResponseHasError<T extends any>(data: T) {
         if (data && data.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;

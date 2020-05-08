@@ -1,5 +1,5 @@
-import { NgModule }                                                       from '@angular/core';
-import { BrowserModule, Title }                                           from '@angular/platform-browser';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { BrowserModule, Title }      from '@angular/platform-browser';
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
 import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
@@ -17,19 +17,23 @@ import { TranslateModule }        from '@ngx-translate/core';
 import { CookieService }          from 'ngx-cookie-service';
 import { WebStorageModule }       from 'ngx-store';
 import { AppComponent }           from './app.component';
-import { ComponentsModule }       from './src/components/components.module';
-import { DialogsModule }          from './src/dialogs/dialogs.module';
-import { PagesModule }            from './src/pages/pages.module';
-import { DirectivesModule }       from './src/directives/directives.module';
-import { PipesModule }            from './src/pipes/pipes.module';
-import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
-import { AuthGuard, SystemGuard } from './src/routeGuards';
-import { NxConfigService }        from './src/services/nx-config';
-import { ServiceModule }          from './src/services/services.module';
-import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
-import { MenuModule }             from './src/menu';
+import { ComponentsModule }              from './src/components/components.module';
+import { DialogsModule }                 from './src/dialogs/dialogs.module';
+import { PagesModule }                   from './src/pages/pages.module';
+import { DirectivesModule }              from './src/directives/directives.module';
+import { PipesModule }                   from './src/pipes/pipes.module';
+import { initializeApp }                 from './src/pages/push-notifications/push-notifications.module';
+import { AuthGuard, SystemGuard }        from './src/routeGuards';
+import { NxConfigService }               from './src/services/nx-config';
+import { ServiceModule }                 from './src/services/services.module';
+import { WINDOWS_PROVIDERS }             from './src/services/window-provider';
+import { MenuModule }                    from './src/menu';
+import { NxLanguageAndSettingsProvider } from './src/services/nx-language-settings-provider';
 
 // AoT requires an exported function for factories
+export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSettingsProvider) {
+    return () => provider.load();
+}
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
@@ -95,7 +99,9 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             useFactory : initializeApp
         },
         AuthGuard,
-        SystemGuard
+        SystemGuard,
+        NxLanguageAndSettingsProvider,
+        { provide: APP_INITIALIZER, useFactory: NxLanguageAndSettingsProviderFactory, deps: [NxLanguageAndSettingsProvider], multi: true }
     ],
     declarations   : [
         AppComponent

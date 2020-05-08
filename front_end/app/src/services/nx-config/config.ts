@@ -356,11 +356,12 @@ export const nxConfig: IConfig = {
         },
         name: ''
     },
-    footerItems        : '',
-    googleTagManagerId : '',
-    pushConfig         : '',
-    trafficRelayHost   : '',
-    vmsName            : '',
+    footerItems            : '',
+    googleTagManagerId     : '',
+    pushConfig             : '',
+    testedOperatingSystems : '',
+    trafficRelayHost       : '',
+    vmsName                : '',
     // End of dynamic config
 
     // Legacy webadmin config

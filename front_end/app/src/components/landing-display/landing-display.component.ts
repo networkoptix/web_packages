@@ -31,34 +31,34 @@ export class NxLandingDisplayComponent implements AfterViewInit {
     ngAfterViewInit() {
         const myTemplateUrl = '/' + this.CONFIG.viewsDir + 'static/landing.html';
 
-        const tmpCmp = Component({
-            moduleId   : module.id,
-            templateUrl: myTemplateUrl
-        })(class {
-        });
-
-        const tmpModule = NgModule({
-            declarations: [tmpCmp]
-        })(class {
-        });
-
-        this._compiler.compileModuleAndAllComponentsAsync(tmpModule)
-            .then((factories) => {
-                const factory         = factories.componentFactories[0];
-                const compRef         = factory.create(this._injector, [], null, this._m);
-                compRef.instance.name = 'dynamic';
-
-                if (this.CONFIG.previewPath) {
-                    // Image src is already compiled with full path
-                    // .. so it needs some massaging
-                    const images = compRef.location.nativeElement.querySelectorAll('img');
-                    images.forEach((img) => {
-                        const position = img.src.indexOf('/static');
-                        img.src = [img.src.slice(0, position), '/' + this.CONFIG.previewPath, img.src.slice(position)].join('');
-                    });
-                }
-
-                this.dynamicTemplate.insert(compRef.hostView);
-            });
+        // const tmpCmp = Component({
+        //     moduleId   : module.id,
+        //     templateUrl: myTemplateUrl
+        // })(class {
+        // });
+        //
+        // const tmpModule = NgModule({
+        //     declarations: [tmpCmp]
+        // })(class {
+        // });
+        //
+        // this._compiler.compileModuleAndAllComponentsAsync(tmpModule)
+        //     .then((factories) => {
+        //         const factory         = factories.componentFactories[0];
+        //         const compRef         = factory.create(this._injector, [], null, this._m);
+        //         compRef.instance.name = 'dynamic';
+        //
+        //         if (this.CONFIG.previewPath) {
+        //             // Image src is already compiled with full path
+        //             // .. so it needs some massaging
+        //             const images = compRef.location.nativeElement.querySelectorAll('img');
+        //             images.forEach((img) => {
+        //                 const position = img.src.indexOf('/static');
+        //                 img.src = [img.src.slice(0, position), '/' + this.CONFIG.previewPath, img.src.slice(position)].join('');
+        //             });
+        //         }
+        //
+        //         this.dynamicTemplate.insert(compRef.hostView);
+        //     });
     }
 }
