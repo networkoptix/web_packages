@@ -61,6 +61,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     availableLicenses = 0;
     noCameras = false;
     sensitivityColors = new Array(10);
+    shakeHint = false;
 
     constructor(
         configService: NxConfigService,
@@ -459,7 +460,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingWatcher.value;
     }
 
-    shakeHint = false;
     flashHint(flash = false) {
         if (!flash) return;
         this.shakeHint = true;
