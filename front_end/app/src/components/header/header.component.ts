@@ -69,6 +69,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
+        console.log(this.accountService.serviceInstance());
     }
 
     private isActive(val) {

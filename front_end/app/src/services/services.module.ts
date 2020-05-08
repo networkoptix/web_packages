@@ -32,6 +32,7 @@ import { nxConfig }                  from './nx-config/config';
         NxSystemsService,
         {
             provide  : NxAccountService,
+            // TODO: Checking nxConfig.isLocal will probably be replaced with checking for a build flag
             useClass : nxConfig.isLocal ? LocalAccount : CloudAccount
         },
         NxUrlProtocolService,

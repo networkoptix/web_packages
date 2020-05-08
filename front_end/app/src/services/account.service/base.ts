@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy, Injector }        from '@angular/core';
+import { Inject, OnDestroy, Injector }                    from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
@@ -19,37 +19,42 @@ import { NxUtilsService }                                 from '../utils.service
 import { IParams }                                        from '../../components/search/search.component';
 import { Account }                                        from './account';
 
+/**
+ * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.
+ * CloudAccount and LocalAccount overrides should maintiain same interface
+ * as BaseAccount.
+ */
 export abstract class BaseAccount implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
-    private location: Location;
-    accountSubject = new BehaviorSubject<Account | undefined>(undefined);
-    private loggingOut: boolean;
-    private requestingLogin: Promise<{data: {account: Account, resultCode: string}}>;
-    private loginDialogActive: boolean;
+    protected CONFIG: IConfig;
+    protected LANG: LanguageI18NStaticTypes;
+    protected location: Location;
+    accountSubject = new BehaviorSubject<Account>(undefined);
+    protected loggingOut: boolean;
+    protected requestingLogin: Promise<{data: {account: Account, resultCode: string}}>;
+    protected loginDialogActive: boolean;
 
-    private accountPoll: Observable<Account | string>;
-    private accountPollSubscription: Subscription;
-    private loginSubscription: Subscription;
-    private queryParamSubscription: Subscription;
+    protected accountPoll: Observable<Account | string>;
+    protected accountPollSubscription: Subscription;
+    protected loginSubscription: Subscription;
+    protected queryParamSubscription: Subscription;
 
     // Declare services that cause circular dependencies here instead of injecting in constructor
-    private dialogs: NxDialogsService;
-    private applyService: NxApplyService;
+    protected dialogs: NxDialogsService;
+    protected applyService: NxApplyService;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         locationService: Location,
-        @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window,
-        private cloudApi: NxCloudApiService,
-        private sessionService: NxSessionService,
-        private uriService: NxUriService,
-        private localStorageService: LocalStorageService,
-        private router: Router,
-        private appStateService: NxAppStateService,
-        private pollService: NxPollService,
+        @Inject(DOCUMENT) protected document: Document,
+        @Inject(WINDOW) protected window: Window,
+        protected cloudApi: NxCloudApiService,
+        protected sessionService: NxSessionService,
+        protected uriService: NxUriService,
+        protected localStorageService: LocalStorageService,
+        protected router: Router,
+        protected appStateService: NxAppStateService,
+        protected pollService: NxPollService,
         injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
@@ -95,20 +100,16 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    customCloudMethod() {
-        return 4;
-    }
-
     ngOnDestroy() {
         this.loginSubscription.unsubscribe();
         this.queryParamSubscription.unsubscribe();
     }
 
-    private get account() {
+    protected get account() {
         return this.accountSubject.getValue();
     }
 
-    private set account(account: Account) {
+    protected set account(account: Account) {
         if (!NxUtilsService.isEqual(account, this.account)) {
             this.accountSubject.next(account);
         }
@@ -118,36 +119,26 @@ export abstract class BaseAccount implements OnDestroy {
         return this.sessionService.email;
     }
 
-    set email(email: string) {
+    set email(email) {
         this.sessionService.email = email;
     }
 
-    // Need to refine this, maybe will be resolved by defining cloudApi.authKey
-    authKey(): any {
-        return this.cloudApi
-            .authKey()
-            .then((result: any) => {
-                return result.auth_key;
-            });
+    async authKey() {
+        const { auth_key: auth } = await this.cloudApi.authKey();
+        return auth;
     }
 
-    checkVisitedKey(key: string) {
-        return this.cloudApi
-            .visitedKey(key)
-            .then((result: any) => {
-                return !!result.visited;
-            });
+    async checkVisitedKey(key: string) {
+        const { visited } = await this.cloudApi.visitedKey(key);
+        return !!visited;
     }
 
-    checkCode(code: string) {
-        return this.cloudApi
-            .checkCode(code)
-            .then((result: any) => {
-                return !!result.emailExists;
-            });
+    async checkCode(code: string) {
+        const { emailExists } = await this.cloudApi.checkCode(code) as any;
+        return !!emailExists;
     }
 
-    private clearLoginState() {
+    protected clearLoginState() {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
@@ -156,7 +147,7 @@ export abstract class BaseAccount implements OnDestroy {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
-                .then((): any => {
+                .then(() => {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
@@ -290,7 +281,7 @@ export abstract class BaseAccount implements OnDestroy {
         return atob(authKey).split(':');
     }
 
-    private loginWithAuthKey(authKey: string): Promise<boolean> {
+    protected loginWithAuthKey(authKey: string): Promise<boolean> {
         const auth         = atob(authKey).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];
@@ -363,7 +354,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    private handleAuthKeyLogin(auth: string) {
+    protected handleAuthKeyLogin(auth: string) {
         this.get()
             .then((account: Account) => {
                 if (!account) {
@@ -409,7 +400,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    private logoutHelper(doNotRedirect: boolean) {
+    protected logoutHelper(doNotRedirect: boolean) {
         this.cloudApi
             .logout()
             .finally(() => {
@@ -428,7 +419,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    private startAccountPoll() {
+    protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
             catchError(() => {
@@ -440,10 +431,14 @@ export abstract class BaseAccount implements OnDestroy {
         });
     }
 
-    private stopAccountPoll() {
+    protected stopAccountPoll() {
         if (this.accountPollSubscription) {
             this.account = undefined;
             this.accountPollSubscription.unsubscribe();
         }
+    }
+
+    serviceInstance() {
+        return 'is base';
     }
 }

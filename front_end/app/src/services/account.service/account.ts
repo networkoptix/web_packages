@@ -1,3 +1,5 @@
+import { User } from '..';
+
 export class Account {
     email: string;
     // eslint-disable-next-line camelcase
@@ -10,4 +12,12 @@ export class Account {
     // eslint-disable-next-line camelcase
     is_superuser: boolean;
     permissions: string[];
+
+    constructor({ email, fullName, permissions }: User) {
+        this.email = email;
+        const [first, ...rest] = fullName.split(' ');
+        this.first_name = first;
+        this.last_name = rest.reverse()[0];
+        this.permissions = permissions.split('|');
+    }
 }
