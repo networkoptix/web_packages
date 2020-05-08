@@ -78,11 +78,10 @@ export class RestartServerModalContent {
                                 }
                             }),
                             mergeMap(() => {
-                                // make sure that system is online
+                                // makes sure that system is online
                                 return this.system.getInfo(true, false)
-                                    .then(system => {
-                                        this.system = system;
-                                        if (!system.isOnline) {
+                                    .then(() => {
+                                        if (!this.system.isOnline) {
                                             this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
                                             throw Error('system is offline still');
                                         }
