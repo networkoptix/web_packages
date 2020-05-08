@@ -70,6 +70,7 @@
         "agreementAccepted": "El acuerdo ha sido aceptado",
         "changePassword": "Cambiar contraseña",
         "newPasswordLabel": "Nueva contraseña",
+        "passwordChangedSuccess": "Password successfully saved",
         "saveChanges": "Guardar"
     },
     "activeActions": {
@@ -206,10 +207,15 @@
             "moveCloudStorage": {
                 "title": "Mover almacenamiento en la nube",
                 "success": "Almacenamiento movido con éxito",
-                "errorPrefix": "Error al mover el almacenamiento en la nube",
+                "errorPrefix": "Error moving cloud storage",
+                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
                 "status": {
                     "offline": "El almacenamiento en la nube no se puede mover a sistemas sin conexión."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Cloud Storage Enabled",
+                "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
                 "message": "Sólo puede mover el almacenamiento en la nube entre los sistemas de los que es propietario. <br/><br/>Conecte un sistema a %CLOUD_NAME% usando su cuenta en la nube para poder mover el almacenamiento en la nube."
@@ -419,7 +425,8 @@
         "wrongAuthCode": "El código ha caducado o es incorrecto",
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
-        "wrongParameters": "Algunos parámetros en el formulario son incorrectos"
+        "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -526,6 +533,10 @@
         "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
+        },
         "merge": {
             "title": "Este sistema se está fusionando a {{systemName}}.",
             "message": {

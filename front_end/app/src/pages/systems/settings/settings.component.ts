@@ -317,8 +317,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
-
-        if (this.system.permissions.isAdmin) {
+        if (this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -432,11 +431,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
-                const byParam = NxUtilsService.byParam((server) => {
-                    return server.name;
-                }, NxUtilsService.sortASC);
-                this.system.servers.sort(byParam);
-
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
@@ -489,7 +483,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem.id || ''}`;
+        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

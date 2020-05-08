@@ -85,8 +85,9 @@ With valid inputs no errors are displayed
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.email" and contains(text(),'${EMAIL INVALID TEXT}')]
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     @{list}    Set Variable    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD SPECIAL CHARS}    ${PASSWORD IS WEAK}    ${EMAIL INVALID}
-    : FOR    ${element}    IN    @{list}
-    \    Element Should Not Be Visible    ${element}
+    FOR    ${element}    IN    @{list}
+            Element Should Not Be Visible    ${element}
+    END
 
 Displays password masked, shows password and changes eye icon when clicked
     [tags]    C24211
@@ -142,16 +143,16 @@ Should respond to Tab key
     Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[1]
+    Switch Window    ${tabs}[1]
     Location Should Be    ${url}${TERMS URL}
-    Switch Window    @{tabs}[0]
+    Switch Window    ${tabs}[0]
     Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
     Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[3]
+    Switch Window    ${tabs}[3]
     Location Should Be    ${PRIVACY POLICY URL FULL}
-    Switch Window    @{tabs}[0]
+    Switch Window    ${tabs}[0]
 
     Clear Register Fields
     Press Keys    ${PRIVACY POLICY LINK}    TAB
@@ -167,7 +168,7 @@ Should open Terms and conditions in a new page
     Click Link    ${TERMS AND CONDITIONS LINK}
     Sleep    2    #This is specifically for Firefox
     ${tabs}    Get Window Handles
-    Switch Window    @{tabs}[1]
+    Switch Window    ${tabs}[1]
     Location Should Be    ${url}/content/eula
 
 Should open Privacy Policy in a new page
@@ -177,7 +178,7 @@ Should open Privacy Policy in a new page
     Click Link    ${PRIVACY POLICY LINK}
     Sleep    2    #This is specifically for Firefox
     ${windows}    Get Window Handles
-    Switch Window    @{windows}[1]
+    Switch Window    ${windows}[1]
     Location Should Be    ${PRIVACY POLICY URL FULL}
 
 Should suggest user to create new account, if he was logged in and goes to registration link
@@ -258,8 +259,9 @@ Check registration email links, colors, cloud name, and user name
     ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    Nx Cloud
     ${links}    Get Links From Email    ${email}
     @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate
-    : FOR    ${link}  IN  @{links}
-    \    check in list    ${expected links}    ${link}
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
     Delete Email    ${email}
     Close Mailbox
 

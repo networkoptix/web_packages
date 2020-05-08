@@ -370,6 +370,7 @@ export const nxConfig: IConfig = {
         default                   : 'Viewer',
         custom                    : 'custom',
         editUserPermissionFlag    : 'GlobalAdminPermission',
+        editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
         globalAdminPermissionFlag : 'GlobalAdminPermission',
         customPermission          : {
             name        : 'Custom',

@@ -10,6 +10,7 @@ import { BehaviorSubject }           from 'rxjs';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxSystem }                  from '../../../services/system.service';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 
@@ -24,6 +25,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
     wrongPassword: boolean;
     delete: Process;
 
@@ -34,19 +36,24 @@ export class CloudStorageDeleteModalContent implements OnInit {
 
     @ViewChild('deleteForm', { static: true }) deleteForm: HTMLFormElement;
 
-    constructor(public activeModal: NgbActiveModal,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService,
-                private renderer: Renderer2,
-                private cloudApiService: NxCloudApiService
+    constructor(
+        config: NxConfigService,
+        language: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private processService: NxProcessService,
+        private renderer: Renderer2,
+        private cloudApiService: NxCloudApiService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = language.getTranslations();
+        this.CONFIG = config.getConfig();
     }
 
     ngOnInit() {
         this.auth.password = '';
         this.system$.subscribe(system => {
-            this.systemId = system.id;
+            if (system && system.id) {
+                this.systemId = system.id;
+            };
         });
 
         this.delete = this.processService.createProcess(() => {
@@ -55,10 +62,21 @@ export class CloudStorageDeleteModalContent implements OnInit {
             const { LANG } = this;
             return this.cloudApiService.deleteCloudStorage(this.systemId, this.auth.password);
         }, {
-            ignoreUnauthorized : true,
-            errorCodes         : {
+            errorCodes: {
+                500: () => {
+                    return this.LANG.common.systemServerError;
+                },
+                notFound: () => {
+                    return this.LANG.dialogs.cloudStorage.moveCloudStorage.notFound;
+                },
                 cloudInvalidResponse: () => {
+                    this.wrongPassword = true;
+                    this.deleteForm.controls.password.setErrors({ password: true });
+                    this.renderer.selectRootElement('#password').focus();
                     return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
                 }
             },
             successMessage : this.LANG.dialogs.cloudStorage.remove.success,
