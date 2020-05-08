@@ -3,8 +3,6 @@ import {
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
 } from '@angular/core';
 import { ActivatedRoute }              from '@angular/router';
-import { of, interval }                from 'rxjs';
-import { delayWhen, catchError }       from 'rxjs/operators';
 import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
 import {
     NxConfigService, IConfig,
@@ -14,7 +12,7 @@ import {
     NxUriService, NxUtilsService
 }                                      from '../../../../../services';
 import { NxDialogsService }            from '../../../../../dialogs';
-import { NxMenuService }               from '../../../../../components/menu';
+import { NxMenuService }               from '../../../../../menu';
 import { NxSettingsService }           from '../../settings.service';
 import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 
@@ -242,7 +240,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         return this.dialogs
             .resetServer(this.system, id, name)
             // will take some time to reset and then restart the server
-            .then(() => this.setStatus('reseting'));
+            .then(() => this.setStatus('resetting'));
     }
 
     storePreviousValue(e) {

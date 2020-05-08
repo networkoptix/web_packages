@@ -47,13 +47,14 @@ export interface AccessRole {
 }
 
 export interface LanguageI18NStaticTypesAccount {
-    accountSavedSuccess: string;
-    accountSettings:     string;
-    activationLinkSent:  string;
-    agreementAccepted:   string;
-    changePassword:      string;
-    newPasswordLabel:    string;
-    saveChanges:         string;
+    accountSavedSuccess:    string;
+    accountSettings:        string;
+    activationLinkSent:     string;
+    agreementAccepted:      string;
+    changePassword:         string;
+    newPasswordLabel:       string;
+    passwordChangedSuccess: string;
+    saveChanges:            string;
 }
 
 export interface ActiveActions {
@@ -103,7 +104,7 @@ export interface Common {
 }
 
 export interface CommonAccount {
-    created:   Server;
+    created:   NoSettings;
     activated: Activated;
 }
 
@@ -111,7 +112,7 @@ export interface Activated {
     title: string;
 }
 
-export interface Server {
+export interface NoSettings {
     title:   string;
     message: string;
 }
@@ -203,17 +204,24 @@ export interface CloudStorage {
     available:             string;
     camera:                string;
     cameras:               string;
-    remove:                Remove;
-    activationError:       Server;
-    systemDisconnectError: Server;
+    remove:                EnableCloudStorage;
+    activationError:       NoSettings;
+    systemDisconnectError: NoSettings;
     moveCloudStorage:      MoveCloudStorage;
+    enableCloudStorage:    EnableCloudStorage;
     noOtherSystemsError:   NoOtherSystemsError;
+}
+
+export interface EnableCloudStorage {
+    success:     string;
+    errorPrefix: string;
 }
 
 export interface MoveCloudStorage {
     title:       string;
     success:     string;
     errorPrefix: string;
+    notFound:    string;
     status:      MoveCloudStorageStatus;
 }
 
@@ -223,11 +231,6 @@ export interface MoveCloudStorageStatus {
 
 export interface NoOtherSystemsError {
     message: string;
-}
-
-export interface Remove {
-    success:     string;
-    errorPrefix: string;
 }
 
 export interface DialogsMerge {
@@ -446,6 +449,7 @@ export interface ErrorCodes {
     wrongCode:                           string;
     wrongCodeRestore:                    string;
     wrongParameters:                     string;
+    networkConnection:                   string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -562,8 +566,9 @@ export interface PasswordRequirements {
 }
 
 export interface PlaceholderTexts {
-    merge:  PlaceholderTextsMerge;
-    server: Server;
+    noSettings: NoSettings;
+    merge:      PlaceholderTextsMerge;
+    server:     NoSettings;
 }
 
 export interface PlaceholderTextsMerge {
@@ -640,7 +645,7 @@ export interface Servers {
 export interface ServersStatus {
     checking:   string;
     offline:    string;
-    reseting:   string;
+    resetting:  string;
     restarting: string;
 }
 
@@ -911,6 +916,7 @@ const typeMap: any = {
         { json: "agreementAccepted", js: "agreementAccepted", typ: "" },
         { json: "changePassword", js: "changePassword", typ: "" },
         { json: "newPasswordLabel", js: "newPasswordLabel", typ: "" },
+        { json: "passwordChangedSuccess", js: "passwordChangedSuccess", typ: "" },
         { json: "saveChanges", js: "saveChanges", typ: "" },
     ], false),
     "ActiveActions": o([
@@ -957,13 +963,13 @@ const typeMap: any = {
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
     ], false),
     "CommonAccount": o([
-        { json: "created", js: "created", typ: r("Server") },
+        { json: "created", js: "created", typ: r("NoSettings") },
         { json: "activated", js: "activated", typ: r("Activated") },
     ], false),
     "Activated": o([
         { json: "title", js: "title", typ: "" },
     ], false),
-    "Server": o([
+    "NoSettings": o([
         { json: "title", js: "title", typ: "" },
         { json: "message", js: "message", typ: "" },
     ], false),
@@ -1047,16 +1053,22 @@ const typeMap: any = {
         { json: "available", js: "available", typ: "" },
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
-        { json: "remove", js: "remove", typ: r("Remove") },
-        { json: "activationError", js: "activationError", typ: r("Server") },
-        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("Server") },
+        { json: "remove", js: "remove", typ: r("EnableCloudStorage") },
+        { json: "activationError", js: "activationError", typ: r("NoSettings") },
+        { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
         { json: "moveCloudStorage", js: "moveCloudStorage", typ: r("MoveCloudStorage") },
+        { json: "enableCloudStorage", js: "enableCloudStorage", typ: r("EnableCloudStorage") },
         { json: "noOtherSystemsError", js: "noOtherSystemsError", typ: r("NoOtherSystemsError") },
+    ], false),
+    "EnableCloudStorage": o([
+        { json: "success", js: "success", typ: "" },
+        { json: "errorPrefix", js: "errorPrefix", typ: "" },
     ], false),
     "MoveCloudStorage": o([
         { json: "title", js: "title", typ: "" },
         { json: "success", js: "success", typ: "" },
         { json: "errorPrefix", js: "errorPrefix", typ: "" },
+        { json: "notFound", js: "notFound", typ: "" },
         { json: "status", js: "status", typ: r("MoveCloudStorageStatus") },
     ], false),
     "MoveCloudStorageStatus": o([
@@ -1064,10 +1076,6 @@ const typeMap: any = {
     ], false),
     "NoOtherSystemsError": o([
         { json: "message", js: "message", typ: "" },
-    ], false),
-    "Remove": o([
-        { json: "success", js: "success", typ: "" },
-        { json: "errorPrefix", js: "errorPrefix", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
@@ -1267,6 +1275,7 @@ const typeMap: any = {
         { json: "wrongCode", js: "wrongCode", typ: "" },
         { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "" },
         { json: "wrongParameters", js: "wrongParameters", typ: "" },
+        { json: "networkConnection", js: "networkConnection", typ: "" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "" },
@@ -1375,8 +1384,9 @@ const typeMap: any = {
         { json: "weakMessage", js: "weakMessage", typ: "" },
     ], false),
     "PlaceholderTexts": o([
+        { json: "noSettings", js: "noSettings", typ: r("NoSettings") },
         { json: "merge", js: "merge", typ: r("PlaceholderTextsMerge") },
-        { json: "server", js: "server", typ: r("Server") },
+        { json: "server", js: "server", typ: r("NoSettings") },
     ], false),
     "PlaceholderTextsMerge": o([
         { json: "title", js: "title", typ: "" },
@@ -1443,7 +1453,7 @@ const typeMap: any = {
     "ServersStatus": o([
         { json: "checking", js: "checking", typ: "" },
         { json: "offline", js: "offline", typ: "" },
-        { json: "reseting", js: "reseting", typ: "" },
+        { json: "resetting", js: "resetting", typ: "" },
         { json: "restarting", js: "restarting", typ: "" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([

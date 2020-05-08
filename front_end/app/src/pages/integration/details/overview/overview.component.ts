@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
-import { NxMenuService }                from '../../../../components/menu';
+import { NxMenuService }                from '../../../../menu';
 import { NxConfigService, IConfig }     from '../../../../services';
 
 @Component({
-    selector: 'overview-component',
-    templateUrl: 'overview.component.html',
-    styleUrls: ['overview.component.scss']
+    selector    : 'overview-component',
+    templateUrl : 'overview.component.html',
+    styleUrls   : ['overview.component.scss']
 })
 
 export class NxOverviewComponent implements OnInit, OnDestroy {

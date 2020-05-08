@@ -33,7 +33,7 @@ Restart
 Remove Temporary Users
     FOR    ${user}    IN     @{TMP USERS}
         ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Remove User    ${auth}    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${user id}
+        Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
     END
 
 *** Test Cases ***
@@ -60,7 +60,7 @@ Should show system name in header dropdown with "Open in Nx Witness" button if u
     [Tags]    C41569    Threaded
     ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
 
     Log In    ${random email}    ${password}    validate=False
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
@@ -150,7 +150,7 @@ Should show the system page instead of all systems when user only has one
     [Tags]    C41878
     ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
 
     Log In    ${random email}    ${password}    validate=False
     Wait Until Element Is Visible    ${SYSTEM NAME}
@@ -170,8 +170,9 @@ Should show your system for owner and owner name for non-owners
     Log In    ${EMAIL OWNER}    ${password}    validate=False
     Wait Until Elements Are Visible    ${SYSTEMS SEARCH INPUT}    ${AUTO TESTS TITLE}    ${AUTO TESTS USER}    ${AUTO TESTS OPEN NX}
     Element Text Should Be    ${AUTO TESTS USER}    ${YOUR SYSTEM TEXT}
-    :FOR    ${user}    IN    @{EMAILS LIST}
-    \  Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
+    FOR    ${user}    IN    @{EMAILS LIST}
+        Run Keyword Unless    "${user}"=="${EMAIL OWNER}"    Check Systems Text    ${user}
+    END
 
 Should not show systems dropdown with no systems
     [Tags]    C41568    Threaded
@@ -227,7 +228,7 @@ Search should only be visible with 9 or more systems
     Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
     Wait Until Element Is Not Visible    ${SYSTEMS SEARCH INPUT}
 
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${EMAIL VIEWER}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${EMAIL VIEWER}
     Wait Until Element Is Visible    ${SYSTEMS SEARCH INPUT}
 
 Should open systems page in anonymous state

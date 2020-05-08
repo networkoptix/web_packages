@@ -16,9 +16,9 @@ import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
-    selector   : 'nx-systems-list-component',
-    templateUrl: 'list.component.html',
-    styleUrls  : ['list.component.scss']
+    selector    : 'nx-systems-list-component',
+    templateUrl : 'list.component.html',
+    styleUrls   : ['list.component.scss']
 })
 
 export class NxSystemsListComponent implements OnInit, OnDestroy {
@@ -44,15 +44,15 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     }
 
     constructor(configService: NxConfigService,
-                private urlProtocol: NxUrlProtocolService,
-                private route: ActivatedRoute,
+        private urlProtocol: NxUrlProtocolService,
+        private route: ActivatedRoute,
                 private language: NxLanguageProviderService,
-                private pageService: NxPageService,
-                private dialogs: NxDialogsService,
-                private systemsService: NxSystemsService,
-                private accountService: NxAccountService,
-                private processService: NxProcessService,
-                private router: Router,
+        private pageService: NxPageService,
+        private dialogs: NxDialogsService,
+        private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
+        private processService: NxProcessService,
+        private router: Router,
                 private location: Location,
     ) {
         this.setupDefaults(configService);
@@ -93,8 +93,8 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
             return this.systemsService.forceUpdateSystems().subscribe(_ => {
             });
         }, {
-            errorPrefix    : this.LANG.errorCodes.cantGetSystemsListPrefix,
-            logoutForbidden: true
+            errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix,
+            logoutForbidden : true
         });
 
         this.searchSubscription = this.searchChanged

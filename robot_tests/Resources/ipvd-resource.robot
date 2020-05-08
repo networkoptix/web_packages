@@ -1,6 +1,3 @@
-*** Settings ***
-Resource          resource.robot
-
 *** Keywords ***
 Go To IPVD Page
     Go To    ${ENV}/ipvd
@@ -287,12 +284,12 @@ Validate Privacy Policy
     Should be True
     ...    ${numWindows} == 2
     ...    Number of browser windows open after clicking Privacy Policy link should be 2, but is ${numWindows}. CLOUD-3315
-    Select Window    @{windows}[1]
+    Select Window    ${windows}[1]
     Location should be    ${url}    # TODO: CLOUD-2949
     # Location should be    ${PRIVACY POLICY URL FULL}
     Wait until Element is Visible    ${PRIVACY POLICY HEADER}
     Close Window
-    Select Window    @{windows}[0]
+    Select Window    ${windows}[0]
 
 Submit Feedback/Request Form
     [Arguments]    ${Your Name}    ${Email}    ${Message}

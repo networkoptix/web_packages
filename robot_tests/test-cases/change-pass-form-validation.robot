@@ -79,5 +79,9 @@ Test Passwords Invalid
     Change Password Form Validation    ${old pw}    ${new pw}
     Run Keyword Unless    "${old pw}" == "${BASE PASSWORD}" or "${old pw}" == "${7char password}"
     ...    Check Old Password Outline
-    Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    Check New Password Outline    ${new pw}
+    Run Keyword Unless    '''${new pw}''' == "${BASE PASSWORD}"    Check New Password Outline    ${new pw}    //h4    ${CURRENT PASSWORD INPUT}
     Run Keyword If    "${old pw}" == "${7char password}"    Check Old Password Alert
+    
+Restart
+    Close Browser
+    Open Change Password Dialog

@@ -209,13 +209,13 @@ Handles two tabs, updates second tab state if logout is done on first
     ...    ${REGISTER LAST NAME INPUT}
     ...    ${REGISTER EMAIL INPUT}
     ...    ${REGISTER PASSWORD INPUT}
-    ...   ${CREATE ACCOUNT BUTTON}
+    ...    ${CREATE ACCOUNT BUTTON}
     Click Link    ${TERMS AND CONDITIONS LINK}
     # This is specifically for Ubuntu Firefox because the new page
     # isn't created fast enough and Get Window Handles only gets 1 item.
     Sleep    2
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Location Should Be    ${url}/content/eula
     Go To    ${url}
     Validate Log Out
@@ -233,7 +233,7 @@ Handles two tabs, updates second tab state if logout is done on first
     Validate Log In
     Log Out
     ${tabs}    Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Location Should Be    ${url}/systems
     Reload Page
     Wait Until Element is Visible    ${LOG IN MODAL}
