@@ -428,11 +428,16 @@ class ServerManager {
             return Promise.reject(new Error(`Request to server has failed ${cameras}`));
         }
         this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
-            const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
-            const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
-            const vmsDate = new Date(serverTime);
-            const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-            const secondsToday = Math.round((serverTime % 86400000) / 1000);
+            const server = servers.find(({ serverId }) => serverId === parentId);
+            let dayOfWeek;
+            let secondsToday;
+            if (server) {
+                const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
+                const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
+                const vmsDate = new Date(serverTime);
+                dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+                secondsToday = Math.round((serverTime % 86400000) / 1000);
+            }
             const {
                 rotation,
                 overrideAr,
