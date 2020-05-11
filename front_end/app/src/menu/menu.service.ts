@@ -55,7 +55,7 @@ export class NxMenuService implements OnDestroy {
 
     getItemBy(id) {
         for (const node of this.content) {
-            if (node.level3 && node.level3.length) {
+            if (node.level3?.length) {
                 const match = node.level3.filter((item) => {
                     return item.id === id;
                 });
@@ -75,7 +75,7 @@ export class NxMenuService implements OnDestroy {
             this.setHighlightPattern(model);
 
             this.content.forEach((node) => {
-                if (node.level3 && node.level3.length) {
+                if (node.level3?.length) {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
                     node.level3.forEach((item) => {
                         let searchAggregate = item.label;
@@ -92,7 +92,7 @@ export class NxMenuService implements OnDestroy {
                             haveNode.level3.push(this.highlighted(filteredItem));
                         }
                     });
-                    if (haveNode && haveNode.level3 && haveNode.level3.length) {
+                    if (haveNode?.level3?.length) {
                         filteredContent.push(haveNode);
                     }
                 }

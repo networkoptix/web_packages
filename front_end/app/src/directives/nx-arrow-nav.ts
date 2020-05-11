@@ -54,7 +54,7 @@ export class NxArrowNavDirective {
 
             const elm = elements[idx];
 
-            if (elm && elm.firstElementChild) {
+            if (elm?.firstElementChild) {
                 elm.firstElementChild.focus();
             }
         }

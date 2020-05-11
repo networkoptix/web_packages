@@ -54,7 +54,7 @@ export class DeleteCloudUserModalContent {
     }
 
     setPassword(input) {
-        this.passwordError = input.touched && input.errors && input.errors.required
+        this.passwordError = input.touched && input.errors?.required
             ? this.LANG.passwordRequirements.missingMessage
             : '';
         this.passwordForUser = input.value;

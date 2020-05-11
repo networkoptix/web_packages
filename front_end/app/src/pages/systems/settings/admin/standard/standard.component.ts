@@ -77,18 +77,18 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
-            hours  : {
-                value  : this.hours,
-                name   : this.LANG.system.settings.sessionLimitDuration.hours,
-                id     : 1,
-                max    : 600,
-                default: 24
+            hours: {
+                value   : this.hours,
+                name    : this.LANG.system.settings.sessionLimitDuration.hours,
+                id      : 1,
+                max     : 600,
+                default : 24
             },
             minutes: {
-                value: this.minutes,
-                name : this.LANG.system.settings.sessionLimitDuration.minutes,
-                id   : 2,
-                max  : 600
+                value : this.minutes,
+                name  : this.LANG.system.settings.sessionLimitDuration.minutes,
+                id    : 2,
+                max   : 600
             }
         };
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
@@ -196,7 +196,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             () => {
                 this.applyService.reset();
                 const { sessionLimitMinutes } = this.settingsWatchers;
-                if (sessionLimitMinutes && sessionLimitMinutes.originalValue) {
+                if (sessionLimitMinutes?.originalValue) {
                     this.sessionLimitToggle = true;
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.timeValue = sessionLimitMinutes.originalValue;

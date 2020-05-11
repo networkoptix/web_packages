@@ -78,25 +78,29 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         this.loggerOptions = [
             {
                 value : 'none',
-                name: this.LANG.system.loggers.none.text,
-                help: this.LANG.system.loggers.none.help },
+                name  : this.LANG.system.loggers.none.text,
+                help  : this.LANG.system.loggers.none.help
+            },
             {
                 value : 'error',
-                name: this.LANG.system.loggers.error.text,
-                help: this.LANG.system.loggers.error.help },
+                name  : this.LANG.system.loggers.error.text,
+                help  : this.LANG.system.loggers.error.help
+            },
             {
                 value : 'warning',
                 name  : this.LANG.system.loggers.warning.text,
                 help  : this.LANG.system.loggers.warning.help
             },
             {
-                value: 'info',
-                name: this.LANG.system.loggers.info.text,
-                help: this.LANG.system.loggers.info.help },
+                value : 'info',
+                name  : this.LANG.system.loggers.info.text,
+                help  : this.LANG.system.loggers.info.help
+            },
             {
-                value: 'debug',
-                name: this.LANG.system.loggers.debug.text,
-                help: this.LANG.system.loggers.debug.help },
+                value : 'debug',
+                name  : this.LANG.system.loggers.debug.text,
+                help  : this.LANG.system.loggers.debug.help
+            },
             {
                 value : 'verbose',
                 name  : this.LANG.system.loggers.verbose.text,
@@ -108,7 +112,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.serverId && changes.serverId.currentValue) {
+        if (changes.serverId?.currentValue) {
             this.system
                 .logLevel(changes.serverId.currentValue)
                 .then(response => {

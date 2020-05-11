@@ -169,7 +169,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     updateFilter(params?, resetUri?) {
-        if (params && params.value) {
+        if (params?.value) {
             this.params = params.value;
         }
 
@@ -232,9 +232,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     writeValue(value: any): void {
         // Avoid localFilter update if filter in not initialized (page refresh)
         if (value &&
-            ((value.tags && value.tags.length) ||
-                (value.selects && value.selects.length) ||
-                (value.multiselects && value.multiselects.length))) {
+            ((value.tags?.length) ||
+                (value.selects?.length) ||
+                (value.multiselects?.length))) {
             if (NxUtilsService.isEqual(this.localFilter, value)) {
                 return;
             }
@@ -424,7 +424,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
             this.localFilter.multiselects.forEach((select) => {
                 queryParams[select.id] = undefined;
-                if (select.selected && select.selected.length) {
+                if (select.selected?.length) {
                     queryParams[select.id] = select.selected.join(',');
                 }
             });

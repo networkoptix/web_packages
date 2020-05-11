@@ -457,10 +457,8 @@ class ServerManager {
             }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
-            const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
-            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
-            const _maxFps = primary && primary.value && primary.value.maxFps;
-            const maxFps = _maxFps || 30;
+            const primary = mediaCapabilities?.streamCapabilities?.find(({ key }) => key === 'primary');
+            const maxFps = primary?.value?.maxFps || 30;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
@@ -1006,7 +1004,7 @@ export class NxSystem extends System implements OnDestroy {
                 .then(() => from(this.getUsers(true)))
                 .catch((error) => {
                     this.isAvailable = false;
-                    this.lostConnection = error && error.data && error.data.resultCode === 'forbidden';
+                    this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });
         }));
     }

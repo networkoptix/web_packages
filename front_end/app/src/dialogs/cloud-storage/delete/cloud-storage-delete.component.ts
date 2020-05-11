@@ -51,7 +51,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
     ngOnInit() {
         this.auth.password = '';
         this.system$.subscribe(system => {
-            if (system && system.id) {
+            if (system?.id) {
                 this.systemId = system.id;
             };
         });

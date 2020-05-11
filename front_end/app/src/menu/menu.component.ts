@@ -76,7 +76,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                this.menuModel.query = (params && params.search) ? params.search : '';
+                this.menuModel.query = params?.search ?? '';
                 this.searchMode = (this.isSearchable && this.menuModel.query !== '');
                 NxSearchService.getMatchPatterns(this.menuModel);
                 this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
@@ -192,7 +192,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             })[0] || [];
         }
 
-        if (buttons.items && buttons.items.length) {
+        if (buttons.items?.length) {
             buttons = buttons.items;
         }
 

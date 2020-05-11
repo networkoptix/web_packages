@@ -96,10 +96,9 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.system && changes.system.currentValue && changes.system.currentValue.info) {
+        if (changes.system?.currentValue?.info) {
             this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                changes.system.currentValue.info.capabilities &&
-                changes.system.currentValue.info.capabilities.vms_metrics) &&
+                changes.system.currentValue.info.capabilities?.vms_metrics) &&
                 changes.system.currentValue.canViewInfo();
 
             if (this.canSeeInfo) {
@@ -109,7 +108,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             }
         }
 
-        if (changes.selectedServer && changes.selectedServer.currentValue) {
+        if (changes.selectedServer?.currentValue) {
             this.setServer();
         }
     }

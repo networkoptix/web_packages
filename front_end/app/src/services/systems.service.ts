@@ -158,8 +158,8 @@ export class NxSystemsService implements OnDestroy {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
-            system.canMerge = system.isMine && (system.capabilities &&
-                system.capabilities.cloudMerge ||
+            system.canMerge = system.isMine &&
+            (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {

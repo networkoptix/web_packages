@@ -21,7 +21,7 @@ export class NxExternalVideoComponent implements OnInit {
     private FormatSrc(link) {
         for (const videoType in this.CONFIG.integration.embedInfo) {
             const videoRegex = link.match(this.CONFIG.integration.embedInfo[videoType].regex);
-            if (videoRegex && videoRegex[1]) {
+            if (videoRegex?.[1]) {
                 return `${this.CONFIG.integration.embedInfo[videoType].link}${videoRegex[1]}`;
             }
         }

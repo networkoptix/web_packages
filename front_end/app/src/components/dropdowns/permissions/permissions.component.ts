@@ -66,7 +66,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.roles && changes.roles.currentValue) {
+        if (changes.roles?.currentValue) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x => x.name === this.selected.name)[0];
             if (!role || role.optionLabel !== this.selection) {
@@ -75,7 +75,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             }
         }
 
-        if (changes.selected && changes.selected.currentValue) {
+        if (changes.selected?.currentValue) {
             this.selection = this.accessRoles.find(x => x.name === changes.selected.currentValue.name).optionLabel;
         }
     }

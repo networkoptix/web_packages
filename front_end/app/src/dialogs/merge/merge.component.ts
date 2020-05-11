@@ -385,7 +385,7 @@ export class MergeModalContent {
                 }
             }, (error) => {
                 // for errors that pop up during the merge
-                const errorCode = error.resultCode || (error.data && error.data.resultCode);
+                const errorCode = error.resultCode || (error.data?.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
                 }
@@ -401,7 +401,7 @@ export class MergeModalContent {
                 }
 
                 error.data.resultCode = errorCode;
-                error.data.errorText = (error && error.errorText) || '';
+                error.data.errorText = (error?.errorText) || '';
                 // Set the name of the primary system.
                 error.data.primarySystemName = this.primarySystem.name;
                 // If name is undefined try looking in info for the name.
@@ -553,7 +553,7 @@ export class MergeModalContent {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
-        const stateOfHealth      = (system.info && system.info.stateOfHealth) ||
+        const stateOfHealth      = (system.info?.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
@@ -593,7 +593,7 @@ export class MergeModalContent {
     }
 
     checkMergeability(system) {
-        const stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
+        const stateOfHealth = (system.info?.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
             return this.systemOffline;
@@ -656,7 +656,7 @@ export class MergeModalContent {
         // handles validation error messages
         let showUpdate             = this.serverUrlState;
         const templateUpdates: any = { serverUrlInputValue: input.value };
-        if (input.touched && input.errors && input.errors.required) {
+        if (input.touched && input.errors?.required) {
             showUpdate = this.serverUrlValidationError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlEmpty';
         } else if (input.touched && input.invalid) {
@@ -670,7 +670,7 @@ export class MergeModalContent {
     passwordChange(input) {
         let showUpdate        = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
-        if (input.touched && input.errors && input.errors.required) {
+        if (input.touched && input.errors?.required) {
             showUpdate = this.confirmPasswordError;
             templateUpdates.passwordErrorText = this.passwordRequired;
         } else {

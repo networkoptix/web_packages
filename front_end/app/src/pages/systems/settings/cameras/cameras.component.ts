@@ -687,7 +687,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsub$))
             .subscribe(
                 result => {
-                    const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
+                    const alerts = result?.reply?.['ec2/metrics/alarms']?.reply.cameras;
                     this.alerts = Object.entries(alerts || {}).map(
                         ([cameraId, alertInfo]) =>
                             new Alert(cameraId, alertInfo, 'Camera')
@@ -718,7 +718,7 @@ export class Alert {
     constructor(public cameraId: string, alertInfo, prefix: string) {
         Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
             _.forEach(item => {
-                if (item && item.level && item.text && this[`${item.level}s`]) {
+                if (item?.level && item.text && this[`${item.level}s`]) {
                     this[`${item.level}s`].push(`${prefix} ${item.text}`);
                 }
             })
