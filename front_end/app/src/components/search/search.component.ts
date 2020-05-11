@@ -17,8 +17,8 @@ import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import {
     NxConfigService, IConfig, NxUriService,
     NxLanguageProviderService, NxUtilsService,
-    NxScrollMechanicsService
-}                                         from '../../services';
+    NxScrollMechanicsService, ButtonArrowType
+} from '../../services';
 import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_types';
 import { NxSearchService }                from '../../services/search.service';
 
@@ -82,14 +82,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     private searchSubscription: Subscription;
     private locationSubscription: SubscriptionLike;
     private modelSubscription: SubscriptionLike;
-
     private params: any = {};
-    private showAdvancedOptions: boolean;
-
-    public advSearch = false;
-
     private searchUpdated: any = Subject;
     private modelUpdated: any = Subject;
+
+    showAdvancedOptions: boolean;
+    buttonArrowTypeUp: string;
+    buttonArrowTypeDown: string;
+    advSearch = false;
 
     constructor(
         configService: NxConfigService,
@@ -103,6 +103,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
+
+        this.buttonArrowTypeUp = ButtonArrowType.up;
+        this.buttonArrowTypeDown = ButtonArrowType.down;
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update

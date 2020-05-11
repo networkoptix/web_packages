@@ -9,8 +9,8 @@ import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
 import { NxMenuService }            from './menu.service';
 import {
     NxLanguageProviderService,
-    NxUtilsService, NxSearchService, NxSystem
-}                                   from '../services';
+    NxUtilsService, NxSearchService, NxSystem, ButtonArrowType
+} from '../services';
 
 /* Usage
  <nx-menu>
@@ -106,17 +106,17 @@ export class NxMenuComponent implements OnInit, OnChanges {
             });
     }
 
-    private resetNav() {
+    resetNav() {
         this.navItemIdx = 0;
         this.menuService.navItemId = undefined;
     }
 
-    private setNav() {
+    setNav() {
         this.modelChanged(this.menuModel);
     }
 
     private assignItemId() {
-        if (this.searchService.navDirection === 'UP') {
+        if (this.searchService.navDirection === ButtonArrowType.up) {
             this.navItemIdx = (this.navItemIdx > 0) ? --this.navItemIdx : this.navItems.length - 1;
         } else {
             this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
