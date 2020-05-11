@@ -128,7 +128,7 @@ export class NxSystemAPI {
         );
     }
 
-    private post<ResponseType>(url: string, data?: unknown) {
+    private post<ResponseType>(url: string, data?: IParams) {
         let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         const params: IParams = {};
@@ -169,7 +169,7 @@ export class NxSystemAPI {
         return this.get<AggregatedType>(url);
     }
 
-    init(userEmail: string, systemId: string, serverId: string, unauthorizedCallback: (params: unknown) => void) {
+    init(userEmail: string, systemId: string, serverId: string, unauthorizedCallback: (params: IParams) => void) {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
         this.systemId = systemId;
@@ -593,7 +593,7 @@ export class NxSystemAPIService {
     createConnection(user: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params?: unknown) => any
+        unauthorizedCallback: (params?: IParams) => any
     ) {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {

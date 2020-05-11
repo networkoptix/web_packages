@@ -57,28 +57,28 @@ export class Watcher<T extends any> {
 /**
  * TODO: Unused, could probably remove
  */
-export class ObjWatcher<Object> {
-    originalValue: unknown = {};
-    valueSubject = new BehaviorSubject({});
+// export class ObjWatcher<Object> {
+//     originalValue: unknown = {};
+//     valueSubject = new BehaviorSubject({});
 
-    get value() {
-        return this.valueSubject.getValue();
-    }
+//     get value() {
+//         return this.valueSubject.getValue();
+//     }
 
-    set value(data) {
-        if (this.value === {}) {
-            this.originalValue = {};
-        }
-        if (!NxUtilsService.isEqual(this.value, data)) {
-            this.valueSubject.next(data);
-        }
-    }
+//     set value(data) {
+//         if (this.value === {}) {
+//             this.originalValue = {};
+//         }
+//         if (!NxUtilsService.isEqual(this.value, data)) {
+//             this.valueSubject.next(data);
+//         }
+//     }
 
-    // Resets the value of the watcher to the first value that was not undefined.
-    reset() {
-        this.valueSubject.next(this.originalValue);
-    }
-}
+//     // Resets the value of the watcher to the first value that was not undefined.
+//     reset() {
+//         this.valueSubject.next(this.originalValue);
+//     }
+// }
 
 @Injectable({
     providedIn: 'root'
@@ -109,7 +109,7 @@ export class NxApplyService {
     private applyComponentRef: ComponentRef<NxApplyComponent>;
     private applyFunction: Process;
     private component: ViewContainerRef;
-    private discardFunction: <T>(T) => void;
+    private discardFunction: () => void;
     private lockedSubject = new BehaviorSubject<boolean>(undefined);
     private popupActive = false;
     private form: NgForm;
@@ -171,7 +171,7 @@ export class NxApplyService {
     initPageWatcher(
         component: ViewContainerRef,
         saveFunction: Process,
-        discardFunction: <T>(T) => void,
+        discardFunction: () => void,
         watchers: Watcher<any>[],
         form?: NgForm
     ) {
@@ -239,7 +239,7 @@ export class NxApplyService {
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
     }
 
-    private setDiscardFunction(func: <T>(T) => void) {
+    private setDiscardFunction(func: () => void) {
         this.discardFunction = func;
         (<NxApplyComponent> this.applyComponentRef.instance).discard = func;
     }
