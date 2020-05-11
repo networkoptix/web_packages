@@ -1,7 +1,7 @@
 interface StateMachine {
     currentState: string;
-    state: any;
-    store: any;
+    state;
+    store;
     history: string[];
 }
 

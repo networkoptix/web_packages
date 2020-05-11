@@ -23,7 +23,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    auth: any;
+    auth;
     params: IParams;
     embedUrl: string;
     private formChangesSubscription: Subscription;

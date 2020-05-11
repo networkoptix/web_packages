@@ -15,9 +15,9 @@ import {
 })
 
 export class NxSystemsDropdown extends BaseDropdown {
-    @Input() endpoint: any;
-    @Input() systems: any;
-    @Input() activeSystem: any;
+    @Input() endpoint;
+    @Input() systems;
+    @Input() activeSystem;
 
     systemCounter: number;
     active = {
@@ -27,7 +27,7 @@ export class NxSystemsDropdown extends BaseDropdown {
         view    : false
     };
 
-    params: any;
+    params;
     show: boolean;
 
     constructor(

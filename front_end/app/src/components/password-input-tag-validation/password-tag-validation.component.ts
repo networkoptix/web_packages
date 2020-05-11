@@ -15,8 +15,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordTagValidationComponent implements OnChanges {
-    @Input() forElement: any;
-    @Input() value: any;
+    @Input() forElement;
+    @Input() value;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

@@ -26,11 +26,11 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean;
-    saveLoggers: any;
+    saveLoggers;
     lockedSubscription: SubscriptionLike;
 
-    @Input() system: any;
-    @Input() serverId: any;
+    @Input() system;
+    @Input() serverId;
 
     systemLoggers: any = {};
     readonly loggerOptions: any = [];

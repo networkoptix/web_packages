@@ -20,7 +20,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     show: boolean;
 
     // internal value
-    _selected: any;
+    _selected;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor

@@ -34,13 +34,13 @@ export class NxContentComponent implements OnInit {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
     public loaded = false;
-    private staticContent: any;
+    private staticContent;
 
     private agreement: boolean;
     private agreementDetails: any = {};
     private account: Account;
     public showAgree = false;
-    public agreeProcess: any;
+    public agreeProcess;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;

@@ -41,7 +41,7 @@ export class Process {
     private error: boolean;
     private processing: boolean;
     private finished: boolean;
-    private errorData: any;
+    private errorData;
 
     /* process handlers */
     private successHandler: (...args: any) => void;

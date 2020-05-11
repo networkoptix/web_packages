@@ -26,7 +26,7 @@ import { MessageParams }                from '../../../dialogs/message/message.c
 export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    plugin: any;
+    plugin;
     content: any = {};
 
     private integrationSubscription: Subscription;

@@ -11,7 +11,7 @@ import { NxDialogsService }              from '../../dialogs';
 })
 
 export class NxSandboxComponent {
-    click: any;
+    click;
     blah: string;
     group: string;
     agree: boolean;
@@ -19,18 +19,18 @@ export class NxSandboxComponent {
     toggleDisabled: boolean;
     show5: boolean;
     edit: boolean;
-    sections: any;
-    options: any;
-    items: any;
-    itemsSelected: any;
-    filter: any;
+    sections;
+    options;
+    items;
+    itemsSelected;
+    filter;
     autohide: boolean;
     ipvdEmbedUrl: SafeResourceUrl;
     // cameraEmbedUrl: SafeResourceUrl;
     data: any = {};
     theme: string;
-    change: any;
-    restore: any;
+    change;
+    restore;
 
     submitted = false;
 

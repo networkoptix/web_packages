@@ -16,7 +16,7 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
-    @Input() list: any;
+    @Input() list;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

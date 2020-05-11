@@ -14,10 +14,10 @@ import {
 })
 
 export class NxActiveSystemDropdown extends BaseDropdown {
-    @Input() activeSystem: any;
+    @Input() activeSystem;
 
     canViewInfo: boolean;
-    params: any;
+    params;
     show: boolean;
     active = {
         health  : false,

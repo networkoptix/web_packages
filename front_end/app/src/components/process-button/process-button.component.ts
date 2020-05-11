@@ -11,15 +11,15 @@ import { NxConfigService, IConfig } from '../../services';
     encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
-    @Input() process: any;
-    @Input() clickFn: any;
+    @Input() process;
+    @Input() clickFn;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;
-    @Input() actionType: any;
-    @Input() form: any;
+    @Input() actionType;
+    @Input() form;
     @Input() customClass: any = '';
     @Input() customButtonClass: any = '';
-    @Input() svg: any;
+    @Input() svg;
 
     buttonClass: string;
     CONFIG: IConfig;

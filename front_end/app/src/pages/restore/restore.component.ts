@@ -25,13 +25,13 @@ export class NxRestoreComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    change: any;
-    restore: any;
-    data: any;
-    restoring: any;
-    restoringSuccess: any;
-    changeSuccess: any;
-    context: any;
+    change;
+    restore;
+    data;
+    restoring;
+    restoringSuccess;
+    changeSuccess;
+    context;
     ready: boolean;
 
     private setupDefaults(configService) {

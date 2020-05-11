@@ -10,7 +10,7 @@ import { NxConfigService, IConfig } from '../../services';
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
     CONFIG: IConfig;
-    src: any;
+    src;
 
     constructor(configService: NxConfigService,
                 private sanitizer: DomSanitizer

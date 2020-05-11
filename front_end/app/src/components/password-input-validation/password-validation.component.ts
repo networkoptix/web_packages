@@ -8,9 +8,9 @@ import { LanguageI18NStaticTypes }                                       from '.
     styleUrls  : ['password-validation.component.scss']
 })
 export class NxPasswordValidationComponent implements OnChanges {
-    @Input() forElement: any;
-    @Input() value: any;
-    @Input() customClass: any;
+    @Input() forElement;
+    @Input() value;
+    @Input() customClass;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

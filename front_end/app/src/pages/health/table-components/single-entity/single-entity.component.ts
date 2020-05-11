@@ -9,11 +9,11 @@ import { NxHealthService }                                from '../../health.ser
     encapsulation: ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
-    @Input() params: any;
-    @Input() entity: any;
+    @Input() params;
+    @Input() entity;
 
     CONFIG: IConfig;
-    copyParams: any;
+    copyParams;
     entityName: string;
 
     constructor(private configService: NxConfigService,

@@ -18,17 +18,17 @@ import {
     encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
-    @Input() system: any;
-    @Input() customClass: any;
-    @Input() actionType: any;
+    @Input() system;
+    @Input() customClass;
+    @Input() actionType;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    location: any;
+    location;
     canceled: boolean;
     modalActive: boolean;
-    openClient: any;
+    openClient;
 
     constructor(configService: NxConfigService,
                 private processService: NxProcessService,

@@ -33,8 +33,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     account: any = {};
     pass: any = {};
 
-    save: any;
-    changePassword: any;
+    save;
+    changePassword;
     private menuDetailSubscription: Subscription;
 
     private setupDefaults() {

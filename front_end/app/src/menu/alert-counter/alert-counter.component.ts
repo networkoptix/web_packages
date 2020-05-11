@@ -7,8 +7,8 @@ import { NxConfigService, IConfig } from '../../services';
     styleUrls   : ['./alert-counter.component.scss'],
 })
 export class NxAlertCounter {
-    @Input() count: any;
-    @Input() type: any;
+    @Input() count;
+    @Input() type;
 
     CONFIG: IConfig;
 

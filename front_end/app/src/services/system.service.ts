@@ -636,7 +636,7 @@ export class NxSystem extends System implements OnDestroy {
     mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
-    moduleInfo: any; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
+    moduleInfo; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;

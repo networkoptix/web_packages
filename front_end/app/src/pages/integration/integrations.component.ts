@@ -22,15 +22,15 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
 
-    private allElements: any;
-    private elements: any;
+    private allElements;
+    private elements;
     private emptyFilter: any = {};
     private filterModel: any = {};
 
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
-    params: any;
-    account: any;
+    params;
+    account;
 
     selectors = {
         access   : false,

@@ -45,7 +45,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     public filter: string;
     public textSelected: any = {};
 
-    private innerValue: any;
+    private innerValue;
 
     constructor(
         languageService: NxLanguageProviderService,

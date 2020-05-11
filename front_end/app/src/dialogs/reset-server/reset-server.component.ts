@@ -14,14 +14,14 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls  : []
 })
 export class ResetServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverName: string;
     @Input() serverId;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    resetServer: any;
+    resetServer;
     password: string;
 
     constructor(

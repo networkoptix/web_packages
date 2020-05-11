@@ -17,24 +17,24 @@ import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_
 })
 
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
-    @Input() settings: any;
+    @Input() settings;
     @Input() system: NxSystem;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     viewContainerRef: ViewContainerRef;
 
-    selectedTimeUnit: any;
+    selectedTimeUnit;
     sessionLimitToggle: boolean;
     timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-    limitSessionTimeUnits: any;
-    limitSessionTimeItems: any;
-    saveSettings: any;
-    resetVideoEncryptionIfDisabled: any;
-    setWarningMessageThroughApplyService: any;
-    timeUnitTracker: any;
-    selectElement: any;
+    limitSessionTimeUnits;
+    limitSessionTimeItems;
+    saveSettings;
+    resetVideoEncryptionIfDisabled;
+    setWarningMessageThroughApplyService;
+    timeUnitTracker;
+    selectElement;
 
     settingsWatchersSet = false;
     settingsWatchers: any = {

@@ -41,7 +41,7 @@ export class MessageModalContent implements OnInit {
     CONFIG: IConfig;
 
     placeholder: string;
-    sendMessage: any;
+    sendMessage;
     userName: string;
     userEmail: string;
     message: string;

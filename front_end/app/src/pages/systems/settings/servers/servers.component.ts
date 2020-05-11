@@ -25,8 +25,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
-    serverIdFromParams: any;
-    selectedServer: any;
+    serverIdFromParams;
+    selectedServer;
 
     advanced: boolean;
     params: Params;

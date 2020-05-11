@@ -25,11 +25,11 @@ import {
 })
 
 export class NxLanguageDropdown extends BaseDropdown {
-    @Input() instantReload: any;
-    @Input() instantApply: any;
-    @Input() dropup: any;
-    @Input() short: any;
-    @Input() altStyle: any;
+    @Input() instantReload;
+    @Input() instantApply;
+    @Input() dropup;
+    @Input() short;
+    @Input() altStyle;
 
     currentLang: string;
     show: boolean;

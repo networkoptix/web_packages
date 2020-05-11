@@ -17,7 +17,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class NxMultiLineEllipsisComponent implements OnInit {
     @Input() config: string;
 
-    ellipsis: any;
+    ellipsis;
 
     constructor() {
         // Defaults

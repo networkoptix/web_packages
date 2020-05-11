@@ -30,10 +30,10 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @Input() system: any;
+    @Input() system;
 
     private haveAdvSettings: boolean;
-    private saveSettings: any;
+    private saveSettings;
     private serverSubscription: Subscription;
 
     systemSettings: any = {};

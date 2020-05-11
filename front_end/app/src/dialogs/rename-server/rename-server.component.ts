@@ -10,15 +10,15 @@ import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types
     styleUrls  : ['rename-server.component.scss']
 })
 export class RenameServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverId: string;
     @Input() serverName: string;
-    @Input() closable: any;
+    @Input() closable;
 
     @ViewChild('renameServerForm') renameForm: HTMLFormElement;
 
     LANG: LanguageI18NStaticTypes;
-    renameServer: any;
+    renameServer;
 
     constructor(
         languageService: NxLanguageProviderService,

@@ -29,7 +29,7 @@ const config = new NxConfigService().config;
     ]
 })
 export class NxCarouselComponent implements OnInit {
-    @Input() screenshots: any;
+    @Input() screenshots;
 
     images: any = [];
     private currentIndex = 0;

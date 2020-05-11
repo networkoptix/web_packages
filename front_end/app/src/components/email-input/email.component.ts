@@ -32,7 +32,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxEmailComponent implements ControlValueAccessor, Validator {
-    @Input() form: any;
+    @Input() form;
     @Input() componentId: string;
     @Input() lockEmail: boolean;
 

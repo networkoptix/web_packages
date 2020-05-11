@@ -31,7 +31,7 @@ interface Params {
 export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterViewInit {
     @Input() elements: any[];
     @Input() allowedParameters: string[];
-    @Input() activeCamera: any;
+    @Input() activeCamera;
     @Input() params: any = {};
 
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
@@ -64,14 +64,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     serviceHeaders;
 
     windowSize: any = {};
-    windowScroll: any;
+    windowScroll;
     clientHeight: number;
     searchHeight: number;
     offsetHeight: number;
     scrollHeight: number;
     tableScrollFixed: boolean;
-    elementWidth: any;
-    revert: any;
+    elementWidth;
+    revert;
     timesElementSet = 0;
 
     uriSubscription: SubscriptionLike;
@@ -81,7 +81,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     resizeSubscription: SubscriptionLike;
 
     // Options for the Excel export
-    public csvFilename: any;
+    public csvFilename;
     public csvCameraData: any[];
     public csvOptions = {
         fieldSeparator  : ',',

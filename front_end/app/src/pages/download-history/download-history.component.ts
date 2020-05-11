@@ -28,8 +28,8 @@ import angular = require('angular');
 })
 
 export class DownloadHistoryComponent implements OnInit, OnDestroy {
-    private sub: any;
-    private build: any;
+    private sub;
+    private build;
     public canViewRelease: boolean;
     readonly releases = 'releases';
 
@@ -37,14 +37,14 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     tabsVisible: boolean;
-    routeParam: any;
-    section: any;
-    user: any;
-    downloads: any;
-    activeBuilds: any;
-    downloadsData: any;
-    noteTypes: any;
-    linkbase: any;
+    routeParam;
+    section;
+    user;
+    downloads;
+    activeBuilds;
+    downloadsData;
+    noteTypes;
+    linkbase;
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })

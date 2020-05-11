@@ -31,10 +31,10 @@ interface Params {
 export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy {
     CONFIG: IConfig;
 
-    filterModel: any;
+    filterModel;
     params: any = {};
     numFilters: number;
-    metricId: any;
+    metricId;
 
     queryParamSubscription: SubscriptionLike;
     breakpointSubscription: SubscriptionLike;
@@ -50,19 +50,19 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     smallDesktopMode: boolean;
     breakpoint: string;
 
-    manifest: any;
-    values: any;
+    manifest;
+    values;
 
-    tableHeaders: any;
-    alerts: any;
+    tableHeaders;
+    alerts;
 
-    activePanelParams: any;
+    activePanelParams;
 
     alertsCount: number;
-    alertCards: any;
+    alertCards;
     alertCardCount: number;
 
-    windowSizeSubscription: any;
+    windowSizeSubscription;
     tableWrapper: number;
 
     @ViewChild('tiles', { static: false }) tilesElement: ElementRef;

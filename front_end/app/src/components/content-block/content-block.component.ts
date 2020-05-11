@@ -39,10 +39,10 @@ import {
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
-    @Input('fixed-height') fixedHeight: any;
-    @Input('hoverable') hoverable: any;
-    @Input('header-style') headerStyle: any;
-    @Input('header-class') headerClass: any;
+    @Input('fixed-height') fixedHeight;
+    @Input('hoverable') hoverable;
+    @Input('header-style') headerStyle;
+    @Input('header-class') headerClass;
 
     haveHeader: boolean;
     haveFooter: boolean;

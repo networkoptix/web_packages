@@ -6,7 +6,7 @@ import { NxScrollMechanicsService } from '../services';
 
 @Directive({ selector: '[nxScrollMechanics]' })
 export class NxScrollMechanicsDirective implements OnInit {
-    // elementWidth: any;
+    // elementWidth;
 
     constructor(
         private element: ElementRef,

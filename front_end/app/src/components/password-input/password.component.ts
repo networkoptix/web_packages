@@ -37,7 +37,7 @@ import {
     encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordComponent implements OnInit, OnDestroy, ControlValueAccessor, Validator {
-    @Input() form: any;
+    @Input() form;
     @Input() componentId: string;
     @Input() component: NgModel;
 

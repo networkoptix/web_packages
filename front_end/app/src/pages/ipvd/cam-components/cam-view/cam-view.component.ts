@@ -20,7 +20,7 @@ import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @Input() activeCamera: any;
+    @Input() activeCamera;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -31,14 +31,14 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     analyticsToShow: number;
     showAllFirmware: boolean;
     showAllEvents: boolean;
-    debug: any;
-    beta: any;
-    params: any;
+    debug;
+    beta;
+    params;
     showAnalytics: boolean;
     showCameraAnalytics: boolean;
 
     windowSize: any = {};
-    windowScroll: any;
+    windowScroll;
     searchHeight: number;
     clientHeight: number;
     offsetHeight: number;
@@ -46,7 +46,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     viewScrollFixedTop: boolean;
     viewScrollFixedBottom: boolean;
 
-    elementWidth: any;
+    elementWidth;
 
     private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;

@@ -35,9 +35,9 @@ import { BaseDropdown }      from '../injDropdown';
 export class NxGenericDropdown extends BaseDropdown {
     // items should have at least "name"
     // ... ex:[{name: 'a', id: 1}, {name: 'a', help: '(say "Aaaa...")', id: 1}, {name: 'b', id:3}]
-    @Input() id: any;
+    @Input() id;
     @Input() items: DropdownItem[];
-    @Input() selected: any;
+    @Input() selected;
     @Output() onSelected = new EventEmitter<string>();
     @Input() merge: boolean;
 
