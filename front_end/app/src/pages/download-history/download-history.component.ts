@@ -52,7 +52,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
         this.tabsVisible = false;
         this.canViewRelease = false;
         this.noteTypes = [];

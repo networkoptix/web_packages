@@ -78,7 +78,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         @Inject(ViewContainerRef) viewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.setSection('cameras');

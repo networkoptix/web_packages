@@ -54,7 +54,7 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.iconSize = 400;
 

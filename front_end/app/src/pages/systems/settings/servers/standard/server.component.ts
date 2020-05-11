@@ -82,7 +82,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }

@@ -36,7 +36,7 @@ export class RestartServerModalContent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

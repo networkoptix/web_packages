@@ -104,7 +104,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private renderer: Renderer2,
                 @Inject(PLATFORM_ID) private platformId: object) {
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
 
         this.sortOrderASC = true;

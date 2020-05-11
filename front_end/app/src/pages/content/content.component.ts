@@ -65,9 +65,9 @@ export class NxContentComponent implements OnInit {
         private sanitizer: DomSanitizer
     ) {
         this.setupDefaults();
-        this.langCode = this.language.getLang();
+        this.langCode = this.language.currentLanguage;
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {

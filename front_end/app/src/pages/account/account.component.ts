@@ -39,7 +39,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.pass = {
             password   : '',

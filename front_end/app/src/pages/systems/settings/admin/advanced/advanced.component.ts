@@ -45,7 +45,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnChanges(changes: SimpleChanges): void {

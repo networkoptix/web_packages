@@ -15,7 +15,7 @@ export class NxNoSystemsComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     private setupDefaults() {
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.pageService.setPageTitle(this.LANG.pageTitles.systems);
     }

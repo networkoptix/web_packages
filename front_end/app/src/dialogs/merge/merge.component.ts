@@ -86,7 +86,7 @@ export class MergeModalContent {
         private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

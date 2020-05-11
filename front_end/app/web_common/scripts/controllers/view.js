@@ -13,7 +13,7 @@
                       nxDialogsService, nxConfigService, nxLanguageService) { // chromeCast
 
                 const CONFIG = nxConfigService.getConfig();
-                const LANG = nxLanguageService.getTranslations();
+                const LANG = nxLanguageService.translations;
 
                 const ROUTE_CAMERA_ID = $routeParams.cameraId ?
                     '{' + $routeParams.cameraId + '}' :

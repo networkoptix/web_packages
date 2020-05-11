@@ -167,7 +167,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
 
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

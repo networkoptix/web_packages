@@ -53,7 +53,7 @@ export class Process {
         settings
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.cloudApiService = cloudApiService;
         this.sessionService = sessionService;
         this.toastService = toastService;

@@ -1139,7 +1139,7 @@ export class NxSystemService {
                 private pollService: NxPollService,
                 private systemsService: NxSystemsService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.systemsCache = {};
     }
 

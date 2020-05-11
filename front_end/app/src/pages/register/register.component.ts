@@ -41,7 +41,7 @@ export class NxRegisterComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
         this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
     }
 

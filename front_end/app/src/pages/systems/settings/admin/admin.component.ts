@@ -87,7 +87,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }

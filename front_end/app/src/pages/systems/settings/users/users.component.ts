@@ -82,7 +82,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.routeParamsSubscription = this.route
             .params

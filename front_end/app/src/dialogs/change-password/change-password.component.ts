@@ -26,7 +26,7 @@ export class ChangePasswordModalContent {
                 private configService: NxConfigService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
         this.newPasswordForUser = '';
     }
 

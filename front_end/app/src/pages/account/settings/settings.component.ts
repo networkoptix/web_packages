@@ -72,7 +72,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.setupDefaults();
     }
 

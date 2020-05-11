@@ -31,7 +31,7 @@ export class UpdateCameraCredentialsModalContent implements OnInit {
         public activeModal: NgbActiveModal,
         private processService: NxProcessService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     clearPassword() {

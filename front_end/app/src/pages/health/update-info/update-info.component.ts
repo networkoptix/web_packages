@@ -29,7 +29,7 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         private healthService: NxHealthService,
         private ribbonService: NxRibbonService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 

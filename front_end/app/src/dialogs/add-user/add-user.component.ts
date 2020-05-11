@@ -31,7 +31,7 @@ export class AddUserModalContent {
         private processService: NxProcessService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     get selectedPermission() {

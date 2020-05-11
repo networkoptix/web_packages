@@ -44,7 +44,7 @@ export class NxActivateComponent implements OnInit {
         };
 
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.pageService.setPageTitle(this.LANG.pageTitles.activate);
 
         this.activate = this.processService.createProcess(() => {

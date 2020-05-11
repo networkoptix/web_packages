@@ -69,7 +69,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     private isActive(val) {

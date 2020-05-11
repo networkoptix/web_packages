@@ -60,7 +60,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
