@@ -67,7 +67,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "port": 9000,
-            "browserTarget": "front-end:build"
+            "browserTarget": "front-end:build",
+            "sslKey": "ssl_keys/server.key",
+            "sslCert": "ssl_keys/server.crt",
+            "ssl": true
           },
           "configurations": {
             "production": {

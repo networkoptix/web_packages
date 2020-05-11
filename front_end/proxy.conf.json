@@ -36,7 +36,7 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/": {
-    "target": "http://localhost:9000",
+    "target": "https://localhost:9000",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
@@ -57,7 +57,7 @@
     "changeOrigin": true
   },
   "/static/": {
-    "target": "http://localhost:9000",
+    "target": "https://localhost:9000",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,

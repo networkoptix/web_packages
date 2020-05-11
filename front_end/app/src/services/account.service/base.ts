@@ -143,7 +143,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    get(forceUpdate = false): Promise<Account | false> {
+    get(forceUpdate = false): Promise<Account | undefined> {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -151,7 +151,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
-                    return false;
+                    return undefined;
                 });
         }
 
@@ -422,9 +422,9 @@ export abstract class BaseAccount implements OnDestroy {
     protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError(() => {
+            catchError((ex) => {
                 this.logoutHelper(false);
-                return of('Error');
+                return of(undefined);
             })
         ).subscribe((account: Account) => {
             this.account = account;

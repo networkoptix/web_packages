@@ -234,7 +234,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     this.canViewDownloads = true;
                     this.getDownloads();
                 });
-
         } else {
             this.canViewDownloads = true;
             this.getDownloads();
