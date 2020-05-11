@@ -132,7 +132,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         });
     }
 
-    logout(doNotRedirect) {
+    logout(doNotRedirect = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -149,7 +149,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
             });
     }
 
-    logoutHelper(doNotRedirect) {
+    logoutHelper(doNotRedirect = false) {
         this.cloudApi
             .logout()
             .finally(() => {

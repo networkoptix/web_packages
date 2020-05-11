@@ -63,7 +63,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         return this.mediaServerApi.login(login, password);
     }
 
-    logout(doNotRedirect?) {
+    logout(doNotRedirect = false) {
         this.account = undefined;
 
         if (this.loggingOut) {
@@ -80,7 +80,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             });
     }
 
-    logoutHelper(doNotRedirect: boolean) {
+    logoutHelper(doNotRedirect = false) {
         this.mediaServerApi
             // @ts-ignore Need to add login method to media server
             .logout()
