@@ -13,7 +13,7 @@ import { Injectable }                              from '@angular/core';
  * After the observable resolves it will make the call again in 10 seconds.
  *
  * To start the poll subscribe to it.
- * const currentSubscription = examplePoll.subscribe((data: any) => { console.log(data); });
+ * const currentSubscription = examplePoll.subscribe((data: unknown) => { console.log(data); });
  *
  * Stopping the poll.
  * currentSubscription.unsubscribe();

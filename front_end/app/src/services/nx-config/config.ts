@@ -357,7 +357,7 @@ export const nxConfig: IConfig = {
         },
         name: ''
     },
-    footerItems        : '',
+    footerItems        : [],
     googleTagManagerId : '',
     pushConfig         : '',
     trafficRelayHost   : '',

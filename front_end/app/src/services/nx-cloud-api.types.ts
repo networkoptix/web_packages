@@ -226,5 +226,5 @@ export interface CloudStorageUsage extends CloudResponse {
     archiveFrom: number,
     recordingBitrate: number,
     delayFromLive: number,
-    spaceUsed: any
+    spaceUsed: unknown
 };

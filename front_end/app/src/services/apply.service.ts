@@ -58,7 +58,7 @@ export class Watcher<T extends any> {
  * TODO: Unused, could probably remove
  */
 export class ObjWatcher<Object> {
-    originalValue: any = {};
+    originalValue: unknown = {};
     valueSubject = new BehaviorSubject({});
 
     get value() {
