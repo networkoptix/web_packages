@@ -13,12 +13,12 @@ export class Account {
     is_superuser: boolean;
     permissions: string[];
 
-    constructor({ email, fullName, permissions, name }: User) {
+    constructor({ email, fullName, permissions, name, isAdmin }: User) {
         this.email = email;
         const [first, ...rest] = (fullName || name || '').split(' ');
         this.first_name = first;
         this.last_name = (rest || ['']).reverse()[0];
         this.permissions = (permissions || '').split('|');
-        this.is_superuser = permissions.includes('GlobalAdminPermission');
+        this.is_superuser = isAdmin || permissions.includes('GlobalAdminPermission');
     }
 }

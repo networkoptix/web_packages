@@ -1,11 +1,11 @@
-import { BaseAccount } from './base';
-import { Account } from './account';
-import { Exactly } from '../../utils/utility-types';
-import { Inject, Injector }        from '@angular/core';
+import { BaseAccount }                                    from './base';
+import { Account }                                        from './account';
+import { Exactly }                                        from '../../utils/utility-types';
+import { Inject, Injector }                               from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
-import { NxConfigService }                       from '../nx-config';
+import { NxConfigService }                                from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
 import { NxSessionService }                               from '../session.service';
@@ -13,10 +13,11 @@ import { WINDOW }                                         from '../window-provid
 import { NxAppStateService }                              from '../nx-app-state.service';
 import { NxUriService }                                   from '../uri.service';
 import { NxPollService }                                  from '../poll.service';
-import { NxSystemAPIService } from '../system-api.service';
+import { NxSystemAPIService }                             from '../system-api.service';
 
 /**
- * CloudAcount over-rides BaseAccount, should maintain the same interface.
+ * CloudAccount overrides BaseAccount, should maintain the same interface.
+ * This is enforced using the Exactly<BaseAccount, CloudAccount> type.
  */
 export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, CloudAccount> {
     constructor(
@@ -166,9 +167,5 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                     this.window.location.reload();
                 });
             });
-    }
-
-    serviceInstance() {
-        return 'is cloud';
     }
 }

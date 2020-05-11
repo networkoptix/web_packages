@@ -1,10 +1,10 @@
-import { BaseAccount } from './base';
-import { Exactly } from '../../utils/utility-types';
-import { Inject, Injector }        from '@angular/core';
+import { BaseAccount }                                    from './base';
+import { Exactly }                                        from '../../utils/utility-types';
+import { Inject, Injector }                               from '@angular/core';
 import { DOCUMENT, Location }                             from '@angular/common';
 import { LocalStorageService }                            from 'ngx-store';
 import { Router }                                         from '@angular/router';
-import { NxConfigService }                       from '../nx-config';
+import { NxConfigService }                                from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
 import { NxSessionService }                               from '../session.service';
@@ -12,11 +12,12 @@ import { WINDOW }                                         from '../window-provid
 import { NxAppStateService }                              from '../nx-app-state.service';
 import { NxUriService }                                   from '../uri.service';
 import { NxPollService }                                  from '../poll.service';
-import { NxSystemAPI, NxSystemAPIService } from '../system-api.service';
-import { Account } from './account';
+import { NxSystemAPI, NxSystemAPIService }                from '../system-api.service';
+import { Account }                                        from './account';
 
 /**
- * LocalAcount and CloudAccount overrides BaseAccount, should maintain the same interface.
+ * LocalAcount overrides BaseAccount, should maintain the same interface.
+ * This is enforced using the Exactly<BaseAccount, LocalAccount> type.
  */
 export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, LocalAccount> {
     constructor(
@@ -25,7 +26,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         locationService: Location,
         @Inject(DOCUMENT) protected document: Document,
         @Inject(WINDOW) protected window: Window,
-        protected cloudApi: NxCloudApiService, // Maybe create a version of this service that works with webadmin
+        protected cloudApi: NxCloudApiService,
         protected sessionService: NxSessionService,
         protected uriService: NxUriService,
         protected localStorageService: LocalStorageService,
@@ -53,13 +54,12 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         );
     }
 
-    get(forceUpdate = false) {
-        return this.mediaServerApi.getCurrentUser().then(({ reply: user }) => new Account(user));
+    async get(forceUpdate = false) {
+        const { reply: user } = await this.mediaServerApi.getCurrentUser();
+        return new Account(user);
     }
 
     login(login, password, remember = false) {
-        // @ts-ignore Need to add login method to media server and transform
-        // return type from NormalResponse<User> to NormalResponse<Account>
         return this.mediaServerApi.login(login, password);
     }
 
@@ -82,7 +82,6 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
 
     logoutHelper(doNotRedirect = false) {
         this.mediaServerApi
-            // @ts-ignore Need to add login method to media server
             .logout()
             .finally(() => {
                 this.sessionService.invalidateSession(); // Clear session
@@ -99,11 +98,6 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                 });
             });
     }
+}
 
-    // This can probably work without modifications with the shadowed get method on LocalAccount
-    // redirectAuthorised() {}
-
-    serviceInstance() {
-        return 'is local';
-    }
 };

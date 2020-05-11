@@ -18,7 +18,7 @@ import { NxPollService }                                  from '../poll.service'
 import { NxUtilsService }                                 from '../utils.service';
 import { IParams }                                        from '../../components/search/search.component';
 import { Account }                                        from './account';
-import { NxSystemAPIService, NxSystemAPI } from '../system-api.service';
+import { NxSystemAPIService, NxSystemAPI }                from '../system-api.service';
 
 /**
  * BaseAccount is an abstract class extended by CloudAccount and LocalAccount.
@@ -43,6 +43,12 @@ export abstract class BaseAccount implements OnDestroy {
     protected dialogs: NxDialogsService;
     protected applyService: NxApplyService;
     public mediaServerApi: NxSystemAPI;
+
+    // Abstract methods implemented by cloud and local versions
+    abstract logoutHelper(doNotRedirect?: boolean): void;
+    abstract get(forceUpdate?: boolean): Promise<Account | false>;
+    abstract login(email: string, password: string, remember: boolean): any;
+    abstract logout(doNotRedirect?: boolean): void;
 
     constructor(
         configService: NxConfigService,
@@ -110,6 +116,8 @@ export abstract class BaseAccount implements OnDestroy {
         this.queryParamSubscription.unsubscribe();
     }
 
+    // Methods shared between local and cloud versions of account service.
+
     protected get account() {
         return this.accountSubject.getValue();
     }
@@ -147,8 +155,6 @@ export abstract class BaseAccount implements OnDestroy {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
     }
-
-    abstract get(forceUpdate?: boolean): Promise<Account | false>;
 
     requireLogin() {
         return this.get()
@@ -210,8 +216,6 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    abstract login(email: string, password: string, remember: boolean): any;
-
     // Temporary aid for AJS
     getCredentialsFromAuth(authKey: string) {
         return atob(authKey).split(':');
@@ -237,9 +241,6 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    abstract logout(doNotRedirect?: boolean): void;
-
-    // TODO: Need to refine return value
     logoutAuthorised() {
         return this.get()
             .then((account: Account) => {
@@ -321,8 +322,7 @@ export abstract class BaseAccount implements OnDestroy {
             });
     }
 
-    abstract logoutHelper(doNotRedirect?: boolean): void;
-
+    // TODO: Need to refine return value
     protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
@@ -340,9 +340,5 @@ export abstract class BaseAccount implements OnDestroy {
             this.account = undefined;
             this.accountPollSubscription.unsubscribe();
         }
-    }
-
-    serviceInstance() {
-        return 'is base';
     }
 }

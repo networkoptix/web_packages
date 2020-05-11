@@ -16,6 +16,7 @@ export interface User {
     canBeDeleted: boolean;
     email: string;
     isCloud: boolean;
+    isAdmin?: boolean;
     isEnabled: boolean;
     userRoleId: string;
     permissions: string;
@@ -278,6 +279,10 @@ export class NxSystemAPI {
                 this.setAuthKeys(auth, authPost, authRtsp);
                 return of(data.reply);
             })).toPromise();
+    }
+
+    logout() {
+        return this.post('/api/cookieLogout').toPromise();
     }
 
     // TODO: This doesn't look like it's being used
