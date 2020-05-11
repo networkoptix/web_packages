@@ -36,6 +36,7 @@ Open Browser and go to URL
     Set Selenium Timeout    ${selenium_timeout}
     Check Language Anonymous
     Go To    ${url}
+    
 
 Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}

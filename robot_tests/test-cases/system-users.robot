@@ -479,20 +479,20 @@ Administrator can add, disable and enable Viewer
     Log In    ${random email}    ${BASE PASSWORD}    button=None
     Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
-    
+
 Cloud Owner Can Change Local User Login
     [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List   
-    Verify In Local Users UI    ${local users}    ${email}   
-    @{new locals} =    Create List 
-    FOR    ${user}    IN    @{local users}  
+    Go To Users List
+    Verify In Local Users UI    ${local users}    ${email}
+    @{new locals} =    Create List
+    FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}
-	    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed   
+	    ${new login} =    Change Login for Local User    ${user}    Local+${user}_changed
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -506,13 +506,13 @@ Cloud Owner Can Change Local User Login
     Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Change Local User Full Name
-    [Tags]    local user   
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List      
+    Go To Users List
     Verify In Local Users UI    ${local users}    ${email}
-    @{new locals} =    Create List 
+    @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
@@ -520,23 +520,23 @@ Cloud Owner Can Change Local User Full Name
 	    ${new full name} =    Change Full Name for Local User     ${user}    Changed User
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
-        Wait Until Element Is Visible    ${NO UNSAVED CHANGES} 
+        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    local+${user}
         &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=&{permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")]	
-    
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+
 Cloud Owner Can Change Local User Email
-    [Tags]    local user   
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List      
+    Go To Users List
     Verify In Local Users UI    ${local users}    ${email}
-    @{new locals} =    Create List 
+    @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
@@ -550,21 +550,21 @@ Cloud Owner Can Change Local User Email
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")]    
-    
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local user   
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List      
+    Go To Users List
     Verify In Local Users UI    ${local users}    ${email}
-    @{new locals} =    Create List 
+    @{new locals} =    Create List
     FOR    ${user}    IN    @{local users}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}
-        ${new permission} =    Change Permission Level for Local User     ${user}    ${email} 
+        ${new permission} =    Change Permission Level for Local User     ${user}    ${email}
         Wait Until Elements Are Visible    ${ACCOUNT SAVE}
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
@@ -577,43 +577,43 @@ Cloud Owner Can Change Local User Permissions
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")] 
-    
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+
 Cloud Owner Can Change Local User Password
-    [Tags]    local user    
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List      
+    Go To Users List
     Verify In Local Users UI    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
         Log    Change password for ${user}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}
-        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
+        Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
         Input Text    //input[@id="newPassword"]    ${ALT PASSWORD}
         Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         Sleep    5
         ${user} =    Convert To Lowercase    ${user}
-        @{new auth} =    Create List    local+${user}     ${ALT PASSWORD} 
+        @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
         ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
     END
     Delete All Local Users    //span[contains(text(),"ocal+")]
-    
+
 Cloud Owner Can Modify All Settings for Local Users
-    [Tags]    local user  
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
-    Go To Users List      
-    ${new locals} =    Modify Local Users via Cloud UI    ${local users}     
+    Go To Users List
+    ${new locals} =    Modify Local Users via Cloud UI    ${local users}
     Verify Changed Info Via API    ${new locals}
     Delete All Local Users    //span[contains(text(),"local+")]
-      
+
 Cloud Owner Can Disable Enable Local User
-    [Tags]    local user   
+    [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
@@ -643,12 +643,12 @@ Cloud Owner Can Disable Enable Local User
     END
     Should Be True    ${state} == ${True}
     Delete All Local Users    //span[contains(text(),"ocal+")]
-    
+
 Cloud Admininstrator Can Change Settings For Non Admin Local Users
     [Tags]    local user
     @{local users} =    Get Dictionary Keys    ${role names}
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
-    Log in to Auto Tests System    ${EMAIL ADMIN} 
+    Log in to Auto Tests System    ${EMAIL ADMIN}
     Go To Users List
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
     FOR    ${user}    IN    @{local users}
@@ -657,14 +657,13 @@ Cloud Admininstrator Can Change Settings For Non Admin Local Users
 	    ...    ${LOCAL USER NAME}
 	    ${user role} =    Get Text    //span[text()="Local+${user}"]/following-sibling::span
 	    ${contains} =    Run Keyword And Return Status    Should Contain    ${user role}    ${ADMIN TEXT}
-	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${EMAIL ADMIN}    
+	    Run Keyword If    ${contains} == ${False}    Modify All Local User Info    ${user}    ${EMAIL ADMIN}
         ...    ELSE    Run Keyword and Expect Error    *    Modify All Local User Info    ${user}    ${EMAIL ADMIN}
         Run Keyword If    ${contains} == ${False}    Wait Until Elements Are Visible    ${DISABLE USER SWITCH}    ${LOCAL USER DELETE BUTTON}
-        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}         
+        ...    ELSE    Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
     END
     Run Keyword and Expect Error    *    Delete All Local Users    //span[contains(text(),"ocal+")]
     Log Out
-    Log in to Auto Tests System    ${email} 
+    Log in to Auto Tests System    ${email}
     Go To Users List
     Delete All Local Users    //span[contains(text(),"ocal+")]
-    

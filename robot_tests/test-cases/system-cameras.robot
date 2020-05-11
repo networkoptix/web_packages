@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Open Browser and go to URL    ${url}
-Test Setup        Common Restart Logout    ${url}
+Test Setup        Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
 Test Teardown     Common Restart Logout    ${url}
 Suite Teardown    Close All Browsers
 Force Tags        system
@@ -14,24 +14,28 @@ ${url}         ${ENV}
 
 *** Test Cases ***
 Rename Camera
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera by Name    good cam
+
     Click Element    ${EDITABLE TITLE}
-    Input Text    ${EDITABLE TITLE}    camera 1 name changed
+    Input Content Editable Text    ${EDITABLE TITLE}    good cam name changed
     Wait Until Element is Visible    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     @{auth}=    Create List    admin    ${password}
-    ${cameras}=   Get Cameras    ${auth}    ${AUTO SYS IP}
-    Should Be Equal    ${cameras[0]["name"]}    camera 1 name changed
-    Input Text    ${EDITABLE TITLE}    camera 1
+    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam name changed
+
+    Click Element    ${EDITABLE TITLE}
+    Input Content Editable Text    ${EDITABLE TITLE}    good cam
     Wait Until Element is Visible    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
     Click Button    //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
-    Should Be Equal    ${cameras[0]["name"]}    camera 1
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+
+    Camera Name Should be    ${auth}    ${AUTO SYS IP}    ${AUTO TESTS GOOD CAM ID}    good cam
 
 View button
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -39,7 +43,6 @@ View button
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/view
 
 Detailed Info
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -47,7 +50,6 @@ Detailed Info
     Wait Until Location Contains    ${ENV}/systems/${AUTO TESTS SYSTEM ID}/health
 
 Aspect Ratio
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -66,11 +68,10 @@ Aspect Ratio
     Aspect Ratio Should Be    Auto
 
 Rotation
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
     Select Camera By Name    good cam
+    Verify on Cameras Page
     Change Rotation    90˚
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
@@ -87,7 +88,6 @@ Rotation
     Rotation Should Be    Auto
 
 Audio enable Disabled
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    good cam
@@ -99,14 +99,13 @@ Audio enable Disabled
     Audio Enabled Should Be    True
 
 Audio unavailable
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
+    Select Camera by Name    no audio cam
     Wait Until Element is Visible    ${ENABLE AUDIO CHECKBOCK}//label[@disabled]
 
 Edit credentials form Close and Cancel buttons
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -121,29 +120,29 @@ Edit credentials form Close and Cancel buttons
     Click Button    ${EDIT CREDENTIALS CANCEL BUTTON}
     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
-Changing credentials from valid to invalid ones makes the camera unauthorized
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
-    Wait Until Element is Visible    ${CAMERAS LINK}
-    Click Link    ${CAMERAS LINK}
-    Verify on Cameras Page
-    Select Camera By Name    good cam
-    Click Button    ${EDIT CREDENTIALS BUTTON}
-    Verify Authentication Form
-    Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwer
-    Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
-    Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
-    Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
+# Changing credentials from valid to invalid ones makes the camera unauthorized
+#     Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+#     Wait Until Element is Visible    ${CAMERAS LINK}
+#     Click Link    ${CAMERAS LINK}
+#     Verify on Cameras Page
+#     Select Camera By Name    good cam
+#     Click Button    ${EDIT CREDENTIALS BUTTON}
+#     Verify Authentication Form
+#     Input Text    ${EDIT CREDENTIALS LOGIN INPUT}    qwer
+#     Input Text    ${EDIT CREDENTIALS PASSWORD INPUT}    asdf
+#     Click Button    ${EDIT CREDENTIALS SAVE BUTTON}
+#     Wait Until Element is Not Visible    ${EDIT CREDENTIALS FORM}
 
 
-Changing credentials from invalid ones to valid ones makes the camera authorized
+# Changing credentials from invalid ones to valid ones makes the camera authorized
 
 
 Record Always
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
+    Click Element    ${RECORING CHECK BOX}
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
     Click Element    ${RECORD ALWAYS RADIO BUTTON}
     Wait Until Element is Visible    ${SYSTEM SAVE}
