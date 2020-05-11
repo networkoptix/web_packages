@@ -1,4 +1,4 @@
-import { BaseAccount } from './base';
+import { CloudAccount } from './cloud';
 export { Account } from './account';
 
 /**
@@ -10,4 +10,4 @@ export { Account } from './account';
  * typescript has/adds a way to programmatically set a type based on a value we could
  * replace this with a type alias.
  */
-export class NxAccountService extends BaseAccount {}
+export class NxAccountService extends CloudAccount {}

@@ -67,9 +67,9 @@ export class NxSystemAPI {
 
     private serverId: string;
     private systemId: string;
-    private currentUser: User;
+    private currentUser: t.NormalResponse<User>;
     private userEmail: string;
-    private userRequest: Promise<User>;
+    private userRequest: Promise<t.NormalResponse<User>>;
     private urlBase: string;
     private unauthorizedCallback: (params: any) => any;
 
@@ -222,7 +222,7 @@ export class NxSystemAPI {
             return this.userRequest;
         }
         if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
-            this.userRequest = this.get<User>('/ec2/getUsers').toPromise()
+            this.userRequest = this.get<Promise<t.NormalResponse<User>>>('/ec2/getUsers').toPromise()
                 .then((result: any) => {
                     this.currentUser = result.find((user: User) => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
@@ -230,7 +230,7 @@ export class NxSystemAPI {
                     return this.currentUser;
                 });
         } else { // Local system mode ???
-            this.userRequest = this.get<User>('/api/getCurrentUser').toPromise()
+            this.userRequest = this.get<t.NormalResponse<User>>('/api/getCurrentUser').toPromise()
                 .then((result) => {
                     this.currentUser = result;
                     return this.currentUser;

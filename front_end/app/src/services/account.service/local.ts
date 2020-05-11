@@ -53,8 +53,8 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
         );
     }
 
-    get() {
-        return this.mediaServerApi.getCurrentUser().then(user => new Account(user));
+    get(forceUpdate = false) {
+        return this.mediaServerApi.getCurrentUser().then(({ reply: user }) => new Account(user));
     }
 
     login(login, password, remember = false) {
@@ -80,8 +80,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             });
     }
 
-    protected logoutHelper(doNotRedirect: boolean) {
-
+    logoutHelper(doNotRedirect: boolean) {
         this.mediaServerApi
             // @ts-ignore Need to add login method to media server
             .logout()
