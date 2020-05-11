@@ -99,5 +99,3 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             });
     }
 }
-
-};
