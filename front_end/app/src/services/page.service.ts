@@ -19,26 +19,31 @@ export class NxPageService {
     }
 
     // called from app component
-    setLanguage(lang: LanguageI18NStaticTypes) {
-        this.LANG = lang;
+    public set newLanguage(language: LanguageI18NStaticTypes) {
+        this.LANG = language;
     }
 
-    setPageTitle(value: string, useAltTemplate?: boolean) {
-        let title = value;
+    public set pageTitle(title: string) {
         if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
-            title = this.LANG.pageTitles.template.replace('{{title}}', value);
-            if (useAltTemplate) {
-                title = title.replace('- ', '');
-            }
+            title = this.LANG.pageTitles.template.replace('{{title}}', title);
+        }
+        this.title.setTitle(title);
+    }
+
+    public set pageTitleRemoveHyphen(title: string) {
+        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
+            title = this.LANG.pageTitles.template
+                .replace('{{title}}', title)
+                .replace('- ', '');
         }
         this.title.setTitle(title);
     }
 
     setDefaultLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.default});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.default });
     }
 
     setDesktopLayout() {
-        this.meta.updateTag({name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout});
+        this.meta.updateTag({ name: 'viewport', content: this.CONFIG.meta.viewport.desktopLayout });
     }
 }

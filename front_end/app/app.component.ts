@@ -81,9 +81,9 @@ export class AppComponent {
             // @ts-ignore
             languageService.newTranslation = { language: window.LANG.ajs.language, json: window.LANG.i18n };
             this.LANG = languageService.translations;
-            this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
+            this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
             // @ts-ignore
-            this.pageService.setPageTitle(this.LANG.pageTitles.default);
+            this.pageService.pageTitle = this.LANG.pageTitles.default;
 
             // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
             // This makes sure only the preloader is shown before the page is refreshed to a logged in state.

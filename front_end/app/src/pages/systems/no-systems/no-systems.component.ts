@@ -17,11 +17,11 @@ export class NxNoSystemsComponent implements OnInit {
     private setupDefaults() {
         this.LANG = this.language.translations;
 
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 
     constructor(private language: NxLanguageProviderService,
-                private pageService: NxPageService,
+                private pageService: NxPageService
     ) {
         this.setupDefaults();
     }

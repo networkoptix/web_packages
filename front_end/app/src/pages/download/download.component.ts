@@ -199,7 +199,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         } else {
             title = this.LANG.pageTitles.download;
         }
-        this.pageService.setPageTitle(title);
+        this.pageService.pageTitle = title;
     }
 
     ngOnInit(): void {

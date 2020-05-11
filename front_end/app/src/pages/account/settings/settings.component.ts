@@ -79,7 +79,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.pageService.setPageTitle(this.LANG.pageTitles.account);
+        this.pageService.pageTitle = this.LANG.pageTitles.account;
 
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {

@@ -184,7 +184,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.resetFilterModel();
         }
 
-        this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
+        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices;
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;

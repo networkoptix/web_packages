@@ -118,7 +118,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
                     this.downloadsData[data.type] = this.activeBuilds;
                 }
 
-                this.pageService.setPageTitle(new TitleCasePipe().transform(this.noteTypes[0])); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
+                this.pageService.pageTitle = new TitleCasePipe().transform(this.noteTypes[0]); // this.downloadTypes[ 0 ][ 0 ].toUpperCase() + this.downloadTypes[ 0 ].substr(1).toLowerCase());
 
                 setTimeout(() => {
                     this.tabsVisible = true;
@@ -141,7 +141,7 @@ export class DownloadHistoryComponent implements OnInit, OnDestroy {
 
     public beforeChange($event: NgbTabChangeEvent) {
         this.activeBuilds = this.downloadsData[$event.nextId];
-        this.pageService.setPageTitle(new TitleCasePipe().transform($event.nextId));
+        this.pageService.pageTitle = new TitleCasePipe().transform($event.nextId);
 
         this.uriService
             .updateURI('/downloads/' + $event.nextId, {})

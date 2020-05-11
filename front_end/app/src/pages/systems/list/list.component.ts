@@ -41,7 +41,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.CONFIG = configService.getConfig();
         this.LANG = this.language.translations;
 
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 
     constructor(configService: NxConfigService,

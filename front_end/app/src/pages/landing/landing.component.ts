@@ -43,12 +43,12 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
+        this.pageService.pageTitle = this.LANG.pageTitles.default;
         if (this.router.url === '/logout') {
             this.accountService.logout();
         } else if (this.router.url.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about;
         } else {
             this.accountService
                 .get(/* forceUpdate */true)
@@ -59,13 +59,13 @@ export class NxLandingComponent implements OnInit {
                     } else {
                         if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
-                            this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                            this.pageService.pageTitle = this.LANG.pageTitles.login;
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                    this.pageService.pageTitle = this.LANG.pageTitles.default;
                     this.loaded = true;
                 });
         }

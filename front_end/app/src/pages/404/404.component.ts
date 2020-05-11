@@ -16,6 +16,6 @@ export class Nx404Component {
         pageService: NxPageService
     ) {
         this.LANG = languageService.translations;
-        pageService.setPageTitle(this.LANG.pageTitles.pageNotFound);
+        pageService.pageTitle = this.LANG.pageTitles.pageNotFound;
     }
 }
