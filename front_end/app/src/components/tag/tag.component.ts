@@ -50,7 +50,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.selected = changes.selected && changes.selected.currentValue;
+        this.selected = changes.selected?.currentValue;
         setTimeout(() => {
             if (!this.selected) {
                 this.deselectTag();

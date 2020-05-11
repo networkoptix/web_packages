@@ -110,7 +110,7 @@ export class NxUrlProtocolService {
             this.accountService
                 .authKey()
                 .then((authKey) => {
-                    linkSettings.auth = authKey;
+                    linkSettings.auth = !!authKey;
                     resolve({
                         link: this.generateLink(linkSettings),
                         authKey

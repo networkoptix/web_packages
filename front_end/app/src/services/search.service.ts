@@ -2,6 +2,11 @@ import { Injectable }                                 from '@angular/core';
 import { BehaviorSubject, Subject, SubscriptionLike } from 'rxjs';
 import { AutoUnsubscribe }                            from 'ngx-auto-unsubscribe';
 
+export enum ButtonArrowType {
+    up = 'UP',
+    down = 'DOWN',
+}
+
 @AutoUnsubscribe()
 @Injectable({
     providedIn: 'root'

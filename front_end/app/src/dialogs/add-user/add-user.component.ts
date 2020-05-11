@@ -75,6 +75,7 @@ export class AddUserModalContent {
         this.user = {
             email     : '',
             isEnabled : true,
+            isCloud   : true,
             role      : {
                 name        : this.CONFIG.accessRoles.default,
                 permissions : ''

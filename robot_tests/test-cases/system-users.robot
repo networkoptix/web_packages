@@ -784,7 +784,8 @@ Cloud Owner Can Change Local User Password
         Click Button    //form[@name="changePasswordForm"]//button[text()="Save"]
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         Sleep    5
-        @{new auth} =    Create List    Local+${user}     ${ALT PASSWORD} 
+        ${user} =    Convert To Lowercase    ${user}
+        @{new auth} =    Create List    local+${user}     ${ALT PASSWORD} 
         ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
     END
     Delete All Local Users    //span[contains(text(),"ocal+")]

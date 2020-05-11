@@ -41,14 +41,14 @@ Create system and attach to cloud
     [Return]    ${bind json["id"]}
 
 Connect System to Cloud
-    [Arguments]    ${auth}   ${server ip}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
+    [Arguments]    ${auth}   ${server ip}    ${system name}    ${cloud email}    ${cloud password}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    ${system name}
     Log    ${bind json}
     Sleep    5
     &{Setup Cloud System json}=    Save Cloud System Credentials
     ...    ${auth}
-    ...    ${server ip}:${server port}
+    ...    ${server ip}
     ...    ${bind json["authKey"]}
     ...    ${bind json["name"]}
     ...    ${bind json["id"]}
@@ -143,7 +143,7 @@ Register New User and Activate the Account
 
 Log Out via API
     ${cookies}=   Get Cookies    as_dict = True
-    ${status}=   CloudPortalAPI.Log Out    ${ENV}    &{cookies}[sessionid]    &{cookies}[csrftoken]
+    ${status}=   CloudPortalAPI.Log Out    ${ENV}    ${cookies}[sessionid]    ${cookies}[csrftoken]
     Should Be Equal as Strings    ${status}    200
     Go To    ${ENV}
     Validate Log Out
@@ -151,7 +151,8 @@ Log Out via API
 
 Evaluate Auto System Settings via API
     [Arguments]    ${setting}    ${selected}
-    Create Digest Session    returnedSetting    ${AUTO TESTS DEV2 IP}:${AUTO TESTS DEV2 PORT}    ${AUTO SYS AUTH}     disable_warnings=1
+    # This need to be fixed in CLOUD-4798
+    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}

@@ -1,6 +1,5 @@
 *** Settings ***
 Resource          ../resource.robot
-Resource          ../resources/change-pass-form-validation-resource.robot
 Suite Setup       Setup
 Suite Teardown    Delete All Local Users
 Test Template     Test Passwords Invalid
@@ -14,73 +13,67 @@ ${valid email}          noptixqa+valid@gmail.com
 ${CURRENT PASSWORD IS REQUIRED}
 ...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 
-*** Test Cases ***              OLD PW                    NEW PW
-# Incorrect Old Password          ${7char password}         ${BASE PASSWORD}
+*** Test Cases ***               NEW PW
+Short New Password              ${7char password}
 
-# Empty Old password              ${EMPTY}                  ${BASE PASSWORD}
+Cyrillic New Password           ${CYRILLIC TEXT}
 
-Short New Password              ${BASE PASSWORD}          ${7char password}
+Smiley New Password             ${SMILEY TEXT}
 
-Cyrillic New Password           ${BASE PASSWORD}          ${CYRILLIC TEXT}
+Glyph New Password              ${GLYPH TEXT}
 
-Smiley New Password             ${BASE PASSWORD}          ${SMILEY TEXT}
+TM New Password                 ${TM TEXT}
 
-Glyph New Password              ${BASE PASSWORD}          ${GLYPH TEXT}
+Leading Space New Password      ${SPACE}${BASE PASSWORD}
 
-TM New Password                 ${BASE PASSWORD}          ${TM TEXT}
+Trailing Space New Password     ${BASE PASSWORD}${SPACE}
 
-Leading Space New Password      ${BASE PASSWORD}          ${SPACE}${BASE PASSWORD}
+Empty New Password              ${EMPTY}
 
-Trailing Space New Password     ${BASE PASSWORD}          ${BASE PASSWORD}${SPACE}
+Weak 1 Lowercase Password adrhartjad           ${lowercase password}
 
-Empty New Password              ${BASE PASSWORD}          ${EMPTY}
+Weak 2 Uppercase Password ADRHARTJAD           ${uppercase password}
 
-Empty Both                      ${EMPTY}                  ${EMPTY}
-
-
-Weak 1 Lowercase Password adrhartjad           ${BASE PASSWORD}       ${lowercase password}
-
-Weak 2 Uppercase Password ADRHARTJAD           ${BASE PASSWORD}       ${uppercase password}
-
-Weak 3 Numbers Password 13462344                ${BASE PASSWORD}      ${numbers password}
+Weak 3 Numbers Password 13462344                ${numbers password}
  
-Weak 4 Symbol only Password !@#$%^&*()_-+=     ${BASE PASSWORD}       ${symbol only password}
+Weak 4 Symbol only Password !@#$%^&*()_-+=     ${symbol only password}
     
 
-Fair 1 Lower and Uppercase                      ${BASE PASSWORD}      ${lower upper password}
+Fair 1 Lower and Uppercase                      ${lower upper password}
 
-Fair 2 Lowercase and numbers                   ${BASE PASSWORD}       ${lower number password}
+Fair 2 Lowercase and numbers                   ${lower number password}
 
-Fair 3 Lowercase and Symbols                   ${BASE PASSWORD}       ${lower symbol password}
+Fair 3 Lowercase and Symbols                   ${lower symbol password}
 
-Fair 4 Uppercase and numbers                  ${BASE PASSWORD}        ${upper number password}
+Fair 4 Uppercase and numbers                  ${upper number password}
 
-Fair 5 Uppercase and Symbols                  ${BASE PASSWORD}        ${upper symbol password}
+Fair 5 Uppercase and Symbols                  ${upper symbol password}
 
-Fair 6 Numbers and Symbols                     ${BASE PASSWORD}       ${number symbol password}
+Fair 6 Numbers and Symbols                     ${number symbol password}
 
 
-Good 1 qweASD123                              ${BASE PASSWORD}        ${lower uppper number password}
+Good 1 qweASD123                              ${lower uppper number password}
 
-Good 2 qweASD!@#                                ${BASE PASSWORD}      ${lower upper symbol password}
+Good 2 qweASD!@#                                ${lower upper symbol password}
 
-Good 3 qwe123!@#                               ${BASE PASSWORD}       ${lower number symbol password}
+Good 3 qwe123!@#                               ${lower number symbol password}
 
-Good 4 QWE123!@#                              ${BASE PASSWORD}        ${upper number symbol password}
+Good 4 QWE123!@#                             ${upper number symbol password}
 
 
 *** Keywords ***
 Test Passwords Invalid
     [Tags]    local user
-    [Arguments]    ${old pw}    ${new pw}
+    [Arguments]    ${new pw}
     ${user} =    Set Variable    cloudAdmin
     Log    Change password for ${user}
     Click Element    //span[text()="Local+${user}"]
     Wait Until Elements Are Visible
     ...    ${LOCAL USER LOGIN}
     Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON} 
-    Input Text    //input[@id="newPassword"]    ${new pw}
-    Check New Password Outline    ${new pw}
+    Input Text    ${LOCAL USER PASSWORD INPUT}    ${new pw}
+    Run Keyword If    '''${new pw}'''!='''${EMPTY}'''     Check Password Badge    ${new pw}    //label[@for="newPassword"]  
+    Check New Password Outline    ${new pw}    //label[@for="newPassword"]    ${LOCAL USER PASSWORD INPUT}   
     Click Button    //form[@name="changePasswordForm"]//button[text()="Cancel"]
     
 Restart

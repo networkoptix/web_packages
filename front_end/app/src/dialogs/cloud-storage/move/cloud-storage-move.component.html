@@ -10,13 +10,14 @@
     <div class="modal-body">
         <p translate>Move to...</p>
         <nx-select class="mb-2" id="system" [items]="targetSystems" [selected]="targetSystems[0]" (onSelected)="setTargetSystem($event)" required></nx-select>
-        <p *ngIf="!errorText" class="light-text" translate>
+        <p *ngIf="targetOnline$ | async" class="light-text" translate>
             If selected system already has cloud storage, it will be merged with this one.
         </p>
-        <p *ngIf="errorText" class="mt-2 error-label">{{ errorText }}</p>
+        <p *ngIf="!(targetOnline$ | async)" class="mt-2 error-label" translate>
+            Cloud storage cannot be moved to offline systems.
+        </p>
     </div>
     <div class="modal-footer">
-        <!-- move process still needs to be implemented -->
         <nx-process-button [buttonDisabled]="!currentTargetOnline" [process]="move" [form]="moveForm" [actionType]="'primary'" buttonText="{{ 'OK' | translate }}"></nx-process-button>
         <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
     </div>

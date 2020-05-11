@@ -2,25 +2,25 @@ import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
     OnDestroy, EventEmitter, Output
-} from '@angular/core';
+}                                           from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
-}                                         from '@angular/forms';
-import { ActivatedRoute, Router }         from '@angular/router';
-import { Location }                       from '@angular/common';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { debounceTime }                   from 'rxjs/operators';
-import { Subject }                        from 'rxjs/Subject';
-import { isArray }                        from 'rxjs/internal-compatibility';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
-import { NxLanguageProviderService }      from '../../services/nx-language-provider';
-import { NxConfigService, IConfig }       from '../../services/nx-config';
-import { NxScrollMechanicsService }       from '../../services/scroll-mechanics.service';
-import { NxUriService }                   from '../../services/uri.service';
-import { NxUtilsService }                 from '../../services/utils.service';
-import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_types';
-import { NxSearchService }                from '../../services/search.service';
+}                                           from '@angular/forms';
+import { ActivatedRoute, Router }           from '@angular/router';
+import { Location }                         from '@angular/common';
+import { Subscription, SubscriptionLike }   from 'rxjs';
+import { debounceTime }                     from 'rxjs/operators';
+import { Subject }                          from 'rxjs/Subject';
+import { isArray }                          from 'rxjs/internal-compatibility';
+import { AutoUnsubscribe }                  from 'ngx-auto-unsubscribe';
+import { NxLanguageProviderService }        from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }         from '../../services/nx-config';
+import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
+import { NxUriService }                     from '../../services/uri.service';
+import { NxUtilsService }                   from '../../services/utils.service';
+import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
+import { ButtonArrowType, NxSearchService } from '../../services/search.service';
 
 /* Usage
  <nx-search
@@ -82,14 +82,14 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     private searchSubscription: Subscription;
     private locationSubscription: SubscriptionLike;
     private modelSubscription: SubscriptionLike;
-
     private params: any = {};
-    private showAdvancedOptions: boolean;
-
-    public advSearch = false;
-
     private searchUpdated: any = Subject;
     private modelUpdated: any = Subject;
+
+    showAdvancedOptions: boolean;
+    buttonArrowTypeUp: ButtonArrowType;
+    buttonArrowTypeDown: ButtonArrowType;
+    advSearch = false;
 
     constructor(
         configService: NxConfigService,
@@ -103,6 +103,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.getTranslations();
+
+        this.buttonArrowTypeUp = ButtonArrowType.up;
+        this.buttonArrowTypeDown = ButtonArrowType.down;
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update
@@ -169,7 +172,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     }
 
     updateFilter(params?, resetUri?) {
-        if (params && params.value) {
+        if (params?.value) {
             this.params = params.value;
         }
 
@@ -232,9 +235,9 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     writeValue(value: any): void {
         // Avoid localFilter update if filter in not initialized (page refresh)
         if (value &&
-            ((value.tags && value.tags.length) ||
-                (value.selects && value.selects.length) ||
-                (value.multiselects && value.multiselects.length))) {
+            ((value.tags?.length) ||
+                (value.selects?.length) ||
+                (value.multiselects?.length))) {
             if (NxUtilsService.isEqual(this.localFilter, value)) {
                 return;
             }
@@ -424,7 +427,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (this.localFilter.multiselects && this.localFilter.multiselects.length) {
             this.localFilter.multiselects.forEach((select) => {
                 queryParams[select.id] = undefined;
-                if (select.selected && select.selected.length) {
+                if (select.selected?.length) {
                     queryParams[select.id] = select.selected.join(',');
                 }
             });

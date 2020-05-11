@@ -70,6 +70,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
+        console.log(this.accountService.serviceInstance());
     }
 
     private isActive(val) {
@@ -286,7 +287,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                             this.system.getInfoAndPermissions(false).catch(_ => {
                             }).then(system => {
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system?.info.capabilities?.vms_metrics) && this.system.canViewInfo();
                             });
                         }
                     } else {

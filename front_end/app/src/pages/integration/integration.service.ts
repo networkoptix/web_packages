@@ -33,7 +33,7 @@ export class IntegrationService implements OnDestroy {
 
         this.integrationSubject = this.getIntegrations()
             .subscribe(result => {
-                const plugins = result && result.data || [];
+                const plugins = result?.data || [];
 
                 plugins.forEach(plugin => {
                     if (plugin.mine) {
@@ -242,7 +242,7 @@ export class IntegrationService implements OnDestroy {
             };
         }
 
-        if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+        if (plugin.requirementsAndCompatibility?.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
         }
 

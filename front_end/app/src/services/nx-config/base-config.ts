@@ -10,6 +10,7 @@
 import { Watcher } from '../apply.service';
 
 export interface BaseConfig {
+    isLocal: boolean;
     commonPasswordsList?: string[];
     capabilities?: Capabilities;
     viewsDir?: string;
@@ -85,6 +86,7 @@ export interface AccessRoles {
     default: string;
     custom: string;
     editUserPermissionFlag: string;
+    editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];

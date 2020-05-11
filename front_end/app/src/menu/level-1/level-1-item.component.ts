@@ -42,7 +42,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.base && changes.base.currentValue) {
+        if (changes.base?.currentValue) {
             this.itemPath = changes.base.currentValue;
             this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         }

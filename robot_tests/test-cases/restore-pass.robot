@@ -180,8 +180,9 @@ Check restore password email links, colors, cloud name, and open link in new tab
     Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
     ${links}    Get Links From Email    ${email}
     @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/restore_password
-    : FOR    ${link}  IN  @{links}
-    \    check in list    ${expected links}    ${link}
+    FOR    ${link}  IN  @{links}
+        check in list    ${expected links}    ${link}
+    END
     Delete Email    ${email}
     Close Mailbox
 

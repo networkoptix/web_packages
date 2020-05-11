@@ -116,6 +116,7 @@ export class MergeModalContent {
                         this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
                         this.targetSystem = this.selectDefaultSystem();
                         this.secondarySystem = this.targetSystem;
+                        this.getSecondaryName();
                         this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
                         this.systemMergeable = this.checkMergeability(this.targetSystem);
                         if (this.systemMergeable) {
@@ -189,21 +190,24 @@ export class MergeModalContent {
     }
 
     setTargetSystem(targetSystem, serverUrlInputValue = '') {
+        let showUpdate = this.checkMergeDefault;
+        const templateUpdates: any = {};
         if (targetSystem.value === this.otherSystem) {
             this.targetSystemDropdown = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
             this.targetSystem = targetSystem;
-            this.updateShow(this.serverUrlState, { serverUrlInputValue, selectedTarget: this.otherSystem });
+            showUpdate = this.serverUrlState;
+            Object.assign(templateUpdates, { serverUrlInputValue, selectedTarget: this.otherSystem });
         } else {
             this.targetSystem = this.systems.find(system => system.id === targetSystem.value) ||
                 this.peerSystems.find(system => system.id === targetSystem.value);
             this.targetSystem.value = this.targetSystem.id;
             this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
             this.systemMergeable = this.checkMergeability(this.targetSystem);
-            let showUpdate             = this.checkMergeDefault;
-            const templateUpdates: any = {
+            Object.assign(templateUpdates, {
                 helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
                 selectedTarget : this.targetSystem.value
-            };
+            });
+
             if (this.targetSystem.systemName) {
                 showUpdate = this.serverUrlState;
                 templateUpdates.serverUrlInputValue = this.targetSystem.url;
@@ -214,9 +218,9 @@ export class MergeModalContent {
                 templateUpdates.checkingErrorText = this.systemMergeable;
                 delete templateUpdates.helpText;
             }
-            this.updateShow(showUpdate, templateUpdates);
         }
         this.setSystems();
+        this.updateShow(showUpdate, templateUpdates);
     }
 
     getPeerSystems() {
@@ -380,7 +384,7 @@ export class MergeModalContent {
                 }
             }, (error) => {
                 // for errors that pop up during the merge
-                const errorCode = error.resultCode || (error.data && error.data.resultCode);
+                const errorCode = error.resultCode || (error.data?.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
                 }
@@ -396,7 +400,7 @@ export class MergeModalContent {
                 }
 
                 error.data.resultCode = errorCode;
-                error.data.errorText = (error && error.errorText) || '';
+                error.data.errorText = (error?.errorText) || '';
                 // Set the name of the primary system.
                 error.data.primarySystemName = this.primarySystem.name;
                 // If name is undefined try looking in info for the name.
@@ -532,8 +536,8 @@ export class MergeModalContent {
     }
 
     insertErrorMessages() {
-        const { errorText }       = this.machine.state;
-        const targetSystemName  = this.secondaryName;
+        const { errorText } = this.machine.state;
+        const targetSystemName = this.secondaryName;
         const primarySystemName = this.primarySystem.name || this.primarySystem.info.name;
         for (const error in errorText) {
             errorText[error] = this.LANG.dialogs.merge[error]
@@ -548,7 +552,7 @@ export class MergeModalContent {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
-        const stateOfHealth      = (system.info && system.info.stateOfHealth) ||
+        const stateOfHealth      = (system.info?.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
@@ -588,7 +592,7 @@ export class MergeModalContent {
     }
 
     checkMergeability(system) {
-        const stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
+        const stateOfHealth = (system.info?.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
             return this.systemOffline;
@@ -651,7 +655,7 @@ export class MergeModalContent {
         // handles validation error messages
         let showUpdate             = this.serverUrlState;
         const templateUpdates: any = { serverUrlInputValue: input.value };
-        if (input.touched && input.errors && input.errors.required) {
+        if (input.touched && input.errors?.required) {
             showUpdate = this.serverUrlValidationError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlEmpty';
         } else if (input.touched && input.invalid) {
@@ -665,7 +669,7 @@ export class MergeModalContent {
     passwordChange(input) {
         let showUpdate        = '';
         const templateUpdates = { passwordErrorText: '', passwordValue: input.value };
-        if (input.touched && input.errors && input.errors.required) {
+        if (input.touched && input.errors?.required) {
             showUpdate = this.confirmPasswordError;
             templateUpdates.passwordErrorText = this.passwordRequired;
         } else {

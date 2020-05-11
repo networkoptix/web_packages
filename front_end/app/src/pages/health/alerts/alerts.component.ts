@@ -400,7 +400,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     setActiveEntity(alarm, updateURI = true) {
-        if (alarm && alarm.entity) {
+        if (alarm?.entity) {
             this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
             this.activePanelParams = this.healthService.panelParams[alarm.metric];

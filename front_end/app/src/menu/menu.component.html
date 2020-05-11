@@ -34,6 +34,7 @@
                      *ngIf=" subLevelButtonsFor(item).length">
                     <nx-menu-button
                         *ngFor="let button of subLevelButtonsFor(item)"
+                        [system]="system"
                         [button]="button"></nx-menu-button>
                 </div>
 

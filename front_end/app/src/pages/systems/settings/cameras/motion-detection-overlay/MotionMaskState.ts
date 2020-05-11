@@ -4,8 +4,10 @@ import { Mask, Area, AreaTuple }    from './motion-detection-types';
 import { takeUntil, skip }          from 'rxjs/operators';
 
 export class MotionMaskState {
-    public columns: number = 44;
-    public rows: number = 32;
+    static readonly matrixColumns = 44;
+    static readonly matrixRows = 32;
+    public columns: number = MotionMaskState.matrixColumns;
+    public rows: number = MotionMaskState.matrixRows;
     public maskMatrix: BehaviorSubject<Mask>;
     public maskZones: BehaviorSubject<Area[]>;
     public selectionZones: BehaviorSubject<Area[]> = new BehaviorSubject([]);
@@ -19,8 +21,8 @@ export class MotionMaskState {
         private rotation: number = 0
     ) {
         const aspectChange = rotation % 180;
-        this.columns = aspectChange ? 32 : 44;
-        this.rows = aspectChange ? 44 : 32;
+        this.columns = aspectChange ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
+        this.rows = aspectChange ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
         const parsedInitial = this.initialToMaskZones(initialMask, this.rotation);
         this.maskZones = new BehaviorSubject(parsedInitial);
         this.maskMatrix = new BehaviorSubject(
@@ -67,8 +69,8 @@ export class MotionMaskState {
         if (!(rotation % 360)) return matrix;
         if (rotation % 360 === 180) return matrix.reverse().map(row => row.reverse());
         if (rotation % 180) {
-            const rows = toLandscape ? 32 : 44;
-            const columns = toLandscape ? 44 : 32;
+            const rows = toLandscape ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
+            const columns = toLandscape ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
             const rotated = Array(rows).fill(Array(columns).fill(0)).map((_, column) => _.map((_, row) => matrix[row][column]));
             if (rotation % 360 === 90) {
                 return rotated.map(row => row.reverse());
@@ -124,8 +126,8 @@ export class MotionMaskState {
 
     // Transform utilities
     public zonesToMatrix(zones: Area[]): Mask {
-        const rows = this.rotation % 180 ? 44 : 32;
-        const columns = this.rotation % 180 ? 32 : 44;
+        const rows = this.rotation % 180 ? MotionMaskState.matrixColumns : MotionMaskState.matrixRows;
+        const columns = this.rotation % 180 ? MotionMaskState.matrixRows : MotionMaskState.matrixColumns;
         let matrix: Mask = new Array(rows).fill(new Array(columns).fill(0));
         for (const zone of zones) {
             matrix = this.addZone(zone, matrix);

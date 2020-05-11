@@ -11,6 +11,7 @@ Resource     ${variables_file}
 Resource     resources/health-monitor-resource.robot
 Resource     resources/system-server-resource.robot
 Resource     resources/system-camera-resource.robot
+Resource     resources/ipvd-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -110,7 +111,7 @@ Log In
     Click Button    ${LOG IN BUTTON}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-#    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
     Sleep    0.5
 
 Log In With Remember Me
@@ -365,14 +366,14 @@ Get Cloud User Role
     [Arguments]    ${auth}    ${email}    ${system id}
     @{users}=   Get Cloud System Users   ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        Run Keyword If   '&{user}[accountEmail]'=='${email}'    Return From Keyword    &{user}[accessRole]
+        Run Keyword If   '${user}[accountEmail]'=='${email}'    Return From Keyword    ${user}[accessRole]
     END
 
 Get Cloud User Id By Email
    [Arguments]    ${auth}    ${email}    ${system id}
    @{users}=   Get Cloud System Users    ${auth}    ${system id}
    FOR    ${user}    IN    @{users}
-       Run Keyword If   '&{user}[accountEmail]'=='${email}'    return from keyword    &{user}[vmsUserId]
+       Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
    END
 
 Change User Permissions
@@ -564,7 +565,7 @@ User is in cloud system
     [Arguments]    ${user email}    ${system id}
     @{users}=   Get Cloud System Users    ${auth}    ${system id}
     FOR    ${user}    IN    @{users}
-        ${status}=   Run keyword and return status    Should be equal as strings   '&{user}[accountEmail]'    '${user email}'
+        ${status}=   Run keyword and return status    Should be equal as strings   '${user}[accountEmail]'    '${user email}'
         Run Keyword If   ${status}    Exit For Loop
     END
     [Return]    ${status}
@@ -572,7 +573,7 @@ User is in cloud system
 Add user to cloud system if not there
     [Arguments]    ${system id}    ${access role}    ${email}
     ${is there}=   User is in cloud system    ${email}    ${system id}
-    Run Keyword If    ${is there}==False    Run Keyword    Share   ${auth}    ${system id}    ${access role}    ${email}
+    Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
     [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
@@ -704,36 +705,83 @@ Get the link from email
     Delete Email    ${email index}
     Close Mailbox
     [Return]    ${link}
-    
+
 Get Key from Value
     [Arguments]    ${dict}   ${value}
     @{dict keys} =    Get Dictionary Keys    ${dict}
     FOR    ${key}     IN     @{dict keys}
         Return From Keyword If    '${dict['${key}']}' == '${value}'   ${key}
     END
-    
+
 Create Local Users via API
     [Arguments]    ${auth}    ${server}    ${local users}
     FOR    ${user}    IN    @{local users}
-        Save User    ${auth}    ${server}    Local+${user}    &{permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
-    END               
+        Save User    ${auth}    ${server}    Local+${user}    ${permissions}[${user}]    noptixautoqa+local_${user}@gmail.com    Local User    ${BASE PASSWORD}    is cloud=${False}
+    END
     [return]    @{local users}
-    
+
 Delete All Local Users
     [Arguments]    ${locator}=//span[contains(text(),"ocal+")]
-    Wait Until Element is Visible    ${locator}  
-    ${local users} =    Get Element Count     ${locator} 
+    Wait Until Element is Visible    ${locator}
+    ${local users} =    Get Element Count     ${locator}
     #Click Element    ${locator}[1]
     FOR    ${node}   IN RANGE   ${local users}
         Wait Until Element is Visible    ${locator}
-        Click Element    ${locator} 
+        Click Element    ${locator}
         Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
         Click Button    ${LOCAL USER DELETE BUTTON}
-        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON} 
+        Wait Until Element is Visible     ${LOCAL USER DELETE CONFIRM BUTTON}
         Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
         Wait Until Element is Not Visible    ${LOCAL USER DELETE CONFIRM BUTTON}
         Sleep    2
         Reload Page
     END
     Wait Until Element is Visible    //span[text()="admin"]
-    Page Should Not Contain Element     ${locator}
+    Page Should Not Contain Element     ${locator}  
+    
+Check Password Badge
+    [arguments]    ${pass}    ${click}
+    Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
+    Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${click}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${click}
+
+Move focus and check badge
+    [Arguments]    ${badge}    ${click}
+    Element Should Be Visible    ${badge}
+    Click Element    ${click}
+    Element Should Be Visible    ${badge}
+    
+Move focus and check element
+    [Arguments]    ${element}    ${click}
+    Click Element    ${click}
+    Wait Until Element is Visible    ${element}
+    
+Check Password Outline
+    [Arguments]    ${pass}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
+    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
+    Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
+    ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
+    ...    ELSE IF    '''${pass}'''=='''${7char password}'''
+    ...    Element Should Be Visible    ${PASSWORD TOO SHORT}
+    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}
+    ...    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
+    ...    ELSE IF    '''${pass}'''=='''${common password}'''
+    ...    Element Should Be Visible    ${PASSWORD TOO COMMON}
+    ...    ELSE IF    '''${pass}''' in ${weak passwords}
+    ...    Element Should Be Visible    ${PASSWORD IS WEAK}
+
+Check New Password Outline
+    [Arguments]    ${new pw}    ${click}    ${input}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
+    ...    //nx-password-input[@name='newPassword' and contains(@class, 'ng-invalid')]//input[@id="newPassword"]
+    # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
+    Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${click}
+    ...    ELSE IF    '''${new pw}'''=="${7char password}"    Move focus and check element    ${PASSWORD TOO SHORT}    ${click}
+    ...    ELSE IF    '''${new pw}''' in "${incorrect passwords}"    Move focus and check element    ${PASSWORD SPECIAL CHARS}    ${click}
+    ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${click}
+    ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${click}
+# ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput

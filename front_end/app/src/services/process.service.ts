@@ -169,7 +169,11 @@ export class Process {
 
     // TODO refine error types
     private formatError(error: any, errorCodes: any): string | false {
-        const errorCode = (error && error.data && error.data.resultCode) || (error && error.resultCode) || error;
+        const errorCode = (error && error.data && error.data.resultCode) ||
+            (error && error.resultCode) ||
+            (error.type === 'error' &&
+            'networkConnection') ||
+            error;
         if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
         }

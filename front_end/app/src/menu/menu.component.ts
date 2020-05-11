@@ -8,9 +8,9 @@ import { NxConfigService, IConfig }  from '../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxMenuService }             from './menu.service';
 import { NxLanguageProviderService } from '../services/nx-language-provider';
-import { NxUtilsService }            from '../services/utils.service';
-import { NxSearchService }           from '../services/search.service';
-import { NxSystem }                  from '../services/system.service';
+import { NxUtilsService }                   from '../services/utils.service';
+import { ButtonArrowType, NxSearchService } from '../services/search.service';
+import { NxSystem }                         from '../services/system.service';
 
 /* Usage
  <nx-menu>
@@ -76,7 +76,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                this.menuModel.query = (params && params.search) ? params.search : '';
+                this.menuModel.query = params?.search ?? '';
                 this.searchMode = (this.isSearchable && this.menuModel.query !== '');
                 NxSearchService.getMatchPatterns(this.menuModel);
                 this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
@@ -106,17 +106,17 @@ export class NxMenuComponent implements OnInit, OnChanges {
             });
     }
 
-    private resetNav() {
+    resetNav() {
         this.navItemIdx = 0;
         this.menuService.navItemId = undefined;
     }
 
-    private setNav() {
+    setNav() {
         this.modelChanged(this.menuModel);
     }
 
     private assignItemId() {
-        if (this.searchService.navDirection === 'UP') {
+        if (this.searchService.navDirection === ButtonArrowType.up) {
             this.navItemIdx = (this.navItemIdx > 0) ? --this.navItemIdx : this.navItems.length - 1;
         } else {
             this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
@@ -192,7 +192,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             })[0] || [];
         }
 
-        if (buttons.items && buttons.items.length) {
+        if (buttons.items?.length) {
             buttons = buttons.items;
         }
 

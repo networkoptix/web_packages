@@ -2,6 +2,7 @@ import {
     Component, LOCALE_ID,
     Inject, OnInit
 }                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
 import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
@@ -27,7 +28,7 @@ export class NxCloudStorageComponent implements OnInit {
     system$: BehaviorSubject<NxSystem>;
 
     usageStats: IUsageStats;
-    _cloudCapacity: number;
+    _cloudCapacity: number = 0;
     cloudStorageSystemEnabled$: BehaviorSubject<boolean | string> = new BehaviorSubject('loading');
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
@@ -43,7 +44,8 @@ export class NxCloudStorageComponent implements OnInit {
         private settingsService: NxSettingsService,
         private cloudApiService: NxCloudApiService,
         private processService: NxProcessService,
-        private menuService: NxMenuService
+        private menuService: NxMenuService,
+        private route: ActivatedRoute
     ) {
         this.setupDefaults({ configService, languageService });
         this.init();
@@ -55,6 +57,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     private init() {
+        this.usageStats = emptyUsage;
         this.system$ = this.settingsService.systemSubject;
         this.system$.subscribe(system => {
             if (system === undefined) return;
@@ -86,7 +89,7 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     get systemCloudStorageCapable() {
-        return this.system$.value.cloudStorageCapable;
+        return this.system$.value.cloudStorageCapable || this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
     }
 
     public get cloudCapacity() {
@@ -172,8 +175,16 @@ export class NxCloudStorageComponent implements OnInit {
             // }
             return this.cloudApiService.enableCloudStorage(this.systemId);
         }, {
-            successMessage : 'Cloud Storage Enabled',
-            errorPrefix    : 'Error Enabling Cloud Storage'
+            errorCodes: {
+                cloudInvalidResponse: () => {
+                    return this.LANG.errorCodes.notAuthorized;
+                },
+                networkConnection: () => {
+                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                }
+            },
+            successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success,
+            errorPrefix    : this.LANG.dialogs.cloudStorage.enableCloudStorage.errorPrefix
         }).then(() => {
             this.cloudStorageSystemEnabled = true;
             this.updateEnabledAndUsageStats();

@@ -1,6 +1,7 @@
 import { IConfig } from './config-types';
 
 export const nxConfig: IConfig = {
+    isLocal      : false,
     alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
     animations   : {
         carouselImage: {
@@ -371,6 +372,7 @@ export const nxConfig: IConfig = {
         default                   : 'Viewer',
         custom                    : 'custom',
         editUserPermissionFlag    : 'GlobalAdminPermission',
+        editCameraPermissionFlag  : 'GlobalEditCamerasPermission',
         globalAdminPermissionFlag : 'GlobalAdminPermission',
         customPermission          : {
             name        : 'Custom',
