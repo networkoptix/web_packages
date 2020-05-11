@@ -87,8 +87,8 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
     private modelUpdated: any = Subject;
 
     showAdvancedOptions: boolean;
-    buttonArrowTypeUp: string;
-    buttonArrowTypeDown: string;
+    buttonArrowTypeUp: ButtonArrowType;
+    buttonArrowTypeDown: ButtonArrowType;
     advSearch = false;
 
     constructor(
