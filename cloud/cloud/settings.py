@@ -66,6 +66,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'drf_yasg',
+
     'storages',
 
     'django_celery_results',
@@ -439,7 +441,7 @@ Regex allows cors for the following api calls:
 4) /api/systems/disconnect
 These urls need to be whitelisted because mediaserver use them.
 """
-CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'
+CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'  # Comment out for swagger-ui local.
 
 SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
 CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
