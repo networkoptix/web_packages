@@ -14,6 +14,8 @@ import { NxUriService }                                       from './src/servic
 import { NxPageService }                                      from './src/services/page.service';
 import { NxLanguageAndSettingsProvider }                      from './src/services/nx-language-settings-provider';
 
+require('what-input');
+
 @Component({
     selector : 'nx-app',
     template : `

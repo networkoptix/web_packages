@@ -9,14 +9,14 @@ import { AngularFireModule, FirebaseOptionsToken }                        from '
 import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
 import { LayoutModule }                                                   from '@angular/cdk/layout';
 
-import { InputTrimModule }        from 'ng2-trim-directive';
-import { NgbToast, NgbModal }     from '@ng-bootstrap/ng-bootstrap';
-import { OrderModule }            from 'ngx-order-pipe';
-import { DeviceDetectorModule }   from 'ngx-device-detector';
-import { TranslateModule }        from '@ngx-translate/core';
-import { CookieService }          from 'ngx-cookie-service';
-import { WebStorageModule }       from 'ngx-store';
-import { AppComponent }           from './app.component';
+import { InputTrimModule }               from 'ng2-trim-directive';
+import { NgbToast, NgbModal }            from '@ng-bootstrap/ng-bootstrap';
+import { OrderModule }                   from 'ngx-order-pipe';
+import { DeviceDetectorModule }          from 'ngx-device-detector';
+import { TranslateModule }               from '@ngx-translate/core';
+import { CookieService }                 from 'ngx-cookie-service';
+import { WebStorageModule }              from 'ngx-store';
+import { AppComponent }                  from './app.component';
 import { ComponentsModule }              from './src/components/components.module';
 import { DialogsModule }                 from './src/dialogs/dialogs.module';
 import { PagesModule }                   from './src/pages/pages.module';
@@ -33,20 +33,6 @@ import { NxLanguageAndSettingsProvider } from './src/services/nx-language-settin
 // AoT requires an exported function for factories
 export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSettingsProvider) {
     return () => provider.load();
-}
-
-class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
-    shouldProcessUrl(url: UrlTree) {
-        return !url.toString().match('\/(systems|embed)\/[A-Za-z0-9\-:]+\/view\/?(?:[A-Za-z0-9\-:]+)?');
-    }
-
-    extract(url: UrlTree) {
-        return url;
-    }
-
-    merge(url: UrlTree, whole: UrlTree) {
-        return url;
-    }
 }
 
 @NgModule({
@@ -92,7 +78,6 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
-        { provide: UrlHandlingStrategy, useClass: HybridUrlHandlingStrategy },
         {
             provide    : FirebaseOptionsToken,
             deps       : [NxConfigService],
