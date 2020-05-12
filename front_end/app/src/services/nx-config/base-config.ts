@@ -14,7 +14,6 @@ export interface BaseConfig {
     commonPasswordsList?: string[];
     capabilities?: Capabilities;
     viewsDir?: string;
-    viewsDirCommon?: string;
     previewPath?: string;
     alertTimeout: number;
     animations: Animations;
@@ -519,7 +518,7 @@ export interface Webclient {
     playerReadyTimeout: number;
     reloadInterval: number;
     resetDisplayedTextTimer: number;
-    staticResources: string;
+    // staticResources: string;
     skipFramesRenderingTimeline: boolean;
     updateArchiveStateTimeout: number;
     updateArchiveRecordsTimeout: number;

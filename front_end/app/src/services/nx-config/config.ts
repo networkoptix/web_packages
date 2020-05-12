@@ -446,7 +446,7 @@ export const nxConfig: IConfig = {
         playerReadyTimeout          : 100,
         reloadInterval              : 30 * 1000,
         resetDisplayedTextTimer     : 3 * 1000,
-        staticResources             : 'static/web_common/',
+        // staticResources             : 'static/web_common/',
         skipFramesRenderingTimeline : true,
         // One minute timeout for manifest:
         // * 30 seconds for gateway to open connection

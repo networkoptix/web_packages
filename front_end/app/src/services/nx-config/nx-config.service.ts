@@ -16,7 +16,6 @@ export class NxConfigService {
         // These properties will be injected on config *******************
         // viewsDir: 'static/views/', //'static/lang_' + lang + '/views/';
         // previewPath: '',
-        // viewsDirCommon: 'static/web_common/views/',
         // ***************************************************************
 
         this.config = nxConfig;

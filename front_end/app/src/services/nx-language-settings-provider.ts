@@ -54,7 +54,6 @@ export class NxLanguageAndSettingsProvider {
         this.pageService.setPageTitle(this.LANG.pageTitles.default);
 
         this.CONFIG.viewsDir = 'static/lang_' + data.ajs.language + '/views/';
-        this.CONFIG.viewsDirCommon = 'static/lang_' + data.ajs.language + '/web_common/views/';
     }
 
     setSettings(data) {
