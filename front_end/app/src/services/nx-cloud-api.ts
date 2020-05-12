@@ -23,7 +23,8 @@ export class NxCloudApiService {
     }
 
     checkResponseHasError<T extends any>(data: T) {
-        if (data?.resultCode !== this.CONFIG.responseOk) {
+        // this is not a repetition
+        if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;
         }
         return false;

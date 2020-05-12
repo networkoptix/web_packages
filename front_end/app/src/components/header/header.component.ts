@@ -245,6 +245,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.dialogs
             .login(this.accountService, !redirect)
             .then(() => {});
+
+        return false;
     }
 
     logout() {
