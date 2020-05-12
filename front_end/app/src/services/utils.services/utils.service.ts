@@ -1,7 +1,7 @@
 import {
     Inject, Injectable, LOCALE_ID
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from './nx-config';
+import { NxConfigService, IConfig } from '../nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 import * as moment                  from 'moment';
@@ -266,5 +266,10 @@ export class NxUtilsService {
         const unit = UNITS[exponent];
 
         return `${prefix}${numberString} ${unit}`;
+    };
+
+    static wrapWithPercent = (numerator: number, denominator: number, wrappedValue: string | number, precision = 2) => {
+        const percentage = (numerator / denominator) * 100;
+        return `${precision ? percentage.toPrecision(precision) : percentage}% (${wrappedValue})`;
     };
 }

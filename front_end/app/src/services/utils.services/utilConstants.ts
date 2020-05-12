@@ -80,6 +80,14 @@ const toLocaleString = (number: number, locale): string | number =>
             ? number.toLocaleString()
             : number;
 
+/**
+ * Use this to enforce that class implementation exactly matches interface or other class.
+ *
+ * Usage:
+ * class Example implements Exacty<InterfaceOrClass, Example>{}
+ */
+type Exactly<T, U> = { [K in keyof U]: K extends keyof T ? T[K] : never };
+
 export {
     BYTE_UNITS,
     BIT_UNITS,
@@ -89,5 +97,6 @@ export {
     Byte,
     Bit,
     Bps,
-    toLocaleString
+    toLocaleString,
+    Exactly
 };

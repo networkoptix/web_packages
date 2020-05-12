@@ -11,8 +11,6 @@ import { NxDialogsService }        from '../../../../dialogs';
 import { NxSettingsService }       from '../settings.service';
 import { NxMenuService }           from '../../../../menu';
 import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { fromBits }                from '../../../../utils/transform-tools/from-bits';
-import { wrapWithPercent }         from '../../../../utils/transform-tools/wrap-with-percent';
 import { BehaviorSubject }         from 'rxjs';
 
 @Component({
@@ -92,12 +90,12 @@ export class NxCloudStorageComponent implements OnInit {
 
     public get cloudCapacity() {
         const { locale } = this;
-        return fromBits(this._cloudCapacity, { locale, roundTo: 1073741824 / 10 });
+        return NxUtilsService.fromBits(this._cloudCapacity, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get compCloudCapacity() {
         const { locale, CONFIG: { cloudCapabilities: { cloudStorageSize } } } = this;
-        return fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
+        return NxUtilsService.fromBits(cloudStorageSize, { locale, roundTo: 1073741824 / 10 });
     }
 
     public get bitrate() {
@@ -105,7 +103,7 @@ export class NxCloudStorageComponent implements OnInit {
         return (
             this.usageStats.recordingBitrate === '_'
                 ? this.usageStats.recordingBitrate
-                : fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
+                : NxUtilsService.fromBits(this.usageStats.recordingBitrate, { unitType: 'bps', locale })
         );
     }
 
@@ -114,10 +112,10 @@ export class NxCloudStorageComponent implements OnInit {
         return (
             this.usageStats.amountUsed === '_'
                 ? this.usageStats.amountUsed
-                : wrapWithPercent(
+                : NxUtilsService.wrapWithPercent(
                     this.usageStats.amountUsed,
                     this._cloudCapacity,
-                    fromBits(
+                    NxUtilsService.fromBits(
                         this.usageStats.amountUsed,
                         { locale, roundTo: 1073741824 / 10 }),
                     2

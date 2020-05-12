@@ -7,7 +7,7 @@ import { NxCloudApiService }                           from './nx-cloud-api';
 import { NxPollService }                               from './poll.service';
 import { LocalStorageService }                         from 'ngx-store';
 import { NxToastService }                              from '../dialogs/toast.service';
-import { NxUtilsService }                              from './utils.service';
+import { NxUtilsService }                              from './utils.services';
 import { NxUriService }                                from './uri.service';
 import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
 import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
