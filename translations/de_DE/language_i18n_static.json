@@ -70,7 +70,7 @@
         "agreementAccepted": "Vereinbarung wurde akzeptiert",
         "changePassword": "Passwort ändern",
         "newPasswordLabel": "Neues Passwort",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Passwort erfolgreich gespeichert",
         "saveChanges": "Speichern"
     },
     "activeActions": {
@@ -129,9 +129,9 @@
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
         "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Immer aufnehmen",
+            "motion": "Nur Bewegung aufzeichnen",
+            "motionLowRes": "Bewegung + Low-Res"
         },
         "resolution": {
             "various": "- Verschiedene Werte -",
@@ -207,15 +207,15 @@
             "moveCloudStorage": {
                 "title": "Cloudspeicher verschieben",
                 "success": "Speicher erfolgreich verschoben",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "errorPrefix": "Fehler beim Verschieben des Cloudspeichers",
+                "notFound": "Speicher wurde nicht gefunden. Der Speicher wurde möglicherweise von einem anderen Benutzer verschoben oder gelöscht",
                 "status": {
                     "offline": "Cloudspeicher kann nicht auf Offlinesysteme verschoben werden."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Cloudspeicher aktiviert",
+                "errorPrefix": "Fehler beim Aktivieren des Cloudspeichers"
             },
             "noOtherSystemsError": {
                 "message": "Sie können den Cloudspeicher nur zwischen Systemen verschieben, deren Besitzer Sie sind. <br/><br/>Verbinden Sie ein System mit %CLOUD_NAME% mit Ihrem Cloudkonto, um den Cloudspeicher dorthin zu verschieben."
@@ -426,7 +426,7 @@
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -534,8 +534,8 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Diese Seite kann nicht geladen werden",
+            "message": "Stellen Sie sicher, dass Ihre Server online sind, und versuchen Sie es erneut."
         },
         "merge": {
             "title": "Dieses System wird mit {{systemName}} zusammengeführt.",
@@ -597,7 +597,7 @@
         "resetSuccessful": "Server {{ serverName }} wurde auf die Standardeinstellungen zurückgesetzt.",
         "restartFailed": "Beim Neustart des Servers ist ein Problem aufgetreten.",
         "restartSuccessful": "Server wurde erfolgreich neu gestartet.",
-        "serverOffline": "Server is offline.",
+        "serverOffline": "Server ist offline.",
         "servers": "Server",
         "status": {
             "checking": "Überprüfen...",
