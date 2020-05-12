@@ -166,8 +166,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
-                this.recordingModesWatcher,
-                this.recordingWatcher,
+                this.recordingModesWatcher, // these are getting updated somewhere
+                this.recordingWatcher, // these are getting updated somewhere
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
