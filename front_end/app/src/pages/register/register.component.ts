@@ -112,7 +112,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email     : this.accountInfo.email || this.accountService.email,
+            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
             password  : '',
             firstName : '',
             lastName  : '',
