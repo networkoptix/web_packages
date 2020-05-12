@@ -220,7 +220,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
                 motionType      : this.motionType,
-                motionMask      : this.motionMaskWatcher.value || '5,0,0,44,32'
+                motionMask      : this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
             };
             return Promise.all([
                 this.system.updateRecordingSettings(updatedTask, cameraSettings),
@@ -653,7 +653,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
-            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
+            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
