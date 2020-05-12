@@ -117,7 +117,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                                     });
                             }
 
-                            this.setServer();
+                            if (!this.applyService.locked) this.setServer();
                         }
                     });
             });

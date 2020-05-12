@@ -99,7 +99,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    this.setCamera();
+                    if (!this.applyService.locked) this.setCamera();
                 }
             });
 
@@ -149,7 +149,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
                             }
-                            this.setCamera();
+                            if (!this.applyService.locked) this.setCamera();
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
                         this.showPreloader = false;
