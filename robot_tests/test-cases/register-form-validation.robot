@@ -48,58 +48,58 @@ Registered Email                                mark        hamill      ${existi
 
 
 Short Password asdfghj                          mark        hamill      ${valid email}            ${7char password}                  True
-    [tags]    C41860
+    [tags]    C41860    Password
 Weak 1 Lowercase Password adrhartjad            mark        hamill      ${valid email}            ${lowercase password}              True
-    [tags]    C41860
+    [tags]    C41860    Password
 Weak 2 Uppercase Password ADRHARTJAD            mark        hamill      ${valid email}            ${uppercase password}              True
-    [tags]    C41860
+    [tags]    C41860    Password
 Weak 3 Numbers Password 13462344                mark        hamill      ${valid email}            ${numbers password}                True
-    [tags]    C41860
+    [tags]    C41860    Password
 Weak 4 Symbol only Password !@#$%^&*()_-+=      mark        hamill      ${valid email}            ${symbol only password}            True
-    [tags]    C41860
+    [tags]    C41860    Password
 
 Fair 1 Lower and Uppercase                      mark        hamill      ${valid email}            ${lower upper password}            True
-    [tags]    C41860
+    [tags]    C41860    Password
 Fair 2 Lowercase and numbers                    mark        hamill      ${valid email}            ${lower number password}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Fair 3 Lowercase and Symbols                    mark        hamill      ${valid email}            ${lower symbol password}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Fair 4 Uppercase and numbers                    mark        hamill      ${valid email}            ${upper number password}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Fair 5 Uppercase and Symbols                    mark        hamill      ${valid email}            ${upper symbol password}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Fair 6 Numbers and Symbols                      mark        hamill      ${valid email}            ${number symbol password}          True
-    [tags]    C41860
+    [tags]    C41860    Password
 
 Good 1 qweASD123                                mark        hamill      ${valid email}            ${lower uppper number password}    True
-    [tags]    C41860
+    [tags]    C41860    Password
 Good 2 qweASD!@#                                mark        hamill      ${valid email}            ${lower upper symbol password}     True
-    [tags]    C41860
+    [tags]    C41860    Password
 Good 3 qwe123!@#                                mark        hamill      ${valid email}            ${lower number symbol password}    True
-    [tags]    C41860
+    [tags]    C41860    Password
 Good 4 QWE123!@#                                mark        hamill      ${valid email}            ${upper number symbol password}    True
-    [tags]    C41860
+    [tags]    C41860    Password
 
 Common Password qweasd123                       mark        hamill      ${valid email}            ${common password}                 True
-    [tags]    C41860
+    [tags]    C41860    Password
 Cyrillic Password Кенгшщзх                      mark        hamill      ${valid email}            ${CYRILLIC TEXT}                   True
-    [tags]    C41860
+    [tags]    C41860    Password
 Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★            mark        hamill      ${valid email}            ${SMILEY TEXT}                     True
-    [tags]    C41860
+    [tags]    C41860    Password
 Glyph Password 您都可以享受源源不絕的好禮及優惠    mark        hamill      ${valid email}            ${GLYPH TEXT}                      True
-    [tags]    C41860
+    [tags]    C41860    Password
 TM Password qweasdzxc123®™                      mark        hamill      ${valid email}            ${TM TEXT}                         True
-    [tags]    C41860
+    [tags]    C41860    Password
 Leading Space Password                          mark        hamill      ${valid email}            ${SPACE}${BASE PASSWORD}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Trailing Space Password                         mark        hamill      ${valid email}            ${BASE PASSWORD}${SPACE}           True
-    [tags]    C41860
+    [tags]    C41860    Password
 Middle Space Password qweasd 123                mark        hamill      ${valid email}            ${BASE PASSWORD}                   True
-    [tags]    C41862
+    [tags]    C41862    Password
 Empty Password                                  mark        hamill      ${valid email}            ${EMPTY}                           True
-    [tags]    C41556
+    [tags]    C41556    Password
 Symbol Password pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}    mark        hamill      ${valid email}            ${symbol password}           True
-    [tags]    C41861
+    [tags]    C41861    Password
 
 
 Invalid First Name                              ${SPACE}    hamill      ${valid email}            ${BASE PASSWORD}                   True
@@ -145,8 +145,12 @@ Test Register Invalid
     ...    ${TERMS AND CONDITIONS ERROR}
     Register Form Validation    ${first}    ${last}    ${email}    ${pass}    ${checked}
     Run Keyword Unless    '''${pass}''' in ${good passwords} or '''${pass}''' in ${fair passwords}
-    ...    Check Password Outline    ${pass}
+    ...    Check New Password Outline    ${pass}    ${REGISTER FORM}     ${REGISTER PASSWORD INPUT}    registerPassword   
     Run Keyword Unless    "${email}"=="${valid email}"    Check Email Outline    ${email}
     Run Keyword Unless    "${first}"=="mark"    Check First Name Outline    ${first}
     Run Keyword Unless    "${last}"=="hamill"    Check Last Name Outline    ${last}
     Run Keyword Unless    "${checked}"=="True"    Check Terms and Conditions Error
+    
+Restart
+    Close Browser
+    Open Browser and go to URL    ${url}/register

@@ -758,26 +758,16 @@ Move focus and check element
     [Arguments]    ${element}    ${new focus}
     Click Element    ${new focus}
     Wait Until Element is Visible    ${element}
-    
-Check Password Outline
-    [Arguments]    ${pass}
-    Element Style Should Be    ${REGISTER PASSWORD INPUT}    border-color    ${ERROR COLOR}
-    Element Style Should Be    ${REGISTER PASSWORD INPUT}    color    ${ERROR COLOR WITH OPACITY}
-    Run Keyword If    '''${pass}'''=='''${EMPTY}''' or '''${pass}'''=='''${SPACE}'''
-    ...    Element Should Be Visible    ${PASSWORD IS REQUIRED}
-    ...    ELSE IF    '''${pass}'''=='''${7char password}'''
-    ...    Element Should Be Visible    ${PASSWORD TOO SHORT}
-    ...    ELSE IF    '''${pass}''' in ${incorrect passwords}
-    ...    Element Should Be Visible    ${PASSWORD SPECIAL CHARS}
-    ...    ELSE IF    '''${pass}'''=='''${common password}'''
-    ...    Element Should Be Visible    ${PASSWORD TOO COMMON}
-    ...    ELSE IF    '''${pass}''' in ${weak passwords}
-    ...    Element Should Be Visible    ${PASSWORD IS WEAK}
 
 Check New Password Outline
-    [Arguments]    ${new pw}    ${new focus}    ${input}
+    [Arguments]    ${new pw}    ${new focus}    ${input}    ${input name}
+    Click Element    ${new focus} 
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
+    ...    Element Style Should Be    ${input}    border-color    ${ERROR COLOR}
+    Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}
+    ...    Element Style Should Be    ${input}    color    ${ERROR COLOR WITH OPACITY}
     Run Keyword Unless    '''${new pw}''' in ${fair passwords} or '''${new pw}''' in ${good passwords}    Wait Until Element Is Visible
-    ...    //nx-password-input[@name='newPassword' and contains(@class, 'ng-invalid')]//input[@id="newPassword"]
+    ...    //nx-password-input[@name='${input name}' and contains(@class, 'ng-invalid')]//input[@id="${input name}"]
     # The first "Run Keyword If" is added because a click out of filed is required for showing "Password is required"  error message
     Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Input text    ${input}    ${EMPTY}
     Run Keyword If    '''${new pw}'''=="${EMPTY}" or "${new pw}"=="${SPACE}"    Move focus and check element    ${PASSWORD IS REQUIRED}    ${new focus}
