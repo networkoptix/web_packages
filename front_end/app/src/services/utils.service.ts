@@ -5,6 +5,7 @@ import { NxConfigService, IConfig } from './nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
 import * as moment                  from 'moment';
+import * as uv                      from './utilConstants';
 
 @Injectable({
     providedIn: 'root'
@@ -208,5 +209,62 @@ export class NxUtilsService {
         }
 
         return server;
+    };
+
+    /** Storage Utilities */
+
+    /*
+        Formats the given number using `Number#toLocaleString`.
+        - If locale is a string, the value is expected to be a locale-key (for example: `de`).
+        - If locale is true, the system default locale is used for translation.
+        - If no value for locale is specified, the number is returned unmodified.
+    */
+    // Need to add logic to figure out rounding
+    static fromBits(number: number, options?: uv.IFromBytesOptions): string {
+        const defaultOptions: uv.IFromBytesOptions = { unitType: 'byte' }; // round to GB / 10 bits
+        options = { ...defaultOptions, ...options };
+
+        if (typeof options.roundTo === 'number') {
+            number = Math.round(number / options.roundTo) * options.roundTo;
+        } else if (options.roundTo) {
+            // TODO: Need to figure out how to take an object {unit: 'GB', toDecimal: 1} and use it to figure out rounding
+            throw new Error("I haven't implemented this feature yet...");
+        }
+
+        const unitList = {
+            bit  : uv.BIT_UNITS,
+            byte : uv.BYTE_UNITS,
+            bps  : uv.BPS_UNITS
+        };
+        const UNITS = unitList[options.unitType];
+        const base = options.unitType === 'byte' ? 1024 : 1000;
+        const is1024 = base === 1024;
+
+        if (options.signed && number === 0) {
+            return ' 0 ' + UNITS[0];
+        }
+
+        const isNegative = number < 0;
+        const prefix = isNegative ? '-' : options.signed ? '+' : '';
+
+        if (isNegative) {
+            number = -number;
+        }
+
+        if (number < 1) {
+            const numberString = uv.toLocaleString(number, options.locale);
+            return prefix + numberString + ' ' + UNITS[0];
+        }
+
+        const getLog = (num: number): number =>
+            is1024 ? Math.log2(num) / 10 : Math.log10(num) / 3;
+        const exponent = Math.min(Math.floor(getLog(number)), UNITS.length - 1);
+
+        number = Number(number / Math.pow(base, exponent)); // add toPrecision or something???
+        const numberString = uv.toLocaleString(number, options.locale);
+
+        const unit = UNITS[exponent];
+
+        return `${prefix}${numberString} ${unit}`;
     };
 }
