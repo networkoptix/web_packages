@@ -23,15 +23,15 @@ export class NxRegisterComponent implements OnInit {
 
     uriParam: string;
     accountInfo: any = {};
-    register: any;
-    registerSuccess: any;
-    activated: any;
-    code: any;
-    session: any;
-    context: any;
+    register;
+    registerSuccess;
+    activated;
+    code;
+    session;
+    context;
     lockEmail: boolean;
-    fromClient: any;
-    location: any;
+    fromClient;
+    location;
     CONFIG: IConfig;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;

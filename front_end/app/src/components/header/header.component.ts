@@ -33,20 +33,20 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     user: any = {};
     canSeeInfo: boolean;
     system: NxSystem;
-    systems: any;
-    systemId: any;
+    systems;
+    systemId;
     active: any = {};
     activeSystem: any = {};
     singleSystem: any = {};
-    inline: any;
+    inline;
     navVisible: boolean;
     dropdownsVisible: boolean;
     viewHeader: boolean;
     systemCounter: number;
-    loginState: any;
+    loginState;
 
-    getUrlSystemId: any;
-    untilHaveID: any;
+    getUrlSystemId;
+    untilHaveID;
     private headerSubscription: Subscription;
     private loginSubscription: Subscription;
     private routerSubscription: Subscription;

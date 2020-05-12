@@ -22,8 +22,8 @@ export class NxApplyComponent {
     @ViewChild(NxProcessButtonComponent, { static: false }) processButton: NxProcessButtonComponent;
 
     @Input() show: boolean;
-    @Input() save: any;
-    @Input() discard: any;
+    @Input() save;
+    @Input() discard;
     @Input() warn: string;
     @Input() form: NgForm;
 

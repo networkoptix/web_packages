@@ -177,7 +177,7 @@ export class NxUtilsService {
      * Return IPv4 address or IPv6 address if none
      */
     static formatURL<T extends any>(server: T) {
-        function ipReducer(result: any, currentValue: any) {
+        function ipReducer(result: {ipv6: string[], ipv4: string[]}, currentValue: string) {
             if (currentValue[0] === '[') {
                 result.ipv6.push(currentValue);
             } else {

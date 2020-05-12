@@ -12,6 +12,7 @@ import { NxUriService }                                from './uri.service';
 import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
 import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
 import { NxSystem }                                    from './system.service';
+import { IParams } from '../components/search/search.component';
 
 @Injectable({
     providedIn: 'root'
@@ -200,7 +201,7 @@ export interface NxSystemWithUserInfo extends NxSystem {
     ownerAccountEmail: string;
     name: string;
     isMine: boolean;
-    capabilities: any;
+    capabilities: IParams;
     state: string;
     stateOfHealth: string;
 }

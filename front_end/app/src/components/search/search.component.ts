@@ -64,16 +64,16 @@ export interface IParams {
 })
 
 export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccessor {
-    @Input() layout: any;
-    @Input() layoutMod: any; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
-    @Input() placeholder: any;
+    @Input() layout;
+    @Input() layoutMod; // mod for 'selectors' layout (HM is using 100% width width Bootstrap) ... at some point we should unify this BS
+    @Input() placeholder;
     @Input() dataLoaded: boolean;
 
     @Output() onFocus: EventEmitter<any> = new EventEmitter();
     @Output() onFocusOut: EventEmitter<any> = new EventEmitter();
 
     public numberFilters = 0;
-    public filterSelected: any;
+    public filterSelected;
     public localFilter: any = {};
 
     CONFIG: IConfig;

@@ -21,7 +21,7 @@ interface ThumbNail {
     styleUrls   : ['./image-section.component.scss']
 })
 export class NxImageSectionComponent implements OnChanges, AfterViewInit, OnDestroy {
-    @Input() cameraInfo: any;
+    @Input() cameraInfo;
     @ViewChild('imageWidth', { static: false }) imageSize: ElementRef;
     cameraId: string;
     changeRow: boolean;

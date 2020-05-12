@@ -20,7 +20,7 @@ import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 
 interface Params {
-    [key: string]: any;
+    [key: string]: string;
 }
 
 @AutoUnsubscribe()
@@ -33,27 +33,27 @@ interface Params {
 export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    account: any;
+    account;
 
-    filterModel: any;
+    filterModel;
     system: NxSystem;
-    metricId: any;
-    initialId: any;
+    metricId;
+    initialId;
 
     fromBrowserNav: boolean;
     layoutReady: boolean;
     fixedLayoutClass: string;
     breakpoint: string;
 
-    manifest: any;
-    values: any;
-    alarms: any;
+    manifest;
+    values;
+    alarms;
 
-    selectedData: any;
-    selectedPanelData: any;
-    selectedValues: any;
+    selectedData;
+    selectedPanelData;
+    selectedValues;
 
-    menu: any;
+    menu;
     metricName: string;
 
     objectValues = Object.values;

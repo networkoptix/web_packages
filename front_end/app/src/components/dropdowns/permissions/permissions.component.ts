@@ -15,17 +15,17 @@ import { NxConfigService }           from '../../../services/nx-config';
 })
 
 export class NxPermissionsDropdown extends BaseDropdown {
-    @Input() disabled: any;
-    @Input() user: any;
-    @Input() roles: any;
-    @Input() system: any;
-    @Input() selected: any;
+    @Input() disabled;
+    @Input() user;
+    @Input() roles;
+    @Input() system;
+    @Input() selected;
     @Output() onSelected = new EventEmitter<string>();
 
     selection: string;
     message: string;
-    accessRoles: any;
-    differ: any;
+    accessRoles;
+    differ;
 
     constructor(private languageService: NxLanguageProviderService,
                 private configService: NxConfigService

@@ -31,11 +31,11 @@ import { NxApplyService, Watcher }              from '../../../../services/apply
 export class NxSystemUsersComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    location: any;
-    paramUser: any;
+    location;
+    paramUser;
     accessDescription: string;
-    editUser: any;
-    locked: any;
+    editUser;
+    locked;
     nextUserId: string;
     selectedUser: NxSystemUser;
     systemAvailable: boolean;

@@ -33,7 +33,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     account: Account;
     pass: any = {};
 
-    changePassword: any;
+    changePassword;
 
     watchers: any = {
         password    : new Watcher<string>(),

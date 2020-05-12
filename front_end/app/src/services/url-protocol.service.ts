@@ -52,7 +52,7 @@ export class NxUrlProtocolService {
     }
 
     generateLink(linkSettings: linkSettings = {}) {
-        let settings = {
+        let settings: linkSettings = {
             native           : true,
             from             : 'portal', // client, mobile, portal, webadmin
             context          : undefined,
@@ -72,7 +72,7 @@ export class NxUrlProtocolService {
         const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
         const host     = this.window.location.host;
 
-        const getParams: any = { ...settings.actionParameters };
+        const getParams: linkSettings = { ...settings.actionParameters };
 
         if (settings.from) {
             getParams.from = settings.from;
@@ -127,7 +127,7 @@ export class NxUrlProtocolService {
     open(systemId: string) {
         return this.getLink({
             systemId
-        }).then((data: any) => {
+        }).then((data: { link: string, authKey: string}) => {
             let link      = data.link;
             const authKey = data.authKey;
             link = link.replace(/&/g, '&&'); // This is a hack,
@@ -187,13 +187,13 @@ export class NxUrlProtocolService {
     }
 }
 
-export type linkSettings = {
+export interface linkSettings {
     native?: boolean,
     from?: string,
-    context?: any,
+    context?: {},
     command?: string,
     systemId?: string,
-    action?: any,
-    actionParameters?: any,
+    action?: {},
+    actionParameters?: {},
     auth?: boolean
 }

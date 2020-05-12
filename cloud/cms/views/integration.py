@@ -5,6 +5,9 @@ from rest_framework.permissions import AllowAny
 from django.core.cache import caches
 from django.db.models import Q
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from cloud import settings
 from api.helpers.exceptions import api_success, handle_exceptions
 
@@ -139,6 +142,21 @@ def check_integration_store_enabled():
     return cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')['integration_store_enabled']
 
 
+asset_id__route_param = openapi.Parameter("asset_id", openapi.IN_PATH,
+                                          description="The Integration's id.",
+                                          required=True,
+                                          type=openapi.TYPE_STRING)
+draft__query_param = openapi.Parameter("draft", openapi.IN_QUERY,
+                                       description="Get the draft version.",
+                                       type=openapi.TYPE_BOOLEAN)
+pending__query_param = openapi.Parameter("pending", openapi.IN_QUERY,
+                                         description="Get the pending version.",
+                                         type=openapi.TYPE_BOOLEAN)
+
+
+@swagger_auto_schema(method='GET',
+                     operation_description="Returns an integration by id.",
+                     manual_parameters=[asset_id__route_param, draft__query_param, pending__query_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -175,6 +193,9 @@ def get_integration(request, asset_id=None):
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 def get_integrations(request):
+    """
+    Returns a list of integrations available to the current user.
+    """
     is_enabled = check_integration_store_enabled()
     integrations = Asset.objects.filter(asset_type__type=INTEGRATION,
                                         customizations__name__in=[settings.CUSTOMIZATION])

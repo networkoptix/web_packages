@@ -25,16 +25,16 @@ import { NxUtilsService }            from '../../../../../services/utils.service
 
 export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDestroy {
     @Input() system: NxSystem;
-    @Input() selectedServer: any;
+    @Input() selectedServer;
     @Input() isOffline: boolean;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
     viewContainerRef: ViewContainerRef;
-    serverIdFromParams: any;
+    serverIdFromParams;
 
-    saveSettings: any;
+    saveSettings;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
     checking: boolean;

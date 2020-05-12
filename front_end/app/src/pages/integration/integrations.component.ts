@@ -32,8 +32,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
     private integrationSubscription: Subscription;
     private uriSubscription: Subscription;
-    params: any;
-    account: any;
+    params;
+    account;
 
     selectors = {
         access    : false,

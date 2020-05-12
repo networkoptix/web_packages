@@ -25,10 +25,10 @@ import { NxSystem }                         from '../services/system.service';
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
-    @Input() content: any;
-    @Input() searchable: any;
+    @Input() content;
+    @Input() searchable;
 
-    systemId: any;
+    systemId;
     selectedLevel1: string;
     selectedLevel2: string;
     selectedLevel3: string;

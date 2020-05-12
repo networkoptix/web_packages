@@ -35,9 +35,9 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() message: string;
     @Input() preloader: boolean;
     @Input() condition: boolean;
-    @Input() withFooter: any;
+    @Input() withFooter;
     @Input() constrainWidth: boolean;
-    @Input() data: any;
+    @Input() data;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

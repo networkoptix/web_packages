@@ -19,7 +19,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     companyLink: string;
     companyName: string;
     copyrightYear: string;
-    footerItems: any;
+    footerItems;
     viewFooter: boolean;
 
     // options

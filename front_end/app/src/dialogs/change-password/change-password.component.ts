@@ -11,13 +11,13 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls  : []
 })
 export class ChangePasswordModalContent {
-    @Input() system: any;
-    @Input() user: any;
+    @Input() system;
+    @Input() user;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    changePassword: any;
+    changePassword;
     newPasswordForUser: string;
 
     constructor(public activeModal: NgbActiveModal,

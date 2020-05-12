@@ -15,7 +15,7 @@ import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.
 })
 export class NxDynamicTablePanelComponent implements AfterViewInit {
 
-    @Input() panelParams: any;
+    @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: IConfig;

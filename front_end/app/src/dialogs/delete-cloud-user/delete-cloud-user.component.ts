@@ -16,7 +16,7 @@ export class DeleteCloudUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    deleteCloudUser: any;
+    deleteCloudUser;
     passwordForUser: string = '';
     passwordError: string = '';
 

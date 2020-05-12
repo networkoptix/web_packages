@@ -14,7 +14,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
-    @Input() list: any;
+    @Input() list;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

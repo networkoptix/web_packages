@@ -19,8 +19,8 @@ export class AddUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    addUser: any;
-    user: any;
+    addUser;
+    user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
 

@@ -31,7 +31,7 @@ const config = new NxConfigService(null).config;
     ]
 })
 export class NxCarouselComponent implements OnInit {
-    @Input() screenshots: any;
+    @Input() screenshots;
 
     public imageCount: number;
 

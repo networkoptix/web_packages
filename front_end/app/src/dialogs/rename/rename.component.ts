@@ -16,7 +16,7 @@ export class RenameModalContent {
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
-    rename: any;
+    rename;
 
     constructor(
         languageService: NxLanguageProviderService,

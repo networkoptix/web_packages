@@ -19,7 +19,7 @@ import { NxConfigService }       from '../../services/nx-config';
 @Injectable()
 export class OsResolver implements Resolve<any> {
 
-    deviceInfo: any;
+    deviceInfo;
     platform: string;
     platformMatch: {};
     windows: string;

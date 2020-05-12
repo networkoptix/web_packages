@@ -24,7 +24,7 @@ export class NxDebugComponent {
     CONFIG: IConfig;
     actionParameters = '{\n	"example": true\n}';
     actionParametersError = false;
-    debugProcess: any;
+    debugProcess;
     debugProxySettings = {
         authGet: '',
         authPost: '',
@@ -150,7 +150,7 @@ export class NxDebugComponent {
     }
 
     debugProxy() {
-        let data: any;
+        let data;
         if (this.debugProxySettings.data) {
             data = JSON.parse(this.debugProxySettings.data);
         }

@@ -30,7 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     @Input() routeParamPlatform;
 
     private sub: Subscription;
-    private platform: any;
+    private platform;
     private activeOs: string;
     public canViewDownloads: boolean;
     private paramPlatform: string;
@@ -38,14 +38,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    downloadButton: any;
-    downloads: any;
-    downloadsData: any;
+    downloadButton;
+    downloads;
+    downloadsData;
     canSeeHistory: boolean;
     tabsVisible: boolean;
     activeTab: string;
-    sortedPlatforms: any;
-    otherPackages: any;
+    sortedPlatforms;
+    otherPackages;
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })

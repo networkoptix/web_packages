@@ -39,9 +39,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     system: NxSystem|any;
     server: NxSystemAPI;
 
-    menu: any;
+    menu;
 
-    reportSnapshot: any;
+    reportSnapshot;
 
     importShow: boolean;
     importedData: any = {};

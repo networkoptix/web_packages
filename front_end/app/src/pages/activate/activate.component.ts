@@ -23,19 +23,19 @@ export class NxActivateComponent implements OnInit {
     @Input() uriParam;
     @Input() uriParamCode;
 
-    location: any;
+    location;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     accountInfo: any = {};
-    activate: any;
-    reactivate: any;
-    activated: any;
-    code: any;
-    session: any;
-    context: any;
+    activate;
+    reactivate;
+    activated;
+    code;
+    session;
+    context;
     loading: boolean;
-    reactivating: any;
-    activationSuccess: any;
+    reactivating;
+    activationSuccess;
 
     private setupDefaults() {
         this.context = {

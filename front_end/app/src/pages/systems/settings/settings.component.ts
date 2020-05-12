@@ -38,25 +38,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    plugin: any;
+    plugin;
     content: any = {};
 
     account: Account;
     system: NxSystem;
-    gettingSystem: any;
-    systems: any;
-    deletingSystem: any;
+    gettingSystem;
+    systems;
+    deletingSystem;
 
     menuVisible: boolean;
-    systemId: any;
+    systemId;
     systemNoAccess: boolean;
     canMerge: boolean;
     debugMode: boolean;
     betaMode: boolean;
     userDisconnectSystem: boolean;
-    mergeTargetSystem: any;
-    gettingSystemUsers: any;
-    selectedUser: any;
+    mergeTargetSystem;
+    gettingSystemUsers;
+    selectedUser;
 
     headerHeight: number;
     secondaryMerge = false;

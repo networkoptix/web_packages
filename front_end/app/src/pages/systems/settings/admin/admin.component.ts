@@ -38,12 +38,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     system: NxSystem;
-    systems: any;
+    systems;
     params: Params;
 
     advanced: boolean;
-    userDisconnectSystem: any;
-    deletingSystem: any;
+    userDisconnectSystem;
+    deletingSystem;
     currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;
@@ -52,7 +52,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsServiceSubscription: Subscription;
     systemSubscription: Subscription;
 
-    settingsForSystem: any;
+    settingsForSystem;
 
     private setupDefaults() {
         this.params = this.route.snapshot.queryParams;

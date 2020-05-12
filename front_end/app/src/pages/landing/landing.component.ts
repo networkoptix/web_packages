@@ -18,9 +18,9 @@ export class NxLandingComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    params: any;
-    userEmail: any;
-    login: any;
+    params;
+    userEmail;
+    login;
 
     loaded: boolean;
 

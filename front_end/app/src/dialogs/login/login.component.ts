@@ -33,7 +33,7 @@ export class LoginModalContent implements OnInit {
     CONFIG: IConfig;
 
     locationService: Location;
-    auth: any;
+    auth;
     next: string;
     password: string;
     remember: boolean;

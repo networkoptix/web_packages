@@ -34,8 +34,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     }]
 })
 export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
-    @Input() vendors: any;
-    @Input() cameras: any;
+    @Input() vendors;
+    @Input() cameras;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
@@ -190,7 +190,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     setFilter(filter) {
         interface Params {
-            [key: string]: any;
+            [key: string]: string;
         }
 
         const queryParams: Params = {};
@@ -238,7 +238,7 @@ export class NxVendorListComponent implements OnInit, OnChanges, OnDestroy {
 
     setVendor(vendor) {
         interface Params {
-            [key: string]: any;
+            [key: string]: string;
         }
 
         const queryParams: Params = {};

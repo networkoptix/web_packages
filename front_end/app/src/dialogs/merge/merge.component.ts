@@ -29,19 +29,19 @@ export class MergeModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     account: NxAccountService;
-    checkMergeabilityProcess: any;
-    checkPasswordProcess: any;
-    mergingProcess: any;
-    primarySystem: any;
+    checkMergeabilityProcess;
+    checkPasswordProcess;
+    mergingProcess;
+    primarySystem;
     peerSystems = [];
     processedSystems = [];
-    secondarySystem: any;
+    secondarySystem;
     serverUrl: string;
     serverUrlInputExists: boolean;
     systemMergeable: string;
-    targetSystem: any;
-    targetSystemDropdown: any;
-    targetSystemService: any;
+    targetSystem;
+    targetSystemDropdown;
+    targetSystemService;
     tooManyServers: boolean;
     nonCloudMerge = false;
     peerSystemsLoaded = false;
@@ -71,9 +71,9 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
-    @ViewChild('checkMergeDropdown') mergeDropdown: any;
+    @ViewChild('checkMergeDropdown') mergeDropdown;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
-    @ViewChild('primaryRadio') primaryRadio: any;
+    @ViewChild('primaryRadio') primaryRadio;
     @ViewChild('confirmMerge') confirmMerge: HTMLFormElement;
 
     constructor(

@@ -10,6 +10,7 @@ celery==4.3.0
 certifi==2019.3.9
 cffi==1.12.3
 chardet==3.0.4
+coreapi==2.3.3
 cryptography==2.7
 cssutils==1.0.2
 Django==2.2
@@ -26,9 +27,10 @@ django-rest-hooks==1.5.0
 django-storages==1.7.1
 django-stubs==0.12.1
 django-tinymce==2.8.0
-djangorestframework==3.9.2
+djangorestframework==3.11.0
 djangorestframework-stubs==0.4.2
 docutils==0.14
+drf-yasg==1.17.1
 enum34==1.1.6
 gunicorn==19.9.0
 h2==2.6.2

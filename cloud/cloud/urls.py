@@ -23,6 +23,9 @@ from django.conf.urls.static import static
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import HttpResponse
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 from notifications import urls as notifications_urls
 
 
@@ -40,7 +43,19 @@ def health_check(request):
     return HttpResponse(status=status)
 
 
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Cloud Portal API",
+      default_version='v1',
+      description="Api calls for cloud portal"
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
+
+
 urlpatterns = [
+    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^health/', health_check),
     url(r'^admin/login/', redirect_login),
     url(r'^admin/logout/', RedirectView.as_view(url='/logout'), name='logout'),

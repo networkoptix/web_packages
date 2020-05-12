@@ -9,7 +9,7 @@ import { NxConfigService, IConfig } from '../../../services/nx-config';
     styleUrls   : ['card.component.scss']
 })
 export class NxSystemAlertCardComponent implements OnInit {
-    @Input() data: any;
+    @Input() data;
     CONFIG: IConfig;
 
     constructor(configService: NxConfigService) {

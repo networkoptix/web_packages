@@ -20,10 +20,10 @@ export class NxHealthService {
     tableReadySubject = new BehaviorSubject(undefined);
 
     importedData: boolean;
-    tableHeaders: any;
-    panelParams: any;
+    tableHeaders;
+    panelParams;
 
-    alertsValues: any;
+    alertsValues;
     alertsCount = {
         warning : 0,
         error   : 0

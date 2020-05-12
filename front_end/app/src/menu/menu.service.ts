@@ -14,7 +14,7 @@ export class NxMenuService implements OnDestroy {
     contentSubject = new BehaviorSubject([]);
     navItemSubject = new BehaviorSubject('');
 
-    private regex: any;
+    private regex;
 
     constructor() {
     }

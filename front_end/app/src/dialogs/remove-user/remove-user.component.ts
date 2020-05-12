@@ -20,7 +20,7 @@ export class RemoveUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    removeUserProcess: any;
+    removeUserProcess;
     dialogTitle: string;
     dialogButtonText: string;
 

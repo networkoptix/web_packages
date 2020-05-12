@@ -76,7 +76,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offsetHeight: number;
     scrollHeight: number;
     showHorizontalTooltip: boolean;
-    hideTooltip: any;
+    hideTooltip;
     mobileDetailMode: boolean;
 
     ribbonSubscription: SubscriptionLike;

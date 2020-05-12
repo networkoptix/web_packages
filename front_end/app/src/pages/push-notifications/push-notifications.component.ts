@@ -16,18 +16,18 @@ import { NxAccountService }             from '../../services/account.service';
 })
 
 export class PushComponent implements OnInit, OnDestroy {
-    private notification: any;
-    private systems: any;
-    private devices: any;
-    private newDevice: any;
-    private deviceSubscriptions: any;
-    private deviceToken: any;
+    private notification;
+    private systems;
+    private devices;
+    private newDevice;
+    private deviceSubscriptions;
+    private deviceToken;
     private deviceName: string;
-    private currentDeviceName: any;
+    private currentDeviceName;
     private permission: string;
     private registered: boolean;
     private sendStatus: string;
-    private receivedMessages: any;
+    private receivedMessages;
     private subChanges: boolean;
     private timeSubscription: Subscription;
     private tokenSubscription: Subscription;

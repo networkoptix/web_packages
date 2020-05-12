@@ -41,8 +41,8 @@ import { Component, Input, SimpleChanges, ViewEncapsulation } from '@angular/cor
     styleUrls    : ['layout.component.scss']
 })
 export class NxLayoutRightComponent {
-    @Input('loading') loading: any;
-    @Input('toggle') toggle: any;
+    @Input('loading') loading;
+    @Input('toggle') toggle;
     private _toggle: string;
 
     constructor() {

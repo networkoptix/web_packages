@@ -18,14 +18,14 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class RestartServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverName: string;
     @Input() serverId: string;
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    restartServer: any;
+    restartServer;
 
     constructor(
         configService: NxConfigService,
