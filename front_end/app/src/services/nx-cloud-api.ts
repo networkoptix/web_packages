@@ -19,7 +19,7 @@ export class NxCloudApiService {
     }
 
     checkResponseHasError<T extends any>(data: T) {
-        if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
+        if (data?.resultCode !== this.CONFIG.responseOk) {
             return data;
         }
         return false;
