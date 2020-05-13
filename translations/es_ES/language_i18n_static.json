@@ -70,7 +70,7 @@
         "agreementAccepted": "El acuerdo ha sido aceptado",
         "changePassword": "Cambiar contraseña",
         "newPasswordLabel": "Nueva contraseña",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Contraseña guardada correctamente",
         "saveChanges": "Guardar"
     },
     "activeActions": {
@@ -207,15 +207,15 @@
             "moveCloudStorage": {
                 "title": "Mover almacenamiento en la nube",
                 "success": "Almacenamiento movido con éxito",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "errorPrefix": "Error al mover el almacenamiento en la nube",
+                "notFound": "Almacenamiento no encontrado. El almacenamiento puede haber sido movido o eliminado por otro usuario",
                 "status": {
                     "offline": "El almacenamiento en la nube no se puede mover a sistemas sin conexión."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Almacenamiento en la nube habilitado",
+                "errorPrefix": "Error al habilitar almacenamiento en la nube"
             },
             "noOtherSystemsError": {
                 "message": "Sólo puede mover el almacenamiento en la nube entre los sistemas de los que es propietario. <br/><br/>Conecte un sistema a %CLOUD_NAME% usando su cuenta en la nube para poder mover el almacenamiento en la nube."
@@ -426,7 +426,7 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -534,8 +534,8 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Esta página no se puede cargar",
+            "message": "Asegúrese de que sus servidores estén en línea e intente nuevamente."
         },
         "merge": {
             "title": "Este sistema se está fusionando a {{systemName}}.",
