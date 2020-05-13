@@ -686,3 +686,18 @@ Local User Removed on Server is Removed From UI
     Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
     Page Should Not Contain    //span[text()="${user to delete}"]
     Delete All Local Users    //span[contains(text(),"ocal+")]
+    
+Verify Local Users Deleted On Server
+    [Tags]    local user
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    Log in to Auto Tests System    ${email}
+    Go To Users List
+    Verify In Local Users UI    ${local users}    ${email}
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    ${deleted user} =    Set Variable    Local
+    FOR    ${user}    IN    @{users}
+        Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    A local user "${user}[name]" was found on server
+    END
+    
