@@ -92,11 +92,19 @@ Audio enable Disabled
     Click Link    ${CAMERAS LINK}
     Select Camera by Name    good cam
     Verify on Cameras Page
+    checkbox
     Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element is Not Visible    ${SYSTEM CANCEL}
     Audio Enabled Should Be    True
+    Reload Page
+    Audio Enabled Should Be    True
+    Set Checkbox Value    ${ENABLE AUDIO CHECKBOCK}//input    False
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Audio Enabled Should Be    False
 
 Audio unavailable
     Wait Until Element is Visible    ${CAMERAS LINK}
@@ -149,7 +157,6 @@ Record Always
     Click Button    ${SYSTEM SAVE}
 
 Record Motion
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -160,7 +167,6 @@ Record Motion
     Click Button    ${SYSTEM SAVE}
 
 Record Motion + Low Quality
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -171,7 +177,6 @@ Record Motion + Low Quality
     Click Button    ${SYSTEM SAVE}
 
 Change FPS
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -183,7 +188,6 @@ Change FPS
     Click Button    ${SYSTEM SAVE}
 
 Change Quality
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -195,7 +199,6 @@ Change Quality
     Click Button    ${SYSTEM SAVE}
 
 Enable/disable motion detection
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Select Camera By Name    good cam
@@ -222,7 +225,6 @@ Enable/disable motion detection
     ...    ${DOT-MENU}
 
 Disabled Motion With Recording
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
@@ -235,7 +237,7 @@ Disabled Motion With Recording
     Record motion and record motion low quality radio buttons should be disabled
 
 Placeholder shows when system is offline
-    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTO TESTS OFFLINE SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Wait Until Elements are Visible

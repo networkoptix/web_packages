@@ -618,7 +618,7 @@ Cloud Owner Can Disable Enable Local User
     @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
     Log in to Auto Tests System    ${email}
     Go To Users List
-    Wait Until Element is Visible    //span[contains(text(),"Local+")]     
+    Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
     Set Checkbox Value   ${DISABLE USER SWITCH}    false
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}
