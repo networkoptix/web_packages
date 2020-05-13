@@ -132,7 +132,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get<ResponseType>(url: string, params?: any) {
+    private get<ResponseType>(url: string, params?: any, customHttpHeaders: IParams<string> = {}) {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -143,13 +143,14 @@ export class NxSystemAPI {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
 
+        Object.entries(customHttpHeaders).forEach((entry) => headers.set(...entry));
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request))
         );
     }
 
-    private post<ResponseType>(url: string, data?: any) {
+    private post<ResponseType>(url: string, data?: any, customHttpHeaders: IParams<string> = {}) {
         let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
         const params: any = {};
@@ -161,7 +162,7 @@ export class NxSystemAPI {
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
         }
-
+        Object.entries(customHttpHeaders).forEach((entry) => headers.set(...entry));
         return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)
@@ -292,9 +293,8 @@ export class NxSystemAPI {
     }
 
     logUrl(params: {id?: number, lines?: number}) {
-        // This is kind of hacky, need to update get to allow passing in headers.
-        return this.get('/api/showLog', { ...params, headers: { responseType: 'text' } })
-            .toPromise().catch(({ error: { text } }) => text);
+        return this.get<string>('/api/showLog', { ...params }, { 'Content-Type': 'text' })
+            .toPromise();
     }
 
     getScripts() {
@@ -418,7 +418,7 @@ export class NxSystemAPI {
     ) {
         // eslint-disable-next-line camelcase
         const [event_type, action_type, brule_id] = [eventType, actionType, eventRuleId];
-        return this.get('/api/getEvents', { from, to, cameraId, event_type, action_type, brule_id });
+        return this.get('/api/getEvents', { from, to, cameraId, event_type, action_type, brule_id }).toPromise();
     }
 
     backupControl(action?: 'start' | 'stop') {

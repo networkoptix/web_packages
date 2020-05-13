@@ -46,8 +46,8 @@ import { NxSearchService }                from '../../services/search.service';
 
  */
 
-export interface IParams {
-    [key: string]: any;
+export interface IParams<Value = any> {
+    [key: string]: Value;
 }
 
 @AutoUnsubscribe()
