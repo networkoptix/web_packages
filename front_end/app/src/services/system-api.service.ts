@@ -89,8 +89,10 @@ export class NxSystemAPI {
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // @ts-ignore TODO: Remove once system-api is done for webadmin, API Testing only,
-        window.accounService = this;
-        console.log('accountService added to window');
+        window.systemService = this;
+        console.log('systemService added to window');
+        console.log('to test system system api method just access the systemService from console');
+        console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
     }
 
     private cookieLogin(auth) {
@@ -304,12 +306,135 @@ export class NxSystemAPI {
     }
 
     getSystemSettings() {
-        return this.get<t.Params[]>('/ec2/getSettings').toPromise().then(params => new t.SystemSettings(params));
+        return this.get<t.Params[]>('/ec2/getSettings').toPromise().then(params => new t.SystemConfigSettings(params));
     }
 
     async getSystemCloudInfo() {
         const { cloudSystemID, cloudAccountName } = await this.getSystemSettings();
         return { cloudSystemID, cloudAccountName };
+    }
+
+    disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
+        const [login, password] = [newAdminLogin, newAdminPassword];
+        const params = newAdminPassword ? { currentPassword, login, password } : { currentPassword };
+        return this.post('/api/detachFromCloud', params).toPromise();
+    }
+
+    setupCloudSystem(
+        systemName: string,
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string,
+        systemSettings // Need to find the type that gets passed here
+    ) {
+        return this.post('/api/setupCloudSystem', {
+            systemName,
+            cloudSystemID,
+            cloudAuthKey,
+            cloudAccountName,
+            systemSettings: JSON.stringify(systemSettings)
+        }).toPromise();
+    }
+
+    setupLocalSystem(
+        systemName: string,
+        password: string,
+        systemSettings // Need to find the type that gets passed here
+    ) {
+        return this.post('/api/setupLocalSystem', {
+            systemName,
+            password,
+            systemSettings
+        }).toPromise();
+    }
+
+    changeSystemName(systemName: string) {
+        return this.updateOrGetSettings({ systemName }).toPromise();
+    }
+
+    configureServer(configureParams: t.ConfigureParams) {
+        return this.post('/api/configure', configureParams).toPromise();
+    }
+
+    changeAdminPassword(newPassword: string, currentPassword: string) {
+        return this.configureServer({ password: newPassword, currentPassword });
+    }
+
+    pingSystem(url: string, remoteLogin: string, remotePassword: string) {
+        return this.getNonce(remoteLogin, url).toPromise().then((res: any) => {
+            if (res.data.error !== '0') {
+                return Promise.reject(res);
+            }
+            const { data: { reply: { realm, nonce } } } = res;
+            const getKey = this.digest(remoteLogin, remotePassword, realm, nonce, 'GET');
+
+            if (url.indexOf('http') !== 0) {
+                url = 'http://' + url;
+            }
+
+            return this.get('/api/pingSystem', { getKey, url }).toPromise();
+        });
+    }
+
+    getDiscoveredPeers(showAddresses = true) {
+        return this.get('/api/discoveredPeers', { showAddresses }).toPromise();
+    }
+
+    getStatistics() {
+        return this.get('/api/statistics', { salt: Date.now() }).toPromise();
+    }
+
+    getTimeZones() {
+        return this.get('/api/getTimeZones').toPromise();
+    }
+
+    saveCloudSystemCredentials(
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string
+    ) {
+        return this.post('/api/saveCloudSystemCredentials', {
+            cloudSystemID,
+            cloudAuthKey,
+            cloudAccountName
+        }).toPromise();
+    }
+
+    checkInternet(reload = true) {
+        return this.getModuleInfo().toPromise().then(res => res.reply.serverFlags.includes('SF_HasPublicIP'));
+    }
+
+    createEvent(params: t.EventParams) {
+        return this.get('/api/createEvent', params).toPromise();
+    }
+
+    getEvents(
+        from: Date,
+        to = Date.now(),
+        cameraId?: string,
+        eventType?: t.EventTypes,
+        actionType?: t.ActionTypes,
+        eventRuleId?: string
+    ) {
+        // eslint-disable-next-line camelcase
+        const [event_type, action_type, brule_id] = [eventType, actionType, eventRuleId];
+        return this.get('/api/getEvents', { from, to, cameraId, event_type, action_type, brule_id });
+    }
+
+    backupControl(action?: 'start' | 'stop') {
+        this.get('./api/backupControl', { action }).toPromise();
+    }
+
+    cameraDiagnostic(cameraId: string, type: t.CameraDiagnosticSteps) {
+        return this.get('/api/doCameraDiagnosticsStep', { cameraId, type }).toPromise();
+    }
+
+    getServerNetworkSettings() {
+        return this.get<t.NormalResponse<t.ServerNetworkSettings>>('/api/iflist').toPromise();
+    }
+
+    setServerNetworkSettings(networkSettings: t.ServerNetworkSettings) {
+        return this.post('/api/ifconfig', networkSettings).toPromise();
     }
 
     // TODO: This doesn't look like it's being used
@@ -355,8 +480,7 @@ export class NxSystemAPI {
     }
 
     changePort(port: number) {
-        return this.post<t.ApiConfigure>('/api/configure', { port }).toPromise()
-            .catch(err => Promise.reject(err));
+        return this.configureServer({ port }).catch(err => Promise.reject(err));
     }
 
     renameServer(serverId: string, serverName: string) {
@@ -623,7 +747,7 @@ export class NxSystemAPI {
 
     /** Merge Systems */
     getPeerSystems() {
-        return this.get<t.DiscoveredPeers>('/api/discoveredPeers', { showAddresses: true });
+        return this.get<t.DiscoveredPeers>('/api/ocoveredPeers', { showAddresses: true });
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
