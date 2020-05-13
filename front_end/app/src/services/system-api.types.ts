@@ -1,3 +1,5 @@
+import { IParams } from "../components/search/search.component";
+
 /**
  * Base response type, accepts a generic type/interface that gets assigned to the reply property.
  * Usage example below.
@@ -140,7 +142,7 @@ interface UserPermissions {
 }
 export interface GetUserRoles extends NormalResponse<UserPermissions> {};
 
-interface Params {
+export interface Params {
     name: string,
     value: string
 };
@@ -572,3 +574,33 @@ interface MergeStatusReply {
     mergeInProgress: boolean
 };
 export interface MergeStatus extends NormalResponse<MergeStatusReply> {};
+
+export class SystemSettings {
+    cloudAccountName: string;
+    cloudHost: string;
+    cloudSystemID: string;
+    localSystemId: string;
+    specificFeatures: IParams;
+    statisticsAllowed: boolean;
+    statisticsReportLastNumber: number;
+    statisticReportsLastTime: Date;
+    statisticReportLastVersion: string;
+    systemName: string;
+
+    constructor(params: Params[]) {
+        params.forEach(({ name, value }) => {
+            this[name] = value;
+        });
+    }
+}
+
+// 0: {name: "cloudAccountName", value: "czach@networkoptix.com"}
+// 1: {name: "cloudHost", value: "dev2.cloud.hdw.mx"}
+// 2: {name: "cloudSystemID", value: "6a80cc7e-42c7-4fe7-bd8a-e7a15e014a93"}
+// 3: {name: "localSystemId", value: "{980d45d0-6fdf-4b45-ab66-143919dd0ee1}"}
+// 4: {name: "specificFeatures", value: "{"advanced_lens_control":1,"camera_auth_server_sid…ion":2,"set_camera_param_post":1,"vms_metrics":1}"}
+// 5: {name: "statisticsAllowed", value: "true"}
+// 6: {name: "statisticsReportLastNumber", value: "2"}
+// 7: {name: "statisticsReportLastTime", value: "2020-05-12T16:18:26Z"}
+// 8: {name: "statisticsReportLastVersion", value: "4.1.0.30697-55bf4a10a585-default-beta"}
+// 9: {name: "systemName", value: "Chris2"}

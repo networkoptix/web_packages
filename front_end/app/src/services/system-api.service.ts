@@ -87,6 +87,10 @@ export class NxSystemAPI {
         this.CONFIG = configService;
         this.location = location;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
+
+        // @ts-ignore TODO: Remove once system-api is done for webadmin, API Testing only,
+        window.accounService = this;
+        console.log('accountService added to window');
     }
 
     private cookieLogin(auth) {
@@ -283,6 +287,29 @@ export class NxSystemAPI {
 
     logout() {
         return this.post('/api/cookieLogout').toPromise();
+    }
+
+    logUrl(params: {id?: number, lines?: number}) {
+        // This is kind of hacky, need to update get to allow passing in headers.
+        return this.get('/api/showLog', { ...params, headers: { responseType: 'text' } })
+            .toPromise().catch(({ error: { text } }) => text);
+    }
+
+    getScripts() {
+        return this.get('/api/scriptList').toPromise();
+    }
+
+    execute(script: string, mode: string = '') {
+        return this.post(`/api/execute${script}?${mode}`);
+    }
+
+    getSystemSettings() {
+        return this.get<t.Params[]>('/ec2/getSettings').toPromise().then(params => new t.SystemSettings(params));
+    }
+
+    async getSystemCloudInfo() {
+        const { cloudSystemID, cloudAccountName } = await this.getSystemSettings();
+        return { cloudSystemID, cloudAccountName };
     }
 
     // TODO: This doesn't look like it's being used
