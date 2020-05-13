@@ -293,8 +293,7 @@ export class NxSystemAPI {
     }
 
     logUrl(params: {id?: number, lines?: number}) {
-        return this.get<string>('/api/showLog', { ...params }, { 'Content-Type': 'text' })
-            .toPromise();
+        return this.get<string>('/api/showLog', { ...params }, { 'Content-Type': 'text' }).toPromise();
     }
 
     getScripts() {
@@ -325,26 +324,26 @@ export class NxSystemAPI {
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string,
-        systemSettings // Need to find the type that gets passed here
+        systemSettings: t.SystemConfigSettings
     ) {
         return this.post('/api/setupCloudSystem', {
             systemName,
             cloudSystemID,
             cloudAuthKey,
             cloudAccountName,
-            systemSettings: JSON.stringify(systemSettings)
+            systemSettings: Object.entries(systemSettings).map(([name, value]) => ({ name, value }))
         }).toPromise();
     }
 
     setupLocalSystem(
         systemName: string,
         password: string,
-        systemSettings // Need to find the type that gets passed here
+        systemSettings: t.SystemConfigSettings
     ) {
         return this.post('/api/setupLocalSystem', {
             systemName,
             password,
-            systemSettings
+            systemSettings: Object.entries(systemSettings).map(([name, value]) => ({ name, value }))
         }).toPromise();
     }
 
@@ -743,7 +742,7 @@ export class NxSystemAPI {
 
     /** Merge Systems */
     getPeerSystems(showAddresses = true) {
-        return this.get<t.DiscoveredPeers>('/api/getDiscoveredPeers', { showAddresses });
+        return this.get<t.DiscoveredPeers>('/api/discoveredPeers', { showAddresses });
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
