@@ -49,7 +49,7 @@
 }
 
 /* Positions in our sprite for xs-sized images */
-.lang-xs[lang=ar_SA] { background-position: 0px     0px; }
+.lang-xs[lang=ar_SA] { background-position: 0     0; }
 .lang-xs[lang=be_BY] { background-position: 0px   -11px; }
 .lang-xs[lang=bg_BG] { background-position: 0px   -22px; }
 .lang-xs[lang=cs_CZ] { background-position: 0px   -33px; }
@@ -190,8 +190,9 @@
 
 /* Adjustments for paragraphs */
 .lang-lg,
-.lang-lg:after       { top:   0px; position: relative; }
-// not needed as buttons should be using flexbox --TT  //.lang-sm             { top:   1px; position: relative; }
+.lang-lg:after       { top:   0; position: relative; }
+// not needed as buttons should be using flexbox --TT
+// .lang-sm             { top:   1px; position: relative; }
 .lang-sm:after       { top:  -1px; position: relative; }
 .lang-xs             { top:   4px; position: relative; }
 .lang-xs:after       { top:  -4px; position: relative; }
@@ -248,7 +249,8 @@ h6>.lang-xs       { top:   1px; }
 h6>.lang-xs:after { top:  -1px; }
 
 /* Adjustments for buttons */
-// not needed as buttons should be using flexbox --TT  //.btn>.lang-sm              { top:   2px; }
+// not needed as buttons should be using flexbox --TT
+// .btn>.lang-sm              { top:   2px; }
 .btn>.lang-sm:after        { top:  -2px; }
 .btn>.lang-xs              { top:   4px; }
 .btn>.lang-xs:after        { top:  -4px; }
@@ -288,14 +290,12 @@ h6>.lang-xs:after { top:  -1px; }
 .lang-xs[lang=zh_TW] { background-position: 0px   -2222px; }
 .lang-xs[lang=pt_BR] { background-position: 0px   -2499px; }
 
-
 .lang-sm[lang=en_GB] { background-position: 0px  -2249px; }
 .lang-sm[lang=fil_PH] { background-position: 0px   -2265px; }
 .lang-sm[lang=km_KH] { background-position: 0px   -2281px; }
 .lang-sm[lang=nl_BE] { background-position: 0px   -2297px; }
 .lang-sm[lang=zh_TW] { background-position: 0px   -2329px; }
 .lang-sm[lang=pt_BR] { background-position: 0px   -2510px; }
-
 
 .lang-lg[lang=en_GB] { background-position: 0px  -2367px; }
 .lang-lg[lang=fil_PH] { background-position: 0px   -2389px; }

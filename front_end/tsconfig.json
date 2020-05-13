@@ -21,6 +21,7 @@
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
-    "src"
+    "ipvd",
+    "health_monitor"
   ]
 }

@@ -17,22 +17,29 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/front-end",
-            "index": "app/index-template.html",
+            "outputPath": "dist",
+            "index": "app/index.html",
             "main": "app/main.ts",
             "polyfills": "app/polyfills.ts",
             "tsConfig": "tsconfig.json",
             "aot": true,
+            "buildOptimizer":true,
             "assets": [
               "app/images",
+              "app/fonts",
+              "app/views",
+              "app/scripts",
               "app/503.html",
               "app/downloads.json",
+              "app/apple-app-site-association",
               "app/language_compiled.json",
+              "app/language_i18n_static.json",
+              "app/language_i18n.json",
+              "app/language.json",
               "app/languages.json"
             ],
             "styles": [
-              "app/styles/main.scss",
-              "app/fonts/fonts.css"
+              "app/styles/main.scss"
             ],
             "scripts": []
           },

@@ -3,7 +3,7 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./webpack.health_monitor.js');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
@@ -12,7 +12,7 @@ module.exports = merge(common, {
         new CleanWebpackPlugin([ 'dist' ]),
         new UglifyJSPlugin({}),
         new webpack.HashedModuleIdsPlugin(),
-    
+
         new CopyWebpackPlugin([
             {
                 from: '../app/scripts/commonPasswordsList.json',
@@ -41,32 +41,40 @@ module.exports = merge(common, {
             {
                 test   : /\.s?css$/,
                 exclude: /src/,
-                use    : ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use     : [
-                        {
-                            loader : 'css-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: false
-                            }
-                        },
-                        {
-                            loader : 'postcss-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: false
-                            }
-                        },
-                        {
-                            loader : 'sass-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: false
-                            }
-                        }
-                    ]
-                })
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader'
+                ]
+                // use    : ExtractTextPlugin.extract({
+                //     fallback: 'style-loader',
+                //     use     : [
+                //         {
+                //             loader : 'css-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: false
+                //             }
+                //         },
+                //         {
+                //             loader : 'postcss-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: false
+                //             }
+                //         },
+                //         {
+                //             loader : 'sass-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: false
+                //             }
+                //         }
+                //     ]
+                // })
             }
         ]
     }
