@@ -2,7 +2,7 @@ import { Inject, Injector }           from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
 import { LocalStorageService }        from 'ngx-store';
-import { Exactly }                    from '../utils.services';
+import { Exactly }                    from '../utils.service';
 import { NxConfigService }            from '../nx-config';
 import { NxCloudApiService }          from '../nx-cloud-api';
 import { NxLanguageProviderService }  from '../nx-language-provider';

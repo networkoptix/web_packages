@@ -15,7 +15,7 @@ import { NxAppStateService }                              from '../nx-app-state.
 import { NxUriService }                                   from '../uri.service';
 import { LanguageI18NStaticTypes }                        from '../../../language_i18n_static_types';
 import { NxPollService }                                  from '../poll.service';
-import { NxUtilsService }                                 from '../utils.services';
+import { NxUtilsService }                                 from '../utils.service';
 import { IParams }                                        from '../../components/search/search.component';
 import { Account }                                        from './account';
 

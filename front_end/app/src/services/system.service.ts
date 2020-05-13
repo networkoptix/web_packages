@@ -9,7 +9,7 @@ import {
 import { BehaviorSubject, from, of, Subscription, Observable }       from 'rxjs';
 import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
-import { NxUtilsService }                  from './utils.services';
+import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { IParams }                         from '../components/search/search.component';

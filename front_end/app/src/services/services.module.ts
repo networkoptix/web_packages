@@ -4,7 +4,7 @@ import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';
-import { NxUtilsService }            from './utils.services';
+import { NxUtilsService }            from './utils.service';
 import { NxPageService }             from './page.service';
 import { NxSystemsService }          from './systems.service';
 import { NxAccountService }          from './account.service';

@@ -1,6 +1,6 @@
 export * from './nx-config';
 export * from './account.service';
-export * from './utils.services';
+export * from './utils.service';
 export * from './apply.service';
 export * from './nx-app-state.service';
 export * from './nx-cloud-api';
