@@ -422,7 +422,7 @@ export class NxSystemAPI {
     }
 
     backupControl(action?: 'start' | 'stop') {
-        this.get('./api/backupControl', { action }).toPromise();
+        this.get('/api/backupControl', { action }).toPromise();
     }
 
     cameraDiagnostic(cameraId: string, type: t.CameraDiagnosticSteps) {
