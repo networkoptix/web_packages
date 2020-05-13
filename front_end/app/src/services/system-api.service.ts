@@ -376,10 +376,6 @@ export class NxSystemAPI {
         });
     }
 
-    getDiscoveredPeers(showAddresses = true) {
-        return this.get('/api/discoveredPeers', { showAddresses }).toPromise();
-    }
-
     getStatistics() {
         return this.get('/api/statistics', { salt: Date.now() }).toPromise();
     }
@@ -746,8 +742,8 @@ export class NxSystemAPI {
     // End of Health Monitor
 
     /** Merge Systems */
-    getPeerSystems() {
-        return this.get<t.DiscoveredPeers>('/api/ocoveredPeers', { showAddresses: true });
+    getPeerSystems(showAddresses = true) {
+        return this.get<t.DiscoveredPeers>('/api/getDiscoveredPeers', { showAddresses });
     }
 
     mergeSystems(url: string, dryRun: string, currentPassword?: string) {
