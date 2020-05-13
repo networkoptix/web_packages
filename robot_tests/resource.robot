@@ -741,7 +741,7 @@ Delete All Local Users
     Page Should Not Contain Element     ${locator}  
     
 Check Password Badge
-    [arguments]    ${pass}    ${click}
+    [arguments]    ${pass}    ${new focus}
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
     Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
