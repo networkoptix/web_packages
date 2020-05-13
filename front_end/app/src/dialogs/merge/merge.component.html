@@ -63,6 +63,7 @@
     </div>
     <div class="modal-footer float-right next-button">
         <nx-process-button
+            [clickFn]="checkMergeabilityFunction"
             [process]="checkMergeabilityProcess"
             [form]="checkMergeForm"
             actionType="primary"

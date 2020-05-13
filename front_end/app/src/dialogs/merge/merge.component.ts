@@ -30,6 +30,7 @@ export class MergeModalContent {
     CONFIG: IConfig;
     account: any;
     checkMergeabilityProcess: any;
+    checkMergeabilityFunction: any;
     checkPasswordProcess: any;
     mergingProcess: any;
     primarySystem: any;
@@ -72,6 +73,7 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
+    @ViewChild('serverUrlInput') serverUrlInput: any;
     @ViewChild('checkMergeDropdown') mergeDropdown: any;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
     @ViewChild('primaryRadio') primaryRadio: any;
@@ -255,6 +257,13 @@ export class MergeModalContent {
     }
 
     initProcesses() {
+        this.checkMergeabilityFunction = () => {
+            if (this.targetSystem.value === this.otherSystem) {
+                this.serverUrlInput.control.markAsTouched();
+                this.serverUrlChange(this.serverUrlInput);
+            }
+        };
+
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.checking = true;
