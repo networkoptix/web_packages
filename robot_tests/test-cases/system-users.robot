@@ -18,14 +18,14 @@ ${url}         ${ENV}
 Setup
     Open Browser and go to URL    ${url}
     Pop From Dictionary    ${role names}    custom    #due to bug 4960
-    
+
 Restart
     Common Restart Logout    ${url}
 
 *** Test Cases ***
 Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
 
     Log In To Auto Tests System    ${EMAIL NOT OWNER}
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
@@ -52,13 +52,13 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
 
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
 
 Should display same user data as user provided during registration
     [Tags]    email    Threaded
     ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
 
 #verify user name displayed correctly in users list
     Log in    ${random email}    ${password}
@@ -73,7 +73,7 @@ Should display same user data as shown in user account
     [Tags]    email    C41573    C41842    Threaded
     ${random email}=   Register and activate account with random email    mark    hamill    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[viewer]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${random email}
     Set Account Name    ${url}    ${random email}    ${password}    ${COMBO TEXT}    ${COMBO TEXT}
 
     Log in to Auto Tests System    ${EMAIL OWNER}
@@ -195,7 +195,7 @@ Admin cannot delete or edit other admins or owner
     [Tags]    C41905
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
 
     Log in to Auto Tests System    ${random email}
     Select user in Users List    ${EMAIL ADMIN}
@@ -234,7 +234,7 @@ Edit permission works
 Delete user works
     [Tags]    email    C41903
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
 
     Log in to Auto Tests System    ${email}
     Select user in Users List    ${random email}
@@ -258,7 +258,7 @@ Share with registered user works and sends him notification
     Share To    ${EMAIL NOPERM}    ${ADMIN TEXT}
 
     ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
     Open Mailbox
     ...    host=${BASE HOST}
@@ -282,15 +282,15 @@ Share with registered user works and sends him notification
     Close Mailbox
 
     ${role}=   Get Cloud User Role  ${auth}    ${EMAIL NOPERM}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
 Share with unregistered user - brings them to registration page with code with correct email locked
     [Tags]    email    C41889
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Append To List    ${TMP USERS}    ${random email}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
     ${code}=   Get Code From Email    ${url}    ${auth}    ${random email}    system_invite
     Go To    ${url}/register/${code}
@@ -330,9 +330,9 @@ Check share email for registered user
     Delete email    ${email}
 
     Set Account Language    ${ENV}    ${random email}    ${password}    ${LANGUAGE}
-    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    &{ACCESS ROLES}[admin]    ${random email}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
     ${role}=   Get Cloud User Role  ${auth}    ${random email}    ${AUTO TESTS SYSTEM ID}
-    Should be equal as strings    ${role}    &{ACCESS ROLES}[admin]
+    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
 
     ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
     ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
@@ -499,7 +499,7 @@ Cloud Owner Can Change Local User Login
         Wait Until Element is Visible    //span[text()="${new login}"]
 	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    ${new login}
 	    ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
-        &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=&{permissions}[${user}]
+        &{new local} =    Create Dictionary    email=${email}    fullName=Local User     name=${new login}    permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
@@ -523,7 +523,7 @@ Cloud Owner Can Change Local User Full Name
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    local+${user}
-        &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=&{permissions}[${user}]
+        &{new local} =    Create Dictionary    email=${email}    fullName=${new full name}    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
@@ -546,7 +546,7 @@ Cloud Owner Can Change Local User Email
         Click Button    ${ACCOUNT SAVE}
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         ${name} =   Convert To Lowercase    local+${user}
-        &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=&{permissions}[${user}]
+        &{new local} =    Create Dictionary    email=${new local user email}   fullName=Local User    name=${name}   permissions=${permissions}[${user}]
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
@@ -573,7 +573,7 @@ Cloud Owner Can Change Local User Permissions
 	    ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
         ${email} =    Convert To Lowercase    noptixautoqa+local_${user}@gmail.com
         ${name} =   Convert To Lowercase    local+${user}
-        &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=&{permissions}[${reverse permission}]
+        &{new local} =    Create Dictionary    email=${email}    fullName=Local User    name=${name}  permissions=${permissions}[${reverse permission}]
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
