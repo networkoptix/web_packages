@@ -460,12 +460,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingWatcher.value;
     }
 
-    flashHint(flash = false) {
-        if (!flash) return;
-        this.shakeHint = true;
-        setTimeout(() => {
-            this.shakeHint = false;
-        }, 500);
+    handleRecordingToggle() {
+        if (!this.recording && !this.availableLicenses) {
+            this.shakeHint = true;
+            setTimeout(() => {
+                this.shakeHint = false;
+            }, 500);
+        } else {
+            this.recording = !this.recording;
+        }
     }
 
     set recording(value) {
@@ -473,13 +476,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return;
         }
 
-        // if (this.recordingWatcher.originalValue !== undefined) {
-        //     if (this.motionEnabled) {
-        //         this.enableMotion();
-        //     } else {
-        //         this.disableMotion();
-        //     }
-        // }
+        if (this.recordingWatcher.originalValue !== undefined) {
+            if (this.motionEnabled) {
+                this.enableMotion();
+            } else {
+                this.disableMotion();
+            }
+        }
 
         this.recordingWatcher.value = value;
     }
@@ -490,9 +493,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     set recordingModes(value: IRecordingModes[]) {
-        console.groupCollapsed();
-        console.trace('why did you update');
-        console.groupEnd();
         if (!this.selectedFps) {
             this.selectedFps = this.selectedCamera.maxFps;
         }
