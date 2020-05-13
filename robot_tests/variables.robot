@@ -137,7 +137,7 @@ ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
-${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
+${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 ${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]

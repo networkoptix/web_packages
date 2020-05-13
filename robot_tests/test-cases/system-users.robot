@@ -667,3 +667,22 @@ Cloud Admininstrator Can Change Settings For Non Admin Local Users
     Log in to Auto Tests System    ${email}
     Go To Users List
     Delete All Local Users    //span[contains(text(),"ocal+")]
+
+Local User Removed on Server is Removed From UI
+    [Tags]    local user
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    Log in to Auto Tests System    ${email}
+    Go To Users List
+    Verify In Local Users UI    ${local users}    ${email}
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    ${user to delete} =    Set Variable    Local+viewer
+    FOR    ${user}    IN    @{users}
+        ${user id} =    Set Variable If    '${user}[name]' == '${user to delete}'    ${user}[id]
+        Run Keyword If    '${user id}' != 'None'    Exit For Loop
+    END
+    Remove User    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${user id}
+    Reload Page
+    Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
+    Page Should Not Contain    //span[text()="${user to delete}"]
+    Delete All Local Users    //span[contains(text(),"ocal+")]
