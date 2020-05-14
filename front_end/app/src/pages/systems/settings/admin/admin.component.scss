@@ -2,7 +2,7 @@
 
 .system-settings {
     .system-header-bold {
-        font-weight: bold;
+        font-family: $font-family-bold;
     }
     .system-name {
         @extend #medium24;
