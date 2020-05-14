@@ -684,8 +684,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         if (currentAlerts) {
             this.warnings = currentAlerts.warnings;
             this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage);
-            this.showUnauthorized = currentAlerts.errors.some(error => error.toLowerCase() === unauthorizedMessage);
         }
+        this.showUnauthorized = this.selectedCamera.status === 'Unauthorized';
     }
 
     updateValues() {

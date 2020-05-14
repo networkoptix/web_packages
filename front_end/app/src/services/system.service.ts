@@ -907,7 +907,7 @@ export class NxSystem extends System implements OnDestroy {
                 user.email = user.accountEmail;
             });
             return data;
-        });
+        }).catch(err => err);
     }
 
     getUsersDataFromTheSystem() {
