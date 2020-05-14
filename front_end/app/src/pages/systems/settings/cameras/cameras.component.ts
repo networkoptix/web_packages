@@ -57,6 +57,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     warnings: string[] = [];
     errors: string[] = [];
     showUnauthorized = false;
+    showOffline = false;
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
@@ -636,6 +637,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (this.selectedCamera && this.parsedCameraId !== this.selectedCamera.id) {
+            this.showOffline = false;
+            this.showUnauthorized = false;
+            this.alerts = [];
+        }
+
         if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
@@ -681,11 +688,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private updateAlerts() {
         const currentAlerts = (this.alerts || []).find(({ cameraId }) => cameraId === this.parsedCameraId);
         const unauthorizedMessage = 'camera is unauthorized';
+        const offlineMessage = 'camera is offline';
         if (currentAlerts) {
             this.warnings = currentAlerts.warnings;
-            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage);
+            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage && error.toLowerCase() !== offlineMessage);
         }
-        this.showUnauthorized = this.selectedCamera.status === 'Unauthorized';
+        this.showUnauthorized = this.selectedCamera && this.selectedCamera.status === 'Unauthorized';
+        this.showOffline = this.selectedCamera && this.selectedCamera.status === 'Offline';
     }
 
     updateValues() {

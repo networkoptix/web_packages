@@ -10,11 +10,17 @@
                 type="error"
                 id="unauthorized-warning"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
-                [line1]="'Camera unauthorized' | translate"
+                [line1]="'Camera is unauthorized' | translate"
                 [btnIconSrc]="CONFIG.icons.dir + 'settings.svg'"
                 [btnCaption]="'Edit Credentials' | translate"
                 (onAction)="updateCredentials()">
             </nx-alert-block>
+        <nx-alert-block
+            *ngIf="showOffline"
+            type="warning"
+            [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
+            [line1]="'Camera is offline' | translate">
+        </nx-alert-block>
             <nx-alert-block
                 *ngFor="let error of errors"
                 type="error"
