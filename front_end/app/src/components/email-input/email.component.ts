@@ -70,7 +70,7 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     constructor(configService: NxConfigService,
                 private language: NxLanguageProviderService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     setValue(newValue) {

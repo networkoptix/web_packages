@@ -68,7 +68,7 @@ export class NxDialogsService {
 
         this.languageSubscription = languageService.translateSubject
             .subscribe(() => {
-                this.LANG = languageService.getTranslations();
+                this.LANG = languageService.translations;
             });
     }
 

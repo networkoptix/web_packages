@@ -58,7 +58,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.setupDefaults();
     }
@@ -112,4 +112,3 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             });
     }
 }
-

@@ -200,7 +200,7 @@ class UserManager {
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         // TODO Need to figure out role type here
-        const role  = roles.find((role: any) => {
+        let role: any  = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
@@ -215,6 +215,12 @@ class UserManager {
             }
             return role.permissions === user.permissions;
         });
+        // handles the Custom role
+        if (!role) {
+            role = NxUtilsService.deepCopy(roles[roles.length - 1]);
+            role.isAdmin = this.isAdmin(user);
+            role.permissions = user.permissions;
+        }
 
         return role || roles[roles.length - 1];
     }
@@ -720,7 +726,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getLicenses().then((licenses: any[]) => {
             const parsedLicenses = licenses.map(this.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
-                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
+                const activeLicense = !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
@@ -996,7 +1002,7 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false, true)
+            return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
                 .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
@@ -1115,7 +1121,7 @@ export class NxSystemService {
         private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.systemsCache = {};
     }
 

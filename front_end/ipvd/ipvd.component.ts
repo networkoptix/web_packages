@@ -15,9 +15,9 @@ export class IpvdComponent {
         this.CONFIG = this.config.getConfig();
 
         // @ts-ignore
-        this.language.setDefaultLang('en_US');
+        this.language.defaultLanguage = 'en_US';
         // @ts-ignore
-        this.language.setTranslations(window.LANG.ajs.language, window.LANG.i18n);
+        this.language.newTranslation = { language: window.LANG.ajs.language, json: window.LANG.i18n };
 
         // @ts-ignore
         this.CONFIG.companyLink = window.SETTINGS.companyLink;

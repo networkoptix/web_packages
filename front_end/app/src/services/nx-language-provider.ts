@@ -7,32 +7,27 @@ import { BehaviorSubject }         from 'rxjs';
     providedIn: 'root'
 })
 export class NxLanguageProviderService {
-    private LANG: LanguageI18NStaticTypes;
-
+    LANG: LanguageI18NStaticTypes;
     translateSubject = new BehaviorSubject({});
 
-    constructor(
-        private translate: TranslateService) {
+    constructor(private translate: TranslateService) {}
+
+    public get currentLanguage(): string {
+        return this.translate.currentLang;
     }
 
-    setDefaultLang(lang: string): void {
-        this.translate.setDefaultLang(lang);
-    }
-
-    setTranslations(lang: string, json: JSON): void {
-        this.translate.setTranslation(lang, json);
-        this.translate.currentLang = lang;
-
-        // Downgraded services like Dialogs try to get translations before they are loaded
-        // I'll slowly transition all usages of getTranslations() -- TT
-        this.translateSubject.next(this.getTranslations());
-    }
-
-    getTranslations(): LanguageI18NStaticTypes {
+    public get translations(): LanguageI18NStaticTypes {
         return this.translate.translations[this.translate.currentLang];
     }
 
-    getLang(): string {
-        return this.translate.currentLang;
+    public set newTranslation(translate: { language: string, json: JSON }) {
+        this.translate.setTranslation(translate.language, translate.json);
+        this.translate.currentLang = translate.language;
+
+        this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
+    }
+
+    public set defaultLanguage(language: string) {
+        this.translate.setDefaultLang(language);
     }
 }

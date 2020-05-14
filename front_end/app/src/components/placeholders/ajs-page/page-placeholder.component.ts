@@ -54,7 +54,7 @@ export class NxAjsPagePlaceholderComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.windowSizeSubscription = this.scrollMechanicsService
             .windowSizeSubject

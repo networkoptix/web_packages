@@ -31,7 +31,7 @@ export class ResetServerModalContent {
         private processService: NxProcessService,
         private toastService: NxToastService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 

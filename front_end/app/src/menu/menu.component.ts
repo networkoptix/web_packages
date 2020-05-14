@@ -60,7 +60,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private searchService: NxSearchService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.searchMode = false;
         this.isSearchable = false;

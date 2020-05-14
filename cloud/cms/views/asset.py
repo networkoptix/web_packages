@@ -400,7 +400,7 @@ def download_package(request, asset_id):
         else:
             return HttpResponseBadRequest("There are no published versions for this asset.")
 
-    if len(modify_db.asset_has_required_data(asset, version_id)) > 0:
+    if not asset.is_cloud_portal and len(modify_db.asset_has_required_data(asset, version_id)) > 0:
         error_message = "Asset requires all fields to be filled."
         if version_id:
             error_message = f"Asset does not have all required fields filled for version: {version_id}"

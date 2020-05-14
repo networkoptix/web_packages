@@ -44,7 +44,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
         private renderer: Renderer2,
         private cloudApiService: NxCloudApiService
     ) {
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.CONFIG = config.getConfig();
     }
 

@@ -81,7 +81,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         @Inject(ViewContainerRef) viewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.setSection('cameras');
@@ -102,7 +102,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    this.setCamera();
+                    if (!this.applyService.locked) this.setCamera();
                 }
             });
 
@@ -152,7 +152,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
                             }
-                            this.setCamera();
+                            if (!this.applyService.locked) this.setCamera();
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
                         this.showPreloader = false;
@@ -169,8 +169,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
-                this.recordingModesWatcher,
-                this.recordingWatcher,
+                this.recordingModesWatcher, // these are getting updated somewhere
+                this.recordingWatcher, // these are getting updated somewhere
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
@@ -223,7 +223,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
                 motionType      : this.motionType,
-                motionMask      : this.motionMaskWatcher.value || '5,0,0,44,32'
+                motionMask      : this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
             };
             return Promise.all([
                 this.system.updateRecordingSettings(updatedTask, cameraSettings),
@@ -463,23 +463,30 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingWatcher.value;
     }
 
-    flashHint(flash = false) {
-        if (!flash) return;
-        this.shakeHint = true;
-        setTimeout(() => {
-            this.shakeHint = false;
-        }, 500);
+    handleRecordingToggle() {
+        if (!this.recording && !this.availableLicenses) {
+            this.shakeHint = true;
+            setTimeout(() => {
+                this.shakeHint = false;
+            }, 500);
+        } else {
+            this.recording = !this.recording;
+        }
     }
 
     set recording(value) {
         if (value === this.recording) {
             return;
         }
-        if (this.motionEnabled) {
-            this.enableMotion();
-        } else {
-            this.disableMotion();
+
+        if (this.recordingWatcher.originalValue !== undefined) {
+            if (this.motionEnabled) {
+                this.enableMotion();
+            } else {
+                this.disableMotion();
+            }
         }
+
         this.recordingWatcher.value = value;
     }
 
@@ -653,10 +660,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
-            this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
+            this.recordingWatcher.value = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
-            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
+            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();

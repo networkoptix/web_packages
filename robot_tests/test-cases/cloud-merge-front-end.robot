@@ -6,6 +6,7 @@ Library           ../NoptixLibrary/
 Suite Setup       Open Browser and go to url    ${ENV}
 Test Teardown     Run Keyword If Test Failed    Reset Systems State
 Suite Teardown    Run Keywords    Reset Systems State    Close All Browsers
+Force Tags        Threaded File    merge
 
 *** Variables ***
 ${email 1 owner}           qaburbank+mergeowner1@gmail.com
@@ -97,7 +98,7 @@ Choose System From Dropdown
     ${url placeholder}=   Run Keyword And Return If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
     Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host: port
     # TODO: add auto-populated url verification(there is no text in DOM now) if check url==${True}
-    Run Keyword Unless     '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${target system ip}:${target system port}
+    Run Keyword Unless     '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${target system ip}${target system port}
 
 Choose Primary System
     [Arguments]    ${from target}=${False}

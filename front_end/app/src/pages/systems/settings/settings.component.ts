@@ -96,7 +96,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
@@ -104,7 +104,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.pageService.setPageTitle(this.LANG.pageTitles.system);
+        this.pageService.pageTitle = this.LANG.pageTitles.system;
         this.init();
     }
 

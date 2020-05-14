@@ -68,7 +68,7 @@ export class MessageModalContent implements OnInit {
         this.subjectMessage = '';
         this.url = this.window.location.href;
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

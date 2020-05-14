@@ -44,8 +44,8 @@ export class NxActivateComponent implements OnInit {
         };
 
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.activate);
+        this.LANG = this.languageService.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.activate;
 
         this.activate = this.processService.createProcess(() => {
             this.loading = true;
@@ -73,7 +73,7 @@ export class NxActivateComponent implements OnInit {
             },
             errorPrefix: this.LANG.errorCodes.cantActivatePrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess;
             this.sessionStorage.set('activationSuccess', true);
             this.activationSuccess = true;
             this.loading = false;
@@ -96,7 +96,7 @@ export class NxActivateComponent implements OnInit {
             holdAlerts  : true,
             errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.activateSuccess;
             this.dialogs.notify(this.LANG.account.activationLinkSent, 'success');
         });
     }
@@ -156,7 +156,7 @@ export class NxActivateComponent implements OnInit {
 
     private checkActivate() {
         if (this.accountInfo.activateCode) {
-            this.pageService.setPageTitle(this.LANG.pageTitles.activateCode);
+            this.pageService.pageTitle = this.LANG.pageTitles.activateCode;
             this.activate.run();
         }
     }

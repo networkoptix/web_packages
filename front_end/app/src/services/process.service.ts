@@ -43,7 +43,7 @@ export class Process {
         settings: Partial<ProcessSettings>
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
         this.settings = { ...this.settings, ...settings };
     }
@@ -203,10 +203,10 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
         }
     }
     return lang.errorCodes[errorCode] || lang.errorCodes.unknownError;
-}
+};
 
 export interface DeferredPromise<P = any> {
     promise: Promise<P>;
     reject: (...args) => void;
     resolve: (...args) => void;
-};
+}

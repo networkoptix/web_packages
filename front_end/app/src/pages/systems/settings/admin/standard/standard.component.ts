@@ -72,7 +72,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit(): void {

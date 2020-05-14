@@ -26,6 +26,12 @@ Verify Rename Dialog
     ...    ${RENAME CLOSE BUTTON}
     ...    ${$RENAME SERVER INPUT}
 
+Verify Restart Dialog
+    Wait Until Elements Are Visible  
+    ...    ${RESTART DIALOG CLOSE BUTTON}  
+    ...    ${RESTART DIALOG CANCEL BUTTON} 
+    ...    ${RESTART DIALOG RESTART BUTTON}  
+
 Select Server By Name
     [Arguments]    ${server name}
     Wait Until Element is Visible    //nx-level-3-item/a//span[contains(text(),"${server name}")]
@@ -36,4 +42,4 @@ Change Port To
     Input Text    ${PORT INPUT}    ${port}
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
-    Wait Until Element is Not Visible    ${SYSTEM CANCEL}
+    Wait Until Element is Not Visible    ${SYSTEM CANCEL} 

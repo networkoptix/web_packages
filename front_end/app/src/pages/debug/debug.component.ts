@@ -73,9 +73,9 @@ export class NxDebugComponent {
                 private urlProtocol: NxUrlProtocolService,
                 private configService: NxConfigService
     ) {
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.setPageTitle(this.LANG.pageTitles.debug);
+        this.pageService.pageTitle = this.LANG.pageTitles.debug;
         this.accountService.get().then((acc) => {
             this.init();
         });

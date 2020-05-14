@@ -69,9 +69,9 @@ export class NxContentComponent implements OnInit {
         private sanitizer: DomSanitizer
     ) {
         this.setupDefaults();
-        this.langCode = this.language.getLang();
+        this.langCode = this.language.currentLanguage;
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -141,7 +141,7 @@ export class NxContentComponent implements OnInit {
             (data: any) => {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
-                this.pageService.setPageTitle(this.title);
+                this.pageService.pageTitle = this.title;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;
@@ -184,7 +184,7 @@ export class NxContentComponent implements OnInit {
 
             const title = component.instance.title.nativeElement;
             if (title) {
-                this.pageService.setPageTitle(title.innerText);
+                this.pageService.pageTitle = title.innerText;
             }
 
             /* If content was successfully compiled from static files,

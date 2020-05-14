@@ -31,7 +31,7 @@ export class NxSectionPlaceholderComponent implements OnInit {
         private languageService: NxLanguageProviderService,
         private configService: NxConfigService
     ) {
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
     }
 

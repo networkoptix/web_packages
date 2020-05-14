@@ -25,7 +25,7 @@ export class RenameServerModalContent {
         private activeModal: NgbActiveModal,
         private processService: NxProcessService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

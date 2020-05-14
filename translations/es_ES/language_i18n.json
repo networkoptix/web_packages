@@ -49,7 +49,7 @@
     "Clear Selection": "Borrar selección",
     "Close": "Cerrar",
     "Cloud Storage": "Almacenamiento en la nube",
-    "Cloud storage cannot be moved to offline systems.": "Cloud storage cannot be moved to offline systems.",
+    "Cloud storage cannot be moved to offline systems.": "El almacenamiento en la nube no se puede mover a sistemas sin conexión.",
     "Cloud storage will be removed from this system": "El almacenamiento en la nube se eliminará de este sistema",
     "Cloud users will not be transferred to the new system.": "Los usuarios de la nube no serán transferidos al nuevo sistema.",
     "Collapse": "Colapsar",

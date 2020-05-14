@@ -34,7 +34,7 @@ export class DisconnectModalContent {
         private cloudApiService: NxCloudApiService,
         private renderer: Renderer2
     ) {
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit() {

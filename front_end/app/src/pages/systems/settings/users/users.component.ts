@@ -41,6 +41,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     system: NxSystem;
     viewContainerRef: ViewContainerRef;
     deleteMessage: string;
+    currentCustomRole: any;
 
     userEnabled = new Watcher<boolean>();
     userRole = new Watcher<string>();
@@ -80,7 +81,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.routeParamsSubscription = this.route
             .params
@@ -99,10 +100,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
+                this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-
                     this.uriService
                         .updateURI('systems/' + this.system.id, {})
                         .catch(error => {
@@ -126,7 +126,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.applyService
             .initPageWatcher(this.viewContainerRef, this.editUser, () => {
                 this.selectedUser.isEnabled = this.userEnabled.originalValue;
-                this.selectedUser.role = this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
+                this.selectedUser.role = this.userRole.originalValue === 'Custom'
+                    ? this.currentCustomRole : this.system.accessRoles.find(role => role.name === this.userRole.originalValue);
                 this.applyService.reset();
             },
             [
@@ -228,6 +229,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.LANG.system.users.cloudDelete : this.LANG.system.users.localDelete;
 
             this.menuService.setDetailsSection(NxUtilsService.cleanId(this.selectedUser.id));
+            if (this.selectedUser.role.name === 'Custom') {
+                this.currentCustomRole = NxUtilsService.deepCopy(this.selectedUser.role);
+            }
             // watchers set
             this.setPermission(this.selectedUser.role);
             this.userEnabled.value = this.selectedUser.isEnabled;

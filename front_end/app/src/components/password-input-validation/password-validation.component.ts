@@ -24,7 +24,7 @@ export class NxPasswordValidationComponent implements OnChanges {
         languageService: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnChanges(changes: SimpleChanges): void {

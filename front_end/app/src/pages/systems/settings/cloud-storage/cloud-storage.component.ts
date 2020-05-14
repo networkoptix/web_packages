@@ -49,7 +49,7 @@ export class NxCloudStorageComponent implements OnInit {
 
     private setupDefaults({ configService, languageService }) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     private init() {

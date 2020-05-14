@@ -166,7 +166,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             });
 
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
@@ -183,7 +183,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.resetFilterModel();
         }
 
-        this.pageService.setPageTitle(this.LANG.pageTitles.supportedDevices);
+        this.pageService.pageTitle = this.LANG.pageTitles.supportedDevices;
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;

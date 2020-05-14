@@ -25,7 +25,7 @@ export class RenameModalContent {
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

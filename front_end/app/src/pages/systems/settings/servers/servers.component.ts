@@ -55,7 +55,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private uriService: NxUriService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }

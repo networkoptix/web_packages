@@ -37,8 +37,8 @@ export class NxRestoreComponent implements OnInit {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.restorePassword);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.restorePassword;
 
         this.context = {
             process: ''
@@ -126,7 +126,7 @@ export class NxRestoreComponent implements OnInit {
             holdAlerts         : true,
             errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
             this.setContext('changeSuccess');
             this.dialogs.dismiss();
             this.uriService
@@ -146,7 +146,7 @@ export class NxRestoreComponent implements OnInit {
             holdAlerts         : true,
             errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');

@@ -460,6 +460,7 @@ export const nxConfig: IConfig = {
     settingsConfig: {
         auditTrailEnabled          : { type: 'checkbox' },
         cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
+        defaultMotionMask          : '5,0,0,44,32',
         disabledVendors            : { type: 'text' },
         ec2AliveUpdateIntervalSec  : {
             type  : 'number',

@@ -36,7 +36,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         private processService: NxProcessService,
         private dialogsService: NxDialogsService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.showStorage = false;
     }

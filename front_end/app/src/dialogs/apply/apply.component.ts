@@ -62,7 +62,7 @@ export class NxModalApplyComponent {
         private modalService: NgbModal,
         private language: NxLanguageProviderService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     private dialog(applyFunc, discardFunc) {

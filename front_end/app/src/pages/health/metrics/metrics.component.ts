@@ -87,7 +87,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
                 private healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.filterModel = {
             query: ''
         };

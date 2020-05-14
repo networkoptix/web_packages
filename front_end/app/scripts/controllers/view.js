@@ -13,9 +13,9 @@
                       nxConfigService, nxLanguageService, nxAppStateService, nxPageService, nxHeaderService, embed) {
 
                 const CONFIG = nxConfigService.getConfig();
-                const LANG = nxLanguageService.getTranslations();
+                const LANG = nxLanguageService.translations;
 
-                nxPageService.setPageTitle(LANG.pageTitles.view);
+                nxPageService.pageTitle = LANG.pageTitles.view;
 
                 $scope.systemReady = false;
                 $scope.hasCameras = false;

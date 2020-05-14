@@ -62,13 +62,13 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.pageService.setPageTitle(this.LANG.pageTitles.changePassword);
+        this.pageService.pageTitle = this.LANG.pageTitles.changePassword;
 
         this.changePassword = this.processService.createProcess(() => {
             return this.cloudApiService

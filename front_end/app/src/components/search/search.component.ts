@@ -102,7 +102,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.buttonArrowTypeUp = ButtonArrowType.up;
         this.buttonArrowTypeDown = ButtonArrowType.down;

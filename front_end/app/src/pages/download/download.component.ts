@@ -53,7 +53,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.canViewDownloads = false;
         this.tabsVisible = false;
@@ -199,7 +199,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         } else {
             title = this.LANG.pageTitles.download;
         }
-        this.pageService.setPageTitle(title);
+        this.pageService.pageTitle = title;
     }
 
     ngOnInit(): void {

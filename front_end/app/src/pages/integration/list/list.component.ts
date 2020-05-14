@@ -27,7 +27,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnDestroy() {
