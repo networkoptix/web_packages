@@ -185,9 +185,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     obj.originalValue = obj.value;
                 }
             }
-            return this.system.updateOrGetSystemSettings(changes).toPromise()
-                .then(() => this.applyService.reset());
-        });
+            return this.system.updateOrGetSystemSettings(changes).toPromise();
+        }).then(() => this.applyService.reset());
 
         this.applyService.initPageWatcher(
             this.viewContainerRef,

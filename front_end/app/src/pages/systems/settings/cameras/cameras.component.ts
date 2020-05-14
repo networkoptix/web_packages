@@ -26,7 +26,6 @@ import {
     distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
 
-
 @Component({
     selector    : 'nx-cameras-component',
     templateUrl : 'cameras.component.html',
@@ -230,13 +229,15 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.system.updateCameraSettings(cameraSettings.id, {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
-            ]).then(_ => this.system.getCameras().then(res => {
-                this.applyService.reset();
+            ]);
+        }).then(_ => {
+            this.applyService.reset();
+            return this.system.getCameras().then(res => {
                 this.setCamera();
                 this.toggleMotionGrid();
                 this.settingsService.system = this.system;
                 return res;
-            }));
+            });
         });
     }
 

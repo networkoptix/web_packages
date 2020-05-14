@@ -17,7 +17,10 @@ export class NxProcessCancelButtonComponent {
     @Input() customClass = ''
 
     discard() {
-        this.process.cancel();
-        this.discardFn();
+        if (this.process.processing) {
+            this.process.cancel();
+        } else {
+            this.discardFn();
+        }
     }
 }

@@ -30,8 +30,20 @@ export class Process {
     public canceled = false;
 
     /* process handlers */
-    private successHandler;
-    private errorHandler;
+    private _successHandler;
+    private _errorHandler;
+
+    successHandler = (...args) => {
+        if (!this.canceled) {
+            return this._successHandler(...args);
+        }
+    }
+
+    errorHandler = (...args) => {
+        if (!this.canceled) {
+            return this._errorHandler(...args);
+        }
+    }
 
     constructor(
         configService: NxConfigService,
@@ -81,6 +93,9 @@ export class Process {
                 this.deferredPromise.resolve(data);
             }
         }, (error) => {
+            if (this.canceled) {
+                return;
+            }
             if (error && error.error) {
                 error = error.error;
             }
@@ -92,14 +107,13 @@ export class Process {
     }
 
     then(successHandler, errorHandler?) {
-        this.successHandler = successHandler;
-        this.errorHandler = errorHandler;
+        this._successHandler = successHandler;
+        this._errorHandler = errorHandler;
         return this;
     }
 
     cancel() {
-        if (!this.processing) return;
-        console.log('process canceled');
+        this.processing = false;
         this.canceled = true;
     }
 

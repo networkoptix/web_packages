@@ -1,4 +1,4 @@
 <button 
     type="button" 
     class="min-w-80 btn btn-default {{customClass}}" 
-    (click)="discard()" translate><ng-content></ng-content></button>
+    (click)="discard()">{{process.processing ? ('Cancel' | translate) : ('Discard changes' | translate)}}</button>
