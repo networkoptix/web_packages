@@ -448,6 +448,8 @@ export class MergeModalContent {
                             switch (res.errorString) {
                                 case 'FAIL':
                                     throw Error(this.noServerFound);
+                                // handles VMS version <= 4.0 systems, which don't support dryRun
+                                case "Missing required parameter 'password'":
                                 case 'INCOMPATIBLE':
                                     throw Error('systemsIncompatible');
                                 case 'DUPLICATE_MEDIASERVER_FOUND':
@@ -540,15 +542,18 @@ export class MergeModalContent {
     }
 
     addStatus(system) {
-        let status               = '';
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
-        const stateOfHealth      = (system.info && system.info.stateOfHealth) ||
+        let stateOfHealth      = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
+        if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
+            stateOfHealth = 'incompatible';
+        }
+        let status = '';
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
-                if (!system.canMerge) {
+                if (Object.prototype.hasOwnProperty.call(system, 'canMerge') && !system.canMerge) {
                     status = statusIncompatible;
                 }
                 break;
