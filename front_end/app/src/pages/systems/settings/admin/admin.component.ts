@@ -191,12 +191,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.removeSystem.action,
                 'btn-danger',
                 this.LANG.dialogs.buttons.cancel
-            )
-                .then((result) => {
-                    if (result) {
-                        return this.deletingSystem.run();
-                    }
-                });
+            ).then((result) => {
+                if (result === true) {
+                    return this.deletingSystem.run();
+                }
+            });
         }
     }
 
