@@ -1,4 +1,5 @@
 mkdir ./dist/styles;
-mv ./dist/*.css ./dist/styles; sed -i -e 's/src="/href="styles\//g' dist/index.html;
+# target only main style
+mv ./dist/*.css ./dist/styles; sed -i -e 's/href="styles./href="styles\/styles./g' dist/index.html;
 mv ./dist/languages.*.png ./dist/styles
 mv ./dist/*.js ./dist/scripts; sed -i -e 's/src="/src="scripts\//g' dist/index.html
