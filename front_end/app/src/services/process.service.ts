@@ -32,6 +32,7 @@ export class Process {
     /* process handlers */
     private _successHandler;
     private _errorHandler;
+    private _catchHandler = (...args) => console.error(args);
 
     successHandler = (...args) => {
         if (!this.canceled) {
@@ -44,6 +45,12 @@ export class Process {
             return this._errorHandler(...args);
         }
     }
+
+    catchHandler = (...args) => {
+        if (!this.canceled) {
+            return this._catchHandler(...args);
+        }
+    };
 
     constructor(
         configService: NxConfigService,
@@ -67,7 +74,7 @@ export class Process {
         this.finished = false;
         this.canceled = false;
         this.deferredPromise = this.createDeferredPromise();
-        this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
+        this.deferredPromise.promise.then(this.successHandler, this.errorHandler).catch(this.catchHandler);
 
         /* There is a weird issue when executing a process that is passed into a modal.
          * After the first execution then caller function becomes undefined when the run
@@ -109,6 +116,11 @@ export class Process {
     then(successHandler, errorHandler?) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
+        return this;
+    }
+
+    catch(catchHandler) {
+        this._catchHandler = catchHandler;
         return this;
     }
 
