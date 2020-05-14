@@ -4,8 +4,6 @@ const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const common = require('./webpack.ipvd.js');
-// const ExtractTextPlugin = require('extract-text-webpack-plugin');
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
 const host = '0.0.0.0';
