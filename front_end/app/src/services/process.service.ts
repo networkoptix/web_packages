@@ -29,28 +29,10 @@ export class Process {
     public errorData;
     public canceled = false;
 
-    /* process handlers */
+    // process handlers assigned from then and catch methods
     private _successHandler;
     private _errorHandler;
     private _catchHandler = (...args) => console.error(args);
-
-    successHandler = (...args) => {
-        if (!this.canceled) {
-            return this._successHandler(...args);
-        }
-    }
-
-    errorHandler = (...args) => {
-        if (!this.canceled) {
-            return this._errorHandler(...args);
-        }
-    }
-
-    catchHandler = (...args) => {
-        if (!this.canceled) {
-            return this._catchHandler(...args);
-        }
-    };
 
     constructor(
         configService: NxConfigService,
@@ -58,7 +40,7 @@ export class Process {
         private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
-        private caller,
+        private caller: () => Promise<any>,
         settings: Partial<ProcessSettings>
     ) {
         this.CONFIG = configService.getConfig();
@@ -66,6 +48,25 @@ export class Process {
         this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
         this.settings = { ...this.settings, ...settings };
     }
+
+    // process handler wrappers
+    private successHandler = (...args) => {
+        if (!this.canceled) {
+            return this._successHandler(...args);
+        }
+    }
+
+    private errorHandler = (...args) => {
+        if (!this.canceled) {
+            return this._errorHandler(...args);
+        }
+    }
+
+    private catchHandler = (...args) => {
+        if (!this.canceled) {
+            return this._catchHandler(...args);
+        }
+    };
 
     run() {
         this.processing = true;
@@ -113,6 +114,7 @@ export class Process {
         });
     }
 
+    // Public methods for assigning handler methods to process
     then(successHandler, errorHandler?) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
@@ -189,7 +191,7 @@ export class NxProcessService {
         private toastService: NxToastService
     ) { }
 
-    createProcess<Returned = any>(caller: () => Returned, settings?: Partial<ProcessSettings>) {
+    createProcess<Returned = any>(caller: () => Promise<any>, settings?: Partial<ProcessSettings>) {
         return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }

@@ -91,8 +91,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
         this.gettingSystems = this.processService.createProcess(() => {
             this.fetchComplete = true;
-            return this.systemsService.forceUpdateSystems().subscribe(_ => {
-            });
+            return this.systemsService.forceUpdateSystems().toPromise();
         }, {
             errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden : true

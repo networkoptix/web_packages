@@ -9,7 +9,8 @@ import {
     IConfig, NxConfigService,
     NxLanguageProviderService,
     NxProcessService,
-    Process
+    Process,
+    NxSystem
 }                                    from '../../../../../services';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
@@ -30,7 +31,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     saveLoggers: Process;
     lockedSubscription: SubscriptionLike;
 
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() serverId;
 
     systemLoggers: any = {};
@@ -42,7 +43,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
                 .setLogLevels(this.serverId, this.loggersToBeSaved())
-                .then(response => {
+                .then((response: any) => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService

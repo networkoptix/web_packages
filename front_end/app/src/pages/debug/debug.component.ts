@@ -122,18 +122,20 @@ export class NxDebugComponent {
         });
 
         const debugProcess = this.processService.createProcess(() => {
-            return setTimeout(() => {
-                if (this.debugProcess.success) {
-                    Promise.resolve({
-                        data: {
-                            resultCode: this.LANG.errorCodes.ok
-                        }
-                    });
-                } else {
-                    // eslint-disable-next-line prefer-promise-reject-errors
-                    Promise.reject(false);
-                }
-            }, 2000);
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (this.debugProcess.success) {
+                        resolve({
+                            data: {
+                                resultCode: this.LANG.errorCodes.ok
+                            }
+                        });
+                    } else {
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        reject(false);
+                    }
+                }, 2000);
+            });
         }, {
             successMessage : 'Success!',
             errorPrefix    : 'Fail!'

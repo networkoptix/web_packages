@@ -13,7 +13,8 @@ import {
     IConfig, NxConfigService,
     NxLanguageProviderService,
     NxProcessService,
-    Process
+    Process,
+    NxSystem
 }                                    from '../../../../../services';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { NxSettingsService }         from '../../settings.service';
@@ -31,7 +32,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @Input() system;
+    @Input() system: NxSystem;
 
     private haveAdvSettings: boolean;
     private saveSettings: Process;
@@ -89,7 +90,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
             return this.system
                 .updateOrGetSystemSettings(this.settingsToBeSaved())
                 .toPromise()
-                .then(response => {
+                .then((response: any) => {
                     this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
@@ -122,7 +123,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     getAdvancedSettings() {
         this.system.updateOrGetSystemSettings({ ignore: 'installedUpdateInformation,targetUpdateInformation' })
             .toPromise()
-            .then(response => {
+            .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
             });

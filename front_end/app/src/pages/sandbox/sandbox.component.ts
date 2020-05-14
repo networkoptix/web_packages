@@ -158,11 +158,11 @@ export class NxSandboxComponent {
 
     ngOnInit() {
         this.change = this.processService.createProcess(() => {
-            return true;
+            return Promise.resolve(true);
         });
 
         this.restore = this.processService.createProcess(() => {
-            return true;
+            return Promise.resolve(true);
         });
     }
 

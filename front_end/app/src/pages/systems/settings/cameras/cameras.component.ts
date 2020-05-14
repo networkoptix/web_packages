@@ -208,7 +208,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
-                return this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
+                return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning));
             }
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
