@@ -15,12 +15,12 @@
                 [btnCaption]="'Edit Credentials' | translate"
                 (onAction)="updateCredentials()">
             </nx-alert-block>
-        <nx-alert-block
-            *ngIf="showOffline"
-            type="warning"
-            [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
-            [line1]="'Camera is offline' | translate">
-        </nx-alert-block>
+            <nx-alert-block
+                *ngIf="showOffline"
+                type="warning"
+                [iconSrc]="CONFIG.icons.dirNonStandard + 'warning.svg'"
+                [line1]="'Camera is offline' | translate">
+            </nx-alert-block>
             <nx-alert-block
                 *ngFor="let error of errors"
                 type="error"
