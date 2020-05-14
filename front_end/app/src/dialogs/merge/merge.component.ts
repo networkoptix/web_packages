@@ -276,7 +276,12 @@ export class MergeModalContent {
             .then(
                 res => {
                     this.checking = false;
-                    if (res.error === '0') {
+                    // covers case where auto-discovered system is not set up yet
+                    if (res.isNew) {
+                        const index = this.serverUrl.indexOf('//') + 2;
+                        this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
+                        this.machine.transition('confirmMerge');
+                    } else if (res.error === '0') {
                         if (this.serverUrlInputExists) {
                             this.machine.transition('adminPassword');
                         } else {
@@ -428,30 +433,31 @@ export class MergeModalContent {
          */
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             this.nonCloudMerge = true;
-            this.serverUrl = this.machine.state.template.serverUrlInputValue;
             this.getSecondaryName();
+            this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!(/^https?:\/\//).test(this.serverUrl)) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
             }
             if (!(/:\d{1,5}$/).test(this.serverUrl)) {
                 this.serverUrl += ':7001';
             }
-            return this.system.mergeSystems(this.serverUrl, true).toPromise()
-                .then(res => {
-                    if (res.error !== '0') {
-                        switch (res.errorString) {
-                            case 'FAIL':
-                                throw Error(this.noServerFound);
-                            case 'INCOMPATIBLE':
-                                throw Error('systemsIncompatible');
-                            case 'DUPLICATE_MEDIASERVER_FOUND':
-                                throw Error(this.duplicateServers);
-                            default:
-                                throw Error(this.unknownError);
+            return this.targetSystem.isNew ? { isNew: true }
+                : this.system.mergeSystems(this.serverUrl, true).toPromise()
+                    .then(res => {
+                        if (res.error !== '0') {
+                            switch (res.errorString) {
+                                case 'FAIL':
+                                    throw Error(this.noServerFound);
+                                case 'INCOMPATIBLE':
+                                    throw Error('systemsIncompatible');
+                                case 'DUPLICATE_MEDIASERVER_FOUND':
+                                    throw Error(this.duplicateServers);
+                                default:
+                                    throw Error(this.unknownError);
+                            }
                         }
-                    }
-                    return res;
-                });
+                        return res;
+                    });
         } else {
             this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
