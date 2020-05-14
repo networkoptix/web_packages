@@ -2,12 +2,33 @@ import statistics
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from api.controllers import cloud_api
 from api.helpers.exceptions import APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params
 from cms.models import cloud_portal_customization_cache
 
 
+# Swagger params
+systemId__query_params = openapi.Parameter('systemId', openapi.IN_PATH, type=openapi.TYPE_STRING)
+
+# Swagger Schema
+destinationSystemId__body = openapi.Schema(type=openapi.TYPE_STRING)
+password__body = openapi.Schema(type=openapi.TYPE_STRING)
+sourceSystemId__body = openapi.Schema(type=openapi.TYPE_STRING)
+systemId__body = openapi.Schema(type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Creates a cloud storage for the system.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "systemId": systemId__body
+                         },
+                         required=["systemId"]
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -26,6 +47,16 @@ def create(request):
     return api_success(storage_info)
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Deletes a cloud storage from the system.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "password": password__body,
+                             "systemId": systemId__body
+                         },
+                         required=["systemId"]
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -37,18 +68,31 @@ def delete(request):
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Moves the cloud storage(s) from one system to another system.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "destinationSystemId": destinationSystemId__body,
+                             "sourceSystemId": sourceSystemId__body
+                         },
+                         required=["destinationSystemId", "sourceSystemId"]
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
 def move(request):
-    require_params(request, ['destinationSystemId', 'sourceSystemId'])
-    cloud_api.Storage.move(request.session['login'],
-                           request.session['password'],
-                           request.data.get('destinationSystemId'),
-                           request.data.get('sourceSystemId'))
+    require_params(request, ["destinationSystemId", "sourceSystemId"])
+    cloud_api.Storage.move(request.session["login"],
+                           request.session["password"],
+                           request.data.get("destinationSystemId"),
+                           request.data.get("sourceSystemId"))
     return api_success()
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the cloud storage usage statistics for a system.",
+                     manual_parameters=[systemId__query_params])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions

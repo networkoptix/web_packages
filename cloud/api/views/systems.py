@@ -1,5 +1,8 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from api.controllers import cloud_api, cloud_gateway
 
 from api.helpers.exceptions import handle_exceptions, api_success, require_params, \
@@ -10,6 +13,27 @@ import hashlib
 import base64
 
 
+# Swagger parameters
+system_id__route_param = openapi.Parameter('system_id', openapi.IN_PATH, type=openapi.TYPE_STRING, required=True)
+
+# Swagger schemas for body
+disconnect_user_email__body = openapi.Schema(type=openapi.TYPE_STRING,
+                                             description="If the user is not currently logged in they need to"
+                                                         "provide their email.")
+master_system_id__body = openapi.Schema(type=openapi.TYPE_STRING,
+                                        description="The system that remains after the cloud merge finishes.")
+password__body = openapi.Schema(type=openapi.TYPE_STRING)
+slave_system_id__body = openapi.Schema(type=openapi.TYPE_STRING,
+                                       description="The system that disappears after the cloud merge completes.")
+system_id__body = openapi.Schema(type=openapi.TYPE_STRING)
+system_name__body = openapi.Schema(type=openapi.TYPE_STRING, description="Name of the system.")
+user_email__body = openapi.Schema(type=openapi.TYPE_STRING)
+user_role__body = openapi.Schema(type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="If the user has access to the system clouddb will return its info.",
+                     manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -18,6 +42,8 @@ def system(request, system_id):
     return api_success(data['systems'])
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns a list of systems that the user has access to.")
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -26,6 +52,21 @@ def list_systems(request):
     return api_success(data['systems'])
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns a list of cloud users for that system",
+                     manual_parameters=[system_id__route_param])
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Adds the account related to user_email to the system. If the account does"
+                                           "not exist that user_email is sent an invite to register on cloud portal",
+                     manual_parameters=[system_id__route_param],
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "role": user_role__body,
+                             "user_email": user_email__body
+                         },
+                         required=["role", "user_email"]
+                     ))
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -60,6 +101,9 @@ def digest(login, password, realm, nonce, method):
     return base64.b64encode(auth)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the auth keys needed to make api requests to a cloud system.",
+                     manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -73,6 +117,15 @@ def get_auth(request, system_id):
     return api_success({'authGet': auth_get, 'authPost': auth_post, 'authPlay': auth_play})
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Renames the cloud system.",
+                     manual_parameters=[system_id__route_param],
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             'name': system_name__body
+                         }
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -83,6 +136,16 @@ def rename(request, system_id):
     return api_success(data)
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Merges two cloud systems into one.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "master_system_id": master_system_id__body,
+                             "master_system_id": slave_system_id__body,
+                             "password": password__body
+                         }
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -97,6 +160,9 @@ def merge(request):
     return api_success(data)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the user access roles for the system.",
+                     manual_parameters=[system_id__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -105,6 +171,17 @@ def access_roles(request, system_id):
     return api_success(data['accessRoles'])
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Disconnects the system from cloud portal.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "email": disconnect_user_email__body,
+                             "password": password__body,
+                             "system_id": system_id__body
+                         },
+                         required=["password", "system_id"]
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -126,6 +203,20 @@ def disconnect(request):
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Connects a system to cloud portal. If the user is already logged in only "
+                                           "the system_id is required. Otherwise the email and password are required "
+                                           "as well.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "email": user_email__body,
+                             "name": system_name__body,
+                             "password": password__body,
+                             "system_id": system_id__body,
+                         },
+                         required=["name", "system_id"]
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -141,6 +232,12 @@ def connect(request):
     return api_success(data)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     deprecated=True,
+                     operation_description="Old way of sending GET request to systems.")
+@swagger_auto_schema(method="POST", auto_schema=None,
+                     deprecated=True,
+                     operation_description="Old way of sending POST request to systems.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions

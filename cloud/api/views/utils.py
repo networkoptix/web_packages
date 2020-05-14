@@ -1,10 +1,13 @@
 import collections
 from math import log2
 
+from django.core.cache import cache, caches
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
-from django.core.cache import cache, caches
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
 import datetime
@@ -18,6 +21,15 @@ from django.shortcuts import redirect
 from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
+
+
+# Swagger params
+build__route_param = openapi.Parameter('key', openapi.IN_PATH, type=openapi.TYPE_STRING)
+visited_key__query_param = openapi.Parameter('key', openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
+# Swagger schemas
+language__body = openapi.Schema(type=openapi.TYPE_STRING)
+visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
 def get_cloud_capabilities_from_cache():
@@ -62,6 +74,18 @@ def get_settings_from_cache():
     }
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Checks if the key has been used.",
+                     manual_parameters=[visited_key__query_param])
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Marks the key as visited.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "key": visited_key__body
+                         },
+                         required=["key"]
+                     ))
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -89,6 +113,17 @@ def visited_key(request):
     return Response({'visited': value})
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Gets the language of the current user.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Sets the language for current user.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "language": language__body
+                         },
+                         required=["language"]
+                     ))
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 def language(request):
@@ -120,6 +155,8 @@ def language(request):
         return response
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -147,6 +184,10 @@ def downloads_history(request):
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns detailed information about a specific build for the current "
+                                           "cloud portal.",
+                     manual_parameters=[build__route_param])
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions
@@ -191,6 +232,11 @@ def download_build(request, build):
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the download information for the current build.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Forces the downloads cache to clear and returns the "
+                                           "new download information.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -273,6 +319,8 @@ def downloads(request):
     return Response(downloads_json)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns cloud config information to the web client.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -287,6 +335,10 @@ def get_settings(request):
     return Response(settings_object)
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns the list of supported devices.")
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Clear's the supported devices cache.")
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
 @handle_exceptions
@@ -410,6 +462,9 @@ def get_ipvd(request):
         return Response({'IPVD cache cleared'})
 
 
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Returns what capabilities cloud portal supports. This is used "
+                                           "mainly for vms.")
 @api_view(['GET'])
 @handle_exceptions
 def cloud_capabilities(request):
