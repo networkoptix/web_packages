@@ -88,11 +88,11 @@ export class NxSystemAPI {
         this.location = location;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
-        // @ts-ignore TODO: Remove once system-api is done for webadmin, API Testing only,
-        window.systemService = this;
-        console.log('systemService added to window');
-        console.log('to test system system api method just access the systemService from console');
-        console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
+        // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
+        // window.systemService = this;
+        // console.log('systemService added to window');
+        // console.log('to test system system api method just access the systemService from console');
+        // console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
     }
 
     private cookieLogin(auth) {
