@@ -214,7 +214,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.email, this.system.id);
-        console.log('systems', this.systems);
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
