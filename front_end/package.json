@@ -18,7 +18,7 @@
     "setSkin": "node setSkin.js --skin",
     "compile-lang": "python compile-lang.py",
     "fill-lang": "python fill-lang.py",
-    "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
+    "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort",
     "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts"
   },
   "private": true,
