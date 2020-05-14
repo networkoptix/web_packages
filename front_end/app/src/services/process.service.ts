@@ -6,31 +6,10 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
-interface IErrorCodes {
-    [key: string]: string | Function
-}
-
-interface ProcessSettings {
-    errorCodes: IErrorCodes;
-    errorMessage?: string;
-    errorPrefix: string;
-    holdAlerts: boolean;
-    ignoreUnauthorized: boolean;
-    logoutForbidden: boolean;
-    successMessage: string;
-    ignoreError?: boolean;
-}
-
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-
-    private deferredPromise: {
-        promise: Promise<unknown>;
-        reject: (...args: any) => void;
-        resolve: (...args: any) => void;
-    };
-
+    private deferredPromise: DeferredPromise;
     private settings: ProcessSettings = {
         errorCodes         : {},
         errorMessage       : '',
@@ -42,15 +21,17 @@ export class Process {
         ignoreError        : false
     };
 
+    // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
     public success: boolean;
     public error: boolean;
     public processing: boolean;
     public finished: boolean;
     public errorData;
+    public canceled = false;
 
     /* process handlers */
-    private successHandler: (...args: any) => void;
-    private errorHandler: (...args: any) => void;
+    private successHandler;
+    private errorHandler;
 
     constructor(
         configService: NxConfigService,
@@ -58,7 +39,7 @@ export class Process {
         private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
-        private caller: (...args: any) => void,
+        private caller,
         settings: Partial<ProcessSettings>
     ) {
         this.CONFIG = configService.getConfig();
@@ -68,11 +49,11 @@ export class Process {
     }
 
     run() {
-
         this.processing = true;
         this.error = false;
         this.success = false;
         this.finished = false;
+        this.canceled = false;
         this.deferredPromise = this.createDeferredPromise();
         this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
 
@@ -110,10 +91,16 @@ export class Process {
         });
     }
 
-    then(successHandler: (...args: any) => void, errorHandler: (...args: any) => void = () => {}) {
+    then(successHandler, errorHandler?) {
         this.successHandler = successHandler;
         this.errorHandler = errorHandler;
         return this;
+    }
+
+    cancel() {
+        if (!this.processing) return;
+        console.log('process canceled');
+        this.canceled = true;
     }
 
     // TODO: possible deprecation
@@ -135,28 +122,6 @@ export class Process {
         })();
     }
 
-    private formatError(error: any, errorCodes: any): string | false {
-        const errorCode = (error && error.data && error.data.resultCode) ||
-            (error && error.resultCode) ||
-            (error.type === 'error' &&
-            'networkConnection') ||
-            error;
-        if (!errorCode) {
-            return this.LANG.errorCodes.unknownError;
-        }
-        if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
-            if (typeof (errorCodes[errorCode]) === 'function') {
-                const result = (errorCodes[errorCode])(error) || false;
-                if (result !== true) {
-                    return result;
-                }
-            } else {
-                return errorCodes[errorCode];
-            }
-        }
-        return this.LANG.errorCodes[errorCode] || this.LANG.errorCodes.unknownError;
-    }
-
     private handleError(data) {
         this.error = true;
         this.errorData = data;
@@ -171,11 +136,11 @@ export class Process {
             this.deferredPromise.reject(data);
             return;
         }
-        const formatted = this.formatError(data, this.settings.errorCodes);
+        const formatted = formatError(data, this.settings.errorCodes, this.LANG);
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
-            const message              = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
-            const options              = {
+            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+            const options = {
                 autohide  : !this.settings.holdAlerts,
                 classname : this.CONFIG.toast.danger,
                 delay     : this.CONFIG.alertTimeout
@@ -198,7 +163,50 @@ export class NxProcessService {
         private toastService: NxToastService
     ) { }
 
-    createProcess(caller: (...args: any) => void, settings?: Partial<ProcessSettings>) {
+    createProcess<Returned = any>(caller: () => Returned, settings?: Partial<ProcessSettings>) {
         return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
     }
 }
+
+export interface IErrorCodes {
+    [key: string]: string | Function
+}
+
+export interface ProcessSettings {
+    errorCodes: IErrorCodes;
+    errorMessage?: string;
+    errorPrefix: string;
+    holdAlerts: boolean;
+    ignoreUnauthorized: boolean;
+    logoutForbidden: boolean;
+    successMessage: string;
+    ignoreError?: boolean;
+}
+
+export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
+    const errorCode = (error && error.data && error.data.resultCode) ||
+        (error && error.resultCode) ||
+        (error.type === 'error' &&
+        'networkConnection') ||
+        error;
+    if (!errorCode) {
+        return lang.errorCodes.unknownError;
+    }
+    if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
+        if (typeof (errorCodes[errorCode]) === 'function') {
+            const result = (errorCodes[errorCode])(error) || false;
+            if (result !== true) {
+                return result;
+            }
+        } else {
+            return errorCodes[errorCode];
+        }
+    }
+    return lang.errorCodes[errorCode] || lang.errorCodes.unknownError;
+}
+
+export interface DeferredPromise<P = any> {
+    promise: Promise<P>;
+    reject: (...args) => void;
+    resolve: (...args) => void;
+};
