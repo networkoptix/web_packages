@@ -1,7 +1,7 @@
 import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { NxProcessService }              from '../../services';
+import { NxProcessService, Process }              from '../../services';
 import { NxDialogsService }              from '../../dialogs';
 
 @Component({
@@ -29,8 +29,8 @@ export class NxSandboxComponent {
     // cameraEmbedUrl: SafeResourceUrl;
     data: any = {};
     theme: string;
-    change;
-    restore;
+    change: Process;
+    restore: Process;
 
     submitted = false;
 

@@ -6,7 +6,8 @@ import {
     NxLanguageProviderService,
     NxAccountService, NxProcessService,
     NxSystem, NxCloudApiService,
-    NxUriService
+    NxUriService,
+    Process
 }                                         from '../../../../services';
 import { NxDialogsService }               from '../../../../dialogs';
 import { NxSettingsService }              from '../settings.service';
@@ -38,7 +39,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     advanced: boolean;
     userDisconnectSystem;
-    deletingSystem;
+    deletingSystem: Process;
     currentlyMerging = false;
     debugMode: boolean;
     betaMode: boolean;

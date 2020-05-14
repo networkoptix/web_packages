@@ -6,7 +6,7 @@ import {
     NxLanguageProviderService,
     NxUrlProtocolService, NxUriService,
     NxProcessService, NxCloudApiService,
-    NxConfigService, IConfig
+    NxConfigService, IConfig, Process
 }                                       from '../../services';
 import { NxDialogsService }             from '../../dialogs';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
@@ -22,7 +22,7 @@ export class NxRegisterComponent implements OnInit {
 
     uriParam: string;
     accountInfo: any = {};
-    register;
+    register: Process;
     registerSuccess;
     activated;
     code;

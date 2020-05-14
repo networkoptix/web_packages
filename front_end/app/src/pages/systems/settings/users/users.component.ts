@@ -11,7 +11,7 @@ import {
     NxLanguageProviderService, NxUtilsService,
     NxSystem, NxSystemRole, NxSystemUser,
     NxProcessService, NxUriService,
-    NxApplyService, Watcher
+    NxApplyService, Watcher, Process
 }                                               from '../../../../services';
 import { NxDialogsService }                     from '../../../../dialogs';
 import { NxSettingsService }                    from '../settings.service';
@@ -33,7 +33,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     location;
     paramUser;
     accessDescription: string;
-    editUser;
+    editUser: Process;
     locked;
     nextUserId: string;
     selectedUser: NxSystemUser;
@@ -151,7 +151,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 return this.system.getUsers(true);
             }).then(() => {
                 this.locked[user.email] = false;
-                return;
             });
         }, {
             ignoreError: true
@@ -276,4 +275,3 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         this.selectedUser[name] = value;
     }
 }
-

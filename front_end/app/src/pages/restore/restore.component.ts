@@ -7,15 +7,16 @@ import {
     NxLanguageProviderService,
     NxProcessService, NxCloudApiService,
     NxConfigService, IConfig,
-    NxAccountService
+    NxAccountService,
+    Process
 }              from '../../services';
 import { NxDialogsService }         from '../../dialogs';
 import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-restore-component',
-    templateUrl: 'restore.component.html',
-    styleUrls  : ['restore.component.scss']
+    selector : 'nx-restore-component',
+    templateUrl : 'restore.component.html',
+    styleUrls : ['restore.component.scss']
 })
 
 export class NxRestoreComponent implements OnInit {
@@ -25,8 +26,8 @@ export class NxRestoreComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    change;
-    restore;
+    change: Process;
+    restore: Process;
     data;
     restoring;
     restoringSuccess;
@@ -75,9 +76,9 @@ export class NxRestoreComponent implements OnInit {
         }
 
         this.data = {
-            newPassword: '',
-            email      : this.localStorage.get('email') || '',
-            restoreCode: this.uriParamCode
+            newPassword : '',
+            email       : this.localStorage.get('email') || '',
+            restoreCode : this.uriParamCode
         };
 
         this.restoring = (this.uriParam === 'restoring');
@@ -118,12 +119,12 @@ export class NxRestoreComponent implements OnInit {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
             errorCodes: {
-                notFound     : this.LANG.errorCodes.wrongCodeRestore,
-                notAuthorized: this.LANG.errorCodes.wrongCodeRestore
+                notFound      : this.LANG.errorCodes.wrongCodeRestore,
+                notAuthorized : this.LANG.errorCodes.wrongCodeRestore
             },
-            ignoreUnauthorized: true,
-            holdAlerts        : true,
-            errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix
+            ignoreUnauthorized : true,
+            holdAlerts         : true,
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.setContext('changeSuccess');
@@ -141,9 +142,9 @@ export class NxRestoreComponent implements OnInit {
             errorCodes: {
                 notFound: this.LANG.errorCodes.emailNotFound
             },
-            ignoreUnauthorized: true,
-            holdAlerts        : true,
-            errorPrefix       : this.LANG.errorCodes.cantSendActivationPrefix
+            ignoreUnauthorized : true,
+            holdAlerts         : true,
+            errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix
         }).then(() => {
             this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
             this.restoring = false;

@@ -6,7 +6,7 @@ import {
     NxConfigService, IConfig,
     NxLanguageProviderService,
     NxProcessService, NxSystem,
-    NxApplyService, Watcher
+    NxApplyService, Watcher, Process
 }                                  from '../../../../../services';
 import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
 
@@ -30,7 +30,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     previousInputValue: number;
     limitSessionTimeUnits;
     limitSessionTimeItems;
-    saveSettings;
+    saveSettings: Process;
     resetVideoEncryptionIfDisabled;
     setWarningMessageThroughApplyService;
     timeUnitTracker;

@@ -9,7 +9,7 @@ import {
     NxAccountService, Account,
     NxProcessService, NxCloudApiService,
     NxSystemsService, NxPageService,
-    NxApplyService, Watcher
+    NxApplyService, Watcher, Process
 }                                  from '../../../services';
 import { NxDialogsService }        from '../../../dialogs';
 import { NxMenuService }           from '../../../menu';
@@ -33,7 +33,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     account: Account;
     pass: any = {};
 
-    changePassword;
+    changePassword: Process;
 
     watchers: any = {
         password    : new Watcher<string>(),

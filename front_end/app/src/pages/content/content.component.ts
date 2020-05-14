@@ -12,7 +12,8 @@ import {
     NxConfigService, IConfig,
     NxPageService, NxProcessService,
     NxAccountService, Account,
-    NxCloudApiService
+    NxCloudApiService,
+    Process
 }                                  from '../../services';
 import { ComponentsModule }        from '../../components/components.module';
 import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
@@ -40,7 +41,7 @@ export class NxContentComponent implements OnInit {
     private agreementDetails: any = {};
     private account: Account;
     public showAgree = false;
-    public agreeProcess;
+    public agreeProcess: Process;
 
     @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
     @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;

@@ -9,7 +9,7 @@ import {
     NxLanguageProviderService,
     NxProcessService, NxSystem,
     NxApplyService, Watcher,
-    NxUriService, NxUtilsService
+    NxUriService, NxUtilsService, Process
 }                                      from '../../../../../services';
 import { NxDialogsService }            from '../../../../../dialogs';
 import { NxMenuService }               from '../../../../../menu';
@@ -34,7 +34,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     viewContainerRef: ViewContainerRef;
     serverIdFromParams;
 
-    saveSettings;
+    saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
     checking: boolean;

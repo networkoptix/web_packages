@@ -8,7 +8,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import {
     NxConfigService, IConfig,
     NxUrlProtocolService, NxProcessService,
-    NxLanguageProviderService
+    NxLanguageProviderService,
+    Process
 }                                    from '../../services';
 
 @Component({
@@ -28,7 +29,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     location;
     canceled: boolean;
     modalActive: boolean;
-    openClient;
+    openClient: Process;
 
     constructor(configService: NxConfigService,
                 private processService: NxProcessService,

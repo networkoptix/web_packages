@@ -8,7 +8,8 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import {
     IConfig, NxConfigService,
     NxLanguageProviderService,
-    NxProcessService
+    NxProcessService,
+    Process
 }                                    from '../../../../../services';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
@@ -26,7 +27,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean;
-    saveLoggers;
+    saveLoggers: Process;
     lockedSubscription: SubscriptionLike;
 
     @Input() system;

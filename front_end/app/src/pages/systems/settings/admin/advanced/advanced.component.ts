@@ -12,7 +12,8 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import {
     IConfig, NxConfigService,
     NxLanguageProviderService,
-    NxProcessService
+    NxProcessService,
+    Process
 }                                    from '../../../../../services';
 import { NxDialogsService }          from '../../../../../dialogs';
 import { NxSettingsService }         from '../../settings.service';
@@ -33,7 +34,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     @Input() system;
 
     private haveAdvSettings: boolean;
-    private saveSettings;
+    private saveSettings: Process;
     private serverSubscription: Subscription;
 
     systemSettings: any = {};

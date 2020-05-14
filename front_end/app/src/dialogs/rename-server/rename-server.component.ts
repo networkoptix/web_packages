@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }            from '../../services/process.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
@@ -18,7 +18,7 @@ export class RenameServerModalContent {
     @ViewChild('renameServerForm') renameForm: HTMLFormElement;
 
     LANG: LanguageI18NStaticTypes;
-    renameServer;
+    renameServer: Process;
 
     constructor(
         languageService: NxLanguageProviderService,

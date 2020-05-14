@@ -3,7 +3,7 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { timer }                     from 'rxjs';
 import { delayWhen, retryWhen, map } from 'rxjs/operators';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process }          from '../../services/process.service';
 import { NxConfigService, IConfig }  from '../../services';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -21,7 +21,7 @@ export class ResetServerModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    resetServer;
+    resetServer: Process;
     password: string;
 
     constructor(

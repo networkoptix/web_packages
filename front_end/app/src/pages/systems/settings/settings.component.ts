@@ -8,7 +8,7 @@ import {
     NxLanguageProviderService, NxPageService,
     NxSystemsService, NxAccountService, Account,
     NxProcessService, NxUtilsService, NxUriService,
-    NxScrollMechanicsService, NxSystem, NxSystemService, ICamera
+    NxScrollMechanicsService, NxSystem, NxSystemService, ICamera, Process
 }                                    from '../../../services';
 import { NxDialogsService, NxToastService }  from '../../../dialogs';
 import { NxSettingsService }         from './settings.service';
@@ -39,7 +39,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     account: Account;
     system: NxSystem;
-    gettingSystem;
+    gettingSystem: Process;
     systems;
     deletingSystem;
 
@@ -51,7 +51,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     betaMode: boolean;
     userDisconnectSystem: boolean;
     mergeTargetSystem;
-    gettingSystemUsers;
+    gettingSystemUsers: Process;
     selectedUser;
 
     headerHeight: number;

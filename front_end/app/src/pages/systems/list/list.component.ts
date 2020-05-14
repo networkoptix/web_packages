@@ -6,7 +6,8 @@ import {
     NxLanguageProviderService,
     NxPageService, NxSystemsService,
     NxAccountService, NxProcessService,
-    NxUrlProtocolService
+    NxUrlProtocolService,
+    Process
 }                                       from '../../../services';
 import { NxDialogsService }             from '../../../dialogs';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
@@ -27,7 +28,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
     showSearch;
     fetchComplete;
     search;
-    gettingSystems;
+    gettingSystems: Process;
     openClient;
     systems;
     filteredSystems;

@@ -7,7 +7,7 @@ import {
 }                                    from 'rxjs/operators';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxRibbonService }           from '../../components/ribbon';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process }          from '../../services/process.service';
 import { NxConfigService, IConfig }  from '../../services';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -25,7 +25,7 @@ export class RestartServerModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    restartServer;
+    restartServer: Process;
 
     constructor(
         configService: NxConfigService,

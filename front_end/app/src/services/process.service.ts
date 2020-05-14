@@ -24,24 +24,29 @@ interface ProcessSettings {
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private cloudApiService: NxCloudApiService;
-    private sessionService: NxSessionService;
-    private toastService: NxToastService;
 
-    private caller: (...args: any) => void;
-    private settings: ProcessSettings;
     private deferredPromise: {
         promise: Promise<unknown>;
         reject: (...args: any) => void;
         resolve: (...args: any) => void;
     };
 
-    /* TODO: Never read, can probably be removed */
-    private success: boolean;
-    private error: boolean;
-    private processing: boolean;
-    private finished: boolean;
-    private errorData;
+    private settings: ProcessSettings = {
+        errorCodes         : {},
+        errorMessage       : '',
+        errorPrefix        : '',
+        holdAlerts         : false,
+        ignoreUnauthorized : false,
+        logoutForbidden    : false,
+        successMessage     : '',
+        ignoreError        : false
+    };
+
+    public success: boolean;
+    public error: boolean;
+    public processing: boolean;
+    public finished: boolean;
+    public errorData;
 
     /* process handlers */
     private successHandler: (...args: any) => void;
@@ -50,57 +55,24 @@ export class Process {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        sessionService: NxSessionService,
-        cloudApiService: NxCloudApiService,
-        toastService: NxToastService,
-        caller: (...args: any) => void,
+        private sessionService: NxSessionService,
+        private cloudApiService: NxCloudApiService,
+        private toastService: NxToastService,
+        private caller: (...args: any) => void,
         settings: Partial<ProcessSettings>
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.getTranslations();
-        this.cloudApiService = cloudApiService;
-        this.sessionService = sessionService;
-        this.toastService = toastService;
-        this.init(caller, settings);
-        return this;
-    }
-
-    init(caller: (...args: any) => void, settings: Partial<ProcessSettings>) {
-        /*
-         settings: {
-         errorCodes,
-
-         holdAlerts
-         successMessage,
-         errorPrefix,
-         }
-         settings.successMessage
-         */
-        if (settings) {
-            settings.errorPrefix = settings.errorPrefix ? `${settings.errorPrefix}: ` : '';
-            this.settings = { ...this.settings, ...settings };
-        } else {
-            this.settings = {
-                errorCodes         : {},
-                errorMessage       : '',
-                errorPrefix        : '',
-                holdAlerts         : false,
-                ignoreUnauthorized : false,
-                logoutForbidden    : false,
-                successMessage     : '',
-                ignoreError        : false
-            };
-        }
-        this.caller = caller;
+        this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
+        this.settings = { ...this.settings, ...settings };
     }
 
     run() {
-        // TODO: These don't seem to be used anywhere, could probably remove setting this values
+
         this.processing = true;
         this.error = false;
         this.success = false;
         this.finished = false;
-
         this.deferredPromise = this.createDeferredPromise();
         this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
 
@@ -118,8 +90,6 @@ export class Process {
             } else {
                 this.success = true;
                 if (this.settings.successMessage && data !== false) {
-                    // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
-                    // Circular dependencies ... keep ngToast for no -- TT
                     const options = {
                         classname : this.CONFIG.toast.success,
                         autohide  : !this.settings.holdAlerts,
@@ -140,10 +110,9 @@ export class Process {
         });
     }
 
-    then(successHandler: (...args: any) => void, errorHandler?: (...args: any) => void) {
+    then(successHandler: (...args: any) => void, errorHandler: (...args: any) => void = () => {}) {
         this.successHandler = successHandler;
-        this.errorHandler = errorHandler || (() => {
-        }) as (...args: any) => void;
+        this.errorHandler = errorHandler;
         return this;
     }
 
@@ -166,7 +135,6 @@ export class Process {
         })();
     }
 
-    // TODO refine error types
     private formatError(error: any, errorCodes: any): string | false {
         const errorCode = (error && error.data && error.data.resultCode) ||
             (error && error.resultCode) ||

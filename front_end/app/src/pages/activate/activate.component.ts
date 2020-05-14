@@ -7,7 +7,8 @@ import {
     NxLanguageProviderService, NxUriService,
     NxUrlProtocolService, NxAccountService,
     NxConfigService, IConfig,
-    NxCloudApiService
+    NxCloudApiService,
+    Process
 }                                   from '../../services';
 import { NxDialogsService }         from '../../dialogs';
 import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
@@ -27,8 +28,8 @@ export class NxActivateComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     accountInfo: any = {};
-    activate;
-    reactivate;
+    activate: Process;
+    reactivate: Process;
     activated;
     code;
     session;
