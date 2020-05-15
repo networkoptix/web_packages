@@ -5,11 +5,15 @@ import { NxCloudApiService }                   from './nx-cloud-api';
 import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { Observable, from, Subject, defer } from 'rxjs';
+import { takeUntil, map, tap, retryWhen, catchError } from 'rxjs/operators';
 
+type Handler = (...args: any[]) => any
+
+const logError = (...args) => console.error(args);
 export class Process {
     private CONFIG: IConfig;
     private LANG: LanguageI18NStaticTypes;
-    private deferredPromise: DeferredPromise;
     private settings: ProcessSettings = {
         errorCodes         : {},
         errorMessage       : '',
@@ -28,11 +32,7 @@ export class Process {
     public finished: boolean;
     public errorData;
     public canceled = false;
-
-    // process handlers assigned from then and catch methods
-    private _successHandler;
-    private _errorHandler;
-    private _catchHandler = (...args) => console.error(args);
+    private canceled$ = new Subject();
 
     constructor(
         configService: NxConfigService,
@@ -40,8 +40,11 @@ export class Process {
         private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
-        private caller: () => Promise<any>,
-        settings: Partial<ProcessSettings>
+        private caller$: Observable<any>,
+        settings: Partial<ProcessSettings> = {},
+        private _successHandler: Handler = () => {},
+        private _errorHandler: Handler = logError,
+        private _catchHandler: Handler = logError
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -49,119 +52,102 @@ export class Process {
         this.settings = { ...this.settings, ...settings };
     }
 
-    // process handler wrappers
-    private successHandler = (...args) => {
-        if (!this.canceled) {
-            return this._successHandler(...args);
-        }
-    }
-
-    private errorHandler = (...args) => {
-        if (!this.canceled) {
-            return this._errorHandler(...args);
-        }
-    }
-
-    private catchHandler = (...args) => {
-        if (!this.canceled) {
-            return this._catchHandler(...args);
-        }
-    };
-
-    run() {
+    run = () => {
         this.processing = true;
         this.error = false;
         this.success = false;
         this.finished = false;
         this.canceled = false;
-        this.deferredPromise = this.createDeferredPromise();
-        this.deferredPromise.promise.then(this.successHandler, this.errorHandler).catch(this.catchHandler);
-
-        /* There is a weird issue when executing a process that is passed into a modal.
-         * After the first execution then caller function becomes undefined when the run
-         * returns this.caller(). Wrapping it in a promise fixes the issue.
-         */
-        const wrapper = new Promise((resolve) => {
-            return resolve(this.caller());
-        });
-        return wrapper.then((data) => {
-            const error = this.cloudApiService.checkResponseHasError(data);
-            if (error) {
-                this.handleError(error);
-            } else {
-                this.success = true;
-                if (this.settings.successMessage && data !== false) {
-                    const options = {
-                        classname : this.CONFIG.toast.success,
-                        autohide  : !this.settings.holdAlerts,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.settings.successMessage, options);
-                }
-                this.deferredPromise.resolve(data);
-            }
-        }, (error) => {
-            if (this.canceled) {
-                return;
-            }
-            if (error && error.error) {
-                error = error.error;
-            }
-            this.handleError(error);
-        }).finally(() => {
-            this.processing = false;
-            this.finished = true;
-        });
+        this.caller$.pipe(takeUntil(this.canceled$)).subscribe(this.onSuccess, this.onError, this.onComplete);
+        return this;
     }
 
-    // Public methods for assigning handler methods to process
-    then(successHandler, errorHandler?) {
+    // Handler method wrappers
+
+    onSuccess = async(res) => {
+        if (this.canceled) return;
+        const data = await res;
+        const error = this.cloudApiService.checkResponseHasError(data);
+        if (error) {
+            this.errorHelper(error);
+        } else {
+            this.success = true;
+            if (this.settings.successMessage && data !== false) {
+                const options = {
+                    classname : this.CONFIG.toast.success,
+                    autohide  : !this.settings.holdAlerts,
+                    delay     : this.CONFIG.alertTimeout
+                };
+                this.toastService.show(this.settings.successMessage, options);
+            }
+            this._successHandler(data);
+        }
+    };
+
+    onError = (error) => {
+        if (error && error.error) {
+            error = error.error;
+        }
+        this.errorHelper(error);
+    };
+
+    onComplete = () => {
+        this.processing = false;
+        this.finished = true;
+    };
+
+    /**
+     * @deprecated
+     * This method is to maintain compatibilty with existing code.
+     *
+     * For readability successHandler and errorHandler should be assigned
+     * when calling NxProcessService.createProcess.
+     *
+     * @param successHandler
+     * @param errorHandler
+     */
+    then(successHandler, errorHandler = logError) {
         this._successHandler = successHandler;
         this._errorHandler = errorHandler;
         return this;
     }
 
+    /**
+     * @deprecated
+     * This method is to maintain compatibility with exisiting code.
+     *
+     * For readability catchHandler should be assigned when calling NxProcessService.createProcess.
+     *
+     * @param catchHandler
+     */
     catch(catchHandler) {
         this._catchHandler = catchHandler;
         return this;
     }
 
+    /**
+     * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
+     */
     cancel() {
         this.processing = false;
         this.canceled = true;
+        this.canceled$.next(true);
     }
 
-    // TODO: possible deprecation
-    private createDeferredPromise() {
-        return (() => {
-            let res;
-            let rej;
-
-            const p = new Promise((resolve, reject) => {
-                res = resolve;
-                rej = reject;
-            });
-
-            return {
-                promise : p,
-                reject  : rej,
-                resolve : res
-            };
-        })();
-    }
-
-    private handleError(data) {
+    private errorHelper(data) {
+        if (this.canceled) return;
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
             (data.detail ||
-                // detail appears only when django rest framework declines request with
-                // {"detail":"Authentication credentials were not provided."}
-                // we need to handle this like user was not authorised
                 (data.resultCode === 'notAuthorized') ||
-                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
+                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))
+        ) {
             this.sessionService.invalidateSession();
-            this.deferredPromise.reject(data);
+            this.error = true;
+            this.errorData = data;
+            this.processing = false;
+            this._errorHandler(data);
             return;
         }
         const formatted = formatError(data, this.settings.errorCodes, this.LANG);
@@ -175,7 +161,10 @@ export class Process {
             };
             this.toastService.show(message, options);
         }
-        this.deferredPromise.reject(data);
+        this.error = true;
+        this.errorData = data;
+        this.processing = false;
+        this._errorHandler(data);
     }
 }
 
@@ -191,8 +180,39 @@ export class NxProcessService {
         private toastService: NxToastService
     ) { }
 
-    createProcess<Returned = any>(caller: () => Promise<any>, settings?: Partial<ProcessSettings>) {
-        return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
+    /**
+     * NxProcessService.createProcess has been updated to allow passing in either a promise or an observable.
+     *
+     * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
+     *
+     * @param caller - Can be a function that returns a promise or an observable
+     * @param settings - ProcesSettings
+     * @param successHandler - Success handler can be assigned here or on .then(successHandler, errorHandler) method
+     * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
+     * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
+     */
+    createProcess(
+        caller: (() => Promise<any>) | Observable<any>,
+        settings?: Partial<ProcessSettings>,
+        successHandler: Handler = () => {},
+        errorHandler: Handler = logError,
+        catchHandler: Handler = logError
+    ) {
+        if (typeof caller === 'function') {
+            caller = defer(caller);
+        }
+        return new Process(
+            this.configService,
+            this.languageService,
+            this.sessionService,
+            this.cloudApiService,
+            this.toastService,
+            caller,
+            settings,
+            successHandler,
+            errorHandler,
+            catchHandler
+        );
     }
 }
 
@@ -232,9 +252,3 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
     }
     return lang.errorCodes[errorCode] || lang.errorCodes.unknownError;
 };
-
-export interface DeferredPromise<P = any> {
-    promise: Promise<P>;
-    reject: (...args) => void;
-    resolve: (...args) => void;
-}
