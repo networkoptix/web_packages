@@ -90,7 +90,7 @@ export class NxSystemsService implements OnDestroy {
                 // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
-            return this.LANG.system.yourSystem;
+            return this.LANG.system.yourSystem();
         }
         // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {

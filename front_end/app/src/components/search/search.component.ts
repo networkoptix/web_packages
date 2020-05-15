@@ -274,7 +274,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
 
-        this.placeholder = this.placeholder || this.LANG.search.Search; // optional param
+        this.placeholder = this.placeholder || this.LANG.search.Search(); // optional param
         this.numberFilters = 0;
         this.filterSelected = '';
 

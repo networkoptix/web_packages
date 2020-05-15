@@ -23,20 +23,20 @@ export class NxPageService {
         this.LANG = language;
     }
 
-    public set pageTitle(title: string) {
+    public set pageTitle(title: any) {
         if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
-            title = this.LANG.pageTitles.template.replace('{{title}}', title);
+            this.title.setTitle(this.LANG.pageTitles.template({ title: title() }));
+            return;
         }
-        this.title.setTitle(title);
+        this.title.setTitle(title());
     }
 
-    public set pageTitleRemoveHyphen(title: string) {
+    public set pageTitleRemoveHyphen(title: any) {
         if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
-            title = this.LANG.pageTitles.template
-                .replace('{{title}}', title)
-                .replace('- ', '');
+            this.title.setTitle(this.LANG.pageTitles.template({ title: title() }).replace('- ', ''));
+            return;
         }
-        this.title.setTitle(title);
+        this.title.setTitle(title());
     }
 
     setDefaultLayout() {

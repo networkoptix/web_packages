@@ -66,6 +66,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     uriPath: string;
     breakpoint: string;
     showAnalytics: boolean;
+    disclaimerParams: any = {};
 
     breakpointSubscription: SubscriptionLike;
     routerSubscription: SubscriptionLike;
@@ -114,6 +115,11 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.hardwareTypes = [];
 
         this.uriPath = '/' + this.route.snapshot.url.map(e => e.path).join('/');
+
+        this.disclaimerParams = {
+            companyName : this.CONFIG.company.name,
+            vmsName     : this.CONFIG.vmsName
+        };
     }
 
     constructor(
@@ -133,6 +139,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         private scrollMechanicsService: NxScrollMechanicsService,
         @Inject(PLATFORM_ID) private platformId: object
     ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
+
         this.setupDefaults();
 
         if (isPlatformBrowser(this.platformId)) {
@@ -164,9 +173,6 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     this.scrollMechanicsService.elementTableWidth = width;
                 }
             });
-
-        this.CONFIG = configService.getConfig();
-        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
@@ -187,7 +193,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.company = this.CONFIG.company.name;
         this.vmsName = this.CONFIG.vmsName;
-        this.placeholder = this.LANG.search.Search;
+        this.placeholder = this.LANG.search.Search();
 
         // add hardware types and tags
         this.addFilterTags();
@@ -321,7 +327,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         this.filterModel.selects.push(
             {
                 id       : 'resolution',
-                label    : this.LANG.search.minResolution,
+                label    : this.LANG.search.minResolution(),
                 items    : this.resolutions,
                 selected : this.resolutions[0]
             });
@@ -332,8 +338,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             this.filterModel.multiselects.push(
                 {
                     id                  : 'analytics',
-                    label               : this.LANG.search.analytics,
-                    searchLabel         : this.LANG.search.analyticsSelected,
+                    label               : this.LANG.search.analytics(),
+                    searchLabel         : this.LANG.search.analyticsSelected(),
                     searchLabelSingular : '',
                     items               : this.analytics
                         .map(v => (
@@ -360,21 +366,21 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         }
 
         this.filterModel.tags.forEach((tag: any) => {
-            tag.label = this.LANG.ipvd[tag.id];
+            tag.label = this.LANG.ipvd[tag.id]();
         });
     }
 
     addFilterTypes() {
         this.hardwareTypes = this.CONFIG.ipvd.supportedHardwareTypes;
         this.hardwareTypes.forEach(type => {
-            type.label = this.LANG.ipvd[type.id];
+            type.label = this.LANG.ipvd[type.id]();
         });
 
         this.filterModel.multiselects = [
             {
                 id       : 'hardwareTypes',
-                label    : this.LANG.search.hardwareTypes,
-                singular : this.LANG.search.hardwareType,
+                label    : this.LANG.search.hardwareTypes(),
+                singular : this.LANG.search.hardwareType(),
                 items    : this.hardwareTypes,
                 selected : []
             }
@@ -424,8 +430,8 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     .multiselects.unshift(
                         {
                             id       : 'vendors',
-                            label    : this.LANG.search.vendors,
-                            singular : this.LANG.search.vendor,
+                            label    : this.LANG.search.vendors(),
+                            singular : this.LANG.search.vendor(),
                             items    : this.vendors.map(v => (
                                 { id: v.name, label: v.name }
                             )),
@@ -562,7 +568,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
         const type = (param === 'device') ? this.CONFIG.dialogs.message.type.ipvd_device : this.CONFIG.dialogs.message.type.ipvd_page;
         const device: string = (param === 'device' && this.activeCamera) ? this.activeCamera.model : '';
         const data: MessageParams = {
-            disclaimer : this.LANG.privacyPolicy.ipvd,
+            disclaimer : this.LANG.privacyPolicy.ipvd(),
             asset      : device
         };
         this.dialogs

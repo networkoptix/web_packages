@@ -74,13 +74,11 @@
                 *ngIf="pagedItems.length">
 
                 <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                    <span [translate]="'ipvd.disclaimer'"
-                        [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
-                    </span>
+                    <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
                     <span>
-                        <ng-container>{{LANG.ipvd.feedback.a_Please}}&nbsp;</ng-container>
-                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvd.feedback.b_Link}}</a>
-                        <ng-container>&nbsp;{{LANG.ipvd.feedback.c_Info}}</ng-container>
+                        <ng-container>{{LANG.ipvdFeedback.a_Please()}}&nbsp;</ng-container>
+                        <a href (click)="onFeedbackClick.emit('page'); false;">{{LANG.ipvdFeedback.b_Link()}}</a>
+                        <ng-container>&nbsp;{{LANG.ipvdFeedback.c_Info()}}</ng-container>
                     </span>
                 </p>
                 <button *ngIf="debug">reset</button>

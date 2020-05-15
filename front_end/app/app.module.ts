@@ -12,8 +12,9 @@ import { LayoutModule }                                                   from '
 import { InputTrimModule }                  from 'ng2-trim-directive';
 import { NgbToast, NgbModal }               from '@ng-bootstrap/ng-bootstrap';
 import { OrderModule }                      from 'ngx-order-pipe';
-import { DeviceDetectorModule }             from 'ngx-device-detector';
-import { TranslateModule }                  from '@ngx-translate/core';
+import { DeviceDetectorModule }               from 'ngx-device-detector';
+import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
+import { TranslateMessageFormatCompiler }     from 'ngx-translate-messageformat-compiler';
 import { CookieService }                    from 'ngx-cookie-service';
 import { WebStorageModule }                 from 'ngx-store';
 
@@ -72,7 +73,12 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         ServiceModule,
         AngularFireModule,
         AngularFireMessagingModule,
-        TranslateModule.forRoot(),
+        TranslateModule.forRoot({
+            compiler: {
+                provide  : TranslateCompiler,
+                useClass : TranslateMessageFormatCompiler
+            }
+        }),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
             initialNavigation         : true,

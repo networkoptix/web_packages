@@ -44,17 +44,18 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
         this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         private urlProtocol: NxUrlProtocolService,
         private route: ActivatedRoute,
-                private language: NxLanguageProviderService,
+        private language: NxLanguageProviderService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private router: Router,
-                private location: Location,
+        private location: Location
     ) {
         this.setupDefaults(configService);
     }

@@ -62,6 +62,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     showAnalytics: boolean;
     serviceParams;
     serviceHeaders;
+    disclaimerParams: any = {};
 
     windowSize: any = {};
     windowScroll;
@@ -115,24 +116,24 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.windowScroll = 0;
         this.tableScrollFixed = false;
 
-        this.serviceHeaders = [this.LANG.ipvd.count, this.LANG.ipvd.resolutionArea];
+        this.serviceHeaders = [this.LANG.ipvd.count(), this.LANG.ipvd.resolutionArea()];
         this.serviceParams = ['count', 'resolutionArea'];
         this.paramsShown = 6;
         this.cameraHeaders = [
-            this.LANG.ipvd.vendor,
-            this.LANG.ipvd.model,
-            this.LANG.ipvd.hardwareType,
-            this.LANG.ipvd.maxResolution,
-            this.LANG.ipvd.maxFps,
-            this.LANG.ipvd.primaryCodec,
-            this.LANG.ipvd.isAudioSupported,
-            this.LANG.ipvd.isPtzSupported,
-            this.LANG.ipvd.isFisheye,
-            this.LANG.ipvd.isMdSupported,
-            this.LANG.ipvd.isIoSupported,
-            this.LANG.ipvd.isAnalyticsSupported,
-            this.LANG.ipvd.count,
-            this.LANG.ipvd.resolutionArea
+            this.LANG.ipvd.vendor(),
+            this.LANG.ipvd.model(),
+            this.LANG.ipvd.hardwareType(),
+            this.LANG.ipvd.maxResolution(),
+            this.LANG.ipvd.maxFps(),
+            this.LANG.ipvd.primaryCodec(),
+            this.LANG.ipvd.isAudioSupported(),
+            this.LANG.ipvd.isPtzSupported(),
+            this.LANG.ipvd.isFisheye(),
+            this.LANG.ipvd.isMdSupported(),
+            this.LANG.ipvd.isIoSupported(),
+            this.LANG.ipvd.isAnalyticsSupported(),
+            this.LANG.ipvd.count(),
+            this.LANG.ipvd.resolutionArea()
         ];
 
         this.elementWidth = '100%';
@@ -146,6 +147,11 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.resizeSubscription = this.scrollMechanicsService.windowSizeSubject.subscribe(() => {
             this.setPagerSize();
         });
+
+        this.disclaimerParams = {
+            companyName : this.CONFIG.company.name,
+            vmsName     : this.CONFIG.vmsName
+        };
     }
 
     ngOnInit() {
@@ -157,7 +163,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
 
         this.showAnalytics = this.CONFIG.ipvd.showAnalyticsEvents || this.debug || this.beta;
         if (!this.showAnalytics) {
-            this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported], ['isAnalyticsSupported']);
+            this.filterAllowedParams([this.LANG.ipvd.isAnalyticsSupported()], ['isAnalyticsSupported']);
         }
 
         this.uriSubscription = this.uri
@@ -177,7 +183,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                     const sortBy    = this.params.sortBy.split(',');
                     const direction = (sortBy[1] === 'ASC');
                     const column    = this.cameraHeaders.find(x => {
-                        return x === this.LANG.ipvd[sortBy[0]];
+                        return x === this.LANG.ipvd[sortBy[0]]();
                     });
 
                     if (this.sortOrderASC === direction && column === this.selectedHeader) {
@@ -271,13 +277,13 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     toggleHeaderSort(param) {
         let filter;
         for (const [key, value] of Object.entries(this.LANG.ipvd)) {
-            if (value === param) {
+            if (value() === param) {
                 filter = key;
                 break;
             }
         }
 
-        this.sortOrderASC = (this.LANG.ipvd[filter] === this.selectedHeader) ? !this.sortOrderASC : true;
+        this.sortOrderASC = (this.LANG.ipvd[filter]() === this.selectedHeader) ? !this.sortOrderASC : true;
         this.toggleSort(filter, false /* reset camera and page params in uri */);
 
         const queryParams: Params = {};
@@ -364,7 +370,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         }
 
         this.selectedHeader = this.cameraHeaders.find(x => {
-            return x === this.LANG.ipvd[param];
+            return x === this.LANG.ipvd[param]();
         });
     }
 

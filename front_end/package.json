@@ -36,6 +36,7 @@
         "jquery": "3.4.1",
         "jquery-mousewheel": "3.1.13",
         "md5": "2.2.1",
+        "messageformat": "^2.3.0",
         "moment": "2.24.0",
         "ng2-trim-directive": "2.3.2",
         "ngstorage": "0.3.11",
@@ -46,6 +47,7 @@
         "ngx-file-drop": "8.0.8",
         "ngx-order-pipe": "2.0.1",
         "ngx-store": "2.1.0",
+        "ngx-translate-messageformat-compiler": "^4.7.0",
         "popper.js": "1.15.0",
         "rangeslider.js": "2.3.2",
         "resize-observer-polyfill": "^1.5.1",
@@ -155,7 +157,7 @@
     "scripts": {
         "lint": "eslint app/src/**/*.ts --fix",
         "lang": "npm run update-lang; npm run fill-lang; npm run compile-lang;",
-        "serve": "npm run update-lang-types; npm run lang; webpack-dev-server --config webpack.dev.js --open --hot --inline",
+        "serve": "npm run lang; npm run update-lang-types; webpack-dev-server --config webpack.dev.js --open --hot --inline",
         "serve-health-monitor": "npm run lang; webpack-dev-server --config webpack.health_monitor-dev.js --open --hot --inline",
         "serve-ipvd": "npm run lang; webpack-dev-server --config webpack.ipvd-dev.js --open --hot --inline",
         "build": "npm run lang; webpack --config webpack.prod.js --progress --profile --bail",
@@ -165,7 +167,7 @@
         "compile-lang": "python compile-lang.py",
         "fill-lang": "python fill-lang.py",
         "update-lang": "ngx-translate-extract -i ./app/src -o ./app/language_i18n.json --clean --sort --format json",
-        "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts",
+        "update-lang-types": "quicktype ./app/language_i18n_static.json -o ./app/language_i18n_static_types.ts; sed -i -e 's/string;/any;/g' app/language_i18n_static_types.ts; sed -i -e 's/typ: \"\" }/typ: \"any\" }/g' app/language_i18n_static_types.ts",
         "test": "jest",
         "test:watch": "jest --watch",
         "test:coverage": "karma start karma.conf.js --single-run"
