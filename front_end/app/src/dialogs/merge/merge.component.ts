@@ -45,7 +45,7 @@ export class MergeModalContent {
     targetSystemService: any;
     tooManyServers: boolean;
     nonCloudMerge = false;
-    peerSystemsLoaded = false;
+    systemsLoaded = false;
     checking = false;
     primaryName: string;
     secondaryName: string;
@@ -96,8 +96,28 @@ export class MergeModalContent {
     ngOnInit() {
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
+            this.updateShow(this.checkMergeDefault);
             this.getPeerSystems()
                 .then(() => {
+                    return this.user.get().then(account => {
+                        this.account = account;
+                        return Promise.all(
+                            this.systems.map(async system => {
+                                if (!system.protoVersion && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
+                                    if (!system.moduleInfo) {
+                                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
+                                        const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
+                                        system.moduleInfo = moduleInfo.reply;
+                                        tempSystemService.stopPoll();
+                                    }
+                                    system.protoVersion = system.moduleInfo.protoVersion;
+                                }
+                            })
+                        );
+                    });
+                })
+                .then(() => {
+                    this.systemsLoaded = true;
                     if (this.systems.length === 0 && this.peerSystems.length === 0) {
                         this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
                         this.secondarySystem = this.targetSystem;
@@ -108,7 +128,6 @@ export class MergeModalContent {
                                 ...this.makeSelectorList(this.systems),
                                 { name: 'horizontal' }
                             );
-                            this.user.get().then(account => { this.account = account; });
                         }
                         if (this.peerSystems.length) {
                             this.processedSystems.push(
@@ -252,7 +271,6 @@ export class MergeModalContent {
                         const b = `${sysB.systemName.toLowerCase()}${sysB.name.toLowerCase()}`;
                         return a < b ? -1 : 1;
                     });
-                this.peerSystemsLoaded = true;
             });
     }
 
@@ -545,11 +563,13 @@ export class MergeModalContent {
         const statusIncompatible = ` – ${this.LANG.systemStatuses.incompatible}`;
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
+
         let stateOfHealth      = (system.info && system.info.stateOfHealth) ||
             system.stateOfHealth || system.stateMessage || system.status || '';
         if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
             stateOfHealth = 'incompatible';
         }
+
         let status = '';
         switch (stateOfHealth.toLowerCase()) {
             case 'online':
@@ -589,7 +609,11 @@ export class MergeModalContent {
     }
 
     checkMergeability(system) {
-        const stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
+        let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
+        if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
+            stateOfHealth = 'Incompatible';
+            system.olderProtocol = system.protoVersion < this.system.moduleInfo.protoVersion;
+        }
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
             return this.systemOffline;

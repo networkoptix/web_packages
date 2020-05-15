@@ -286,6 +286,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                             this.system.getInfoAndPermissions(false).catch(_ => {
                             }).then(system => {
+                                this.systems.find(sys => {
+                                    if (sys.id === this.activeSystem.id) {
+                                        sys.moduleInfo = system.moduleInfo;
+                                    }
+                                });
                                 this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
                             });
                         }
