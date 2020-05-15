@@ -70,7 +70,7 @@
         "agreementAccepted": "De overeenkomst is geaccepteerd",
         "changePassword": "Wachtwoord wijzigen",
         "newPasswordLabel": "Nieuw wachtwoord",
-        "passwordChangedSuccess": "Het wachtwoord is succesvol opgeslagen",
+        "passwordChangedSuccess": "Wachtwoord succesvol opgeslagen",
         "saveChanges": "Opslaan"
     },
     "activeActions": {
@@ -131,14 +131,14 @@
         "recordingModes": {
             "always": "Altijd opnemen",
             "motion": "Neem alleen beweging op",
-            "motionLowRes": "Beweging + Lo-Res"
+            "motionLowRes": "Beweging + Lage-Res"
         },
         "resolution": {
             "various": "- Verschillende waarden -",
             "auto": "Automatisch",
             "best": "Beste",
             "high": "Hoog",
-            "medium": "Middelgroot",
+            "medium": "Gemiddeld",
             "low": "Lage"
         },
         "general": "Algemeen",
@@ -226,7 +226,7 @@
             "checking": "Controleren...",
             "commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
             "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
             "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om de systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen.</p><p>De instellingen en de naam worden overgenomen van <strong>{{primarySystem}}</strong>.</p>",

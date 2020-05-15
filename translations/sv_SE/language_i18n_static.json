@@ -226,7 +226,7 @@
             "checking": "Kontrollerar...",
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
             "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",

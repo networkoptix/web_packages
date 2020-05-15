@@ -226,7 +226,7 @@
             "checking": "Checking...",
             "commonText": "מיזוג מערכות נכשל<strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "חבר מערכת שברצונך למזג עם מערכת זו <strong>{{cloudName}}</strong> או מזג מקומי באמצעות <strong>{{vmsName}}</strong> לקוח.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "גם המערכת שנבחרה וגם המערכת הנוכחית מחוברים ל- %CLOUD_NAME% ויש להם בעלים שונים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "אתה עומד למזג מערכות <strong>{{primarySystem}}</strong> ו - <strong>{{secondarySystem}}</strong>. ההגדרות והשם יילקחו מ <strong>{{primarySystem}}</strong>.",
