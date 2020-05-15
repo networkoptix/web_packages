@@ -38,6 +38,7 @@ export class MergeModalContent {
     processedSystems = [];
     secondarySystem: any;
     serverUrl: string;
+    cleanUrl: string;
     serverUrlInputExists: boolean;
     systemMergeable: string;
     targetSystem: any;
@@ -49,6 +50,7 @@ export class MergeModalContent {
     checking = false;
     primaryName: string;
     secondaryName: string;
+    systemUrls = {};
 
     // static variables
     readonly checkMerge: string = 'checkMerge';
@@ -103,14 +105,16 @@ export class MergeModalContent {
                         this.account = account;
                         return Promise.all(
                             this.systems.map(async system => {
-                                if (!system.protoVersion && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
-                                    if (!system.moduleInfo) {
-                                        const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
-                                        const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
-                                        system.moduleInfo = moduleInfo.reply;
-                                        tempSystemService.stopPoll();
-                                    }
+                                if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
+                                    const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
+                                    const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
+                                    system.moduleInfo = moduleInfo.reply;
+                                    tempSystemService.stopPoll();
+                                }
+                                if (system.moduleInfo) {
                                     system.protoVersion = system.moduleInfo.protoVersion;
+                                    system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
+                                    system.moduleInfo.remoteAddresses.forEach(addy => { this.systemUrls[addy] = system.id; });
                                 }
                             })
                         );
@@ -251,6 +255,7 @@ export class MergeModalContent {
                 this.peerSystems = res.reply
                     .filter(peer => !peer.cloudSystemId)
                     .map(peer => {
+                        peer.remoteAddresses.forEach(addy => { this.systemUrls[addy] = peer.id; });
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
                             ...peer,
@@ -285,7 +290,21 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.checking = true;
-                this.serverUrlInputExists = Boolean(this.machine.state.template.serverUrlInputValue);
+                // if using otherSystem, check if it matches an existing system in dropdown
+                let url = this.machine.state.template.serverUrlInputValue;
+                if (url && (/^https?:\/\//).test(url)) {
+                    url = url.slice(url.indexOf('://') + 3);
+                }
+                if (url && (/:\d{1,5}$/).test(url)) {
+                    url = url.slice(0, url.lastIndexOf(':'));
+                }
+                if (this.targetSystem.value === this.otherSystem && this.systemUrls[url]) {
+                    const targetSystem = this.systems.find(system => system.id === this.systemUrls[url]) ||
+                        this.peerSystems.find(system => system.id === this.systemUrls[url]);
+                    targetSystem.value = targetSystem.id;
+                    this.setTargetSystem(targetSystem, url);
+                }
+                this.serverUrlInputExists = Boolean(url);
                 if (!this.serverUrlInputExists) {
                     this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
                 }
@@ -294,10 +313,12 @@ export class MergeModalContent {
             .then(
                 res => {
                     this.checking = false;
-                    // covers case where auto-discovered system is not set up yet
+                    // covers case where system (cloud & non-cloud) is not set up yet
                     if (res.isNew) {
-                        const index = this.serverUrl.indexOf('//') + 2;
-                        this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
+                        if (this.serverUrl) {
+                            const index = this.serverUrl.indexOf('//') + 2;
+                            this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
+                        }
                         this.machine.transition('confirmMerge');
                     } else if (res.error === '0') {
                         if (this.serverUrlInputExists) {
@@ -449,9 +470,10 @@ export class MergeModalContent {
          * localSystemId = auto-discovered system
          * else = cloud-connected merge check
          */
+        if (this.targetSystem.isNew) {
+            return { isNew: true };
+        }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
-            this.nonCloudMerge = true;
-            this.getSecondaryName();
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!(/^https?:\/\//).test(this.serverUrl)) {
                 this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
@@ -459,25 +481,28 @@ export class MergeModalContent {
             if (!(/:\d{1,5}$/).test(this.serverUrl)) {
                 this.serverUrl += ':7001';
             }
-            return this.targetSystem.isNew ? { isNew: true }
-                : this.system.mergeSystems(this.serverUrl, true).toPromise()
-                    .then(res => {
-                        if (res.error !== '0') {
-                            switch (res.errorString) {
-                                case 'FAIL':
-                                    throw Error(this.noServerFound);
-                                // handles VMS version <= 4.0 systems, which don't support dryRun
-                                case "Missing required parameter 'password'":
-                                case 'INCOMPATIBLE':
-                                    throw Error('systemsIncompatible');
-                                case 'DUPLICATE_MEDIASERVER_FOUND':
-                                    throw Error(this.duplicateServers);
-                                default:
-                                    throw Error(this.unknownError);
-                            }
+            this.cleanUrl = this.serverUrl;
+
+            this.nonCloudMerge = true;
+            this.getSecondaryName();
+            return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                .then(res => {
+                    if (res.error !== '0') {
+                        switch (res.errorString) {
+                            case 'FAIL':
+                                throw Error(this.noServerFound);
+                            // handles VMS version <= 4.0 systems, which don't support dryRun
+                            case "Missing required parameter 'password'":
+                            case 'INCOMPATIBLE':
+                                throw Error('systemsIncompatible');
+                            case 'DUPLICATE_MEDIASERVER_FOUND':
+                                throw Error(this.duplicateServers);
+                            default:
+                                throw Error(this.unknownError);
                         }
-                        return res;
-                    });
+                    }
+                    return res;
+                });
         } else {
             this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
@@ -723,7 +748,7 @@ export class MergeModalContent {
             this.secondarySystem.name ||
             this.secondarySystem.info && this.secondarySystem.info.name;
         if (name === this.LANG.dialogs.merge.otherSystem) {
-            name = this.LANG.dialogs.merge.serverAtUrl.replace('{{url}}', this.serverUrl);
+            name = this.LANG.dialogs.merge.serverAtUrl.replace('{{url}}', this.cleanUrl || this.serverUrl);
         }
         this.secondaryName = name;
     }
