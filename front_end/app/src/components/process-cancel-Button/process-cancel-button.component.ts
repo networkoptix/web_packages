@@ -12,15 +12,18 @@ import { NxConfigService, IConfig, Process } from '../../services';
 })
 export class NxProcessCancelButtonComponent {
     @Input() process: Process;
-    @Input() discardFn = () => {};
+    @Input() discardFn;
+    @Input() cancelFn;
     @Input() buttonText: string;
     @Input() customClass = ''
+    @Input() showDiscard = false;
 
-    discard() {
+    handleClick() {
         if (this.process.processing) {
             this.process.cancel();
+            return this.cancelFn?.();
         } else {
-            this.discardFn();
+            return this.discardFn?.();
         }
     }
 }

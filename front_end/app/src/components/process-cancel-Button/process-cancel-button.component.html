@@ -1,4 +1,8 @@
 <button 
     type="button" 
     class="min-w-80 btn btn-default {{customClass}}" 
-    (click)="discard()">{{process.processing ? ('Cancel' | translate) : ('Discard changes' | translate)}}</button>
+    (click)="handleClick()">{{
+        !process.processing && showDiscard
+        ? ('Discard' | translate) 
+        : ('Cancel' | translate) 
+    }}</button>

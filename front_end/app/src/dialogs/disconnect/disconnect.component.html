@@ -35,7 +35,6 @@
                            [form]="disconnectForm"
                            [actionType]="'danger'"
                            buttonText="{{ 'Disconnect' | translate }}"></nx-process-button>
-
-        <button type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
+        <nx-cancel-button [process]="disconnect" [discardFn]="close"></nx-cancel-button>
     </div>
 </form>

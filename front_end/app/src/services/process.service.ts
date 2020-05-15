@@ -33,6 +33,7 @@ export class Process {
     public errorData;
     public canceled = false;
     private canceled$ = new Subject();
+    private caller$: Observable<any>;
 
     constructor(
         configService: NxConfigService,
@@ -40,7 +41,7 @@ export class Process {
         private sessionService: NxSessionService,
         private cloudApiService: NxCloudApiService,
         private toastService: NxToastService,
-        private caller$: Observable<any>,
+        caller$: Observable<any>,
         settings: Partial<ProcessSettings> = {},
         private _successHandler: Handler = () => {},
         private _errorHandler: Handler = logError,
@@ -50,6 +51,7 @@ export class Process {
         this.LANG = languageService.translations;
         this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
         this.settings = { ...this.settings, ...settings };
+        this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
     run = () => {
@@ -58,7 +60,7 @@ export class Process {
         this.success = false;
         this.finished = false;
         this.canceled = false;
-        this.caller$.pipe(takeUntil(this.canceled$)).subscribe(this.onSuccess, this.onError, this.onComplete);
+        this.caller$.subscribe(this.onSuccess, this.onError, this.onComplete);
         return this;
     }
 

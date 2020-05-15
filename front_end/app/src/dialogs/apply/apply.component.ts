@@ -35,13 +35,13 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
         });
     };
 
-    close() {
+    close = () => {
         this.activeModal.dismiss('canceled');
     }
 
-    discard() {
-        this.discardFunc();
+    discard = () => {
         this.activeModal.close('discarded');
+        return this.discardFunc?.();
     }
 }
 

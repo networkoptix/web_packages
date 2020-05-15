@@ -4,7 +4,7 @@ import {
 import { NxConfigService, IConfig } from '../nx-config';
 import { DOCUMENT }                 from '@angular/common';
 import { DeviceDetectorService }    from 'ngx-device-detector';
-import { momentWithLocale }         from 'moment';
+import * as moment                  from 'moment';
 import * as uv                      from './utilConstants';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class NxUtilsService {
 
     public static sortASC = true;
     public static sortDESC = false;
-    public momentWithLocale;
+    public momentWithLocale
 
     constructor(
         configService: NxConfigService,
@@ -24,7 +24,7 @@ export class NxUtilsService {
         @Inject(DOCUMENT) private document: Document
     ) {
         this.CONFIG = configService.getConfig();
-        this.momentWithLocale = momentWithLocale(locale);
+        this.momentWithLocale = moment.locale(locale);
     }
 
     static cleanId(id: string) {

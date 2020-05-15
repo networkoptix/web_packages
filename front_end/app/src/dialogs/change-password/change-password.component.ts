@@ -20,7 +20,7 @@ export class ChangePasswordModalContent {
     changePassword: Process;
     newPasswordForUser: string;
 
-    constructor(private activeModal: NgbActiveModal,
+    constructor(public activeModal: NgbActiveModal,
                 private language: NxLanguageProviderService,
                 private processService: NxProcessService,
                 private configService: NxConfigService
