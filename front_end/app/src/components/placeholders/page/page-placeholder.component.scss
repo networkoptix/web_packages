@@ -73,7 +73,9 @@ $preloader_small_circle_distance : 8px;
     }
 }
 
-.section-placeholder {}
+.show-preloader {
+    height: 284px;
+}
 
 .page-placeholder {
     width            : calc(100% - 16px);
