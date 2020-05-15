@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework.decorators import api_view, permission_classes
@@ -50,7 +51,7 @@ def get_context_and_language(request, context_id, language_code, default_languag
 def add_upload_error_messages(request, message, errors):
     for error in errors:
         messages.error(
-            request, message.format(error[0], error[1]))
+            request, format_html(message.format(error[0], error[1])))
 
 
 # Used to make sure users without advanced permission don't modify advanced DataStructures
@@ -146,6 +147,8 @@ def page_editor(request):
         raise PermissionDenied
 
     preview_link, context_errors, asset_errors = context_editor_action(request, asset, context_id, language_code)
+    if asset_errors:
+        return redirect(asset_errors[0][2]), context_errors
 
     if 'SendReview' in request.POST and not context_errors and not asset_errors:
         customization_review = AssetCustomizationReview.objects.\
