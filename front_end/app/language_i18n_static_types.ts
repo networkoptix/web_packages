@@ -544,7 +544,6 @@ export interface PageTitles {
     restorePasswordSuccess: any;
     supportedDevices:       any;
     system:                 any;
-    systemName:             any;
     systemShare:            any;
     systems:                any;
     template:               any;
@@ -1367,7 +1366,6 @@ const typeMap: any = {
         { json: "restorePasswordSuccess", js: "restorePasswordSuccess", typ: "any" },
         { json: "supportedDevices", js: "supportedDevices", typ: "any" },
         { json: "system", js: "system", typ: "any" },
-        { json: "systemName", js: "systemName", typ: "any" },
         { json: "systemShare", js: "systemShare", typ: "any" },
         { json: "systems", js: "systems", typ: "any" },
         { json: "template", js: "template", typ: "any" },

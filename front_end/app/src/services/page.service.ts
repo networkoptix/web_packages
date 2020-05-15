@@ -24,11 +24,12 @@ export class NxPageService {
     }
 
     public set pageTitle(title: any) {
-        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
-            this.title.setTitle(this.LANG.pageTitles.template({ title: title() }));
+        const txt = (typeof title === 'function') ? title() : title;
+        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.pageTitles.default()) {
+            this.title.setTitle(this.LANG.pageTitles.template({ title: txt }));
             return;
         }
-        this.title.setTitle(title());
+        this.title.setTitle(txt);
     }
 
     public set pageTitleRemoveHyphen(title: any) {

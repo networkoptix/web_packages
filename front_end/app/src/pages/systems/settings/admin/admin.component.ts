@@ -111,7 +111,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .pipe(filter((system) => system !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
+                this.pageService.pageTitle = this.system.info.name;
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -138,7 +138,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.deletingSystem = this.processService.createProcess(
                     () => this.system.deleteFromCurrentAccount(),
                     {
-                        successMessage : this.LANG.toastMessage.system.deleted.success.replace('{{systemName}}', this.system.info.name),
+                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.name }),
                         errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
                     }
                 ).then(
@@ -186,11 +186,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         if (!this.system.isMine) {
             // User is not owner. Deleting means he'll lose access to it
             this.dialogs.confirm(
-                this.LANG.dialogs.removeSystem.message,
-                this.LANG.dialogs.removeSystem.title,
-                this.LANG.dialogs.removeSystem.action,
+                this.LANG.dialogs.removeSystem.message(),
+                this.LANG.dialogs.removeSystem.title(),
+                this.LANG.dialogs.removeSystem.action(),
                 'btn-danger',
-                this.LANG.dialogs.buttons.cancel
+                this.LANG.dialogs.buttons.cancel()
             ).then((result) => {
                 if (result === true) {
                     return this.deletingSystem.run();
@@ -231,12 +231,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 if (!error.primarySystemName && !error.secondarySystemName) {
                     return;
                 }
-                const commonErrorMsg = this.LANG.dialogs.merge.commonText
+                const commonErrorMsg = this.LANG.dialogs.merge.commonText()
                     .replace('{{primarySystem}}', error.primarySystemName)
                     .replace('{{secondarySystem}}', error.secondarySystemName);
-                let responseError = this.LANG.errorCodes[error.errorText] || this.LANG.errorCodes[error.resultCode];
+                let responseError = this.LANG.errorCodes[error.errorText]() || this.LANG.errorCodes[error.resultCode]();
                 if (!responseError) {
-                    responseError = this.LANG.errorCodes.unknownMergeError;
+                    responseError = this.LANG.errorCodes.unknownMergeError();
                 } else {
                     responseError = responseError.replace('{{failedSystem}}', error.failedSystemName);
                 }
@@ -247,8 +247,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 // Handling promise to satisfy the linter.
                 this.dialogs.confirm(
                     dialogBody,
-                    this.LANG.dialogs.merge.mergeFailedTitle,
-                    this.LANG.dialogs.buttons.ok,
+                    this.LANG.dialogs.merge.mergeFailedTitle(),
+                    this.LANG.dialogs.buttons.ok(),
                     'btn-primary',
                     undefined).then(() => {});
             }).finally(() => {
@@ -261,7 +261,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     updateUserRole() {
         let userRole = this.system.accessRole;
         if (this.system.accessRole in this.LANG.accessRoles) {
-            userRole = this.LANG.accessRoles[this.system.accessRole].label;
+            userRole = this.LANG.accessRoles[this.system.accessRole].label();
         }
         return userRole;
     }

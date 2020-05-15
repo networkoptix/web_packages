@@ -136,7 +136,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 {
                     id     : this.CONFIG.menus.systemSettings.admin.id,
                     svg    : this.CONFIG.menus.systemSettings.admin.icon,
-                    label  : this.LANG.menu.titles.systemAdministration,
+                    label  : this.LANG.menu.titles.systemAdministration(),
                     path   : this.CONFIG.menus.systemSettings.admin.path,
                     level2 : []
                 }
@@ -169,7 +169,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.gettingSystemUsers = this.processService.createProcess(() => {
             return this.system.getUsers(true);
         }, {
-            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
+            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix()
         }).then(() => {
             this.systemReady();
         });
@@ -190,7 +190,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return false;
                 }
             },
-            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
+            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix()
         }).then(() => {
             if (this.system.permissions.editUsers) {
                 this.gettingSystemUsers.run();
@@ -357,7 +357,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode = {
                     id     : this.CONFIG.menus.systemSettings.users.id,
                     svg    : this.CONFIG.menus.systemSettings.users.icon,
-                    label  : this.LANG.menu.titles.users,
+                    label  : this.LANG.menu.titles.users(),
                     path   : this.CONFIG.menus.systemSettings.users.path,
                     level2 : [
                         {
@@ -424,7 +424,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode = {
                     id    : this.CONFIG.menus.systemSettings.servers.id,
                     svg   : this.CONFIG.menus.systemSettings.servers.icon,
-                    label : this.LANG.servers.servers,
+                    label : this.LANG.servers.servers(),
                     path  : this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
@@ -453,12 +453,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
             const generalNode = {
                 id    : this.CONFIG.menus.systemSettings.admin.id,
-                label : this.LANG.common.general,
+                label : this.LANG.common.general(),
                 path  : this.CONFIG.menus.systemSettings.admin.path
             };
             const cloudStorageNode = {
                 id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
-                label : this.LANG.dialogs.cloudStorage.title,
+                label : this.LANG.dialogs.cloudStorage.title(),
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
             adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
@@ -480,8 +480,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
-            this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
+        this.dialogs.notify(this.LANG.errorCodes.lostConnection({ systemName: this.system.info.name || this.LANG.errorCodes.thisSystem() }), 'warning');
 
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);

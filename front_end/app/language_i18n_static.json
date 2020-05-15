@@ -512,7 +512,6 @@
         "restorePasswordSuccess": "Password saved",
         "supportedDevices": "Supported Devices",
         "system": "System",
-        "systemName": "{systemName}",
         "systemShare": "Share System",
         "systems": "Systems",
         "template": "{title} - %CLOUD_NAME%",
