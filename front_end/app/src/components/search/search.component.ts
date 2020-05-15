@@ -350,10 +350,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (flag === 1) {
             this.filterSelected = tagsSelected || selectsSelected || multiSelectsSelected;
         } else {
-            const str           = (this.numberFilters === 1)
-                ? ' ' + this.LANG.search['filter applied']
-                : ' ' + this.LANG.search['filters applied'];
-            this.filterSelected = this.numberFilters + str;
+            this.filterSelected = this.LANG.search.appliedFilters({ count: this.numberFilters });
         }
     }
 

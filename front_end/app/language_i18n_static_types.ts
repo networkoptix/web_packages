@@ -505,6 +505,7 @@ export interface Ipvd {
     resolutionArea:                  any;
     sndResolution:                   any;
     vendor:                          any;
+    sortKey:                         any;
 }
 
 export interface IpvdFeedback {
@@ -617,6 +618,7 @@ export interface Search {
     analyticsSelected: any;
     "filter applied":  any;
     "filters applied": any;
+    appliedFilters:    any;
     hardwareType:      any;
     hardwareTypes:     any;
     minResolution:     any;
@@ -1330,6 +1332,7 @@ const typeMap: any = {
         { json: "resolutionArea", js: "resolutionArea", typ: "any" },
         { json: "sndResolution", js: "sndResolution", typ: "any" },
         { json: "vendor", js: "vendor", typ: "any" },
+        { json: "sortKey", js: "sortKey", typ: "any" },
     ], false),
     "IpvdFeedback": o([
         { json: "a_Please", js: "a_Please", typ: "any" },
@@ -1428,6 +1431,7 @@ const typeMap: any = {
         { json: "analyticsSelected", js: "analyticsSelected", typ: "any" },
         { json: "filter applied", js: "filter applied", typ: "any" },
         { json: "filters applied", js: "filters applied", typ: "any" },
+        { json: "appliedFilters", js: "appliedFilters", typ: "any" },
         { json: "hardwareType", js: "hardwareType", typ: "any" },
         { json: "hardwareTypes", js: "hardwareTypes", typ: "any" },
         { json: "minResolution", js: "minResolution", typ: "any" },

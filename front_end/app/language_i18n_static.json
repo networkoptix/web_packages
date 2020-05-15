@@ -475,7 +475,8 @@
         "primaryCodec": "Codec",
         "resolutionArea": "Area",
         "sndResolution": "Secondary Stream",
-        "vendor": "Manufacturer"
+        "vendor": "Manufacturer",
+        "sortKey": ""
     },
     "ipvdFeedback": {
         "a_Please": "Please",
@@ -578,11 +579,12 @@
         "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters} applied}",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
-        "selected": "selected",
+        "selected": "{count, plural, other{# selected}}",
         "vendor": "Manufacturer",
         "vendors": "Manufacturers"
     },
