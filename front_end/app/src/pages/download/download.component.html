@@ -8,7 +8,7 @@
                      [id]="platform.os || platform.name" >
 
                 <ng-template ngbTabTitle>
-                    <span class="tab-heading">{{LANG.downloads.groups[platform.name].label}}</span>
+                    <span class="tab-heading">{{ LANG.downloads.groups[platform.name].label() }}</span>
                 </ng-template>
                 <ng-template ngbTabContent>
                     <div class="card card-default">
