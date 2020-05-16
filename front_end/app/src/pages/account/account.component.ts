@@ -90,12 +90,12 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                     level3 : [
                         {
                             id    : accountMenu.settings.id,
-                            label : this.LANG.account.accountSettings,
+                            label : this.LANG.account.accountSettings(),
                             path  : accountMenu.settings.path
                         },
                         {
                             id    : accountMenu.password.id,
-                            label : this.LANG.account.changePassword,
+                            label : this.LANG.account.changePassword(),
                             path  : accountMenu.password.path
                         }
                     ]

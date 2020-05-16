@@ -578,7 +578,7 @@
         "analyticsSelected": "analytics events",
         "filter applied": "filter applied",
         "filters applied": "filters applied",
-        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters} applied}",
+        "appliedFilters": "{count, plural, =0{# filters} one{# filter} other{# filters}} applied",
         "hardwareType": "Type",
         "hardwareTypes": "Types",
         "minResolution": "Minimum Resolution",

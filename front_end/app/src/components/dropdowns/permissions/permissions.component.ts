@@ -55,7 +55,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             this.accessRoles = this.roles.filter((role) => {
                 if (!(role.isOwner || role.isAdmin && !this.system.isMine)) {
                     role.optionLabel = this.LANG.accessRoles[role.name]
-                        ? this.LANG.accessRoles[role.name].label
+                        ? this.LANG.accessRoles[role.name].label()
                         : role.name;
                     return true;
                 }
@@ -69,8 +69,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
         if (changes.roles?.currentValue) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x => x.name === this.selected.name)[0];
-            if (!role || role.optionLabel !== this.selection) {
-                this.selection = role.optionLabel || this.message;
+
+            if (!role || role.optionLabel() !== this.selection) {
+                this.selection = role.optionLabel() || this.message;
                 this.changePermission(role);
             }
         }
@@ -81,7 +82,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     changePermission(role) {
-        this.selection = role.optionLabel;
+        this.selection = role.optionLabel();
 
         const selectedRole = this.accessRoles.filter((accessRole) => {
             if (accessRole.name === role.name) {

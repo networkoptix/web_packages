@@ -73,7 +73,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private pageService: NxPageService,
@@ -87,7 +87,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.translations;
+        this.LANG = languageService.translations;
 
         this.setupDefaults();
     }
@@ -139,7 +139,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     () => this.system.deleteFromCurrentAccount(),
                     {
                         successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.name }),
-                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix
+                        errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
                     }
                 ).then(
                     () => { this.updateAndGoToSystems(); },

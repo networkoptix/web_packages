@@ -22,17 +22,17 @@ export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
     @Input() height: string;
     @Input() width: string;
-    @Input() translatedMessage: string;
+    @Input() translatedMessage: any;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
     constructor(
-        private languageService: NxLanguageProviderService,
-        private configService: NxConfigService
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
     ) {
-        this.LANG = this.languageService.translations;
-        this.CONFIG = this.configService.getConfig();
+        this.LANG = languageService.translations;
+        this.CONFIG = configService.getConfig();
     }
 
     ngOnInit() {

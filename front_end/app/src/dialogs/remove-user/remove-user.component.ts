@@ -24,14 +24,15 @@ export class RemoveUserModalContent {
     dialogTitle: string;
     dialogButtonText: string;
 
-    constructor(public activeModal: NgbActiveModal,
-                private renderer: Renderer2,
-                private configService: NxConfigService,
-                private language: NxLanguageProviderService,
-                private processService: NxProcessService
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        public activeModal: NgbActiveModal,
+        private renderer: Renderer2,
+        private processService: NxProcessService
     ) {
-        this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.translations;
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

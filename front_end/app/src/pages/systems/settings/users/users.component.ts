@@ -100,7 +100,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
+                this.pageService.pageTitle = this.system.info.name;
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService
@@ -225,8 +225,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             this.applyService.hardReset();
             this.selectedUser = { ...user };
 
-            this.deleteMessage = this.selectedUser.isCloud ?
-                this.LANG.system.users.cloudDelete : this.LANG.system.users.localDelete;
+            this.deleteMessage = this.selectedUser.isCloud
+                ? this.LANG.system.users.cloudDelete()
+                : this.LANG.system.users.localDelete();
 
             this.menuService.setDetailsSection(NxUtilsService.cleanId(this.selectedUser.id));
             if (this.selectedUser.role.name === 'Custom') {
@@ -254,8 +255,8 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     setPermission(role: NxSystemRole | any) {
         const userRole = role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
-            ? this.LANG.accessRoles[userRole].description
-            : this.LANG.accessRoles.customRole.description;
+            ? this.LANG.accessRoles[userRole].description()
+            : this.LANG.accessRoles.customRole.description();
         this.selectedUser.role = role;
         this.userRole.value = role.name;
     }
