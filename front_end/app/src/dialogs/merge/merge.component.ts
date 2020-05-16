@@ -114,7 +114,9 @@ export class MergeModalContent {
                                 if (system.moduleInfo) {
                                     system.protoVersion = system.moduleInfo.protoVersion;
                                     system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                                    system.moduleInfo.remoteAddresses.forEach(addy => { this.systemUrls[addy] = system.id; });
+                                    system.moduleInfo.remoteAddresses.forEach((addy: string) => {
+                                        this.systemUrls[addy] = system.id.replace(/{|}/g, '');
+                                    });
                                 }
                             })
                         );
@@ -255,7 +257,9 @@ export class MergeModalContent {
                 this.peerSystems = res.reply
                     .filter(peer => !peer.cloudSystemId)
                     .map(peer => {
-                        peer.remoteAddresses.forEach(addy => { this.systemUrls[addy] = peer.id; });
+                        peer.remoteAddresses.forEach((addy: string) => {
+                            this.systemUrls[addy] = peer.id.replace(/{|}/g, '');
+                        });
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
                             ...peer,
@@ -464,15 +468,13 @@ export class MergeModalContent {
     }
 
     async precheckSystemMerge() {
+        const isNew = { isNew: true };
         /**
          * targetSystem
          * no id = Other System
          * localSystemId = auto-discovered system
          * else = cloud-connected merge check
          */
-        if (this.targetSystem.isNew) {
-            return { isNew: true };
-        }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!(/^https?:\/\//).test(this.serverUrl)) {
@@ -501,7 +503,7 @@ export class MergeModalContent {
                                 throw Error(this.unknownError);
                         }
                     }
-                    return res;
+                    return this.targetSystem.isNew ? isNew : res;
                 });
         } else {
             this.getSecondaryName();
@@ -550,7 +552,7 @@ export class MergeModalContent {
             }
             this.targetSystemService.stopPoll();
         }
-        return Promise.resolve({ error: '0' });
+        return this.targetSystem.isNew ? isNew : { error: '0' };
     }
 
     goBack(serverUrlError?) {
