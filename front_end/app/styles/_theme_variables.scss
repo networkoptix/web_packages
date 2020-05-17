@@ -6,7 +6,7 @@ $font-family-bold : "robotobold", "Helvetica Neue", Helvetica, Arial, sans-serif
 
 @import '~sass-rem/rem';
 @import '_theme_palette';
-@import '/native-theme/_theme_palette';
+@import './native-theme/theme_palette';
 @import 'custom/custom_palette';
 
 // Brand colors

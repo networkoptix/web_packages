@@ -133,7 +133,7 @@ module.exports = merge(common, {
                         {
                             loader : 'sass-loader',
                             options: {
-                                url      : false,
+                                implementation: require('sass'),
                                 sourceMap: true
                             }
                         }
