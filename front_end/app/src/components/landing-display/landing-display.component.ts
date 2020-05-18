@@ -1,64 +1,33 @@
 import {
-    AfterViewInit, Compiler,
-    Component, Injector,
-    NgModule, NgModuleRef,
+    Component,
+    OnInit,
     ViewChild,
     ViewContainerRef
-}                                   from '@angular/core';
+} from '@angular/core';
 import { NxConfigService, IConfig } from '../../services/nx-config';
+import { NxCloudApiService }        from '../../services/nx-cloud-api';
 
 @Component({
-    selector: 'landing-display-component',
-    template: `
-        <ng-container #dynamicTemplate></ng-container>`,
-    styleUrls: ['landing-display.component.scss']
+    selector  : 'landing-display-component',
+    template  : `
+         <div [innerHTML]="myTemplate"></div>`,
+    styleUrls : ['landing-display.component.scss']
 })
 
-export class NxLandingDisplayComponent implements AfterViewInit {
+export class NxLandingDisplayComponent implements OnInit {
     CONFIG: IConfig;
+    myTemplate: string;
 
-    @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
-    @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
+    constructor(
+        private apiService: NxCloudApiService
+    ) {}
 
-    constructor(private _compiler: Compiler,
-                private _injector: Injector,
-                private _m: NgModuleRef<any>,
-                configService: NxConfigService
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
-
-    ngAfterViewInit() {
-        const myTemplateUrl = '/' + this.CONFIG.viewsDir + 'static/landing.html';
-
-        // const tmpCmp = Component({
-        //     moduleId   : module.id,
-        //     templateUrl: myTemplateUrl
-        // })(class {
-        // });
-        //
-        // const tmpModule = NgModule({
-        //     declarations: [tmpCmp]
-        // })(class {
-        // });
-        //
-        // this._compiler.compileModuleAndAllComponentsAsync(tmpModule)
-        //     .then((factories) => {
-        //         const factory         = factories.componentFactories[0];
-        //         const compRef         = factory.create(this._injector, [], null, this._m);
-        //         compRef.instance.name = 'dynamic';
-        //
-        //         if (this.CONFIG.previewPath) {
-        //             // Image src is already compiled with full path
-        //             // .. so it needs some massaging
-        //             const images = compRef.location.nativeElement.querySelectorAll('img');
-        //             images.forEach((img) => {
-        //                 const position = img.src.indexOf('/static');
-        //                 img.src = [img.src.slice(0, position), '/' + this.CONFIG.previewPath, img.src.slice(position)].join('');
-        //             });
-        //         }
-        //
-        //         this.dynamicTemplate.insert(compRef.hostView);
-        //     });
+    ngOnInit() {
+        this.apiService
+            .getStaticLanding()
+            .toPromise()
+            .then((result) => {
+                this.myTemplate = result;
+            });
     }
 }

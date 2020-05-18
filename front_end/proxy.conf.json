@@ -41,6 +41,12 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/static/lang_en_US/views/static/landing.html": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/static/lang_en_US/": {
     "target": "https://localhost:9000",
     "secure": false,

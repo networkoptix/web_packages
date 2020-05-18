@@ -1,5 +1,5 @@
 import { Injectable }               from '@angular/core';
-import { HttpClient }               from '@angular/common/http';
+import { HttpClient, HttpHeaders }  from '@angular/common/http';
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
@@ -35,6 +35,14 @@ export class NxCloudApiService {
             system_id: systemId,
             password
         });
+    }
+
+    getStaticLanding() {
+        const httpOptions = {
+            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType : 'text' as 'text'
+        };
+        return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
     getCommonPasswords() {
