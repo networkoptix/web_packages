@@ -87,7 +87,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -111,7 +111,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .pipe(filter((system) => system !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
+                this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -191,12 +191,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.LANG.dialogs.removeSystem.action,
                 'btn-danger',
                 this.LANG.dialogs.buttons.cancel
-            )
-                .then((result) => {
-                    if (result) {
-                        return this.deletingSystem.run();
-                    }
-                });
+            ).then((result) => {
+                if (result === true) {
+                    return this.deletingSystem.run();
+                }
+            });
         }
     }
 
@@ -208,7 +207,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system.info.name = finalName;
                 }
 
-                this.pageService.setPageTitle(this.system.info.name);
+                this.pageService.pageTitle = this.system.info.name;
                 this.systemsService.forceUpdateSystems(this.accountService.email);
             });
     }

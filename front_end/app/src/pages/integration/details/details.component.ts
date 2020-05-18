@@ -34,7 +34,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     constructor(configService: NxConfigService,

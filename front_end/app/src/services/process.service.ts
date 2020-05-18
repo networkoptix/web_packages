@@ -53,7 +53,7 @@ export class Process {
         settings
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.cloudApiService = cloudApiService;
         this.sessionService = sessionService;
         this.toastService = toastService;
@@ -163,7 +163,11 @@ export class Process {
 
     // TODO refine error types
     private formatError(error: any, errorCodes: any): string | false {
-        const errorCode = (error && error.data && error.data.resultCode) || (error && error.resultCode) || error;
+        const errorCode = (error && error.data && error.data.resultCode) ||
+            (error && error.resultCode) ||
+            (error.type === 'error' &&
+            'networkConnection') ||
+            error;
         if (!errorCode) {
             return this.LANG.errorCodes.unknownError;
         }

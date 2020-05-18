@@ -65,8 +65,8 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     ngOnInit(): void {
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.integrations);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.integrations;
 
         // Example URI
         // /integrations?search=node

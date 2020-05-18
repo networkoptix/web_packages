@@ -26,7 +26,7 @@ export class ChangePasswordModalContent {
                 private configService: NxConfigService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
         this.newPasswordForUser = '';
     }
 
@@ -38,13 +38,12 @@ export class ChangePasswordModalContent {
                     .then(() => this.activeModal.close());
             }, {
                 errorCodes: {
-                    notAuthorized   : this.LANG.errorCodes.oldPasswordMistmatch,
-                    wrongOldPassword: this.LANG.errorCodes.oldPasswordMistmatch
+                    notAuthorized    : this.LANG.errorCodes.oldPasswordMistmatch,
+                    wrongOldPassword : this.LANG.errorCodes.oldPasswordMistmatch
                 },
-                // @ts-ignore: TODO passwordChangedSuccess is not on language json
-                successMessage    : this.LANG.account.passwordChangedSuccess,
-                errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix,
-                ignoreUnauthorized: true
+                successMessage     : this.LANG.account.passwordChangedSuccess,
+                errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix,
+                ignoreUnauthorized : true
             });
     }
 

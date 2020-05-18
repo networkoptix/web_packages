@@ -13,6 +13,6 @@ export class NxGridLayoutComponent {
     constructor(private languageService: NxLanguageProviderService,
                 private pageService: NxPageService,
     ) {
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
     }
 }

@@ -38,7 +38,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     ngOnDestroy(): void {

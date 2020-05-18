@@ -70,6 +70,7 @@
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Jelszómódosítás",
         "newPasswordLabel": "Új jelszó",
+        "passwordChangedSuccess": "Password successfully saved",
         "saveChanges": "Mentés"
     },
     "activeActions": {
@@ -206,10 +207,15 @@
             "moveCloudStorage": {
                 "title": "Move Cloud Storage",
                 "success": "Storage succesfully moved",
-                "errorPrefix": "Cloud storage move error",
+                "errorPrefix": "Error moving cloud storage",
+                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
                 "status": {
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Cloud Storage Enabled",
+                "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
                 "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
@@ -220,7 +226,7 @@
             "checking": "Checking...",
             "commonText": "A rendszerek <strong>{{primarySystem}}</strong> és <strong>{{secondarySystem}}</strong>egyesítése sikertelen.",
             "connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
-            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
@@ -419,7 +425,8 @@
         "wrongAuthCode": "Code is expired or incorrect",
         "wrongCode": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
         "wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
-        "wrongParameters": "Néhány paraméter hibás"
+        "wrongParameters": "Néhány paraméter hibás",
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Access Control",
@@ -526,6 +533,10 @@
         "weakMessage": "Használjon számokat, kis és nagybetűket és speciális karaktereket az erősebb jelszó érdekében"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
+        },
         "merge": {
             "title": "This system is being merged to {{systemName}}.",
             "message": {

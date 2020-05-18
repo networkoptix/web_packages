@@ -271,6 +271,8 @@ import * as Hls from 'hls.js';
                         
                         function playerReadyHandler(api) {
                             makingPlayer = false;
+                            cancelTimeoutNativeLoad();
+                            nativePlayerLoadError = $timeout(loadingTimeout, CONFIG.webclient.nativeTimeout);
                             scope.vgApi = api;
                             if (scope.vgSrc) {
                                 scope.vgApi.load(getFormatSrc('hls'));
@@ -292,6 +294,16 @@ import * as Hls from 'hls.js';
         
                                     $rootScope.$emit('nx.player.playing');
                                 });
+                                scope.vgApi.addEventListener('play', function() {
+                                    if (nativePlayerLoadError) {
+                                        $timeout.cancel(nativePlayerLoadError);
+                                        nativePlayerLoadError = undefined;
+                                    }
+                                });
+
+                                //If the player stalls give it a chance to recover
+                                scope.vgApi.addEventListener('progress', resetTimeout);
+                                scope.vgApi.addEventListener('stalled', resetTimeout);
                                 
                                 scope.vgApi.addEventListener('ended', function (event) {
                                     scope.vgUpdateTime({$currentTime: null, $duration: null});

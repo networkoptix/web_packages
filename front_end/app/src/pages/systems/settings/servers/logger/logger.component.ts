@@ -71,7 +71,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.loggerOptions = [
             {

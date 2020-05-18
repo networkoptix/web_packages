@@ -88,6 +88,7 @@ class SystemPermissions {
     editAdmins = false;
     editUsers = false;
     isAdmin = false;
+    editCameras = false;
 }
 
 class System implements SystemInterface {
@@ -164,22 +165,25 @@ class UserManager {
     }
 
     isOwner(user: NxSystemUser) {
-        return user.email === this._ownerEmail;
+        return user.isCloud && user.email === this._ownerEmail;
     }
 
     checkPermissions() {
         const isMine                         = this.isMine;
         const permissions: SystemPermissions = {
-            editAdmins : isMine,
-            editUsers  : isMine,
-            isAdmin    : isMine
+            editAdmins  : isMine,
+            editUsers   : isMine,
+            isAdmin     : isMine,
+            editCameras : isMine
         };
         if (!isMine && this.currentUser) {
             permissions.editUsers = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editUserPermissionFlag) >= 0;
             permissions.isAdmin = this.isAdmin(this.currentUser);
+            permissions.editCameras = this.currentUser.permissions.indexOf(this.CONFIG.accessRoles.editCameraPermissionFlag) >= 0;
         } else if (this.CONFIG.accessRoles.adminAccess.indexOf(this._accessRole.toLowerCase()) > -1) {
             permissions.editUsers = true;
             permissions.isAdmin = true;
+            permissions.editCameras = true;
         }
         this.permissions = permissions;
     }
@@ -197,7 +201,7 @@ class UserManager {
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         // TODO Need to figure out role type here
-        const role  = roles.find((role: any) => {
+        let role: any  = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
@@ -212,6 +216,12 @@ class UserManager {
             }
             return role.permissions === user.permissions;
         });
+        // handles the Custom role
+        if (!role) {
+            role = NxUtilsService.deepCopy(roles[roles.length - 1]);
+            role.isAdmin = this.isAdmin(user);
+            role.permissions = user.permissions;
+        }
 
         return role || roles[roles.length - 1];
     }
@@ -259,7 +269,7 @@ class UserManager {
 
             const isAdmin      = this.isAdmin(user);
             const isCloudOwner = this.isOwner(user);
-            const isMe         = user.email === this.currentUserEmail;
+            const isMe         = user.isCloud && user.email === this.currentUserEmail;
             if (isMe) {
                 this.currentUser = user;
                 this.accessRole = user.accessRole;
@@ -303,9 +313,6 @@ class UserManager {
         let userCreated = false;
         if (user.email === this.currentUserEmail) {
             if (user.isCloud) {
-                // eslint-disable-next-line prefer-promise-reject-errors
-                return Promise.reject({ resultCode: 'cantEditYourself' });
-            } else {
                 // eslint-disable-next-line prefer-promise-reject-errors
                 return Promise.reject({ resultCode: 'cantAddYourOwnEmail' });
             }
@@ -411,7 +418,7 @@ class ServerManager {
             if (!res) {
                 return Promise.reject(new Error(`Request to server has failed ${res}`));
             }
-            this.servers = res;
+            this.servers = res.sort(NxUtilsService.byParam(server => server.name, NxUtilsService.sortASC));
             return this.servers;
         });
         return serverSubscription;
@@ -427,21 +434,34 @@ class ServerManager {
             return Promise.reject(new Error(`Request to server has failed ${cameras}`));
         }
         this.cameras = cameras.map(({ addParams: addParamsRaw, parentId, id, ...camera }: ICamera) => {
-            const { timeZoneOffset, vmsTime } = servers.find(({ serverId }) => serverId === parentId);
-            const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
-            const vmsDate = new Date(serverTime);
-            const dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
-            const secondsToday = Math.round((serverTime % 86400000) / 1000);
+            const server = servers.find(({ serverId }) => serverId === parentId);
+            let dayOfWeek;
+            let secondsToday;
+            if (server) {
+                const { timeZoneOffset, vmsTime } = server;
+                const serverTime = parseInt(vmsTime) + parseInt(timeZoneOffset);
+                const vmsDate = new Date(serverTime);
+                dayOfWeek = ((vmsDate.getDay() + 6) % 7) + 1;
+                secondsToday = Math.round((serverTime % 86400000) / 1000);
+            }
             const {
                 rotation,
                 overrideAr,
                 mediaCapabilities,
-                cameraAdvancedParams,
                 isAudioSupported: audioSupported,
                 ...parsedAddParams
-            }: any = addParamsRaw.reduce((params, { name, value }) => (
-                { ...params, [name]: recursiveJson(value) }
-            ), {});
+            }: any = addParamsRaw.filter(({ name }) => [
+                'rotation',
+                'overrideAr',
+                'mediaCapbilities',
+                'isAudioSupported',
+                'supportedMotion',
+                'motionStream',
+                'credentials'
+            ].includes(name)).reduce((params, { name, value }) => {
+                params[name] = value;
+                return params;
+            }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
             const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
@@ -729,9 +749,9 @@ export class NxSystem extends System implements OnDestroy {
     getLicenseChannels(): Promise<{total: number, used: number, available: number}> {
         return this.serverManager.getLicenses().then((licenses: any[]) => {
             const parsedLicenses = licenses.map(this.parseLicense);
-            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION }) => {
-                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
-                return activeLicense ? qty + parseInt(COUNT) : qty;
+            const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
+                const activeLicense = !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
+                return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
             const available = total - used;
@@ -916,7 +936,7 @@ export class NxSystem extends System implements OnDestroy {
                 user.email = user.accountEmail;
             });
             return data;
-        });
+        }).catch(err => err);
     }
 
     getUsersDataFromTheSystem() {
@@ -1011,7 +1031,7 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false, true)
+            return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
                 .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
@@ -1148,7 +1168,7 @@ export class NxSystemService {
                 private pollService: NxPollService,
                 private systemsService: NxSystemsService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.systemsCache = {};
     }
 
@@ -1385,7 +1405,6 @@ export interface BitrateInfos {
 interface _ParsedAddParams {
     DeviceUrl: string;
     VideoLayout: string;
-    cameraAdvancedParams: CameraAdvancedParams;
     cameraCapabilities: number;
     compatibleAnalyticsEngines: any[];
     credentials: string;

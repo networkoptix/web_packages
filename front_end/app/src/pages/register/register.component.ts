@@ -41,8 +41,8 @@ export class NxRegisterComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
     constructor(configService: NxConfigService,
@@ -82,7 +82,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess;
         }
 
         if (this.uriParam === 'activated') {
@@ -112,7 +112,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email     : this.accountInfo.email || this.accountService.email,
+            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
             password  : '',
             firstName : '',
             lastName  : '',
@@ -182,7 +182,7 @@ export class NxRegisterComponent implements OnInit {
                         });
 
                     this.accountService.email = this.accountInfo.email;
-                    this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess;
                     this.registerSuccess = true;
                     this.localStorage.set('regProcess', 'registerSuccess');
                 }

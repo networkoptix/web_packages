@@ -502,7 +502,7 @@
           {
             "label": "Privacy policy content",
             "name": "%CONTENT%",
-            "value": "<p>ALL YOUR BASE BELONG TO US</p>",
+            "value": "<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy Policy</a>",
             "description": "Content for privacy policy",
             "type": "html"
           }

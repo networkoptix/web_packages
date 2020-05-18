@@ -976,9 +976,8 @@ class DataRecord(models.Model):
 
     @property
     def get_data_structure_with_name(self):
-        if self.language:
-            return f"{self.data_structure.name}-{self.language.code}"
-        return self.data_structure.name
+        language = self.language.code if self.language else ''
+        return f"{self.data_structure.context.name}-{self.data_structure.name}-{language}"
 
     @cached_property
     def cast_value(self):

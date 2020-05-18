@@ -268,18 +268,22 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    /**
+     * Expected repsonse:
+     *
+     * {
+     *    enabled           : true,
+     *    cloudCapacity     : 53687091200,
+     *    currentRecordings : 7457136000, // ms, rounded to the hour
+     *    whenFullyUsed     : 1209600000, // ms, rounded to the hour
+     *    amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
+     *    archiveFrom       : 11, // number of cameras represented by integer
+     *    recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
+     *    delayFromLive     : 1200000 // ms, rounded to 0.1s}
+     *}
+     * @param systemId
+     */
     getCloudStorageUsage(systemId: string): Promise<any> {
-        // return Promise.resolve({
-        //     enabled           : true,
-        //     cloudCapacity     : 53687091200,
-        //     currentRecordings : 7457136000, // ms, rounded to the hour
-        //     whenFullyUsed     : 1209600000, // ms, rounded to the hour
-        //     amountUsed        : 17424682320, // bytes rounded to 0.1 Gb, percent calculated and rounded to 1%
-        //     archiveFrom       : 11, // number of cameras represented by integer
-        //     recordingBitrate  : 1500000, // bps rounded to 0.1 Mbps
-        //     delayFromLive     : 1200000 // ms, rounded to 0.1s}
-        // });
-
         return this.http.get(this.CONFIG.apiBase + '/storage/usageStats', {
             params: {
                 systemId

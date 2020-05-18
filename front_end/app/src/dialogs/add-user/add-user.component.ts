@@ -31,7 +31,7 @@ export class AddUserModalContent {
         private processService: NxProcessService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     get selectedPermission() {
@@ -75,6 +75,7 @@ export class AddUserModalContent {
         this.user = {
             email     : '',
             isEnabled : true,
+            isCloud   : true,
             role      : {
                 name        : this.CONFIG.accessRoles.default,
                 permissions : ''

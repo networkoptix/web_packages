@@ -30,7 +30,7 @@ export class DetachServerModalContent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit() {

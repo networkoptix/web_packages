@@ -103,8 +103,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.system);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.system;
         this.init();
     }
 
@@ -315,26 +315,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
-
-        const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
-
-        adminNode.level3 = [{
-            id    : this.CONFIG.menus.systemSettings.general.id,
-            svg   : this.CONFIG.menus.systemSettings.general.icon,
-            label : this.LANG.menu.titles.general,
-            path  : this.CONFIG.menus.systemSettings.general.path
-        }];
-
-        if (this.system.isAdmin || this.system.isOwner) {
-            adminNode.level3.push({
-                id    : this.CONFIG.menus.systemSettings.licenses.id,
-                svg   : this.CONFIG.menus.systemSettings.licenses.icon,
-                label : this.LANG.menu.titles.licenses,
-                path  : this.CONFIG.menus.systemSettings.licenses.path
-            });
-        }
-
-        if (this.system.permissions.isAdmin) {
+        if (this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -448,11 +429,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.servers) {
-                const byParam = NxUtilsService.byParam((server) => {
-                    return server.name;
-                }, NxUtilsService.sortASC);
-                this.system.servers.sort(byParam);
-
                 serversNode.level3 = [];
                 this.system.servers.forEach(systemServer => {
                     const server = NxUtilsService.formatURL(systemServer);
@@ -505,7 +481,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
             this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
 
-        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem.id || ''}`;
+        const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);
     }
 }

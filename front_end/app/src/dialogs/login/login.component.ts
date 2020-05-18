@@ -62,7 +62,7 @@ export class LoginModalContent implements OnInit {
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.locationService = locationService;
 
         this.setupDefaults();

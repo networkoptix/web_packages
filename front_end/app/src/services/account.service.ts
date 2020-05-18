@@ -69,7 +69,7 @@ export class NxAccountService implements OnDestroy {
         injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;

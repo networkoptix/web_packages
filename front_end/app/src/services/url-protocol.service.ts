@@ -19,7 +19,7 @@ export class NxUrlProtocolService {
         private accountService: NxAccountService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     private parseSource() {

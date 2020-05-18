@@ -40,6 +40,7 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() selected: any;
     @Output() onSelected = new EventEmitter<string>();
     @Input() merge: boolean;
+    @Input() stillLoading: boolean;
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 

@@ -70,6 +70,7 @@
         "agreementAccepted": "Avtal har accepterats",
         "changePassword": "Ändra lösenord",
         "newPasswordLabel": "Nytt lösenord",
+        "passwordChangedSuccess": "Lösenordet har sparats",
         "saveChanges": "Spara"
     },
     "activeActions": {
@@ -206,10 +207,15 @@
             "moveCloudStorage": {
                 "title": "Flytta molnlagring",
                 "success": "Lagringen har flyttats",
-                "errorPrefix": "Flyttningsfel i molnet",
+                "errorPrefix": "Fel vid flyttning av molnlagring",
+                "notFound": "Lagring hittades inte. Lagring kan ha flyttats eller raderats av en annan användare",
                 "status": {
                     "offline": "Molnlagring kan inte flyttas till offlinesystem."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Molnlagring aktiverat",
+                "errorPrefix": "Fel vid flyttning av molnlagring"
             },
             "noOtherSystemsError": {
                 "message": "Du kan bara flytta molnlagring mellan system du är ägare till. <br/><br/>Anslut ett system till %CLOUD_NAME% med ditt molnkonto för att kunna flytta molnlagring till det."
@@ -220,7 +226,7 @@
             "checking": "Kontrollerar...",
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
-            "differentOwners": "Du kan bara slå samman system med samma ägare och dessa systemägare är olika.",
+            "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
             "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
             "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",
@@ -419,7 +425,8 @@
         "wrongAuthCode": "Koden är utgått eller felaktig",
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
-        "wrongParameters": "Vissa parametrar på formuläret är felaktiga"
+        "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
+        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -526,6 +533,10 @@
         "weakMessage": "Använd siffror, stora bokstäver och specialtecken för att göra ditt lösenord starkare"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "Denna sida kunde inte hittas",
+            "message": "Se till att dina servrar är online och försök igen."
+        },
         "merge": {
             "title": "Detta system slås samman med {{systemName}}.",
             "message": {

@@ -97,7 +97,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.locationSubscription = this.location.subscribe((event: PopStateEvent) => {
             // force search component update

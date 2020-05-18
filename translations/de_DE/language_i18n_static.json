@@ -70,6 +70,7 @@
         "agreementAccepted": "Vereinbarung wurde akzeptiert",
         "changePassword": "Passwort ändern",
         "newPasswordLabel": "Neues Passwort",
+        "passwordChangedSuccess": "Passwort erfolgreich gespeichert",
         "saveChanges": "Speichern"
     },
     "activeActions": {
@@ -128,9 +129,9 @@
         "chromeCastWarning": "Chromecast ist ressourcenintensiv und kann Probleme auf Ihrem Server verursachen.",
         "recordingSettingsWarning": "Bitte aktualisieren Sie fehlende Aufnahmeeinstellungen.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Immer aufnehmen",
+            "motion": "Nur Bewegung aufzeichnen",
+            "motionLowRes": "Bewegung + Low-Res"
         },
         "resolution": {
             "various": "- Verschiedene Werte -",
@@ -207,9 +208,14 @@
                 "title": "Cloudspeicher verschieben",
                 "success": "Speicher erfolgreich verschoben",
                 "errorPrefix": "Fehler beim Verschieben des Cloudspeichers",
+                "notFound": "Speicher wurde nicht gefunden. Der Speicher wurde möglicherweise von einem anderen Benutzer verschoben oder gelöscht",
                 "status": {
                     "offline": "Cloudspeicher kann nicht auf Offlinesysteme verschoben werden."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Cloudspeicher aktiviert",
+                "errorPrefix": "Fehler beim Aktivieren des Cloudspeichers"
             },
             "noOtherSystemsError": {
                 "message": "Sie können den Cloudspeicher nur zwischen Systemen verschieben, deren Besitzer Sie sind. <br/><br/>Verbinden Sie ein System mit %CLOUD_NAME% mit Ihrem Cloudkonto, um den Cloudspeicher dorthin zu verschieben."
@@ -220,7 +226,7 @@
             "checking": "Prüfung...",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
-            "differentOwners": "Sie können nur Systeme mit demselben Besitzer zusammenführen, und diese Systembesitzer sind unterschiedlich.",
+            "differentOwners": "Sowohl das ausgewählte als auch das aktuelle System sind mit %CLOUD_NAME% verbunden und haben unterschiedliche Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "duplicateServers": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
             "enterSystemAddressTitle": "Geben Sie die Adresse eines Servers im System ein, den Sie mit diesem zusammenführen möchten.",
             "mergeConfirmation": "<p class=\"mb-0\">Sie sind dabei, die Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong> zusammenzuführen.</p><p>Einstellungen und der Name werden von <strong>{{primarySystem}}</strong> übernommen.</p>",
@@ -419,7 +425,8 @@
         "wrongAuthCode": "Code ist abgelaufen oder falsch",
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
-        "wrongParameters": "Einige Parameter in dem Formular sind falsch"
+        "wrongParameters": "Einige Parameter in dem Formular sind falsch",
+        "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",
@@ -526,6 +533,10 @@
         "weakMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "Diese Seite kann nicht geladen werden",
+            "message": "Stellen Sie sicher, dass Ihre Server online sind, und versuchen Sie es erneut."
+        },
         "merge": {
             "title": "Dieses System wird mit {{systemName}} zusammengeführt.",
             "message": {
@@ -586,7 +597,7 @@
         "resetSuccessful": "Server {{ serverName }} wurde auf die Standardeinstellungen zurückgesetzt.",
         "restartFailed": "Beim Neustart des Servers ist ein Problem aufgetreten.",
         "restartSuccessful": "Server wurde erfolgreich neu gestartet.",
-        "serverOffline": "Server is offline.",
+        "serverOffline": "Server ist offline.",
         "servers": "Server",
         "status": {
             "checking": "Überprüfen...",

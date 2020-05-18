@@ -84,6 +84,7 @@ export interface AccessRoles {
     default: string;
     custom: string;
     editUserPermissionFlag: string;
+    editCameraPermissionFlag: string;
     globalAdminPermissionFlag: string;
     customPermission: CustomPermission;
     predefinedRoles: PredefinedRole[];
@@ -527,6 +528,7 @@ export interface Setting {
 export interface SettingsConfig {
     auditTrailEnabled: Setting,
     cameraSettingsOptimization: Setting,
+    defaultMotionMask: string,
     disabledVendors: Setting,
     ec2AliveUpdateIntervalSec: Setting,
     ec2ConnectionKeepAliveTimeoutSec: Setting,

@@ -125,7 +125,7 @@ ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FRO
 ${ACCESS LEVEL DROPDOWN}              ${SYSTEM USER DETAILS}//nx-section//button[@id='permissionsSelect']
 ${HELP BLOCK}                         ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'help-block')]
 ${REMOVE USER BUTTON}                 ${SYSTEM USER DETAILS}//button[contains(text(),'${REMOVE USER BUTTON TEXT}')]
-${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='undefined']
+${DISABLE USER SWITCH}                ${SYSTEM USER DETAILS}//div[@id='user-active-status']
 ${USER DISABLED MSG}                  ${SYSTEM USER DETAILS}//span[contains(@class,'text-danger')]
 ${REMOVE USER MODAL}                  ${MODAL DIALOG}
 ${REMOVE BUTTON}                      ${MODAL DIALOG}//button[contains(text(),'${REMOVE BUTTON TEXT}')]
@@ -137,7 +137,7 @@ ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
-${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button
+${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 ${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
@@ -548,5 +548,6 @@ ${LOCAL USER LOGIN}                  //input[@id='name']
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
+${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button

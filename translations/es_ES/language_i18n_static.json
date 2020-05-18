@@ -70,6 +70,7 @@
         "agreementAccepted": "El acuerdo ha sido aceptado",
         "changePassword": "Cambiar contraseña",
         "newPasswordLabel": "Nueva contraseña",
+        "passwordChangedSuccess": "Contraseña guardada correctamente",
         "saveChanges": "Guardar"
     },
     "activeActions": {
@@ -207,9 +208,14 @@
                 "title": "Mover almacenamiento en la nube",
                 "success": "Almacenamiento movido con éxito",
                 "errorPrefix": "Error al mover el almacenamiento en la nube",
+                "notFound": "Almacenamiento no encontrado. El almacenamiento puede haber sido movido o eliminado por otro usuario",
                 "status": {
                     "offline": "El almacenamiento en la nube no se puede mover a sistemas sin conexión."
                 }
+            },
+            "enableCloudStorage": {
+                "success": "Almacenamiento en la nube habilitado",
+                "errorPrefix": "Error al habilitar almacenamiento en la nube"
             },
             "noOtherSystemsError": {
                 "message": "Sólo puede mover el almacenamiento en la nube entre los sistemas de los que es propietario. <br/><br/>Conecte un sistema a %CLOUD_NAME% usando su cuenta en la nube para poder mover el almacenamiento en la nube."
@@ -220,7 +226,7 @@
             "checking": "Comprobación...",
             "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
-            "differentOwners": "Sólo puede fusionar sistemas con el mismo propietario y estos propietarios de sistemas son diferentes.",
+            "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
             "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.</p><p>Configuraciones y el nombre se tomarán de <strong>{{primarySystem}}</strong>.</p>",
@@ -419,7 +425,8 @@
         "wrongAuthCode": "El código ha caducado o es incorrecto",
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
-        "wrongParameters": "Algunos parámetros en el formulario son incorrectos"
+        "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
+        "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {
         "Access Control": "Control de Acceso",
@@ -526,6 +533,10 @@
         "weakMessage": "Uso de números, letras mayúsculas y minúsculas y caracteres especiales para hacer su contraseña más fuerte"
     },
     "placeholderTexts": {
+        "noSettings": {
+            "title": "Esta página no se puede cargar",
+            "message": "Asegúrese de que sus servidores estén en línea e intente nuevamente."
+        },
         "merge": {
             "title": "Este sistema se está fusionando a {{systemName}}.",
             "message": {

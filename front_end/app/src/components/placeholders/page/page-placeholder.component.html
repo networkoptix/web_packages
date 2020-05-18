@@ -1,4 +1,4 @@
-<div class="container page-placeholder-wrapper">
+<div class="container {{preloader ? 'show-preloader' : 'h-100'}}">
     <div class="page-placeholder"
          [ngClass]="{'has-preloader':preloader, 'with-footer': withFooter}"
          [ngStyle]="{'padding-top': (withFooter && iconVisible) ? '16px': undefined}">

@@ -54,7 +54,7 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.iconSize = 400;
 
@@ -140,6 +140,12 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.placeholderTitle = this.LANG.placeholderTexts.server.title;
                     this.message = this.LANG.placeholderTexts.server.message;
                     this.iconName = 'Offline';
+                    break;
+                case 'NO_SETTINGS':
+                    this.placeholderTitle = this.LANG.placeholderTexts.noSettings.title;
+                    this.message = this.LANG.placeholderTexts.noSettings.message;
+                    this.iconName = 'NoSettings';
+                    break;
             }
         }
     }
