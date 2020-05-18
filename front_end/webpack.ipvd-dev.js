@@ -13,13 +13,13 @@ const cloudInstance = process.env.CLOUD_INSTANCE || 'https://cloud-dev2.hdw.mx';
 const localStatic = `https://${host}:${port}`;
 
 module.exports = merge(common, {
-    devtool  : 'cheap-module-eval-source-map',
-    devServer: {
-        contentBase       : './dist',
-        hot               : true,
-        host              : host,
-        port              : port,
-        proxy             : [
+    devtool   : 'cheap-module-eval-source-map',
+    devServer : {
+        contentBase : './dist',
+        hot         : true,
+        host        : host,
+        port        : port,
+        proxy       : [
             // Uncomment to test local translation strings
             // {
             //     context: ['/api/utils/language'],
@@ -29,112 +29,112 @@ module.exports = merge(common, {
             //     secure: false
             // },
             {
-                context: [ '/api/', '/gateway/' ],
-                target : cloudInstance,
-                changeOrigin: true,
-                secure: false
+                context      : ['/api/', '/gateway/'],
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
 
             },
             {
-                context     : '/static/lang_en_US/',
-                target      : cloudInstance,
-                changeOrigin: true,
-                secure      : false
+                context      : '/static/lang_en_US/',
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
             },
             {
-                context: '/static/lang_ru_RU/',
-                target: cloudInstance,
-                changeOrigin: true,
-                secure: false
+                context      : '/static/lang_ru_RU/',
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
             },
             {
-                context: '/static/lang_de_DE/',
-                target: cloudInstance,
-                changeOrigin: true,
-                secure: false
+                context      : '/static/lang_de_DE/',
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
             },
             {
-                context: '/static/lang_he_IL/',
-                target: cloudInstance,
-                changeOrigin: true,
-                secure: false
+                context      : '/static/lang_he_IL/',
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
             },
             {
-                context: '/static/images/',
-                target: cloudInstance,
-                changeOrigin: true,
-                secure: false
+                context      : '/static/images/',
+                target       : cloudInstance,
+                changeOrigin : true,
+                secure       : false
             },
             {
-                context     : '/static/',
-                target      : localStatic,
-                pathRewrite : { '^/static': '' },
-                changeOrigin: true,
-                secure      : false
-            },
+                context      : '/static/',
+                target       : localStatic,
+                pathRewrite  : { '^/static': '' },
+                changeOrigin : true,
+                secure       : false
+            }
         ],
-        https             : {
+        https: {
             spdy: {
                 protocols: ['http/1.1']
             },
-            key : fs.readFileSync('ssl_keys/server.key').toString(),
-            cert: fs.readFileSync('ssl_keys/server.crt').toString()
+            key  : fs.readFileSync('ssl_keys/server.key').toString(),
+            cert : fs.readFileSync('ssl_keys/server.crt').toString()
         },
         historyApiFallback: {
             index: '/'
         }
     },
-    plugins  : [
+    plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        // new BundleAnalyzerPlugin({analyzerHost:'0.0.0.0', analyzerPort:9001})
+        new BundleAnalyzerPlugin({ analyzerHost: '0.0.0.0', analyzerPort: 9001 }),
 
         // make some resources available while serve the project locally
         new CopyWebpackPlugin([
             // *****************************************
             // Local test for commonPasswordsList ******
             {
-                from: 'scripts/commonPasswordsList.json',
-                to  : 'static/scripts/commonPasswordsList.json'
+                from : 'scripts/commonPasswordsList.json',
+                to   : 'static/scripts/commonPasswordsList.json'
             }
             // *****************************************
         ])
     ],
     output: {
-        filename  : 'scripts/[name].js',
-        publicPath: '/'
+        filename   : 'scripts/[name].js',
+        publicPath : '/'
     },
-    module   : {
+    module: {
         rules: [
             {
-                test   : /\.scss$/,
-                include: /src/,
-                loaders: [ 'raw-loader', 'sass-loader' ]
+                test    : /\.scss$/,
+                include : /src/,
+                loaders : ['raw-loader', 'sass-loader']
             },
             {
-                test: /\.s?css$/,
-                exclude: /src/,
-                use : ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use     : [
+                test    : /\.s?css$/,
+                exclude : /src/,
+                use     : ExtractTextPlugin.extract({
+                    fallback : 'style-loader',
+                    use      : [
                         {
-                            loader : 'css-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: true
+                            loader  : 'css-loader',
+                            options : {
+                                url       : false,
+                                sourceMap : true
                             }
                         },
                         {
-                            loader : 'postcss-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: 'inline'
+                            loader  : 'postcss-loader',
+                            options : {
+                                url       : false,
+                                sourceMap : 'inline'
                             }
                         },
                         {
-                            loader : 'sass-loader',
-                            options: {
-                                implementation: require('sass'),
-                                sourceMap: true
+                            loader  : 'sass-loader',
+                            options : {
+                                implementation : require('sass'),
+                                sourceMap      : true
                             }
                         }
                     ]

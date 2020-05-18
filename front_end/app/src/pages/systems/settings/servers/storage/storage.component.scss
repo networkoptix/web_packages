@@ -1,4 +1,4 @@
-@import "../../../../../styles/typography";
+@use "../../../../../styles/typography";
 @import "../../../../../../styles/theme_palette";
 .storage-container {
     table {
@@ -53,13 +53,13 @@
     }
 
     tr:hover td {
-        background : transparentize($brand_core, 0.9);
+        background : transparentize(typography.$brand_core, 0.9);
     }
 }
 
 .server-info {
-    font-family : $font-family-regular;
-    font-size   : $font-size-base;
+    font-family : typography.$font-family-regular;
+    font-size   : typography.$font-size-base;
     color       : $dark9;
 
     .header-top-bar {
@@ -73,7 +73,7 @@
             flex-grow   : 1;
 
             h2 {
-                font-family : $font-family-regular;
+                font-family : typography.$font-family-regular;
                 height      : 32px;
                 font-weight : bold;
                 font-size   : 24px;
@@ -89,7 +89,7 @@
             }
 
             .online {
-                background-color : $brand_core;
+                background-color : typography.$brand_core;
             }
 
             .offline {
@@ -103,7 +103,7 @@
     }
 
     .header-table {
-        font-size    : $font-size-base;
+        font-size    : typography.$font-size-base;
         padding-left : 0;
 
         .header-table-cell {

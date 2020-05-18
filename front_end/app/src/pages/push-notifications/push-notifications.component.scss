@@ -1,4 +1,4 @@
-@import '../../styles/typography';
+@use '../../styles/typography';
 
 .foreground-messages-content {
   max-height: 800px;
@@ -6,7 +6,7 @@
 
 .footnote {
   font-style: italic;
-  color: $gray-light;
+  color: typography.$gray-light;
   font-size: 11px;
 }
 

@@ -1,8 +1,8 @@
-@import '../../../../styles/typography';
+@use '../../../../styles/typography';
 
 .system-settings {
     .system-header-bold {
-        font-family: $font-family-bold;
+        font-family: typography.$font-family-bold;
     }
     .system-name {
         @extend #medium24;

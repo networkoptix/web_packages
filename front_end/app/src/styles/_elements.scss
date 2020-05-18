@@ -1,7 +1,7 @@
+@use './typography';
 @import '../../styles/custom/custom_palette';
 @import '../../styles/theme_palette';
 @import '../../styles/theme_variables';
-@import './typography';
 
 svg {
     pointer-events : none;

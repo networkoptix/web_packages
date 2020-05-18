@@ -1,7 +1,7 @@
 // A5 styles
 
 // Common
-@import '../app/src/styles/_typography';
+@use '../app/src/styles/_typography';
 @import '../app/src/styles/_buttons';
 @import '../app/src/styles/_forms';
 @import '../app/src/styles/_inputs';

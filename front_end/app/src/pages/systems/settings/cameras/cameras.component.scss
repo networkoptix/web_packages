@@ -1,9 +1,9 @@
-@import "../../../../styles/typography";
+@use "../../../../styles/typography";
 @import "../../../../../styles/theme_palette";
 
 .camera-settings-info {
-    font-family: $font-family-regular;
-    font-size: $font-size-base;
+    font-family: typography.$font-family-regular;
+    font-size: typography.$font-size-base;
     color: $dark9;
     .header-top-bar {
         width: 100%;
@@ -15,7 +15,7 @@
             min-width: 0;
             text-align: left !important;
             h2 {
-                font-family: $font-family-regular;
+                font-family: typography.$font-family-regular;
                 height: 32px;
                 font-weight: bold;
                 font-size: 24px;
@@ -69,7 +69,7 @@
     }
 
     .header-table {
-        font-size: $font-size-base;
+        font-size: typography.$font-size-base;
         padding: 0;
         .header-table-cell {
             display: flex;

@@ -1,5 +1,5 @@
+@use '../../../../styles/typography';
 @import '../../../../styles/mixins';
-@import '../../../../styles/typography';
 
 .user-name {
     @include ellipsis;
