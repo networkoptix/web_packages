@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Some server lists as existing in both Systems \u2013 in the selected and in the current one.<br>Remove offline and incompatible servers from each System and try again.",
         "EmailAlreadyExists": "This Email is already registered",
         "FAIL": "System <strong>{{failedSystem}}</strong> is currently unreachable.<br>Try again in a few moments or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Systems have different software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "This account is already activated",
         "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
         "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
