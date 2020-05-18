@@ -1,8 +1,8 @@
 @use '../../styles/typography';
 // @import '../../../styles/custom/custom_palette';
 // @import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/mixins';
+@use '../../../styles/theme_variables';
+@use '../../styles/mixins';
 
 .close-button {
     border-radius: 2px;
@@ -20,9 +20,9 @@
 
 .badge {
     @extend #regular12;
-    color            : $light16;
+    color            : theme_variables.$light16;
     font-weight      : 400;
-    background-color : $light4;
+    background-color : theme_variables.$light4;
     line-height      : 18px;
     height           : 20px;
     padding          : 0 8px;
@@ -30,7 +30,7 @@
 
     &.large {
         @extend #regular13;
-        color       : $light16;
+        color       : theme_variables.$light16;
         height      : 2rem !important;
         line-height : 2rem !important;
         padding     : 0 12px;
@@ -42,37 +42,37 @@
         cursor : pointer !important;
 
         &:hover {
-            background-color : $light5;
+            background-color : theme_variables.$light5;
         }
 
         &:active {
-            background-color : $light6;
+            background-color : theme_variables.$light6;
         }
     }
 }
 
 .badge-selected {
     @extend #regular13;
-    @include badge-selected($light16, $light17, $light18);
+    @include mixins.badge-selected(theme_variables.$light16, theme_variables.$light17, theme_variables.$light18);
     cursor : default !important;
 }
 
 .badge-brand-selected {
     @extend #regular13;
-    @include badge-selected($brand_core, $brand_d1, $brand_d2);
+    @include mixins.badge-selected(theme_variables.$brand_core, theme_variables.$brand_d1, theme_variables.$brand_d2);
     cursor : default !important;
 }
 
 $nx-theme-colors :
-    "brand" $brand_core $light1,
-    "default" $light8 $light1,
-    "success" $brand-success $light1,
-    "success-bright" $brand-success-bright $light1,
-    "info" $brand-info $light1,
-    "warning" $brand-warning $light1,
-    "warning-bright" $brand-warning-bright $light1,
-    "danger" $brand-danger $light1,
-    "danger-bright" $brand-danger-bright $light1;
+    "brand" theme_variables.$brand_core theme_variables.$light1,
+    "default" theme_variables.$light8 theme_variables.$light1,
+    "success" theme_variables.$brand-success theme_variables.$light1,
+    "success-bright" theme_variables.$brand-success-bright theme_variables.$light1,
+    "info" theme_variables.$brand-info theme_variables.$light1,
+    "warning" theme_variables.$brand-warning theme_variables.$light1,
+    "warning-bright" theme_variables.$brand-warning-bright theme_variables.$light1,
+    "danger" theme_variables.$brand-danger theme_variables.$light1,
+    "danger-bright" theme_variables.$brand-danger-bright theme_variables.$light1;
 
 @each $name, $bg-color, $fg-color in $nx-theme-colors {
     .badge-#{$name} {
@@ -81,7 +81,7 @@ $nx-theme-colors :
         color: $fg-color !important;
     }
     .badge-#{$name}-selected {
-        color: $light1 !important;
-        @include badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
+        color: theme_variables.$light1 !important;
+        @include mixins.badge-selected($bg-color, darken($bg-color, 10%), darken($bg-color, 15%));
     }
 }

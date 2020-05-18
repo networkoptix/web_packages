@@ -1,13 +1,13 @@
 @use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/mixins';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
-@import '../../styles/mixins';
 
 // @import '../../../styles/native-theme/theme_palette';
 // @import '../../../styles/theme_palette';
 // @import '../../../styles/custom/custom_palette';
-@import '../../../styles/theme_variables';
 
 $logo-height               : 32px;
 $line-height               : 44px;
@@ -102,7 +102,7 @@ $header-collapsing-width-1 : 1px;
             text-decoration : none;
 
             & > span.ellipsis {
-                @include ellipsis;
+                @include mixins.ellipsis;
                 white-space    : nowrap;
                 display        : inline-block;
                 vertical-align : bottom;

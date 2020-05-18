@@ -1,6 +1,6 @@
 // @import '../../../../../styles/theme_palette';
-@import '../../../../../styles/theme_variables';
-@import '../../../../styles/mixins';
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/mixins';
 
 .panel {
     padding          : 0;
@@ -80,7 +80,7 @@
         position : relative;
         
         .panel-title {
-            @include ellipsis;
+            @include mixins.ellipsis;
             width : 90%;
         }
         

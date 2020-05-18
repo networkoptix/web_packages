@@ -1,7 +1,7 @@
 @use '../../styles/typography';
 // @import '../../../styles/custom/custom_palette';
 // @import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
+@use '../../../styles/theme_variables' as *;
 
 nx-vendor-list {
     width : 100%;

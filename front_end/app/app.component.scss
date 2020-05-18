@@ -1,8 +1,8 @@
-// @import 'styles/_theme_variables';
+@use 'styles/_theme_variables' as variables;
 
 // Common
-@import 'src/styles/_mixins';
-// @import 'src/styles/_typography';
+@use 'src/styles/_mixins';
+@use 'src/styles/_typography';
 @import 'src/styles/_buttons';
 @import 'src/styles/_forms';
 @import 'src/styles/_inputs';

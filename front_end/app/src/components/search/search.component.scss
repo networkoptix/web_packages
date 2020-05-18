@@ -1,7 +1,7 @@
 @use '../../styles/typography';
 // @import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/_mixins';
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/_mixins';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -54,7 +54,7 @@
             background    : transparent;
 
             &:placeholder-shown {
-                @include placeholder();
+                @include mixins.placeholder();
             }
 
             &:active, &:focus, &.non-empty {
@@ -123,7 +123,7 @@
             }
 
             .dropdown .dropdown-toggle span {
-                @include ellipsis;
+                @include mixins.ellipsis;
             }
         }
     }

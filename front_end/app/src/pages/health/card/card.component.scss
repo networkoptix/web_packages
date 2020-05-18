@@ -1,6 +1,6 @@
 @use '../../../styles/typography';
 // @import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
+@use '../../../../styles/theme_variables' as *;
 
 .card {
     height: 100%;

@@ -1,7 +1,7 @@
 @use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/mixins';
 // @import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/mixins';
 
 .menu-level-3 {
     @extend #medium13;
@@ -90,7 +90,7 @@
     }
 
     .ellipsis {
-        @include ellipsis;
+        @include mixins.ellipsis;
         line-height : inherit;
     }
 

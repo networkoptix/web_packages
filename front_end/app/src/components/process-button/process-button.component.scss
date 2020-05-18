@@ -1,8 +1,8 @@
 // @import '../../../styles/native-theme/_theme_palette';
 // @import '../../../styles/_theme_palette';
 // @import '../../../styles/custom/_custom_palette';
-@import '../../../styles/_theme_variables';
-@import '../../styles/mixins';
+@use '../../../styles/_theme_variables' as *;
+@use '../../styles/mixins';
 
 nx-process-button {
     .full-width {
@@ -10,7 +10,7 @@ nx-process-button {
         max-width: 100% !important;
     }
 
-    @include keyframe(bubblingG) {
+    @include mixins.keyframe(bubblingG) {
         0% {
             opacity:1;
     	}

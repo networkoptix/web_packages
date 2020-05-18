@@ -1,7 +1,7 @@
 // @import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import 'variables';
-@import '../../styles/mixins';
+@use '../../../styles/theme_variables';
+@use'../../styles/mixins';
+@use 'variables' as *;
 
 .dropdown, .dropup {
     .lang-sm {
@@ -91,7 +91,7 @@ header {
         }
         
         .ellipsis {
-            @include ellipsis;
+            @include mixins.ellipsis;
             // set text max-width so dropdown button will match spec width
             @media (max-width : $collapse-first-width) {
                 max-width : 150px;
@@ -106,7 +106,7 @@ header {
             }
         }
         .ellipsis-merge {
-            @include ellipsis;
+            @include mixins.ellipsis;
             max-width: 95%;
         }
     }
@@ -202,7 +202,7 @@ header {
                 }
 
                 & > span:first-child {
-                    @include ellipsis;
+                    @include mixins.ellipsis;
                     padding      : 0 rem(10px);
                 }
 

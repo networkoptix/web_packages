@@ -1,7 +1,7 @@
 // @import '../../../../../app/styles/native-theme/theme_palette';
 // @import '../../../../../app/styles/custom/custom_palette';
 // @import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
+@use '../../../../styles/theme_variables' as *;
 
 .title {
     font-family : $font-family-medium;

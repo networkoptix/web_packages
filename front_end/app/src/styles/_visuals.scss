@@ -1,6 +1,6 @@
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@import '../../styles/theme_variables';
+@use '../../styles/theme_variables';
 
 .highlighted {
     display          : inline;
@@ -21,23 +21,23 @@
 }
 
 .border-left {
-    border-left : 1px solid $common-border-color;
+    border-left : 1px solid theme_variables.$common-border-color;
 }
 
 .border-right {
-    border-right : 1px solid $common-border-color;
+    border-right : 1px solid theme_variables.$common-border-color;
 }
 
 .border-top {
-    border-top : 1px solid $common-border-color;
+    border-top : 1px solid theme_variables.$common-border-color;
 }
 
 .border-bottom {
-    border-bottom : 1px solid $common-border-color;
+    border-bottom : 1px solid theme_variables.$common-border-color;
 }
 
 .light-color {
-    color : $gray-light;
+    color : theme_variables.$gray-light;
 }
 
 .preloader {
@@ -51,6 +51,6 @@
     }
 
     .border-left-md {
-        border-left : 1px solid $common-border-color;
+        border-left : 1px solid theme_variables.$common-border-color;
     }
 }

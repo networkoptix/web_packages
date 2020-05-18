@@ -1,8 +1,8 @@
-@use 'typography';
+@use './typography';
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@import '../../styles/theme_variables';
-@import 'mixins';
+@use '../../styles/theme_variables' as *;
+@use './mixins';
 
 .form-control {
     display          : block;
@@ -19,7 +19,7 @@
     box-shadow       : none;
     padding          : $padding-base-vertical $padding-input-horizontal;
 
-    @include placeholder ();
+    @include mixins.placeholder ();
 
     &[disabled], &[readonly],
     fieldset[disabled] & {

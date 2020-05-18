@@ -1,6 +1,7 @@
 @use './typography';
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
+@use './mixins';
 @import '../../styles/theme_variables';
 
 svg {
@@ -86,7 +87,7 @@ svg {
 }
 
 .image-link {
-    @include ellipsis;
+    @include mixins.ellipsis;
     text-decoration : none !important;
     display         : flex;
     align-items     : center;

@@ -1,8 +1,9 @@
 @use '../styles/typography';
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
-@import '../../styles/theme_variables';
-@import '../styles/mixins';
+@use '../../styles/theme_variables' as *;
+@use '../styles/mixins';
+@forward '../../styles/theme_variables';
 @import '~bootstrap/scss/mixins';
 
 #button {
@@ -212,7 +213,7 @@ button, .btn {
 
 .btn-tag-selected {
     @extend #regular13;
-    @include badge-selected($light16, $light17, $light18);
+    @include mixins.badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;
     max-width : none;
@@ -281,7 +282,7 @@ button, .btn {
     }
 
     &.selected {
-        @include badge-selected($light16, $light17, $light18);
+        @include mixins.badge-selected($light16, $light17, $light18);
 
         .nav-arrow {
             span {

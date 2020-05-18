@@ -1,4 +1,4 @@
-@import "../../../styles/_theme_variables";
+@use "../../../styles/_theme_variables" as *;
 
 .switch {
     width : 33px !important;
