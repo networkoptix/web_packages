@@ -56,7 +56,7 @@ export class MessageModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,

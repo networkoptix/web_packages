@@ -24,16 +24,15 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    public allElements: any;
-    public elements: any;
-
-    private emptyFilter: any = {};
-    private filterModel: any = {};
-
-    private integrationSubscription: Subscription;
-    private uriSubscription: Subscription;
+    allElements: any;
+    elements: any;
     params;
     account;
+    filterModel: any = {};
+
+    private emptyFilter: any = {};
+    private integrationSubscription: Subscription;
+    private uriSubscription: Subscription;
 
     selectors = {
         access    : false,

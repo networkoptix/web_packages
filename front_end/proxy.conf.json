@@ -5,7 +5,7 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/admin/": {
+  "/admin": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",

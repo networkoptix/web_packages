@@ -69,14 +69,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('area', { static: false }) areaElement: ElementRef;
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
-    constructor(private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private configService: NxConfigService,
-                public healthService: NxHealthService,
-                private uriService: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+    constructor(
+        public healthLayoutService: NxHealthLayoutService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private menuService: NxMenuService,
+        private configService: NxConfigService,
+        public healthService: NxHealthService,
+        private uriService: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {

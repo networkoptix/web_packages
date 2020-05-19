@@ -23,13 +23,13 @@
 
                 <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" id="integrations" href="/integrations" (click)="onClick($event)" translate>Integrations</a>
+                        <a class="inset" id="integrations" routerLink="/integrations" (click)="onClick($event)" translate>Integrations</a>
                     </li>
                 </ul>
 
                 <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
                     <li class="active">
-                        <a class="inset" id="ipvd" href="/ipvd" (click)="onClick($event)" translate>Supported IP Video Devices</a>
+                        <a class="inset" id="ipvd" routerLink="/ipvd" (click)="onClick($event)" translate>Supported IP Video Devices</a>
                     </li>
                 </ul>
 

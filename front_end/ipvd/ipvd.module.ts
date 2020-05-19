@@ -42,6 +42,8 @@ import { BoolIconComponent } from '../app/src/pages/ipvd/cam-components/bool-ico
 
 // Services
 import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { ComponentsModule }  from '../app/src/components/components.module';
+import { DirectivesModule }  from '../app/src/directives/directives.module';
 
 @NgModule({
     imports: [
@@ -56,11 +58,13 @@ import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
             { path: '**', redirectTo: 'ipvd' },
             { path: 'ipvd', component: NxIpvdComponent }
         ], {
-            initialNavigation: true,
+            initialNavigation        : true,
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
-        })
+        }),
+        ComponentsModule,
+        DirectivesModule
     ],
     entryComponents: [
         NxIpvdComponent

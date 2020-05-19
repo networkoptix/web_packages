@@ -16,23 +16,24 @@ import { NxAccountService }             from '../../services/account.service';
 })
 
 export class PushComponent implements OnInit, OnDestroy {
-    private notification;
-    private systems;
-    private devices;
-    private newDevice;
-    private deviceSubscriptions;
-    private deviceToken;
-    private deviceName: string;
-    private currentDeviceName;
-    private permission: string;
-    private registered: boolean;
-    private sendStatus: string;
-    private receivedMessages;
+    notification;
+    systems;
+    devices;
+    newDevice;
+    deviceSubscriptions;
+    deviceToken;
+    deviceName: string;
+    currentDeviceName;
+    permission: string;
+    registered: boolean;
+    sendStatus: string;
+    receivedMessages;
+    account: any;
+
     private subChanges: boolean;
     private timeSubscription: Subscription;
     private tokenSubscription: Subscription;
 
-    public account: any;
 
     private setupDefaults() {
         this.notification = {

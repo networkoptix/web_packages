@@ -58,8 +58,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     public selectedHeader;
     public showHeaders;
 
-    private sortOrderASC: boolean;
-
+    sortOrderASC: boolean;
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -454,7 +453,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    private getTitle(item, headerGroupId, headerId) {
+    getTitle(item, headerGroupId, headerId) {
         let title;
         if (item?.[headerGroupId]?.[headerId]) {
             title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;

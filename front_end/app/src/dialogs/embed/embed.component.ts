@@ -33,7 +33,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        private activeModal: NgbActiveModal
+        public activeModal: NgbActiveModal
     ) {
         this.params = {
             authString: '',

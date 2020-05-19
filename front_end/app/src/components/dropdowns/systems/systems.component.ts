@@ -61,6 +61,9 @@ export class NxSystemsDropdown extends BaseDropdown {
                     window.location.href = url;
                 }
             });
+
+        this.show = false;
+        return false;
     }
 
     ngOnInit(): void {

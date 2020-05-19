@@ -27,7 +27,7 @@ export class ResetServerModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private toastService: NxToastService
     ) {

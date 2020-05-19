@@ -73,17 +73,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('search', { static: false }) searchElement: ElementRef;
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
-    constructor(private accountService: NxAccountService,
-                private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
-                private systemService: NxSystemService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private healthService: NxHealthService,
-                private uri: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                public healthLayoutService: NxHealthLayoutService
+    constructor(
+        private accountService: NxAccountService,
+        public healthService: NxHealthService,
+        public healthLayoutService: NxHealthLayoutService,
+        private configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        private systemService: NxSystemService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private menuService: NxMenuService,
+        private uri: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.getTranslations();

@@ -47,13 +47,12 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     viewScrollFixedBottom: boolean;
 
     elementWidth;
+    camera: { title: string, param?: string, secondaryParam?: string }[];
 
     private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
-
-    private camera: { title: string, param?: string, secondaryParam?: string }[];
 
     @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
 

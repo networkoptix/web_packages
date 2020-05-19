@@ -20,7 +20,7 @@ export class RenameModalContent {
 
     constructor(
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,

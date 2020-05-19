@@ -10,22 +10,22 @@
 <div [ngClass]="motionPreview ? {
     'motion-preview': true, 'd-none': !show
 } : {
-    mini: !isPrimary, 
+    mini: !isPrimary,
     'd-none': !show,
-    'light-thumbnail-preview': lightBackground, 
+    'light-thumbnail-preview': lightBackground,
     'thumbnail-preview': !lightBackground,
     wide: aspect === '16:9' || aspect === 'Auto',
     normal: aspect === '4:3',
     square: aspect === '1:1',
     fill: aspect === 'override'
 }">
-    <img *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
+    <img alt="{{state}}" *ngIf="(state === 'Online' || state === 'Recording' || state === 'Scheduled') && url; else noLivePreview" [src]="url"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"
         (load)="loaded.emit(true)" (error)="url=''; loaded.emit(true)"/>
     <ng-template #noLivePreview>
-        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state" 
+        <div *ngIf="isPrimary; else noMiniPreview" [ngSwitch]="lightBackground || motionPreview ? 'No Image' : state"
             [ngClass]="lightBackground || motionPreview ? 'light-camera-preview' : 'hm-camera-preview'">
             <div *ngSwitchCase="'No Image'" translate>NO IMAGE</div>
             <div *ngSwitchCase="'Offline'" translate>OFFLINE</div>
