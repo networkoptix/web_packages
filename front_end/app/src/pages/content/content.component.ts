@@ -1,10 +1,8 @@
 import {
-    Component, OnInit, Compiler,
-    NgModule, ViewChild, ViewContainerRef, Inject
-}                                    from '@angular/core';
+    Component, OnInit, Inject
+} from '@angular/core';
 import { ActivatedRoute, Router }    from '@angular/router';
 import { HttpClient, HttpParams }    from '@angular/common/http';
-import { Location }                  from '@angular/common';
 import { DomSanitizer, SafeHtml }    from '@angular/platform-browser';
 import { SessionStorageService }     from 'ngx-store';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -14,7 +12,6 @@ import { NxPageService }             from '../../services/page.service';
 import { NxProcessService }          from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { WINDOW }                    from '../../services/window-provider';
-import { ComponentsModule }          from '../../components/components.module';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -22,7 +19,6 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     templateUrl : 'content.component.html',
     styleUrls   : ['content.component.scss']
 })
-
 export class NxContentComponent implements OnInit {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -44,25 +40,20 @@ export class NxContentComponent implements OnInit {
     public showAgree = false;
     public agreeProcess;
 
-    @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
-    @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
-
     private setupDefaults() {
         this.title = '';
         this.body = '';
         this.staticHTML = '';
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(WINDOW) private window: Window,
         private route: ActivatedRoute,
         private router: Router,
         private http: HttpClient,
-        private location: Location,
-        private language: NxLanguageProviderService,
         private pageService: NxPageService,
-        private _compiler: Compiler,
         private sessionStorage: SessionStorageService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
@@ -70,8 +61,8 @@ export class NxContentComponent implements OnInit {
         private sanitizer: DomSanitizer
     ) {
         this.setupDefaults();
-        this.langCode = this.language.getLang();
         this.CONFIG = configService.getConfig();
+        this.langCode = languageService.getLang();
         this.LANG = languageService.getTranslations();
     }
 
@@ -109,7 +100,6 @@ export class NxContentComponent implements OnInit {
             this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
-            this.dynamicTemplate.clear();
             this.title = '';
             this.body = '';
             this.loaded = false;
@@ -158,40 +148,25 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.location.go('404');
+                    this.router.navigate(['404'])
+                        .catch((ex) => console.error(ex));
                 }
             });
     }
 
     loadStaticContent() {
         const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
-        this.compileStaticArticle(templateUrl);
-    }
 
-    compileStaticArticle(templateUrl: string) {
-        // @Component({ templateUrl: (templateUrl + '') })
-        // class TemplateComponent {
-        //     @ViewChild('title', { static: true }) title;
-        // }
-        //
-        // @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
-        // class TemplateModule {}
-        //
-        // this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
-        //     const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
-        //
-        //     const component = this.dynamicTemplate.createComponent(factory);
-        //     this.loaded = true;
-        //
-        //     const title = component.instance.title.nativeElement;
-        //     if (title) {
-        //         this.pageService.setPageTitle(title.innerText);
-        //     }
-        //
-        //     /* If content was successfully compiled from static files,
-        //         add to staticContent so we don't do an API call each time we switch pages */
-        //     this.staticContent[this.articleParam] = true;
-        //     this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-        // }).catch(() => this.router.navigate([this.CONFIG.redirect.page404]));
+        this.cloudApiService
+            .getStaticArticle(templateUrl)
+            .toPromise()
+            .then((result) => {
+                this.body = this.sanitizer.bypassSecurityTrustHtml(result);
+
+                /* If content was successfully compiled from static files,
+                    add to staticContent so we don't do an API call each time we switch pages */
+                this.staticContent[this.articleParam] = true;
+                this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
+            });
     }
 }

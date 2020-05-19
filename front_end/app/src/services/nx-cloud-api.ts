@@ -45,6 +45,14 @@ export class NxCloudApiService {
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
+    getStaticArticle(url) {
+        const httpOptions = {
+            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType : 'text' as 'text'
+        };
+        return this.http.get(url, httpOptions);
+    }
+
     getCommonPasswords() {
         return this.http.get<string[]>('/static/scripts/commonPasswordsList.json');
     }

@@ -1,24 +1,22 @@
 import {
     Component,
-    OnInit,
-    ViewChild,
-    ViewContainerRef
-} from '@angular/core';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxCloudApiService }        from '../../services/nx-cloud-api';
+    OnInit
+}                            from '@angular/core';
+import { NxCloudApiService }      from '../../services/nx-cloud-api';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector  : 'landing-display-component',
     template  : `
-         <div [innerHTML]="myTemplate"></div>`,
+         <div [innerHTML]="compTemplate"></div>`,
     styleUrls : ['landing-display.component.scss']
 })
 
 export class NxLandingDisplayComponent implements OnInit {
-    CONFIG: IConfig;
-    myTemplate: string;
+    compTemplate: SafeHtml;
 
     constructor(
+        private sanitizer: DomSanitizer,
         private apiService: NxCloudApiService
     ) {}
 
@@ -27,7 +25,7 @@ export class NxLandingDisplayComponent implements OnInit {
             .getStaticLanding()
             .toPromise()
             .then((result) => {
-                this.myTemplate = result;
+                this.compTemplate = this.sanitizer.bypassSecurityTrustHtml(result);
             });
     }
 }
