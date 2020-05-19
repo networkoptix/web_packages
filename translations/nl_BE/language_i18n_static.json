@@ -228,7 +228,7 @@
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-            "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om de systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen.</p><p>De instellingen en de naam worden overgenomen van <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}",
             "primarySystemUnavailable": "Systeem {{primarySystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "We raden aan om te overleggen met",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "ondersteuning",
                 "c_proceeding": "voordat u verder gaat."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Er zullen meer dan <strong>{{maxServers}}</strong> servers in het samengevoegde systeem zijn."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
         "EmailAlreadyExists": "Dit Email is al geregistreerd",
         "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
-        "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",
         "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
         "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",

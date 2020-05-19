@@ -228,7 +228,7 @@
             "connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Unione di sistemi fallita",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Raccomandiamo di consultarsi con",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "supporto",
                 "c_proceeding": "prima di procedere."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Ci saranno più di <strong>{{maxServers}}</strong> server nel sistema creato."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Alcuni elenchi di server come esistenti in entrambi i sistemi, sia quelli selezionati che quelli attuali.<br>Rimuovere i server offline e incompatibili da ciascun sistema e riprovare.",
         "EmailAlreadyExists": "Questa email è già registrata",
         "FAIL": "Il sistema <strong>{{failedSystem}}</strong> è attualmente irraggiungibile.<br>Riprovare tra qualche istante o contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
-        "INCOMPATIBLE": "I sistemi hanno diverse versioni del software. Si prega di aggiornarli entrambi all'ultimo <a href=\"/download\">build</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Questo account è già stato attivato",
         "accountBlocked": "Questo account è temporaneamente bloccato. Riprova tra qualche minuto.",
         "accountNotActivated": "Questo account non è ancora stato attivato. <a href=\"/activate\">Invia nuovamente il link di attivazione</a>",

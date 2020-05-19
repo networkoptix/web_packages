@@ -228,7 +228,7 @@
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
-            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Vi rekommenderar att vi konsulterar med",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "Det kommer att finnas mer än <strong>{{maxServers}}</strong> servrar i det sammanslagna systemet."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Lagringsinställningar sparade.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
         "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste version</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Detta konto är redan aktiverat",
         "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
         "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
