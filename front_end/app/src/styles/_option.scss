@@ -16,9 +16,9 @@
     user-select         : none;
 
     .text {
-        font-family : $font-family-regular;
+        font-family : theme_variables.$font-family-regular;
         user-select : none;
-        color       : $dark9
+        color       : theme_variables.$dark9
     }
 
     /* Hide the browser's default checkbox */
@@ -39,21 +39,21 @@
 
     & input:hover ~ .optionmark {
         svg path.circle {
-            fill : $dark1;
+            fill : theme_variables.$dark1;
         }
 
         & ~ .text {
-            color : $dark1;
+            color : theme_variables.$dark1;
         }
     }
 
     & input:active ~ .optionmark {
         svg path.circle {
-            fill : $dark9 !important;
+            fill : theme_variables.$dark9 !important;
         }
 
         & ~ .text {
-            color : $dark9 !important;
+            color : theme_variables.$dark9 !important;
         }
     }
 }
@@ -68,11 +68,11 @@
     margin-top : -2px;
 
     & svg path.circle {
-        fill : $dark9;
+        fill : theme_variables.$dark9;
     }
 
     & svg circle {
-        fill    : $brand_core;
+        fill    : theme_variables.$brand_core;
         display : none;
     }
 }

@@ -1,3 +1,5 @@
+@use '../../styles/theme_variables' as *;
+
 .editable-directive {
     &-initial {
         position: relative;

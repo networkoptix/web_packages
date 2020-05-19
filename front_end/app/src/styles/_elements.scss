@@ -2,7 +2,7 @@
 // @import '../../styles/custom/custom_palette';
 // @import '../../styles/theme_palette';
 @use './mixins';
-@import '../../styles/theme_variables';
+@use '../../styles/theme_variables';
 
 svg {
     pointer-events : none;
@@ -26,13 +26,13 @@ svg {
 
 .standalone-delimiter {
     height           : 1px;
-    background-color : $light5;
+    background-color : theme_variables.$light5;
     padding          : 0 12px;
     position         : relative;
 
     &:after {
         height           : 1px;
-        background-color : $light7;
+        background-color : theme_variables.$light7;
         content          : '';
         position         : absolute;
         width            : calc(100% - 24px);
@@ -41,21 +41,21 @@ svg {
 
 .group-label {
     margin-bottom : 8px;
-    font-family   : $font-family-regular;
-    color         : $light16;
+    font-family   : theme_variables.$font-family-regular;
+    color         : theme_variables.$light16;
 }
 
 .error-label {
     @extend #regular13;
-    color : $error !important;
+    color : theme_variables.$error !important;
 }
 
 .warning-label {
-    color : $brand-danger !important;
+    color : theme_variables.$brand-danger !important;
 }
 
 .block-container {
-    max-width : $fluid-container-max-width;
+    max-width : theme_variables.$fluid-container-max-width;
     width     : 100%;
     padding   : 0 16px;
 }
@@ -115,7 +115,7 @@ h1 .badge {
 }
 
 .disabled {
-    color  : $light10;
+    color  : theme_variables.$light10;
     cursor : default !important;
 }
 
@@ -145,10 +145,10 @@ h1 .badge {
 }
 
 .light-text {
-    color     : $light16;
+    color     : theme_variables.$light16;
     font-size : 13px;
 }
 
 span.marked {
-    background-color : $light4;
+    background-color : theme_variables.$light4;
 }

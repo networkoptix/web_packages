@@ -2,14 +2,14 @@
 @use '../../../styles/theme_variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
-$grid-breakpoints: theme_variables.$grid-breakpoints;
+$grid-breakpoints: typography.$grid-breakpoints;
 
 .card {
     box-shadow   : none;
-    border-color : theme_variables.$light4;
+    border-color : typography.$light4;
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px theme_variables.$additional_light2;
+        box-shadow: 0 -14px 0 2px typography.$additional_light2;
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -25,9 +25,9 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
         height           : unset;
         display          : flex;
         align-items      : center;
-        background-color : theme_variables.$additional_light1;
+        background-color : typography.$additional_light1;
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid theme_variables.$light3;
+        border-bottom    : 1px solid typography.$light3;
         position         : relative;
 
         h4 {
@@ -50,7 +50,7 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
 
     &--body {
         padding          : 1rem;
-        background-color : theme_variables.$light1;
+        background-color : typography.$light1;
 
         img {
             max-width : 100%;
@@ -74,7 +74,7 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
                     height      : 1rem;
                     width       : 1rem;
                     margin-left : .25rem;
-                    color       : theme_variables.$light12;
+                    color       : typography.$light12;
                     font-size   : typography.$font-size-sm;
                     line-height : 1rem;
                 }
@@ -91,7 +91,7 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : theme_variables.$light1;
+        background-color : typography.$light1;
         box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
 
         footer {
@@ -101,7 +101,7 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : theme_variables.$light1;
+            background-color : typography.$light1;
             z-index          : 9;
         }
     }
@@ -113,60 +113,60 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
     }
 
     &.gray {
-        background-color : theme_variables.$light4;
-        border           : 1px solid theme_variables.$light4;
+        background-color : typography.$light4;
+        border           : 1px solid typography.$light4;
         border-bottom    : none;
 
         .card--header {
-            background-color    : theme_variables.$light4;
-            border-bottom-color : theme_variables.$light6;
+            background-color    : typography.$light4;
+            border-bottom-color : typography.$light6;
         }
 
         .card--body {
-            background-color : theme_variables.$light4;
-            border-top       : 1px solid theme_variables.$light6;
+            background-color : typography.$light4;
+            border-top       : 1px solid typography.$light6;
         }
 
         .card--footer {
-            background-color : theme_variables.$light4;
+            background-color : typography.$light4;
         }
     }
 
     &.simple-alert {
-        background-color : theme_variables.$red2;
-        border           : 1px solid theme_variables.$red1;
+        background-color : typography.$red2;
+        border           : 1px solid typography.$red1;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : theme_variables.$red2;
-            border-top       : 1px solid theme_variables.$red1;
+            background-color : typography.$red2;
+            border-top       : 1px solid typography.$red1;
         }
 
         .card--footer {
-            background-color : theme_variables.$red2;
+            background-color : typography.$red2;
         }
     }
 
     &.menu {
-        background-color : theme_variables.$light5;
-        border           : 1px solid theme_variables.$light5;
+        background-color : typography.$light5;
+        border           : 1px solid typography.$light5;
         border-bottom    : none;
 
         .card--header {
-            background-color    : theme_variables.$light5;
-            border-bottom-color : theme_variables.$light7;
+            background-color    : typography.$light5;
+            border-bottom-color : typography.$light7;
         }
 
         .card--body {
-            background-color : theme_variables.$light5;
-            border-top       : 1px solid theme_variables.$light7;
+            background-color : typography.$light5;
+            border-top       : 1px solid typography.$light7;
         }
 
         .card--footer {
-            background-color : theme_variables.$light5;
+            background-color : typography.$light5;
         }
 
         &.top {
@@ -217,7 +217,7 @@ $grid-breakpoints: theme_variables.$grid-breakpoints;
 
             .minor-text {
                 @extend #regular11;
-                color      : theme_variables.$light16;
+                color      : typography.$light16;
                 margin-top : 5px;
             }
         }

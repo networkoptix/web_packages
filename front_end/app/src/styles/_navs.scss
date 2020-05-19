@@ -1,4 +1,4 @@
-@import '../../styles/theme_palette';
+@use '../../styles/theme_palette' as *;
 
 .nav-arrow {
     position: absolute;
