@@ -1,15 +1,16 @@
 @use '../../../../styles/typography';
-@import '../../../../styles/mixins';
+@use '../../../../styles/mixins';
+@use '../../../../../styles/theme_variables' as *;
 
 .user-name {
-    @include ellipsis;
+    @include mixins.ellipsis;
     //width     : 20%;
     // max-width : 175px;
     @extend #regular13;
 }
 
 .user-email {
-    @include ellipsis;
+    @include mixins.ellipsis;
     //width     : 30%;
     // max-width : 240px;
     font-family : $font-family-medium;
@@ -17,7 +18,7 @@
 }
 
 .user-role {
-    @include ellipsis;
+    @include mixins.ellipsis;
     //width     : 20%;
     max-width : 120px;
 }

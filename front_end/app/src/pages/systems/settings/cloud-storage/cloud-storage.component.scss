@@ -1,5 +1,5 @@
 @use "../../../../styles/typography";
-@import "../../../../styles/theme/variables";
+@use "../../../../../styles/theme_variables" as *;
 
 .initial-state {
     position: relative;

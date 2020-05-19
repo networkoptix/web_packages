@@ -1,7 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
 @use '../../../styles/mixins';
-// @import '../../../../styles/theme_palette';
 
 .menu-level-3 {
     @extend #medium13;

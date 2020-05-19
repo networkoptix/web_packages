@@ -1,6 +1,6 @@
 
 @use '../../../../styles/typography';
-@import '../../../../../styles/theme_palette';
+@use '../../../../../styles/theme_variables' as *;
 
 .server-info {
     font-family : typography.$font-family-regular;

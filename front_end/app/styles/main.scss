@@ -1,10 +1,6 @@
 @use '_theme_variables' as *;
 @import "~sass-rem";
 
-// @import 'native-theme/_theme_palette';
-// @import '_theme_palette';
-// @import 'custom/_custom_palette';
-
 @import '~bootstrap/scss/bootstrap';
 
 @import '_theme_override';

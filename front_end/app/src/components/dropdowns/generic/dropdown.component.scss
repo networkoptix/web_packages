@@ -1,6 +1,6 @@
 @use '../../../styles/typography';
-@import '../../../../styles/theme_palette';
-@import '../../../styles/mixins';
+@use '../../../styles/mixins';
+@use '../../../../styles/theme_variables' as *;
 
 nx-select {
     width: 100%;
@@ -21,7 +21,7 @@ nx-select {
         color : $light1;
     }
 
-    @include keyframe(bubblingG) {
+    @include mixins.keyframe(bubblingG) {
         0% {
             opacity:1;
         }
