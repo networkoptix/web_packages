@@ -162,7 +162,7 @@ export class NxContentComponent implements OnInit {
             .toPromise()
             .then((result) => {
                 this.body = this.sanitizer.bypassSecurityTrustHtml(result);
-
+                this.loaded = true;
                 /* If content was successfully compiled from static files,
                     add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;

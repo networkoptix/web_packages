@@ -5,6 +5,12 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
+  "/admin/": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
   "/api/*": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
@@ -12,12 +18,6 @@
     "changeOrigin": true
   },
   "/gateway/*": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
-  "/admin/*": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
@@ -41,13 +41,13 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/static/lang_en_US/views/static/landing.html": {
+  "/static/lang_en_US/views/static/*": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/static/lang_en_US/": {
+  "/static/lang_en_US/*": {
     "target": "https://localhost:9000",
     "secure": false,
     "logLevel": "debug",
@@ -68,7 +68,7 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/static/": {
+  "/static/*": {
     "target": "https://localhost:9000",
     "secure": false,
     "logLevel": "debug",
