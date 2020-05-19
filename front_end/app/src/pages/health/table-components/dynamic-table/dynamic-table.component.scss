@@ -9,7 +9,7 @@ nx-dynamic-table {
   cursor: default;
 
   .text-placeholder {
-    @extend #regular20;
+    @include typography.regular20;
     height : 2rem;
   }
 
@@ -70,7 +70,7 @@ nx-dynamic-table {
     }
 
     .table-header {
-      @extend #medium15;
+      @include typography.medium15;
       font-weight      : 500 !important;
       background-color : $additional_light1;
       padding          : 1rem;
@@ -101,7 +101,7 @@ nx-dynamic-table {
             white-space    : nowrap;
 
             div {
-              @extend #regular13;
+              @include typography.regular13;
               border-bottom  : 1px solid;
               padding-bottom : 4px;
             }
@@ -139,7 +139,7 @@ nx-dynamic-table {
         }
 
         th {
-          @extend #medium13;
+          @include typography.medium13;
           font-weight    : 500 !important;
           padding        : 0 16px 0 0;
           text-transform : none;
@@ -157,7 +157,7 @@ nx-dynamic-table {
           }
 
           &.table-title {
-            @extend #regular24;
+            @include typography.regular24;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -239,7 +239,7 @@ nx-dynamic-table {
           }
 
           td {
-            @extend #regular12;
+            @include typography.regular12;
             padding     : 0 16px 0 0;
             line-height : 1rem;
             border      : none;
@@ -257,7 +257,7 @@ nx-dynamic-table {
       }
 
       &-header {
-        @extend #regular13;
+        @include typography.regular13;
         padding          : 0.5rem 1rem;
         background-color : $additional_light1;
         border           : 1px solid $light3;
@@ -267,7 +267,7 @@ nx-dynamic-table {
         overflow-wrap    : break-word;
 
         .results {
-          @extend #medium13;
+          @include typography.medium13;
           font-weight : 500 !important;
           line-height : 16px;
         }
@@ -291,7 +291,7 @@ nx-dynamic-table {
           }
 
           .page-link {
-            @extend #regular13;
+            @include typography.regular13;
             color            : $light16 !important;
             background-color : $light4;
             border-radius    : 2px;

@@ -129,7 +129,7 @@
 }
 
 h2.version-number {
-    @extend #medium32;
+    @include typography.medium32;
     line-height : 34px;
     margin      : 0 0 8px 0;
 }

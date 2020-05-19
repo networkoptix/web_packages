@@ -1,4 +1,5 @@
 @use '../../../styles/theme_variables' as *;
+@use '../../styles/typography';
 @use'../../styles/mixins';
 @use 'variables' as *;
 
@@ -77,7 +78,7 @@ header {
         max-width        : 100%;
 
         &.btn.btn-dropdown-toggle span .text-muted {
-            @extend #regular14;
+            @include typography.regular14;
             color: $light16 !important;
         }
         

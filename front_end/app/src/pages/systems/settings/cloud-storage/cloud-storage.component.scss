@@ -10,12 +10,12 @@
     align-items: center;
 
     h2 {
-        @extend #medium24;
+        @include typography.medium24;
         margin: 16px;
     }
 
     p {
-        @extend #regular13;
+        @include typography.regular13;
         max-width: 480px;
         text-align: center;
     }
@@ -39,7 +39,7 @@
     border-bottom: 1px dotted $light3;
 
     h2 {
-        @extend #medium24;
+        @include typography.medium24;
         text-align: left;
     }
 
@@ -111,7 +111,7 @@
         color: $dark15;
         fill: $dark15;
     }
-    @extend #regular13;
+    @include typography.regular13;
     background-color: inherit;
     color: $light16;
     display: flex;

@@ -46,14 +46,14 @@
     }
 }
 
-#selected-tag {
+@mixin selected-tag {
     color         : theme_variables.$light1 !important;
     padding-left  : 12px;
     padding-right : 0;
 }
 
 @mixin badge-selected($default, $hover, $active) {
-    @extend #selected-tag;
+    @include selected-tag;
     background-color : $default;
     
     & > span.close-button:hover {

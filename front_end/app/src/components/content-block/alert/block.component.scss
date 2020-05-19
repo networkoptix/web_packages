@@ -244,7 +244,7 @@
             }
 
             .minor-text {
-                @extend #regular11;
+                @include typography.regular11;
                 color      : typography.$light16;
                 margin-top : 5px;
             }

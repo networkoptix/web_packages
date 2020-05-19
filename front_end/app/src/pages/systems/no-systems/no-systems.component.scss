@@ -13,7 +13,7 @@ nx-no-systems {
         padding          : 2rem 0;
 
         &-body {
-            @extend #light18;
+            @include typography.light18;
         }
     }
 

@@ -5,5 +5,5 @@ svg-icon {
 }
 
 span {
-  @extend #regular13;
+  @include typography.regular13;
 }

@@ -2,7 +2,7 @@
 @use '../../../styles/theme_variables' as *;
 
 .ribbon {
-    @extend #regular13;
+    @include typography.regular13;
     color            : $light1;
     background-color : $brand_d1;
     line-height      : 1rem;
@@ -31,7 +31,7 @@
         text-align : right;
 
         a {
-            @extend #regular13;
+            @include typography.regular13;
             color           : $light1;
             text-decoration : underline;
 
@@ -51,7 +51,7 @@
         color: $dark9;
         text-align: center;
         .larger {
-            @extend #regular18;
+            @include typography.regular18;
         }
     }
 

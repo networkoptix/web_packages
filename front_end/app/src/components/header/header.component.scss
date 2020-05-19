@@ -87,7 +87,7 @@ $header-collapsing-width-1 : 1px;
         }
 
         & > a {
-            @extend #medium14;
+            @include typography.medium14;
             margin          : 0;
             padding         : 0 $horizontal-spacing;
             line-height     : 46px;

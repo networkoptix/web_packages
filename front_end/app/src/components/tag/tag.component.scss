@@ -17,7 +17,7 @@
 }
 
 .badge {
-    @extend #regular12;
+    @include typography.regular12;
     color            : theme_variables.$light16;
     font-weight      : 400;
     background-color : theme_variables.$light4;
@@ -27,7 +27,7 @@
     border-radius    : 2px;
 
     &.large {
-        @extend #regular13;
+        @include typography.regular13;
         color       : theme_variables.$light16;
         height      : 2rem !important;
         line-height : 2rem !important;
@@ -50,13 +50,13 @@
 }
 
 .badge-selected {
-    @extend #regular13;
+    @include typography.regular13;
     @include mixins.badge-selected(theme_variables.$light16, theme_variables.$light17, theme_variables.$light18);
     cursor : default !important;
 }
 
 .badge-brand-selected {
-    @extend #regular13;
+    @include typography.regular13;
     @include mixins.badge-selected(theme_variables.$brand_core, theme_variables.$brand_d1, theme_variables.$brand_d2);
     cursor : default !important;
 }

@@ -11,7 +11,7 @@ nx-block {
 
   .user-name,
   .system-owner {
-    @extend #regular13;
+    @include typography.regular13;
   }
 
   .name {

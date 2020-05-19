@@ -154,13 +154,13 @@ nx-system-health-component {
   }
 
   .contentZone {
-    @extend #light14;
+    @include typography.light14;
     text-align : center;
   }
 
   .importInfo {
     p {
-      @extend #light13;
+      @include typography.light13;
     }
   }
 }

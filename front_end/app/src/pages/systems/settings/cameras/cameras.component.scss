@@ -43,7 +43,7 @@
                     }
                 }
             }
-            @extend #regular13;
+            @include typography.regular13;
             // flex: 0 0 auto;
             background-color: inherit;
             color: $light16;
@@ -76,7 +76,7 @@
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                @extend #regular13;
+                @include typography.regular13;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -296,7 +296,7 @@
         }
         &-keys {
             p {
-                @extend #regular13;
+                @include typography.regular13;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -319,7 +319,7 @@
         }
         &-values {
             p {
-                @extend #medium13;
+                @include typography.medium13;
                 margin-right: 16px;
             }
         }
@@ -336,7 +336,7 @@
 }
 
 .recording-hint {
-    @extend #regular13;
+    @include typography.regular13;
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

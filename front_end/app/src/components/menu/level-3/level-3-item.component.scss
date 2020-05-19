@@ -3,7 +3,7 @@
 @use '../../../styles/mixins';
 
 .menu-level-3 {
-    @extend #medium13;
+    @include typography.medium13;
     position         : relative;
     background-color : $light5;
     border-radius    : 0;

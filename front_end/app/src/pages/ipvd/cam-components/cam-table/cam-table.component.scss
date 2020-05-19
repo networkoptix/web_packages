@@ -1,5 +1,6 @@
 @use '../../../../../styles/theme_variables' as *;
 @use '../../../../components/tag/tag.component' as *;
+@use '../../../../styles/typography';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -60,7 +61,7 @@ nx-cam-table {
 
       thead {
         th {
-          @extend #medium11;
+          @include typography.medium11;
           padding          : .5rem 0;
           font-weight      : 500 !important;
           text-transform   : none;
@@ -73,7 +74,7 @@ nx-cam-table {
           }
 
           &.table-title {
-            @extend #regular24;
+            @include typography.regular24;
 
             .text-placeholder {
               font-size : 1.25rem;
@@ -82,7 +83,7 @@ nx-cam-table {
           }
 
           .caption {
-            @extend #medium13;
+            @include typography.medium13;
             color : $light16;
             position : relative;
             height   : 2rem;
@@ -135,7 +136,7 @@ nx-cam-table {
           }
 
           td {
-            @extend #regular13;
+            @include typography.regular13;
             padding      : 4px 4px 4px 0;
             line-height  : 1rem;
             border       : none;
@@ -148,7 +149,7 @@ nx-cam-table {
       }
 
       &-header {
-        @extend #regular13;
+        @include typography.regular13;
         padding          : 0.5rem 1rem;
         background-color : $additional_light1;
         border           : 1px solid $light3;
@@ -158,7 +159,7 @@ nx-cam-table {
         overflow-wrap    : break-word;
 
         .results {
-          @extend #medium11;
+          @include typography.medium11;
           font-weight : 500 !important;
           line-height : 16px;
         }
@@ -182,7 +183,7 @@ nx-cam-table {
           }
 
           .page-link {
-            @extend #regular13;
+            @include typography.regular13;
             color: $light16 !important;
             background-color: $light4;
             border-radius: 2px;

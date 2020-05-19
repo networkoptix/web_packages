@@ -5,9 +5,9 @@
         font-family: typography.$font-family-bold;
     }
     .system-name {
-        @extend #medium24;
+        @include typography.medium24;
     }
     .system-owner {
-        @extend #regular13;
+        @include typography.regular13;
     }
 }

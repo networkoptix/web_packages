@@ -24,7 +24,7 @@
             }
 
             .tag {
-                @extend #medium11;
+                @include typography.medium11;
                 margin-left    : 8px;
                 color          : $light1;
                 padding        : 4px 8px;
@@ -56,7 +56,7 @@
             align-items : flex-end;
 
             .cell-title {
-                @extend #regular13;
+                @include typography.regular13;
             }
 
             .cell-ellipsis {
@@ -90,13 +90,13 @@
 }
 
 .text-muted {
-    @extend #regular11;
+    @include typography.regular11;
     color : $light16 !important;
     line-height: 1.5;
 }
 
 .help-block {
-    @extend #regular11;
+    @include typography.regular11;
     color            : $error;
     padding          : .25rem 0 .5rem;
     background-color : transparent;

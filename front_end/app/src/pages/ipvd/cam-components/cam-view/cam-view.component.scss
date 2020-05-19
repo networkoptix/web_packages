@@ -79,7 +79,7 @@
     }
 
     .disclaimer {
-        @extend #regular12;
+        @include typography.regular12;
     }
 
     header {

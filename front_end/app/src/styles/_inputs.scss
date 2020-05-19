@@ -72,7 +72,7 @@
 }
 
 .input-error {
-    @extend #regular13;
+    @include typography.regular13;
     color       : $error !important;
     line-height : 1rem;
 

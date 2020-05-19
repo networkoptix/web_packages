@@ -6,8 +6,8 @@
 @forward '../../styles/theme_variables';
 @import '~bootstrap/scss/mixins';
 
-#button {
-    @extend #medium14;
+@mixin button {
+    @include typography.medium14;
     height        : 2rem;
     border-radius : $border-radius-base;
     font-weight   : inherit;
@@ -42,7 +42,7 @@
 
 // Overwrite Boostrap section ************
 button, .btn {
-    @extend #button;
+    @include button;
 }
 
 .btn.btn-big {
@@ -193,7 +193,7 @@ button, .btn {
 }
 
 .btn-tag {
-    @extend #regular13;
+    @include typography.regular13;
     color            : $light16 !important;
     font-weight      : 400;
     white-space      : nowrap;
@@ -212,7 +212,7 @@ button, .btn {
 }
 
 .btn-tag-selected {
-    @extend #regular13;
+    @include typography.regular13;
     @include mixins.badge-selected($light16, $light17, $light18);
     padding   : 0 40px 0 12px !important;
     position  : relative;
@@ -318,7 +318,7 @@ button, .btn {
     }
 
     span {
-        @extend #regular13;
+        @include typography.regular13;
         color : $light16 !important;
 
         &.close {

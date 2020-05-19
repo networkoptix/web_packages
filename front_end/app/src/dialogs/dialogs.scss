@@ -83,7 +83,7 @@
         border-radius    : 2px 2px 0 0;
 
         .modal-title {
-            @extend #medium14;
+            @include typography.medium14;
             font-weight : theme_variables.$modal-title-font-weight;
             line-height : theme_variables.$modal-title-line-height;
             margin      : 0;

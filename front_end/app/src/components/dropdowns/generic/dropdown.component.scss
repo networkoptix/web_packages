@@ -12,7 +12,7 @@ nx-select {
     }
 
     .additional-help {
-        @extend #regular13;
+        @include typography.regular13;
         margin-left: 0.25rem;
         color : $light16;
     }

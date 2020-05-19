@@ -6,7 +6,7 @@
     @include mixins.ellipsis;
     //width     : 20%;
     // max-width : 175px;
-    @extend #regular13;
+    @include typography.regular13;
 }
 
 .user-email {

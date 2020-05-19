@@ -117,7 +117,7 @@ nx-system-metrics-component {
     }
 
     .text-placeholder {
-        @extend #regular20;
+        @include typography.regular20;
         color       : $light16;
         height      : 2rem;
     }
