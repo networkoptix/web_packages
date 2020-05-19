@@ -96,6 +96,10 @@ export class MergeModalContent {
     }
 
     ngOnInit() {
+        this.init();
+    }
+
+    init(targetSystem?, currentUrl?) {
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
@@ -107,8 +111,14 @@ export class MergeModalContent {
                             this.systems.map(async system => {
                                 if (!system.moduleInfo && !['offline', 'unavailable'].includes(system.stateOfHealth)) {
                                     const tempSystemService = this.systemService.createSystem(this.account.email, system.id);
-                                    const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
-                                    system.moduleInfo = moduleInfo.reply;
+                                    try {
+                                        const moduleInfo = await tempSystemService.mediaserver.getModuleInfo().toPromise();
+                                        system.moduleInfo = moduleInfo.reply;
+                                    } catch (err) {
+                                        system.status = 'offline';
+                                        system.stateOfHealth = 'offline';
+                                        console.error(err);
+                                    }
                                     tempSystemService.stopPoll();
                                 }
                                 if (system.moduleInfo) {
@@ -123,7 +133,6 @@ export class MergeModalContent {
                     });
                 })
                 .then(() => {
-                    this.systemsLoaded = true;
                     if (this.systems.length === 0 && this.peerSystems.length === 0) {
                         this.targetSystem = { value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem };
                         this.secondarySystem = this.targetSystem;
@@ -142,30 +151,44 @@ export class MergeModalContent {
                             );
                         }
                         this.processedSystems.push({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
-                        this.targetSystem = this.selectDefaultSystem();
-                        this.secondarySystem = this.targetSystem;
-                        this.getSecondaryName();
-                        this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
-                        this.systemMergeable = this.checkMergeability(this.targetSystem);
-                        if (this.systemMergeable) {
-                            this.updateShow(
-                                this.checkMergeError,
-                                { checkingErrorText: this.systemMergeable }
-                            );
+                        if (targetSystem) {
+                            this.systemsService.forceUpdateSystems();
+                            const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
+                                this.systems = systems;
+                                const updatedTargetSystem = [...this.systems, ...this.peerSystems]
+                                    .find(system => system.id === targetSystem.id);
+                                updatedTargetSystem.value = updatedTargetSystem.id;
+                                this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
+                                this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
+                            });
+                            systemsSubscription.unsubscribe();
                         } else {
-                            let show = this.checkMergeDefault;
-                            const templateUpdates: any = {
-                                helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
-                                selectedTarget : this.targetSystemDropdown.value
-                            };
-                            if (this.targetSystemDropdown.peer) {
-                                show = this.serverUrlState;
-                                templateUpdates.serverUrlInputValue = this.targetSystem.url;
-                                delete templateUpdates.helpText;
+                            this.targetSystem = this.selectDefaultSystem();
+                            this.secondarySystem = this.targetSystem;
+                            this.getSecondaryName();
+                            this.targetSystemDropdown = this.makeSelectorList([this.targetSystem])[0];
+                            this.systemMergeable = this.checkMergeability(this.targetSystem);
+                            if (this.systemMergeable) {
+                                this.updateShow(
+                                    this.checkMergeError,
+                                    { checkingErrorText: this.systemMergeable }
+                                );
+                            } else {
+                                let show = this.checkMergeDefault;
+                                const templateUpdates: any = {
+                                    helpText       : this.LANG.dialogs.merge.ownerCanMergeText,
+                                    selectedTarget : this.targetSystemDropdown.value
+                                };
+                                if (this.targetSystemDropdown.peer) {
+                                    show = this.serverUrlState;
+                                    templateUpdates.serverUrlInputValue = currentUrl || this.targetSystem.url;
+                                    delete templateUpdates.helpText;
+                                }
+                                this.updateShow(show, templateUpdates);
                             }
-                            this.updateShow(show, templateUpdates);
                         }
                     }
+                    this.systemsLoaded = true;
                     this.initProcesses();
                 });
         } else {
@@ -283,6 +306,22 @@ export class MergeModalContent {
             });
     }
 
+    checkIfExistingSystem(url) {
+        // if using otherSystem, checks if it matches an existing system in dropdown
+        if (url && (/^https?:\/\//).test(url)) {
+            url = url.slice(url.indexOf('://') + 3);
+        }
+        if (url && (/:\d{1,5}$/).test(url)) {
+            url = url.slice(0, url.lastIndexOf(':'));
+        }
+        if (this.targetSystem.value === this.otherSystem && this.systemUrls[url]) {
+            const targetSystem = this.systems.find(system => system.id === this.systemUrls[url]) ||
+                this.peerSystems.find(system => system.id === this.systemUrls[url]);
+            targetSystem.value = targetSystem.id;
+            this.setTargetSystem(targetSystem, url);
+        }
+    }
+
     initProcesses() {
         this.checkMergeabilityFunction = () => {
             if (this.targetSystem.value === this.otherSystem) {
@@ -294,20 +333,8 @@ export class MergeModalContent {
         this.checkMergeabilityProcess = this.processService
             .createProcess(() => {
                 this.checking = true;
-                // if using otherSystem, check if it matches an existing system in dropdown
-                let url = this.machine.state.template.serverUrlInputValue;
-                if (url && (/^https?:\/\//).test(url)) {
-                    url = url.slice(url.indexOf('://') + 3);
-                }
-                if (url && (/:\d{1,5}$/).test(url)) {
-                    url = url.slice(0, url.lastIndexOf(':'));
-                }
-                if (this.targetSystem.value === this.otherSystem && this.systemUrls[url]) {
-                    const targetSystem = this.systems.find(system => system.id === this.systemUrls[url]) ||
-                        this.peerSystems.find(system => system.id === this.systemUrls[url]);
-                    targetSystem.value = targetSystem.id;
-                    this.setTargetSystem(targetSystem, url);
-                }
+                const url = this.machine.state.template.serverUrlInputValue;
+                this.checkIfExistingSystem(url);
                 this.serverUrlInputExists = Boolean(url);
                 if (!this.serverUrlInputExists) {
                     this.updateShow(this.checkMergeDefault, { helpText: this.LANG.dialogs.merge.checking });
@@ -570,9 +597,9 @@ export class MergeModalContent {
             });
             this.setTargetSystem({ value: template.selectedTarget });
         } else if (this.machine.currentState === this.checkMerge) {
-            this.setPrimarySystem(this.system);
-            this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
-            this.setTargetSystem(this.targetSystem, template.serverUrlInputValue);
+            this.systemsLoaded = false;
+            this.processedSystems = [];
+            this.init(this.targetSystem, template.serverUrlInputValue);
         }
     }
 
