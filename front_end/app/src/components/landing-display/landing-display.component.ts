@@ -7,8 +7,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector  : 'landing-display-component',
-    template  : `
-         <div [innerHTML]="compTemplate"></div>`,
+    template  : `<div [innerHTML]="compTemplate"></div>`,
     styleUrls : ['landing-display.component.scss']
 })
 

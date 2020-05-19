@@ -45,7 +45,7 @@ export class NxCloudApiService {
         return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
     }
 
-    getStaticArticle(url) {
+    getStatic(url) {
         const httpOptions = {
             headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
             responseType : 'text' as 'text'

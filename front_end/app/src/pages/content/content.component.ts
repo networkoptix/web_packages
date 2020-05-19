@@ -148,7 +148,7 @@ export class NxContentComponent implements OnInit {
                 if (!this.agreement) {
                     this.loadStaticContent();
                 } else {
-                    this.router.navigate(['404'])
+                    this.router.navigate([this.CONFIG.redirect.page404])
                         .catch((ex) => console.error(ex));
                 }
             });
@@ -158,7 +158,7 @@ export class NxContentComponent implements OnInit {
         const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
 
         this.cloudApiService
-            .getStaticArticle(templateUrl)
+            .getStatic(templateUrl)
             .toPromise()
             .then((result) => {
                 this.body = this.sanitizer.bypassSecurityTrustHtml(result);
@@ -167,6 +167,6 @@ export class NxContentComponent implements OnInit {
                     add to staticContent so we don't do an API call each time we switch pages */
                 this.staticContent[this.articleParam] = true;
                 this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-            });
+            }).catch((ex) => { console.error(ex); });
     }
 }
