@@ -162,10 +162,10 @@
             }"></p>
         <div *ngIf="tooManyServers">
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
-            <p translate>Systems of such size can work, but may be unstable and have troubles with updates and synchronization.</p>
+            <p translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
             <p>
                 {{LANG.dialogs.merge.recommendSupport.a_recommend}}&nbsp;
-                <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
+                <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
                 {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
             </p>
         </div>
@@ -197,6 +197,6 @@
             [form]="confirmMergeForm"
             actionType="primary"
             [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
-            buttonText="{{ 'Next' | translate}}"></nx-process-button>
+            buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
     </div>
 </form>
