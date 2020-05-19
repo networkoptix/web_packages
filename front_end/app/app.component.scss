@@ -1,18 +1,18 @@
-@use 'styles/_theme_variables' as variables;
+// @import 'styles/_theme_variables';
+@forward 'src/styles/_buttons';
+@forward 'src/styles/_mixins';
 
 // Common
-@use 'src/styles/_mixins';
-@use 'src/styles/_typography';
-@import 'src/styles/_buttons';
+// @import 'src/styles/_typography';
 @import 'src/styles/_forms';
-@import 'src/styles/_inputs';
-@import 'src/styles/_labels';
-@import 'src/styles/_navs';
+// @import 'src/styles/_inputs';
+// @import 'src/styles/_labels';
+// @import 'src/styles/_navs';
 @import 'src/styles/_elements';
-@import 'src/styles/_visuals';
-@import 'src/styles/_tables';
-@import 'src/styles/_icons';
-@import 'src/styles/_components';
+// @import 'src/styles/_visuals';
+// @import 'src/styles/_tables';
+// @import 'src/styles/_icons';
+// @import 'src/styles/_components';
 
 // Components (common)
 @import './src/dialogs/dialogs';
