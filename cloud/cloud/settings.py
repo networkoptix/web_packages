@@ -404,6 +404,8 @@ if PUSH_WORKER:
     CELERY_WORKER_PREFETCH_MULTIPLIER = 30
     CELERY_RESULT_BACKEND = None
 
+DJANGO_CELERY_BEAT_TZ_AWARE = False
+
 
 # / End of Celery settings section
 
