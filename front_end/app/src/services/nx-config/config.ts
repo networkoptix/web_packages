@@ -425,7 +425,6 @@ export const nxConfig: IConfig = {
     debug          : {
         chunksOnTimeline: false // timeline.js - draw debug events
     },
-    gatewayUrl                  : '/gateway',
     globalViewArchivePermission : 'GlobalViewArchivePermission',
     openClientTimeout           : 20 * 1000, // 20 seconds we wait for client to open
     openClientError             : 'notVisited',

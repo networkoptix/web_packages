@@ -5,19 +5,13 @@
     "logLevel": "debug",
     "changeOrigin": true
   },
-  "/admin": {
+  "/admin/": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
   },
   "/api/*": {
-    "target": "https://dev2.cloud.hdw.mx",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
-  "/gateway/*": {
     "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",

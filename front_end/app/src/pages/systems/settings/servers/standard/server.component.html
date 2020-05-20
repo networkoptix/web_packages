@@ -1,5 +1,5 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="sectional-div server-placeholder" type="OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
+    <nx-page-placeholder class="placeholder-section" type="OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
     <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !selectedServer">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>

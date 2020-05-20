@@ -54,7 +54,6 @@ export interface BaseConfig {
     allowBetaMode: boolean;
     allowDebugMode: boolean;
     debug: Debug;
-    gatewayUrl: string;
     globalViewArchivePermission: string;
     openClientTimeout: number;
     openClientError: string;
@@ -779,7 +778,6 @@ export interface SettingsConfig {
 //         { json: 'allowBetaMode', js: 'allowBetaMode', typ: true },
 //         { json: 'allowDebugMode', js: 'allowDebugMode', typ: true },
 //         { json: 'debug', js: 'debug', typ: r('Debug') },
-//         { json: 'gatewayUrl', js: 'gatewayUrl', typ: '' },
 //         { json: 'globalViewArchivePermission', js: 'globalViewArchivePermission', typ: '' },
 //         { json: 'openClientTimeout', js: 'openClientTimeout', typ: 0 },
 //         { json: 'openClientError', js: 'openClientError', typ: '' },

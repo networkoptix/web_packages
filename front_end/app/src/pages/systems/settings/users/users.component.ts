@@ -103,7 +103,6 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-
                     this.uriService
                         .updateURI('systems/' + this.system.id, {})
                         .catch(error => {
@@ -139,7 +138,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             ]);
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.routeParamsSubscription.unsubscribe();
+        this.systemSubscription.unsubscribe();
+        this.userSubscription.unsubscribe();
+    }
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
@@ -209,20 +212,20 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 });
             }
             if (typeof (user) === 'undefined') {
-                user = this.system.users[0];
-                const userId = this.system.mediaserver.cleanId(user.id);
+                if (this.menuService.section === 'users') {
+                    user = this.system.users[0];
+                    const userId = this.system.mediaserver.cleanId(user.id);
 
-                this.uriService
-                    .updateURI(`systems/${this.system.id}/users/${userId}`)
-                    .catch(error => {
-                        console.error(error);
-                    });
+                    this.uriService
+                        .updateURI(`systems/${this.system.id}/users/${userId}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
+                } else {
+                    return;
+                }
             }
 
-            // If there's no users skip setting section and permissions
-            if (typeof (user) === 'undefined') {
-                return;
-            }
             this.applyService.hardReset();
             this.selectedUser = { ...user };
 

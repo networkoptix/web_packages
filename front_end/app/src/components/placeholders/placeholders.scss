@@ -82,6 +82,20 @@ $preloader_small_circle_distance : 8px;
         justify-content : center;
     }
 
+    &-section {
+        width           : 100%;
+        display         : flex;
+        justify-content : center;
+        align-items     : center;
+        height          : 400px;
+        margin-top      : 40px;
+
+        .page-placeholder {
+            position : relative;
+            height   : 100%;
+        }
+    }
+
     &-content {
         height    : 30px;
         display   : flex;
