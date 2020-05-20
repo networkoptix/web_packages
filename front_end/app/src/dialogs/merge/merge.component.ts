@@ -61,6 +61,7 @@ export class MergeModalContent {
     readonly serverUrlValidationError: string = 'serverUrlValidationError';
     readonly confirmPasswordError: string = 'confirmPasswordError';
     readonly serverUrlErrors: string = 'serverUrlErrors';
+    readonly confirmMerge: string = 'confirmMerge';
 
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
@@ -75,11 +76,11 @@ export class MergeModalContent {
 
     machine = new StateMachine(this.checkMerge, State);
 
-    @ViewChild('serverUrlInput') serverUrlInput: any;
     @ViewChild('checkMergeDropdown') mergeDropdown: any;
+    @ViewChild('serverUrlInput') serverUrlInput: any;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
     @ViewChild('primaryRadio') primaryRadio: any;
-    @ViewChild('confirmMerge') confirmMerge: HTMLFormElement;
+    @ViewChild('confirmMergeForm') confirmMergeForm: HTMLFormElement;
 
     constructor(
         configService: NxConfigService,
@@ -189,6 +190,7 @@ export class MergeModalContent {
                         }
                     }
                     this.systemsLoaded = true;
+                    this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                     this.initProcesses();
                 });
         } else {
@@ -350,7 +352,7 @@ export class MergeModalContent {
                             const index = this.serverUrl.indexOf('//') + 2;
                             this.serverUrl = this.serverUrl.slice(0, index) + 'admin:admin@' + this.serverUrl.slice(index);
                         }
-                        this.machine.transition('confirmMerge');
+                        this.machine.transition(this.confirmMerge);
                     } else if (res.error === '0') {
                         if (this.serverUrlInputExists) {
                             this.machine.transition('adminPassword');
@@ -387,7 +389,7 @@ export class MergeModalContent {
                 return this.system.mergeSystems(this.serverUrl, true).toPromise()
                     .then(res => {
                         if (res.error === '0') {
-                            this.machine.transition('confirmMerge');
+                            this.machine.transition(this.confirmMerge);
                         } else if (res.errorString === 'UNAUTHORIZED') {
                             this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
                             this.updateShow(this.confirmPasswordError, {
@@ -461,10 +463,10 @@ export class MergeModalContent {
                             : this.CONFIG.system.status.slave
                     });
                 } else if (res.errorString === 'Wrong username or password.') {
-                    this.confirmMerge.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
                 } else if (res.errorString) {
-                    this.confirmMerge.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.unknownError });
                 }
             }, (error) => {
@@ -582,24 +584,18 @@ export class MergeModalContent {
         return this.targetSystem.isNew ? isNew : { error: '0' };
     }
 
-    goBack(serverUrlError?) {
-        this.confirmMerge && this.confirmMerge.form.markAsUntouched();
+    goBack() {
+        this.confirmMergeForm && this.confirmMergeForm.form.markAsUntouched();
         this.adminPassword && this.adminPassword.form.markAsUntouched();
         this.machine.goBack();
         this.cdRef.detectChanges();
         this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
         this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
-        const { template } = this.machine.state;
-        if (serverUrlError) {
-            this.updateShow(this.serverUrlMergeError, {
-                serverUrlInputValue : template.serverUrlInputValue,
-                checkingErrorText   : serverUrlError
-            });
-            this.setTargetSystem({ value: template.selectedTarget });
-        } else if (this.machine.currentState === this.checkMerge) {
+
+        if (this.machine.currentState === this.checkMerge) {
             this.systemsLoaded = false;
             this.processedSystems = [];
-            this.init(this.targetSystem, template.serverUrlInputValue);
+            this.init(this.targetSystem, this.machine.state.template.serverUrlInputValue);
         }
     }
 
@@ -756,10 +752,11 @@ export class MergeModalContent {
 
     close(data?) {
         this.updateShow('', {
+            checkingErrorText                 : '',
+            helpText                          : '',
+            passwordErrorText                 : '',
             passwordValue                     : '',
             serverUrlInputValue               : '',
-            passwordErrorText                 : '',
-            checkingErrorText                 : '',
             serverUrlInputValidationErrorText : ''
         });
         this.activeModal.close(data);
