@@ -141,7 +141,7 @@
     "IPVD DEV FILTER FISHEYE CAMERAS": "Fischaugenkameras",
     "IPVD DEV FILTER I/O MODULES": "I/O-Module",
     "IPVD EXPORT ALL TO CSV": "Alles in CSV exportieren",
-    "IPVD SUBMIT A REQUEST TEXT": "Anfrage abschicken",
+    "IPVD SUBMIT A REQUEST TEXT": "anfrage abschicken",
     "IPVD SEND DEVICE FEEDBACK TEXT": "Feedback zu diesem Gerät senden",
     "IPVD FEEDBACK ABOUT": "Feedback zu {{model}}",
     "IPVD FEEDBACK FOR CAMERAS PAGE": "Feedback zur Kameraseite",
