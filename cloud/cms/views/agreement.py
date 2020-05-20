@@ -1,7 +1,7 @@
 from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException, APIForbiddenException
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview, DataStructure, \
-    ContributerAgreement
+    ContributorAgreement
 from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -65,7 +65,7 @@ def get_agreement(request):
                 'id': agreement.id,
                 'review_id': agreement_review.id if agreement_review else 0,
                 'preview': review or draft,
-                'accepted': ContributerAgreement.objects.filter(
+                'accepted': ContributorAgreement.objects.filter(
                     accepted_agreement=agreement_review, user=request.user
                 ).exists() if agreement_review and request.user.is_authenticated else False
             }
@@ -96,7 +96,7 @@ def accept_agreement(request):
     ).first()
 
     if agreement_review:
-        ContributerAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
+        ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
         return api_success()
     else:
         return api_success("Agreement review not found.", status_code=status.HTTP_404_NOT_FOUND)

@@ -998,7 +998,7 @@ class DataRecord(models.Model):
         super(DataRecord, self).save(*args, **kwargs)
 
 
-class ContributerAgreement(models.Model):
+class ContributorAgreement(models.Model):
     accepted_date = models.DateTimeField(auto_now_add=True)
     accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

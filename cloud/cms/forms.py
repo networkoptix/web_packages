@@ -338,7 +338,7 @@ class CustomizationForm(forms.ModelForm):
 
 class ContributerAgreementForm(forms.ModelForm):
     class Meta:
-        model = ContributerAgreement
+        model = ContributorAgreement
         exclude = []
         widgets = {
             'user': autocomplete.ModelSelect2(url='account-autocomplete',
