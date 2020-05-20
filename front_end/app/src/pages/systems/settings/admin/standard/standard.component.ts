@@ -37,13 +37,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
-        autoDiscoveryEnabled        : new Watcher<boolean>(),
-        statisticsAllowed           : new Watcher<boolean>(),
-        cameraSettingsOptimization  : new Watcher<boolean>(),
-        auditTrailEnabled           : new Watcher<boolean>(),
-        trafficEncryptionForced     : new Watcher<boolean>(),
-        videoTrafficEncryptionForced: new Watcher<boolean>(),
-        sessionLimitMinutes         : new Watcher<number>()
+        autoDiscoveryEnabled         : new Watcher<boolean>(),
+        statisticsAllowed            : new Watcher<boolean>(),
+        cameraSettingsOptimization   : new Watcher<boolean>(),
+        auditTrailEnabled            : new Watcher<boolean>(),
+        trafficEncryptionForced      : new Watcher<boolean>(),
+        videoTrafficEncryptionForced : new Watcher<boolean>(),
+        sessionLimitMinutes          : new Watcher<number>()
     };
 
     readonly minutes: string = 'minutes';
@@ -76,18 +76,18 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
-            hours  : {
-                value  : this.hours,
-                name   : this.LANG.system.settings.sessionLimitDuration.hours,
-                id     : 1,
-                max    : 600,
-                default: 24
+            hours: {
+                value   : this.hours,
+                name    : this.LANG.system.settings.sessionLimitDuration.hours,
+                id      : 1,
+                max     : 600,
+                default : 24
             },
             minutes: {
-                value: this.minutes,
-                name : this.LANG.system.settings.sessionLimitDuration.minutes,
-                id   : 2,
-                max  : 600
+                value : this.minutes,
+                name  : this.LANG.system.settings.sessionLimitDuration.minutes,
+                id    : 2,
+                max   : 600
             }
         };
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
@@ -96,11 +96,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.settings) {
-            const { previousValue, currentValue } = changes.settings;
+            const { previousValue, currentValue, firstChange } = changes.settings;
             if (previousValue === undefined && currentValue) {
                 this.cleanUpWatchers(currentValue);
             }
-            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue)) {
+            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue) && !firstChange) {
                 this.setWatcherValues(currentValue);
             }
         }
