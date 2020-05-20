@@ -53,7 +53,7 @@ export class CloudStorageMoveModalContent implements OnInit {
         private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.targetSystems = [];
         this.errorText = '';

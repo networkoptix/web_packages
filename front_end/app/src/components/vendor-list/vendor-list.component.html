@@ -7,10 +7,7 @@
 
     <nx-section>
         <div class="mb-2"
-             *ngIf="vendors.length !== allVendors.length"
-             [translate]="'ipvd.topXByVolume'"
-             [translateParams]="{value: CONFIG.ipvd.vendorsShown}">
-        </div>
+             *ngIf="vendors.length !== allVendors.length">{{'ipvdTopXByVolume' | translate:topXByVolume}}</div>
         <div class="float-left mr-1 mb-1" *ngFor="let vendor of vendors; trackBy: trackItem">
             <nx-tag element="btn"
                     size="large"

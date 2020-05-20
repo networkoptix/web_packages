@@ -75,7 +75,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: any,
         @Inject(DOCUMENT) private document: any
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
     }
 

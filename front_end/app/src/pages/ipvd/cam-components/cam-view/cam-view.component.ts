@@ -63,7 +63,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         private uri: NxUriService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.viewScrollFixedTop = false;
         this.viewScrollFixedBottom = false;
         this.elementWidth = '100%';

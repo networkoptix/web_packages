@@ -11,9 +11,10 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 export class NxGridLayoutComponent {
     LANG: LanguageI18NStaticTypes;
 
-    constructor(languageService: NxLanguageProviderService,
-                private pageService: NxPageService
+    constructor(
+        languageService: NxLanguageProviderService,
+        private pageService: NxPageService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 }

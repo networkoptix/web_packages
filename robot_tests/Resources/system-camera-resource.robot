@@ -41,7 +41,7 @@ Select Camera By Name
 Change Aspect Ratio
     [Arguments]    ${expected ratio}
     Click Button    ${ASPECT RATIO DROPDOWN}
-    Click Link    ${ASPECT RATIO DROPDOWN}/following-sibling::div//span[contains(text(),"${expected ratio}")]/..
+    Click Element    ${ASPECT RATIO DROPDOWN}/following-sibling::div//span[contains(text(),"${expected ratio}")]/..
 
 Aspect Ratio Should Be
     [Arguments]    ${expected ratio}
@@ -50,16 +50,23 @@ Aspect Ratio Should Be
 Change Rotation
     [Arguments]    ${expected rotation}
     Click Button    ${ROTATION DROPDOWN}
-    Click Link    ${ROTATION DROPDOWN}/following-sibling::div//span[contains(text(),"${expected rotation}")]/..
+    Click Element    ${ROTATION DROPDOWN}/following-sibling::div//span[contains(text(),"${expected rotation}")]/..
 
 Rotation Should Be
     [Arguments]    ${expected rotation}
     Wait Until Element is Visible    ${ROTATION DROPDOWN}/span[contains(text(),"${expected rotation}")]
 
-Audo Enabled Should Be
+Audio Enabled Should Be
     [Arguments]    ${expected state}
     ${current state}=   ${Get Checkbox Value    ${ENABLE AUDIO CHECKBOCK}
     Should Be Equal    ${expected state}    ${current state}
+
+Camera Name Should Be
+    [Arguments]    ${auth}    ${server url}    ${camera id}    ${name}
+    ${cameras}=   Get Cameras    ${auth}    ${server url}
+    FOR    ${camera}  IN  ${cameras[0]}
+        Run Keyword if    '''${camera['id']}'''=='''${camera id}'''    Should Be Equal    ${camera['name']    ${name}
+    END
 
 Get Recording Status
 

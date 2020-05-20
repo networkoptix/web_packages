@@ -35,13 +35,13 @@ export class ApplyModalContent<Apply extends Process, Discard extends Function> 
         });
     };
 
-    close() {
+    close = () => {
         this.activeModal.dismiss('canceled');
     }
 
-    discard() {
-        this.discardFunc();
+    discard = () => {
         this.activeModal.close('discarded');
+        return this.discardFunc?.();
     }
 }
 
@@ -62,7 +62,7 @@ export class NxModalApplyComponent {
         private modalService: NgbModal,
         private language: NxLanguageProviderService
     ) {
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     private dialog(applyFunc, discardFunc) {

@@ -8,7 +8,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUrlProtocolService }      from '../../services/url-protocol.service';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 
 @Component({
     selector     : 'nx-client-button',
@@ -27,7 +27,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     location;
     canceled: boolean;
     modalActive: boolean;
-    openClient;
+    openClient: Process;
 
     constructor(configService: NxConfigService,
                 private processService: NxProcessService,
@@ -38,7 +38,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     ngOnDestroy(): void {

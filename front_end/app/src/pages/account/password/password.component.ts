@@ -7,7 +7,7 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
 import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxAccountService, Account } from '../../../services/account.service';
 import { NxPageService }             from '../../../services/page.service';
-import { NxProcessService }          from '../../../services/process.service';
+import { NxProcessService, Process } from '../../../services/process.service';
 import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { NxApplyService, Watcher }   from '../../../services/apply.service';
@@ -33,7 +33,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
     account: Account;
     pass: any = {};
 
-    changePassword;
+    changePassword: Process;
 
     watchers: any = {
         password    : new Watcher<string>(),
@@ -62,13 +62,13 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.pageService.setPageTitle(this.LANG.pageTitles.changePassword);
+        this.pageService.pageTitle = this.LANG.pageTitles.changePassword;
 
         this.changePassword = this.processService.createProcess(() => {
             return this.cloudApiService

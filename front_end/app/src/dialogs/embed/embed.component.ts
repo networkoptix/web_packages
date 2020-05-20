@@ -48,7 +48,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
         };
 
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnDestroy() {

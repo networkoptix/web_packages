@@ -226,7 +226,7 @@
             "checking": "Checking...",
             "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi.",
             "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-            "differentOwners": "You are only able to merge systems with the same owner and these system owners are different.",
+            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",

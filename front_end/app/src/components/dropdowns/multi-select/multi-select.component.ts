@@ -126,11 +126,11 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any;
+                this.textSelected = this.LANG.search.Any();
                 break;
             }
             default: {
-                this.textSelected = this.innerValue.length + ' ' + this.LANG.search.selected;
+                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
                 break;
             }
         }

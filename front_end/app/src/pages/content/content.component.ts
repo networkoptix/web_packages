@@ -9,7 +9,7 @@ import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAccountService, Account } from '../../services/account.service';
 import { NxPageService }             from '../../services/page.service';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { WINDOW }                    from '../../services/window-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -38,7 +38,7 @@ export class NxContentComponent implements OnInit {
     private agreementDetails: any = {};
     private account: Account;
     public showAgree = false;
-    public agreeProcess;
+    public agreeProcess: Process;
 
     private setupDefaults() {
         this.title = '';
@@ -62,8 +62,8 @@ export class NxContentComponent implements OnInit {
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
-        this.langCode = languageService.getLang();
-        this.LANG = languageService.getTranslations();
+        this.langCode = languageService.currentLanguage;
+        this.LANG = languageService.translations;
     }
 
     ngOnInit(): void {
@@ -132,7 +132,7 @@ export class NxContentComponent implements OnInit {
             (data: any) => {
                 this.title = data.title;
                 this.body = this.sanitizer.bypassSecurityTrustHtml(data.body);
-                this.pageService.setPageTitle(this.title);
+                this.pageService.pageTitle = this.title;
                 this.loaded = true;
                 if (data.id) {
                     this.id = data.id;

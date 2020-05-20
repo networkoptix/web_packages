@@ -28,6 +28,7 @@ export class NxLanguageAndSettingsProvider {
     }
 
     load(): Promise<boolean> {
+        debugger;
         return new Promise<boolean>((resolve, reject) => {
             return Promise.all([
                 this.configService.getSettings(),
@@ -35,7 +36,7 @@ export class NxLanguageAndSettingsProvider {
             ]).then((result) => {
                 // this language will be used as a fallback when a translation
                 // isn't found in the current language
-                this.languageService.setDefaultLang('en_US');
+                this.languageService.defaultLanguage = 'en_US';
                 this.setSettings(result[0]);
                 this.setLanguage(result[1]);
                 this.isLoaded = true;
@@ -48,10 +49,11 @@ export class NxLanguageAndSettingsProvider {
     }
 
     setLanguage(data) {
+        // this.languageService.newTranslation = { language: data.ajs.language, json: data.i18n };
         this.languageService.setTranslations(data.ajs.language, data.i18n);
-        this.LANG = this.languageService.getTranslations();
-        this.pageService.setLanguage(this.LANG); // during the init of the service LANG is undefined
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
+        this.LANG = this.languageService.translations;
+        this.pageService.newLanguage = this.LANG; // during the init of the service LANG is undefined
+        this.pageService.pageTitle = this.LANG.pageTitles.default;
 
         this.CONFIG.viewsDir = 'static/lang_' + data.ajs.language + '/views/';
     }

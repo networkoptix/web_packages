@@ -1,8 +1,4 @@
 *** Keywords ***
-Restart
-    Close Browser
-    Open Browser and go to URL    ${url}/register
-
 Register Form Validation
     [arguments]    ${first name}    ${last name}    ${email}    ${password}    ${checked}
     Clear Element Text    ${REGISTER PASSWORD INPUT}

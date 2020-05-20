@@ -8,17 +8,23 @@ import { NxMenuService }     from '../menu.service';
     selector : 'nx-menu-button',
     template : `<button class="inset btn btn-menu btn-clear"
                        [disabled]="button.disabled"
-                       (click)="action()">{{button.label}}</button>`
+                       (click)="action()">{{caption}}</button>`
 })
 export class NxMenuButtonComponent {
     @Input() button;
     @Input() system;
+
+    caption: string
 
     constructor(
         private dialogs: NxDialogsService,
         private uriService: NxUriService,
         private menuService: NxMenuService
     ) {}
+
+    ngOnInit() {
+        this.caption = (typeof this.button.label === 'function') ? this.button.label() : this.button.label;
+    }
 
     action() {
         if (this.button.id === 'addUser') {

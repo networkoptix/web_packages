@@ -16,14 +16,14 @@ export class NxNoSystemsComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
 
     private setupDefaults() {
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 
     constructor(
-        language: NxLanguageProviderService,
+        languageService: NxLanguageProviderService,
         private pageService: NxPageService
     ) {
-        this.LANG = language.getTranslations();
+        this.LANG = languageService.translations;
         this.setupDefaults();
     }
 

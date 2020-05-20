@@ -94,7 +94,7 @@ def get_agreement(request):
     raise APINotFoundException(error_text='Agreement not found')
 
 
-review_id__body = openapi.Schema("review_id", openapi.IN_BODY, type=openapi.TYPE_NUMBER)
+review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
 
 
 @swagger_auto_schema(method="POST", auto_schema=None,

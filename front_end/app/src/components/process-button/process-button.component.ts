@@ -3,6 +3,7 @@ import {
     ViewEncapsulation
 }                                   from '@angular/core';
 import { NxConfigService, IConfig } from '../../services/nx-config';
+import { Process }                  from '../../services/process.service';
 
 @Component({
     selector     : 'nx-process-button',
@@ -11,7 +12,7 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
     encapsulation: ViewEncapsulation.None
 })
 export class NxProcessButtonComponent implements OnInit {
-    @Input() process;
+    @Input() process: Process;
     @Input() clickFn;
     @Input() buttonText: string;
     @Input() buttonDisabled: boolean;

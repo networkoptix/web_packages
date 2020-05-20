@@ -16,8 +16,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { WINDOW }                    from '../../services/window-provider';
 
 @Component({
-    selector: 'nx-debug',
-    templateUrl: 'debug.component.html'
+    selector    : 'nx-debug',
+    templateUrl : 'debug.component.html'
 })
 export class NxDebugComponent {
     LANG: LanguageI18NStaticTypes;
@@ -26,32 +26,35 @@ export class NxDebugComponent {
     actionParametersError = false;
     debugProcess;
     debugProxySettings = {
-        authGet: '',
-        authPost: '',
-        method: 'POST',
-        proxyUrl: 'relay-bur.vmsproxy.hdw.mx',
-        systemId: new Watcher<string>(),
-        apiCall: 'web/ec2/saveUser',
-        data: '{}',
-        success: undefined,
-        result: ''
+        authGet  : '',
+        authPost : '',
+        method   : 'POST',
+        proxyUrl : 'relay-bur.vmsproxy.hdw.mx',
+        systemId : new Watcher<string>(),
+        apiCall  : 'web/ec2/saveUser',
+        data     : '{}',
+        success  : undefined,
+        result   : ''
     };
+
     linkSettings = {
-        native: true,
-        from: undefined,    // client, mobile, portal, webadmin
-        context: undefined,
-        command: undefined, // client, cloud, system
-        systemId: undefined,
-        action: undefined,
-        actionParameters: undefined, // Object with parameters
-        auth: undefined // true for request, undefined for skipping, string for specific value
+        native           : true,
+        from             : undefined, // client, mobile, portal, webadmin
+        context          : undefined,
+        command          : undefined, // client, cloud, system
+        systemId         : undefined,
+        action           : undefined,
+        actionParameters : undefined, // Object with parameters
+        auth             : undefined // true for request, undefined for skipping, string for specific value
     };
+
     mergeSettings = {
-        masterSystemId: '',
-        slaveSystemId: '',
-        result: ''
+        masterSystemId : '',
+        slaveSystemId  : '',
+        result         : ''
     };
-    message = JSON.stringify({code: 'test_code'}, undefined, '\t');
+
+    message = JSON.stringify({ code: 'test_code' }, undefined, '\t');
     notificationError = false;
     notifyCounter = 0;
     password: '';
@@ -70,18 +73,18 @@ export class NxDebugComponent {
                 private processService: NxProcessService,
                 private systemsService: NxSystemsService,
                 private urlProtocol: NxUrlProtocolService,
-                private configService: NxConfigService,
+                private configService: NxConfigService
     ) {
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.CONFIG = this.configService.getConfig();
-        this.pageService.setPageTitle(this.LANG.pageTitles.debug);
+        this.pageService.pageTitle = this.LANG.pageTitles.debug;
         this.accountService.get().then((acc) => {
             this.init();
         });
     }
 
     private clearEmptyStrings(obj) {
-        const temp = {... obj};
+        const temp = { ...obj };
         Object.entries(obj).forEach(([key, value]: [string, any]) => {
             if (value === '' || value === undefined) {
                 delete temp[key];
@@ -121,20 +124,23 @@ export class NxDebugComponent {
         });
 
         const debugProcess = this.processService.createProcess(() => {
-            return setTimeout(() => {
-                if (this.debugProcess.success) {
-                    Promise.resolve({
-                        data: {
-                            resultCode: this.LANG.errorCodes.ok
-                        }
-                    });
-                } else {
-                    Promise.reject(false);
-                }
-            }, 2000);
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    if (this.debugProcess.success) {
+                        resolve({
+                            data: {
+                                resultCode: this.LANG.errorCodes.ok
+                            }
+                        });
+                    } else {
+                        // eslint-disable-next-line prefer-promise-reject-errors
+                        reject(false);
+                    }
+                }, 2000);
+            });
         }, {
-            successMessage: 'Success!',
-            errorPrefix: 'Fail!'
+            successMessage : 'Success!',
+            errorPrefix    : 'Fail!'
         }).then((res) => {
             console.log(res);
         }, (error) => {
@@ -142,8 +148,8 @@ export class NxDebugComponent {
         });
 
         this.debugProcess = {
-            success: true,
-            process: debugProcess
+            success : true,
+            process : debugProcess
         };
         // Handling promise to satisfy the linter.
         this.systemsService.forceUpdateSystemsAsPromise().then(() => {});
@@ -158,7 +164,7 @@ export class NxDebugComponent {
         if (this.debugProxySettings.method === 'GET') {
             request = this.http.get(this.debugProxyUrl());
         } else {
-            request = this.http.post(this.debugProxyUrl(), {data});
+            request = this.http.post(this.debugProxyUrl(), { data });
         }
         request.subscribe((result) => {
             this.debugProxySettings.success = true;
@@ -178,8 +184,8 @@ export class NxDebugComponent {
         return `${protocol}//${systemId}.${proxyUrl}/${apiCall}?auth=${auth}`;
     }
 
-    formatJSON (data) {
-        return  JSON.stringify(data, undefined, '\t');
+    formatJSON(data) {
+        return JSON.stringify(data, undefined, '\t');
     }
 
     generateLink() {
@@ -238,8 +244,8 @@ export class NxDebugComponent {
             this.result = 'Message is not a valid JSON object';
             console.warn(`Message is not json ${message}`);
         }
-        this.cloudApiService.notificationSend(this.userEmail, this.type, message).
-            then((res: any) => {
+        this.cloudApiService.notificationSend(this.userEmail, this.type, message)
+            .then((res: any) => {
                 this.notificationError = false;
                 this.result = this.formatJSON(res.data);
                 console.warn(res);
@@ -248,6 +254,6 @@ export class NxDebugComponent {
                 this.result = error.data.errorText;
                 console.error(error);
             }
-        );
+            );
     }
 }

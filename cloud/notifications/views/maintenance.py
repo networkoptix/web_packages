@@ -7,6 +7,8 @@ from util.config import get_config
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from drf_yasg.utils import swagger_auto_schema
+
 from api.helpers.exceptions import handle_exceptions, api_success
 
 PERIOD = 60  # In seconds
@@ -73,6 +75,7 @@ def _get_sqs_metrics():
     return metric_result
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @handle_exceptions

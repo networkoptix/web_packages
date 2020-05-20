@@ -27,7 +27,7 @@ export class Nx503Component implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
 
-        this.pageService.setPageTitle('Maintenance is in progress');
+        this.pageService.pageTitle = 'Maintenance is in progress';
         this.appState.setFooterVisibility(false);
         this.appState.setHeaderVisibility(false);
     }

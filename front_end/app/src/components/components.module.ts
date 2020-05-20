@@ -43,6 +43,7 @@ import { NxSectionPlaceholderComponent }      from './placeholders/section/secti
 import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
+import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-cancel-button.component';
 
 @NgModule({
     imports: [
@@ -66,6 +67,7 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
@@ -131,10 +133,13 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer
+        ToastsContainer,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent
     ],
     providers: [
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
@@ -161,7 +166,6 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
-
         NxRibbonService
     ],
     exports: [
@@ -175,6 +179,7 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,

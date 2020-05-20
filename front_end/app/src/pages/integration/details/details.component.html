@@ -71,9 +71,7 @@
                 <div>
                     <label class="group-label" translate>Support</label>
                 </div>
-                <div *ngIf="plugin.support.supportPhone"
-                     [translate]="'integration.phoneNumberWithLabel'"
-                     [translateParams]="{number: plugin.support.supportPhone}"></div>
+                <div *ngIf="plugin.support.supportPhone">{{'integration.phoneNumberWithLabel' | translate:{number: plugin.support.supportPhone} }}</div>
                 <div *ngIf="plugin.support.supportWeb">
                     <a [href]="plugin.support.supportWeb"
                        target="_blank" translate>Support URL</a>
@@ -112,7 +110,7 @@
                         </nx-block>
                         <nx-block side-element type="gray"
                                   *ngIf="plugin.requirementsAndCompatibility">
-                            <header [translate]="'integration.requirements'" [translateParams]="{name: plugin.information.name}"></header>
+                            <header>{{'integration.requirements' | translate: {name: plugin.information.name} }}}</header>
 
                             <nx-section>
                                 <div class="card--body-info">
@@ -131,12 +129,10 @@
                                     <div class="section"
                                          *ngIf="plugin.requirementsAndCompatibility.testedVersionsStringFull">
                                         <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length == 1">
-                                            <label class="group-label" [translate]="'integration.testedVersionLabel'"
-                                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
+                                            <label class="group-label">{{'integration.testedVersionLabel' | translate: { vmsName: CONFIG.vmsName } }}</label>
                                         </div>
                                         <div *ngIf="plugin.requirementsAndCompatibility.testedVersions.length > 1">
-                                            <label class="group-label" [translate]="'integration.testedVersionsLabel'"
-                                                   [translateParams]="{ vmsName: CONFIG.vmsName }"></label>
+                                            <label class="group-label">{{'integration.testedVersionsLabel'| translate: { vmsName: CONFIG.vmsName } }}</label>
                                         </div>
                                         <div [innerHTML]="plugin.requirementsAndCompatibility.testedVersionsStringFull"></div>
                                     </div>

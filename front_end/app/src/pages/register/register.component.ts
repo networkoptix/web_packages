@@ -4,9 +4,9 @@ import { LocalStorageService }          from 'ngx-store';
 import { NxLanguageProviderService }    from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }     from '../../services/nx-config';
 import { NxAccountService }             from '../../services/account.service';
-import { NxPageService }                from '../../services/page.service';
-import { NxProcessService }             from '../../services/process.service';
-import { NxCloudApiService }            from '../../services/nx-cloud-api';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { NxUrlProtocolService }         from '../../services/url-protocol.service';
 import { NxDialogsService }             from '../../dialogs/dialogs.service';
@@ -23,7 +23,7 @@ export class NxRegisterComponent implements OnInit {
 
     uriParam: string;
     accountInfo: any = {};
-    register;
+    register: Process;
     registerSuccess;
     activated;
     code;
@@ -41,8 +41,8 @@ export class NxRegisterComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
     constructor(configService: NxConfigService,
@@ -82,7 +82,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess;
         }
 
         if (this.uriParam === 'activated') {
@@ -112,7 +112,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email     : this.accountInfo.email || this.accountService.email,
+            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
             password  : '',
             firstName : '',
             lastName  : '',
@@ -182,7 +182,7 @@ export class NxRegisterComponent implements OnInit {
                         });
 
                     this.accountService.email = this.accountInfo.email;
-                    this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess;
                     this.registerSuccess = true;
                     this.localStorage.set('regProcess', 'registerSuccess');
                 }

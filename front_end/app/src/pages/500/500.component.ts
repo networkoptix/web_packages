@@ -18,8 +18,8 @@ export class Nx500Component {
         languageService: NxLanguageProviderService,
         private pageService: NxPageService
     ) {
-        this.LANG = languageService.getTranslations();
-        this.pageService.setPageTitle(this.LANG.common.systemServerError);
+        this.LANG = languageService.translations;
+        this.pageService.pageTitle = this.LANG.common.systemServerError;
         this.CONFIG = configService.getConfig();
     }
 }

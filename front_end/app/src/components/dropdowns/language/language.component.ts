@@ -51,7 +51,7 @@ export class NxLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
-        this.currentLang = languageService.getLang();
+        this.currentLang = languageService.currentLanguage;
     }
 
     private splitLanguages() {

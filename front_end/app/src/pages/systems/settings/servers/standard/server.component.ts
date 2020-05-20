@@ -7,7 +7,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { NxProcessService }          from '../../../../../services/process.service';
+import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxMenuService }             from '../../../../../menu';
@@ -34,7 +34,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     viewContainerRef: ViewContainerRef;
     serverIdFromParams;
 
-    saveSettings;
+    saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
     checking: boolean;
@@ -80,7 +80,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -117,9 +117,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     setServer(): void {
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
-        this.applyService.hardReset();
         const { ip, port } = this.selectedServer;
-        this.ipPortWatcher.value = port;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
         this.selectedServer.osName = this.selectedServer.osInfo !== '' ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
@@ -132,8 +130,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
         this.portChangeDisabled = !this.system.permissions.editAdmins;
-        this.applyService.reset();
-        this.applyService.setVisible(true);
+
+        if (!this.applyService.locked) {
+            this.applyService.hardReset();
+            this.ipPortWatcher.value = port;
+            this.applyService.reset();
+            this.applyService.setVisible(true);
+        }
     }
 
     initForApplyService(): void {

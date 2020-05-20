@@ -1,7 +1,7 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -17,7 +17,7 @@ export class ChangePasswordModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    changePassword;
+    changePassword: Process;
     newPasswordForUser: string;
 
     constructor(public activeModal: NgbActiveModal,
@@ -26,7 +26,7 @@ export class ChangePasswordModalContent {
                 private configService: NxConfigService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
         this.newPasswordForUser = '';
     }
 

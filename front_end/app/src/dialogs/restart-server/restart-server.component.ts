@@ -6,7 +6,7 @@ import {
     tap, mergeMap
 }                                    from 'rxjs/operators';
 import { NxRibbonService }           from '../../components/ribbon';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxToastService }            from '../toast.service';
@@ -25,7 +25,7 @@ export class RestartServerModalContent {
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    restartServer;
+    restartServer: Process;
 
     constructor(
         configService: NxConfigService,
@@ -36,7 +36,7 @@ export class RestartServerModalContent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

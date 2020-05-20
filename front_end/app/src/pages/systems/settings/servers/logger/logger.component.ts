@@ -7,9 +7,10 @@ import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
+import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -24,10 +25,10 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean;
-    saveLoggers;
+    saveLoggers: Process;
     lockedSubscription: SubscriptionLike;
 
-    @Input() system;
+    @Input() system: NxSystem;
     @Input() serverId;
 
     systemLoggers: any = {};
@@ -39,7 +40,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
                 .setLogLevels(this.serverId, this.loggersToBeSaved())
-                .then(response => {
+                .then((response: any) => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -71,7 +72,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.loggerOptions = [
             {

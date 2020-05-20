@@ -56,7 +56,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private uriService: NxUriService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.setupDefaults();
     }
@@ -166,7 +166,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
             }
 
-            server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown;
+            server.osName = server.osInfo !== '' ? JSON.parse(server.osInfo).platform : this.LANG.common.unknown();
             if (!server.ip) {
                 NxUtilsService.formatURL(server);
             }

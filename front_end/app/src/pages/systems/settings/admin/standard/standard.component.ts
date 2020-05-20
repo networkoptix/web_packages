@@ -5,7 +5,7 @@ import {
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
-import { NxProcessService }          from '../../../../../services/process.service';
+import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 
@@ -29,7 +29,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     previousInputValue: number;
     limitSessionTimeUnits;
     limitSessionTimeItems;
-    saveSettings;
+    saveSettings: Process;
     resetVideoEncryptionIfDisabled;
     setWarningMessageThroughApplyService;
     timeUnitTracker;
@@ -71,7 +71,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
@@ -184,9 +184,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     obj.originalValue = obj.value;
                 }
             }
-            return this.system.updateOrGetSystemSettings(changes).toPromise()
-                .then(() => this.applyService.reset());
-        });
+            return this.system.updateOrGetSystemSettings(changes).toPromise();
+        }).then(() => this.applyService.reset());
 
         this.applyService.initPageWatcher(
             this.viewContainerRef,

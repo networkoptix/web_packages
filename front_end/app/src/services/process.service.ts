@@ -5,217 +5,168 @@ import { NxCloudApiService }                   from './nx-cloud-api';
 import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
+import { Observable, from, Subject, defer } from 'rxjs';
+import { takeUntil, map, tap, retryWhen, catchError } from 'rxjs/operators';
 
-interface IErrorCodes {
-    [key: string]: string | Function
-}
+type Handler = (...args: any[]) => any
 
-interface ProcessSettings {
-    errorCodes: IErrorCodes;
-    errorMessage?: string;
-    errorPrefix: string;
-    holdAlerts: boolean;
-    ignoreUnauthorized: boolean;
-    logoutForbidden: boolean;
-    successMessage: string;
-    ignoreError?: boolean;
-}
-
+const logError = (...args) => console.error(args);
 export class Process {
-    CONFIG: IConfig;
-    LANG: LanguageI18NStaticTypes;
-
-    private cloudApiService: NxCloudApiService;
-    private sessionService: NxSessionService;
-    private toastService: NxToastService;
-
-    private caller: (...args: any) => void;
-    private settings: ProcessSettings;
-    private deferredPromise: {
-        promise: Promise<unknown>;
-        reject: (...args: any) => void;
-        resolve: (...args: any) => void;
+    private CONFIG: IConfig;
+    private LANG: LanguageI18NStaticTypes;
+    private settings: ProcessSettings = {
+        errorCodes         : {},
+        errorMessage       : '',
+        errorPrefix        : '',
+        holdAlerts         : false,
+        ignoreUnauthorized : false,
+        logoutForbidden    : false,
+        successMessage     : '',
+        ignoreError        : false
     };
 
-    /* TODO: Never read, can probably be removed */
-    private success: boolean;
-    private error: boolean;
-    private processing: boolean;
-    private finished: boolean;
-    private errorData;
-
-    /* process handlers */
-    private successHandler: (...args: any) => void;
-    private errorHandler: (...args: any) => void;
+    // These public methods are being accessed in the nx-process-button, for some reason typescript isn't showing it though.
+    public success: boolean;
+    public error: boolean;
+    public processing: boolean;
+    public finished: boolean;
+    public errorData;
+    public canceled = false;
+    private canceled$ = new Subject();
+    private caller$: Observable<any>;
 
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        sessionService: NxSessionService,
-        cloudApiService: NxCloudApiService,
-        toastService: NxToastService,
-        caller: (...args: any) => void,
-        settings: Partial<ProcessSettings>
+        private sessionService: NxSessionService,
+        private cloudApiService: NxCloudApiService,
+        private toastService: NxToastService,
+        caller$: Observable<any>,
+        settings: Partial<ProcessSettings> = {},
+        private _successHandler: Handler = () => {},
+        private _errorHandler: Handler = logError,
+        private _catchHandler: Handler = logError
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
-        this.cloudApiService = cloudApiService;
-        this.sessionService = sessionService;
-        this.toastService = toastService;
-        this.init(caller, settings);
-        return this;
+        this.LANG = languageService.translations;
+        this.settings.errorPrefix = settings?.errorPrefix ? `${settings.errorPrefix}: ` : '';
+        this.settings = { ...this.settings, ...settings };
+        this.caller$ = caller$.pipe(takeUntil(this.canceled$));
     }
 
-    init(caller: (...args: any) => void, settings: Partial<ProcessSettings>) {
-        /*
-         settings: {
-         errorCodes,
-
-         holdAlerts
-         successMessage,
-         errorPrefix,
-         }
-         settings.successMessage
-         */
-        if (settings) {
-            settings.errorPrefix = settings.errorPrefix ? `${settings.errorPrefix}: ` : '';
-            this.settings = { ...this.settings, ...settings };
-        } else {
-            this.settings = {
-                errorCodes         : {},
-                errorMessage       : '',
-                errorPrefix        : '',
-                holdAlerts         : false,
-                ignoreUnauthorized : false,
-                logoutForbidden    : false,
-                successMessage     : '',
-                ignoreError        : false
-            };
-        }
-        this.caller = caller;
-    }
-
-    run() {
-        // TODO: These don't seem to be used anywhere, could probably remove setting this values
+    run = () => {
         this.processing = true;
         this.error = false;
         this.success = false;
         this.finished = false;
-
-        this.deferredPromise = this.createDeferredPromise();
-        this.deferredPromise.promise.then(this.successHandler, this.errorHandler);
-
-        /* There is a weird issue when executing a process that is passed into a modal.
-         * After the first execution then caller function becomes undefined when the run
-         * returns this.caller(). Wrapping it in a promise fixes the issue.
-         */
-        const wrapper = new Promise((resolve) => {
-            return resolve(this.caller());
-        });
-        return wrapper.then((data) => {
-            const error = this.cloudApiService.checkResponseHasError(data);
-            if (error) {
-                this.handleError(error);
-            } else {
-                this.success = true;
-                if (this.settings.successMessage && data !== false) {
-                    // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
-                    // Circular dependencies ... keep ngToast for no -- TT
-                    const options = {
-                        classname : this.CONFIG.toast.success,
-                        autohide  : !this.settings.holdAlerts,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.settings.successMessage, options);
-                }
-                this.deferredPromise.resolve(data);
-            }
-        }, (error) => {
-            if (error && error.error) {
-                error = error.error;
-            }
-            this.handleError(error);
-        }).finally(() => {
-            this.processing = false;
-            this.finished = true;
-        });
-    }
-
-    then(successHandler: (...args: any) => void, errorHandler?: (...args: any) => void) {
-        this.successHandler = successHandler;
-        this.errorHandler = errorHandler || (() => {
-        }) as (...args: any) => void;
+        this.canceled = false;
+        this.caller$.subscribe(this.onSuccess, this.onError, this.onComplete);
         return this;
     }
 
-    // TODO: possible deprecation
-    private createDeferredPromise() {
-        return (() => {
-            let res;
-            let rej;
+    // Handler method wrappers
 
-            const p = new Promise((resolve, reject) => {
-                res = resolve;
-                rej = reject;
-            });
-
-            return {
-                promise : p,
-                reject  : rej,
-                resolve : res
-            };
-        })();
-    }
-
-    // TODO refine error types
-    private formatError(error: any, errorCodes: any): string | false {
-        const errorCode = (error && error.data && error.data.resultCode) ||
-            (error && error.resultCode) ||
-            (error.type === 'error' &&
-            'networkConnection') ||
-            error;
-        if (!errorCode) {
-            return this.LANG.errorCodes.unknownError;
-        }
-        if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
-            if (typeof (errorCodes[errorCode]) === 'function') {
-                const result = (errorCodes[errorCode])(error) || false;
-                if (result !== true) {
-                    return result;
-                }
-            } else {
-                return errorCodes[errorCode];
+    onSuccess = async(res) => {
+        if (this.canceled) return;
+        const data = await res;
+        const error = this.cloudApiService.checkResponseHasError(data);
+        if (error) {
+            this.errorHelper(error);
+        } else {
+            this.success = true;
+            if (this.settings.successMessage && data !== false) {
+                const options = {
+                    classname : this.CONFIG.toast.success,
+                    autohide  : !this.settings.holdAlerts,
+                    delay     : this.CONFIG.alertTimeout
+                };
+                this.toastService.show(this.settings.successMessage, options);
             }
+            this._successHandler(data);
         }
-        return this.LANG.errorCodes[errorCode] || this.LANG.errorCodes.unknownError;
+    };
+
+    onError = (error) => {
+        if (error && error.error) {
+            error = error.error;
+        }
+        this.errorHelper(error);
+    };
+
+    onComplete = () => {
+        this.processing = false;
+        this.finished = true;
+    };
+
+    /**
+     * @deprecated
+     * This method is to maintain compatibilty with existing code.
+     *
+     * For readability successHandler and errorHandler should be assigned
+     * when calling NxProcessService.createProcess.
+     *
+     * @param successHandler
+     * @param errorHandler
+     */
+    then(successHandler, errorHandler = logError) {
+        this._successHandler = successHandler;
+        this._errorHandler = errorHandler;
+        return this;
     }
 
-    private handleError(data) {
+    /**
+     * @deprecated
+     * This method is to maintain compatibility with exisiting code.
+     *
+     * For readability catchHandler should be assigned when calling NxProcessService.createProcess.
+     *
+     * @param catchHandler
+     */
+    catch(catchHandler) {
+        this._catchHandler = catchHandler;
+        return this;
+    }
+
+    /**
+     * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
+     */
+    cancel() {
+        this.processing = false;
+        this.canceled = true;
+        this.canceled$.next(true);
+    }
+
+    private errorHelper(data) {
+        if (this.canceled) return;
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&
             (data.detail ||
-                // detail appears only when django rest framework declines request with
-                // {"detail":"Authentication credentials were not provided."}
-                // we need to handle this like user was not authorised
                 (data.resultCode === 'notAuthorized') ||
-                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))) {
+                (data.resultCode === 'forbidden' && this.settings.logoutForbidden))
+        ) {
             this.sessionService.invalidateSession();
-            this.deferredPromise.reject(data);
+            this.error = true;
+            this.errorData = data;
+            this.processing = false;
+            this._errorHandler(data);
             return;
         }
-        const formatted = this.formatError(data, this.settings.errorCodes);
+        const formatted = formatError(data, this.settings.errorCodes, this.LANG);
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
-            const message              = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
-            const options              = {
+            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+            const options = {
                 autohide  : !this.settings.holdAlerts,
                 classname : this.CONFIG.toast.danger,
                 delay     : this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
         }
-        this.deferredPromise.reject(data);
+        this.error = true;
+        this.errorData = data;
+        this.processing = false;
+        this._errorHandler(data);
     }
 }
 
@@ -231,7 +182,75 @@ export class NxProcessService {
         private toastService: NxToastService
     ) { }
 
-    createProcess(caller: (...args: any) => void, settings?: Partial<ProcessSettings>) {
-        return new Process(this.configService, this.languageService, this.sessionService, this.cloudApiService, this.toastService, caller, settings);
+    /**
+     * NxProcessService.createProcess has been updated to allow passing in either a promise or an observable.
+     *
+     * To make a cancelable button use <nx-cancel-button [process]="process"></nx-cancel-button>
+     *
+     * @param caller - Can be a function that returns a promise or an observable
+     * @param settings - ProcesSettings
+     * @param successHandler - Success handler can be assigned here or on .then(successHandler, errorHandler) method
+     * @param errorHandler - Error handler can be assigned here or on .then(successHandler, errorHandler) method.
+     * @param catchHandler - Catch handler can be assigned on here or on .catch(catchHandler) method.
+     */
+    createProcess(
+        caller: (() => Promise<any>) | Observable<any>,
+        settings?: Partial<ProcessSettings>,
+        successHandler: Handler = () => {},
+        errorHandler: Handler = logError,
+        catchHandler: Handler = logError
+    ) {
+        if (typeof caller === 'function') {
+            caller = defer(caller);
+        }
+        return new Process(
+            this.configService,
+            this.languageService,
+            this.sessionService,
+            this.cloudApiService,
+            this.toastService,
+            caller,
+            settings,
+            successHandler,
+            errorHandler,
+            catchHandler
+        );
     }
 }
+
+export interface IErrorCodes {
+    [key: string]: string | Function
+}
+
+export interface ProcessSettings {
+    errorCodes: IErrorCodes;
+    errorMessage?: string;
+    errorPrefix: string;
+    holdAlerts: boolean;
+    ignoreUnauthorized: boolean;
+    logoutForbidden: boolean;
+    successMessage: string;
+    ignoreError?: boolean;
+}
+
+export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
+    const errorCode = (error && error.data && error.data.resultCode) ||
+        (error && error.resultCode) ||
+        (error.type === 'error' &&
+        'networkConnection') ||
+        error;
+    if (!errorCode) {
+        return lang.errorCodes.unknownError;
+    }
+    if (errorCodes && typeof (errorCodes[errorCode]) !== 'undefined') {
+        if (typeof (errorCodes[errorCode]) === 'function') {
+            const result = (errorCodes[errorCode])(error) || false;
+            if (result !== true) {
+                return result;
+            }
+        } else {
+            return errorCodes[errorCode];
+        }
+    }
+    return lang.errorCodes[errorCode] || lang.errorCodes.unknownError;
+};

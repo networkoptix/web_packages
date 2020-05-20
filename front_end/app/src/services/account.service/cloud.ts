@@ -1,5 +1,5 @@
 import { BaseAccount }                  from './base';
-import { Exactly }                      from '../../utils/utility-types';
+import { Exactly }                      from '../utils.service';
 import { Inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT, Location }           from '@angular/common';
 import { LocalStorageService }          from 'ngx-store';

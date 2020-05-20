@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
+from drf_yasg.utils import swagger_auto_schema
+
 from django.utils.http import urlencode
 
 from api.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
@@ -198,6 +200,7 @@ def make_or_increment_rule(action, email, system_id, caption, password=None,
             increment_rule(rules_query)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -213,6 +216,7 @@ def get_systems(request):
     return api_success(zap_list)
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -236,6 +240,7 @@ def zapier_send_generic_event(request):
     return cloud_gateway.get(system_id, url, email, password)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -258,6 +263,7 @@ def nx_http_action(request):
         return Response({'message': "Webhook for " + caption + " does not exist"}, status=404)
 
 
+@swagger_auto_schema(method="GET", auto_schema=None)
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -266,6 +272,7 @@ def ping(request):
     return Response({'status': 'ok'})
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -293,6 +300,7 @@ def subscribe_webhook(request):
     return Response({'message': 'Webhook created for ' + caption, 'link': url_link}, status=200)
 
 
+@swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions
@@ -309,6 +317,7 @@ def unsubscribe_webhook(request):
     return Response({'message': 'Webhook deleted for ' + event}, status=200)
 
 
+@swagger_auto_schema(methods=["GET", "POST"], auto_schema=None)
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
 @zapier_exceptions

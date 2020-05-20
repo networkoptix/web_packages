@@ -59,7 +59,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.setupDefaults();
     }
@@ -91,12 +91,12 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                     level3 : [
                         {
                             id    : accountMenu.settings.id,
-                            label : this.LANG.account.accountSettings,
+                            label : this.LANG.account.accountSettings(),
                             path  : accountMenu.settings.path
                         },
                         {
                             id    : accountMenu.password.id,
-                            label : this.LANG.account.changePassword,
+                            label : this.LANG.account.changePassword(),
                             path  : accountMenu.password.path
                         }
                     ]
@@ -113,4 +113,3 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             });
     }
 }
-

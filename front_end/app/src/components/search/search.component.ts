@@ -102,7 +102,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.buttonArrowTypeUp = ButtonArrowType.up;
         this.buttonArrowTypeDown = ButtonArrowType.down;
@@ -274,7 +274,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
             return;
         }
 
-        this.placeholder = this.placeholder || this.LANG.search.Search; // optional param
+        this.placeholder = this.placeholder || this.LANG.search.Search(); // optional param
         this.numberFilters = 0;
         this.filterSelected = '';
 
@@ -350,10 +350,7 @@ export class NxSearchComponent implements OnInit, OnDestroy, ControlValueAccesso
         if (flag === 1) {
             this.filterSelected = tagsSelected || selectsSelected || multiSelectsSelected;
         } else {
-            const str           = (this.numberFilters === 1)
-                ? ' ' + this.LANG.search['filter applied']
-                : ' ' + this.LANG.search['filters applied'];
-            this.filterSelected = this.numberFilters + str;
+            this.filterSelected = this.LANG.search.appliedFilters({ count: this.numberFilters });
         }
     }
 

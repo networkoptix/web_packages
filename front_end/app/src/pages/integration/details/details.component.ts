@@ -34,7 +34,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     constructor(configService: NxConfigService,
@@ -83,14 +83,14 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
                                 level3: [
                                     {
                                         id   : 'how-it-works',
-                                        label: this.LANG['How it works'] || 'How it works',
+                                        label: this.LANG['How it works']() || 'How it works',
                                         // path : 'how-it-works',
                                         path : '',
                                         query
                                     },
                                     {
                                         id   : 'how-to-setup',
-                                        label: this.LANG['How to setup?'] || 'How to setup?',
+                                        label: this.LANG['How to setup?']() || 'How to setup?',
                                         path : 'how-to-setup',
                                         query
                                     }]
