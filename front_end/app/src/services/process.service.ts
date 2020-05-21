@@ -107,28 +107,36 @@ export class Process {
             return resolve(this.caller());
         });
         return wrapper.then((data) => {
-            const error = this.cloudApiService.checkResponseHasError(data);
-            if (error) {
-                this.handleError(error);
-            } else {
-                this.success = true;
-                if (this.settings.successMessage && data !== false) {
-                    // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
-                    // Circular dependencies ... keep ngToast for no -- TT
-                    const options = {
-                        classname : this.CONFIG.toast.success,
-                        autohide  : !this.settings.holdAlerts,
-                        delay     : this.CONFIG.alertTimeout
-                    };
-                    this.toastService.show(this.settings.successMessage, options);
+            if (this.processing) {
+                const error = this.cloudApiService.checkResponseHasError(data);
+                if (error) {
+                    this.handleError(error);
+                } else {
+                    this.success = true;
+                    if (this.settings.successMessage && data !== false) {
+                        // nxDialogsService.notify(successMessage, this.CONFIG.toast.success, holdAlerts);
+                        // Circular dependencies ... keep ngToast for no -- TT
+                        const options = {
+                            classname : this.CONFIG.toast.success,
+                            autohide  : !this.settings.holdAlerts,
+                            delay     : this.CONFIG.alertTimeout
+                        };
+                        this.toastService.show(this.settings.successMessage, options);
+                    }
+                    this.deferredPromise.resolve(data);
                 }
-                this.deferredPromise.resolve(data);
+            } else {
+                this.deferredPromise.resolve('canceled');
             }
         }, (error) => {
-            if (error && error.error) {
-                error = error.error;
+            if (this.processing) {
+                if (error && error.error) {
+                    error = error.error;
+                }
+                this.handleError(error);
+            } else {
+                this.deferredPromise.reject('canceled');
             }
-            this.handleError(error);
         }).finally(() => {
             this.processing = false;
             this.finished = true;
