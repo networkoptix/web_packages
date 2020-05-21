@@ -54,7 +54,6 @@ export class AppComponent {
         private languageAndSettingsProvider: NxLanguageAndSettingsProvider,
         @Inject(WINDOW) private window: Window
     ) {
-        debugger;
         if (!languageAndSettingsProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))

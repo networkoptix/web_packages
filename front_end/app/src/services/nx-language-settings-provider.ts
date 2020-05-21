@@ -28,7 +28,6 @@ export class NxLanguageAndSettingsProvider {
     }
 
     load(): Promise<boolean> {
-        debugger;
         return new Promise<boolean>((resolve, reject) => {
             return Promise.all([
                 this.configService.getSettings(),

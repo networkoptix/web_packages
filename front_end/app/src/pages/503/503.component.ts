@@ -1,12 +1,13 @@
 import {
     Component, OnInit
-}                                   from '@angular/core';
-import { Router }                   from '@angular/router';
-import { DomSanitizer, SafeHtml }   from '@angular/platform-browser';
-import { NxPageService }            from '../../services/page.service';
-import { NxConfigService, IConfig } from '../../services/nx-config';
-import { NxAppStateService }        from '../../services/nx-app-state.service';
-import { NxCloudApiService }        from '../../services/nx-cloud-api';
+}                                        from '@angular/core';
+import { Router }                        from '@angular/router';
+import { DomSanitizer, SafeHtml }        from '@angular/platform-browser';
+import { NxPageService }                 from '../../services/page.service';
+import { NxConfigService, IConfig }      from '../../services/nx-config';
+import { NxAppStateService }             from '../../services/nx-app-state.service';
+import { NxCloudApiService }             from '../../services/nx-cloud-api';
+import { NxLanguageAndSettingsProvider } from '../../services/nx-language-settings-provider';
 
 @Component({
     selector  : 'nx-503',
@@ -23,7 +24,8 @@ export class Nx503Component implements OnInit {
         private pageService: NxPageService,
         private router: Router,
         private sanitizer: DomSanitizer,
-        private apiService: NxCloudApiService
+        private apiService: NxCloudApiService,
+        private languageAndSettingsProvider: NxLanguageAndSettingsProvider
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -43,7 +45,13 @@ export class Nx503Component implements OnInit {
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.router.navigate(['/']).catch(() => console.error('Error navigating to the index'));
+            this.languageAndSettingsProvider
+                .load()
+                .then(() => {
+                    if (this.languageAndSettingsProvider.loaded) {
+                        this.router.navigate(['/']).catch(() => console.error('Error navigating to the index'));
+                    }
+                });
         }, this.CONFIG.maintenanceTimeout);
     }
 }
