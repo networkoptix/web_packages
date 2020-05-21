@@ -2,7 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const webCommonPath = path.join(__dirname, './app/web_common');
 
@@ -70,7 +70,7 @@ module.exports = {
             chunksSortMode: 'manual'
         }),
 
-        new ExtractTextPlugin('styles/main.[chunkhash].css', { allChunks:true }),
+        // new ExtractTextPlugin('styles/main.[chunkhash].css', { allChunks:true }),
 
         new CopyWebpackPlugin([
             {
@@ -95,11 +95,11 @@ module.exports = {
             'screenfull': 'screenfull',
             'jquery-mousewheel': 'jquery-mousewheel'
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'commons',
-            filename: 'scripts/commons.[hash].js',
-            minChunks: 2
-        })
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'commons',
+        //     filename: 'scripts/commons.[hash].js',
+        //     minChunks: 2
+        // })
     ],
     resolve: {
         extensions: ['.ts', '.js'],

@@ -2,23 +2,22 @@ import {
     AfterViewInit, Component,
     ElementRef, OnInit, ViewChild,
     ViewEncapsulation
-}                                  from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
-import { Location }                from '@angular/common';
-import {
-    NxAccountService, NxUriService,
-    NxConfigService, IConfig,
-    NxSystem, NxSystemService,
-    NxLanguageProviderService,
-    NxScrollMechanicsService
-}                                  from '../../../services';
-import { NxMenuService }           from '../../../menu';
-import { NxHealthService }         from '../health.service';
-import { NxHealthLayoutService }   from '../health-layout.service';
-import { delay, throttleTime }     from 'rxjs/operators';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
-import { of, SubscriptionLike }    from 'rxjs';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { Location }                  from '@angular/common';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxMenuService }             from '../../../menu';
+import { NxHealthService }           from '../health.service';
+import { NxHealthLayoutService }     from '../health-layout.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { of, SubscriptionLike }      from 'rxjs';
+import { delay, throttleTime }       from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: string;
@@ -74,17 +73,18 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
     @ViewChild('search', { static: false }) searchElement: ElementRef;
     @ViewChild('area', { static: false }) areaElement: ElementRef;
 
-    constructor(private accountService: NxAccountService,
-                private configService: NxConfigService,
-                private languageService: NxLanguageProviderService,
-                private systemService: NxSystemService,
-                private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private healthService: NxHealthService,
-                private uri: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+    constructor(
+        private accountService: NxAccountService,
+        public healthService: NxHealthService,
+        public healthLayoutService: NxHealthLayoutService,
+        private configService: NxConfigService,
+        private languageService: NxLanguageProviderService,
+        private systemService: NxSystemService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private menuService: NxMenuService,
+        private uri: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.LANG = this.languageService.translations;

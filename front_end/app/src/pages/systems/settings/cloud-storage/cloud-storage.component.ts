@@ -1,17 +1,19 @@
-import { Component, LOCALE_ID, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxUtilsService, NxSystem,
-    NxCloudApiService,
-    NxProcessService, Process
-}                                  from '../../../../services';
-import { NxDialogsService }        from '../../../../dialogs';
-import { NxSettingsService }       from '../settings.service';
-import { NxMenuService }           from '../../../../menu';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { BehaviorSubject }         from 'rxjs';
+    Component, LOCALE_ID,
+    Inject, OnInit
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../services/process.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import { NxSettingsService }         from '../settings.service';
+import { NxMenuService }             from '../../../../menu';
+import { BehaviorSubject }           from 'rxjs';
+import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
+import { NxUtilsService }            from '../../../../services/utils.service';
+import { NxSystem }                  from '../../../../services/system.service';
 
 @Component({
     selector    : 'nx-cloud-storage',

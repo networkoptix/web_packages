@@ -2,25 +2,25 @@ import {
     Component, OnInit, Input,
     forwardRef, ViewEncapsulation,
     OnDestroy, EventEmitter, Output
-} from '@angular/core';
+}                                           from '@angular/core';
 import {
     NG_VALUE_ACCESSOR,
     ControlValueAccessor
-}                                         from '@angular/forms';
-import { ActivatedRoute, Router }         from '@angular/router';
-import { Location }                       from '@angular/common';
-import { Subscription, SubscriptionLike } from 'rxjs';
-import { debounceTime }                   from 'rxjs/operators';
-import { Subject }                        from 'rxjs/Subject';
-import { isArray }                        from 'rxjs/internal-compatibility';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
-import {
-    NxConfigService, IConfig, NxUriService,
-    NxLanguageProviderService, NxUtilsService,
-    NxScrollMechanicsService, ButtonArrowType
-} from '../../services';
-import { LanguageI18NStaticTypes }        from '../../../language_i18n_static_types';
-import { NxSearchService }                from '../../services/search.service';
+}                                           from '@angular/forms';
+import { ActivatedRoute, Router }           from '@angular/router';
+import { Location }                         from '@angular/common';
+import { Subscription, SubscriptionLike }   from 'rxjs';
+import { debounceTime }                     from 'rxjs/operators';
+import { Subject }                          from 'rxjs/Subject';
+import { isArray }                          from 'rxjs/internal-compatibility';
+import { AutoUnsubscribe }                  from 'ngx-auto-unsubscribe';
+import { NxLanguageProviderService }        from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }         from '../../services/nx-config';
+import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
+import { NxUriService }                     from '../../services/uri.service';
+import { NxUtilsService }                   from '../../services/utils.service';
+import { LanguageI18NStaticTypes }          from '../../../language_i18n_static_types';
+import { ButtonArrowType, NxSearchService } from '../../services/search.service';
 
 /* Usage
  <nx-search

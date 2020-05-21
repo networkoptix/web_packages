@@ -1,15 +1,17 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router }                       from '@angular/router';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import { IntegrationService }           from './integration.service';
 import {
-    NxUriService, NxAccountService,
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxPageService, NxUtilsService
-}                                       from '../../services';
-import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { IntegrationService }        from './integration.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxUriService }              from '../../services/uri.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxUtilsService }            from '../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -19,25 +21,25 @@ import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_type
 })
 
 export class NxIntegrationsComponent implements OnInit, OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
-    private allElements;
-    private elements;
-    private emptyFilter: any = {};
-    private filterModel: any = {};
-
-    private integrationSubscription: Subscription;
-    private uriSubscription: Subscription;
+    allElements: any;
+    elements: any;
     params;
     account;
+    filterModel: any = {};
+
+    private emptyFilter: any = {};
+    private integrationSubscription: Subscription;
+    private uriSubscription: Subscription;
 
     selectors = {
-        access   : false,
-        analytics: false,
-        cameras  : false,
-        home     : false,
-        psim     : false,
+        access    : false,
+        analytics : false,
+        cameras   : false,
+        home      : false,
+        psim      : false
     };
 
     private setupDefaults(configService) {
@@ -114,7 +116,7 @@ export class NxIntegrationsComponent implements OnInit, OnDestroy {
 
         this.CONFIG.integration.filter.items.forEach(item => {
             if (item.enabled || (item.id === this.CONFIG.integration.myTagId && haveMyIntegration)) {
-                    this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
+                this.filterModel.tags.push({ id: item.id, label: item.name, value: false });
             }
         });
 

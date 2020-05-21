@@ -46,10 +46,12 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
     @Input() description: string;
     @Output() onClick = new EventEmitter<string>();
 
+    public value;
+    public state: string;
+
     private touched: boolean;
     private invalid: boolean;
-    private state: string;
-    private value;
+
     private cbxStates = {
         false    : 'unchecked',
         true     : 'checked',

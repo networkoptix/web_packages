@@ -1,16 +1,17 @@
 import {
-    Component, Inject, OnDestroy, LOCALE_ID, Input, OnChanges, SimpleChanges
-}                                       from '@angular/core';
-import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
-import {
-    NxSystem, Watcher,
-    NxLanguageProviderService,
-    NxProcessService, Process,
-    NxUtilsService
-}                                       from '../../../../../services';
-import { NxDialogsService }             from '../../../../../dialogs';
-import { LanguageI18NStaticTypes }      from '../../../../../../language_i18n_static_types';
+    Component, Inject, OnDestroy,
+    LOCALE_ID, Input, OnChanges,
+    SimpleChanges
+}                                    from '@angular/core';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { Watcher }                   from '../../../../../services/apply.service';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
+import { NxSystem }                  from '../../../../../services/system.service';
+import { NxUtilsService }            from '../../../../../services/utils.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -188,8 +189,7 @@ export class BitConverter {
 
         get GB(): number {
             const roundBy = this.bitsGb;
-            const rounded = Math.round(this.bits / roundBy) * roundBy;
-            this.bits = rounded;
+            this.bits = Math.round(this.bits / roundBy) * roundBy;
             return Math.round(this.bits / this.bitsGb);
         }
 
@@ -197,8 +197,7 @@ export class BitConverter {
 
         get TB(): number {
             const roundBy = this.bitsTb / 1000;
-            const rounded = Math.round(this.bits / roundBy) * roundBy;
-            this.bits = rounded;
+            this.bits = Math.round(this.bits / roundBy) * roundBy;
             return Math.round(this.bits / this.bitsTb * 1000) / 1000;
         }
 

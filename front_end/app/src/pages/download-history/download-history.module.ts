@@ -10,7 +10,6 @@ import { ComponentsModule }         from '../../components/components.module';
 import { ReleaseComponent }         from './release/release.component';
 import { DownloadHistoryComponent } from './download-history.component';
 import { TranslateModule }          from '@ngx-translate/core';
-import { DeviceDetectorService }    from 'ngx-device-detector';
 import { EMPTY as empty }           from 'rxjs';
 
 @Injectable()
@@ -62,8 +61,3 @@ const appRoutes: Routes = [
 })
 export class DownloadHistoryModule {
 }
-
-// declare var angular: angular.IAngularStatic;
-// angular
-//     .module('cloudApp.directives')
-//     .directive('downloadHistory', downgradeComponent({component: DownloadHistoryComponent}) as angular.IDirectiveFactory);

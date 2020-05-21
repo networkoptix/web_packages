@@ -1,14 +1,10 @@
-import {
-    Component, Input, OnDestroy, OnInit,
-    ViewEncapsulation
-} from '@angular/core';
-import {
-    NxLanguageProviderService, NxConfigService,
-    IConfig, NxScrollMechanicsService
-}                                    from '../../../services';
-import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { SubscriptionLike }          from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { NxLanguageProviderService }                              from '../../../services/nx-language-provider';
+import { IConfig, NxConfigService }                               from '../../../services/nx-config';
+import { NxScrollMechanicsService }                               from '../../../services/scroll-mechanics.service';
+import { LanguageI18NStaticTypes }                                from '../../../../language_i18n_static_types';
+import { SubscriptionLike }                                       from 'rxjs';
+import { AutoUnsubscribe }                                        from 'ngx-auto-unsubscribe';
 
 /* Usage
  <nx-page-placeholder

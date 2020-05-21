@@ -2,20 +2,19 @@ import {
     AfterViewInit, Component, ElementRef,
     OnDestroy, OnInit, ViewChild,
     ViewEncapsulation
-}                                from '@angular/core';
-import { ActivatedRoute }        from '@angular/router';
-import { Location }              from '@angular/common';
-import {
-    NxConfigService, IConfig,
-    NxUriService, NxUtilsService,
-    NxScrollMechanicsService
-}                                from '../../../services';
-import { NxMenuService }         from '../../../menu';
-import { NxHealthService }       from '../health.service';
-import { NxHealthLayoutService } from '../health-layout.service';
-import { of, SubscriptionLike }  from 'rxjs';
-import { delay, throttleTime }   from 'rxjs/operators';
-import { AutoUnsubscribe }       from 'ngx-auto-unsubscribe';
+}                                   from '@angular/core';
+import { ActivatedRoute }           from '@angular/router';
+import { Location }                 from '@angular/common';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
+import { NxUriService }             from '../../../services/uri.service';
+import { NxMenuService }            from '../../../menu';
+import { NxHealthService }          from '../health.service';
+import { NxHealthLayoutService }    from '../health-layout.service';
+import { of, SubscriptionLike }     from 'rxjs';
+import { delay, throttleTime }      from 'rxjs/operators';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { NxUtilsService }           from '../../../services/utils.service';
+import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -70,14 +69,15 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
     @ViewChild('area', { static: false }) areaElement: ElementRef;
     // @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
 
-    constructor(private route: ActivatedRoute,
-                private location: Location,
-                private menuService: NxMenuService,
-                private configService: NxConfigService,
-                private healthService: NxHealthService,
-                private uriService: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+    constructor(
+        public healthLayoutService: NxHealthLayoutService,
+        private route: ActivatedRoute,
+        private location: Location,
+        private menuService: NxMenuService,
+        private configService: NxConfigService,
+        public healthService: NxHealthService,
+        private uriService: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {

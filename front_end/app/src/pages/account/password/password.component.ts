@@ -1,20 +1,20 @@
 import {
     Component, OnInit, AfterViewInit, ViewChild, ViewContainerRef, ViewChildren, QueryList
-}                                  from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
-import { NgForm }                  from '@angular/forms';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxAccountService, Account,
-    NxProcessService, NxCloudApiService,
-    NxSystemsService, NxPageService,
-    NxApplyService, Watcher, Process
-}                                  from '../../../services';
-import { NxDialogsService }        from '../../../dialogs';
-import { NxMenuService }           from '../../../menu';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { first }                   from 'rxjs/operators';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { NgForm }                    from '@angular/forms';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService, Account } from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { NxApplyService, Watcher }   from '../../../services/apply.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../menu';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { first }                     from 'rxjs/operators';
 
 @Component({
     selector    : 'nx-account-password-component',

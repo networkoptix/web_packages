@@ -5,7 +5,7 @@ import { Router }                                         from '@angular/router'
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
-import { NxDialogsService }                               from '../../dialogs';
+import { NxDialogsService }                               from '../../dialogs/dialogs.service';
 import { NxSessionService }                               from '../session.service';
 import { NxApplyService }                                 from '../apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -143,7 +143,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.sessionService.invalidateSession();
     }
 
-    get(forceUpdate = false): Promise<Account | false> {
+    get(forceUpdate = false): Promise<Account | undefined> {
         if (this.requestingLogin) {
             // login is requesting, so we wait
             return this.requestingLogin
@@ -151,7 +151,7 @@ export abstract class BaseAccount implements OnDestroy {
                     this.requestingLogin = undefined; // clean requestingLogin reference
                     return this.get(); // Try again
                 }, () => {
-                    return false;
+                    return undefined;
                 });
         }
 
@@ -422,9 +422,9 @@ export abstract class BaseAccount implements OnDestroy {
     protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError(() => {
+            catchError((ex) => {
                 this.logoutHelper(false);
-                return of('Error');
+                return of(undefined);
             })
         ).subscribe((account: Account) => {
             this.account = account;

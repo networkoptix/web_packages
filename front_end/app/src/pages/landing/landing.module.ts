@@ -1,13 +1,11 @@
-import { NgModule }                          from '@angular/core';
-import { CommonModule }                      from '@angular/common';
-import { BrowserModule }                     from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
-import { RouterModule, Routes }              from '@angular/router';
-
-import { NxLandingComponent } from './landing.component';
-
-import { TranslateModule }   from '@ngx-translate/core';
-import { ComponentsModule }  from '../../components/components.module';
+import { NgModule }             from '@angular/core';
+import { CommonModule }         from '@angular/common';
+import { BrowserModule }        from '@angular/platform-browser';
+import { UpgradeModule }        from '@angular/upgrade/static';
+import { RouterModule, Routes } from '@angular/router';
+import { NxLandingComponent }   from './landing.component';
+import { TranslateModule }      from '@ngx-translate/core';
+import { ComponentsModule }     from '../../components/components.module';
 
 const appRoutes: Routes = [
     { path    : '', component: NxLandingComponent },

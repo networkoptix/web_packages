@@ -6,15 +6,16 @@ import { DOCUMENT, Location }        from '@angular/common';
 import { Router }                    from '@angular/router';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { LocalStorageService }       from 'ngx-store';
-import {
-    NxConfigService, IConfig,
-    NxUtilsService, NxAccountService
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxUtilsService }            from '../../services/utils.service';
+import { NxAccountService }          from '../../services/account.service';
 import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxModalGenericComponent }   from '../generic/generic.component';
+import { NxDialogsService }          from '../dialogs.service';
+import { NxApplyService }            from '../../services/apply.service';
 
 @Component({
     selector    : 'ngbd-modal-content',
@@ -57,10 +58,10 @@ export class LoginModalContent implements OnInit {
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
-        private activeModal: NgbActiveModal,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
+        public activeModal: NgbActiveModal,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();

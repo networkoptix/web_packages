@@ -1,5 +1,5 @@
 import { Injectable }               from '@angular/core';
-import { HttpClient }               from '@angular/common/http';
+import { HttpClient, HttpHeaders }  from '@angular/common/http';
 import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
@@ -18,7 +18,12 @@ export class NxCloudApiService {
         this.CONFIG = configService.getConfig();
     }
 
+    getLanguage() {
+        return this.http.get('/api/utils/language');
+    }
+
     checkResponseHasError<T extends any>(data: T) {
+        // this is not a repetition
         if (data?.resultCode && data.resultCode !== this.CONFIG.responseOk) {
             return data;
         }
@@ -30,6 +35,22 @@ export class NxCloudApiService {
             system_id: systemId,
             password
         });
+    }
+
+    getStaticLanding() {
+        const httpOptions = {
+            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType : 'text' as 'text'
+        };
+        return this.http.get('/' + this.CONFIG.viewsDir + 'static/landing.html', httpOptions);
+    }
+
+    getStatic(url) {
+        const httpOptions = {
+            headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),
+            responseType : 'text' as 'text'
+        };
+        return this.http.get(url, httpOptions);
     }
 
     getCommonPasswords() {

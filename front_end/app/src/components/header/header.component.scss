@@ -1,13 +1,13 @@
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
-@import '../../styles/mixins';
 
 @import '../../../styles/native-theme/theme_palette';
 @import '../../../styles/theme_palette';
 @import '../../../styles/custom/custom_palette';
 @import '../../../styles/theme_variables';
 @import '../../styles/typography';
+
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/mixins/breakpoints';
+@import '../../styles/mixins';
 
 $logo-height               : 32px;
 $line-height               : 44px;

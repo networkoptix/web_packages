@@ -10,9 +10,9 @@ import { Component, Input, OnInit } from '@angular/core';
 */
 
 @Component({
-    selector   : 'nx-ml-ellipsis',
-    templateUrl: 'mle.component.html',
-    styleUrls  : [ 'mle.component.scss' ],
+    selector    : 'nx-ml-ellipsis',
+    templateUrl : 'mle.component.html',
+    styleUrls   : ['mle.component.scss']
 })
 export class NxMultiLineEllipsisComponent implements OnInit {
     @Input() config: string;

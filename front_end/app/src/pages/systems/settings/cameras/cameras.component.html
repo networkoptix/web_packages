@@ -1,9 +1,9 @@
 <div *ngIf="system" class="row auth-visible">
-    <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
-    <div class="col-12 loader-div" *ngIf="showPreloader">
-        <nx-pre-loader type="wrapper"></nx-pre-loader>
-    </div>
-    <ng-container *ngIf="!noCameras && selectedCamera">
+    <nx-page-placeholder *ngIf="(!system || !system.isOnline ||noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
+
+    <nx-pre-loader *ngIf="showPreloader" class="w-100"></nx-pre-loader>
+
+    <ng-container *ngIf="!noCameras && selectedCamera && system.isOnline">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -39,11 +39,11 @@
                 <header>
                     <div class="header-top-bar">
                         <div class="header-title">
-                            <h2 NxEditable 
-                            [(content)]="cameraName" 
-                            (blur)="handleBlur()" 
+                            <h2 NxEditable
+                            [(content)]="cameraName"
+                            (blur)="handleBlur()"
                             (focus)="handleFocus()"
-                            [hasError]="cameraName" 
+                            [hasError]="cameraName"
                             id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
@@ -64,10 +64,10 @@
                         </button>
                     </div>
                     <div [style.width.px]="previewWidth">
-                        <nx-health-image [isPrimary]="true" 
+                        <nx-health-image [isPrimary]="true"
                             aspect="override"
-                            [preloader]="true" 
-                            [state]="selectedCamera.status" 
+                            [preloader]="true"
+                            [state]="selectedCamera.status"
                             [url]="motionPreviewImage"
                             [lightBackground]="true"></nx-health-image>
                     </div>
@@ -137,8 +137,8 @@
                                 [disabled]="availableLicenses === 0"  
                                 (click)="handleRecordingToggle()"></nx-switch>
                             <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses, 'shake-hint': shakeHint}">{{
-                                availableLicenses > 0 ? 
-                                ('1 professional license channel will be used' | translate)  : 
+                                availableLicenses > 0 ?
+                                ('1 professional license channel will be used' | translate)  :
                                 ('Professional license is required' | translate)
                             }}</div>
                         </div>
@@ -149,7 +149,7 @@
                         <h4 class="mb-3" translate>Mode</h4>
                             <nx-radio
                                 *ngFor="let mode of recordingModes" class="d-flex pb-2"
-                                [name]="LANG.common.recordingModes[mode.name]" 
+                                [name]="LANG.common.recordingModes[mode.name]"
                                 [componentId]="LANG.common.recordingModes[mode.name]"
                                 [value]="mode.value"
                                 [label]="LANG.common.recordingModes[mode.name]"
@@ -202,17 +202,17 @@
                 </header>
                 <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)">
                     <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
-                        <nx-health-image [isPrimary]="true" 
-                            [motionPreview]="true" 
-                            [preloader]="true" 
-                            [state]="selectedCamera.status" 
+                        <nx-health-image [isPrimary]="true"
+                            [motionPreview]="true"
+                            [preloader]="true"
+                            [state]="selectedCamera.status"
                             [url]="motionPreviewImage"
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
-                        <nx-motion-detection-overlay 
+                        <nx-motion-detection-overlay
                             *ngIf="showOverlay && selectedCamera && !noCameras && this.motionMaskWatcher.value"
                             (updateMask)="updateMask($event)"
-                            [height]="height" 
+                            [height]="height"
                             [width]="width"
                             [rotation]="this.selectedRotation.value || 0"
                             [sensitivityButtons$]="sensitivityButtons$"
@@ -223,9 +223,9 @@
                     <span *ngIf="sensitivityButtons === false" class="text-muted" translate>Select some area on camera to change the sensitivity settings for it</span>
                     <ng-container *ngIf="sensitivityButtons !== false">
                         <div class="btn-toolbar btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="sensitivityButtons">
-                            <label *ngFor="let _ of sensitivityColors; let i = index" 
-                                ngbButtonLabel 
-                                class="btn-secondary mr-2 sensitivity-buttons" 
+                            <label *ngFor="let _ of sensitivityColors; let i = index"
+                                ngbButtonLabel
+                                class="btn-secondary mr-2 sensitivity-buttons"
                                 [id]="'sensitivity-' + i + '-button'"
                                 [ngClass]="'button-' + i">
                                 <input ngbButton type="radio" [value]="i"> {{i}}

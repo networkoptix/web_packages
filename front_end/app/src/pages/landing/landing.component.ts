@@ -1,23 +1,20 @@
-import { Component, OnInit }       from '@angular/core';
-import { Router }                  from '@angular/router';
-import { LocalStorageService }     from 'ngx-store';
-
-import {
-    NxConfigService, IConfig,
-    NxAccountService, NxPageService,
-    NxLanguageProviderService
-}  from '../../services';
-import { NxDialogsService }        from '../../dialogs';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, OnInit }         from '@angular/core';
+import { Router }                    from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'landing-component',
-    templateUrl: 'landing.component.html',
-    styleUrls  : ['landing.component.scss']
+    selector    : 'landing-component',
+    templateUrl : 'landing.component.html',
+    styleUrls   : ['landing.component.scss']
 })
 
 export class NxLandingComponent implements OnInit {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -72,4 +69,3 @@ export class NxLandingComponent implements OnInit {
         }
     }
 }
-

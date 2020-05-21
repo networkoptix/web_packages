@@ -8,9 +8,8 @@ import {
     NG_VALIDATORS,
     Validator, FormControl
 }                                    from '@angular/forms';
-import {
-    NxLanguageProviderService, NxConfigService, IConfig
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -39,11 +38,11 @@ export class NxEmailComponent implements ControlValueAccessor, Validator {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    private value: string;
+    public value: string;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
-    private onTouchedCallback = () => {
+    public onTouchedCallback = () => {
     };
 
     private onChangeCallback = (_: any) => {

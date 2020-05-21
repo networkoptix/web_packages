@@ -3,14 +3,12 @@ import {
     ViewEncapsulation, OnDestroy
 }                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxDialogsService }          from '../../dialogs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import {
-    NxConfigService, IConfig,
-    NxUrlProtocolService, NxProcessService,
-    NxLanguageProviderService,
-    Process
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxProcessService, Process } from '../../services/process.service';
 
 @Component({
     selector     : 'nx-client-button',

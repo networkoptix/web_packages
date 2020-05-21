@@ -47,13 +47,13 @@ export interface BaseConfig {
     footerItems: FooterItem[];
     googleTagManagerId: string;
     pushConfig: string;
+    testedOperatingSystems: string;
     trafficRelayHost: string;
     vmsName: string;
     accessRoles: AccessRoles;
     allowBetaMode: boolean;
     allowDebugMode: boolean;
     debug: Debug;
-    gatewayUrl: string;
     globalViewArchivePermission: string;
     openClientTimeout: number;
     openClientError: string;
@@ -517,7 +517,7 @@ export interface Webclient {
     playerReadyTimeout: number;
     reloadInterval: number;
     resetDisplayedTextTimer: number;
-    staticResources: string;
+    // staticResources: string;
     skipFramesRenderingTimeline: boolean;
     updateArchiveStateTimeout: number;
     updateArchiveRecordsTimeout: number;
@@ -779,7 +779,6 @@ export interface SettingsConfig {
 //         { json: 'allowBetaMode', js: 'allowBetaMode', typ: true },
 //         { json: 'allowDebugMode', js: 'allowDebugMode', typ: true },
 //         { json: 'debug', js: 'debug', typ: r('Debug') },
-//         { json: 'gatewayUrl', js: 'gatewayUrl', typ: '' },
 //         { json: 'globalViewArchivePermission', js: 'globalViewArchivePermission', typ: '' },
 //         { json: 'openClientTimeout', js: 'openClientTimeout', typ: 0 },
 //         { json: 'openClientError', js: 'openClientError', typ: '' },

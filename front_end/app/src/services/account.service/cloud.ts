@@ -1,21 +1,22 @@
-import { Inject, Injector }           from '@angular/core';
-import { DOCUMENT, Location }         from '@angular/common';
-import { Router }                     from '@angular/router';
-import { LocalStorageService }        from 'ngx-store';
-import { Exactly }                    from '../utils.service';
-import { NxConfigService }            from '../nx-config';
-import { NxCloudApiService }          from '../nx-cloud-api';
-import { NxLanguageProviderService }  from '../nx-language-provider';
-import { NxSessionService }           from '../session.service';
-import { WINDOW }                     from '../window-provider';
-import { NxAppStateService }          from '../nx-app-state.service';
-import { NxUriService }               from '../uri.service';
-import { NxPollService }              from '../poll.service';
-import { BaseAccount }                from './base';
+import { BaseAccount }                  from './base';
+import { Exactly }                      from '../utils.service';
+import { Inject, Injectable, Injector } from '@angular/core';
+import { DOCUMENT, Location }           from '@angular/common';
+import { LocalStorageService }          from 'ngx-store';
+import { Router }                       from '@angular/router';
+import { NxConfigService }              from '../nx-config';
+import { NxCloudApiService }            from '../nx-cloud-api';
+import { NxLanguageProviderService }    from '../nx-language-provider';
+import { NxSessionService }             from '../session.service';
+import { WINDOW }                       from '../window-provider';
+import { NxAppStateService }            from '../nx-app-state.service';
+import { NxUriService }                 from '../uri.service';
+import { NxPollService }                from '../poll.service';
 
 /**
  * CloudAcount over-rides BaseAccount, should maintain the same interface.
  */
+@Injectable()
 export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, CloudAccount> {
     constructor(
         configService: NxConfigService,

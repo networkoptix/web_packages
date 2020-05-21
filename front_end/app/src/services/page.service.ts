@@ -7,8 +7,8 @@ import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
     providedIn: 'root'
 })
 export class NxPageService {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(
         configService: NxConfigService,

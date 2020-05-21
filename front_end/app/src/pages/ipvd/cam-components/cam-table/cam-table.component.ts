@@ -6,16 +6,15 @@ import {
     ElementRef, ViewChild, HostListener, Renderer2
 }                                         from '@angular/core';
 import { Router }                         from '@angular/router';
-import {
-    NxConfigService, IConfig,
-    NxUriService, NxUtilsService,
-    NxLanguageProviderService,
-    NxScrollMechanicsService
-}                                         from '../../../../services';
+import { NxLanguageProviderService }      from '../../../../services/nx-language-provider';
+import { NxConfigService, IConfig }       from '../../../../services/nx-config';
+import { NxUriService }                   from '../../../../services/uri.service';
 import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 import { Subscription, SubscriptionLike } from 'rxjs';
 import { delay }                          from 'rxjs/operators';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
+import { NxUtilsService }                 from '../../../../services/utils.service';
+import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -37,18 +36,17 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>()
 
-    public selectedHeader;
-    public showHeaders;
-
     private _elements: any[];
-    private selectedCamera;
-    private sortOrderASC: boolean;
-    private results;
     private cameraHeaders;
     private paramsShown;
-    private debug: boolean;
     private beta: boolean;
 
+    selectedHeader;
+    showHeaders;
+    selectedCamera;
+    sortOrderASC: boolean;
+    results;
+    debug: boolean;
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -99,13 +97,15 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @ViewChild('nxScrollWrapper', { static: false }) scrollWrapper: ElementRef;
     @ViewChild('nxTable', { static: false }) camerasTable: ElementRef;
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         language: NxLanguageProviderService,
-                private router: Router,
-                private uri: NxUriService,
-                private scrollMechanicsService: NxScrollMechanicsService,
-                private renderer: Renderer2,
-                @Inject(PLATFORM_ID) private platformId: object) {
+        private router: Router,
+        private uri: NxUriService,
+        private scrollMechanicsService: NxScrollMechanicsService,
+        private renderer: Renderer2,
+        @Inject(PLATFORM_ID) private platformId: object
+    ) {
         this.LANG = language.translations;
         this.CONFIG = configService.getConfig();
 

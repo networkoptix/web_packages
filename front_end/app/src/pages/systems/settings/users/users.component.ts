@@ -5,20 +5,21 @@ import {
 import { Location }                             from '@angular/common';
 import { ActivatedRoute }                       from '@angular/router';
 import { filter }                               from 'rxjs/operators';
-import {
-    NxConfigService, IConfig,
-    NxPageService, NxAccountService,
-    NxLanguageProviderService, NxUtilsService,
-    NxSystem, NxSystemRole, NxSystemUser,
-    NxProcessService, NxUriService,
-    NxApplyService, Watcher, Process
-}                                               from '../../../../services';
-import { NxDialogsService }                     from '../../../../dialogs';
+import { NxDialogsService }                     from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }                    from '../settings.service';
 import { NxMenuService }                        from '../../../../menu';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
 import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
+import { NxConfigService, IConfig }             from '../../../../services/nx-config';
+import { NxPageService }                        from '../../../../services/page.service';
+import { NxAccountService }                     from '../../../../services/account.service';
+import { NxLanguageProviderService }            from '../../../../services/nx-language-provider';
+import { NxUtilsService }                       from '../../../../services/utils.service';
+import { NxSystem, NxSystemRole, NxSystemUser } from '../../../../services/system.service';
+import { NxProcessService, Process }            from '../../../../services/process.service';
+import { NxUriService }                         from '../../../../services/uri.service';
+import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -139,7 +140,11 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             ]);
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this.routeParamsSubscription.unsubscribe();
+        this.systemSubscription.unsubscribe();
+        this.userSubscription.unsubscribe();
+    }
 
     initProcesses(): void {
         this.editUser = this.processService.createProcess(() => {
@@ -208,20 +213,20 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 });
             }
             if (typeof (user) === 'undefined') {
-                user = this.system.users[0];
-                const userId = this.system.mediaserver.cleanId(user.id);
+                if (this.menuService.section === 'users') {
+                    user = this.system.users[0];
+                    const userId = this.system.mediaserver.cleanId(user.id);
 
-                this.uriService
-                    .updateURI(`systems/${this.system.id}/users/${userId}`)
-                    .catch(error => {
-                        console.error(error);
-                    });
+                    this.uriService
+                        .updateURI(`systems/${this.system.id}/users/${userId}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
+                } else {
+                    return;
+                }
             }
 
-            // If there's no users skip setting section and permissions
-            if (typeof (user) === 'undefined') {
-                return;
-            }
             this.applyService.hardReset();
             this.selectedUser = { ...user };
 

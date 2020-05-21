@@ -1,14 +1,13 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
-
 
 import { NonSupportedBrowserComponent } from './non-supported-browser.component';
 
 const appRoutes: Routes = [
-    {path: 'browser', component: NonSupportedBrowserComponent},
+    { path: 'browser', component: NonSupportedBrowserComponent }
 ];
 
 @NgModule({

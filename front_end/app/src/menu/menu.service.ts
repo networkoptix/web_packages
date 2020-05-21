@@ -1,13 +1,14 @@
-import { Injectable, OnDestroy }           from '@angular/core';
-import { BehaviorSubject }                 from 'rxjs';
-import { NxUtilsService, NxSearchService } from '../services';
-import { isArray }                         from 'rxjs/internal-compatibility';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject }       from 'rxjs';
+import { NxUtilsService }        from '../services/utils.service';
+import { NxSearchService }       from '../services/search.service';
+import { isArray }               from 'rxjs/internal-compatibility';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxMenuService implements OnDestroy {
-    selectedSectionSubject = new BehaviorSubject([]);
+    selectedSectionSubject = new BehaviorSubject('');
     selectedSubSectionSubject = new BehaviorSubject([]);
     selectedDetailsSection = new BehaviorSubject([]);
     contentSubject = new BehaviorSubject([]);
@@ -32,6 +33,14 @@ export class NxMenuService implements OnDestroy {
 
     get navItemId() {
         return this.navItemSubject.getValue();
+    }
+
+    get section() {
+        return this.selectedSectionSubject.getValue();
+    }
+
+    get detail() {
+        return this.selectedDetailsSection.getValue();
     }
 
     setSection(section) {

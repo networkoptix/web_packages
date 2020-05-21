@@ -4,7 +4,6 @@ const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const common = require('./webpack.ipvd.js');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
 const host = '0.0.0.0';
@@ -111,34 +110,42 @@ module.exports = merge(common, {
                 loaders: [ 'raw-loader', 'sass-loader' ]
             },
             {
-                test: /\.s?css$/,
+                test   : /\.s?css$/,
                 exclude: /src/,
-                use : ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use     : [
-                        {
-                            loader : 'css-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader : 'postcss-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: 'inline'
-                            }
-                        },
-                        {
-                            loader : 'sass-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: true
-                            }
-                        }
-                    ]
-                })
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader'
+                ]
+                // use    : [
+                //     {
+                //         loader: MiniCssExtractPlugin.loader
+                //     },
+                //     {
+                //         loader : 'css-loader',
+                //         options: {
+                //             url      : false,
+                //             sourceMap: true
+                //         }
+                //     },
+                //     {
+                //         loader : 'postcss-loader',
+                //         options: {
+                //             url      : false,
+                //             sourceMap: 'inline'
+                //         }
+                //     },
+                //     {
+                //         loader : 'sass-loader',
+                //         options: {
+                //             url      : false,
+                //             sourceMap: true
+                //         }
+                //     }
+                // ]
             }
         ]
     }

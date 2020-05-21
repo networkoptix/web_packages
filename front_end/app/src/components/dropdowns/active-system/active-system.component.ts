@@ -1,11 +1,10 @@
 import {
     Component, Input, SimpleChanges
-}                       from '@angular/core';
-import { Router }       from '@angular/router';
-import { BaseDropdown } from '../injDropdown';
-import {
-    NxConfigService, NxLanguageProviderService
-}                       from '../../../services';
+}                                    from '@angular/core';
+import { Router }                    from '@angular/router';
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector   : 'nx-active-system',
@@ -33,7 +32,7 @@ export class NxActiveSystemDropdown extends BaseDropdown {
         super(languageService, configService);
     }
 
-    private updateActive(endpoint = 'settings') {
+    updateActive(endpoint = 'settings') {
         this.active.health = (endpoint === 'health');
         this.active.view = (endpoint === 'view');
         this.active.settings = (endpoint === 'settings');

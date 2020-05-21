@@ -1,23 +1,27 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                    from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
-import { NxConfigService, IConfig }  from '../../../services/nx-config';
-import {
-    NxLanguageProviderService, NxPageService,
-    NxSystemsService, NxAccountService, Account,
-    NxProcessService, NxUtilsService, NxUriService,
-    NxScrollMechanicsService, NxSystem, NxSystemService, ICamera, Process
-}                                    from '../../../services';
-import { NxDialogsService, NxToastService }  from '../../../dialogs';
-import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../menu';
-import { NxRibbonService }           from '../../../components/ribbon';
-import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+}                                             from '@angular/core';
+import { ActivatedRoute, Router }             from '@angular/router';
+import { NxConfigService, IConfig }           from '../../../services/nx-config';
+import { NxLanguageProviderService }          from '../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxToastService }                     from '../../../dialogs/toast.service';
+import { NxSettingsService }                  from './settings.service';
+import { NxMenuService }                      from '../../../menu';
+import { NxRibbonService }                    from '../../../components/ribbon';
+import { Subscription }                       from 'rxjs';
+import { filter }                             from 'rxjs/operators';
+import { AutoUnsubscribe }                    from 'ngx-auto-unsubscribe';
+import { NxPageService }                      from '../../../services/page.service';
+import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
+import { Account, NxAccountService }          from '../../../services/account.service';
+import { NxUtilsService }                     from '../../../services/utils.service';
+import { NxUriService }                       from '../../../services/uri.service';
+import { NxScrollMechanicsService }           from '../../../services/scroll-mechanics.service';
+import { NxSystemsService }                   from '../../../services/systems.service';
 
 @AutoUnsubscribe()
 @Component({

@@ -1,8 +1,8 @@
 import {
-    Component, OnInit, Input,
+    Component, Input,
     ViewEncapsulation
 }                                   from '@angular/core';
-import { NxConfigService, IConfig, Process } from '../../services';
+import { Process } from '../../services/process.service';
 
 @Component({
     selector      : 'nx-cancel-button',

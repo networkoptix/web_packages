@@ -1,14 +1,14 @@
-import { Component, Inject } from '@angular/core';
-import {
-    NxLanguageProviderService,
-    NxConfigService, IConfig,
-    NxScrollMechanicsService,
-    NxAppStateService, WINDOW
-}                            from '../app/src/services';
+import { Component, Inject }         from '@angular/core';
+import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../app/src/services/nx-config';
+import { NxScrollMechanicsService }  from '../app/src/services/scroll-mechanics.service';
+import { NxAppStateService }         from '../app/src/services/nx-app-state.service';
+import { WINDOW }                    from '../app/src/services/window-provider';
+import { fromEvent }                 from 'rxjs';
+import { debounceTime }              from 'rxjs/operators';
+
 import '../app/styles/main.scss';
 import 'bootstrap';
-import { fromEvent }         from 'rxjs';
-import { debounceTime }      from 'rxjs/operators';
 
 @Component({
     selector: 'health-monitor-app',
@@ -33,7 +33,7 @@ export class HealthMonitorComponent {
         // @ts-ignore
         this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
         // @ts-ignore
-        this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+        // this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
         fromEvent(window, 'resize').pipe(debounceTime(100)).subscribe((event: any) => {
             this.scrollMechanicsService.setWindowSize(event.target.innerHeight, event.target.innerWidth);
         });

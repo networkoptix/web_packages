@@ -1,20 +1,19 @@
 import {
     Component, Input, ViewChild,
     ChangeDetectorRef
-}                                      from '@angular/core';
-import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import {
-    NxConfigService, IConfig, NxAccountService
-}                                      from '../../services';
-import { NxCloudApiService }           from '../../services/nx-cloud-api';
-import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService, Process }            from '../../services/process.service';
-import { NxSystemService }             from '../../services/system.service';
-import { NxSystemsService }            from '../../services/systems.service';
-import { NxUtilsService }              from '../../services/utils.service';
-import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
-import StateMachine                    from './stateMachine';
-import State                           from './stateForMergeDialog';
+}                                    from '@angular/core';
+import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxSystemService }           from '../../services/system.service';
+import { NxSystemsService }          from '../../services/systems.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import StateMachine                  from './stateMachine';
+import State                         from './stateForMergeDialog';
+import { NxUtilsService }            from '../../services/utils.service';
 
 @Component({
     selector    : 'nx-modal-merge-content',

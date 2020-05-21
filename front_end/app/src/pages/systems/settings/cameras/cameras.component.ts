@@ -3,23 +3,26 @@ import {
     Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../services/process.service';
+import { WINDOW }                    from '../../../../services/window-provider';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxSystem, ICamera, StreamQuality,
-    IRecordingSettings, ITask,
-    IRecordingModes, MotionType,
-    NxUriService, WINDOW,
-    Watcher, NxApplyService,
-    Process, NxProcessService
-}                                    from '../../../../services';
+    ICamera, IRecordingModes,
+    IRecordingSettings,
+    ITask, MotionType,
+    NxSystem, StreamQuality
+}                                    from '../../../../services/system.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
+import { NxUriService }              from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
-import { NxDialogsService }          from '../../../../dialogs';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
-    Subscription, BehaviorSubject, Subject
+    Subscription, BehaviorSubject,
+    Subject
 }                                    from 'rxjs';
 import {
     filter, map, retryWhen, delay,
@@ -661,8 +664,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
-            const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
-            this.selectedAspect = aspect;
+            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;

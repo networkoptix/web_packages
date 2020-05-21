@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, OnChanges, Output, OnDestroy, SimpleChanges, SimpleChange } from '@angular/core';
-import { Subscription } from 'rxjs';
+import {
+    Component, EventEmitter,
+    Input, OnChanges, Output,
+    OnDestroy, SimpleChanges
+}                          from '@angular/core';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
-    selector : 'nx-health-image',
+    selector    : 'nx-health-image',
     templateUrl : './image.component.html',
-    styleUrls : ['./image.component.scss']
+    styleUrls   : ['./image.component.scss']
 })
 export class NxImageComponent implements OnChanges, OnDestroy {
     @Input() isPrimary: boolean;

@@ -3,16 +3,15 @@ import {
     Input, Output, EventEmitter,
     SimpleChanges
 }                                    from '@angular/core';
-import {
-    NxLanguageProviderService, NxConfigService
-}                                    from '../../../services';
 import { BaseDropdown }              from '../injDropdown';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
 
 @Component({
-    selector     : 'nx-permissions-select',
-    templateUrl  : 'permissions.component.html',
-    styleUrls    : ['permissions.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-permissions-select',
+    templateUrl   : 'permissions.component.html',
+    styleUrls     : ['permissions.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 
 export class NxPermissionsDropdown extends BaseDropdown {

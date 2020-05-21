@@ -1,47 +1,42 @@
-import { Inject, Injectable }          from '@angular/core';
-import { DOCUMENT, Location }          from '@angular/common';
-import { DomSanitizer }                from '@angular/platform-browser';
-import { NgbModal }                    from '@ng-bootstrap/ng-bootstrap';
-import { Router }                      from '@angular/router';
+import { Inject, Injectable }                  from '@angular/core';
+import { DOCUMENT, Location }                  from '@angular/common';
+import { DomSanitizer }                        from '@angular/platform-browser';
+import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
+import { Router }                              from '@angular/router';
 import {
     BehaviorSubject, SubscriptionLike
-}                                      from 'rxjs';
-import { AutoUnsubscribe }             from 'ngx-auto-unsubscribe';
-import { NxToastService }              from './toast.service';
-import {
-    NxConfigService, IConfig, NxAccountService,
-    NxSystem, ICamera, Process, NxSystemUser, NxCloudApiService
-}                                      from '../services';
-import { NxLanguageProviderService }   from '../services/nx-language-provider';
-import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
-
-import { LoginModalContent }           from './login/login.component';
-import { GenericModalContent }         from './generic/generic.component';
-import { AddUserModalContent }         from './add-user/add-user.component';
-import { DisconnectModalContent }      from './disconnect/disconnect.component';
-import { RenameModalContent }          from './rename/rename.component';
-import { MessageModalContent }         from './message/message.component';
-import { EmbedModalContent }           from './embed/embed.component';
-import { MergeModalContent }           from './merge/merge.component';
-import { ApplyModalContent }           from './apply/apply.component';
-import { RemoveUserModalContent }      from './remove-user/remove-user.component';
-import { RenameServerModalContent }    from './rename-server/rename-server.component';
-import { RestartServerModalContent }   from './restart-server/restart-server.component';
-import { DetachServerModalContent }    from './detach-server/detach-server.component';
-import { ResetServerModalContent }     from './reset-server/reset-server.component';
-import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
-import { ChangePasswordModalContent }  from './change-password/change-password.component';
-import {
-    CloudStorageDeleteModalContent,
-    CloudStorageMoveModalContent
-}                                      from './cloud-storage';
-import {
-    UpdateCameraCredentialsModalContent
-}                                      from './update-camera-credentials/update-camera-credentials.component';
-
+}                                              from 'rxjs';
+import { NgForm }                              from '@angular/forms';
+import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
+import { NxToastService }                      from './toast.service';
+import { NxLanguageProviderService }           from '../services/nx-language-provider';
+import { NxConfigService, IConfig }            from '../services/nx-config';
+import { NxAccountService }                from '../services/account.service';
+import { NxSystem, ICamera, NxSystemUser } from '../services/system.service';
+import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
+import { LoginModalContent }                   from './login/login.component';
+import { GenericModalContent }                 from './generic/generic.component';
+import { AddUserModalContent }                 from './add-user/add-user.component';
+import { DisconnectModalContent }              from './disconnect/disconnect.component';
+import { RenameModalContent }                  from './rename/rename.component';
+import { MessageModalContent }                 from './message/message.component';
+import { EmbedModalContent }                   from './embed/embed.component';
+import { MergeModalContent }                   from './merge/merge.component';
+import { ApplyModalContent }                   from './apply/apply.component';
+import { RemoveUserModalContent }              from './remove-user/remove-user.component';
+import { RenameServerModalContent }            from './rename-server/rename-server.component';
+import { RestartServerModalContent }           from './restart-server/restart-server.component';
+import { DetachServerModalContent }            from './detach-server/detach-server.component';
+import { ResetServerModalContent }             from './reset-server/reset-server.component';
+import { DeleteCloudUserModalContent }         from './delete-cloud-user/delete-cloud-user.component';
+import { ChangePasswordModalContent }          from './change-password/change-password.component';
+import { UpdateCameraCredentialsModalContent } from './update-camera-credentials/update-camera-credentials.component';
+import { CloudStorageDeleteModalContent }      from './cloud-storage/delete/cloud-storage-delete.component';
+import { CloudStorageMoveModalContent }        from './cloud-storage/move/cloud-storage-move.component';
+import { IParams }                             from '../components/search/search.component';
 import './../dialogs/dialogs.scss';
-import { IParams } from '../components/search/search.component';
-import { NgForm } from '@angular/forms';
+import { Process }                             from '../services/process.service';
+import { NxCloudApiService }                   from '../services/nx-cloud-api';
 
 @AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })

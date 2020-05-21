@@ -2,9 +2,11 @@ import {
     Component, ViewEncapsulation,
     Input, forwardRef, EventEmitter,
     Output, SimpleChanges, ViewChild
-}                            from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BaseDropdown }      from '../injDropdown';
+}                                    from '@angular/core';
+import { NG_VALUE_ACCESSOR }         from '@angular/forms';
+import { BaseDropdown }              from '../injDropdown';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 /* Usage
  <nx-select [id]="select.id"
@@ -42,6 +44,13 @@ export class NxGenericDropdown extends BaseDropdown {
     @Input() merge: boolean;
 
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
+
+    constructor(
+        languageService: NxLanguageProviderService,
+        configService: NxConfigService
+    ) {
+        super(languageService, configService);
+    }
 
     ngOnInit(): void {
         this.id = this.id || 'genericSelect';

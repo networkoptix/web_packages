@@ -6,6 +6,7 @@
             width="64"
             [translatedMessage]="LANG.system.settings.notAbleToLoadSystem">
     </nx-section-placeholder>
+
     <ng-template #systemSettings>
         <nx-pre-loader *ngIf="!settingsWatchersSet"></nx-pre-loader>
         <nx-section *ngIf="settingsWatchersSet">

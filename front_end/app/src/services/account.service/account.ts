@@ -1,4 +1,4 @@
-import { User } from '..';
+import { User } from '../system-api.service';
 
 export class Account {
     email: string;

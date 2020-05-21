@@ -1,8 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { NxHealthService } from '../../health.service';
+import {
+    AfterViewInit, Component,
+    ElementRef, Input, OnChanges,
+    OnDestroy, ViewChild
+}                                  from '@angular/core';
+import { NxHealthService }         from '../../health.service';
 import { fromEvent, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { debounceTime }            from 'rxjs/operators';
+import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 
 interface ThumbNail {
     loaded: boolean;

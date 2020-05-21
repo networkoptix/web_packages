@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { NxLanguageProviderService, NxConfigService, IConfig } from '../app/src/services';
+import { NxConfigService, IConfig } from '../app/src/services/nx-config';
+import { NxLanguageProviderService } from '../app/src/services/nx-language-provider';
 import '../app/styles/main.scss';
 import 'bootstrap';
 
@@ -64,6 +65,6 @@ export class IpvdComponent {
         // @ts-ignore
         this.CONFIG.viewsDir = 'static/lang_' + window.LANG.ajs.language + '/views/';
         // @ts-ignore
-        this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
+        // this.CONFIG.viewsDirCommon = 'static/lang_' + window.LANG.ajs.language + '/web_common/views/';
     }
 }

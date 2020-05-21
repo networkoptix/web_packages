@@ -9,17 +9,14 @@ import {
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import {
-    IConfig, NxConfigService,
-    NxLanguageProviderService,
-    NxProcessService,
-    Process,
-    NxSystem
-}                                    from '../../../../../services';
-import { NxDialogsService }          from '../../../../../dialogs';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../../settings.service';
 import { NxMenuService }             from '../../../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -34,8 +31,8 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
 
     @Input() system: NxSystem;
 
-    private haveAdvSettings: boolean;
-    private saveSettings: Process;
+    haveAdvSettings: boolean;
+    saveSettings: Process;
     private serverSubscription: Subscription;
 
     systemSettings: any = {};

@@ -3,10 +3,9 @@ import {
     Input, forwardRef, SimpleChanges
 }                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
-import {
-    NxLanguageProviderService, NxConfigService
-}                                    from '../../../services';
 import { BaseDropdown }              from '../injDropdown';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
 
 /* Usage
  <nx-multi-select

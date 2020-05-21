@@ -2,6 +2,7 @@ import { Injectable }              from '@angular/core';
 import { TranslateService }        from '@ngx-translate/core';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { BehaviorSubject }         from 'rxjs';
+import { NxCloudApiService }       from './nx-cloud-api';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,21 @@ export class NxLanguageProviderService {
     LANG: LanguageI18NStaticTypes;
     translateSubject = new BehaviorSubject({});
 
-    constructor(private translate: TranslateService) {}
+    constructor(
+        private translate: TranslateService,
+        private cloudApiService: NxCloudApiService
+    ) {}
+
+    loadLanguage() {
+        return this.cloudApiService.getLanguage().toPromise();
+    }
+
+    setTranslations(lang: string, json: JSON): void {
+        this.translate.setTranslation(lang, json);
+        this.translate.currentLang = lang;
+
+        this.translateSubject.next(this.translate.translations[this.translate.currentLang]);
+    }
 
     public get currentLanguage(): string {
         return this.translate.currentLang;

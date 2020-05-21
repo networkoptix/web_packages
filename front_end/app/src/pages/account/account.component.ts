@@ -1,19 +1,20 @@
 import {
     Component, OnDestroy, OnInit
-}                                  from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
-import { LocalStorageService }     from 'ngx-store';
-import {
-    NxConfigService, IConfig, NxAccountService,
-    NxLanguageProviderService, NxUriService,
-    NxProcessService, NxCloudApiService,
-    NxSystemsService
-}                                  from '../../services';
-import { NxDialogsService }        from '../../dialogs';
-import { NxMenuService }           from '../../menu';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxUriService }              from '../../services/uri.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxSystemsService }          from '../../services/systems.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../menu';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({

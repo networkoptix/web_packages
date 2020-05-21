@@ -3,12 +3,12 @@ import {
     ViewChild, OnDestroy, AfterViewInit
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }  from '../../services';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import { IParams } from '../../components/search/search.component';
+import { IParams }                   from '../../components/search/search.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -33,7 +33,7 @@ export class EmbedModalContent implements OnInit, OnDestroy, AfterViewInit {
     constructor(
         language: NxLanguageProviderService,
         configService: NxConfigService,
-        private activeModal: NgbActiveModal
+        public activeModal: NgbActiveModal
     ) {
         this.params = {
             authString: '',

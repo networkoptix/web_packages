@@ -1,8 +1,8 @@
 import { Component, ViewChild }          from '@angular/core';
 import { NgForm }                        from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { NxProcessService, Process }              from '../../services';
-import { NxDialogsService }              from '../../dialogs';
+import { NxProcessService, Process }     from '../../services/process.service';
+import { NxDialogsService }              from '../../dialogs/dialogs.service';
 
 @Component({
     selector   : 'sandbox-component',
