@@ -1,11 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy }    from '@angular/core';
 import {
     BehaviorSubject, Observable, Subscription
-}                                from 'rxjs';
-import {
-    NxCloudApiService, NxUtilsService,
-    NxConfigService, IConfig
-}                                from '../../services';
+}                                   from 'rxjs';
+import { NxCloudApiService }        from '../../services/nx-cloud-api';
+import { NxUtilsService }           from '../../services/utils.service';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 interface Platform {
     file: string;
@@ -34,7 +33,7 @@ export class IntegrationService implements OnDestroy {
 
         this.integrationSubject = this.getIntegrations()
             .subscribe(result => {
-                const plugins = result && result.data || [];
+                const plugins = result?.data || [];
 
                 plugins.forEach(plugin => {
                     if (plugin.mine) {
@@ -243,7 +242,7 @@ export class IntegrationService implements OnDestroy {
             };
         }
 
-        if (plugin.requirementsAndCompatibility && plugin.requirementsAndCompatibility.platforms) {
+        if (plugin.requirementsAndCompatibility?.platforms) {
             plugin.requirementsAndCompatibility.platforms.icons = this.setPlatformIcons(plugin);
         }
 

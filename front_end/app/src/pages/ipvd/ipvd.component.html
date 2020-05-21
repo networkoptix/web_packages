@@ -68,13 +68,11 @@
         </nx-vendor-list>
         <div>
             <p class="m-0" *ngIf="CONFIG.cloudCapabilities.feedbackEnabled && LANG && LANG.ipvd" dir="auto">
-                <span [translate]="'ipvd.disclaimer'"
-                      [translateParams]="{companyName: CONFIG.company.name, vmsName: CONFIG.vmsName}">
-                </span>
+                <span>{{'ipvdDisclaimer' | translate:disclaimerParams}}</span>
                 <ng-container>
-                    {{LANG.ipvd.feedback.a_Please}}&nbsp;
-                    <a href (click)="openFeedback('page')">{{LANG.ipvd.feedback.b_Link}}</a>&nbsp;
-                    {{LANG.ipvd.feedback.c_Info}}</ng-container>
+                    {{LANG.ipvdFeedback.a_Please()}}&nbsp;
+                    <a href (click)="openFeedback('page')">{{LANG.ipvdFeedback.b_Link()}}</a>&nbsp;
+                    {{LANG.ipvdFeedback.c_Info()}}</ng-container>
             </p>
         </div>
         <div class="row p-0 m-0">

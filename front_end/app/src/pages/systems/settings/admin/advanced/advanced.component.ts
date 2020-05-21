@@ -9,15 +9,14 @@ import {
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import {
-    IConfig, NxConfigService,
-    NxLanguageProviderService,
-    NxProcessService
-}                                    from '../../../../../services';
-import { NxDialogsService }          from '../../../../../dialogs';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../../settings.service';
 import { NxMenuService }             from '../../../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -30,10 +29,10 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    @Input() system: any;
+    @Input() system: NxSystem;
 
-    private haveAdvSettings: boolean;
-    private saveSettings: any;
+    haveAdvSettings: boolean;
+    saveSettings: Process;
     private serverSubscription: Subscription;
 
     systemSettings: any = {};
@@ -47,7 +46,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -88,7 +87,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
             return this.system
                 .updateOrGetSystemSettings(this.settingsToBeSaved())
                 .toPromise()
-                .then(response => {
+                .then((response: any) => {
                     this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
@@ -121,7 +120,7 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     getAdvancedSettings() {
         this.system.updateOrGetSystemSettings({ ignore: 'installedUpdateInformation,targetUpdateInformation' })
             .toPromise()
-            .then(response => {
+            .then((response: any) => {
                 this.settingsToBeDisplayedOrUpdated(response.reply.settings);
                 this.haveAdvSettings = (Object.keys(response.reply.settings).length > 0);
             });

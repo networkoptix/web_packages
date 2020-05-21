@@ -146,16 +146,3 @@
     }
 }
 
-.sectional-div {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    &.server-loader {
-        height: 200px;
-    }
-    &.server-placeholder {
-        height: 400px;
-        margin-top: 40px;
-    }
-}

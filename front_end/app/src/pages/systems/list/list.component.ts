@@ -1,18 +1,20 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location }                     from '@angular/common';
-import { ActivatedRoute, Router }       from '@angular/router';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxPageService, NxSystemsService,
-    NxAccountService, NxProcessService,
-    NxUrlProtocolService
-}                                       from '../../../services';
-import { NxDialogsService }             from '../../../dialogs';
-import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
-import { debounceTime }                 from 'rxjs/operators';
-import { Subject, Subscription }        from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+    Component, OnDestroy, OnInit
+}                                    from '@angular/core';
+import { Location }                  from '@angular/common';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService }          from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxUrlProtocolService }      from '../../../services/url-protocol.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { debounceTime }              from 'rxjs/operators';
+import { Subject, Subscription }     from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxSystemsService }          from '../../../services/systems.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -24,13 +26,13 @@ import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 export class NxSystemsListComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    showSearch: any;
-    fetchComplete: any;
-    search: any;
-    gettingSystems: any;
-    openClient: any;
-    systems: any;
-    filteredSystems: any;
+    showSearch;
+    fetchComplete;
+    search;
+    gettingSystems: Process;
+    openClient;
+    systems;
+    filteredSystems;
     userEmail: string;
     searchChanged = new Subject();
     private searchSubscription: Subscription;
@@ -38,22 +40,23 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
-        this.pageService.setPageTitle(this.LANG.pageTitles.systems);
+        this.pageService.pageTitle = this.LANG.pageTitles.systems;
     }
 
-    constructor(configService: NxConfigService,
+    constructor(
+        configService: NxConfigService,
         private urlProtocol: NxUrlProtocolService,
         private route: ActivatedRoute,
-                private language: NxLanguageProviderService,
+        private language: NxLanguageProviderService,
         private pageService: NxPageService,
         private dialogs: NxDialogsService,
         private systemsService: NxSystemsService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private router: Router,
-                private location: Location,
+        private location: Location
     ) {
         this.setupDefaults(configService);
     }
@@ -90,8 +93,7 @@ export class NxSystemsListComponent implements OnInit, OnDestroy {
 
         this.gettingSystems = this.processService.createProcess(() => {
             this.fetchComplete = true;
-            return this.systemsService.forceUpdateSystems().subscribe(_ => {
-            });
+            return this.systemsService.forceUpdateSystems().toPromise();
         }, {
             errorPrefix     : this.LANG.errorCodes.cantGetSystemsListPrefix,
             logoutForbidden : true

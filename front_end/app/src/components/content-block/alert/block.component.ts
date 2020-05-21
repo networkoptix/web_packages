@@ -2,7 +2,7 @@ import {
     Component, EventEmitter, Input, OnInit, Output,
     ViewEncapsulation
 } from '@angular/core';
-import { IConfig, NxConfigService } from '../../../services';
+import { IConfig, NxConfigService } from '../../../services/nx-config';
 
 /* Usage
  <nx-alert-block

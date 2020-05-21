@@ -3,13 +3,12 @@ import {
     ViewEncapsulation, OnDestroy
 }                                    from '@angular/core';
 import { Router }                    from '@angular/router';
-import { NxDialogsService }          from '../../dialogs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import {
-    NxConfigService, IConfig,
-    NxUrlProtocolService, NxProcessService,
-    NxLanguageProviderService
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxUrlProtocolService }      from '../../services/url-protocol.service';
+import { NxProcessService, Process } from '../../services/process.service';
 
 @Component({
     selector     : 'nx-client-button',
@@ -18,17 +17,17 @@ import {
     encapsulation: ViewEncapsulation.None
 })
 export class NxClientButtonComponent implements OnInit, OnDestroy {
-    @Input() system: any;
-    @Input() customClass: any;
-    @Input() actionType: any;
+    @Input() system;
+    @Input() customClass;
+    @Input() actionType;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    location: any;
+    location;
     canceled: boolean;
     modalActive: boolean;
-    openClient: any;
+    openClient: Process;
 
     constructor(configService: NxConfigService,
                 private processService: NxProcessService,
@@ -39,7 +38,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     ngOnDestroy(): void {

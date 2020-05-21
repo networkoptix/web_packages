@@ -8,6 +8,9 @@ from rest_framework.serializers import ValidationError
 from django.conf import settings
 from django.utils import timezone
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from api.controllers.cloud_api import Account
 from api.account_backend import AccountManager, get_ip
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APINotAuthorisedException, \
@@ -21,6 +24,25 @@ from api import models
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Swagger Schemas for body parameters
+email__body = openapi.Schema(type=openapi.TYPE_STRING)
+first_name__body = openapi.Schema(type=openapi.TYPE_STRING)
+last_name__body = openapi.Schema(type=openapi.TYPE_STRING)
+password__body = openapi.Schema(type=openapi.TYPE_STRING)
+
+login__body = openapi.Schema(type=openapi.TYPE_STRING)
+remember__body = openapi.Schema(type=openapi.TYPE_BOOLEAN)
+timezone__body = openapi.Schema(description="The users current timezone.", type=openapi.TYPE_STRING)
+
+activate_code__body = openapi.Schema(description="The code used to activate the account.", type=openapi.TYPE_STRING)
+restore_code__body = openapi.Schema(description="The code used to restore the password for an account.",
+                                    type=openapi.TYPE_STRING)
+
+code__body = openapi.Schema(description="A temporary code.", type=openapi.TYPE_STRING)
+
+# Swagger Responses
+account__response = openapi.Response('Account info.', AccountSerializer)
 
 
 def set_session_credentials(request, email, password):
@@ -38,6 +60,17 @@ def set_session_credentials(request, email, password):
     request.session['password'] = tempCredentials['password']
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "email": email__body,
+                             "first_name": first_name__body,
+                             "last_name": last_name__body,
+                             "password": password__body
+                         },
+                         required=["email", "first_name", "last_name", "password"]
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -67,6 +100,17 @@ def register(request):
     return api_success({'activated': activated})
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "login": login__body,
+                             "password": password__body,
+                             "remember": remember__body,
+                             "timezone": timezone__body
+                         },
+                         required=["login", "password"]
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -113,6 +157,7 @@ def login(request):
     return api_success(serializer.data)
 
 
+# @swagger_auto_schema(method="POST", auto_schema=None)
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -121,6 +166,19 @@ def logout(request):
     return api_success()
 
 
+@swagger_auto_schema(method="GET",  # auto_schema=None,
+                     operation_description="Returns info about the current logged in user.",
+                     responses={"200": account__response})
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Updates the user's account information and returns it.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "first_name": first_name__body,
+                             "last_name": last_name__body
+                         }
+                     ),
+                     responses={"200": account__response})
 @api_view(['GET', 'POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -149,6 +207,9 @@ def index(request):
         return api_success(serializer.data)
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Returns an temporary authkey based on the user's credentials.",
+                     responses={"200": "auth_key"})
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions
@@ -159,6 +220,15 @@ def auth_key(request):
     return api_success({'auth_key': key})
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Delete's the user's account from cloud portal and cloud db.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "password": password__body
+                         },
+                         required=["password"]
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions
@@ -170,13 +240,22 @@ def delete_user(request):
         Account.delete(user.email, request.data.get('password'))
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong password', ErrorCodes.wrong_password,
-            error_data={'password': error.error_data})
+                                  error_data={'password': error.error_data})
 
     kill_session(request)
     user.delete()
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "new_password": password__body,
+                             "old_password": password__body
+                         },
+                         required=["new_password", "old_password"]
+                     ))
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions
@@ -201,6 +280,17 @@ def change_password(request):
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="If the code is present an attempt will be made to activate the account. If "
+                                           "the email is present the user will get another activation email with a "
+                                           "valid code. If neither is present an error will occur.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": activate_code__body,
+                             "email": email__body
+                         }
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -237,6 +327,19 @@ def activate(request):
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="If the code is present an attempt will be made to restore the account's "
+                                           "password. If the email is present the user will get another restore"
+                                           "password email with a valid code. If neither is present an error will"
+                                           "occur.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": restore_code__body,
+                             "new_password": password__body,
+                             "user_email": email__body
+                         }
+                     ))
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -267,6 +370,16 @@ def restore_password(request):
     return api_success()
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Check the code and returns an email if its valid.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": code__body
+                         },
+                         required=["code"]
+                     ),
+                     responses={"200": "User's email related to the code."})
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -278,6 +391,16 @@ def check_code_in_portal(request):
     return api_success({'emailExists': email_exists})
 
 
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "code": code__body
+                         },
+                         required=["code"]
+                     ),
+                     responses={"200": "User's email related to the auth code."})
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions

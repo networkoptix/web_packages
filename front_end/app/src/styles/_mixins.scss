@@ -1,4 +1,3 @@
-@import 'theme/_variables';
 @import '../../styles/theme_variables';
 
 // Placeholder text
@@ -54,11 +53,11 @@
 @mixin badge-selected($default, $hover, $active) {
     @extend #selected-tag;
     background-color : $default;
-    
+
     & > span.close-button:hover {
         background-color : $hover;
     }
-    
+
     & > span.close-button:active {
         background-color : $active;
     }
@@ -107,15 +106,15 @@
     @-webkit-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-moz-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @-o-keyframes #{$animation-name} {
         @content;
     }
-    
+
     @keyframes #{$animation-name} {
         @content;
     }

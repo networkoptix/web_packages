@@ -1,8 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }    from '../../services';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }            from '../../services/process.service';
 import { BehaviorSubject }             from 'rxjs';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
@@ -19,8 +19,8 @@ export class AddUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    addUser: any;
-    user: any;
+    addUser: Process;
+    user;
     selectedPermissionSubject = new BehaviorSubject<any>({ name: '' });
     accessDescription: string;
 
@@ -31,7 +31,7 @@ export class AddUserModalContent {
         private processService: NxProcessService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     get selectedPermission() {

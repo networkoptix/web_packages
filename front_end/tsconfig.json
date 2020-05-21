@@ -19,6 +19,9 @@
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts",
+    "ipvd",
+    "health_monitor"
   ]
 }

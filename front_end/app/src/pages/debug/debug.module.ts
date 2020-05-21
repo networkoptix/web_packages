@@ -1,14 +1,13 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule }          from '@angular/forms';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
-import { TranslateModule }  from '@ngx-translate/core';
-
-import { NxDebugComponent } from './debug.component';
-import { ComponentsModule } from '../../components/components.module';
-import { AuthGuard }        from '../../routeGuards';
+import { TranslateModule }      from '@ngx-translate/core';
+import { NxDebugComponent }     from './debug.component';
+import { ComponentsModule }     from '../../components/components.module';
+import { AuthGuard }            from '../../routeGuards';
 
 const appRoutes: Routes = [
     {

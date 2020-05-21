@@ -9,15 +9,16 @@ import {
 import { LocalStorageService }       from 'ngx-store';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { Subscription, timer }       from 'rxjs';
-import { NxDialogsService }          from '../../dialogs';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
-import {
-    NxConfigService, IConfig,
-    NxAppStateService, NxAccountService,
-    NxSessionService, NxSystemsService,
-    NxHeaderService, NxLanguageProviderService,
-    NxSystem, NxSystemService
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAppStateService }         from '../../services/nx-app-state.service';
+import { NxAccountService }          from '../../services/account.service';
+import { NxSessionService }          from '../../services/session.service';
+import { NxSystemsService }          from '../../services/systems.service';
+import { NxHeaderService }           from '../../services/nx-header.service';
+import { NxSystem, NxSystemService } from '../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -32,20 +33,20 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     user: any = {};
     canSeeInfo: boolean;
     system: NxSystem;
-    systems: any;
-    systemId: any;
+    systems;
+    systemId;
     active: any = {};
     activeSystem: any = {};
     singleSystem: any = {};
-    inline: any;
+    inline;
     navVisible: boolean;
     dropdownsVisible: boolean;
     viewHeader: boolean;
     systemCounter: number;
-    loginState: any;
+    loginState;
 
-    getUrlSystemId: any;
-    untilHaveID: any;
+    getUrlSystemId;
+    untilHaveID;
     private headerSubscription: Subscription;
     private loginSubscription: Subscription;
     private routerSubscription: Subscription;
@@ -68,7 +69,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private headerService: NxHeaderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
+        console.log(this.accountService.serviceInstance());
     }
 
     private isActive(val) {
@@ -244,6 +246,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.dialogs
             .login(this.accountService, !redirect)
             .then(() => {});
+
+        return false;
     }
 
     logout() {
@@ -286,7 +290,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                             this.system.getInfoAndPermissions(false).catch(_ => {
                             }).then(system => {
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system?.info.capabilities?.vms_metrics) && this.system.canViewInfo();
                             });
                         }
                     } else {

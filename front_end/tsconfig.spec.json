@@ -1,0 +1,24 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/spec",
+    "module": "commonjs",
+    "types": [
+      "jest",
+      "jquery",
+      "jsdom",
+      "node"
+    ]
+  },
+  "files": [
+    "polyfills.ts"
+  ],
+  "include": [
+    "app/src/**/*.spec.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "test",
+    "**/spec.js"
+  ]
+}

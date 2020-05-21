@@ -1,19 +1,20 @@
 import {
     Component, OnDestroy, OnInit
-}                                  from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
-import { LocalStorageService }     from 'ngx-store';
-import {
-    NxConfigService, IConfig, NxAccountService,
-    NxLanguageProviderService, NxUriService,
-    NxProcessService, NxCloudApiService,
-    NxSystemsService
-}                                  from '../../services';
-import { NxDialogsService }        from '../../dialogs';
-import { NxMenuService }           from '../../menu';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxUriService }              from '../../services/uri.service';
+import { NxProcessService }          from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxSystemsService }          from '../../services/systems.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../menu';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { Subscription }              from 'rxjs';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
@@ -33,8 +34,8 @@ export class NxAccountComponent implements OnInit, OnDestroy {
     account: any = {};
     pass: any = {};
 
-    save: any;
-    changePassword: any;
+    save;
+    changePassword;
     private menuDetailSubscription: Subscription;
 
     private setupDefaults() {
@@ -58,7 +59,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.setupDefaults();
     }
@@ -90,12 +91,12 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                     level3 : [
                         {
                             id    : accountMenu.settings.id,
-                            label : this.LANG.account.accountSettings,
+                            label : this.LANG.account.accountSettings(),
                             path  : accountMenu.settings.path
                         },
                         {
                             id    : accountMenu.password.id,
-                            label : this.LANG.account.changePassword,
+                            label : this.LANG.account.changePassword(),
                             path  : accountMenu.password.path
                         }
                     ]
@@ -112,4 +113,3 @@ export class NxAccountComponent implements OnInit, OnDestroy {
             });
     }
 }
-

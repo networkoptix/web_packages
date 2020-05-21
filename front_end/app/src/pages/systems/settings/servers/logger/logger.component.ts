@@ -5,13 +5,12 @@ import {
 }                                    from '@angular/core';
 import { SubscriptionLike }          from 'rxjs';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import {
-    IConfig, NxConfigService,
-    NxLanguageProviderService,
-    NxProcessService
-}                                    from '../../../../../services';
-import { NxDialogsService }          from '../../../../../dialogs';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxSystem }                  from '../../../../../services/system.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -26,11 +25,11 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     LANG: LanguageI18NStaticTypes;
 
     showLoggers: boolean;
-    saveLoggers: any;
+    saveLoggers: Process;
     lockedSubscription: SubscriptionLike;
 
-    @Input() system: any;
-    @Input() serverId: any;
+    @Input() system: NxSystem;
+    @Input() serverId;
 
     systemLoggers: any = {};
     readonly loggerOptions: any = [];
@@ -41,7 +40,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         this.saveLoggers = this.processService.createProcess(() => {
             return this.system
                 .setLogLevels(this.serverId, this.loggersToBeSaved())
-                .then(response => {
+                .then((response: any) => {
                     if (typeof (response.error) !== 'undefined' && response.error !== '0') {
                         const errorToShow = response.errorString;
                         this.dialogsService
@@ -73,30 +72,34 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
         private dialogsService: NxDialogsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
 
         this.loggerOptions = [
             {
                 value : 'none',
-                name: this.LANG.system.loggers.none.text,
-                help: this.LANG.system.loggers.none.help },
+                name  : this.LANG.system.loggers.none.text,
+                help  : this.LANG.system.loggers.none.help
+            },
             {
                 value : 'error',
-                name: this.LANG.system.loggers.error.text,
-                help: this.LANG.system.loggers.error.help },
+                name  : this.LANG.system.loggers.error.text,
+                help  : this.LANG.system.loggers.error.help
+            },
             {
                 value : 'warning',
                 name  : this.LANG.system.loggers.warning.text,
                 help  : this.LANG.system.loggers.warning.help
             },
             {
-                value: 'info',
-                name: this.LANG.system.loggers.info.text,
-                help: this.LANG.system.loggers.info.help },
+                value : 'info',
+                name  : this.LANG.system.loggers.info.text,
+                help  : this.LANG.system.loggers.info.help
+            },
             {
-                value: 'debug',
-                name: this.LANG.system.loggers.debug.text,
-                help: this.LANG.system.loggers.debug.help },
+                value : 'debug',
+                name  : this.LANG.system.loggers.debug.text,
+                help  : this.LANG.system.loggers.debug.help
+            },
             {
                 value : 'verbose',
                 name  : this.LANG.system.loggers.verbose.text,
@@ -108,7 +111,7 @@ export class NxServerLoggerComponent implements OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.serverId && changes.serverId.currentValue) {
+        if (changes.serverId?.currentValue) {
             this.system
                 .logLevel(changes.serverId.currentValue)
                 .then(response => {

@@ -1,11 +1,11 @@
 import {
     Component, Input, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterContentChecked,
     ChangeDetectionStrategy, HostListener, Output, EventEmitter
-}                               from '@angular/core';
-import { BehaviorSubject, Subject }      from 'rxjs';
-import { MotionMaskState }      from './MotionMaskState';
-import { MotionMaskRenderer }   from './MotionMaskRenderer';
-import { NxConfigService, IConfig } from '../../../../../services';
+}                                   from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { MotionMaskState }          from './MotionMaskState';
+import { MotionMaskRenderer }       from './MotionMaskRenderer';
+import { NxConfigService, IConfig } from '../../../../../services/nx-config';
 
 @Component({
     selector        : 'nx-motion-detection-overlay',
@@ -16,7 +16,7 @@ import { NxConfigService, IConfig } from '../../../../../services';
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;
     @Input() width: number;
-    @Input() initialMask: string = '';
+    @Input() initialMask: string;
     @Input() rotation: number = 0;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;

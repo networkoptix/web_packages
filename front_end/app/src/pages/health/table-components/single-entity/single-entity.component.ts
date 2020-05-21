@@ -1,19 +1,23 @@
-import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
-import { NxConfigService, IConfig, NxUtilsService }       from '../../../../services';
-import { NxHealthService }                                from '../../health.service';
+import {
+    Component, Input, OnChanges,
+    ViewEncapsulation
+}                                   from '@angular/core';
+import { NxHealthService }          from '../../health.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxUtilsService }           from '../../../../services/utils.service';
 
 @Component({
-    selector     : 'nx-single-entity',
-    templateUrl  : './single-entity.component.html',
-    styleUrls    : ['./single-entity.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector      : 'nx-single-entity',
+    templateUrl   : './single-entity.component.html',
+    styleUrls     : ['./single-entity.component.scss'],
+    encapsulation : ViewEncapsulation.None
 })
 export class NxSingleEntityComponent implements OnChanges {
-    @Input() params: any;
-    @Input() entity: any;
+    @Input() params;
+    @Input() entity;
 
     CONFIG: IConfig;
-    copyParams: any;
+    copyParams;
     entityName: string;
 
     constructor(private configService: NxConfigService,

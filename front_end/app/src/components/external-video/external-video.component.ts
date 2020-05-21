@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer }             from '@angular/platform-browser';
-import { NxConfigService, IConfig } from '../../services';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
     selector   : 'nx-external-video',
@@ -10,7 +10,7 @@ import { NxConfigService, IConfig } from '../../services';
 export class NxExternalVideoComponent implements OnInit {
     @Input('src') videoSrc: string;
     CONFIG: IConfig;
-    src: any;
+    src;
 
     constructor(configService: NxConfigService,
                 private sanitizer: DomSanitizer
@@ -21,7 +21,7 @@ export class NxExternalVideoComponent implements OnInit {
     private FormatSrc(link) {
         for (const videoType in this.CONFIG.integration.embedInfo) {
             const videoRegex = link.match(this.CONFIG.integration.embedInfo[videoType].regex);
-            if (videoRegex && videoRegex[1]) {
+            if (videoRegex?.[1]) {
                 return `${this.CONFIG.integration.embedInfo[videoType].link}${videoRegex[1]}`;
             }
         }

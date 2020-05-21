@@ -2,7 +2,6 @@
 @import '../../../../app/styles/custom/custom_palette';
 @import '../../../styles/theme_variables';
 @import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
 
 //@import '../../../styles/theme_palette';
@@ -28,6 +27,8 @@ $themes : (
                 buttonBorder: 1px solid #333
         )
 );
+
+$theme-map : null;
 
 @mixin themify($themes: $themes) {
     @each $theme, $map in $themes {

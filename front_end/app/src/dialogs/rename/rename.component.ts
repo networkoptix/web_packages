@@ -1,7 +1,7 @@
 import { Component, Input, Renderer2 } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }            from '../../services/process.service';
 import { NxCloudApiService }           from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
@@ -16,16 +16,16 @@ export class RenameModalContent {
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
-    rename: any;
+    rename: Process;
 
     constructor(
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {

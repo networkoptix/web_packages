@@ -1,9 +1,9 @@
 import { Component, Input }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxToastService }            from '../toast.service';
-import { NxConfigService, IConfig }  from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -12,14 +12,14 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class DetachServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverName: string;
     @Input() serverId;
     @Input() closable;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    detachServer: any;
+    detachServer: Process;
     password: string;
 
     constructor(
@@ -30,7 +30,7 @@ export class DetachServerModalContent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit() {

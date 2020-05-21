@@ -63,6 +63,7 @@
     </div>
     <div class="modal-footer float-right next-button">
         <nx-process-button
+            [clickFn]="checkMergeabilityFunction"
             [process]="checkMergeabilityProcess"
             [form]="checkMergeForm"
             actionType="primary"
@@ -78,7 +79,7 @@
             }"></p>
         <div class="form-group">
             <label class="mt-2" for="adminLogin" translate>Login</label>
-            <input class="form-control" name="adminLogin" disabled="true" value="admin"/>
+            <input class="form-control" name="adminLogin" disabled value="admin"/>
         </div>
         <div class="form-group"
             [ngClass]="{ 'mb-4': !machine.state.show.passwordError }">
@@ -92,9 +93,9 @@
                     [ngModel]="machine.state.template.passwordValue"
                     (blur)="passwordChange(adminPassword)"
                     nxFocusMe>
-            <label 
-                *ngIf="machine.state.show.passwordError" 
-                [innerHTML]="machine.state.template.passwordErrorText" 
+            <label
+                *ngIf="machine.state.show.passwordError"
+                [innerHTML]="machine.state.template.passwordErrorText"
                 class="error-label password-label-margin mb-0" for="adminPassword">
             </label>
         </div>
@@ -182,9 +183,9 @@
                     [ngModel]="machine.state.template.passwordValue"
                     (blur)="passwordChange(cloudOwnerPassword)"
                     nxFocusMe>
-            <label 
-                *ngIf="machine.state.show.passwordError" 
-                [innerHTML]="machine.state.template.passwordErrorText" 
+            <label
+                *ngIf="machine.state.show.passwordError"
+                [innerHTML]="machine.state.template.passwordErrorText"
                 class="error-label password-label-margin mb-0" for="cloudOwnerPassword">
             </label>
         </div>

@@ -31,12 +31,12 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string;
     @Input() size: string;
-    @Input() static: any;
+    @Input() static;
 
     @Input('value') selected: boolean;
     @Output() onClick = new EventEmitter<boolean>();
 
-    private badgeType: string;
+    public badgeType: string;
 
     constructor() {}
 
@@ -50,7 +50,7 @@ export class NxTagComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.selected = changes.selected && changes.selected.currentValue;
+        this.selected = changes.selected?.currentValue;
         setTimeout(() => {
             if (!this.selected) {
                 this.deselectTag();

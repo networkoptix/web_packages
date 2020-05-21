@@ -13,7 +13,7 @@ import { NxLandingComponent } from '../landing/landing.component';
 const appRoutes: Routes = [
     { path    : 'content/about', component: NxLandingComponent },
     { path    : 'content/:article_param', component: NxContentComponent },
-    { path    : 'agreement', component: NxContentComponent },
+    { path    : 'agreement', component: NxContentComponent }
 ];
 
 @NgModule({

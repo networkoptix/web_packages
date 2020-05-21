@@ -3,12 +3,25 @@ from cms.controllers.filldata import global_contexts_to_dict, process_global_con
 from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
     DataStructure
 from django.conf import settings
-from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from util.helpers import detect_language_by_request
 
 
+state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
+                                       description="State of the article. Ex: draft, published, or review",
+                                       type=openapi.TYPE_STRING)
+id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+url__route_param = openapi.Parameter("url_param", openapi.IN_PATH,
+                                     description="Route in the url that points to the article.",
+                                     type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns an article based on params",
+                     manual_parameters=[state__query_param, id__query_param, url__route_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 @handle_exceptions

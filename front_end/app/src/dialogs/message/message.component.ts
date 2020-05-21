@@ -4,12 +4,11 @@ import {
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NgForm }                    from '@angular/forms';
-import {
-    NxConfigService, IConfig, NxAccountService
-}                                    from '../../services';
-import { WINDOW }                    from '../../services/window-provider';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { NxProcessService }          from '../../services/process.service';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { WINDOW }                    from '../../services/window-provider';
+import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -27,9 +26,9 @@ interface Subject {
 }
 
 @Component({
-    selector   : 'nx-modal-message-content',
-    templateUrl: 'message.component.html',
-    styleUrls  : []
+    selector    : 'nx-modal-message-content',
+    templateUrl : 'message.component.html',
+    styleUrls   : []
 })
 export class MessageModalContent implements OnInit {
     @Input() account: NxAccountService;
@@ -41,7 +40,7 @@ export class MessageModalContent implements OnInit {
     CONFIG: IConfig;
 
     placeholder: string;
-    sendMessage: any;
+    sendMessage: Process;
     userName: string;
     userEmail: string;
     message: string;
@@ -57,7 +56,7 @@ export class MessageModalContent implements OnInit {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
@@ -68,7 +67,7 @@ export class MessageModalContent implements OnInit {
         this.subjectMessage = '';
         this.url = this.window.location.href;
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
@@ -102,8 +101,8 @@ export class MessageModalContent implements OnInit {
         }
         this.subjects = this.CONFIG.dialogs.message.subjects[this.messageType].map((subject) => {
             return {
-                value: subject,
-                name : this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
+                value : subject,
+                name  : this.LANG.dialogs.message.subject[subject].replace('{{asset}}', this.data.asset)
             };
         });
 

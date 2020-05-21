@@ -1,10 +1,22 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from api.helpers.exceptions import handle_exceptions, require_params, api_success
 from notifications.models import Message
 from api.models import AccountManager
 
+email__body = openapi.Schema(type=openapi.TYPE_STRING, description="Target users email.")
+type__body = openapi.Schema(type=openapi.TYPE_STRING,
+                            description="Type of email you are extracting code from")
+
+
+@swagger_auto_schema(method="POST",  # auto_schema=None,
+                     operation_description="Returns a code based on a users email. "
+                                           "The purpose of this is to help speed up auto tests so that they dont have "
+                                           "to wait on emails to appear in the inbox.")
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions

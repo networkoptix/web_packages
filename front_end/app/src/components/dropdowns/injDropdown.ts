@@ -3,10 +3,9 @@ import {
     SimpleChanges, OnDestroy, OnInit
 }                                    from '@angular/core';
 import { ControlValueAccessor }      from '@angular/forms';
-import {
-    NxLanguageProviderService,
-    NxConfigService, IConfig, Watcher
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { Watcher }                   from '../../services/apply.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 const noop = () => {
@@ -20,7 +19,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     show: boolean;
 
     // internal value
-    _selected: any;
+    _selected;
 
     // Placeholders for the callbacks which are later provided
     // by the Control Value Accessor
@@ -32,7 +31,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
         configService: NxConfigService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.message = this.LANG.pleaseSelect;
         this.show = false;
     }

@@ -1,16 +1,16 @@
 import {
     Component, ElementRef, HostListener, Input, OnChanges, OnInit,
     SimpleChanges, ViewChild, ViewEncapsulation
-} from '@angular/core';
-import { SubscriptionLike }         from 'rxjs';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { NxConfigService, IConfig } from '../services/nx-config';
-import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
-import { NxMenuService }            from './menu.service';
-import {
-    NxLanguageProviderService,
-    NxUtilsService, NxSearchService, NxSystem
-}                                   from '../services';
+}                                    from '@angular/core';
+import { SubscriptionLike }          from 'rxjs';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { NxConfigService, IConfig }  from '../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
+import { NxMenuService }             from './menu.service';
+import { NxLanguageProviderService } from '../services/nx-language-provider';
+import { NxUtilsService }                   from '../services/utils.service';
+import { ButtonArrowType, NxSearchService } from '../services/search.service';
+import { NxSystem }                         from '../services/system.service';
 
 /* Usage
  <nx-menu>
@@ -25,10 +25,10 @@ import {
 })
 export class NxMenuComponent implements OnInit, OnChanges {
     @Input() system: NxSystem;
-    @Input() content: any;
-    @Input() searchable: any;
+    @Input() content;
+    @Input() searchable;
 
-    systemId: any;
+    systemId;
     selectedLevel1: string;
     selectedLevel2: string;
     selectedLevel3: string;
@@ -60,7 +60,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         private searchService: NxSearchService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
 
         this.searchMode = false;
         this.isSearchable = false;
@@ -76,7 +76,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         this.routeParamsSubscription = this.route
             .queryParams
             .subscribe(params => {
-                this.menuModel.query = (params && params.search) ? params.search : '';
+                this.menuModel.query = params?.search ?? '';
                 this.searchMode = (this.isSearchable && this.menuModel.query !== '');
                 NxSearchService.getMatchPatterns(this.menuModel);
                 this.menuContent = this.menuService.fillerItemsBy(this.menuModel);
@@ -106,17 +106,17 @@ export class NxMenuComponent implements OnInit, OnChanges {
             });
     }
 
-    private resetNav() {
+    resetNav() {
         this.navItemIdx = 0;
         this.menuService.navItemId = undefined;
     }
 
-    private setNav() {
+    setNav() {
         this.modelChanged(this.menuModel);
     }
 
     private assignItemId() {
-        if (this.searchService.navDirection === 'UP') {
+        if (this.searchService.navDirection === ButtonArrowType.up) {
             this.navItemIdx = (this.navItemIdx > 0) ? --this.navItemIdx : this.navItems.length - 1;
         } else {
             this.navItemIdx = (this.navItemIdx < this.navItems.length - 1) ? ++this.navItemIdx : 0;
@@ -192,7 +192,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             })[0] || [];
         }
 
-        if (buttons.items && buttons.items.length) {
+        if (buttons.items?.length) {
             buttons = buttons.items;
         }
 

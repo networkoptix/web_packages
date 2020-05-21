@@ -3,21 +3,20 @@ import {
     Input, SimpleChanges
 }                                    from '@angular/core';
 import { BaseDropdown }              from '../injDropdown';
-import {
-    NxLanguageProviderService,
-    NxConfigService, NxUriService
-}                                    from '../../../services';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
+import { NxUriService }              from '../../../services/uri.service';
 
 @Component({
-    selector   : 'nx-systems',
-    templateUrl: 'systems.component.html',
-    styleUrls  : ['systems.component.scss']
+    selector    : 'nx-systems',
+    templateUrl : 'systems.component.html',
+    styleUrls   : ['systems.component.scss']
 })
 
 export class NxSystemsDropdown extends BaseDropdown {
-    @Input() endpoint: any;
-    @Input() systems: any;
-    @Input() activeSystem: any;
+    @Input() endpoint;
+    @Input() systems;
+    @Input() activeSystem;
 
     systemCounter: number;
     active = {
@@ -27,7 +26,7 @@ export class NxSystemsDropdown extends BaseDropdown {
         view    : false
     };
 
-    params: any;
+    params;
     show: boolean;
 
     constructor(
@@ -62,6 +61,9 @@ export class NxSystemsDropdown extends BaseDropdown {
                     window.location.href = url;
                 }
             });
+
+        this.show = false;
+        return false;
     }
 
     ngOnInit(): void {
@@ -73,5 +75,10 @@ export class NxSystemsDropdown extends BaseDropdown {
         this.systems = (changes.systems) ? changes.systems.currentValue : this.systems;
         this.activeSystem = (changes.activeSystem) ? changes.activeSystem.currentValue : this.activeSystem;
         this.systemCounter = this.systems.length;
+    }
+
+    hide() {
+        this.show = false;
+        return false;
     }
 }

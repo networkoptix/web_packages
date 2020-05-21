@@ -4,10 +4,14 @@ from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.html import format_html
 from django.contrib import admin
 from django.http.response import HttpResponse, HttpResponseBadRequest
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import APINotFoundException, api_success, require_params
 from api.helpers.permissions import make_customization_visible_to_user
@@ -47,7 +51,7 @@ def get_context_and_language(request, context_id, language_code, default_languag
 def add_upload_error_messages(request, message, errors):
     for error in errors:
         messages.error(
-            request, message.format(error[0], error[1]))
+            request, format_html(message.format(error[0], error[1])))
 
 
 # Used to make sure users without advanced permission don't modify advanced DataStructures
@@ -143,6 +147,8 @@ def page_editor(request):
         raise PermissionDenied
 
     preview_link, context_errors, asset_errors = context_editor_action(request, asset, context_id, language_code)
+    if asset_errors:
+        return redirect(asset_errors[0][2]), context_errors
 
     if 'SendReview' in request.POST and not context_errors and not asset_errors:
         customization_review = AssetCustomizationReview.objects.\
@@ -256,6 +262,11 @@ def response_attachment(data, filename, content_type):
     return response
 
 
+asset_settings_wiki = "For more information please go to " \
+                      "https://networkoptix.atlassian.net/wiki/spaces/PM/pages/1183057641/Asset+Settings"
+
+
+@swagger_auto_schema(methods=["GET", "POST"], operation_description=asset_settings_wiki, auto_schema=None)
 @api_view(["GET", "POST"])
 @permission_classes((IsSuperuser,))
 def asset_settings(request, asset_id):
@@ -362,6 +373,17 @@ def download_file(request, path):
     raise HttpResponseBadRequest("File does not exist")
 
 
+asset_id__route_param = openapi.Parameter("asset_id", openapi.IN_PATH, type=openapi.TYPE_STRING)
+draft__query_param = openapi.\
+    Parameter("draft", openapi.IN_QUERY,
+              description="Specifics if a draft or published version of the asset should be returned",
+              type=openapi.TYPE_STRING)
+version_id__query_param = openapi.Parameter("version_id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Download data records for a given asset",
+                     manual_parameters=[asset_id__route_param, draft__query_param, version_id__query_param])
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def download_package(request, asset_id):
@@ -381,7 +403,7 @@ def download_package(request, asset_id):
         else:
             return HttpResponseBadRequest("There are no published versions for this asset.")
 
-    if len(modify_db.asset_has_required_data(asset, version_id)) > 0:
+    if not asset.is_cloud_portal and len(modify_db.asset_has_required_data(asset, version_id)) > 0:
         error_message = "Asset requires all fields to be filled."
         if version_id:
             error_message = f"Asset does not have all required fields filled for version: {version_id}"
@@ -394,6 +416,14 @@ def download_package(request, asset_id):
     return response_attachment(zipped_data, file_name, "application/zip")
 
 
+customization__query_param = openapi.Parameter("customization", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+name__query_param = openapi.Parameter("name", openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+type__query_param = openapi.Parameter("type", openapi.IN_QUERY, required=True, type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Returns a list of asset ids based on an asset type.",
+                     manual_parameters=[customization__query_param, name__query_param, type__query_param])
 @api_view(["GET"])
 @permission_classes((IsAuthenticated,))
 def get_asset_ids_by_asset_type(request):

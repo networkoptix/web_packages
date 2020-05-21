@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { IntegrationService }           from '../../integration.service';
 import { NxMenuService }                from '../../../../menu';
-import { NxConfigService, IConfig }     from '../../../../services';
+import { NxConfigService, IConfig }     from '../../../../services/nx-config';
 
 @Component({
     selector    : 'overview-component',

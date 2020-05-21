@@ -3,21 +3,20 @@ import {
     EventEmitter, OnChanges, SimpleChanges,
     OnInit, ViewEncapsulation,
     ViewChild, ElementRef, AfterViewInit
-}                                 from '@angular/core';
-import { Location }               from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DeviceDetectorService }  from 'ngx-device-detector';
-import {
-    NxConfigService, IConfig,
-    NxUtilsService, NxUriService,
-    NxScrollMechanicsService
-}                                 from '../../../../services';
-import { NxHealthService }        from '../../health.service';
-import { NxHealthLayoutService }  from '../../health-layout.service';
-import { NxRibbonService }        from '../../../../components/ribbon';
-import { SubscriptionLike }       from 'rxjs';
-import { delay }                  from 'rxjs/operators';
-import { AutoUnsubscribe }        from 'ngx-auto-unsubscribe';
+}                                   from '@angular/core';
+import { Location }                 from '@angular/common';
+import { ActivatedRoute, Router }   from '@angular/router';
+import { DeviceDetectorService }    from 'ngx-device-detector';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxUriService }             from '../../../../services/uri.service';
+import { NxHealthService }          from '../../health.service';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import { NxRibbonService }          from '../../../../components/ribbon';
+import { SubscriptionLike }         from 'rxjs';
+import { delay }                    from 'rxjs/operators';
+import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { NxUtilsService }           from '../../../../services/utils.service';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 interface Params {
     [key: string]: any;
@@ -59,8 +58,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     public selectedHeader;
     public showHeaders;
 
-    private sortOrderASC: boolean;
-
+    sortOrderASC: boolean;
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -77,7 +75,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     offsetHeight: number;
     scrollHeight: number;
     showHorizontalTooltip: boolean;
-    hideTooltip: any;
+    hideTooltip;
     mobileDetailMode: boolean;
 
     ribbonSubscription: SubscriptionLike;
@@ -98,7 +96,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private router: Router,
                 private route: ActivatedRoute,
                 private location: Location,
-                private healthService: NxHealthService,
+                public healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
                 private healthLayoutService: NxHealthLayoutService
@@ -393,11 +391,11 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
             switch (paramId) {
                 case 'alarm':
                     return (elm) => {
-                        return elm[groupId] && elm[groupId][paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
+                        return elm[groupId]?.[paramId] && ALARM_ORDER[elm[groupId][paramId].icon] || '';
                     };
                 case 'resolution':
                     return (elm) => {
-                        if (elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value) {
+                        if (elm[groupId]?.[paramId]?.value) {
                             const res = elm[groupId][paramId].value.toLowerCase().split('x');
 
                             if (res.length === 2) {
@@ -411,25 +409,25 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                     };
                 case 'displayAddress':
                     return (elm) => {
-                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                        if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
                         }
-                        const value = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value;
+                        const value = elm[groupId]?.[paramId]?.value;
                         return parseInt(value.replace(/\./g, '')) || 0;
                     };
                 default:
                     return (elm) => {
-                        if (!(elm[groupId] && elm[groupId][paramId])) {
+                        if (!(elm[groupId]?.[paramId])) {
                             return Number.NEGATIVE_INFINITY; // metric does not exist - visual representation is "-"
                         }
 
-                        const format = elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].formatClass || undefined;
+                        const format = elm[groupId]?.[paramId]?.formatClass || undefined;
 
                         if (TEXT_FORMATS.includes(format)) {
-                            return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].text || '';
+                            return elm[groupId]?.[paramId]?.text || '';
                         }
 
-                        return elm[groupId] && elm[groupId][paramId] && elm[groupId][paramId].value || 0;
+                        return elm[groupId]?.[paramId]?.value || 0;
                     };
             }
         }
@@ -455,9 +453,9 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
         }
     }
 
-    private getTitle(item, headerGroupId, headerId) {
+    getTitle(item, headerGroupId, headerId) {
         let title;
-        if (item && item[headerGroupId] && item[headerGroupId][headerId]) {
+        if (item?.[headerGroupId]?.[headerId]) {
             title = item[headerGroupId][headerId].tooltip || item[headerGroupId][headerId].text;
         }
         if (title === undefined) {

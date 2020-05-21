@@ -1,21 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router }   from '@angular/router';
-import { LocalStorageService }      from 'ngx-store';
-
-import {
-    NxUriService, NxPageService,
-    NxLanguageProviderService,
-    NxProcessService, NxCloudApiService,
-    NxConfigService, IConfig,
-    NxAccountService
-}              from '../../services';
-import { NxDialogsService }         from '../../dialogs';
-import { LanguageI18NStaticTypes }  from '../../../language_i18n_static_types';
+import { Component, Input, OnInit }  from '@angular/core';
+import { ActivatedRoute, Router }    from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUriService }              from '../../services/uri.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'nx-restore-component',
-    templateUrl: 'restore.component.html',
-    styleUrls  : ['restore.component.scss']
+    selector : 'nx-restore-component',
+    templateUrl : 'restore.component.html',
+    styleUrls : ['restore.component.scss']
 })
 
 export class NxRestoreComponent implements OnInit {
@@ -25,19 +24,19 @@ export class NxRestoreComponent implements OnInit {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    change: any;
-    restore: any;
-    data: any;
-    restoring: any;
-    restoringSuccess: any;
-    changeSuccess: any;
-    context: any;
+    change: Process;
+    restore: Process;
+    data;
+    restoring;
+    restoringSuccess;
+    changeSuccess;
+    context;
     ready: boolean;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.restorePassword);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitle = this.LANG.pageTitles.restorePassword;
 
         this.context = {
             process: ''
@@ -75,9 +74,9 @@ export class NxRestoreComponent implements OnInit {
         }
 
         this.data = {
-            newPassword: '',
-            email      : this.localStorage.get('email') || '',
-            restoreCode: this.uriParamCode
+            newPassword : '',
+            email       : this.localStorage.get('email') || '',
+            restoreCode : this.uriParamCode
         };
 
         this.restoring = (this.uriParam === 'restoring');
@@ -118,14 +117,14 @@ export class NxRestoreComponent implements OnInit {
             return this.cloudApiService.restorePassword(this.data.restoreCode, this.data.newPassword);
         }, {
             errorCodes: {
-                notFound     : this.LANG.errorCodes.wrongCodeRestore,
-                notAuthorized: this.LANG.errorCodes.wrongCodeRestore
+                notFound      : this.LANG.errorCodes.wrongCodeRestore,
+                notAuthorized : this.LANG.errorCodes.wrongCodeRestore
             },
-            ignoreUnauthorized: true,
-            holdAlerts        : true,
-            errorPrefix       : this.LANG.errorCodes.cantChangePasswordPrefix
+            ignoreUnauthorized : true,
+            holdAlerts         : true,
+            errorPrefix        : this.LANG.errorCodes.cantChangePasswordPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
             this.setContext('changeSuccess');
             this.dialogs.dismiss();
             this.uriService
@@ -141,11 +140,11 @@ export class NxRestoreComponent implements OnInit {
             errorCodes: {
                 notFound: this.LANG.errorCodes.emailNotFound
             },
-            ignoreUnauthorized: true,
-            holdAlerts        : true,
-            errorPrefix       : this.LANG.errorCodes.cantSendActivationPrefix
+            ignoreUnauthorized : true,
+            holdAlerts         : true,
+            errorPrefix        : this.LANG.errorCodes.cantSendActivationPrefix
         }).then(() => {
-            this.pageService.setPageTitle(this.LANG.pageTitles.restorePasswordSuccess);
+            this.pageService.pageTitle = this.LANG.pageTitles.restorePasswordSuccess;
             this.restoring = false;
             this.restoringSuccess = true;
             this.setContext('restoringSuccess');

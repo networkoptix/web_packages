@@ -1,5 +1,5 @@
 import { Component, Input }         from '@angular/core';
-import { NxConfigService, IConfig } from '../../services';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 
 @Component({
     selector    : 'nx-alert-counter',
@@ -7,8 +7,8 @@ import { NxConfigService, IConfig } from '../../services';
     styleUrls   : ['./alert-counter.component.scss'],
 })
 export class NxAlertCounter {
-    @Input() count: any;
-    @Input() type: any;
+    @Input() count;
+    @Input() type;
 
     CONFIG: IConfig;
 

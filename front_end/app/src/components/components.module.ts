@@ -6,7 +6,6 @@ import { FormsModule }                        from '@angular/forms';
 import { NgbModule, NgbToastModule }          from '@ng-bootstrap/ng-bootstrap';
 import { DirectivesModule }                   from '../directives/directives.module';
 import { NxProcessButtonComponent }           from './process-button/process-button.component';
-import { NxPreLoaderComponent }               from './pre-loader/pre-loader.component';
 import { NxCheckboxComponent }                from './checkbox/checkbox.component';
 import { NxRadioComponent }                   from './radio/radio.component';
 import { NxAlertBlockComponent }              from './content-block/alert/block.component';
@@ -38,13 +37,13 @@ import { ToastsContainer }                    from './toast/toast.component';
 import { NxHeaderComponent }                  from './header/header.component';
 import { NxNavLocationDropdown }              from './dropdowns/nav-location/nav.component';
 import { NxApplyComponent }                   from './apply/apply.component';
+import { NxPreLoaderComponent }               from './placeholders/pre-loader/pre-loader.component';
 import { NxPagePlaceholderComponent }         from './placeholders/page/page-placeholder.component';
-import { NxAjsPagePlaceholderComponent }      from './placeholders/ajs-page/page-placeholder.component';
 import { NxSectionPlaceholderComponent }      from './placeholders/section/section-placeholder.component';
 import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
-import { downgradeComponent }                 from '@angular/upgrade/static';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
+import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-cancel-button.component';
 
 @NgModule({
     imports: [
@@ -68,6 +67,7 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
@@ -93,7 +93,6 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
-        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer
     ],
@@ -133,12 +132,14 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
-        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer
+        ToastsContainer,
+        NxProcessButtonComponent,
+        NxProcessCancelButtonComponent
     ],
     providers: [
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
@@ -163,10 +164,8 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
-        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
-
         NxRibbonService
     ],
     exports: [
@@ -180,6 +179,7 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
         NxProcessButtonComponent,
+        NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
         NxRadioComponent,
@@ -205,15 +205,9 @@ import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-
         NxSwitchComponent,
         NxApplyComponent,
         NxPagePlaceholderComponent,
-        NxAjsPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer
     ]
 })
 export class ComponentsModule {
 }
-
-declare var angular: angular.IAngularStatic;
-angular
-    .module('cloudApp.directives')
-    .directive('nxAjsPagePlaceholder', downgradeComponent({ component: NxAjsPagePlaceholderComponent }) as angular.IDirectiveFactory);

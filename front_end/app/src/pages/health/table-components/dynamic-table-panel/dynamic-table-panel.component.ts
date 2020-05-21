@@ -2,22 +2,20 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input,
     Output, ViewChild
-}                                from '@angular/core';
-import {
-    NxConfigService, IConfig,
-    NxScrollMechanicsService
-}                                from '../../../../services';
-import { NxHealthService }       from '../../health.service';
-import { NxHealthLayoutService } from '../../health-layout.service';
+}                                   from '@angular/core';
+import { NxHealthService }          from '../../health.service';
+import { NxHealthLayoutService }    from '../../health-layout.service';
+import { NxConfigService, IConfig } from '../../../../services/nx-config';
+import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
 @Component({
-    selector   : 'nx-dynamic-table-panel-component',
-    templateUrl: './dynamic-table-panel.component.html',
-    styleUrls  : ['./dynamic-table-panel.component.scss']
+    selector    : 'nx-dynamic-table-panel-component',
+    templateUrl : './dynamic-table-panel.component.html',
+    styleUrls   : ['./dynamic-table-panel.component.scss']
 })
 export class NxDynamicTablePanelComponent implements AfterViewInit {
 
-    @Input() panelParams: any;
+    @Input() panelParams;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
 
     CONFIG: IConfig;
@@ -32,9 +30,9 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-        private healthService: NxHealthService,
-        private scrollMechanicsService: NxScrollMechanicsService,
-        private healthLayoutService: NxHealthLayoutService
+        public healthService: NxHealthService,
+        public healthLayoutService: NxHealthLayoutService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {

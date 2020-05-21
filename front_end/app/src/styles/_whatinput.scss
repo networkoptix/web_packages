@@ -1,3 +1,7 @@
+@import '../../styles/custom/custom_palette';
+@import '../../styles/theme_palette';
+@import '../../styles/theme_variables';
+
 [data-whatintent='mouse'] *:focus {
     outline : none !important;
 }

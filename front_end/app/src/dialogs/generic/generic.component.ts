@@ -58,7 +58,7 @@ export class NxModalGenericComponent implements OnInit {
         private domSanitizer: DomSanitizer,
         private modalService: NgbModal
     ) {
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     private dialog(message, title, actionLabel, actionType?, cancelLabel?, footerClass?,

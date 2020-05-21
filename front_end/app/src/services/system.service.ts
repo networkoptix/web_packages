@@ -12,8 +12,7 @@ import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
-import { recursiveJson }                   from '../utils/recursive-json';
-import { IParams } from '../components/search/search.component';
+import { IParams }                         from '../components/search/search.component';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -115,8 +114,9 @@ class System extends SystemInterface {
 }
 
 class UserManager {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     private mediaserver: NxSystemAPI;
     private _ownerEmail: string;
     private _accessRole: string;
@@ -201,7 +201,7 @@ class UserManager {
     findAccessRole(user: NxSystemUser) {
         const roles = this.accessRoles || this.CONFIG.accessRoles.predefinedRoles;
         // TODO Need to figure out role type here
-        const role  = roles.find((role: any) => {
+        let role: any  = roles.find((role: any) => {
             // Owner flag has top priority and overrides everything
             if (role.isOwner) {
                 return this.isOwner(user);
@@ -216,6 +216,12 @@ class UserManager {
             }
             return role.permissions === user.permissions;
         });
+        // handles the Custom role
+        if (!role) {
+            role = NxUtilsService.deepCopy(roles[roles.length - 1]);
+            role.isAdmin = this.isAdmin(user);
+            role.permissions = user.permissions;
+        }
 
         return role || roles[roles.length - 1];
     }
@@ -456,10 +462,8 @@ class ServerManager {
             }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
-            const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
-            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
-            const _maxFps = primary && primary.value && primary.value.maxFps;
-            const maxFps = _maxFps || 30;
+            const primary = mediaCapabilities?.streamCapabilities?.find(({ key }) => key === 'primary');
+            const maxFps = primary?.value?.maxFps || 30;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
@@ -628,6 +632,9 @@ class ServerManager {
 }
 
 export class NxSystem extends System implements OnDestroy {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
     private userManager: UserManager;
     private serverManager: ServerManager;
     private _subscribersCount = new BehaviorSubject<number>(0);
@@ -637,7 +644,7 @@ export class NxSystem extends System implements OnDestroy {
     mediaserver: NxSystemAPI;
     currentServerNotBusy: boolean;
     currentBusyServerIds = new Set();
-    moduleInfo: any; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
+    moduleInfo; // TODO: Add type here once moduleInfo request type is added on NxSystemAPI.getModuleInfo
 
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
@@ -722,7 +729,7 @@ export class NxSystem extends System implements OnDestroy {
         return this.serverManager.getLicenses().then((licenses: any[]) => {
             const parsedLicenses = licenses.map(this.parseLicense);
             const total: number = parsedLicenses.reduce((qty, { COUNT, EXPIRATION, CLASS }) => {
-                const activeLicense = new Date(EXPIRATION).getTime() > Date.now();
+                const activeLicense = !EXPIRATION || new Date(EXPIRATION).getTime() > Date.now();
                 return activeLicense && (CLASS === 'digital' || CLASS === 'starter' || CLASS === 'edge') ? qty + parseInt(COUNT) : qty;
             }, 0);
             const used = this.cameras.filter(({ scheduleEnabled }) => scheduleEnabled).length;
@@ -749,8 +756,8 @@ export class NxSystem extends System implements OnDestroy {
     // End of serverManager functions
 
     constructor(
-        private CONFIG: IConfig,
-        private LANG: LanguageI18NStaticTypes,
+        CONFIG: IConfig,
+        LANG: LanguageI18NStaticTypes,
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
@@ -760,11 +767,11 @@ export class NxSystem extends System implements OnDestroy {
         serverId?: string
     ) {
         super();
+
+        this.CONFIG = CONFIG;
+        this.LANG = LANG;
         this.lostConnection = false;
         this.initSystem(currentUserEmail, systemId, serverId);
-        // this._subscribersCount.subscribe((subscribers) => {
-        //     console.log(`Current Subscribers for ${systemId || serverId}: ${subscribers}`);
-        // });
     }
 
     private updateSystemState() {
@@ -912,7 +919,7 @@ export class NxSystem extends System implements OnDestroy {
                 user.email = user.accountEmail;
             });
             return data;
-        });
+        }).catch(err => err);
     }
 
     getUsersDataFromTheSystem() {
@@ -1006,14 +1013,14 @@ export class NxSystem extends System implements OnDestroy {
 
     update() {
         return of('').pipe(flatMap(() => {
-            return this.getInfo(true, false, true)
+            return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
                 .then(() => this.getServers().toPromise())
                 .then(() => this.getCameras())
                 .then(() => from(this.getUsers(true)))
                 .catch((error) => {
                     this.isAvailable = false;
-                    this.lostConnection = error && error.data && error.data.resultCode === 'forbidden';
+                    this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });
         }));
     }
@@ -1126,7 +1133,7 @@ export class NxSystemService {
         private systemsService: NxSystemsService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.languageService.getTranslations();
+        this.LANG = this.languageService.translations;
         this.systemsCache = {};
     }
 

@@ -112,10 +112,10 @@ dir=../skins/$SKIN
         cp -rf $lang_dir/views $TARGET_DIR/$SKIN/static/lang_$LANG || true
 
 
-        mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
+#        mkdir -p $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
-        echo "Copy web_common default views - untranslatable"
-        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
+#        echo "Copy web_common default views - untranslatable"
+#        cp -rf $TARGET_DIR/$SKIN/static/web_common/views $TARGET_DIR/$SKIN/static/lang_$LANG/web_common
 
         if [ "$SKIN" = "blue" ] ; then
             echo "Generate language.json"
@@ -135,7 +135,7 @@ dir=../skins/$SKIN
     python ../../../../build_scripts/generate_languages_json.py
     popd
 
-    rm -rf $TARGET_DIR/$SKIN/static/{views,web_common/views}
+    rm -rf $TARGET_DIR/$SKIN/static/views
     echo "Localization success"
 
 echo "$SKIN Done"

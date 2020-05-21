@@ -4,11 +4,11 @@ import {
 }                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { BaseDropdown }              from '../injDropdown';
-import {
-    NxUtilsService, NxCloudApiService,
-    NxLanguageProviderService,
-    NxConfigService, ILanguages
-}                                    from '../../../services';
+import { NxUtilsService }            from '../../../services/utils.service';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
+import { ILanguages }                from '../../../services/nx-cloud-api.types';
 
 @Component({
     selector      : 'nx-language-select',
@@ -25,11 +25,11 @@ import {
 })
 
 export class NxLanguageDropdown extends BaseDropdown {
-    @Input() instantReload: any;
-    @Input() instantApply: any;
-    @Input() dropup: any;
-    @Input() short: any;
-    @Input() altStyle: any;
+    @Input() instantReload;
+    @Input() instantApply;
+    @Input() dropup;
+    @Input() short;
+    @Input() altStyle;
 
     currentLang: string;
     show: boolean;
@@ -51,7 +51,7 @@ export class NxLanguageDropdown extends BaseDropdown {
     ) {
         super(languageService, configService);
 
-        this.currentLang = languageService.getLang();
+        this.currentLang = languageService.currentLanguage;
     }
 
     private splitLanguages() {

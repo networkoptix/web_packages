@@ -3,9 +3,8 @@ import {
     OnChanges, SimpleChanges,
     ViewEncapsulation
 }                                    from '@angular/core';
-import {
-    NxConfigService, IConfig, NxLanguageProviderService
-}                                    from '../../services';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
@@ -15,8 +14,8 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     encapsulation: ViewEncapsulation.None
 })
 export class NxPasswordTagValidationComponent implements OnChanges {
-    @Input() forElement: any;
-    @Input() value: any;
+    @Input() forElement;
+    @Input() value;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -30,7 +29,7 @@ export class NxPasswordTagValidationComponent implements OnChanges {
         languageService: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnChanges(changes: SimpleChanges): void {

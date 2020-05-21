@@ -4,9 +4,9 @@ const webpack = require('webpack');
 var helpers = require('./helpers');
 const merge = require('webpack-merge');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const common = require('./webpack.common.js');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 const ENV = process.env.ENV = process.env.NODE_ENV = 'dev';
 

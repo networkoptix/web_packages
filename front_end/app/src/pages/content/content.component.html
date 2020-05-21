@@ -1,18 +1,20 @@
 <div class="container">
+    <nx-pre-loader *ngIf="!loaded"></nx-pre-loader>
+
     <ng-container *ngIf="title || body">
-        <h1 set-title>{{ title }}</h1>
+        <h1>{{ title }}</h1>
         <div class="card">
             <div class="card-body"
                  [innerHTML]="body">
             </div>
         </div>
     </ng-container>
-    <ng-container #dynamicTemplate></ng-container>
+
     <nx-process-button *ngIf="showAgree"
                        customClass="mt-3"
                        actionType="primary"
                        [process]="agreeProcess"
                        [buttonText]="'Agree' | translate"></nx-process-button>
-    <nx-pre-loader *ngIf="!loaded"></nx-pre-loader>
+
     <nx-footer></nx-footer>
 </div>

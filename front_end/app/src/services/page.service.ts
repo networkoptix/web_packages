@@ -7,8 +7,8 @@ import { LanguageI18NStaticTypes }  from '../../language_i18n_static_types';
     providedIn: 'root'
 })
 export class NxPageService {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
 
     constructor(
         configService: NxConfigService,
@@ -19,19 +19,25 @@ export class NxPageService {
     }
 
     // called from app component
-    setLanguage(lang: LanguageI18NStaticTypes) {
-        this.LANG = lang;
+    public set newLanguage(language: LanguageI18NStaticTypes) {
+        this.LANG = language;
     }
 
-    setPageTitle(value: string, useAltTemplate?: boolean) {
-        let title = value;
-        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
-            title = this.LANG.pageTitles.template.replace('{{title}}', value);
-            if (useAltTemplate) {
-                title = title.replace('- ', '');
-            }
+    public set pageTitle(title: any) {
+        const txt = (typeof title === 'function') ? title() : title;
+        if (this.LANG && this.LANG.pageTitles && txt !== this.LANG.pageTitles.default()) {
+            this.title.setTitle(this.LANG.pageTitles.template({ title: txt }));
+            return;
         }
-        this.title.setTitle(title);
+        this.title.setTitle(txt);
+    }
+
+    public set pageTitleRemoveHyphen(title: any) {
+        if (this.LANG && this.LANG.pageTitles && title !== this.LANG.pageTitles.default) {
+            this.title.setTitle(this.LANG.pageTitles.template({ title: title() }).replace('- ', ''));
+            return;
+        }
+        this.title.setTitle(title());
     }
 
     setDefaultLayout() {

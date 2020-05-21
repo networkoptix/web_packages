@@ -60,11 +60,14 @@ Server name can be changed
     Click Button    ${RENAME SAVE BUTTON}
     Check for Alert    ${SERVER NAME SAVED}
 
-
 Restart server
     [Setup]    Server Settings Test Setup    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
-    Restart server
-    Wait
+    Select Server By Name    server2
+    Click Button    ${RESTART SESRVER BUTTON}
+    Wait Until Elements Are Visible  
+    ...    ${RESTART DIALOG CLOSE BUTTON}  
+    ...    ${RESTART DIALOG CANCEL BUTTON} 
+    ...    ${RESTART DIALOG RESTART BUTTON}  
     verify back online
 
 Change port

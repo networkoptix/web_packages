@@ -5,7 +5,7 @@ import { Router }                                         from '@angular/router'
 import { NxConfigService, IConfig }                       from '../nx-config';
 import { NxCloudApiService }                              from '../nx-cloud-api';
 import { NxLanguageProviderService }                      from '../nx-language-provider';
-import { NxDialogsService }                               from '../../dialogs';
+import { NxDialogsService }                               from '../../dialogs/dialogs.service';
 import { NxSessionService }                               from '../session.service';
 import { NxApplyService }                                 from '../apply.service';
 import { catchError, debounceTime, distinctUntilChanged } from 'rxjs/operators';
@@ -67,7 +67,7 @@ export abstract class BaseAccount implements OnDestroy {
         protected nxSystemAPIService: NxSystemAPIService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
@@ -326,9 +326,9 @@ export abstract class BaseAccount implements OnDestroy {
     protected startAccountPoll() {
         this.stopAccountPoll();
         this.accountPollSubscription = this.accountPoll.pipe(
-            catchError(() => {
+            catchError((ex) => {
                 this.logoutHelper(false);
-                return of('Error');
+                return of(undefined);
             })
         ).subscribe((account: Account) => {
             this.account = account;

@@ -3,24 +3,24 @@ import {
     AfterViewInit, ViewChild,
     ViewContainerRef, OnDestroy,
     ViewChildren, QueryList
-}                                  from '@angular/core';
-import { ActivatedRoute }          from '@angular/router';
-import { NgForm }                  from '@angular/forms';
-import { LocalStorageService }     from 'ngx-store';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService, NxPageService,
-    NxAccountService, Account,
-    NxProcessService, Process,
-    NxCloudApiService, NxSystemsService,
-    NxApplyService, Watcher
-}                                  from '../../../services';
-import { NxDialogsService }        from '../../../dialogs';
-import { NxMenuService }           from '../../../menu';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { first }                   from 'rxjs/operators';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+}                                    from '@angular/core';
+import { ActivatedRoute }            from '@angular/router';
+import { NgForm }                    from '@angular/forms';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxAccountService, Account } from '../../../services/account.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxCloudApiService }         from '../../../services/nx-cloud-api';
+import { NxSystemsService }          from '../../../services/systems.service';
+import { NxApplyService, Watcher }   from '../../../services/apply.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxMenuService }             from '../../../menu';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { Subscription }              from 'rxjs';
+import { first }                     from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
@@ -68,14 +68,14 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
         private pageService: NxPageService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.setupDefaults();
     }
 
     ngOnDestroy() {}
 
     ngOnInit() {
-        this.pageService.setPageTitle(this.LANG.pageTitles.account);
+        this.pageService.pageTitle = this.LANG.pageTitles.account;
 
         this.save = this.processService.createProcess(() => {
             return this.cloudApiService.accountPost(this.account).then(() => {

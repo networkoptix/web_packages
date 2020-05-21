@@ -4,12 +4,12 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable()
 export class NxRibbonService {
     context = {
-        visibility    : false,
-        message       : '',
-        text          : '',
-        url           : '',
-        type          : '',
-        updateFunction: ''
+        visibility     : false,
+        message        : '',
+        text           : '',
+        url            : '',
+        type           : '',
+        updateFunction : ''
     };
 
     contextSubject = new BehaviorSubject(this.context);
@@ -18,10 +18,12 @@ export class NxRibbonService {
     }
 
     show(message, text, url, type?, updateFunction?) {
+        const msg = (typeof message === 'function') ? message() : message;
+        const txt = (typeof text === 'function') ? text() : text;
         this.context = {
-            visibility: true,
-            message,
-            text,
+            visibility : true,
+            message    : msg,
+            text       : txt,
             url,
             type,
             updateFunction

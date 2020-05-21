@@ -7,7 +7,19 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
+
+state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
+                                       description="State of the agreement. Ex: draft, published, or review",
+                                       type=openapi.TYPE_STRING)
+id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
+
+
+@swagger_auto_schema(method="GET", auto_schema=None,
+                     operation_description="Developer Agreement to use the integration store.",
+                     manual_parameters=[state__query_param, id__query_param])
 @api_view(("GET", ))
 @permission_classes((AllowAny, ))
 @handle_exceptions
@@ -82,6 +94,17 @@ def get_agreement(request):
     raise APINotFoundException(error_text='Agreement not found')
 
 
+review_id__body = openapi.Schema(type=openapi.TYPE_NUMBER)
+
+
+@swagger_auto_schema(method="POST", auto_schema=None,
+                     operation_description="Accepts the current published eula.",
+                     request_body=openapi.Schema(
+                         type=openapi.TYPE_OBJECT,
+                         properties={
+                             "review_id": review_id__body
+                         }
+                     ))
 @api_view(("POST", ))
 @permission_classes((IsAuthenticated, ))
 @handle_exceptions

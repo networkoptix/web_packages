@@ -1,26 +1,28 @@
 import {
     Component, Input,
     OnDestroy, OnInit
-}                                    from '@angular/core';
-import { ActivatedRoute, Router }    from '@angular/router';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxPageService, NxSystemsService,
-    NxSystem, NxSystemService, ICamera,
-    NxAccountService, Account,
-    NxProcessService, NxUtilsService,
-    NxUriService, NxScrollMechanicsService,
-    NxSystemAPIService
-}                                    from '../../../services';
-import { NxDialogsService, NxToastService }  from '../../../dialogs';
-import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../menu';
-import { NxRibbonService }           from '../../../components/ribbon';
-import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+}                                             from '@angular/core';
+import { ActivatedRoute, Router }             from '@angular/router';
+import { NxConfigService, IConfig }           from '../../../services/nx-config';
+import { NxLanguageProviderService }          from '../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../services/process.service';
+import { NxDialogsService }          from '../../../dialogs/dialogs.service';
+import { NxToastService }                     from '../../../dialogs/toast.service';
+import { NxSettingsService }                  from './settings.service';
+import { NxMenuService }                      from '../../../menu';
+import { NxRibbonService }                    from '../../../components/ribbon';
+import { Subscription }                       from 'rxjs';
+import { filter }                             from 'rxjs/operators';
+import { AutoUnsubscribe }                    from 'ngx-auto-unsubscribe';
+import { NxPageService }                      from '../../../services/page.service';
+import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
+import { NxSystemAPIService }                 from "../../../services/system-api.service";
+import { Account, NxAccountService }          from '../../../services/account.service';
+import { NxUtilsService }                     from '../../../services/utils.service';
+import { NxUriService }                       from '../../../services/uri.service';
+import { NxScrollMechanicsService }           from '../../../services/scroll-mechanics.service';
+import { NxSystemsService }                   from '../../../services/systems.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -37,25 +39,25 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    plugin: any;
+    plugin;
     content: any = {};
 
     account: Account;
     system: NxSystem|any;
-    gettingSystem: any;
-    systems: any;
-    deletingSystem: any;
+    gettingSystem: Process;
+    systems;
+    deletingSystem;
 
     menuVisible: boolean;
-    systemId: any;
+    systemId;
     systemNoAccess: boolean;
     canMerge: boolean;
     debugMode: boolean;
     betaMode: boolean;
     userDisconnectSystem: boolean;
-    mergeTargetSystem: any;
-    gettingSystemUsers: any;
-    selectedUser: any;
+    mergeTargetSystem;
+    gettingSystemUsers: Process;
+    selectedUser;
 
     headerHeight: number;
     secondaryMerge = false;
@@ -99,7 +101,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private toastService: NxToastService,
                 private scrollMechanicsService: NxScrollMechanicsService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
 
         this.setupDefaults();
@@ -107,7 +109,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.pageService.setDesktopLayout();
-        this.pageService.setPageTitle(this.LANG.pageTitles.system);
+        this.pageService.pageTitle = this.LANG.pageTitles.system;
         this.init();
     }
 
@@ -141,7 +143,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 {
                     id     : this.CONFIG.menus.systemSettings.admin.id,
                     svg    : this.CONFIG.menus.systemSettings.admin.icon,
-                    label  : this.LANG.menu.titles.systemAdministration,
+                    label  : this.LANG.menu.titles.systemAdministration(),
                     path   : this.CONFIG.menus.systemSettings.admin.path,
                     level2 : []
                 }
@@ -174,7 +176,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.gettingSystemUsers = this.processService.createProcess(() => {
             return this.system.getUsers(true);
         }, {
-            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix
+            errorPrefix: this.LANG.errorCodes.cantGetUsersListPrefix()
         }).then(() => {
             this.systemReady();
         });
@@ -195,7 +197,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     return false;
                 }
             },
-            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix
+            errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix()
         }).then(() => {
             if (this.system.permissions.editUsers) {
                 this.gettingSystemUsers.run();
@@ -305,8 +307,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 } else if (primary && primary.id === this.system.id) {
                     this.secondaryMerge = false;
                     const secondarySystem = this.systemsService.systems.find(system => secondary.id === system.id);
-                    let secondaryName = secondarySystem && secondarySystem.name ||
-                        secondary && secondary.name || this.LANG.system.mergeUnknownName;
+                    let secondaryName = secondarySystem?.name ||
+                        secondary?.name || this.LANG.system.mergeUnknownName;
                     if (secondaryName.indexOf('server at ') === 0) {
                         secondaryName = secondaryName[0].toUpperCase() + secondaryName.slice(1);
                     }
@@ -377,7 +379,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode = {
                     id     : this.CONFIG.menus.systemSettings.users.id,
                     svg    : this.CONFIG.menus.systemSettings.users.icon,
-                    label  : this.LANG.menu.titles.users,
+                    label  : this.LANG.menu.titles.users(),
                     path   : this.CONFIG.menus.systemSettings.users.path,
                     level2 : [
                         {
@@ -444,7 +446,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 serversNode = {
                     id    : this.CONFIG.menus.systemSettings.servers.id,
                     svg   : this.CONFIG.menus.systemSettings.servers.icon,
-                    label : this.LANG.servers.servers,
+                    label : this.LANG.servers.servers(),
                     path  : this.CONFIG.menus.systemSettings.servers.path
                 };
                 this.content.level1.push(serversNode);
@@ -473,12 +475,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
             const generalNode = {
                 id    : this.CONFIG.menus.systemSettings.admin.id,
-                label : this.LANG.common.general,
+                label : this.LANG.common.general(),
                 path  : this.CONFIG.menus.systemSettings.admin.path
             };
             const cloudStorageNode = {
                 id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
-                label : this.LANG.dialogs.cloudStorage.title,
+                label : this.LANG.dialogs.cloudStorage.title(),
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
             };
             adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
@@ -500,8 +502,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     connectionLost() {
-        this.dialogs.notify(this.LANG.errorCodes.lostConnection.replace('{{systemName}}',
-            this.system.info.name || this.LANG.errorCodes.thisSystem), 'warning');
+        this.dialogs.notify(this.LANG.errorCodes.lostConnection({ systemName: this.system.info.name || this.LANG.errorCodes.thisSystem() }), 'warning');
 
         const route = `${this.CONFIG.redirect.authorised}/${this.mergeTargetSystem && this.mergeTargetSystem.id || ''}`;
         setTimeout(() => this.router.navigate([route]), this.CONFIG.alertTimeout);

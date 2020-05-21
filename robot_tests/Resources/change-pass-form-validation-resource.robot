@@ -14,8 +14,9 @@ Change Password Form Validation
     Input Text    ${CURRENT PASSWORD INPUT}    ${old password}
     Input Text    ${NEW PASSWORD INPUT}    ${new password}
     Check Password Badge    ${new password}    //h4
-    Run keyword unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
-    Run keyword unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Click Button    ${CHANGE PASSWORD BUTTON}
+    Run Keyword Unless  '${old password}' == '${EMPTY}' and '${new password}' == '${EMPTY}'    Wait until Element is Visible    ${CHANGE PASSWORD BUTTON}
+    Run Keyword If    '${new password}' == '${BASE PASSWORD}'    Click Button    ${CHANGE PASSWORD BUTTON}
+    ...    ELSE    Click Element    //h4
 
 Check Old Password Outline
 #    Wait Until Element Is Visible

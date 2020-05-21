@@ -27,6 +27,7 @@ export class NxSessionService {
 
     invalidateSession() {
         this.session.set('loginState', undefined);
+        this.session.set('loginRegister', false);
         this.loginStateSubject.next(this.loginState);
     }
 

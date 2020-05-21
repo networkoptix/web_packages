@@ -21,12 +21,12 @@
 
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container">
-                <a class="dropdown-item inset" (click)="show = false; return;"
+                <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/" ><span translate>Account Settings</span>
                 </a>
             </li>
             <li class="dropdown-item-container">
-                <a class="dropdown-item inset" (click)="show = false; return;"
+                <a class="dropdown-item inset" (click)="hide()"
                    routerLink="/account/password/"><span translate>Change Password</span>
                 </a>
             </li>
@@ -41,7 +41,7 @@
 
             <li class="dropdown-item-container">
                 <a class="dropdown-item inset"
-                   (click)="show = false; return;"
+                   (click)="this.show = false; true;"
                    href="/admin/" target="_blank">
                    <span translate>Administration</span>
                 </a>

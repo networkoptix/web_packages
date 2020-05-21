@@ -12,8 +12,6 @@
                        [clickFn]="apply"
                        [process]="applyFunc"
     ></nx-process-button>
-    <button type="button" class="btn btn-default"
-            (click)="discard()" translate>Discard</button>
-    <button type="button" class="btn btn-default"
-            (click)="close()" translate>Cancel</button>
+    <nx-cancel-button [process]="applyFunc" [discardFn]="discard" [showDiscard]=true></nx-cancel-button>
+    <button *ngIf="!applyFunc.processing" type="button" class="btn btn-default" (click)="close()" translate>Cancel</button>
 </div>

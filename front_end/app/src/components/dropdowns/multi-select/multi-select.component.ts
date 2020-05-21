@@ -3,10 +3,9 @@ import {
     Input, forwardRef, SimpleChanges
 }                                    from '@angular/core';
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
-import {
-    NxLanguageProviderService, NxConfigService
-}                                    from '../../../services';
 import { BaseDropdown }              from '../injDropdown';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { NxConfigService }           from '../../../services/nx-config';
 
 /* Usage
  <nx-multi-select
@@ -45,7 +44,7 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
     public filter: string;
     public textSelected: any = {};
 
-    private innerValue: any;
+    private innerValue;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -127,11 +126,11 @@ export class NxMultiSelectDropdown<Item extends any> extends BaseDropdown {
             }
             case 0:
             case this.items.length: {
-                this.textSelected = this.LANG.search.Any;
+                this.textSelected = this.LANG.search.Any();
                 break;
             }
             default: {
-                this.textSelected = this.innerValue.length + ' ' + this.LANG.search.selected;
+                this.textSelected = this.LANG.search.selected({ count: this.innerValue.length });
                 break;
             }
         }

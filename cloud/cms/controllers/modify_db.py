@@ -2,6 +2,7 @@ from datetime import datetime
 
 from notifications.notifications_api import send
 from django.contrib.auth.models import Permission
+from django.urls import reverse
 from django.db.models import Q
 from django.utils.http import urlencode
 
@@ -424,9 +425,13 @@ def asset_has_required_data(asset, version_id=None):
                 has_default_value = len(default_value) > 0
         if not datastructure.optional and not has_default_value and (not records.exists() or last_record_value == ""):
             ds_name = datastructure.label if datastructure.label else datastructure.name
-            errors.append((ds_name,
-                           "This field cannot be blank. Go to the {} page and fill in {}.".
-                           format(datastructure.context.name, ds_name)))
+            change_url = reverse('admin:change_page', kwargs={'asset_id': asset.id, 'context_id': datastructure.context.id})
+            errors.append((
+                ds_name,
+                'This field cannot be blank. '
+                f'Go to the <a href="{change_url}">{datastructure.context.label}</a> page and fill in {ds_name}.',
+                change_url
+            ))
     return errors
 
 

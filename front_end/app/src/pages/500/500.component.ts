@@ -1,9 +1,8 @@
-import { Component }               from '@angular/core';
-import {
-    NxPageService, NxLanguageProviderService,
-    NxConfigService, IConfig
-}                                  from '../../services';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component }                 from '@angular/core';
+import { NxPageService }             from '../../services/page.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
     selector   : 'nx-500',
@@ -19,8 +18,8 @@ export class Nx500Component {
         languageService: NxLanguageProviderService,
         private pageService: NxPageService
     ) {
-        this.LANG = languageService.getTranslations();
-        this.pageService.setPageTitle(this.LANG.common.systemServerError);
+        this.LANG = languageService.translations;
+        this.pageService.pageTitle = this.LANG.common.systemServerError;
         this.CONFIG = configService.getConfig();
     }
 }

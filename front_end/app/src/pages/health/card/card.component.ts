@@ -1,15 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NxConfigService, IConfig } from '../../../services';
+import { NxConfigService, IConfig } from '../../../services/nx-config';
 
 // TODO: need to style component
 
 @Component({
-    selector   : 'nx-system-alert-card-component',
-    templateUrl: 'card.component.html',
-    styleUrls  : ['card.component.scss']
+    selector    : 'nx-system-alert-card-component',
+    templateUrl : 'card.component.html',
+    styleUrls   : ['card.component.scss']
 })
 export class NxSystemAlertCardComponent implements OnInit {
-    @Input() data: any;
+    @Input() data;
     CONFIG: IConfig;
 
     constructor(configService: NxConfigService) {

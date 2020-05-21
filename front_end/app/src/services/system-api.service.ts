@@ -72,7 +72,7 @@ export class NxSystemAPI {
     private userEmail: string;
     private userRequest: Promise<t.NormalResponse<User>>;
     private urlBase: string;
-    private unauthorizedCallback: (params: any) => any;
+    private unauthorizedCallback: (params: unknown) => any;
 
     constructor(
         http: HttpClient,
@@ -153,7 +153,7 @@ export class NxSystemAPI {
     private post<ResponseType>(url: string, data?: any, customHttpHeaders: IParams<string> = {}) {
         let headers = new HttpHeaders();
         const fullUrl = `${this.urlBase}${url}`;
-        const params: any = {};
+        const params: IParams = {};
         data = data || {};
 
         if (this.authPost) {
@@ -171,7 +171,7 @@ export class NxSystemAPI {
 
     // TODO: Need to figure out how to type this
     private retryHandler(request) {
-        return request.pipe(mergeMap((error: any, attempt: number) => {
+        return request.pipe(mergeMap((error: {status: number, resultCode: string}, attempt: number) => {
             if (attempt === 0) {
                 if (error.status === 401 || error.status === 403 || error.resultCode === 'forbidden') {
                     return from(this.unauthorizedCallback(error));
@@ -191,7 +191,7 @@ export class NxSystemAPI {
         return this.get<AggregatedType>(url);
     }
 
-    init(userEmail: string, systemId: string, serverId: string, unauthorizedCallback: (params: any) => void) {
+    init(userEmail: string, systemId: string, serverId: string, unauthorizedCallback: (params: IParams) => void) {
         this.setAuthKeys('', '', '');
         this.userEmail = userEmail;
         this.systemId = systemId;
@@ -433,17 +433,17 @@ export class NxSystemAPI {
     }
 
     // TODO: This doesn't look like it's being used
-    private checkPermissions(flag) {
-        // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
-        return this.getCurrentUser().then((user: any) => {
-            if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
-                return this.getRolePermissions(user.userRoleId).subscribe((role: any) => {
-                    return role.permissions.indexOf(flag) > -1;
-                });
-            }
-            return user.isAdmin || user.permissions.indexOf(flag) > -1;
-        });
-    }
+    // private checkPermissions(flag) {
+    //     // TODO: getCurrentUser will not work on portal for 3.0 systems, think of something
+    //     return this.getCurrentUser().then((user) => {
+    //         if (!user.isAdmin && this.isEmptyId(user.userRoleId)) {
+    //             return this.getRolePermissions(user.userRoleId).subscribe((role: unknown) => {
+    //                 return role.permissions.indexOf(flag) > -1;
+    //             });
+    //         }
+    //         return user.isAdmin || user.permissions.indexOf(flag) > -1;
+    //     });
+    // }
 
     setAuthKeys(authGet: string, authPost: string, authPlay: string) {
         this.authGet = authGet;
@@ -541,8 +541,8 @@ export class NxSystemAPI {
         return !id || id === this.emptyId;
     }
 
-    cleanUserObject(user: NxSystemUser): NxSystemUser { // Remove unnecessary fields from the object
-        const cleanedUser: any = {};
+    cleanUserObject(user: NxSystemUser): Partial<NxSystemUser> { // Remove unnecessary fields from the object
+        const cleanedUser: Partial<NxSystemUser> = {};
         if (user.id) {
             cleanedUser.id = user.id;
         }
@@ -576,7 +576,6 @@ export class NxSystemAPI {
     }
 
     /* End of Working with users */
-
     /* Cameras and Servers */
     getCameras(id?: string) {
         const params = id ? { id: this.cleanId(id) } : {};
@@ -584,8 +583,8 @@ export class NxSystemAPI {
     }
 
     getCamerasWithSeverTime(): Observable<any> {
-        return this.getRequestAggregator<[t.SystemTime, t.GetCameras]>(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
-            .pipe(map(({ reply }: any) => {
+        return this.getRequestAggregator<t.NormalResponse<[t.SystemTime, t.GetCameras]>>(['ec2/getTimeOfServers', 'ec2/getCamerasEx'])
+            .pipe(map(({ reply }) => {
                 return ([reply['ec2/getTimeOfServers'].reply, reply['ec2/getCamerasEx']]);
             }));
     }
@@ -619,7 +618,14 @@ export class NxSystemAPI {
 
     /* Formatting urls */
     previewUrl(cameraId: string, time?: number, width?: number, height?: number, rotate?: number) {
-        const data: any = {
+        const data: {
+            cameraId: string,
+            time?: number | string,
+            width?: number,
+            height?: number,
+            rotate?: number,
+            auth?: string
+        } = {
             cameraId: this.cleanId(cameraId)
         };
         let endpoint    = '/ec2/cameraThumbnail';
@@ -650,7 +656,10 @@ export class NxSystemAPI {
     }
 
     hlsUrl(cameraId: string, position: string, resolution: string) {
-        const data: any = {
+        const data: {
+            pos?: string,
+            auth: string
+        } = {
             auth: this.authGet
         };
         if (position) {
@@ -661,7 +670,11 @@ export class NxSystemAPI {
     }
 
     webmUrl(cameraId: string, position: string, resolution: string, force: boolean) {
-        const data: any = {
+        const data: {
+            auth: string,
+            resolution: string,
+            pos?: string
+        } = {
             auth: this.authGet,
             resolution
         };
@@ -690,7 +703,7 @@ export class NxSystemAPI {
         if (typeof (periodsType) === 'undefined') {
             periodsType = 0;
         }
-        const params: any = {
+        const params: IParams = {
             cameraId: this.cleanId(cameraId),
             detail,
             endTime,
@@ -779,7 +792,7 @@ export class NxSystemAPIService {
     createConnection(user: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params?: any) => any
+        unauthorizedCallback: (params?: IParams) => any
     ) {
         // const sysServe = `${systemId}+${serverId}`;
         // if (systemId && serverId && sysServe in this.systemConnections) {

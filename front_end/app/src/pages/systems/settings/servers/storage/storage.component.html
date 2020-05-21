@@ -58,9 +58,7 @@
             <nx-process-button
                     [process]="saveSettings"
                     [buttonText]="'Save' | translate"></nx-process-button>
-            <button
-                    class="btn btn-default ml-2"
-                    (click)="resetWatchers()" translate>Cancel</button>
+            <nx-cancel-button [process]="saveSettings" [discardFn]="resetWatchers" [showDiscard]="true"></nx-cancel-button>
         </div>
     </nx-section>
 </nx-block>

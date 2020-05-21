@@ -1,17 +1,18 @@
 @import '../../../../styles/custom/custom_palette';
 @import '../../../../styles/theme_palette';
 @import '../../../../styles/theme_variables';
-@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 integration-detail-component {
-    
+
     .integration-details {
     }
-    
+
     .menu {
         background-color : $light5;
         padding          : .5rem 0 0;
-        
+
         .menu-level-2 {
             border-radius: 2px;
         }

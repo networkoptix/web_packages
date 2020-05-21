@@ -2,15 +2,15 @@ import {
     AfterViewInit,
     Component, ElementRef, EventEmitter, Input, OnDestroy,
     OnInit, Output, SimpleChanges, ViewChild
-}                                  from '@angular/core';
-import {
-    NxConfigService, IConfig, NxScrollMechanicsService,
-    NxLanguageProviderService, NxUriService
-}                                  from '../../../../services';
-import { LanguageI18NStaticTypes } from '../../../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { delay }                   from 'rxjs/operators';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+}                                    from '@angular/core';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxUriService }              from '../../../../services/uri.service';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { Subscription }              from 'rxjs';
+import { delay }                     from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,7 +20,7 @@ import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
 })
 export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    @Input() activeCamera: any;
+    @Input() activeCamera;
     @Output() public onCloseView: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>();
 
@@ -31,14 +31,14 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     analyticsToShow: number;
     showAllFirmware: boolean;
     showAllEvents: boolean;
-    debug: any;
-    beta: any;
-    params: any;
+    debug;
+    beta;
+    params;
     showAnalytics: boolean;
     showCameraAnalytics: boolean;
 
     windowSize: any = {};
-    windowScroll: any;
+    windowScroll;
     searchHeight: number;
     clientHeight: number;
     offsetHeight: number;
@@ -46,14 +46,13 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
     viewScrollFixedTop: boolean;
     viewScrollFixedBottom: boolean;
 
-    elementWidth: any;
+    elementWidth;
+    camera: { title: string, param?: string, secondaryParam?: string }[];
 
     private uriSubscription: Subscription;
     private windowScrollSubscription: Subscription;
     private elementViewWidthSubscription: Subscription;
     private searchViewHeightSubscription: Subscription;
-
-    private camera: { title: string, param?: string, secondaryParam?: string }[];
 
     @ViewChild('nxCamView', { static: false }) cameraView: ElementRef;
 
@@ -64,7 +63,7 @@ export class CamViewComponent implements OnInit, AfterViewInit, OnDestroy {
         private uri: NxUriService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.viewScrollFixedTop = false;
         this.viewScrollFixedBottom = false;
         this.elementWidth = '100%';

@@ -357,11 +357,12 @@ export const nxConfig: IConfig = {
         },
         name: ''
     },
-    footerItems        : '',
-    googleTagManagerId : '',
-    pushConfig         : '',
-    trafficRelayHost   : '',
-    vmsName            : '',
+    footerItems            : [],
+    googleTagManagerId     : '',
+    pushConfig             : '',
+    testedOperatingSystems : '',
+    trafficRelayHost       : '',
+    vmsName                : '',
     // End of dynamic config
 
     // Legacy webadmin config
@@ -424,7 +425,6 @@ export const nxConfig: IConfig = {
     debug          : {
         chunksOnTimeline: false // timeline.js - draw debug events
     },
-    gatewayUrl                  : '/gateway',
     globalViewArchivePermission : 'GlobalViewArchivePermission',
     openClientTimeout           : 20 * 1000, // 20 seconds we wait for client to open
     openClientError             : 'notVisited',
@@ -445,7 +445,7 @@ export const nxConfig: IConfig = {
         playerReadyTimeout          : 100,
         reloadInterval              : 30 * 1000,
         resetDisplayedTextTimer     : 3 * 1000,
-        staticResources             : 'static/web_common/',
+        // staticResources             : 'static/web_common/',
         skipFramesRenderingTimeline : true,
         // One minute timeout for manifest:
         // * 30 seconds for gateway to open connection
@@ -460,6 +460,7 @@ export const nxConfig: IConfig = {
     settingsConfig: {
         auditTrailEnabled          : { type: 'checkbox' },
         cameraSettingsOptimization : { type: 'checkbox', setupWizard: true },
+        defaultMotionMask          : '5,0,0,44,32',
         disabledVendors            : { type: 'text' },
         ec2AliveUpdateIntervalSec  : {
             type  : 'number',

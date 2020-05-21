@@ -1,14 +1,13 @@
 import {
     Component, OnInit, Inject, Input, ViewContainerRef,
     ViewChild, ElementRef, OnChanges, SimpleChanges
-}                                  from '@angular/core';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxProcessService, NxSystem,
-    NxApplyService, Watcher
-}                                  from '../../../../../services';
-import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../../services/process.service';
+import { NxSystem }                  from '../../../../../services/system.service';
+import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
 
 @Component({
     selector    : 'nx-system-standard-admin-component',
@@ -17,24 +16,24 @@ import { LanguageI18NStaticTypes } from '../../../../../../language_i18n_static_
 })
 
 export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
-    @Input() settings: any;
+    @Input() settings;
     @Input() system: NxSystem;
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
     viewContainerRef: ViewContainerRef;
 
-    selectedTimeUnit: any;
+    selectedTimeUnit;
     sessionLimitToggle: boolean;
     timeValue: number;
     currentMaxTimeUnit: number;
     previousInputValue: number;
-    limitSessionTimeUnits: any;
-    limitSessionTimeItems: any;
-    saveSettings: any;
-    resetVideoEncryptionIfDisabled: any;
-    setWarningMessageThroughApplyService: any;
-    timeUnitTracker: any;
-    selectElement: any;
+    limitSessionTimeUnits;
+    limitSessionTimeItems;
+    saveSettings: Process;
+    resetVideoEncryptionIfDisabled;
+    setWarningMessageThroughApplyService;
+    timeUnitTracker;
+    selectElement;
 
     settingsWatchersSet = false;
     settingsWatchers: any = {
@@ -72,23 +71,23 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnInit(): void {
         this.limitSessionTimeUnits = {
-            hours  : {
-                value  : this.hours,
-                name   : this.LANG.system.settings.sessionLimitDuration.hours,
-                id     : 1,
-                max    : 600,
-                default: 24
+            hours: {
+                value   : this.hours,
+                name    : this.LANG.system.settings.sessionLimitDuration.hours,
+                id      : 1,
+                max     : 600,
+                default : 24
             },
             minutes: {
-                value: this.minutes,
-                name : this.LANG.system.settings.sessionLimitDuration.minutes,
-                id   : 2,
-                max  : 600
+                value : this.minutes,
+                name  : this.LANG.system.settings.sessionLimitDuration.minutes,
+                id    : 2,
+                max   : 600
             }
         };
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
@@ -185,9 +184,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                     obj.originalValue = obj.value;
                 }
             }
-            return this.system.updateOrGetSystemSettings(changes).toPromise()
-                .then(() => this.applyService.reset());
-        });
+            return this.system.updateOrGetSystemSettings(changes).toPromise();
+        }).then(() => this.applyService.reset());
 
         this.applyService.initPageWatcher(
             this.viewContainerRef,
@@ -196,7 +194,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
             () => {
                 this.applyService.reset();
                 const { sessionLimitMinutes } = this.settingsWatchers;
-                if (sessionLimitMinutes && sessionLimitMinutes.originalValue) {
+                if (sessionLimitMinutes?.originalValue) {
                     this.sessionLimitToggle = true;
                     this.selectedTimeUnit = this.limitSessionTimeUnits.minutes;
                     this.timeValue = sessionLimitMinutes.originalValue;

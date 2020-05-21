@@ -1,28 +1,31 @@
-import { NgModule } from '@angular/core';
+import { NgModule }             from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
-import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+    Location, PathLocationStrategy,
+    LocationStrategy, CommonModule
+}                               from '@angular/common';
+import { RouterModule }         from '@angular/router';
+import { HttpClientModule }     from '@angular/common/http';
+import { FormsModule }          from '@angular/forms';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule }  from '@ngx-translate/core';
 import { WebStorageModule } from 'ngx-store';
 
 import { IpvdComponent } from './ipvd.component';
 
 // Components
-import { NxCheckboxComponent } from '../app/src/components/checkbox/checkbox.component';
-import { NxContentBlockComponent } from '../app/src/components/content-block/content-block.component';
+import { NxCheckboxComponent }            from '../app/src/components/checkbox/checkbox.component';
+import { NxContentBlockComponent }        from '../app/src/components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '../app/src/components/content-block/section/section.component';
-import { NxFooterComponent } from '../app/src/components/footer/footer.component';
-import { NxGenericDropdown } from '../app/src/components/dropdowns/generic/dropdown.component';
-import { NxMultiSelectDropdown } from '../app/src/components/dropdowns/multi-select/multi-select.component';
-import { NxPreLoaderComponent } from '../app/src/components/pre-loader/pre-loader.component';
-import { NxProcessButtonComponent } from '../app/src/components/process-button/process-button.component';
-import { NxSearchComponent } from '../app/src/components/search/search.component';
-import { NxTagComponent } from '../app/src/components/tag/tag.component';
-import { NxVendorListComponent } from '../app/src/components/vendor-list/vendor-list.component';
+import { NxFooterComponent }              from '../app/src/components/footer/footer.component';
+import { NxGenericDropdown }              from '../app/src/components/dropdowns/generic/dropdown.component';
+import { NxMultiSelectDropdown }          from '../app/src/components/dropdowns/multi-select/multi-select.component';
+import { NxPreLoaderComponent }           from '../app/src/components/pre-loader/pre-loader.component';
+import { NxProcessButtonComponent }       from '../app/src/components/process-button/process-button.component';
+import { NxSearchComponent }              from '../app/src/components/search/search.component';
+import { NxTagComponent }                 from '../app/src/components/tag/tag.component';
+import { NxVendorListComponent }          from '../app/src/components/vendor-list/vendor-list.component';
 
 // Dialogs
 import { MessageModalContent } from '../app/src/dialogs/message/message.component';
@@ -38,7 +41,9 @@ import { CsvButtonComponent } from '../app/src/pages/ipvd/cam-components/csv-but
 import { BoolIconComponent } from '../app/src/pages/ipvd/cam-components/bool-icon/bool-icon.component';
 
 // Services
-import { WINDOWS_PROVIDERS } from '../app/src/services';
+import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { ComponentsModule }  from '../app/src/components/components.module';
+import { DirectivesModule }  from '../app/src/directives/directives.module';
 
 @NgModule({
     imports: [
@@ -53,11 +58,13 @@ import { WINDOWS_PROVIDERS } from '../app/src/services';
             { path: '**', redirectTo: 'ipvd' },
             { path: 'ipvd', component: NxIpvdComponent }
         ], {
-            initialNavigation: true,
+            initialNavigation        : true,
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
-        })
+        }),
+        ComponentsModule,
+        DirectivesModule
     ],
     entryComponents: [
         NxIpvdComponent
@@ -66,7 +73,7 @@ import { WINDOWS_PROVIDERS } from '../app/src/services';
         Location,
         Title,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy, useClass: PathLocationStrategy }
     ],
     declarations: [
         IpvdComponent,
@@ -86,7 +93,7 @@ import { WINDOWS_PROVIDERS } from '../app/src/services';
         CamTableComponent,
         CamViewComponent,
         CsvButtonComponent,
-        BoolIconComponent,
+        BoolIconComponent
     ],
     bootstrap: [
         IpvdComponent

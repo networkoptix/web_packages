@@ -9,14 +9,14 @@ export class IpvdSearchService {
     private static TYPES = 'hardwareTypes';
     private static ANALYTICS = 'analytics';
 
-    private _vendors: any;
-    private _showAnalytics: any;
+    private _vendors;
+    private _showAnalytics;
 
     constructor() {
         this._vendors = [];
     }
 
-    set showAnalytics(show: boolean){
+    set showAnalytics(show: boolean) {
         this._showAnalytics = show;
     }
 

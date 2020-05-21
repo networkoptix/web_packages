@@ -3,29 +3,31 @@ import {
     Inject, ViewContainerRef
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
+import { NxConfigService, IConfig }  from '../../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
+import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
+import { NxProcessService, Process } from '../../../../services/process.service';
+import { WINDOW }                    from '../../../../services/window-provider';
+import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxSystem, ICamera, StreamQuality,
-    IRecordingSettings, ITask,
-    IRecordingModes, MotionType,
-    NxUriService, WINDOW,
-    Watcher, NxApplyService,
-    Process, NxProcessService
-}                                    from '../../../../services';
+    ICamera, IRecordingModes,
+    IRecordingSettings,
+    ITask, MotionType,
+    NxSystem, StreamQuality
+}                                    from '../../../../services/system.service';
+import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
+import { NxUriService }              from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
-import { NxDialogsService }          from '../../../../dialogs';
-import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import {
-    Subscription, BehaviorSubject, Subject
+    Subscription, BehaviorSubject,
+    Subject
 }                                    from 'rxjs';
 import {
     filter, map, retryWhen, delay,
     distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
-
 
 @Component({
     selector    : 'nx-cameras-component',
@@ -58,6 +60,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     warnings: string[] = [];
     errors: string[] = [];
     showUnauthorized = false;
+    showOffline = false;
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
     showPreloader = true;
@@ -81,7 +84,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         @Inject(ViewContainerRef) viewContainerRef
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.setSection('cameras');
@@ -102,7 +105,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.menuService.setDetailsSection(params.cameraId);
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
-                    this.setCamera();
+                    if (!this.applyService.locked) this.setCamera();
                 }
             });
 
@@ -152,7 +155,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             if (this.system && this.system.cameras && this.system.cameras.length) {
                                 this.system.initSystemMediaServers();
                             }
-                            this.setCamera();
+                            if (!this.applyService.locked) this.setCamera();
                         }
                         this.noCameras = this.system && this.system.cameras && this.system.cameras.length === 0;
                         this.showPreloader = false;
@@ -169,8 +172,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
-                this.recordingModesWatcher,
-                this.recordingWatcher,
+                this.recordingModesWatcher, // these are getting updated somewhere
+                this.recordingWatcher, // these are getting updated somewhere
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
@@ -208,7 +211,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     initUpdateProcess() {
         this.saveSettings = this.processService.createProcess(() => {
             if (!this.safeToUpdateRecordingSettings) {
-                return this.applyService.setWarn(this.LANG.common.recordingSettingsWarning);
+                return Promise.resolve(this.applyService.setWarn(this.LANG.common.recordingSettingsWarning));
             }
             const updatedTask: Pick<ITask, 'fps' | 'recordingType' | 'streamQuality'> | false = this.recordingSettingsChanged ? {
                 fps           : !this.selectedFpsWatcher.value ? this.selectedFpsWatcher.originalValue : this.selectedFpsWatcher.value,
@@ -223,20 +226,22 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 rotation        : `${this.selectedRotationWatcher.value}` || '',
                 scheduleEnabled : this.recordingWatcher.value,
                 motionType      : this.motionType,
-                motionMask      : this.motionMaskWatcher.value || '5,0,0,44,32'
+                motionMask      : this.motionMaskWatcher.value || this.CONFIG.settingsConfig.defaultMotionMask
             };
             return Promise.all([
                 this.system.updateRecordingSettings(updatedTask, cameraSettings),
                 this.system.updateCameraSettings(cameraSettings.id, {
                     overrideAr: cameraSettings.overrideAr, rotation: cameraSettings.rotation
                 })
-            ]).then(_ => this.system.getCameras().then(res => {
-                this.applyService.reset();
+            ]);
+        }).then(_ => {
+            this.applyService.reset();
+            return this.system.getCameras().then(res => {
                 this.setCamera();
                 this.toggleMotionGrid();
                 this.settingsService.system = this.system;
                 return res;
-            }));
+            });
         });
     }
 
@@ -463,23 +468,30 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.recordingWatcher.value;
     }
 
-    flashHint(flash = false) {
-        if (!flash) return;
-        this.shakeHint = true;
-        setTimeout(() => {
-            this.shakeHint = false;
-        }, 500);
+    handleRecordingToggle() {
+        if (!this.recording && !this.availableLicenses) {
+            this.shakeHint = true;
+            setTimeout(() => {
+                this.shakeHint = false;
+            }, 500);
+        } else {
+            this.recording = !this.recording;
+        }
     }
 
     set recording(value) {
         if (value === this.recording) {
             return;
         }
-        if (this.motionEnabled) {
-            this.enableMotion();
-        } else {
-            this.disableMotion();
+
+        if (this.recordingWatcher.originalValue !== undefined) {
+            if (this.motionEnabled) {
+                this.enableMotion();
+            } else {
+                this.disableMotion();
+            }
         }
+
         this.recordingWatcher.value = value;
     }
 
@@ -628,6 +640,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (this.selectedCamera && this.parsedCameraId !== this.selectedCamera.id) {
+            this.showOffline = false;
+            this.showUnauthorized = false;
+            this.alerts = [];
+        }
+
         if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
             this.applyService.hardReset();
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
@@ -648,17 +666,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
-            const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
-            this.selectedAspect = aspect;
+            this.selectedAspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];
             this.audioEnabled = this.selectedCamera.audioEnabled;
             this.recordingModesWatcher.value = this.selectedCamera.recordingSettings.modes;
             this.selectedQuality = [...this.streamQualities, this.various].find(({ value: id }) => id === this.selectedCamera.recordingSettings.quality) || this.various;
             this.selectedFps = this.selectedCamera.recordingSettings.fps;
-            this.recordingWatcher.originalValue = this.selectedCamera.recordingSettings.recording;
+            this.recordingWatcher.value = this.selectedCamera.recordingSettings.recording;
             this.recordingSettings = this.selectedCamera.recordingSettings;
             this.motionType = this.selectedCamera.motionType;
-            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask;
+            this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
             this.applyService.setVisible();
@@ -675,11 +692,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     private updateAlerts() {
         const currentAlerts = (this.alerts || []).find(({ cameraId }) => cameraId === this.parsedCameraId);
         const unauthorizedMessage = 'camera is unauthorized';
+        const offlineMessage = 'camera is offline';
         if (currentAlerts) {
             this.warnings = currentAlerts.warnings;
-            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage);
-            this.showUnauthorized = currentAlerts.errors.some(error => error.toLowerCase() === unauthorizedMessage);
+            this.errors = currentAlerts.errors.filter(error => error.toLowerCase() !== unauthorizedMessage && error.toLowerCase() !== offlineMessage);
         }
+        this.showUnauthorized = this.selectedCamera && this.selectedCamera.status === 'Unauthorized';
+        this.showOffline = this.selectedCamera && this.selectedCamera.status === 'Offline';
     }
 
     updateValues() {
@@ -689,7 +708,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsub$))
             .subscribe(
                 result => {
-                    const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
+                    const alerts = result?.reply?.['ec2/metrics/alarms']?.reply.cameras;
                     this.alerts = Object.entries(alerts || {}).map(
                         ([cameraId, alertInfo]) =>
                             new Alert(cameraId, alertInfo, 'Camera')
@@ -720,7 +739,7 @@ export class Alert {
     constructor(public cameraId: string, alertInfo, prefix: string) {
         Object.values(alertInfo.availability || {}).forEach((_: any[] = []) =>
             _.forEach(item => {
-                if (item && item.level && item.text && this[`${item.level}s`]) {
+                if (item?.level && item.text && this[`${item.level}s`]) {
                     this[`${item.level}s`].push(`${prefix} ${item.text}`);
                 }
             })

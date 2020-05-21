@@ -2,7 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const babelLoader = {
     loader: 'babel-loader',
@@ -43,6 +44,28 @@ module.exports = {
         styles: '../health_monitor/entrypoint.js',
         appnew: '../health_monitor/main.ts'
     },
+    optimization: {
+        splitChunks: {
+            chunks                : 'async',
+            minSize               : 30000,
+            maxSize               : 0,
+            minChunks             : 1,
+            maxAsyncRequests      : 6,
+            maxInitialRequests    : 4,
+            automaticNameDelimiter: '~',
+            cacheGroups           : {
+                defaultVendors: {
+                    test    : /[\\/]node_modules[\\/]/,
+                    priority: -10
+                },
+                default       : {
+                    minChunks         : 2,
+                    priority          : -20,
+                    reuseExistingChunk: true
+                }
+            }
+        }
+    },
     plugins: [
         new webpack.DefinePlugin({
             PRODUCTION: JSON.stringify(isProd),
@@ -68,7 +91,8 @@ module.exports = {
             chunksSortMode: 'manual'
         }),
 
-        new ExtractTextPlugin('styles/main.[chunkhash].css', { allChunks:true }),
+        // new ExtractTextPlugin('styles/main.[chunkhash].css', { allChunks:true }),
+        new MiniCssExtractPlugin({ filename: 'styles/main.[chunkhash].css' }),
 
         new CopyWebpackPlugin([
             {
@@ -87,11 +111,6 @@ module.exports = {
             '_': 'underscore',
             'screenfull': 'screenfull',
             'jquery-mousewheel': 'jquery-mousewheel'
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'commons',
-            filename: 'scripts/commons.[hash].js',
-            minChunks: 2
         })
     ],
     resolve: {

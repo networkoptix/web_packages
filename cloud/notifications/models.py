@@ -33,6 +33,9 @@ class MessageTypes(object):
     ipvd_feedback_device = "ipvd_feedback_device"
     ipvd_feedback = "ipvd_feedback"
 
+    def keys(self):
+        return list(filter(lambda k: not k.startswith("__", 0, 2) and k != "keys", dir(self)))
+
 
 class Event(models.Model):
     object = models.CharField(max_length=255)

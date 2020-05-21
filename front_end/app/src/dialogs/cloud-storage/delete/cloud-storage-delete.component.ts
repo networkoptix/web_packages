@@ -44,14 +44,14 @@ export class CloudStorageDeleteModalContent implements OnInit {
         private renderer: Renderer2,
         private cloudApiService: NxCloudApiService
     ) {
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
         this.CONFIG = config.getConfig();
     }
 
     ngOnInit() {
         this.auth.password = '';
         this.system$.subscribe(system => {
-            if (system && system.id) {
+            if (system?.id) {
                 this.systemId = system.id;
             };
         });

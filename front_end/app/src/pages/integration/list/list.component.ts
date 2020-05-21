@@ -1,13 +1,11 @@
 import {
     Component, OnDestroy,
     Input, SimpleChanges, OnChanges
-}                                  from '@angular/core';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService
-}                                  from '../../../services';
-import { NxRibbonService }         from '../../../components/ribbon';
-import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types';
+}                                    from '@angular/core';
+import { NxRibbonService }           from '../../../components/ribbon';
+import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxConfigService, IConfig }  from '../../../services/nx-config';
+import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 
 @Component({
     selector    : 'integrations-list-component',
@@ -16,7 +14,7 @@ import { LanguageI18NStaticTypes } from '../../../../language_i18n_static_types'
 })
 
 export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
-    @Input() list: any;
+    @Input() list;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -27,7 +25,7 @@ export class NxIntegrationsListComponent implements OnDestroy, OnChanges {
         private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = language.getTranslations();
+        this.LANG = language.translations;
     }
 
     ngOnDestroy() {

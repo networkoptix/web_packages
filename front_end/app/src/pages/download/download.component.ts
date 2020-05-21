@@ -1,21 +1,23 @@
 import {
     Component, OnInit, OnDestroy,
     ViewChild, Inject, Input, PLATFORM_ID
-}                                                from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { isPlatformBrowser, Location }           from '@angular/common';
-import { filter }                                from 'rxjs/operators';
+}                                       from '@angular/core';
+import {
+    ActivatedRoute, ActivationEnd, Router
+}                                       from '@angular/router';
+import { isPlatformBrowser, Location }  from '@angular/common';
+import { filter }                       from 'rxjs/operators';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorService }        from 'ngx-device-detector';
-import {
-    NxConfigService, IConfig,
-    NxLanguageProviderService,
-    NxAccountService, NxCloudApiService,
-    NxPageService, NxUriService
-}                                  from '../../services';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
-import { Subscription }            from 'rxjs';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }     from '../../services/nx-config';
+import { NxAccountService }             from '../../services/account.service';
+import { NxPageService }                from '../../services/page.service';
+import { NxCloudApiService }            from '../../services/nx-cloud-api';
+import { NxUriService }                 from '../../services/uri.service';
+import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
+import { Subscription }                 from 'rxjs';
+import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
 
 @AutoUnsubscribe()
 @Component({
@@ -28,7 +30,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
     @Input() routeParamPlatform;
 
     private sub: Subscription;
-    private platform: any;
+    private platform;
     private activeOs: string;
     public canViewDownloads: boolean;
     private paramPlatform: string;
@@ -36,14 +38,14 @@ export class DownloadComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    downloadButton: any;
-    downloads: any;
-    downloadsData: any;
+    downloadButton;
+    downloads;
+    downloadsData;
     canSeeHistory: boolean;
     tabsVisible: boolean;
     activeTab: string;
-    sortedPlatforms: any;
-    otherPackages: any;
+    sortedPlatforms;
+    otherPackages;
     private routerSubscription: Subscription;
 
     @ViewChild('tabs', { static: false })
@@ -53,7 +55,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
 
         this.canViewDownloads = false;
         this.tabsVisible = false;
@@ -199,7 +201,7 @@ export class DownloadComponent implements OnInit, OnDestroy {
         } else {
             title = this.LANG.pageTitles.download;
         }
-        this.pageService.setPageTitle(title);
+        this.pageService.pageTitle = title;
     }
 
     ngOnInit(): void {
@@ -232,7 +234,6 @@ export class DownloadComponent implements OnInit, OnDestroy {
                     this.canViewDownloads = true;
                     this.getDownloads();
                 });
-
         } else {
             this.canViewDownloads = true;
             this.getDownloads();

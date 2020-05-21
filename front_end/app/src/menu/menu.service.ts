@@ -1,19 +1,20 @@
-import { Injectable, OnDestroy }           from '@angular/core';
-import { BehaviorSubject }                 from 'rxjs';
-import { NxUtilsService, NxSearchService } from '../services';
-import { isArray }                         from 'rxjs/internal-compatibility';
+import { Injectable, OnDestroy } from '@angular/core';
+import { BehaviorSubject }       from 'rxjs';
+import { NxUtilsService }        from '../services/utils.service';
+import { NxSearchService }       from '../services/search.service';
+import { isArray }               from 'rxjs/internal-compatibility';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxMenuService implements OnDestroy {
-    selectedSectionSubject = new BehaviorSubject([]);
+    selectedSectionSubject = new BehaviorSubject('');
     selectedSubSectionSubject = new BehaviorSubject([]);
     selectedDetailsSection = new BehaviorSubject([]);
     contentSubject = new BehaviorSubject([]);
     navItemSubject = new BehaviorSubject('');
 
-    private regex: any;
+    private regex;
 
     constructor() {
     }
@@ -32,6 +33,14 @@ export class NxMenuService implements OnDestroy {
 
     get navItemId() {
         return this.navItemSubject.getValue();
+    }
+
+    get section() {
+        return this.selectedSectionSubject.getValue();
+    }
+
+    get detail() {
+        return this.selectedDetailsSection.getValue();
     }
 
     setSection(section) {
@@ -55,7 +64,7 @@ export class NxMenuService implements OnDestroy {
 
     getItemBy(id) {
         for (const node of this.content) {
-            if (node.level3 && node.level3.length) {
+            if (node.level3?.length) {
                 const match = node.level3.filter((item) => {
                     return item.id === id;
                 });
@@ -75,7 +84,7 @@ export class NxMenuService implements OnDestroy {
             this.setHighlightPattern(model);
 
             this.content.forEach((node) => {
-                if (node.level3 && node.level3.length) {
+                if (node.level3?.length) {
                     let haveNode = filteredContent.find((filtered) => filtered.id === node.id);
                     node.level3.forEach((item) => {
                         let searchAggregate = item.label;
@@ -92,7 +101,7 @@ export class NxMenuService implements OnDestroy {
                             haveNode.level3.push(this.highlighted(filteredItem));
                         }
                     });
-                    if (haveNode && haveNode.level3 && haveNode.level3.length) {
+                    if (haveNode?.level3?.length) {
                         filteredContent.push(haveNode);
                     }
                 }

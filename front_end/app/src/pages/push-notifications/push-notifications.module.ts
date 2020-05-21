@@ -9,7 +9,7 @@ import { PushComponent } from './push-notifications.component';
 
 import { TranslateModule }  from '@ngx-translate/core';
 import { ComponentsModule } from '../../components/components.module';
-import { NxConfigService } from '../../services';
+import { NxConfigService } from '../../services/nx-config';
 
 const appRoutes: Routes = [
     {

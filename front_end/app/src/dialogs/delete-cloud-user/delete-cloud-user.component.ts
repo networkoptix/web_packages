@@ -1,8 +1,8 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
-import { NxConfigService, IConfig }    from '../../services';
+import { NxConfigService, IConfig }    from '../../services/nx-config';
 import { NxLanguageProviderService }   from '../../services/nx-language-provider';
-import { NxProcessService }            from '../../services/process.service';
+import { NxProcessService, Process }            from '../../services/process.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 
 @Component({
@@ -16,7 +16,7 @@ export class DeleteCloudUserModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
 
-    deleteCloudUser: any;
+    deleteCloudUser: Process;
     passwordForUser: string = '';
     passwordError: string = '';
 
@@ -28,7 +28,7 @@ export class DeleteCloudUserModalContent {
                 private processService: NxProcessService
     ) {
         this.CONFIG = this.configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     ngOnInit() {
@@ -54,7 +54,7 @@ export class DeleteCloudUserModalContent {
     }
 
     setPassword(input) {
-        this.passwordError = input.touched && input.errors && input.errors.required
+        this.passwordError = input.touched && input.errors?.required
             ? this.LANG.passwordRequirements.missingMessage
             : '';
         this.passwordForUser = input.value;

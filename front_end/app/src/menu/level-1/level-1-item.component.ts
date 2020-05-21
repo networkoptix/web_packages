@@ -2,7 +2,7 @@ import {
     Component, EventEmitter, Input, OnChanges,
     OnInit, Output, SimpleChanges
 }                                   from '@angular/core';
-import { NxConfigService, IConfig } from '../../services';
+import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
 import { Router }                   from '@angular/router';
 
@@ -42,7 +42,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.base && changes.base.currentValue) {
+        if (changes.base?.currentValue) {
             this.itemPath = changes.base.currentValue;
             this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         }

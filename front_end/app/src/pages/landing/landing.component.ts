@@ -1,35 +1,32 @@
-import { Component, OnInit }       from '@angular/core';
-import { Router }                  from '@angular/router';
-import { LocalStorageService }     from 'ngx-store';
-
-import {
-    NxConfigService, IConfig,
-    NxAccountService, NxPageService,
-    NxLanguageProviderService
-}  from '../../services';
-import { NxDialogsService }        from '../../dialogs';
-import { LanguageI18NStaticTypes } from '../../../language_i18n_static_types';
+import { Component, OnInit }         from '@angular/core';
+import { Router }                    from '@angular/router';
+import { LocalStorageService }       from 'ngx-store';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
+import { NxAccountService }          from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxDialogsService }          from '../../dialogs/dialogs.service';
+import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
 @Component({
-    selector   : 'landing-component',
-    templateUrl: 'landing.component.html',
-    styleUrls  : ['landing.component.scss']
+    selector    : 'landing-component',
+    templateUrl : 'landing.component.html',
+    styleUrls   : ['landing.component.scss']
 })
 
 export class NxLandingComponent implements OnInit {
-
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
-    params: any;
-    userEmail: any;
-    login: any;
+    params;
+    userEmail;
+    login;
 
     loaded: boolean;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
-        this.LANG = this.language.getTranslations();
+        this.LANG = this.language.translations;
     }
 
     constructor(configService: NxConfigService,
@@ -44,12 +41,12 @@ export class NxLandingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.pageService.setPageTitle(this.LANG.pageTitles.default);
+        this.pageService.pageTitle = this.LANG.pageTitles.default;
         if (this.router.url === '/logout') {
             this.accountService.logout();
         } else if (this.router.url.includes('/content/about')) {
             this.loaded = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.about, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.about;
         } else {
             this.accountService
                 .get(/* forceUpdate */true)
@@ -60,16 +57,15 @@ export class NxLandingComponent implements OnInit {
                     } else {
                         if (this.router.url.includes('/login')) {
                             this.login = this.dialogs.login(this.accountService, false, false);
-                            this.pageService.setPageTitle(this.LANG.pageTitles.login);
+                            this.pageService.pageTitle = this.LANG.pageTitles.login;
                         } else {
                             this.loaded = true;
                         }
                     }
                 }).catch(() => {
-                    this.pageService.setPageTitle(this.LANG.pageTitles.default);
+                    this.pageService.pageTitle = this.LANG.pageTitles.default;
                     this.loaded = true;
                 });
         }
     }
 }
-

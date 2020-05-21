@@ -15,7 +15,6 @@
                            [form]="restartServerForm"
                            [actionType]="'primary'"
                            buttonText="{{ 'Restart' | translate }}"></nx-process-button>
-
-        <button type="button" class="btn btn-default" (click)="close('')" translate>Cancel</button>
+        <nx-cancel-button [process]="restartServer" [discardFn]="close"></nx-cancel-button>
     </div>
 </form>

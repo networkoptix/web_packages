@@ -1,37 +1,36 @@
-import { NgModule } from '@angular/core';
+import { NgModule }             from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
-import { Location, HashLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+    Location, HashLocationStrategy,
+    LocationStrategy, CommonModule
+}                               from '@angular/common';
+import { RouterModule }         from '@angular/router';
+import { HttpClientModule }     from '@angular/common/http';
+import { FormsModule }          from '@angular/forms';
+import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
 import { DeviceDetectorModule } from 'ngx-device-detector';
-
-import { TranslateModule } from '@ngx-translate/core';
-import { WebStorageModule } from 'ngx-store';
+import { TranslateModule }      from '@ngx-translate/core';
+import { WebStorageModule }     from 'ngx-store';
 
 import { HealthMonitorComponent } from './health-monitor.component';
 
 // Components
-
+import { NxSystemAlertsComponent }  from '../app/src/pages/health/alerts/alerts.component';
+import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metrics.component';
 
 // Dialogs
 
-
 // Directives
 
-
-// Health page
+// Page
 import { NxHealthComponent } from '../app/src/pages/health/health.component';
 
 // Route guards
 import { AuthGuard } from '../app/src/routeGuards';
 
 // Services
-import { WINDOWS_PROVIDERS } from '../app/src/services';
-import { NxHealthModule } from '../app/src/pages/health/health.module';
-import { NxSystemAlertsComponent } from '../app/src/pages/health/alerts/alerts.component';
-import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metrics.component';
+import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { NxHealthModule }    from '../app/src/pages/health/health.module';
 
 @NgModule({
     imports: [
@@ -45,27 +44,32 @@ import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metric
         DeviceDetectorModule.forRoot(),
         TranslateModule.forRoot(),
         RouterModule.forRoot([
-            { path: 'health', component: NxHealthComponent,
-                children: [
+            {
+                path      : 'health',
+                component : NxHealthComponent,
+                children  : [
                     {
-                        path: '', redirectTo: 'alerts',
-                        pathMatch: 'full'
+                        path       : '',
+                        redirectTo : 'alerts',
+                        pathMatch  : 'full'
                     },
                     {
-                        path: 'alerts', component: NxSystemAlertsComponent,
+                        path      : 'alerts',
+                        component : NxSystemAlertsComponent,
                     },
                     {
-                        path: ':metric', component: NxSystemMetricsComponent,
+                        path      : ':metric',
+                        component : NxSystemMetricsComponent,
                     }
                 ]
             },
             { path: '**', redirectTo: 'health' }
         ], {
-            useHash: true,
-            initialNavigation: true,
-            scrollPositionRestoration: 'enabled',
-            anchorScrolling          : 'enabled',
-            enableTracing            : false
+            useHash                   : true,
+            initialNavigation         : true,
+            scrollPositionRestoration : 'enabled',
+            anchorScrolling           : 'enabled',
+            enableTracing             : false
         })
     ],
     entryComponents: [
@@ -76,7 +80,7 @@ import { NxSystemMetricsComponent } from '../app/src/pages/health/metrics/metric
         Location,
         Title,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        { provide: LocationStrategy, useClass: HashLocationStrategy }
     ],
     declarations: [
         HealthMonitorComponent

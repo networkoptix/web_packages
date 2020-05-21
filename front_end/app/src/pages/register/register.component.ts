@@ -1,14 +1,15 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { LocalStorageService }          from 'ngx-store';
-import {
-    NxPageService, NxAccountService,
-    NxLanguageProviderService,
-    NxUrlProtocolService, NxUriService,
-    NxProcessService, NxCloudApiService,
-    NxConfigService, IConfig
-}                                       from '../../services';
-import { NxDialogsService }             from '../../dialogs';
+import { NxLanguageProviderService }    from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }     from '../../services/nx-config';
+import { NxAccountService }             from '../../services/account.service';
+import { NxPageService }             from '../../services/page.service';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxCloudApiService }         from '../../services/nx-cloud-api';
+import { NxUriService }                 from '../../services/uri.service';
+import { NxUrlProtocolService }         from '../../services/url-protocol.service';
+import { NxDialogsService }             from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 
 @Component({
@@ -22,15 +23,15 @@ export class NxRegisterComponent implements OnInit {
 
     uriParam: string;
     accountInfo: any = {};
-    register: any;
-    registerSuccess: any;
-    activated: any;
-    code: any;
-    session: any;
-    context: any;
+    register: Process;
+    registerSuccess;
+    activated;
+    code;
+    session;
+    context;
     lockEmail: boolean;
-    fromClient: any;
-    location: any;
+    fromClient;
+    location;
     CONFIG: IConfig;
 
     @ViewChild('registerForm', { static: false }) registerForm: HTMLFormElement;
@@ -40,8 +41,8 @@ export class NxRegisterComponent implements OnInit {
             process: ''
         };
 
-        this.LANG = this.language.getTranslations();
-        this.pageService.setPageTitle(this.LANG.pageTitles.register, true);
+        this.LANG = this.language.translations;
+        this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.register;
     }
 
     constructor(configService: NxConfigService,
@@ -81,7 +82,7 @@ export class NxRegisterComponent implements OnInit {
 
         if (this.uriParam === 'registerSuccess') {
             this.registerSuccess = true;
-            this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess, true);
+            this.pageService.pageTitleRemoveHyphen = this.LANG.pageTitles.registerSuccess;
         }
 
         if (this.uriParam === 'activated') {
@@ -111,7 +112,7 @@ export class NxRegisterComponent implements OnInit {
         }
 
         this.accountInfo = {
-            email     : this.accountInfo.email || this.accountService.email,
+            email     : this.lockEmail ? this.accountInfo.email || this.accountService.email : '',
             password  : '',
             firstName : '',
             lastName  : '',
@@ -181,7 +182,7 @@ export class NxRegisterComponent implements OnInit {
                         });
 
                     this.accountService.email = this.accountInfo.email;
-                    this.pageService.setPageTitle(this.LANG.pageTitles.registerSuccess);
+                    this.pageService.pageTitle = this.LANG.pageTitles.registerSuccess;
                     this.registerSuccess = true;
                     this.localStorage.set('regProcess', 'registerSuccess');
                 }

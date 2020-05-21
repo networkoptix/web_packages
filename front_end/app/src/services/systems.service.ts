@@ -12,13 +12,14 @@ import { NxUriService }                                from './uri.service';
 import { NxRibbonService }                             from '../components/ribbon/ribbon.service';
 import { LanguageI18NStaticTypes }                     from '../../language_i18n_static_types';
 import { NxSystem }                                    from './system.service';
+import { IParams } from '../components/search/search.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class NxSystemsService implements OnDestroy {
-    private CONFIG: IConfig;
-    private LANG: LanguageI18NStaticTypes;
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
     private activeSubscription: Subscription;
     private currentUser: string;
     private mergingSystems: Set<string>;
@@ -40,7 +41,7 @@ export class NxSystemsService implements OnDestroy {
         private toastService: NxToastService,
         private uriService: NxUriService
     ) {
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
         this.systemsPoll = pollService.createPoll(this.cloudApi.systems(), this.CONFIG.updateInterval);
         this.mergingSystems = new Set();
@@ -89,7 +90,7 @@ export class NxSystemsService implements OnDestroy {
                 // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property name
                 return `!!!!!!!${system.name}`; // Force my systems to be first
             }
-            return this.LANG.system.yourSystem;
+            return this.LANG.system.yourSystem();
         }
         // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerFullName
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
@@ -158,8 +159,8 @@ export class NxSystemsService implements OnDestroy {
         this.systems = this.sortSystems(systems, this.currentUser);
         this.systems.forEach((system) => {
             system.isMine = system.ownerAccountEmail === this.currentUser;
-            system.canMerge = system.isMine && (system.capabilities &&
-                system.capabilities.cloudMerge ||
+            system.canMerge = system.isMine &&
+            (system.capabilities?.cloudMerge ||
                 this.CONFIG.clientMode.debug ||
                 this.CONFIG.clientMode.beta);
             if (system.mergeInfo !== undefined) {
@@ -200,7 +201,7 @@ export interface NxSystemWithUserInfo extends NxSystem {
     ownerAccountEmail: string;
     name: string;
     isMine: boolean;
-    capabilities: any;
+    capabilities: IParams;
     state: string;
     stateOfHealth: string;
 }

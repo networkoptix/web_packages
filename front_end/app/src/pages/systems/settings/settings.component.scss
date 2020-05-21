@@ -1,7 +1,8 @@
-@import '../../../styles/typography';
 @import '../../../../styles/theme_variables';
-@import '~bootstrap/scss/bootstrap';
+@import '../../../styles/typography';
 @import '../../../styles/buttons';
+@import '~bootstrap/scss/functions';
+@import '~bootstrap/scss/mixins/breakpoints';
 
 nx-block {
   .user-email,

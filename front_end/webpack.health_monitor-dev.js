@@ -114,32 +114,40 @@ module.exports = merge(common, {
             {
                 test: /\.s?css$/,
                 exclude: /src/,
-                use : ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use     : [
-                        {
-                            loader : 'css-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: true
-                            }
-                        },
-                        {
-                            loader : 'postcss-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: 'inline'
-                            }
-                        },
-                        {
-                            loader : 'sass-loader',
-                            options: {
-                                url      : false,
-                                sourceMap: true
-                            }
-                        }
-                    ]
-                })
+                use: [
+                    // Creates `style` nodes from JS strings
+                    'style-loader',
+                    // Translates CSS into CommonJS
+                    'css-loader',
+                    // Compiles Sass to CSS
+                    'sass-loader'
+                ]
+                // use : ExtractTextPlugin.extract({
+                //     fallback: 'style-loader',
+                //     use     : [
+                //         {
+                //             loader : 'css-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: true
+                //             }
+                //         },
+                //         {
+                //             loader : 'postcss-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: 'inline'
+                //             }
+                //         },
+                //         {
+                //             loader : 'sass-loader',
+                //             options: {
+                //                 url      : false,
+                //                 sourceMap: true
+                //             }
+                //         }
+                //     ]
+                // })
             }
         ]
     }

@@ -5,10 +5,10 @@ import {
     delayWhen, retryWhen, map,
     tap, mergeMap
 }                                    from 'rxjs/operators';
-import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxRibbonService }           from '../../components/ribbon';
-import { NxProcessService }          from '../../services/process.service';
-import { NxConfigService, IConfig }  from '../../services';
+import { NxProcessService, Process } from '../../services/process.service';
+import { NxLanguageProviderService } from '../../services/nx-language-provider';
+import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxToastService }            from '../toast.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
@@ -18,14 +18,14 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
     styleUrls   : []
 })
 export class RestartServerModalContent {
-    @Input() system: any;
+    @Input() system;
     @Input() serverName: string;
     @Input() serverId: string;
     @Input() closable: boolean;
 
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
-    restartServer: any;
+    restartServer: Process;
 
     constructor(
         configService: NxConfigService,
@@ -36,7 +36,7 @@ export class RestartServerModalContent {
         private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
-        this.LANG = languageService.getTranslations();
+        this.LANG = languageService.translations;
     }
 
     ngOnInit() {
