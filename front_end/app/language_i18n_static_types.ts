@@ -235,6 +235,7 @@ export interface NoOtherSystemsError {
 
 export interface DialogsMerge {
     adminPasswordTitle:         string;
+    adminPasswordWrong:         string;
     checking:                   string;
     commonText:                 string;
     connectToCloud:             string;
@@ -410,6 +411,11 @@ export interface ErrorCodes {
     EmailAlreadyExists:                  string;
     FAIL:                                string;
     INCOMPATIBLE:                        string;
+    cloud_systems_have_different_owners: string;
+    duplicate_mediaserver_found:         string;
+    fail:                                string;
+    incompatible:                        string;
+    unknown_error:                       string;
     accountAlreadyActivated:             string;
     accountBlocked:                      string;
     accountNotActivated:                 string;
@@ -1079,6 +1085,7 @@ const typeMap: any = {
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
+        { json: "adminPasswordWrong", js: "adminPasswordWrong", typ: "" },
         { json: "checking", js: "checking", typ: "" },
         { json: "commonText", js: "commonText", typ: "" },
         { json: "connectToCloud", js: "connectToCloud", typ: "" },
@@ -1236,6 +1243,11 @@ const typeMap: any = {
         { json: "EmailAlreadyExists", js: "EmailAlreadyExists", typ: "" },
         { json: "FAIL", js: "FAIL", typ: "" },
         { json: "INCOMPATIBLE", js: "INCOMPATIBLE", typ: "" },
+        { json: "cloud_systems_have_different_owners", js: "cloud_systems_have_different_owners", typ: "" },
+        { json: "duplicate_mediaserver_found", js: "duplicate_mediaserver_found", typ: "" },
+        { json: "fail", js: "fail", typ: "" },
+        { json: "incompatible", js: "incompatible", typ: "" },
+        { json: "unknown_error", js: "unknown_error", typ: "" },
         { json: "accountAlreadyActivated", js: "accountAlreadyActivated", typ: "" },
         { json: "accountBlocked", js: "accountBlocked", typ: "" },
         { json: "accountNotActivated", js: "accountNotActivated", typ: "" },

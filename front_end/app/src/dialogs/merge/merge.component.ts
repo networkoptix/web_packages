@@ -13,6 +13,7 @@ import { NxUtilsService }              from '../../services/utils.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 import StateMachine                    from './stateMachine';
 import State                           from './stateForMergeDialog';
+import * as md5                        from 'md5';
 
 @Component({
     selector    : 'nx-modal-merge-content',
@@ -48,6 +49,7 @@ export class MergeModalContent {
     nonCloudMerge = false;
     systemsLoaded = false;
     checking = false;
+    dryRunAvailable = false;
     primaryName: string;
     secondaryName: string;
     systemUrls = {};
@@ -101,6 +103,7 @@ export class MergeModalContent {
     }
 
     init(targetSystem?, currentUrl?) {
+        this.dryRunAvailable = this.system.info.capabilities.merge_systems >= 1;
         if (this.system.canMerge) {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
@@ -397,34 +400,40 @@ export class MergeModalContent {
                 }
                 const index = this.serverUrl.indexOf('//') + 2;
                 this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
-                return this.system.mergeSystems(this.serverUrl, true).toPromise()
-                    .then(res => {
-                        if (res.error === '0') {
-                            this.machine.transition(this.confirmMerge);
-                        } else if (res.errorString === 'UNAUTHORIZED') {
-                            this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
-                            this.updateShow(this.confirmPasswordError, {
-                                passwordErrorText : this.passwordWrong,
-                                passwordValue     : ''
-                            });
-                        } else if (res.errorString) {
-                            if (this.machine.currentState !== this.serverUrlErrors) {
-                                this.machine.transition(this.serverUrlErrors);
+                if (!this.dryRunAvailable) {
+                    this.checkMergeabilityProcess.processing = false;
+                    this.checkMergeabilityProcess.finished = true;
+                    this.machine.transition(this.confirmMerge);
+                } else {
+                    return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                        .then(res => {
+                            if (res.error === '0') {
+                                this.machine.transition(this.confirmMerge);
+                            } else if (res.errorString === 'UNAUTHORIZED') {
+                                this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
+                                this.updateShow(this.confirmPasswordError, {
+                                    passwordErrorText : this.passwordWrong,
+                                    passwordValue     : ''
+                                });
+                            } else if (res.errorString) {
+                                if (this.machine.currentState !== this.serverUrlErrors) {
+                                    this.machine.transition(this.serverUrlErrors);
+                                }
+                                const newCheckMergeErrors = {
+                                    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
+                                    DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
+                                    FAIL                                : this.systemOffline
+                                };
+                                this.updateShow(this.serverUrlErrors, {
+                                    urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
+                                });
                             }
-                            const newCheckMergeErrors = {
-                                CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
-                                DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
-                                FAIL                                : this.systemOffline
-                            };
-                            this.updateShow(this.serverUrlErrors, {
-                                urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
-                            });
-                        }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        this.updateShow('confirmPasswordError', { passwordErrorText: this.unknownError });
-                    });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            this.updateShow('confirmPasswordError', { passwordErrorText: this.unknownError });
+                        });
+                }
             }, { ignoreError: true });
 
         this.mergingProcess = this.processService
@@ -435,7 +444,9 @@ export class MergeModalContent {
                 }
 
                 if (this.nonCloudMerge) {
-                    return this.system.mergeSystems(this.serverUrl, false, password).toPromise();
+                    return this.dryRunAvailable
+                        ? this.system.mergeSystems(this.serverUrl, false, password).toPromise()
+                        : this.deprecatedMergeSystems(password);
                 } else {
                     return this.cloudApi.merge(this.primarySystem.id, this.secondarySystem.id, password);
                 }
@@ -473,12 +484,24 @@ export class MergeModalContent {
                             ? this.CONFIG.system.status.master
                             : this.CONFIG.system.status.slave
                     });
+                // wrong cloud password
                 } else if (res.errorString === 'Wrong username or password.') {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                // wrong local admin password when checking VMS <= 4.0 systems
+                } else if (res.errorString === 'UNAUTHORIZED') {
+                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
+                    this.updateShow(this.confirmPasswordError, { passwordErrorText: 'adminPasswordWrong' });
                 } else if (res.errorString) {
-                    this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ unknownError: true });
-                    this.updateShow(this.confirmPasswordError, { passwordErrorText: this.unknownError });
+                    res.resultCode = res.errorString.toLowerCase();
+                    res.primarySystemName = this.primaryName;
+                    res.secondarySystemName = this.secondaryName;
+                    res.failedSystemName = this.primarySystem.stateOfHealth === 'online'
+                        ? res.secondarySystemName
+                        : res.primarySystemName;
+
+                    this.activeModal.dismiss(res);
+                    this.clearTemplate();
                 }
             }, (error) => {
                 // for errors that pop up during the merge
@@ -504,6 +527,21 @@ export class MergeModalContent {
                     : err.primarySystemName;
 
                 this.activeModal.dismiss(err);
+                this.clearTemplate();
+            });
+    }
+
+    deprecatedMergeSystems(password) {
+        return this.system.mediaserver.getNonce().toPromise()
+            .then(res => {
+                const { nonce, realm } = res.reply;
+                const adminPassword = this.serverUrl.slice(this.serverUrl.indexOf('//admin') + 8, this.serverUrl.lastIndexOf('@'));
+                const digest = md5(`admin:${realm}:${adminPassword}`);
+                const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
+                const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
+                const postKey = btoa(`admin:${nonce}:${postSimplified}`);
+                const getKey = btoa(`admin:${nonce}:${getSimplified}`);
+                return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, getKey, postKey, password).toPromise();
             });
     }
 
@@ -527,24 +565,29 @@ export class MergeModalContent {
 
             this.nonCloudMerge = true;
             this.getSecondaryName();
-            return this.system.mergeSystems(this.serverUrl, true).toPromise()
-                .then(res => {
-                    if (res.error !== '0') {
-                        switch (res.errorString) {
-                            case 'FAIL':
-                                throw Error(this.noServerFound);
-                            // handles VMS version <= 4.0 systems, which don't support dryRun
-                            case "Missing required parameter 'password'":
-                            case 'INCOMPATIBLE':
-                                throw Error('systemsIncompatible');
-                            case 'DUPLICATE_MEDIASERVER_FOUND':
-                                throw Error(this.duplicateServers);
-                            default:
-                                throw Error(this.unknownError);
+            if (!this.dryRunAvailable) {
+                this.checkMergeabilityProcess.processing = false;
+                this.checkMergeabilityProcess.finished = true;
+                this.checking = false;
+                this.machine.transition('adminPassword');
+            } else {
+                return this.system.mergeSystems(this.serverUrl, true).toPromise()
+                    .then(res => {
+                        if (res.error !== '0') {
+                            switch (res.errorString) {
+                                case 'FAIL':
+                                    throw Error(this.noServerFound);
+                                case 'INCOMPATIBLE':
+                                    throw Error('systemsIncompatible');
+                                case 'DUPLICATE_MEDIASERVER_FOUND':
+                                    throw Error(this.duplicateServers);
+                                default:
+                                    throw Error(this.unknownError);
+                            }
                         }
-                    }
-                    return this.targetSystem.isNew ? isNew : res;
-                });
+                        return this.targetSystem.isNew ? isNew : res;
+                    });
+            }
         } else {
             this.getSecondaryName();
             this.targetSystemService = this.systemService.createSystem(this.account.email, this.targetSystem.id);
@@ -762,15 +805,18 @@ export class MergeModalContent {
     }
 
     close(data?) {
-        this.updateShow('', {
-            checkingErrorText                 : '',
-            helpText                          : '',
-            passwordErrorText                 : '',
-            passwordValue                     : '',
-            serverUrlInputValue               : '',
-            serverUrlInputValidationErrorText : ''
-        });
+        this.clearTemplate();
         this.activeModal.close(data);
+    }
+
+    clearTemplate() {
+        const { store } = this.machine;
+        for (const state in store) {
+            const { template } = store[state];
+            for (const key in template) {
+                template[key] = '';
+            }
+        }
     }
 
     setPrimarySystem(system) {
