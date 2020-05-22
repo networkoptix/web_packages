@@ -233,6 +233,7 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
+            python update_proxy.py
             break
             ;;
         start_celery)
