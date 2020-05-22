@@ -30,14 +30,14 @@ ${selenium_timeout}    30
 *** Keywords ***
 Open Browser and go to URL
     [Arguments]    ${url}
-    Run Keyword If    "${options}"=="false" or "${headless}"=="false"    Regular Open Browser
+    Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
+    Go To    ${ENV}
     Check Language Anonymous
     Go To    ${url}
     
-
 Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
@@ -745,8 +745,8 @@ Check Password Badge
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
     Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${click}
-    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${click}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${new focus}
 
 Move focus and check badge
     [Arguments]    ${badge}    ${new focus}

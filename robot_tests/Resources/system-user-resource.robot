@@ -63,8 +63,8 @@ Verify Changed Info Via API
     @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    &{node}[name]    ocal+
-        Run Keyword If    &{node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     FOR    ${user}    IN    @{locals}
         Keep in Dictionary    ${user}    name    fullName    permissions    email
@@ -78,7 +78,7 @@ Verify In Local Users UI
     [Arguments]    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
         Wait Until Element is Visible    //span[text()="Local+${user}"]
-        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    &{role names}[${user}] 
+        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}] 
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}
@@ -88,9 +88,9 @@ Verify In Local Users UI
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
 	    Run Keyword If    '${email}' == '${EMAIL OWNER}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' != '${ADMIN TEXT}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]   
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
+	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' != '${ADMIN TEXT}'
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
 	    ...    ELSE    Element Should Not Be Visible    //*[@id="permissionsSelect"]
     END
     
@@ -124,7 +124,7 @@ Modify Local Users via Cloud UI
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]    
+        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]    
         
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local} 
@@ -152,10 +152,10 @@ Change Permission Level for Local User
     FOR    ${x}    IN RANGE    5
         ${random int} =	    Evaluate	random.randint(0, ${n})	modules=random 
         ${new permission} =     Get From List    ${permissions set}    ${random int}   
-        Exit For Loop If  '${new permission}' != '&{role names}[${user}]'
+        Exit For Loop If  '${new permission}' != '${role names}[${user}]'
     END
-    # ${new permission} =    Set Variable If     '&{role names}[${user}]' == 'Viewer'    Live Viewer
-    # ...     '&{role names}[${user}]' != 'Viewer'    Viewer 
+    # ${new permission} =    Set Variable If     '${role names}[${user}]' == 'Viewer'    Live Viewer
+    # ...     '${role names}[${user}]' != 'Viewer'    Viewer 
     Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
     Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"] 
@@ -184,5 +184,5 @@ Modify All Local User Info
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
 	Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
 	${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]
+	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]
     [Return]    ${new local}
