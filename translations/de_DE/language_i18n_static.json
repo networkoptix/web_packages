@@ -529,7 +529,7 @@
         "required": "falsch",
         "requiredMessage": "Verwenden Sie nur alphanumerische Zeichen und Tastatursymbole, vermeiden Sie führende und nachfolgende Leerzeichen",
         "strongMessage": "Sicheres Passwort!",
-        "weak": "schlecht",
+        "weak": "schwach",
         "weakMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen"
     },
     "placeholderTexts": {
