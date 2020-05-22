@@ -84,14 +84,18 @@ Verify In Local Users UI
 	    ...    ${LOCAL USER LOGIN}
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
+	    Run Keyword Unless    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
+	    ...    ${DISABLE USER SWITCH}
+	    ...    ${LOCAL USER DELETE BUTTON}
+	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
 	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+${user}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
 	    Run Keyword If    '${email}' == '${EMAIL OWNER}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' != '${ADMIN TEXT}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
-	    ...    ELSE    Element Should Not Be Visible    //*[@id="permissionsSelect"]
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]
+	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' != '${ADMIN TEXT}'
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]   
+		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
     END
     
 Modify Local Users via Cloud UI
@@ -186,3 +190,11 @@ Modify All Local User Info
 	${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
 	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]
     [Return]    ${new local}
+    
+Local User Start
+    [Arguments]    ${email}
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    Log in to Auto Tests System    ${email} 
+    Go To Users List
+    [Return]    ${local users}
