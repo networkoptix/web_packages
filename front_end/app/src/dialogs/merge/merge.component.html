@@ -17,49 +17,47 @@
 </form>
 <form *ngIf="machine.currentState === 'checkMerge'" #checkMergeForm="ngForm" name="checkMergeForm">
     <div class="modal-body">
-        <nx-pre-loader type="merge-wrapper" *ngIf="!peerSystemsLoaded; else checkMergeBody"></nx-pre-loader>
-        <ng-template #checkMergeBody>
-            <p>{{machine.state.template.bodyTitle}}</p>
-            <nx-select
-                #checkMergeDropdown
-                *ngIf="machine.state.show.systemDropdown"
-                class="mb-2"
-                id="system"
-                merge="true"
-                [items]="processedSystems"
-                [selected]="targetSystemDropdown"
-                (onSelected)="setTargetSystem($event)"
-                required></nx-select>
-            <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
-            <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
-                [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
-                <label class="server-url-label" for="serverUrl" translate>Server URL</label>
-                <input
-                    class="mb-2 form-control"
-                    #serverUrlInput="ngModel"
-                    name="serverUrl"
-                    id="serverUrl"
-                    type="url"
-                    [readonly]="checking"
-                    placeholder="host:port"
-                    (ngModelChange)="serverUrlChange(serverUrlInput)"
-                    [ngModel]="machine.state.template.serverUrlInputValue"
-                    (blur)="serverUrlChange(serverUrlInput)"
-                    nxUrlValidator
-                    required/>
-                <label
-                    *ngIf="machine.state.show.serverUrlInputValidationErrorText"
-                    [innerHTML]="machine.state.template.serverUrlInputValidationErrorText"
-                    class="error-label"
-                    for="serverUrl">
-                </label>
-            </div>
-            <p *ngIf="machine.state.show.checkingErrorText"
-                [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
-                [innerHTML]="machine.state.template.checkingErrorText"
-                class="error-label">
-            </p>
-        </ng-template>
+        <p>{{machine.state.template.bodyTitle}}</p>
+        <nx-select
+            #checkMergeDropdown
+            *ngIf="machine.state.show.systemDropdown"
+            class="mb-2"
+            id="system"
+            merge="true"
+            [stillLoading]="!systemsLoaded"
+            [items]="processedSystems"
+            [selected]="targetSystemDropdown"
+            (onSelected)="setTargetSystem($event)"
+            required></nx-select>
+        <p *ngIf="machine.state.show.helpText" class="light-text">{{machine.state.template.helpText}}</p>
+        <div *ngIf="machine.state.show.serverUrlInput" class="d-flex flex-column server-url add-specificity"
+            [ngClass]="{ 'mb-4': !(machine.state.show.checkingErrorText || machine.state.show.serverUrlInputValidationErrorText) }">
+            <label class="server-url-label" for="serverUrl" translate>Server URL</label>
+            <input
+                class="mb-2 form-control"
+                #serverUrlInput="ngModel"
+                name="serverUrl"
+                id="serverUrl"
+                type="url"
+                [readonly]="checking"
+                placeholder="host:port"
+                (ngModelChange)="serverUrlChange(serverUrlInput)"
+                [ngModel]="machine.state.template.serverUrlInputValue"
+                (blur)="serverUrlChange(serverUrlInput)"
+                nxUrlValidator
+                required/>
+            <label
+                *ngIf="machine.state.show.serverUrlInputValidationErrorText"
+                [innerHTML]="machine.state.template.serverUrlInputValidationErrorText"
+                class="error-label"
+                for="serverUrl">
+            </label>
+        </div>
+        <p *ngIf="machine.state.show.checkingErrorText"
+            [ngClass]="{ 'error-text-margin': machine.state.show.serverUrlInput }"
+            [innerHTML]="machine.state.template.checkingErrorText"
+            class="error-label">
+        </p>
     </div>
     <div class="modal-footer float-right next-button">
         <nx-process-button
@@ -67,7 +65,7 @@
             [process]="checkMergeabilityProcess"
             [form]="checkMergeForm"
             actionType="primary"
-            [buttonDisabled]="!peerSystemsLoaded"
+            [buttonDisabled]="!systemsLoaded"
             [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
             buttonText="{{ 'Next' | translate}}"></nx-process-button>
     </div>
@@ -164,10 +162,10 @@
             }"></p>
         <div *ngIf="tooManyServers">
             <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
-            <p translate>Systems of such size can work, but may be unstable and have troubles with updates and synchronization.</p>
+            <p translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
             <p>
                 {{LANG.dialogs.merge.recommendSupport.a_recommend}}&nbsp;
-                <a [href]="CONFIG.supportLink" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
+                <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
                 {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
             </p>
         </div>
@@ -198,7 +196,6 @@
             [process]="mergingProcess"
             [form]="confirmMergeForm"
             actionType="primary"
-            [svg]="{ src: 'arrow_right', height: '24', color: 'light1' }"
-            buttonText="{{ 'Next' | translate}}"></nx-process-button>
+            buttonText="{{ 'Merge Systems' | translate}}"></nx-process-button>
     </div>
 </form>

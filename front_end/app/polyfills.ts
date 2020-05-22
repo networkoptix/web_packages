@@ -8,7 +8,6 @@ import 'core-js/features/object'; // IE 11 needs Object.entries
 import 'core-js/features/array';
 import { environment } from './environments/environment';
 
-require('hidpi-canvas/dist/hidpi-canvas');
 require('zone.js/dist/zone');
 
 if (!Element.prototype.matches) {

@@ -228,7 +228,7 @@
             "connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Spojení systémů selhalo",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Doporučujeme konzultaci s",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "podpora",
                 "c_proceeding": "než budete pokračovat."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Některé serverové seznamy se mohou zobrazovat jako existující v obou systémech - ve vybraném i v aktuálním.<br>Ze systému odeberte offline a nekompatibilní servery a opakujte akci.",
         "EmailAlreadyExists": "Tento email je již registrován",
         "FAIL": "Systém <strong>{{failedSystem}}</strong> je momentálně nedostupný.<br>zkuste to znovu za okamžik nebo se obraťte na podporu <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-        "INCOMPATIBLE": "Systémy mají různé verze softwaru. Prosím aktualizujte oba na <a href=\"/download\">nejnovější verzi</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Tento účet byl již aktivován",
         "accountBlocked": "Tento účet je dočasně zablokován. Zkuste to prosím znovu za pár minut.",
         "accountNotActivated": "Tento účet není ještě aktivován. <a href=\"/activate\">Odeslat znovu aktivační odkaz</a>",

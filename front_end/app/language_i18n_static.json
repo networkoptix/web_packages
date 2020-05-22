@@ -242,7 +242,7 @@
             "primarySystemOffline": "System {primarySystem} is offline and cannot be merged with System {targetSystem}",
             "primarySystemUnavailable": "System {primarySystem} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "We'd recommend consulting with",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "support",
                 "c_proceeding": "before proceeding."
             },

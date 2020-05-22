@@ -47,16 +47,16 @@ module.exports = merge( common, {
                 secure      : false
             },
             {
-                context     : '/static/lang_en_US/',
-                target      : localStatic, // change to cloudInstance for live value
-                pathRewrite : { '^/static/lang_en_US/views': '/views' },
+                context     : '/static/lang_en_US/web_common/views',
+                target      : localStatic,
+                pathRewrite : { '^/static/lang_en_US/web_common/views': '/web_common/views' },
                 changeOrigin: true,
                 secure      : false
             },
             {
-                context     : '/static/lang_en_US/web_common/views',
-                target      : localStatic,
-                pathRewrite : { '^/static/lang_en_US/web_common/views': '/web_common/views' },
+                context     : '/static/lang_en_US/',
+                target      : localStatic, // change to cloudInstance for live value
+                pathRewrite : { '^/static/lang_en_US/views': '/views' },
                 changeOrigin: true,
                 secure      : false
             },

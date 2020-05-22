@@ -44,7 +44,6 @@
     "bootstrap": "4.5.0",
     "core-js": "3.6.5",
     "firebase": "7.6.2",
-    "hidpi-canvas": "^1.0.10",
     "hls.js": "0.13.2",
     "jquery": "3.4.1",
     "jquery-mousewheel": "3.1.13",

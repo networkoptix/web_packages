@@ -226,9 +226,9 @@
             "checking": "Comprobación...",
             "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
-            "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor en el sistema que desea combinar con este.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.</p><p>Configuraciones y el nombre se tomarán de <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
             "mergeFailedTitle": "La fusión de sistemas falló",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}",
             "primarySystemUnavailable": "El sistema {{primarySystem}} no está disponible actualmente. Inténtalo de nuevo en unos minutos o ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
             "recommendSupport": {
-                "a_recommend": "Recomendamos consultar con",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "asistencia",
                 "c_proceeding": "antes de continuar."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
             "unknownError": "Se ha producido un error desconocido. Actualice la página y vuelva a intentarlo. Si el problema persiste, póngase en contacto con el servicio de asistencia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-            "warning": "Habrá más de <strong>{{maxServers}}</strong> servidores en el sistema combinado."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Ajustes de almacenamiento guardados.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Algunas listas de servidores existen en ambos sistemas, en el seleccionado y en el actual.<br>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.",
         "EmailAlreadyExists": "Este correo electrónico ya ha sido registrado",
         "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Los sistemas tienen diferentes versiones de software. Por favor, actualice ambos a la <a href=\"/download\">última versión</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Esta cuenta ya está activada",
         "accountBlocked": "Esta cuenta está bloqueada. Por favor, intente nuevamente en unos minutos.",
         "accountNotActivated": "Esta cuenta aún no es activada. <a href=\"/activate\"> Envíe enlace de activación de nuevo</a>",

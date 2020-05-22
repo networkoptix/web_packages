@@ -228,7 +228,7 @@
             "connectToCloud": "Csatlakoztassa az egyesíteni kívánt rendszert ezzel együtt <strong>{{cloudName}}</strong> vagy egyesítse helyileg <strong>{{vmsName}}</strong> klienst használva.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "A rendszeregyesítés sikertelen",
@@ -242,7 +242,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Javasoljuk, hogy konzultáljon erről",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "támogatás",
                 "c_proceeding": "mielőtt folytatná."
             },
@@ -261,7 +261,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +386,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Egyes szerverlisták mindkét rendszerben léteznek - a kiválasztott és az aktuális rendszerben.<br>Távolítsa el az offline és inkompatibilis kiszolgálókat minden egyes rendszerből, és próbálja újra.",
         "EmailAlreadyExists": "Ez az e-mail már regisztrálva van",
         "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
-        "INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "accountAlreadyActivated": "Ez a fiók már aktiválva van",
         "accountBlocked": "A fiók zárolva van. Próbálja újra pár perc múlva.",
         "accountNotActivated": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",

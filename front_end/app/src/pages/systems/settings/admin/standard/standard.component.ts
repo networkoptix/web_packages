@@ -96,11 +96,11 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.settings) {
-            const { previousValue, currentValue } = changes.settings;
+            const { previousValue, currentValue, firstChange } = changes.settings;
             if (previousValue === undefined && currentValue) {
                 this.cleanUpWatchers(currentValue);
             }
-            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue)) {
+            if (JSON.stringify(previousValue) !== JSON.stringify(currentValue) && !firstChange) {
                 this.setWatcherValues(currentValue);
             }
         }

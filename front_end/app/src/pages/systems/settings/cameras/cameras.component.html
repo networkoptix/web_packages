@@ -1,5 +1,6 @@
+<nx-pre-loader *ngIf="showPreloader"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
-    <nx-page-placeholder *ngIf="(!system || !system.isOnline ||noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
+    <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
 
     <nx-pre-loader *ngIf="showPreloader" class="w-100"></nx-pre-loader>
 
