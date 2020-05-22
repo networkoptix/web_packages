@@ -289,11 +289,9 @@ export const nxConfig: IConfig = {
     },
     showHeaderAndFooter : true,
     search              : {
-        debounceTime        : 500, // ms
-        maxLength           : 200,
-        minSystems          : 9, // We need at least 9 system to enable search
-        transitionInMs      : 500,
-        transitionShortInMs : 100
+        debounceTime : 500, // ms
+        maxLength    : 200,
+        minSystems   : 9 // We need at least 9 system to enable search
     },
     servers: {
         checkStatusTimeout : 3400,
