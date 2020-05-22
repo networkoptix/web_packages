@@ -150,11 +150,13 @@ Record Always
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Click Element    ${RECORING CHECK BOX}
-    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
-    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
     Wait Until Element is Visible    ${CAMERAS LINK}
