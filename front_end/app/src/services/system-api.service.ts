@@ -15,6 +15,7 @@ export interface User {
     canBeEdited: boolean;
     canBeDeleted: boolean;
     email: string;
+    id: string;
     isCloud: boolean;
     isAdmin?: boolean;
     isEnabled: boolean;
@@ -72,7 +73,7 @@ export class NxSystemAPI {
     private userEmail: string;
     private userRequest: Promise<t.NormalResponse<User>>;
     private urlBase: string;
-    private unauthorizedCallback: (params: unknown) => any;
+    unauthorizedCallback: (params: unknown) => any;
 
     constructor(
         http: HttpClient,
@@ -565,6 +566,7 @@ export class NxSystemAPI {
             canBeEdited  : true,
             canBeDeleted : true,
             email,
+            id           : '',
             isCloud      : true,
             isEnabled    : true,
             userRoleId   : this.emptyId,

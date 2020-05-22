@@ -1,7 +1,6 @@
 import { Injectable }        from '@angular/core';
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
-import { NxCloudApiService } from '../nx-cloud-api';
 import { HttpClient }        from '@angular/common/http';
 
 @Injectable({
@@ -22,7 +21,7 @@ export class NxConfigService {
     }
 
     getSettings() {
-        return this.http.get('/api/utils/settings').toPromise();
+        return Promise.resolve({}); // this.http.get('/api/utils/settings').toPromise();
     }
 
     getConfig() {

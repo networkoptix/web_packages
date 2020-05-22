@@ -122,18 +122,6 @@ export class AppComponent {
         // (Smart check) Check if page is displayed inside an iframe
         // this.isInIframe = (window.location !== window.parent.location);
 
-        /*
-            Note: keeping for local webadmin for now.
-            Todo: Clean up once there's a way to determine cloud portal vs webadmin.
-            this.CONFIG.isLocal = true;
-            this.CONFIG.menus.systemSettings.baseUrl = '/settings';
-            this.CONFIG.redirect.authorised = '/settings';
-            this.CONFIG.credentialsValidation.emailRegex = '.*';
-            this.CONFIG.viewsDir = 'static/views/';
-            // @ts-ignore
-            this.CONFIG.commonViewsDir = 'web_common/views/';
-         */
-
         // Route check if page is displayed inside an iframe
         this.isInIframe = (window.location.pathname.indexOf('/embed') === 0);
         if (this.isInIframe) {

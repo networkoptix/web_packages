@@ -87,16 +87,12 @@ const appRoutes: Routes = [
         ApplyGuard
     ],
     declarations: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
     ],
-    bootstrap: [],
-    entryComponents : [
-        NxSystemSettingsComponent
+    bootstrap: [
+    ],
+    entryComponents: [
     ],
     exports: [
-        NxSystemSettingsComponent,
-        NxNoSystemsComponent
     ]
 })
 export class NxSystemModule {

@@ -42,6 +42,7 @@ export class NxLanguageAndSettingsProvider {
                 resolve(true);
             }).catch(() => {
                 // handle fail in app component
+                this.languageService.defaultLanguage = 'en_US';
                 resolve(true);
             });
         });
@@ -58,72 +59,83 @@ export class NxLanguageAndSettingsProvider {
     }
 
     setSettings(data) {
-        // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
-        // This was done every time a system is created. Its only need once
-        this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
-            if (option.permissions) {
-                option.permissions = option.permissions.split('|').sort().join('|');
-            }
-        });
-
-        // @ts-ignore
-        const { companyLink, companyName, copyrightYear, privacyLink, supportLink } = data;
-        this.CONFIG.company = {
-            copyrightYear,
-            links: {
-                privacy : privacyLink,
-                support : supportLink,
-                website : companyLink
-            },
-            name: companyName
-        };
-
-        const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize } = data;
-        this.CONFIG.cloudCapabilities = {
-            feedbackEnabled,
-            healthMonitor,
-            integrationStore: integrationStoreEnabled,
-            publicDownloads,
-            publicReleases,
-            cloudStorageEnabled,
-            cloudStorageSize
-        };
-
-        const { searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown } = data;
-        this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
-            searchTags,
-            sortSupportedDevicesByPopularity,
-            supportedHardwareTypes,
-            supportedResolutions,
-            vendorsShown: parseInt(vendorsShown)
-        });
-
-        const { integrationFilterItems, integrationFilterLimitation } = data;
-        this.CONFIG.integration.filter = {
-            items      : integrationFilterItems,
-            limitation : integrationFilterLimitation
-        };
-
-        if (data.appTypesForPlatform) {
-            Object.entries(data.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
-                if (platform in this.CONFIG.downloads.groups && appTypes) {
-                    this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+        if (Object.keys(data).length > 0) {
+            // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
+            // This was done every time a system is created. Its only need once
+            this.CONFIG.accessRoles.predefinedRoles.forEach((option: NxSystemRole) => {
+                if (option.permissions) {
+                    option.permissions = option.permissions.split('|').sort().join('|');
                 }
             });
-        }
 
-        this.CONFIG.cloudName = data.cloudName;
-        this.CONFIG.footerItems = data.footerItems;
-        this.CONFIG.googleTagManagerId = data.googleTagManagerId;
-        this.CONFIG.pushConfig = data.pushConfig;
-        this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
-        this.CONFIG.trafficRelayHost = data.trafficRelayHost;
-        this.CONFIG.vmsName = data.vmsName;
+            // @ts-ignore
+            const {companyLink, companyName, copyrightYear, privacyLink, supportLink} = data;
+            this.CONFIG.company = {
+                copyrightYear,
+                links: {
+                    privacy: privacyLink,
+                    support: supportLink,
+                    website: companyLink
+                },
+                name: companyName
+            };
 
-        // detect preview mode
-        if (window.location.href.indexOf('preview') >= 0) {
-            this.CONFIG.previewPath = 'preview';
-            this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = data;
+            this.CONFIG.cloudCapabilities = {
+                feedbackEnabled,
+                healthMonitor,
+                integrationStore: integrationStoreEnabled,
+                publicDownloads,
+                publicReleases,
+                cloudStorageEnabled,
+                cloudStorageSize
+            };
+
+            const {searchTags, sortSupportedDevicesByPopularity, supportedHardwareTypes, supportedResolutions, vendorsShown} = data;
+            this.CONFIG.ipvd = Object.assign({}, this.CONFIG.ipvd, {
+                searchTags,
+                sortSupportedDevicesByPopularity,
+                supportedHardwareTypes,
+                supportedResolutions,
+                vendorsShown: parseInt(vendorsShown)
+            });
+
+            const {integrationFilterItems, integrationFilterLimitation} = data;
+            this.CONFIG.integration.filter = {
+                items: integrationFilterItems,
+                limitation: integrationFilterLimitation
+            };
+
+            if (data.appTypesForPlatform) {
+                Object.entries(data.appTypesForPlatform).forEach(([platform, appTypes]: [string, any]) => {
+                    if (platform in this.CONFIG.downloads.groups && appTypes) {
+                        this.CONFIG.downloads.groups[platform].appTypes = appTypes;
+                    }
+                });
+            }
+
+            this.CONFIG.cloudName = data.cloudName;
+            this.CONFIG.footerItems = data.footerItems;
+            this.CONFIG.googleTagManagerId = data.googleTagManagerId;
+            this.CONFIG.pushConfig = data.pushConfig;
+            this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
+            this.CONFIG.trafficRelayHost = data.trafficRelayHost;
+            this.CONFIG.vmsName = data.vmsName;
+
+            // detect preview mode
+            if (window.location.href.indexOf('preview') >= 0) {
+                this.CONFIG.previewPath = 'preview';
+                this.CONFIG.viewsDir = this.CONFIG.previewPath + '/' + this.CONFIG.viewsDir;
+            }
+        } else {
+            // Todo: Clean up once there's a way to determine cloud portal vs webadmin.
+            this.CONFIG.isLocal = true;
+            this.CONFIG.menus.systemSettings.baseUrl = '/settings';
+            this.CONFIG.redirect.authorised = '/settings';
+            this.CONFIG.credentialsValidation.emailRegex = '.*';
+            this.CONFIG.viewsDir = 'static/views/';
+            // @ts-ignore
+            this.CONFIG.commonViewsDir = 'web_common/views/';
         }
     }
 }

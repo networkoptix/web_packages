@@ -107,7 +107,7 @@ export abstract class BaseAccount implements OnDestroy {
         this.dialogs = injector.get(NxDialogsService);
         this.applyService = injector.get(NxApplyService);
         this.mediaServerApi = this.nxSystemAPIService
-            .createConnection(undefined, undefined, undefined, () => {});
+            .createConnection(undefined, undefined, undefined, () => of(''));
         // });
     }
 
@@ -159,22 +159,16 @@ export abstract class BaseAccount implements OnDestroy {
     requireLogin() {
         return this.get()
             .then((account: Account) => {
-                if (!account && !this.loginDialogActive) {
-                    this.loginDialogActive = true;
-                    return this.dialogs
-                        .login(<any> this, true, true).then((result) => {
-                            this.localStorageService.set('loginRegister', true);
-                            if (result === 'register') {
-                                return this.router.navigate(['/register']).then(() => result);
-                            }
-                            return this.get();
-                        })
-                        .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
-                        .finally(() => {
-                            this.loginDialogActive = false;
-                        });
+                if (!this.loginDialogActive) {
+                    return this.showLogin();
                 }
                 return this.loginDialogActive ? undefined : account;
+            }).catch(() => {
+                if (!this.loginDialogActive) {
+                    return this.showLogin();
+                } else {
+                    return undefined;
+                }
             });
     }
 
@@ -273,6 +267,22 @@ export abstract class BaseAccount implements OnDestroy {
                             }
                         });
                 }
+            });
+    }
+
+    protected showLogin() {
+        this.loginDialogActive = true;
+        return this.dialogs
+            .login(<any> this, true, true).then((result) => {
+                this.localStorageService.set('loginRegister', true);
+                if (result === 'register') {
+                    return this.router.navigate(['/register']).then(() => result);
+                }
+                return this.get();
+            })
+            .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
+            .finally(() => {
+                this.loginDialogActive = false;
             });
     }
 

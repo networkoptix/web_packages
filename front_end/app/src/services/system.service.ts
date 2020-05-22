@@ -120,6 +120,7 @@ class UserManager {
     private mediaserver: NxSystemAPI;
     private _ownerEmail: string;
     private _accessRole: string;
+    private _userId: string;
     accessRoles: NxSystemRole[];
     currentUser: NxSystemUser;
     currentUserEmail: string;
@@ -127,7 +128,7 @@ class UserManager {
     permissions: SystemPermissions;
     users: NxSystemUser[];
 
-    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI, currentUserEmail: string) {
+    constructor(config: IConfig, lang: LanguageI18NStaticTypes, mediaserver: NxSystemAPI, currentUserEmail: string, userId: string) {
         this.CONFIG = config;
         this.LANG = lang;
         this.mediaserver = mediaserver;
@@ -135,6 +136,7 @@ class UserManager {
 
         this._ownerEmail = '';
         this._accessRole = '';
+        this._userId = userId;
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
         this.isMine = false;
         this.permissions = new SystemPermissions();
@@ -269,7 +271,7 @@ class UserManager {
 
             const isAdmin      = this.isAdmin(user);
             const isCloudOwner = this.isOwner(user);
-            const isMe         = user.isCloud && user.email === this.currentUserEmail;
+            const isMe         = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
             if (isMe) {
                 this.currentUser = user;
                 this.accessRole = user.accessRole;
@@ -764,14 +766,15 @@ export class NxSystem extends System implements OnDestroy {
         private systemsService: NxSystemsService,
         currentUserEmail: string,
         systemId?: string,
-        serverId?: string
+        serverId?: string,
+        userId?: string
     ) {
         super();
 
         this.CONFIG = CONFIG;
         this.LANG = LANG;
         this.lostConnection = false;
-        this.initSystem(currentUserEmail, systemId, serverId);
+        this.initSystem(currentUserEmail, systemId, serverId, userId);
     }
 
     private updateSystemState() {
@@ -790,7 +793,7 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    initSystem(currentUserEmail: string, systemId?: string, serverId?: string) {
+    initSystem(currentUserEmail: string, systemId?: string, serverId?: string, userId?: string) {
         this.id = systemId || serverId;
         this.isAvailable = false;
         this.isOnline = false;
@@ -823,7 +826,7 @@ export class NxSystem extends System implements OnDestroy {
         this.updateSystemAuth(true).then(() => {
         });
         this.systemPoll = this.pollService.createPoll<any>(this.update(), this.CONFIG.updateInterval);
-        this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail);
+        this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
@@ -1156,7 +1159,7 @@ export class NxSystemService {
         return system;
     }
 
-    createLocalSystem(mediaServer: NxSystemAPI) {
+    createLocalSystem(mediaServer: NxSystemAPI, userId: string) {
         if (this.system !== undefined) {
             return this.system;
         }
@@ -1164,7 +1167,7 @@ export class NxSystemService {
             this.CONFIG, this.LANG,
             this.cloudApi, this.systemApiService,
             this.pollService, this.systemsService,
-            '', '', '');
+            '', '', '', userId);
         this.system.mediaserver = mediaServer;
         this.system.startPoll();
         return this.system;

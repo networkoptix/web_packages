@@ -20,31 +20,34 @@ import {
     NxImageComponent, NxImageSectionComponent,
     NxSystemAlertCardComponent, NxUpdateInfoComponent
 } from './';
-import { NxConfigService } from '../../services/nx-config';
+import { nxConfig } from '../../services/nx-config/config';
 
-const CONFIG = new NxConfigService().getConfig();
+const CONFIG = nxConfig;
 const appRoutes: Routes = !CONFIG.isLocal ? [
     {
-        path    : 'systems/:systemId/health',
-        component: NxHealthComponent,
-        canActivate: [AuthGuard, SystemGuard],
-        children : [
+        path        : 'systems/:systemId/health',
+        component   : NxHealthComponent,
+        canActivate : [AuthGuard, SystemGuard],
+        children    : [
             {
-                path: '', component: NxSystemAlertsComponent,
-                pathMatch: 'full'
+                path      : '',
+                component : NxSystemAlertsComponent,
+                pathMatch : 'full'
             },
             {
-                path: 'alerts', component: NxSystemAlertsComponent,
+                path: 'alerts', component: NxSystemAlertsComponent
             },
             {
-                path: ':metric', component: NxSystemMetricsComponent,
+                path: ':metric', component: NxSystemMetricsComponent
             }
         ]
     }
 ] : [
     {
-        path    : 'health', component: NxHealthComponent, canActivate: [AuthGuard, SystemGuard],
-        children : [
+        path        : 'health',
+        component   : NxHealthComponent,
+        canActivate : [AuthGuard, SystemGuard],
+        children    : [
             {
                 path: '', component: NxSystemAlertsComponent, pathMatch: 'full'
             },
@@ -75,8 +78,8 @@ const appRoutes: Routes = !CONFIG.isLocal ? [
         RouterModule.forChild(appRoutes),
         MenuModule
     ],
-    providers      : [],
-    declarations   : [
+    providers    : [],
+    declarations : [
         NxHealthComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,
@@ -88,8 +91,8 @@ const appRoutes: Routes = !CONFIG.isLocal ? [
         NxSystemAlertCardComponent,
         NxUpdateInfoComponent
     ],
-    bootstrap      : [],
-    entryComponents: [
+    bootstrap       : [],
+    entryComponents : [
         NxHealthComponent,
         NxSystemAlertsComponent,
         NxSystemMetricsComponent,

@@ -1,4 +1,5 @@
 import { Injectable }              from '@angular/core';
+import { HttpClient }        from '@angular/common/http';
 import { TranslateService }        from '@ngx-translate/core';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { BehaviorSubject }         from 'rxjs';
@@ -13,10 +14,12 @@ export class NxLanguageProviderService {
 
     constructor(
         private translate: TranslateService,
+        private http: HttpClient,
         private cloudApiService: NxCloudApiService
     ) {}
 
     loadLanguage() {
+        return this.http.get('/static/language_compiled.json').toPromise();
         return this.cloudApiService.getLanguage().toPromise();
     }
 

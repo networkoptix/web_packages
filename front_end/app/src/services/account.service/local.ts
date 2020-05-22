@@ -1,4 +1,4 @@
-import { Inject, Injector }           from '@angular/core';
+import { Inject, Injectable, Injector } from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
 import { LocalStorageService }        from 'ngx-store';
@@ -19,6 +19,7 @@ import { Account }                    from './account';
  * LocalAcount overrides BaseAccount, should maintain the same interface.
  * This is enforced using the Exactly<BaseAccount, LocalAccount> type.
  */
+@Injectable()
 export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, LocalAccount> {
     constructor(
         configService: NxConfigService,

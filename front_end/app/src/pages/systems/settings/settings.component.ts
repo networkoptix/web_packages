@@ -17,7 +17,7 @@ import { filter }                             from 'rxjs/operators';
 import { AutoUnsubscribe }                    from 'ngx-auto-unsubscribe';
 import { NxPageService }                      from '../../../services/page.service';
 import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxSystemAPIService }                 from "../../../services/system-api.service";
+import { NxSystemAPIService }                 from '../../../services/system-api.service';
 import { Account, NxAccountService }          from '../../../services/account.service';
 import { NxUtilsService }                     from '../../../services/utils.service';
 import { NxUriService }                       from '../../../services/uri.service';
@@ -32,7 +32,6 @@ import { NxSystemsService }                   from '../../../services/systems.se
     // eslint-disable-next-line no-multi-spaces
     styleUrls   : ['settings.component.scss']
 })
-
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
@@ -279,19 +278,14 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         });
                 } else if (this.CONFIG.isLocal) {
                     this.systemsService.stopPoll();
-                    // Todo: Find a way to call the login dialog and use the mediaserver object.
-                    this.accountService.requireLogin()
-                        .then(() => {
-                            this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi);
-                            this.system.isAvailable = true;
-                            this.system.isOnline = true;
-                            this.settingsService.system = this.system;
-                            this.systemReady();
-                            this.systemSubscription = this.system.infoSubject.subscribe(() => {
-                                this.updateMenu();
-                            });
-                        })
-                        .catch((err) => console.log(err));
+                    this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id);
+                    this.system.isAvailable = true;
+                    this.system.isOnline = true;
+                    this.settingsService.system = this.system;
+                    this.systemSubscription = this.system.infoSubject.subscribe(() => {
+                        this.systemReady();
+                        this.updateMenu();
+                    });
                 }
             });
     }

@@ -1,6 +1,5 @@
 import { NgModule }                  from '@angular/core';
 import { CommonModule }              from '@angular/common';
-import { downgradeInjectable }       from '@angular/upgrade/static';
 import { NxLanguageProviderService } from './nx-language-provider';
 import { NxConfigService }           from './nx-config';
 import { NxAppStateService }         from './nx-app-state.service';

@@ -72,7 +72,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
 
         return this.cloudApi
             .account().toPromise()
-            .then((account: Account) => {
+            .then((account: Account|any) => {
                 this.account = account;
                 return account;
             })
