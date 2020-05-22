@@ -80,12 +80,14 @@
         // overwrite input style by layout
         &.search {
             .icon-search {
-                margin-top : 7px;
+                margin-top  : 7px;
+                margin-left : 10px;
             }
 
             .search-input {
                 @extend #regular14;
                 height : 32px;
+                padding-left: 40px;
             }
 
             .search-clear {

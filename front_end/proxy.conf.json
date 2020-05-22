@@ -51,7 +51,7 @@
             "^/static/lang_en_US/views": "/views"
         }
     },
-    "/static/images/": {
+    "/static/images/*": {
         "target": "https://dev2.cloud.hdw.mx",
         "secure": false,
         "logLevel": "debug",
@@ -69,7 +69,7 @@
         "logLevel": "debug",
         "changeOrigin": true,
         "pathRewrite": {
-            "^/static": ""
+            "^/static/": ""
         }
     }
 }

@@ -24,6 +24,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     itemPath: string;
     _toggle: boolean;
+    _type: string;
 
     CONFIG: IConfig;
 
@@ -60,6 +61,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     toggleNode() {
+        this._type = this._toggle ? 'arrow_collapse' : 'arrow_expand';
         this._toggle = !this._toggle;
         this.toggle.emit(this._toggle);
     }
