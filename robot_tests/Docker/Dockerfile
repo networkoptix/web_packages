@@ -1,4 +1,3 @@
-
 FROM ubuntu:18.04
 
 # This will override our EULA check.
@@ -13,13 +12,11 @@ RUN mkdir /debs
 # Copy the deb file into the container
 COPY "${mediaserver_deb}" /debs/
 
-# Installing the mediaserver
-RUN apt-get update -qq; exit 0
-RUN apt-get install gdebi
-
-RUN dpkg -i /debs/${mediaserver_deb}; exit 0
-
-#RUN apt install -y -f; exit 0
+RUN apt update -qq
+# Helps with dependencies
+RUN apt install -y gdebi
+# Install the mediaserver
+RUN apt install -y /debs/${mediaserver_deb}
 
 # Remove root tool as we aren't running server as a service
 RUN rm /opt/networkoptix/mediaserver/bin/root-tool-bin
