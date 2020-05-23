@@ -251,5 +251,6 @@
     "SERVER NAME REQUIRED": "Servernaam is vereist",
     "SERVER NAME SAVED": "Servernaam opgeslagen.",
     "CHANGE PASSWORD BUTTON TEXT": "Wijzig wachtwoord",
-    "DELETE USER TEXT": "Verwijder gebruiker"
+    "DELETE USER TEXT": "Verwijder gebruiker",
+    "LOGIN IS REQUIRED TEXT": "Login is required"
 }

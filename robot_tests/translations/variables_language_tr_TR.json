@@ -251,5 +251,6 @@
     "SERVER NAME REQUIRED": "Sistem adı zorunludur",
     "SERVER NAME SAVED": "Sunucu adı kaydedildi.",
     "CHANGE PASSWORD BUTTON TEXT": "Parola Değiştir",
-    "DELETE USER TEXT": "Kullanıcıyı sil"
+    "DELETE USER TEXT": "Kullanıcıyı sil",
+    "LOGIN IS REQUIRED TEXT": "Login is required"
 }

@@ -243,7 +243,7 @@
     "INFORMATION TEXT": "Information",
     "SYSTEM OFFLINE TEXT": "System Hors ligne",
     "SYSTEM CANNOT BE ACCESSED TEXT": "Ce système est hors ligne et n'est pas accessible pour le moment.",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "VIEWING IMPORTED REPORT TEXT": "Vous visualisez un rapport importé, actualisez la page pour obtenir un nouveau rapport",
     "NO ALERTS TEXT": "Aucune alerte",
     "SYSTEM DOING WELL TEXT": "Votre système doit bien fonctionner!",
     "PORT TEXT": "Port",
@@ -251,5 +251,6 @@
     "SERVER NAME REQUIRED": "Server name is required",
     "SERVER NAME SAVED": "Server name saved.",
     "CHANGE PASSWORD BUTTON TEXT": "Changer mot de passe",
-    "DELETE USER TEXT": "Delete User"
+    "DELETE USER TEXT": "Delete User",
+    "LOGIN IS REQUIRED TEXT": "Login is required"
 }

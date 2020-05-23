@@ -251,5 +251,6 @@
     "SERVER NAME REQUIRED": "Servername ist erforderlich",
     "SERVER NAME SAVED": "Servername gespeichert.",
     "CHANGE PASSWORD BUTTON TEXT": "Passwort ändern",
-    "DELETE USER TEXT": "Benutzer löschen"
+    "DELETE USER TEXT": "Benutzer löschen",
+    "LOGIN IS REQUIRED TEXT": "Login is required"
 }
