@@ -652,7 +652,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
             }
-
+            this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
