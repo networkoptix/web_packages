@@ -91,7 +91,7 @@ export abstract class BaseAccount implements OnDestroy {
             }
         });
 
-        this.accountPoll = this.pollService.createPoll<Account>(this.cloudApi.account(), this.CONFIG.updateInterval);
+        this.accountPoll = this.pollService.createPoll(() => this.cloudApi.account(true), this.CONFIG.updateInterval);
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         setTimeout(() => {

@@ -4,6 +4,7 @@ import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
+import { NxUriCacheService } from './uri-cache.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,8 @@ export class NxCloudApiService {
 
     constructor(
         configService: NxConfigService,
-        private http: HttpClient
+        private http: HttpClient,
+        private cacheService: NxUriCacheService
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -197,8 +199,14 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
     }
 
-    account() {
-        return this.http.get<Account>(this.CONFIG.apiBase + '/account');
+    account(forceUpdate = false) {
+        const endpoint = this.CONFIG.apiBase + '/account';
+        if (!this.cacheService.addedToCache(endpoint)) this.cacheService.addToCache(endpoint);
+        let headers = new HttpHeaders();
+        if (forceUpdate) {
+            headers = headers.set('reset-cache', 'true');
+        }
+        return this.http.get<Account>(endpoint, { headers });
     }
 
     getLanguages() {

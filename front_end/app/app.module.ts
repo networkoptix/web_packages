@@ -3,7 +3,7 @@ import { BrowserModule, Title }      from '@angular/platform-browser';
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
 import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
-import { HttpClientModule, HttpClientXsrfModule }                         from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }                         from '@angular/common/http';
 import { FormsModule }                                                    from '@angular/forms';
 import { AngularFireModule, FirebaseOptionsToken }                        from '@angular/fire';
 import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
@@ -30,6 +30,8 @@ import { ServiceModule }                      from './src/services/services.modu
 import { WINDOWS_PROVIDERS }                  from './src/services/window-provider';
 import { MenuModule }                         from './src/menu';
 import { NxLanguageAndSettingsProvider }      from './src/services/nx-language-settings-provider';
+import { NxUriCacheService } from './src/services/uri-cache.service';
+import { NxUriCachingInterceptor } from './src/services/uri-cache-interceptor.service';
 
 // AoT requires an exported function for factories
 export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSettingsProvider) {
@@ -81,6 +83,12 @@ export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSett
         Location,
         Title,
         CookieService,
+        NxUriCacheService,
+        {
+            provide : HTTP_INTERCEPTORS,
+            useClass : NxUriCachingInterceptor,
+            multi : true
+        },
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },
@@ -94,12 +102,12 @@ export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSett
         NxLanguageAndSettingsProvider,
         { provide: APP_INITIALIZER, useFactory: NxLanguageAndSettingsProviderFactory, deps: [NxLanguageAndSettingsProvider], multi: true }
     ],
-    declarations   : [
+    declarations: [
         AppComponent
     ],
-    exports        : [
+    exports: [
     ],
-    bootstrap      : [AppComponent]
+    bootstrap: [AppComponent]
 })
 
 export class AppModule {

@@ -823,7 +823,7 @@ export class NxSystem extends System implements OnDestroy {
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
-        this.systemPoll = this.pollService.createPoll<any>(this.update(), this.CONFIG.updateInterval);
+        this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval);
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail);
         this.serverManager = new ServerManager(
             this.mediaserver,
