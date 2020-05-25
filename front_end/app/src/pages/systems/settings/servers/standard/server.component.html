@@ -26,7 +26,7 @@
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
                             <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                                [applyCss]="true"></svg-icon>
+                                [applyClass]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>Check Status</span>
                     </button>
@@ -35,7 +35,7 @@
                         [queryParams]="{id: parsedServerId}">
                             <span>
                                 <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
-                                    [applyCss]="true"></svg-icon>
+                                    [applyClass]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>
                     </button>
