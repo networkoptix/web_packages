@@ -201,7 +201,7 @@ export class NxCloudApiService {
 
     account(forceUpdate = false) {
         const endpoint = this.CONFIG.apiBase + '/account';
-        if (!this.cacheService.addedToCache(endpoint)) this.cacheService.addToCache(endpoint);
+        this.cacheService.addToCache(endpoint);
         let headers = new HttpHeaders();
         if (forceUpdate) {
             headers = headers.set('reset-cache', 'true');
@@ -210,7 +210,9 @@ export class NxCloudApiService {
     }
 
     getLanguages() {
-        return this.http.get<t.ILanguages>('/static/languages.json').toPromise();
+        const endpoint = '/static/languages.json';
+        this.cacheService.addToCache(endpoint);
+        return this.http.get<t.ILanguages>(endpoint).toPromise();
     }
 
     changeLanguage(language: string) {
