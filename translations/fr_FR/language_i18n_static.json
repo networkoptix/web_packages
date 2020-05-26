@@ -158,7 +158,7 @@
 		"myIntegrationsLabel": "Mien",
 		"previewRibbonText": "Cette page est un aperçu des dernières modifications et ne correspond pas à la version publique.",
 		"backToEditText": "Retour aux interfaces d'édition",
-		"requirements": "{{name}} Requirements",
+		"requirements": "Exigences {{name}}",
 		"Access Control": "Contrôle d'accès",
 		"Connector": "Connecteur",
 		"Data Analytics": "Analyse de données",
@@ -227,7 +227,7 @@
 				"b_support": "support",
 				"c_proceeding": "avant de procéder."
 			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+			"warning": "Il y aura plus de <strong>{{maxServers}}</strong> serveurs dans le système fusionné."
 		},
 		"message": {
 			"failedToSend": "Échec d’envoi du message.",
@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Aucune alerte",
 		"systemNoAlertsMessage": "Votre système doit bien fonctionner!",
 		"systemServerError": "Erreur Interne du Serveur",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
 		"systemNewVersion": "Mettre à jour votre système",
 		"systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
 		"systemHasNoCameras": "AUCUNE CAMÉRA",

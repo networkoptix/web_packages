@@ -84,7 +84,7 @@
 		},
 		"platforms": {
 			"bananapi": "Banana Pi",
-			"bpi": "Nx1",
+			"bpi": "Px1",
 			"linux64": "x64",
 			"linux_arm32": "x32",
 			"linux_arm64": "x64",

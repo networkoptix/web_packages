@@ -196,7 +196,7 @@
     "ENABLE AUTO DISCOVERY TEXT": "启用摄影机和伺服器的自动搜寻",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "When enabled, system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Failover enabled on some servers ignore status check prohibition.",
     "SEND ANONYMOUS USAGE TEXT": "以匿名方式发送使用情况和故障统计报告至开发人员",
-    "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.",
+    "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "包括有关系统资讯，例如摄像机模组，固件版本，服务器数量等。不包含任何个人信息并采完全匿名的方式。",
     "ALLOW SYSTEM OPTIMIZE TEXT": "允许系统优化摄像机设置",
     "ENABLE AUDIT TRAIL TEXT": "启用使用者行为记录",
     "ENABLE AUDIT TRAIL DESCRIPTION TEXT": "跟踪和记录所有用户操作",
@@ -213,7 +213,7 @@
     "INFORMATION TEXT": "信息",
     "SYSTEM OFFLINE TEXT": "系统处于离线状态",
     "SYSTEM CANNOT BE ACCESSED TEXT": "此系统处于离线状态，现在无法登录。",
-    "VIEWING IMPORTED REPORT TEXT": "You are viewing an imported report, refresh the page to get a fresh report",
+    "VIEWING IMPORTED REPORT TEXT": "您正在查看导入的报告，请刷新页面以获取新报告",
     "NO ALERTS TEXT": "没有警报",
     "SYSTEM DOING WELL TEXT": "您的系统必须运行良好！"
 }

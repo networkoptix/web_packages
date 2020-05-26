@@ -87,12 +87,12 @@
       "view": "xem + [tên camera]",
       "search": "tìm + [văn bản cho thanh tìm kiếm]",
       "clear search": "xóa tìm kiếm",
-      "expand server": "expand server + [server name]",
-      "collapse server": "collapse server + [server name]",
+      "expand server": "mở rộng máy chủ + [tên máy chủ]",
+      "collapse server": "sập máy chủ + [tên máy chủ]",
       "expand all servers": "mở rộng tất cả các máy chủ",
       "collapse all servers": "tất cả máy chủ mất ổn định",
       "stop listening": "dừng nghe",
-      "help": "help | show commands"
+      "help": "giúp đỡ | hiển thị lệnh"
     }
   },
   "system": {
