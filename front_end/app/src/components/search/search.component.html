@@ -23,7 +23,8 @@
                            [placeholder]="placeholder"/>
 
                     <button class="inset search-clear btn btn-clear" [hidden]="!localFilter.query" (click)="resetQuery()">
-                        <span class="web-icon-close"></span>
+                        <svg-icon [src]="CONFIG.icons.dir + 'close.svg'"
+                                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
                     </button>
                 </div>
                 <div class="float-left btn btn-big btn-tag-selected mt-3 mt-md-0 mr-1"

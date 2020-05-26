@@ -51,6 +51,8 @@
             border-radius : 2px;
             border        : 1px solid $light6;
             background    : transparent;
+            outline       : none !important;
+            box-shadow    : none !important;
 
             &:placeholder-shown {
                 @include placeholder();
@@ -91,7 +93,8 @@
             }
 
             .search-clear {
-                height : 32px;
+                height      : 32px;
+                line-height : 32px;
             }
         }
 

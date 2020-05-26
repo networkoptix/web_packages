@@ -14,7 +14,6 @@ function brew_install() {
 
     echo 'Installing node v11.15.0'
     n 11.15.0
-
     echo 'Installing python 3.7.6'
     pyenv install 3.7.6
     pip install virtualenv
@@ -233,7 +232,7 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
-            python update_proxy.py
+            python3 update_proxy.py
             break
             ;;
         start_celery)

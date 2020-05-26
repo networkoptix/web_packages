@@ -156,9 +156,13 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
         this.navItems = [];
         if (model.query !== '') {
-            this.navItems = this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3');
-            this.navItemIdx = 0;
-            this.menuService.navItemId = this.navItems[this.navItemIdx].id;
+            setTimeout(() => { // Avoid selection before filter finishes
+                this.navItems = this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3');
+                if (this.navItems.length) {
+                    this.navItemIdx = 0;
+                    this.menuService.navItemId = this.navItems[this.navItemIdx].id;
+                }
+            });
         }
     }
 

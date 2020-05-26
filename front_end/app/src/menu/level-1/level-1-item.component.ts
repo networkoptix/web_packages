@@ -47,6 +47,10 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
             this.itemPath = changes.base.currentValue;
             this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         }
+
+        if (changes.searchMode?.currentValue) {
+            this._type = changes.searchMode?.currentValue ? 'arrow_collapse' : 'arrow_expand';
+        }
     }
 
     menuClick(sectionId) {
