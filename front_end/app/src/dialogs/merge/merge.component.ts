@@ -60,7 +60,6 @@ export class MergeModalContent {
     readonly checkMergeError: string = 'checkMergeError';
     readonly serverUrlState: string = 'serverUrl';
     readonly serverUrlMergeError: string = 'serverUrlMergeError';
-    readonly serverUrlValidationError: string = 'serverUrlValidationError';
     readonly confirmPasswordError: string = 'confirmPasswordError';
     readonly serverUrlErrors: string = 'serverUrlErrors';
     readonly confirmMerge: string = 'confirmMerge';
@@ -778,13 +777,14 @@ export class MergeModalContent {
             this.setTargetSystem({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
         }
         // handles validation error messages
-        let showUpdate             = this.serverUrlState;
+        const serverUrlError = this.processedSystems.length ? 'serverUrlValidationError' : 'noOtherSystemValidationError';
+        let showUpdate = this.processedSystems.length ? this.serverUrlState : 'noOtherSystemServerUrl';;
         const templateUpdates: any = { serverUrlInputValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
-            showUpdate = this.serverUrlValidationError;
+            showUpdate = serverUrlError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlEmpty';
         } else if (input.touched && input.invalid) {
-            showUpdate = this.serverUrlValidationError;
+            showUpdate = serverUrlError;
             templateUpdates.serverUrlInputValidationErrorText = 'urlNotValid';
         }
         this.updateShow(showUpdate, templateUpdates);
