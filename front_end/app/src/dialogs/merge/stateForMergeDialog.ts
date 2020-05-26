@@ -113,9 +113,10 @@ export default Object.assign({
             passwordValue     : ''
         },
         errorText: {
-            passwordRequired : '',
-            passwordWrong    : '',
-            unknownError     : ''
+            adminPasswordWrong : '',
+            passwordRequired   : '',
+            passwordWrong      : '',
+            unknownError       : ''
         }
     }
 });

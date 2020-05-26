@@ -131,7 +131,7 @@
         "recordingModes": {
             "always": "Record always",
             "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "motionLowRes": "位移+低分辨率"
         },
         "resolution": {
             "various": "– Different Values –",
@@ -223,12 +223,13 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Wrong password for local admin user",
             "checking": "Checking...",
             "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
             "connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "系统合并失败",
@@ -242,7 +243,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "建议您进行咨询",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "技术支持",
                 "c_proceeding": "在继续执行之前："
             },
@@ -261,7 +262,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
         "EmailAlreadyExists": "此电子邮件已被注册",
         "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-        "INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "No server found",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "此帐户已激活",
         "accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
         "accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",

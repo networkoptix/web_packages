@@ -1,5 +1,5 @@
 import {
-    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, Inject
+    Directive, ElementRef, Renderer2, Input, HostListener, HostBinding, forwardRef, OnInit, EventEmitter, Output, Inject, SimpleChanges
 } from '@angular/core';
 import {
     ControlValueAccessor, NG_VALUE_ACCESSOR
@@ -86,6 +86,10 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
         this.editOff();
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        this.checkError();
+    }
+
     // toggle mode handlers
 
     editOn() {
@@ -134,7 +138,6 @@ export class NxEditableDirective implements ControlValueAccessor, OnInit {
 
     @HostListener('input')
     callOnChange() {
-        this.checkError();
         this.content = this.elementRef.nativeElement[this.propValueAccessor];
         if (typeof this.onChange === 'function') {
             this.onChange(

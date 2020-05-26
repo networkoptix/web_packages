@@ -223,12 +223,13 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Wrong password for local admin user",
             "checking": "Checking...",
             "commonText": "Не удалось объединить системы <strong>{{primarySystem}}</strong> и <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Подключите систему, которую вы хотите объединить с этой, к <strong>{{cloudName}}</strong> или выполните объединение локально, используя <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Объединение систем не удалось",
@@ -242,7 +243,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Мы рекомендуем проконсультироваться с",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "техническая поддержка",
                 "c_proceeding": "прежде чем продолжить."
             },
@@ -261,7 +262,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "В объединенной системе будет больше <strong>{{maxServers}}</strong> серверов."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Некоторые серверы перечислены как существующие в обеих системах - как в выбранной, так и в текущей.<br>Удалите серверы, которые находятся не в сети, и несовместимые серверы из каждой системы и повторите попытку.",
         "EmailAlreadyExists": "Этот Email уже зарегистрирован",
         "FAIL": "Система <strong>{{failedSystem}}</strong> в настоящее время недоступна.<br>Повторите попытку через несколько минут или обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">поддержку</a>.",
-        "INCOMPATIBLE": "Системы имеют разные версии программного обеспечения. Пожалуйста, обновите их на <a href=\"/download\">последнюю версию</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "No server found",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Эта учетная запись уже активирована",
         "accountBlocked": "Эта учетная запись заблокирована. Пожалуйста, повторите попытку через несколько минут.",
         "accountNotActivated": "Эта учетная запись еще не активирована. <a href=\"/activate\">Отправить ссылку активации снова</a>",

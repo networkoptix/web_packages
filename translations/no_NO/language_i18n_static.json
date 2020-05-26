@@ -223,12 +223,13 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Wrong password for local admin user",
             "checking": "Checking...",
             "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
@@ -242,7 +243,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Vi anbefaler å konsultere med",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "brukerstøtte",
                 "c_proceeding": "før du fortsetter."
             },
@@ -261,7 +262,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Noen server lister som eksisterende i begge systemene - i den valgte og i den nåværende.<br>Fjern offline og inkompatible servere fra hvert system, og prøv igjen.",
         "EmailAlreadyExists": "Denne e-posten er allerede registrert",
         "FAIL": "System <strong>{{failedSystem}}</strong> er for tiden ikke tilgjengelig.<br>Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
-        "INCOMPATIBLE": "Systemer har forskjellige programvareversjoner. Vennligst oppdatere dem begge til <a href=\"/download\">siste build</a>.",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "No server found",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
         "accountBlocked": "Denne kontoen er midlertidig blokkert. Vennligst prøv igjen om noen minutter.",
         "accountNotActivated": "Denne kontoen er ikke aktivert enda. <a href=\"/activate\">Send aktiveringslenke igjen</a>",

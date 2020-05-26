@@ -223,6 +223,7 @@
         },
         "merge": {
             "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{{secondarySystem}}</strong> ein",
+            "adminPasswordWrong": "Falsches Passwort für lokalen Adminbenutzer",
             "checking": "Prüfung...",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -242,7 +243,7 @@
             "primarySystemOffline": "System {{primarySystem}} ist offline und kann nicht mit dem System {{targetSystem}} zusammengeführt werden",
             "primarySystemUnavailable": "System {{primarySystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
             "recommendSupport": {
-                "a_recommend": "Wir empfehlen die Beratung mit",
+                "a_recommend": "Wir empfehlen Ihnen, sich in Verbindung zu setzen mit",
                 "b_support": "support",
                 "c_proceeding": "bevor Sie fortfahren."
             },
@@ -261,7 +262,7 @@
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-            "warning": "Es werden mehr als <strong>{{maxServers}}</strong> Server im zusammengeführten System sein."
+            "warning": "Das zusammengeführte System enthält mehr als <strong>{{maxServers}}</strong> Server."
         },
         "message": {
             "storageSettingsSaved": "Speichereinstellungen gespeichert.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Einige Serverlisten sind in beiden Systemen vorhanden - im ausgewählten und im aktuellen.<br>Entfernen Sie offline und inkompatible Server von jedem System, und versuchen Sie es erneut.",
         "EmailAlreadyExists": "Diese E-Mail ist bereits registriert",
         "FAIL": "System <strong>{{failedSystem}}</strong> ist derzeit nicht erreichbar.<br>Versuchen Sie es in ein paar Minuten erneut oder kontaktieren Sie den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
-        "INCOMPATIBLE": "Systeme haben unterschiedliche Softwareversionen. Bitte aktualisieren Sie sie beide auf die <a href=\"/download\">neueste Buildversion</a>.",
+        "INCOMPATIBLE": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide auf den <a href=\"/download\">neuesten Build</a>.",
+        "cloud_systems_have_different_owners": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
+        "fail": "Keine Server gefunden",
+        "incompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
+        "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
         "accountAlreadyActivated": "Dieser Account ist bereits aktiviert",
         "accountBlocked": "Dieses Konto ist vorübergehend gesperrt. Bitte versuchen Sie es in ein paar Minuten noch einmal.",
         "accountNotActivated": "Dieser Account ist noch nicht aktiviert. <a href=\"/activate\">Bestätigungsmail erneut senden</a>",
@@ -529,7 +535,7 @@
         "required": "falsch",
         "requiredMessage": "Verwenden Sie nur alphanumerische Zeichen und Tastatursymbole, vermeiden Sie führende und nachfolgende Leerzeichen",
         "strongMessage": "Sicheres Passwort!",
-        "weak": "schlecht",
+        "weak": "schwach",
         "weakMessage": "Verwenden Sie Zahlen, Groß- und Kleinbuchstaben und Sonderzeichen, um Ihr Passwort sicherer machen"
     },
     "placeholderTexts": {

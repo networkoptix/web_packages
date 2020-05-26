@@ -275,5 +275,6 @@
     "SERVER NAME SAVED"                    :    "Server name saved.",
 
     "CHANGE PASSWORD BUTTON TEXT"		   :	"Change Password",
-    "DELETE USER TEXT"					   :	"Delete User"
+    "DELETE USER TEXT"					   :	"Delete User",
+    "LOGIN IS REQUIRED TEXT"			   :	"Login is required"
 }

@@ -39,7 +39,7 @@ Check System Text
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    10.1.5.169    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO SYS IP}    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
     FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
