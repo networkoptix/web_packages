@@ -9,15 +9,17 @@
         width: 100%;
         display: flex;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
         .header-title {
             flex: 0 1 auto;
             min-width: 0;
+            height: 40px;
             text-align: left !important;
             h2 {
-                font-family: $font-family-regular;
-                height: 32px;
-                font-weight: bold;
+                font-family: $font-family-medium;
+                line-height: 40px;
+                vertical-align: middle;
+                height: 40px;
                 font-size: 24px;
             }
         }
@@ -29,6 +31,7 @@
             padding-left: 8px;
             justify-content: start;
             align-items: center;
+            cursor: pointer;
         }
         .camera-buttons {
             flex: 0 0 auto;

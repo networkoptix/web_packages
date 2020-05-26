@@ -18,14 +18,14 @@
         position: relative;
         border-radius: 2px;
         padding: 0px;
-        background: $additional_light1;
+        background: #FFFFF8;
         border: 1px solid $blue1;
         background: #fffff7;
         text-align: left !important;
         overflow: hidden;
         white-space: nowrap !important;
         margin-left: -1px !important;
-        margin-top: -4px !important;
+        outline: none;
     }
 
     &-error {
