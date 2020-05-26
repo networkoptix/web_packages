@@ -475,7 +475,7 @@
         "isFisheye": "魚眼",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "Motion Detection",
+        "isMdSupported": "位移偵測",
         "isMultiSensor": "多感測器",
         "isPtzSupported": "PTZ",
         "isTwAudioSupported": "2-Way Audio",

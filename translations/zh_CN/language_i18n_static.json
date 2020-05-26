@@ -131,7 +131,7 @@
         "recordingModes": {
             "always": "Record always",
             "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "motionLowRes": "位移+低分辨率"
         },
         "resolution": {
             "various": "– Different Values –",

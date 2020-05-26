@@ -152,7 +152,7 @@
         "systemOffline": "System Hors ligne",
         "systemOfflineMessage": "Ce système est hors ligne et n'est pas accessible pour le moment.",
         "systemServerError": "Erreur Interne du Serveur",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Une erreur est survenue, veuillez réessayer plus tard. Si le problème persiste, veuillez contacter votre équipe d'assistance.",
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
         "unknown": "Inconnu",
         "voiceCommands": {
@@ -443,7 +443,7 @@
         "Storage": "Stockage",
         "myIntegrationsLabel": "Mien",
         "phoneNumberWithLabel": "Tel: {{number}}",
-        "requirements": "{{name}} Requirements",
+        "requirements": "Exigences {{name}}",
         "testedVersionLabel": "Testé avec la version {{vmsName}}:",
         "testedVersionsLabel": "Testé avec les versions {{vmsName}}:"
     },
