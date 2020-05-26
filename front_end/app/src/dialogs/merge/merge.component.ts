@@ -158,6 +158,7 @@ export class MergeModalContent {
                             this.systemsService.forceUpdateSystems();
                             const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
                                 this.systems = systems;
+                                console.log('systems', systems);
                                 const updatedTargetSystem = [...this.systems, ...this.peerSystems]
                                     .find(system => system.id === targetSystem.id);
                                 if (updatedTargetSystem) updatedTargetSystem.value = updatedTargetSystem.id;
@@ -391,19 +392,32 @@ export class MergeModalContent {
 
         this.checkPasswordProcess = this.processService
             .createProcess(() => {
-                // for use case when password gets changed
-                if (this.serverUrl.includes('//admin:')) {
-                    const startIndex = this.serverUrl.indexOf('//admin') + 2;
-                    const endIndex = this.serverUrl.indexOf('@', startIndex + 1) + 1;
-                    this.serverUrl = this.serverUrl.slice(0, startIndex) + this.serverUrl.slice(endIndex);
+                // when trying again, does not have access to previous state template
+                if (this.machine.state.template.passwordValue) {
+                    // for use case when password gets changed
+                    if (this.serverUrl.includes('//admin:')) {
+                        const startIndex = this.serverUrl.indexOf('//admin') + 2;
+                        const endIndex = this.serverUrl.indexOf('@', startIndex + 1) + 1;
+                        this.serverUrl = this.serverUrl.slice(0, startIndex) + this.serverUrl.slice(endIndex);
+                    }
+                    const index = this.serverUrl.indexOf('//') + 2;
+                    this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
                 }
-                const index = this.serverUrl.indexOf('//') + 2;
-                this.serverUrl = this.serverUrl.slice(0, index) + `admin:${this.machine.state.template.passwordValue}@` + this.serverUrl.slice(index);
                 if (!this.dryRunAvailable) {
                     this.checkMergeabilityProcess.processing = false;
                     this.checkMergeabilityProcess.finished = true;
                     this.machine.transition(this.confirmMerge);
                 } else {
+                    // this.systemsService.forceUpdateSystems();
+                    // const systemsSubscription = this.systemsService.systemsSubject.subscribe(systems => {
+                    //     this.systems = systems;
+                    //     const updatedTargetSystem = this.systems[0];
+                    //     console.log('systems', systems);
+                    //         // .find(system => system.id === targetSystem.id);
+                    //     if (updatedTargetSystem) updatedTargetSystem.value = updatedTargetSystem.id;
+                    //     this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
+                    // });
+                    // systemsSubscription.unsubscribe();
                     return this.system.mergeSystems(this.serverUrl, true).toPromise()
                         .then(res => {
                             if (res.error === '0') {
