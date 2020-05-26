@@ -10,7 +10,7 @@ import { isArray }               from 'rxjs/internal-compatibility';
 export class NxMenuService implements OnDestroy {
     selectedSectionSubject = new BehaviorSubject('');
     selectedSubSectionSubject = new BehaviorSubject([]);
-    selectedDetailsSection = new BehaviorSubject([]);
+    selectedDetailsSection = new BehaviorSubject('');
     contentSubject = new BehaviorSubject([]);
     navItemSubject = new BehaviorSubject('');
 
@@ -39,20 +39,20 @@ export class NxMenuService implements OnDestroy {
         return this.selectedSectionSubject.getValue();
     }
 
+    set section(section) {
+        this.selectedSectionSubject.next(section);
+    }
+
     get detail() {
         return this.selectedDetailsSection.getValue();
     }
 
-    setSection(section) {
-        this.selectedSectionSubject.next(section);
+    set detail(section) {
+        this.selectedDetailsSection.next(section);
     }
 
     setSubSection(section) {
         this.selectedSubSectionSubject.next(section);
-    }
-
-    setDetailsSection(section) {
-        this.selectedDetailsSection.next(section);
     }
 
     ngOnDestroy() {

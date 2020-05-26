@@ -50,7 +50,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     private formSubscription: Subscription;
 
     private setupDefaults() {
-        this.menuService.setDetailsSection('settings');
+        this.menuService.detail = 'settings';
     }
 
     constructor(

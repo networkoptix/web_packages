@@ -33,7 +33,7 @@ export class NxMenuButtonComponent {
                 .then((userId) => {
                     if (userId) {
                         userId = this.system.mediaserver.cleanId(userId);
-                        this.menuService.setDetailsSection(userId);
+                        this.menuService.detail = userId;
 
                         this.uriService
                             .updateURI(`systems/${this.system.id}/users/${userId}`)

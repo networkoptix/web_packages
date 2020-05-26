@@ -55,7 +55,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     menuClick(sectionId) {
         if (!this.searchMode) {
-            this.menuService.setSection(sectionId);
+            this.menuService.section = sectionId;
             this.router
                 .navigate([this.itemPath], { queryParams: { search: this.item.query } })
                 .catch((ex) => console.error(ex));

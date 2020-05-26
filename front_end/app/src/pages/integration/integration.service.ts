@@ -265,10 +265,6 @@ export class IntegrationService implements OnDestroy {
         return this.plugin;
     }
 
-    // setSection(section) {
-    //     this.selectedSectionSubject.next(section);
-    // }
-
     ngOnDestroy() {
         this.integrationSubject.unsubscribe();
         this.pluginsSubject.unsubscribe();

@@ -16,7 +16,7 @@ export class NxOverviewComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.plugin = this.integrationService.getIntegrationPlugin();
-        this.menuService.setDetailsSection('how-it-works');
+        this.menuService.detail = 'how-it-works';
         this.CONFIG = this.configService.getConfig();
     }
 

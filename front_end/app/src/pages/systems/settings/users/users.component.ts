@@ -56,7 +56,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
 
     private setupDefaults() {
         this.locked = {};
-        this.menuService.setSection('users');
+        this.menuService.section = 'users';
     }
 
     constructor(
@@ -92,7 +92,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                     if (this.paramUser.indexOf('?') > -1) {
                         this.paramUser = this.paramUser.substring(0, this.paramUser.indexOf('?'));
                     }
-                    this.menuService.setDetailsSection(this.paramUser);
+                    this.menuService.detail = this.paramUser;
                     this.setUser();
                 }
             });
@@ -189,7 +189,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
 
-                this.menuService.setDetailsSection(this.nextUserId);
+                this.menuService.detail = this.nextUserId;
             } else {
                 this.locked[user.email] = false;
             }
@@ -234,7 +234,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 ? this.LANG.system.users.cloudDelete()
                 : this.LANG.system.users.localDelete();
 
-            this.menuService.setDetailsSection(NxUtilsService.cleanId(this.selectedUser.id));
+            this.menuService.detail = NxUtilsService.cleanId(this.selectedUser.id);
             if (this.selectedUser.role.name === 'Custom') {
                 this.currentCustomRole = NxUtilsService.deepCopy(this.selectedUser.role);
             }
