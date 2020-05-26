@@ -1,3 +1,5 @@
+@import "../../styles/theme_variables";
+
 .editable-directive {
     &-initial {
         position: relative;
@@ -18,9 +20,9 @@
         position: relative;
         border-radius: 2px;
         padding: 0px;
-        background: #FFFFF8;
+        background: $additional_light5;
         border: 1px solid $blue1;
-        background: #fffff7;
+        background: $additional_light6;
         text-align: left !important;
         overflow: hidden;
         white-space: nowrap !important;
