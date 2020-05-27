@@ -13,6 +13,7 @@ Resource     resources/system-server-resource.robot
 Resource     resources/system-camera-resource.robot
 Resource     resources/ipvd-resource.robot
 Resource     resources/system-user-resource.robot
+Resource     resources/system-admin-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -129,6 +130,14 @@ Log In With Remember Me
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
     Validate Log In
+
+Log in to Auto Tests System
+    [Arguments]    ${email}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
     [Arguments]    ${timeout}=${selenium_timeout}
@@ -777,3 +786,11 @@ Check New Password Outline
     ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
     ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
 # ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
+
+Check System Text
+    [Arguments]    ${user}
+    Log Out
+    Log in to Auto Tests System    ${user}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
