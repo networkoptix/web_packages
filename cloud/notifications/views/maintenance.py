@@ -106,6 +106,6 @@ def health_email(request):
 @handle_exceptions
 def health_push(request):
     return check_queue(
-        'push-notification', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD,
-        APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
+        'push-notification', PUSH_APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD,
+        PUSH_APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
     )
