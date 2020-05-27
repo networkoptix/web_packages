@@ -150,8 +150,7 @@ Record Always
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
-    Click Element    ${RECORDING CHECK BOX}
+    Enable Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD ALWAYS RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -172,8 +171,7 @@ Record Motion
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
-    Click Element    ${RECORDING CHECK BOX}
+    Enable Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
@@ -194,8 +192,7 @@ Record Motion + Low Quality
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
-    Click Element    ${RECORDING CHECK BOX}
+    Enable Recording
     Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
     Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
