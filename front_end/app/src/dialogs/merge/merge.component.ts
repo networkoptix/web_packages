@@ -160,7 +160,9 @@ export class MergeModalContent {
                                 this.systems = systems;
                                 const updatedTargetSystem = [...this.systems, ...this.peerSystems]
                                     .find(system => system.id === targetSystem.id);
-                                if (updatedTargetSystem) updatedTargetSystem.value = updatedTargetSystem.id;
+                                if (updatedTargetSystem) {
+                                    updatedTargetSystem.value = updatedTargetSystem.id;
+                                }
                                 this.updateShow('', { helpText: this.LANG.dialogs.merge.ownerCanMergeText });
                                 this.setTargetSystem(updatedTargetSystem || targetSystem, currentUrl);
                             });
