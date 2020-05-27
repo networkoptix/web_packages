@@ -7,7 +7,7 @@
 		"newPasswordLabel": "新密码",
 		"saveChanges": "保存",
 		"accountSettings": "帐户设置",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "协议已被接受"
 	},
 	"activeActions": {
 		"sendConfirm": "重新发送激活链接",
