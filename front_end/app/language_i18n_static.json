@@ -685,7 +685,7 @@
             },
             "merge": {
                 "failed": "System merge failed",
-                "success": "System merge completed"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "System name saved"
