@@ -232,7 +232,11 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
-            python3 update_proxy.py
+            if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
+                echo "Virtualenv not activated. Proxy configuration not updated!"
+            else
+                python update_proxy.py
+            fi
             break
             ;;
         start_celery)
