@@ -157,26 +157,70 @@ Record Always
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
     Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Wait Until Element Is Visible    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
-    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
-    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Set Checkbox Value    ${RECORD MOTION RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Wait Until Element Is Visible    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
 
 Record Motion + Low Quality
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
     Wait Until Element is Visible    ${CAMERAS LINK}
     Click Link    ${CAMERAS LINK}
     Verify on Cameras Page
-    Enable Recording
-    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}
-    Click Element    ${RECORD ALWAYS RADIO BUTTON}
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${RECORD ALWAYS RADIO BUTTON}/ancestor::nx-radio 
+    Set Checkbox Value    ${RECORD MOTION LOW QUALITY RADIO BUTTON}    True
     Wait Until Element is Visible    ${SYSTEM SAVE}
     Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+    Reload Page
+    Verify on Cameras Page
+    ${state}    Get Checkbox Value    ${RECORDING CHECK BOX}//input
+    Should Be Equal As Strings    ${state}    True
+    Wait Until Element Is Visible    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"checked")]
+    Click Element    ${RECORDING CHECK BOX}
+    Wait Until Element is Visible    ${SYSTEM SAVE}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Element Is Not Visible    ${SYSTEM CANCEL}
+
+Check recording triple state
+    [Setup]    Log in to user and system    ${EMAIL OWNER}    ${AUTOTESTS 2 SERVER SYSTEM ID}
+    Wait Until Element is Visible    ${CAMERAS LINK}
+    Click Link    ${CAMERAS LINK}
+    Verify on Cameras Page
+    Select Camera By Name    triple state cam
+    Wait Until Elements are Visible
+    ...    ${RECORD MOTION LOW QUALITY RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+    ...    ${RECORD MOTION RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
+    ...    ${RECORD ALWAYS RADIO BUTTON}/following-sibling::span[contains(@class,"tristate")]
 
 Change FPS
     Wait Until Element is Visible    ${CAMERAS LINK}

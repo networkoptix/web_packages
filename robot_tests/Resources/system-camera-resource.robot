@@ -31,7 +31,8 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
 Enable Recording
-    Set Checkbox Value    ${RECORDING CHECK BOX}//input    true
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
     [Arguments]    ${camera name}
