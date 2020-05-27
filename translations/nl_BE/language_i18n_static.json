@@ -61,7 +61,8 @@
         "viewer": {
             "description": "Kan live video bekijken en zoeken in opgenomen beelden",
             "label": "Viewer"
-        }
+        },
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "account": {
         "accountSavedSuccess": "Uw account is succesvol opgeslagen",
@@ -432,7 +433,8 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
+        "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding.",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
         "Access Control": "Toegangscontrole",
@@ -683,7 +685,7 @@
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "success": "Systeem samenvoegen voltooid"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "Systeemnaam opgeslagen"
@@ -783,6 +785,7 @@
         "watermarkSettings": "Watermerk instellingen",
         "maxWebMTranscoders": "Maximaal aantal WEBM-verbindingen voor de server. Chrome opent twee verbindingen tegelijk en sluit vervolgens de eerste. Het is dus aan te raden om waarde> = 2 in te stellen op deze parameter.",
         "maxEventLogRecords": "Maximum logboek evenementen om in de database te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
-        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
+        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

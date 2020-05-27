@@ -61,7 +61,8 @@
         "viewer": {
             "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
-        }
+        },
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "account": {
         "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
@@ -432,7 +433,8 @@
         "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -683,7 +685,7 @@
             },
             "merge": {
                 "failed": "システム統合が失敗しました",
-                "success": "システムが統合されました"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "システム名は保存されました"
@@ -783,6 +785,7 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

@@ -220,7 +220,7 @@
     "System name is required": "Adja meg a rendszer nevét",
     "System will be accessible through local network with local administrator account.": "A rendszer a helyi hálózatból továbbra is elérhető lesz a helyi adminisztrátor fiókkal.",
     "Systems": "Rendszerek",
-    "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.",
+    "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "Címke",
     "Take system name and settings from": "Take system name and settings from",
     "Terms of Use": "Terms of Use",

@@ -61,7 +61,8 @@
         "viewer": {
             "description": "Pode visualizar o vídeo ao vivo e pesquisar o arquivo",
             "label": "Visualizador"
-        }
+        },
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "account": {
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
@@ -432,7 +433,8 @@
         "wrongCode": "A conta já está activada ou o código de confirmação está incorreto",
         "wrongCodeRestore": "O código de confirmação já foi usado ou está incorreto",
         "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
         "Access Control": "Access Control",
@@ -683,7 +685,7 @@
             },
             "merge": {
                 "failed": "Falha na fusão de Sistemas",
-                "success": "Fusão do sistema concluída"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "Nome do sistema guardado"
@@ -783,6 +785,7 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

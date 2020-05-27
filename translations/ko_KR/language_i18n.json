@@ -220,7 +220,7 @@
     "System name is required": "시스템 이름이 필요합니다.",
     "System will be accessible through local network with local administrator account.": "로컬 관리자 계정으로 로컬 네트워크를 통해 시스템에 액세스 할 수 있습니다.",
     "Systems": "시스템",
-    "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.",
+    "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "태그",
     "Take system name and settings from": "Take system name and settings from",
     "Terms of Use": "이용 약관",

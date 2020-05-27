@@ -220,7 +220,7 @@
     "System name is required": "Sistem adı zorunludur",
     "System will be accessible through local network with local administrator account.": "Sisteme yerel yönetici hesabı ile yerel ağ üzerinden erişilebilir.",
     "Systems": "Sistemler",
-    "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Bu boyuttaki sistemler çalışabilir, ancak kararsız olabilir ve güncellemeler ve senkronizasyon ile ilgili sorunlar yaşayabilir.",
+    "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "Etiketler",
     "Take system name and settings from": "Sistem adını ve ayarlarını al",
     "Terms of Use": "Kullanım Şartları",

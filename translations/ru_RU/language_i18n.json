@@ -220,7 +220,7 @@
     "System name is required": "Требуется имя системы",
     "System will be accessible through local network with local administrator account.": "Система будет доступна через локальную сеть с учетной записью локального администратора.",
     "Systems": "Системы",
-    "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.",
+    "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "Теги",
     "Take system name and settings from": "Take system name and settings from",
     "Terms of Use": "Условия использования",
