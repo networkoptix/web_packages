@@ -1,6 +1,4 @@
 import boto3
-import json
-import sys
 from datetime import datetime, timedelta
 from util.config import get_config
 
@@ -13,12 +11,15 @@ PERIOD = 60  # In seconds
 APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD = 600  # In seconds
 APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD = 100
 
+PUSH_APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD = 12000
+PUSH_APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD = 20000
 
-def _get_sqs_metrics():
+
+def _get_sqs_metrics(queue):
     metric_result = {}
 
     conf = get_config()
-    queue_name = '{}-celery'.format(conf['queue_name'])
+    queue_name = f'{conf["queue_name"]}-{queue}'
 
     cloudwatch = boto3.client('cloudwatch')
     paginator = cloudwatch.get_paginator('get_metric_data')
@@ -73,17 +74,14 @@ def _get_sqs_metrics():
     return metric_result
 
 
-@api_view(['GET'])
-@permission_classes((AllowAny, ))
-@handle_exceptions
-def maintenance_health(request):
-    metric_result = _get_sqs_metrics()
+def check_queue(queue, age_threshold, number_visible_threshold):
+    metric_result = _get_sqs_metrics(queue)
 
     oldest = metric_result['approximateAgeOfOldestMessage']
     number = metric_result['approximateNumberOfMessagesVisible']
 
-    result = (oldest is None or oldest < APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD) and \
-             (number is None or number < APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD)
+    result = (oldest is None or oldest < age_threshold) and \
+             (number is None or number < number_visible_threshold)
 
     return api_success({
         'ok': result,
@@ -92,3 +90,22 @@ def maintenance_health(request):
             'approximateNumberOfMessagesVisible': number
         }
     })
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def health_email(request):
+    return check_queue(
+        'celery', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD, APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
+    )
+
+
+@api_view(['GET'])
+@permission_classes((AllowAny, ))
+@handle_exceptions
+def health_push(request):
+    return check_queue(
+        'push-notification', APPROXIMATE_AGE_OF_OLDEST_MESSAGE_THRESHOLD,
+        APPROXIMATE_NUMBER_OF_MESSAGES_VISIBLE_THRESHOLD
+    )
