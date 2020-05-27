@@ -64,7 +64,6 @@ ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
 ${SYSTEMS DROPDOWN}                   //header//li[contains(@class, 'collapse-second')]//button[@id='systemsDropdown']
 ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
-${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}${DISABLED}
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
@@ -138,12 +137,11 @@ ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 ${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
-${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
-${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 ${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
 ${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
+${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
 
 ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}    //nx-checkbox[@name="autoDiscoveryEnabled"]
 ${ENABLE AUTO DISCOVERY CHECKBOX REAL}     //*[@id="autoDiscoveryEnabled"]

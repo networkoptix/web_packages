@@ -12,6 +12,7 @@ Resource     resources/health-monitor-resource.robot
 Resource     resources/system-server-resource.robot
 Resource     resources/system-camera-resource.robot
 Resource     resources/ipvd-resource.robot
+Resource     resources/system-user-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
