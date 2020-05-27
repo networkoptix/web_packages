@@ -534,6 +534,7 @@ export class MergeModalContent {
     }
 
     deprecatedMergeSystems(password) {
+        // TO-DO (CLOUD-5154) move getting keys to system service
         return this.system.mediaserver.getNonce().toPromise()
             .then(res => {
                 const { nonce, realm } = res.reply;
