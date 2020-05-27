@@ -551,7 +551,7 @@ Should confirm, if owner deletes system (You are going to disconnect your system
     Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     Wait Until Page Does Not Contain Element    ${BACKDROP}
 
-Should confirm, if not owner deletes system (You will lose access to this system)
+Offline system should confirm, if not owner deletes system (You will lose access to this system)
     [Tags]    Threaded    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Click Button    ${DISCONNECT FROM NX}
@@ -598,20 +598,20 @@ Should not be able to delete/edit users
     Click Link    ${User In List}
     Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}${DISABLED}    ${REMOVE USER BUTTON}${DISABLED}
 
-Should open System page by link to not authorized user and redirect to homepage, if he does not log in
+Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]    Threaded    System-offline
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
     Click Button    ${LOG IN CLOSE BUTTON}
     Wait Until Element Is Visible    ${JUMBOTRON}
 
-Should open System page by link to not authorized user and show it, after owner logs in
+Offline system should open System page by link to not authorized user and show it, after owner logs in
     [Tags]    Threaded    System-offline
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL OWNER}   ${password}    button=None
     Verify In System    Auto Tests 2
 
-Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
+Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572    Threaded    System-offline
     Log In    ${EMAIL NOPERM}    ${password}
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
@@ -622,13 +622,13 @@ Should open System page by link to user without permission and show alert (Syste
     Should not Contain    ${actual url}    ${AUTOTESTS OFFLINE SYSTEM ID}
     # Location Should Be    ${url}/systems
 
-Should open System page by link not authorized user, and show alert if logs in and has no permission
+Offline system should open System page by link not authorized user, and show alert if logs in and has no permission
     [Tags]    Threaded    System-offline
     Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
     Log In    ${EMAIL NOPERM}   ${password}    button=None
     Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
-Rename button opens dialog and clicking cancel closes rename dialog without rename
+Offline system rename button opens dialog and clicking cancel closes rename dialog without rename
     [Tags]    C41880    Threaded    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Open Rename System Dialog
@@ -636,7 +636,7 @@ Rename button opens dialog and clicking cancel closes rename dialog without rena
     Wait Until Page Does Not Contain Element    //div[@uib-modal-backdrop="modal-backdrop"]
     Verify In System    Auto Tests 2
 
-Clicking 'X' closes rename dialog without rename
+Offline system clicking 'X' closes rename dialog without rename
     [Tags]    C41880    Threaded    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Open Rename System Dialog
@@ -645,7 +645,7 @@ Clicking 'X' closes rename dialog without rename
     Wait Until Page Does Not Contain Element    ${BACKDROP}
     Verify In System    Auto Tests 2
 
-Clicking save with no input in rename dialog throws error
+Offline system clicking save with no input in rename dialog throws error
     [Tags]    C41880    Threaded    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}
     Open Rename System Dialog
