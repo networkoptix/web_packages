@@ -23,24 +23,24 @@ Remove Temporary Users
     
 Check Special Hint
     [Arguments]    ${type}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
-    Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()="${type}"]
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Set Suite Variable    ${dropdown type}    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${type}']
+    Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${ADD USER MODAL}//nx-permissions-select//li//span[text()="${type}"]
     Wait Until Element is Visible    ${dropdown type}
     Sleep    1
     Click Link    ${dropdown type}/..
     ${type}    Convert To Uppercase    ${type}
     Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
     ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
     ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}

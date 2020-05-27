@@ -48,7 +48,7 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
 
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
@@ -87,11 +87,11 @@ Share button - opens dialog
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE MODAL}
-    Click Button    ${SHARE CLOSE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER MODAL}
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 
 #Sharing link for anonymous - first ask login, then show share dialog
 #    [Tags]    Threaded    Deprecated
@@ -100,9 +100,9 @@ Share button - opens dialog
 #    Log Out
 #    Go To    ${location}/share
 #    Log In    ${email}    ${password}    button=None
-#    Wait Until Element is Visible    ${SHARE MODAL}
-#    Click Button    ${SHARE CLOSE}
-#    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+#    Wait Until Element is Visible    ${ADD USER MODAL}
+#    Click Button    ${ADD USER CLOSE}
+#    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 #
 
 Check Cancel and 'X' buttons
@@ -111,42 +111,42 @@ Check Cancel and 'X' buttons
 
     Log    Check Cancel Button
     Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}/users
-    Wait until element is visible    ${SHARE BUTTON SYSTEMS}
-    Click Button  ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CANCEL}
-    Click Button    ${SHARE CANCEL}
-    Wait Until Element is Not Visible    ${SHARE MODAL}
+    Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
+    Click Button  ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
+    Click Button    ${ADD USER CANCEL}
+    Wait Until Element is Not Visible    ${ADD USER MODAL}
 
     Log    Check 'X' Button
-    Click Button  ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements are Visible    ${SHARE MODAL}    ${SHARE CLOSE}
-    Click Button    ${SHARE CLOSE}
-    Wait Until Element is Not Visible    ${SHARE MODAL}
+    Click Button  ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Element is Not Visible    ${ADD USER MODAL}
 
 Sharing roles are ordered: more access is on top of the list with options
     [Tags]    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Element    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Element is Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
-    Click Button    ${SHARE CLOSE}
-    Wait Until Page Does Not Contain Element    ${SHARE MODAL}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Element    ${ADD USER PERMISSIONS DROPDOWN}
+    Wait Until Element is Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
+    Click Button    ${ADD USER CLOSE}
+    Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
 
 When user selects role - special hint appears
     [Tags]    C41901    Threaded
     Log in to Auto Tests System    ${email}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
     FOR    ${type}    IN    @{USER TYPE LIST}
         Run Keyword Unless    "${type}"=="${OWNER TEXT}"    Check Special Hint    ${type}
     END
-    Click Button    ${SHARE CANCEL}
+    Click Button    ${ADD USER CANCEL}
 
 Admin cannot delete or edit self
     [Tags]    C41904    Threaded
@@ -168,15 +168,15 @@ Admin and owner cannot edit self and other users via share
 
         Log    Step 2
         Share To    ${EMAIL OWNER}    ${CUSTOM TEXT}    fail
-        Click Button    ${SHARE CANCEL}
+        Click Button    ${ADD USER CANCEL}
         Share To    ${EMAIL ADMIN}    ${LIVE VIEWER TEXT}    fail
-        Click Button    ${SHARE CANCEL}
+        Click Button    ${ADD USER CANCEL}
         Share To    ${EMAIL VIEWER}    ${ADV VIEWER TEXT}    fail
-        Click Button    ${SHARE CANCEL}
+        Click Button    ${ADD USER CANCEL}
         Share To    ${EMAIL ADV VIEWER}    ${CUSTOM TEXT}    fail
-        Click Button    ${SHARE CANCEL}
+        Click Button    ${ADD USER CANCEL}
         Share To    ${EMAIL CUSTOM}    ${VIEWER TEXT}    fail
-        Click Button    ${SHARE CANCEL}
+        Click Button    ${ADD USER CANCEL}
         Log Out
     END
 
@@ -207,17 +207,17 @@ Admin cannot invite another admin
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
     Sleep    2
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
     Wait Until Element is Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
+    ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
     Element Should Not Be Visible
-    ...    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE CANCEL}
+    ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER CANCEL}
 
 Edit permission works
     [Tags]    C41900
@@ -663,7 +663,7 @@ Local User Removed on Server is Removed From UI
     END
     Remove User    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${user id}
     Reload Page
-    Wait Until Element is Visible    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
     Page Should Not Contain    //span[text()="${user to delete}"]
     Delete All Local Users    //span[contains(text(),"ocal+")]
     

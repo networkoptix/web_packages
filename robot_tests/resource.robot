@@ -315,24 +315,24 @@ Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
     Sleep    1
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${email}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${email}
+    Wait Until Element Is Visible    ${ADD USER PERMISSIONS DROPDOWN}
     Sleep    1
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Button    ${SHARE BUTTON MODAL}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Button    ${ADD USER BUTTON MODAL}
     Run Keyword if    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${EMAIL IS ALREADY REGISTERED TEXT}")]    ${selenium timeout}
     ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
-    Wait Until Element Is Not Visible    ${SHARE MODAL}
+    Wait Until Element Is Not Visible    ${ADD USER MODAL}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
     Select user in Users List    ${user email address}
@@ -357,19 +357,19 @@ Check User Permissions
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT CUSTOM}
+    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
 
@@ -410,7 +410,7 @@ Remove User Permissions
 
 Select user in Users List
     [arguments]    ${user email address}
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${SHARE BUTTON SYSTEMS}   5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
     Run Keyword Unless    ${status}   Go To Users List
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
     Wait Until Element Is Visible    ${User In List}
@@ -538,11 +538,11 @@ Reset user noperm first/last name
     Close Browser
 
 Add notowner
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
-    Click Button    ${SHARE BUTTON MODAL}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${EMAIL NOT OWNER}
+    Click Button    ${ADD USER BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
     Check User Permissions    ${EMAIL NOT OWNER}    ${CUSTOM TEXT}
     Close Browser

@@ -125,7 +125,7 @@ ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@cla
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 ${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
 
-${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
+${ADD USER BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
 
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
 ${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
@@ -188,13 +188,13 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
-${SHARE MODAL}                        //form[@name='addUserForm']
-${SHARE EMAIL}                        ${SHARE MODAL}//input[@id='addUserEmail']
-${SHARE PERMISSIONS DROPDOWN}         ${SHARE MODAL}//nx-permissions-select//button[@id='permissionsSelect']
-${SHARE BUTTON MODAL}                 ${SHARE MODAL}//button[text()='${ADD BUTTON TEXT}']
-${SHARE CANCEL}                       ${SHARE MODAL}//button[text()='${CANCEL BUTTON TEXT}']
-${SHARE CLOSE}                        ${SHARE MODAL}//button[@data-dismiss='modal']
-${SHARE PERMISSIONS HINT}             ${SHARE MODAL}//span[contains(@class,'help-block')]
+${ADD USER MODAL}                        //form[@name='addUserForm']
+${ADD USER EMAIL}                        ${ADD USER MODAL}//input[@id='addUserEmail']
+${ADD USER PERMISSIONS DROPDOWN}         ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${ADD USER BUTTON MODAL}                 ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
+${ADD USER CANCEL}                       ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
+${ADD USER CLOSE}                        ${ADD USER MODAL}//button[@data-dismiss='modal']
+${ADD USER PERMISSIONS HINT}             ${ADD USER MODAL}//span[contains(@class,'help-block')]
 
 ${EDIT PERMISSIONS EMAIL}             //form[@name='shareForm']//input[@ng-model='user.email']
 ${EDIT PERMISSIONS DROPDOWN}          //form[@name='shareForm']//button[@id='permissionsSelect']

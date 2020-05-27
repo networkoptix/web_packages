@@ -63,7 +63,7 @@ Correct items are shown for owner
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}    ${MERGE BUTTON SYSTEM}
     Go To Users List
-    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 Correct items are shown for admin
     [Tags]    C41561    Threaded
@@ -72,7 +72,7 @@ Correct items are shown for admin
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
     Go To Users List
-    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    Threaded
@@ -84,7 +84,7 @@ Correct items are shown for advanced viewer and below
         Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Element Should Not Be Visible    ${RENAME SYSTEM}
-        Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
+        Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END
 
@@ -388,7 +388,7 @@ Share button should be disabled
     Wait Until Page Does Not Contain Element    //div[contains(@uib-modal-backdrop, "modal-backdrop")]
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}${DISABLED}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
 
 Open in nx button should be disabled
     [Tags]    C41881    Threaded    System-offline
@@ -503,7 +503,7 @@ Does not show Share button to viewer, advanced viewer, live viewer
     @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
     FOR    ${user}    IN    @{emails}
         Log in to Autotests 2 System    ${user}
-        Elements Should Not Be Visible    ${USERS LIST LINK}    ${SHARE BUTTON SYSTEMS}
+        Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END
 
