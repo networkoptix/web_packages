@@ -15,7 +15,7 @@ class CMSAdminSite(AdminSite):
         def force_agreement(request, *args, **kwargs):
             if request.user.is_authenticated and request.user.is_staff and not request.user.is_superuser:
                 agreement = ContributorAgreement.get_current()
-                if not agreement or \
+                if agreement and \
                         not ContributorAgreement.objects.filter(
                             user=request.user, accepted_agreement=agreement
                         ).exists():
