@@ -35,7 +35,7 @@ import {
     selector     : 'nx-block',
     templateUrl  : 'content-block.component.html',
     styleUrls    : ['content-block.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class NxContentBlockComponent implements OnInit {
     @Input('type') type: string;
@@ -48,8 +48,8 @@ export class NxContentBlockComponent implements OnInit {
     haveFooter: boolean;
     headerClasses: string;
 
-    @ViewChild('headerWrapper', { static: true }) headerWrapper: ElementRef;
-    @ViewChild('footerWrapper', { static: true }) footerWrapper: ElementRef;
+    @ViewChild('headerWrapper', {static: true}) headerWrapper: ElementRef;
+    @ViewChild('footerWrapper', {static: true}) footerWrapper: ElementRef;
 
     constructor() {
         this.haveHeader = true;

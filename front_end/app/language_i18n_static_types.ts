@@ -38,7 +38,6 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
-    license:               License;
     settingsConfig:        SettingsConfig;
 }
 
@@ -476,7 +475,6 @@ export interface ErrorCodes {
     wrongParameters:                        string;
     networkConnection:                      string;
     DO_NOT_USE_FORCES_INTERFACE_GENERATION: number;
-    licenseFail:                         string;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -539,51 +537,12 @@ export interface Feedback {
     c_Info:   string;
 }
 
-export interface License {
-    info:     Info;
-    messages: Messages;
-}
-
-export interface Info {
-    type:          string;
-    channels:      string;
-    server:        string;
-    hwid:          string;
-    status:        string;
-    expires:       string;
-    time:          string;
-    deactivations: string;
-    trial:         string;
-    online:        string;
-    error:         string;
-    expired:       string;
-    ok:            string;
-    digital:       string;
-    analog:        string;
-    edge:          string;
-    vmax:          string;
-    videowall:     string;
-    analogencoder: string;
-    starter:       string;
-    iomodule:      string;
-    bridge:        string;
-}
-
-export interface Messages {
-    required:       string;
-    activated:      string;
-    inuse:          string;
-    trialActivated: string;
-}
-
 export interface Menu {
     titles: MenuTitles;
 }
 
 export interface MenuTitles {
     systemAdministration: string;
-    general:              string;
-    licenses:             string;
     users:                string;
 }
 
@@ -1066,7 +1025,6 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
-        { json: "license", js: "license", typ: r("License") },
         { json: "settingsConfig", js: "settingsConfig", typ: r("SettingsConfig") },
     ], false),
     "AccessRoles": o([
@@ -1139,7 +1097,6 @@ const typeMap: any = {
         { json: "systemServerError", js: "systemServerError", typ: "" },
         { json: "systemServerErrorMessage", js: "systemServerErrorMessage", typ: "" },
         { json: "systemUnreachable", js: "systemUnreachable", typ: "" },
-        { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "" },
         { json: "unknown", js: "unknown", typ: "" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
@@ -1465,7 +1422,6 @@ const typeMap: any = {
         { json: "wrongParameters", js: "wrongParameters", typ: "" },
         { json: "networkConnection", js: "networkConnection", typ: "" },
         { json: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", js: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", typ: 0 },
-        { json: "licenseFail", js: "licenseFail", typ: "" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "" },
@@ -1524,47 +1480,11 @@ const typeMap: any = {
         { json: "b_Link", js: "b_Link", typ: "" },
         { json: "c_Info", js: "c_Info", typ: "" },
     ], false),
-    "License": o([
-        { json: "info", js: "info", typ: r("Info") },
-        { json: "messages", js: "messages", typ: r("Messages") },
-    ], false),
-    "Info": o([
-        { json: "type", js: "type", typ: "" },
-        { json: "channels", js: "channels", typ: "" },
-        { json: "server", js: "server", typ: "" },
-        { json: "hwid", js: "hwid", typ: "" },
-        { json: "status", js: "status", typ: "" },
-        { json: "expires", js: "expires", typ: "" },
-        { json: "time", js: "time", typ: "" },
-        { json: "deactivations", js: "deactivations", typ: "" },
-        { json: "trial", js: "trial", typ: "" },
-        { json: "online", js: "online", typ: "" },
-        { json: "error", js: "error", typ: "" },
-        { json: "expired", js: "expired", typ: "" },
-        { json: "ok", js: "ok", typ: "" },
-        { json: "digital", js: "digital", typ: "" },
-        { json: "analog", js: "analog", typ: "" },
-        { json: "edge", js: "edge", typ: "" },
-        { json: "vmax", js: "vmax", typ: "" },
-        { json: "videowall", js: "videowall", typ: "" },
-        { json: "analogencoder", js: "analogencoder", typ: "" },
-        { json: "starter", js: "starter", typ: "" },
-        { json: "iomodule", js: "iomodule", typ: "" },
-        { json: "bridge", js: "bridge", typ: "" },
-    ], false),
-    "Messages": o([
-        { json: "required", js: "required", typ: "" },
-        { json: "activated", js: "activated", typ: "" },
-        { json: "inuse", js: "inuse", typ: "" },
-        { json: "trialActivated", js: "trialActivated", typ: "" },
-    ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },
     ], false),
     "MenuTitles": o([
         { json: "systemAdministration", js: "systemAdministration", typ: "" },
-        { json: "general", js: "general", typ: "" },
-        { json: "licenses", js: "licenses", typ: "" },
         { json: "users", js: "users", typ: "" },
     ], false),
     "PageTitles": o([
