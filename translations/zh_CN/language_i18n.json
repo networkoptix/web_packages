@@ -184,7 +184,7 @@
     "When enabled, system will discover new cameras and servers. Also,\n                                    it will automatically and persistently send discovery requests to\n                                    cameras in order to get the camera's status update.\n                                    Failover enabled on some servers ignore status check prohibition.": "启用后，系统将发现新的摄像机和服务器。 而且， \n                            它将自动和持续地向 \n                            摄像机发送搜寻请求，以便获取摄像机状态更新。 \n                            在某些服务器上启用的故障转移功能将忽略状态检查禁令。",
     "Works with:": "适用于：",
     "Wrong password": "错误的密码。",
-    "You can only merge Systems where you are the owner.": "当您的权限为拥有者时，就可以合并系统",
+    "You can only merge Systems where you are the owner.": "当您的权限为所有者时，就可以合并系统",
     "You have registered in": "您已注册于",
     "Your Email": "您的电邮",
     "Your Name": "您的姓名",

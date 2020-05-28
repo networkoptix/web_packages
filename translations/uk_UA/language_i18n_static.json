@@ -7,7 +7,7 @@
 		"newPasswordLabel": "Новий пароль",
 		"saveChanges": "Зберегти",
 		"accountSettings": "Параметри Облікового Запису",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "Угода була прийнята"
 	},
 	"activeActions": {
 		"sendConfirm": "Відправити посилання активації ще раз",
@@ -441,7 +441,7 @@
 		"systemNoAlerts": "Немає попереджень",
 		"systemNoAlertsMessage": "Ваша система має добре працювати!",
 		"systemServerError": "Внутрішня помилка сервера",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemServerErrorMessage": "Сталася помилка, повторіть спробу пізніше. Якщо проблема залишиться, будь ласка, зв'яжіться з вашою командою підтримки.",
 		"systemNewVersion": "Оновіть вашу систему",
 		"systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
 		"systemHasNoCameras": "НЕМАЄ КАМЕР",

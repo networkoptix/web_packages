@@ -217,7 +217,7 @@
 			"connectToCloud": "請將要與此合併的系統連接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客戶端進行本機合併。",
 			"mergeConfirmation": "您即將合併系統 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。設定和名稱將取自 <strong>{{primarySystem}}</strong>。",
 			"mergeFailedTitle": "系統合併失敗",
-			"primaryCannotMerge": "系統 {{targetSystem}} 具有較新的軟件版本，與當前系統不相容。將當前系統更新至<a href=\"/download\" target=\"_blank\" translate>最新版本</a>，以將其與 {{targetSystem}} 系統合併。",
+			"primaryCannotMerge": "系統 {{targetSystem}} 的軟體版本較新，與當前系統不相容。請更新目前系統<a href=\"/download\" target=\"_blank\" translate>為最新版本</a>，再與 {{targetSystem}} 系統合併。",
 			"primarySystemOffline": "系統 {{primarySystem}} 處於離線狀態, 無法合併系統{{targetSystem}}。",
 			"secondaryCannotMerge": "系統 {{targetSystem}} 具有較舊的軟件版本，與當前系統不相容。請將 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以將與其當前版本合併。",
 			"systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
