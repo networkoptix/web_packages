@@ -1,6 +1,6 @@
 import {
     Component, Input, ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef, ElementRef
 }                                      from '@angular/core';
 import { NgbActiveModal }              from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }    from '../../services/nx-config';
@@ -79,9 +79,12 @@ export class MergeModalContent {
 
     @ViewChild('checkMergeDropdown') mergeDropdown: any;
     @ViewChild('serverUrlInput') serverUrlInput: any;
+    @ViewChild('checkMergeUrlInput') serverUrlInputFocus: ElementRef;
     @ViewChild('adminPasswordForm') adminPassword: HTMLFormElement;
+    @ViewChild('adminPasswordInput') adminPasswordInput: ElementRef;
     @ViewChild('primaryRadio') primaryRadio: any;
     @ViewChild('confirmMergeForm') confirmMergeForm: HTMLFormElement;
+    @ViewChild('confirmMergeInput') confirmMergeInput: ElementRef;
 
     constructor(
         configService: NxConfigService,
@@ -244,6 +247,7 @@ export class MergeModalContent {
                     template[clearText] = '';
                 });
         }
+        console.log('end of updateShow');
     }
 
     setTargetSystem(targetSystem, serverUrlInputValue = '') {
@@ -285,6 +289,9 @@ export class MergeModalContent {
             }
             this.setSystems();
             this.updateShow(showUpdate, templateUpdates);
+            if (this.machine.state.show.serverUrlInput) {
+                setTimeout(() => { this.serverUrlInputFocus.nativeElement.focus(); });
+            }
         }
     }
 
@@ -388,6 +395,7 @@ export class MergeModalContent {
                             { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
                         );
                     }
+                    this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                 }
             );
 
@@ -419,6 +427,7 @@ export class MergeModalContent {
                                     passwordErrorText : this.passwordWrong,
                                     passwordValue     : ''
                                 });
+                                this.adminPasswordInput.nativeElement.focus();
                             } else if (res.errorString) {
                                 if (this.machine.currentState !== this.serverUrlErrors) {
                                     this.machine.transition(this.serverUrlErrors);
@@ -436,6 +445,7 @@ export class MergeModalContent {
                         .catch(err => {
                             console.error(err);
                             this.updateShow('confirmPasswordError', { passwordErrorText: this.unknownError });
+                            this.adminPasswordInput.nativeElement.focus();
                         });
                 }
             }, { ignoreError: true });
@@ -464,9 +474,11 @@ export class MergeModalContent {
                     },
                     missingPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordRequired });
+                        this.confirmMergeInput.nativeElement.focus();
                     },
                     wrongPassword: () => {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
+                        this.confirmMergeInput.nativeElement.focus();
                     }
                 }
             })
@@ -492,10 +504,12 @@ export class MergeModalContent {
                 } else if (res.errorString === 'Wrong username or password.') {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong });
+                    this.confirmMergeInput.nativeElement.focus();
                 // wrong local admin password when checking VMS <= 4.0 systems
                 } else if (res.errorString === 'UNAUTHORIZED') {
                     this.confirmMergeForm.form.controls.cloudOwnerPassword.setErrors({ passwordWrong: true });
                     this.updateShow(this.confirmPasswordError, { passwordErrorText: 'adminPasswordWrong' });
+                    this.confirmMergeInput.nativeElement.focus();
                 } else if (res.errorString) {
                     res.resultCode = res.errorString.toLowerCase();
                     res.primarySystemName = this.primaryName;

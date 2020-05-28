@@ -36,6 +36,7 @@
             <input
                 class="mb-2 form-control"
                 #serverUrlInput="ngModel"
+                #checkMergeUrlInput
                 name="serverUrl"
                 id="serverUrl"
                 type="url"
@@ -84,6 +85,7 @@
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
+                    #adminPasswordInput
                     [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
                     id="adminPassword" autocomplete="new-password"
                     name="adminPassword" type="password" required
@@ -174,6 +176,7 @@
             <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"
+                    #confirmMergeInput
                     [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
                     id="cloudOwnerPassword" autocomplete="new-password"
                     name="cloudOwnerPassword" type="password" required
