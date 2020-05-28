@@ -67,7 +67,7 @@
                             aspect="override"
                             [preloader]="true" 
                             [state]="selectedCamera.status" 
-                            [url]="motionPreviewImage"
+                            [url]="preview + '&reload=' + (reload$ | async)"
                             [lightBackground]="true"></nx-health-image>
                     </div>
                     <div class="details">
@@ -205,7 +205,7 @@
                             [motionPreview]="true" 
                             [preloader]="true" 
                             [state]="selectedCamera.status" 
-                            [url]="motionPreviewImage"
+                            [url]="preview + '&reload=' + (reload$ | async)"
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
                         <nx-motion-detection-overlay 
