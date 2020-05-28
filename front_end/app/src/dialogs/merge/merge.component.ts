@@ -479,7 +479,8 @@ export class MergeModalContent {
                         this.updateShow(this.confirmPasswordError, { passwordErrorText: this.passwordWrong, passwordValue: '' });
                         this.confirmMergeInput.nativeElement.focus();
                     }
-                }
+                },
+                ignoreError: true
             })
             .then(res => {
                 if (res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
@@ -522,9 +523,12 @@ export class MergeModalContent {
                 }
             }, (error) => {
                 // for errors that pop up during the merge
-                const errorCode = error.resultCode || (error.data && error.data.resultCode);
+                let errorCode = error.resultCode || (error.data && error.data.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
+                }
+                if (!errorCode && error.name === 'TimeoutError') {
+                    errorCode = 'fail';
                 }
 
                 /** Get the names of the primary and secondary system.
