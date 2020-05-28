@@ -48,6 +48,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settingsSubscription: Subscription;
     settingsServiceSubscription: Subscription;
     systemSubscription: Subscription;
+    currentMergeInfo: any = undefined;
 
     settingsForSystem: any;
 
@@ -62,6 +63,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
+        if (this.system.mergeInfo) {
+            this.currentMergeInfo = this.system.mergeInfo;
+        } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+            this.currentMergeInfo = undefined;
+            this.systemsService.forceUpdateSystems().toPromise();
+        }
         const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {

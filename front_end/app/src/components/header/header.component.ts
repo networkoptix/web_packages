@@ -203,6 +203,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
+            if (this.systemsService.finishedMerged) {
+                this.systemsService.finishedMerged = false;
+                this.system.getInfo(true, false);
+            }
             if (!systems) {
                 return;
             }
