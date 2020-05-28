@@ -64,13 +64,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
-        // if (this.system.mergeInfo) {
-        //     this.currentMergeInfo = this.system.mergeInfo;
-        // } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
-        //     this.currentMergeInfo = undefined;
-        //     this.systemsService.forceUpdateSystems().toPromise();
-        // }
-        console.log('updateSettings called');
         const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
