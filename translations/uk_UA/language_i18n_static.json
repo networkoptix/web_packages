@@ -68,10 +68,10 @@
         "accountSavedSuccess": "Ваш обліковий запис успішно збережено",
         "accountSettings": "Параметри Облікового Запису",
         "activationLinkSent": "Посилання для активації відправлене",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Угода була прийнята",
         "changePassword": "Змінити пароль",
         "newPasswordLabel": "Новий пароль",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Пароль успішно збережено",
         "saveChanges": "Зберегти"
     },
     "activeActions": {
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Обліковий запис створено",
+                "message": "Повідомлення підтвердження з посиланням активації надсилається на {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Обліковий запис успішно активовано"
             }
         },
         "cameraLinks": {
@@ -128,24 +128,24 @@
             "unauthorized": "Потрібна авторизація"
         },
         "chromeCastWarning": "Chromecast ресурсоємний і може спричинити проблеми на вашому сервері.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Оновіть відсутні налаштування запису.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Завжди записувати",
+            "motion": "Запис тільки руху",
+            "motionLowRes": "Рух + Низька Якість"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Різні значення -",
             "auto": "Авто",
-            "best": "Best",
+            "best": "Найкраще",
             "high": "Високий",
-            "medium": "Medium",
+            "medium": "Середній",
             "low": "Низький"
         },
-        "general": "General",
+        "general": "Загальні",
         "searchCamPlaceholder": "Пошук",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Немає камер",
+        "systemHasNoCamerasMessage": "Немає доступних камер для вас у системі. <br><br>підключіть кілька камер до локальної мережі сервера, щоб зробити їх видимими, або попросіть системного адміністратора змінити ваш рівень доступу.",
         "systemNewVersion": "Оновіть вашу систему",
         "systemNewVersionMessage": "Ваша поточна версія несумісна з цією функцією. Будь ласка, оновіть ваші сервери до останньої версії, щоб використовувати цю функцію.",
         "systemNoAlerts": "Немає попереджень",
@@ -153,7 +153,7 @@
         "systemOffline": "Система знаходиться поза мережею",
         "systemOfflineMessage": "Ця система не доступна, тому її зараз не можна відкрити.",
         "systemServerError": "Внутрішня помилка сервера",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Сталася помилка, повторіть спробу пізніше. Якщо проблема залишиться, будь ласка, зв'яжіться з вашою командою підтримки.",
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "unknown": "Невідомо",
         "voiceCommands": {
@@ -170,14 +170,14 @@
             "stop listening": "припинити прослуховування",
             "view": "перегляд + [назва камери]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Ви переглядаєте застарілий звіт."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Скасувати",
             "createAccount": "Створити новий обліковий запис",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Видалити",
+            "deleteAccount": "Видалити обліковий запис",
             "download": "Завантажити %VMS_NAME%",
             "logoutAuthorised": "Вийти",
             "ok": "Добре",
@@ -186,30 +186,30 @@
             "stayLoggedIn": "Залишайтеся в системі"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Хмарне сховище",
+            "enableStorage": "Увімкнути хмарне сховище",
+            "otherSystem": "Інша система...",
+            "initial": "Ми пропонуємо {{compCapacity}} безкоштовних хмарних сховищ у кожній системі.",
+            "available": "Розташування хмарного сховища доступне для всіх серверів в системі. Ви можете керувати ним за допомогою настільного {{vmsName}} клієнта.",
+            "camera": "камера",
+            "cameras": "камери",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Хмарне сховище успішно видалено із системи",
+                "errorPrefix": "Помилка при видаленні хмарного сховища"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Не вдалося увімкнути хмарне сховище",
+                "message": "У ваших системах уже додано <volume> хмарних сховищ і неможливо додати більше. <br/><br/>Натомість ви можете видалити сховище з іншої системи або перемістити його в цю. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Не вдалося відключити систему від %CLOUD_NAME%",
+                "message": "Ця система має хмарне сховище з деякими архівами на ній. <br/><br/>Хмарне сховище потрібно видалити вручну перед відключенням системи від %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Перемістити хмарне сховище",
+                "success": "Накопичувач успішно переміщено",
+                "errorPrefix": "Помилка переміщення хмарного сховища",
+                "notFound": "Сховище не знайдено. Сховище було переміщено або видалено іншим користувачем",
                 "status": {
                     "offline": "Cloud storage cannot be moved to offline systems."
                 }
@@ -685,7 +685,7 @@
             },
             "merge": {
                 "failed": "Не вдалося об’єднати систему",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Об'єднання систем {{primaryName}} і {{secondaryName}} завершено"
             },
             "rename": {
                 "success": "Ім'я системи збережено"

@@ -685,7 +685,7 @@
             },
             "merge": {
                 "failed": "Systemsammanslagning misslyckades",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Sammanslagningen av system {{primaryName}} och {{secondaryName}} slutförd"
             },
             "rename": {
                 "success": "Systemnamnet sparat"
