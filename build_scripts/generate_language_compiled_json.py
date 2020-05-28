@@ -94,11 +94,8 @@ def prep_json_for_pluralization(adict):
         if type(adict[key]) is dict:
             prep_json_for_pluralization(adict[key])
         else:
-            list_of_matches = re.findall(r'{{[#\s\w]+}}', adict[key])
-            for match in list_of_matches:
-                m_len = len(match)
-                idx = adict[key].find(match)
-                adict[key] = adict[key][:idx] + adict[key][idx + 1:][:m_len - 2] + adict[key][idx + m_len:]
+            for match in re.findall(r'{{[#\s\w]+}}', adict[key]):
+                adict[key] = adict[key].replace(match, match[1:-1])
 
 
 languages = sys.argv[1:]

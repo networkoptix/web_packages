@@ -233,7 +233,7 @@ do
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
             if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
-                echo "Virtualenv not activated. Proxy configuration not updated!"
+                echo "Py3 not found. Likely virtualenv is not activated. Proxy configuration is not updated!"
             else
                 python update_proxy.py
             fi
