@@ -13,6 +13,7 @@ export interface LanguageI18NStaticTypes {
     Integrations:          string;
     Privacy:               string;
     Support:               string;
+    "Supported Devices":   string;
     Terms:                 string;
     accessRoles:           AccessRoles;
     account:               LanguageI18NStaticTypesAccount;
@@ -1000,6 +1001,7 @@ const typeMap: any = {
         { json: "Integrations", js: "Integrations", typ: "" },
         { json: "Privacy", js: "Privacy", typ: "" },
         { json: "Support", js: "Support", typ: "" },
+        { json: "Supported Devices", js: "Supported Devices", typ: "" },
         { json: "Terms", js: "Terms", typ: "" },
         { json: "accessRoles", js: "accessRoles", typ: r("AccessRoles") },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },

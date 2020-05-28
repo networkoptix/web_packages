@@ -47,7 +47,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settings: Settings;
     settingsSubscription: Subscription;
     settingsServiceSubscription: Subscription;
+    systemsSubscription: Subscription;
     systemSubscription: Subscription;
+    currentMergeInfo: any = undefined;
 
     settingsForSystem: any;
 
@@ -62,6 +64,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     private updateSettings(forceMergeState?: boolean) {
+        // if (this.system.mergeInfo) {
+        //     this.currentMergeInfo = this.system.mergeInfo;
+        // } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+        //     this.currentMergeInfo = undefined;
+        //     this.systemsService.forceUpdateSystems().toPromise();
+        // }
+        console.log('updateSettings called');
         const merging = this.system && typeof this.system.mergeInfo !== 'undefined' || forceMergeState;
         const notAvailable = this.system && (!this.system.isOnline || !this.system.isAvailable);
         this.settings = {
@@ -131,6 +140,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
+                        this.synceMergeAlerts();
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
@@ -149,6 +159,27 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     () => { this.updateAndGoToSystems(); },
                     error => error
                 );
+            });
+    }
+
+    synceMergeAlerts() {
+        if (this.system.mergeInfo) {
+            this.currentMergeInfo = this.system.mergeInfo;
+        } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+            this.currentMergeInfo = undefined;
+            this.systemsService.forceUpdateSystems().toPromise();
+        }
+
+        if (this.systemsSubscription) {
+            this.systemsSubscription.unsubscribe();
+        }
+        this.systemsSubscription = this.systemsService.systemsSubject
+            .subscribe(() => {
+                if (this.systemsService.finishedMerged) {
+                    this.systemsService.finishedMerged = false;
+                    console.log('system getInfo triggered');
+                    this.system.getInfo(true, false);
+                }
             });
     }
 
@@ -258,6 +289,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
+                this.synceMergeAlerts();
                 this.settingsService.system = this.system;
             });
     }
