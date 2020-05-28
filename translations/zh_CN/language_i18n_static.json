@@ -219,59 +219,59 @@
                 "errorPrefix": "启用云存储时发生错误"
             },
             "noOtherSystemsError": {
-                "message": "云存储仅能在您为该系统所有者的系统间移动。 <br/><br/>请使用您的云帐号系统连接到 %CLOUD_NAME%，以便将云存储移至该系统。"
+                "message": "云存储仅能在您为该系统拥有者的系统间移动。 <br/><br/>请使用您的云帐号系统连接到 %CLOUD_NAME%，以便将云存储移至该系统。"
             }
         },
         "merge": {
-            "adminPasswordTitle": "请输入密码于所有者帐号中 <strong>{{secondarySystem}}</strong>",
+            "adminPasswordTitle": "请输入密码于拥有者帐号中 <strong>{{secondarySystem}}</strong>",
             "adminPasswordWrong": "本地管理员用户密码错误",
             "checking": "检查中...",
             "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
             "connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
-            "differentOwners": "所选系统和当前系统都连接到 %CLOUD_NAME% 并且分属不同的所有者。仅当所有者帐户相同时，才可以合并云系统。",
-            "duplicateServers": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
-            "enterSystemAddressTitle": "请输入服务器地址于合并该服务器的系统中。",
-            "mergeConfirmation": "<p class=\"mb-0\">系统即将合并<strong>{{primarySystem}}</strong>和<strong>{{secondarySystem}}</strong>。</p><p>设置和名称将取自<strong>{{primarySystem}}</strong>。</p>",
-            "mergeSystemsTitle": "合并当前系统",
+            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
+            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "系统合并失败",
-            "noServerFound": "找不到服务器",
-            "newSystemDisplayName": "新系统",
-            "otherSystem": "其它系统...",
-            "ownerCanMergeText": "当您的权限为所有者时，便可以合并系统",
+            "noServerFound": "No server found",
+            "newSystemDisplayName": "New System",
+            "otherSystem": "Other System...",
+            "ownerCanMergeText": "You can only merge Systems where you are the owner",
             "passwordRequired": "密码为必填项",
             "passwordWrong": "错误的密码。",
             "primaryCannotMerge": "系统 {{targetSystem}} 具有较新的软件版本，与当前系统不兼容。请将当前系统更新为 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 将其与 {{targetSystem}} 系统合并。",
-            "primarySystemOffline": "系统 {{primarySystem}} 处于离线状态，无法合并系統{{targetSystem}}",
-            "primarySystemUnavailable": "系统{{primarySystem}} 目前无法连上。请稍后再试一次, 或联系<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
+            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
+            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "建议您咨询",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "技术支持",
                 "c_proceeding": "在继续执行之前："
             },
             "secondaryCannotMerge": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
-            "secondarySystemUnavailable": "系统{{targetSystem}} 目前无法连上。请稍后再试一次, 或联系<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-            "serverAtUrl": "服务器在 {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">无法访问系统 {{targetSystem}} 。</p><p>请确保指定的服务器在线，然后重试。</p>",
-            "serverNotYours": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
-            "serverVersionOld": "该服务器的软件版本较旧，与当前系统不兼容。请更新为最新版本再行合并。",
-            "serverVersionNew": "此服务器的软件版本比当前系统更新。请将两个系统更新到同一版本再行合并。",
-            "systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
-            "systemOfflineUrl": "无法访问{{targetSystem}}",
-            "systemsIncompatible": "该服务器软件版本不兼容。请将两个系统更新为同一版本再行合并。",
+            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "serverAtUrl": "server at {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
+            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
+            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
+            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
-            "systemVersionNew": "系统 {{targetSystem}} 的软件版本较新，与当前系统不相容。请更新目前系统<a href=\"/download\" target=\"_blank\" translate>为最新版本</a>，再与 {{targetSystem}} 系统合并。",
-            "urlEmpty": "输入服务器地址",
-            "urlNotValid": "请输入有效的URL。",
-            "unknownError": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-            "warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
+            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "urlEmpty": "Enter server address",
+            "urlNotValid": "Enter valid URL",
+            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
-            "storageSettingsSaved": "存储设置已保存。",
-            "storageSettingsNotSaved": "无法保存存储设置。",
-            "settingsSaved": "设置已保存.",
-            "settingsNotSaved": "无法保存设置。",
-            "logLevelsSaved": "日志级别已保存。",
-            "logLevelsNotSaved": "无法保存日志级别。",
+            "storageSettingsSaved": "Storage settings saved.",
+            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "settingsSaved": "Settings saved.",
+            "settingsNotSaved": "Couldn't save settings.",
+            "logLevelsSaved": "Log level(s) saved.",
+            "logLevelsNotSaved": "Couldn't save log level(s).",
             "failedToSend": "訊息无法发送。",
             "placeholders": {
                 "feedback": "请确保已包含您的摄像机型号和制造商..."
@@ -297,18 +297,18 @@
         },
         "titles": {
             "error": "错误",
-            "success": "成功",
+            "success": "Success",
             "changeAccount": "您已经以{email} 的身份登录。",
-            "deleteUser": "删除用户？",
+            "deleteUser": "Delete user?",
             "loggedFromOtherAccount": "您将使用其他帐户登录",
             "noClientDetected": "安装%VMS_NAME%来查看您的系统",
             "removeUser": "是否删除用户？",
-            "serversDetach": "从系统分离服务器\"{{ title }}\"?",
-            "serversReset": "将服务器“{{ title }}”重置为默认值？",
-            "serversRestart": "重启服务器“{{ title }}”？"
+            "serversDetach": "Detach server \"{{ title }}\" from current system?",
+            "serversReset": "Reset server \"{{ title }}\" to defaults?",
+            "serversRestart": "Restart server \"{{ title }}\"?"
         },
         "tooltips": {
-            "deleteAccount": "请经由%CLOUD_NAME%断开您为所有者的全部系统，以删除您的帐户。"
+            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
         }
     },
     "downloads": {
@@ -384,23 +384,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
         "EmailAlreadyExists": "此电子邮件已被注册",
         "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-        "INCOMPATIBLE": "系统的软件版本不相容。请更新为 <a href=\"/download\">最新版本</a>。",
-        "cloud_systems_have_different_owners": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
-        "fail": "找不到服务器",
-        "incompatible": "该服务器软件版本不兼容。请将两个系统更新为同一版本再行合并。",
-        "unknown_error": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "No server found",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "此帐户已激活",
         "accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
         "accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
         "alreadyExists": "此帐户已存在",
         "brokenAccount": "帐户出现意外问题。 <a href=\"/restore_password\">恢复帐户</a>",
         "cantActivatePrefix": "无法激活您的帐户",
-        "cantAddYourOwnEmail": "不允许添加自己的电子邮件",
+        "cantAddYourOwnEmail": "Adding your own email is not allowed",
         "cantChangeAccountPrefix": "无法保存更改",
         "cantChangePasswordPrefix": "无法保存密码",
         "cantDisconnectSystemPrefix": "不能删除系统",
@@ -427,7 +427,7 @@
         "oldSafariNotSupported": "不支持10岁以上的Safari版本",
         "passwordMismatch": "错误的密码。",
         "thisSystem": "系统",
-        "unknownError": "发生意外错误",
+        "unknownError": "Unexpected error occurred",
         "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
         "wrongAuthCode": "代码已过期或不正确",
         "wrongCode": "已经激活帐户或确认码不正确",
@@ -473,22 +473,22 @@
         "isAptzSupported": "高级PTZ",
         "isAptzSupportedShort": "高级PTZ",
         "isAudioSupported": "音频",
-        "isDualStreamingSupported": "双串流",
+        "isDualStreamingSupported": "Dual Streaming",
         "isFisheye": "鱼眼",
         "isH265": "H.265",
         "isIoSupported": "I/O",
-        "isMdSupported": "移动侦测",
+        "isMdSupported": "Motion Detection",
         "isMultiSensor": "多传感器",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "双向音频",
-        "maxFps": "FPS（最大值)",
-        "maxResolution": "分辨率（最大）",
+        "isTwAudioSupported": "2-Way Audio",
+        "maxFps": "FPS(max)",
+        "maxResolution": "Resolution(max)",
         "model": "型号",
         "multiSensorCamera": "多传感器摄像机",
         "other": "其它",
         "primaryCodec": "编码器",
         "resolutionArea": "区域",
-        "sndResolution": "次码流",
+        "sndResolution": "Secondary Stream",
         "topXByVolume": "以量排名 {{value}}：",
         "vendor": "制造商"
     },
@@ -509,7 +509,7 @@
         "default": "%CLOUD_NAME%",
         "download": "下载 %VMS_NAME%",
         "downloadPlatform": "下载 %VMS_NAME% ",
-        "failedToAccessSystem": "无法访问系统",
+        "failedToAccessSystem": "Failed to access system",
         "integrations": "集成",
         "login": "登录",
         "pageNotFound": "找不到页面",
@@ -542,20 +542,20 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "无法加载此页面",
-            "message": "请确保您的服务器在线，然后重试。"
+            "title": "This page cannot be loaded",
+            "message": "Please make sure that your servers are online and try again."
         },
         "merge": {
-            "title": "此系统正合并到 {{systemName}}。",
+            "title": "This system is being merged to {{systemName}}.",
             "message": {
-                "dependingOnSize": "根据录影资料的大小，可能会花费数小时",
-                "untilFinished": "在合并完成前，您可以登录到此系统并观看视频，但无法更改任何配置",
-                "whenFinished": "合并完成后, 此系统中的所有用户和摄相机都将可用于{{systemName}}, 同时此系统将被删除"
+                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
+                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
+                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
             }
         },
         "server": {
-            "title": "无法访问服务器",
-            "message": "系统处于离线状态，无法访问服务器。"
+            "title": "Server not accessible",
+            "message": "System is offline and hence, servers are not accessible."
         }
     },
     "pleaseSelect": "请选择...",
@@ -571,7 +571,7 @@
             "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "完成系统合并",
+        "finishingMerge": "Finishing systems merge",
         "integration": {
             "backToEditText": "返回编辑界面",
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。"
@@ -595,7 +595,7 @@
         "vendors": "制造商"
     },
     "servers": {
-        "beginDetach": "服务器正在分离",
+        "beginDetach": "Server is now detaching",
         "beginReset": "Server is now reseting.",
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
@@ -605,13 +605,13 @@
         "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
         "restartFailed": "There was a problem restarting the server.",
         "restartSuccessful": "Server has successfully restarted.",
-        "serverOffline": "服务器已离线.",
-        "servers": "服务器",
+        "serverOffline": "Server is offline.",
+        "servers": "Servers",
         "status": {
-            "checking": "检查中...",
+            "checking": "checking...",
             "offline": "离线",
-            "reseting": "重置中...",
-            "restarting": "重启中……"
+            "reseting": "reseting...",
+            "restarting": "restarting..."
         },
         "successRename": "Server name saved."
     },
