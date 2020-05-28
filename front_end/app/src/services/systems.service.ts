@@ -26,7 +26,6 @@ export class NxSystemsService implements OnDestroy {
     systems: any;
     systemsPoll: any;
     systemsSubject = new ReplaySubject(0);
-    finishedMerged = false;
     systemsMerging: { primary: any, secondary: any } = {
         primary   : undefined,
         secondary : undefined
@@ -64,17 +63,12 @@ export class NxSystemsService implements OnDestroy {
             const message = this.LANG.toastMessage.system.merge.success
                 .replace('{{primaryName}}', this.systemsMerging.primary.name)
                 .replace('{{secondaryName}}', this.systemsMerging.secondary.name);
-            this.systemsMerging = {
-                primary   : undefined,
-                secondary : undefined
-            };
             const options = {
                 autohide  : true,
                 classname : this.CONFIG.toast.success,
                 delay     : this.CONFIG.alertTimeout
             };
             this.toastService.show(message, options);
-            this.finishedMerged = true;
         }
     }
 
@@ -184,6 +178,10 @@ export class NxSystemsService implements OnDestroy {
                     this.ribbonService.hide();
                 }
                 this.removeFromMergeList(system.id);
+                this.systemsMerging = {
+                    primary   : undefined,
+                    secondary : undefined
+                };
             }
         });
     }
