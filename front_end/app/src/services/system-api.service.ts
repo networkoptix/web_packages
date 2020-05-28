@@ -571,6 +571,21 @@ export class NxSystemAPI {
         };
         return this.http.get(`${localPasswordUrl}/api/`, httpOptions);
     }
+
+    getNonce() {
+        return this.get('/api/getNonce');
+    }
+
+    deprecatedMergeSystems(url: string, getKey: string, postKey: string, currentPassword: string) {
+        const data = {
+            getKey,
+            postKey,
+            currentPassword,
+            takeRemoteSettings: false,
+            url
+        };
+        return this.post('/api/mergeSystems', data);
+    }
 }
 
 @Injectable({

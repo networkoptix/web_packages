@@ -1,6 +1,4 @@
-@import '../../../styles/native-theme/_theme_palette';
-@import '../../../styles/_theme_palette';
-@import '../../../styles/custom/_custom_palette';
+@use '../../../styles/theme_variables' as *;
 
 .mainGrid {
     display : grid;

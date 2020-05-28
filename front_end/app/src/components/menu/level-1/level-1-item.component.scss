@@ -1,12 +1,10 @@
-@import '../../../../styles/custom/custom_palette';
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 
 $item_height : 40px;
 
 .menu-level-1 {
-    @extend #medium15;
+    @include typography.medium15;
     position         : relative;
     line-height      : $item_height;
     background-color : $additional_light2;

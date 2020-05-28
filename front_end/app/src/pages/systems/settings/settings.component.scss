@@ -1,40 +1,40 @@
-@import '../../../styles/typography';
-@import '../../../../styles/theme_variables';
-@import '~bootstrap/scss/bootstrap';
-@import '../../../styles/buttons';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as variables;
+@use '../../../styles/buttons' as buttons;
+@use '~bootstrap/scss/bootstrap';
 
 nx-block {
   .user-email,
   .system-name {
-    font-family: $font-family-medium;
+    font-family: variables.$font-family-medium;
   }
 
   .user-name,
   .system-owner {
-    @extend #regular13;
+    @include typography.regular13;
   }
 
   .name {
-    font-family: $font-family-bold;
+    font-family: variables.$font-family-bold;
   }
 }
 
 .fixed-sidebar{
-  @include media-breakpoint-down(sm) {
+  @include bootstrap.media-breakpoint-down(sm) {
     height: auto !important;
   }
 
   // replicate col-md-4
-  @include media-breakpoint-up(md) {
+  @include bootstrap.media-breakpoint-up(md) {
     position: fixed;
     left: 0;
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 3)
+    width: calc((100% - (#{variables.$grid-gutter-width} + #{variables.$scrollbar-height})) / 3)
   }
 
   // replicate col-xl-3
-  @include media-breakpoint-up(xl) {
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4);
-    max-width:  calc((#{$fluid-container-max-width} - #{$grid-gutter-width}) / 4);
+  @include bootstrap.media-breakpoint-up(xl) {
+    width: calc((100% - (#{variables.$grid-gutter-width} + #{variables.$scrollbar-height})) / 4);
+    max-width:  calc((#{variables.$fluid-container-max-width} - #{variables.$grid-gutter-width}) / 4);
   }
   nx-menu {
     max-height: 100%;

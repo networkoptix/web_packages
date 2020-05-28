@@ -1,9 +1,10 @@
-@import 'styles/_theme_variables';
+@use 'styles/_theme_variables';
+@forward 'src/styles/_buttons';
+@forward 'src/styles/_mixins';
 
 // Common
-@import 'src/styles/_mixins';
-@import 'src/styles/_typography';
-@import 'src/styles/_buttons';
+// @import 'src/styles/_typography';
+@import 'src/styles/typography_defaults';
 @import 'src/styles/_forms';
 @import 'src/styles/_inputs';
 @import 'src/styles/_labels';
@@ -22,11 +23,11 @@
 
 nx-app {
     .headerPadding {
-        padding-top : $navbar-height;
+        padding-top : theme_variables.$navbar-height;
     }
     
     .headerAndRibbonPadding {
-        padding-top : $navbar-height + 32px;
+        padding-top : theme_variables.$navbar-height + 32px;
     }
     
     .placeholder {

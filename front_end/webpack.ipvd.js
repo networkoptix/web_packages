@@ -89,11 +89,11 @@ module.exports = {
             'screenfull': 'screenfull',
             'jquery-mousewheel': 'jquery-mousewheel'
         }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'commons',
-            filename: 'scripts/commons.[hash].js',
-            minChunks: 2
-        })
+        // new webpack.optimize.CommonsChunkPlugin({
+        //     name: 'commons',
+        //     filename: 'scripts/commons.[hash].js',
+        //     minChunks: 2
+        // })
     ],
     resolve: {
         extensions: ['.ts', '.js'],

@@ -112,7 +112,7 @@
     "PASSWORD IS FAIR BADGE TEXT": "ZAYIF",
     "PASSWORD IS GOOD BADGE TEXT": "İYİ",
     "PASSWORD INCORRECT BADGE TEXT": "YANLIŞ",
-    "IPVD SEARCH PLACEHOLDER TEXT": "Search",
+    "IPVD SEARCH PLACEHOLDER TEXT": "Arama",
     "IPVD FILTERS APPLIED TEXT": "filtreler uygulandı",
     "IPVD FILTERS ANALYTICS TEXT": "analiz Etkinliği",
     "IPVD FILTERS SELECTED TEXT": "seçildi",
@@ -251,5 +251,6 @@
     "SERVER NAME REQUIRED": "Sistem adı zorunludur",
     "SERVER NAME SAVED": "Sunucu adı kaydedildi.",
     "CHANGE PASSWORD BUTTON TEXT": "Parola Değiştir",
-    "DELETE USER TEXT": "Kullanıcıyı sil"
+    "DELETE USER TEXT": "Kullanıcıyı sil",
+    "LOGIN IS REQUIRED TEXT": "Login is required"
 }

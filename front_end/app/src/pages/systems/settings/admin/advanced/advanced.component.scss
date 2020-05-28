@@ -1,9 +1,9 @@
-@import "../../../../../styles/typography";
-@import "../../../../../../styles/theme_palette";
+@use "../../../../../styles/typography";
+@use "../../../../../../styles/theme_variables" as *;
 
 .server-info {
-    font-family : $font-family-regular;
-    font-size   : $font-size-base;
+    font-family : typography.$font-family-regular;
+    font-size   : typography.$font-size-base;
     color       : $dark9;
 
     .header-top-bar {
@@ -17,14 +17,14 @@
             flex-grow   : 1;
 
             h2 {
-                font-family : $font-family-regular;
+                font-family : typography.$font-family-regular;
                 height      : 32px;
                 font-weight : bold;
                 font-size   : 24px;
             }
 
             .tag {
-                @extend #medium11;
+                @include typography.medium11;
                 margin-left    : 8px;
                 color          : $light1;
                 padding        : 4px 8px;
@@ -33,7 +33,7 @@
             }
 
             .online {
-                background-color : $brand_core;
+                background-color : typography.$brand_core;
             }
 
             .offline {
@@ -47,7 +47,7 @@
     }
 
     .header-table {
-        font-size    : $font-size-base;
+        font-size    : typography.$font-size-base;
         padding-left : 0;
 
         .header-table-cell {
@@ -56,7 +56,7 @@
             align-items : flex-end;
 
             .cell-title {
-                @extend #regular13;
+                @include typography.regular13;
             }
 
             .cell-ellipsis {
@@ -90,13 +90,13 @@
 }
 
 .text-muted {
-    @extend #regular11;
+    @include typography.regular11;
     color : $light16 !important;
     line-height: 1.5;
 }
 
 .help-block {
-    @extend #regular11;
+    @include typography.regular11;
     color            : $error;
     padding          : .25rem 0 .5rem;
     background-color : transparent;

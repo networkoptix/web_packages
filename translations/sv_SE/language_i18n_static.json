@@ -61,7 +61,8 @@
         "viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
             "label": "Tittare"
-        }
+        },
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "account": {
         "accountSavedSuccess": "Ditt konto har sparats",
@@ -223,12 +224,13 @@
         },
         "merge": {
             "adminPasswordTitle": "Ange lösenord till ägarens konto i <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Fel lösenord för lokal administratörsanvändare",
             "checking": "Kontrollerar...",
             "commonText": "Misslyckades med att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Anslut system du vill slå samman med den här till <strong>{{cloudName}}</strong> eller slå ihop lokalt med <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Både det valda och det aktuella systemet är anslutna till %CLOUD_NAME% och har olika ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "duplicateServers": "<p class=\"mb-2\">Det ser ut som att en server listar sig själv under både det valda och det aktuella systemet.</p><p>Ta bort offline- och inkompatibla servrar från varje system och försök igen.</p>",
-            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i systemet som du vill slå samman med den här.",
+            "enterSystemAddressTitle": "Ange adressen till vilken server som helst i det system som du vill slå ihop med denna.",
             "mergeConfirmation": "<p class=\"mb-0\">Du håller på att slå samman system <strong>{{primarySystem}}</strong> och <strong>{{secondarySystem}}</strong>.</p><p>Inställningar och namnet kommer från <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Slå samman aktuellt system med",
             "mergeFailedTitle": "Systemsammanslagning misslyckades",
@@ -242,7 +244,7 @@
             "primarySystemOffline": "System {{primarySystem}} är offline och kan inte slås samman med System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} närvarande inte nås. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "Vi rekommenderar att vi konsulterar med",
+                "a_recommend": "Vi rekommenderar att du rådgör med",
                 "b_support": "support",
                 "c_proceeding": "innan fortsättning."
             },
@@ -386,7 +388,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Några server listas som befintliga i båda systemen – i den valda och i den nuvarande.<br>ta bort offline och oförenliga servrar från varje System och försök igen.",
         "EmailAlreadyExists": "Denna e-postadress är redan registrerad",
         "FAIL": "System <strong>{{failedSystem}}</strong> är för närvarande oåtkomligt.<br>Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste version</a>.",
+        "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste versionen</a>.",
+        "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
+        "fail": "Ingen server hittades",
+        "incompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
+        "unknown_error": "Ett okänt fel inträffade. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Detta konto är redan aktiverat",
         "accountBlocked": "Det här kontot är tillfälligt blockerat. Vänligen försök igen om några minuter.",
         "accountNotActivated": "Det här kontot är inte aktiverat än. <a href=\"/activate\">Skicka aktiveringslänk igen</a>",
@@ -426,7 +433,8 @@
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
-        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
+        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning.",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",
@@ -677,7 +685,7 @@
             },
             "merge": {
                 "failed": "Systemsammanslagning misslyckades",
-                "success": "Systemsammanslagning slutförd"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "Systemnamnet sparat"
@@ -777,6 +785,7 @@
         "watermarkSettings": "Vattenmärkesinställningar",
         "maxWebMTranscoders": "Max antal WEBM-anslutningar för servern. Chrome öppnar 2 anslutningar samtidigt och stänger sedan den första. Så det rekommenderas att ange värdet> = 2 till denna parameter.",
         "maxEventLogRecords": "Maximala händelseloggposter för att hålla i databasen. Den verkliga mängden obestängda poster kan vara upp till 20% högre än det angivna värdet.",
-        "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran)."
+        "forceLiveCacheForPrimaryStream": "Om du vill cacha några ramar för den primära strömmen. Värden: \"ja\" - alltid aktiverat (kan använda en hel del RAM), \"nej\" - inaktiveras alltid utom när det krävs av uppspelningen (e.. HLS), \"auto\" - liknande \"nej\", men påslagen när förbättrar användarupplevelsen (t.ex. när vissa Analytics plugin fungerar på kameran).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

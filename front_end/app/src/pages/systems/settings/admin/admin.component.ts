@@ -41,6 +41,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     userDisconnectSystem: any;
     deletingSystem: any;
     currentlyMerging = false;
+    systemLoaded = false;
     debugMode: boolean;
     betaMode: boolean;
     settings: Settings;
@@ -108,7 +109,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
-            .pipe(filter((system) => system !== undefined))
+            .pipe(filter((system) => {
+                this.systemLoaded = system !== undefined;
+                return this.systemLoaded;
+            }))
             .subscribe((system) => {
                 this.system = system;
                 this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);

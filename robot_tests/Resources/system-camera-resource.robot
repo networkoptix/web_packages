@@ -12,7 +12,7 @@ Verify on Cameras Page
     ...    ${ROTATION DROPDOWN}
     ...    ${ENABLE AUDIO CHECKBOCK}
     ...    ${EDIT CREDENTIALS BUTTON}
-    ...    ${RECORING CHECK BOX}
+    ...    ${RECORDING CHECK BOX}
 
 Verify Recording Options are Visible
     Wait Until Elements are Visible
@@ -31,7 +31,8 @@ Verify Authentication Form
     ...    ${EDIT CREDENTIALS SAVE BUTTON}
 
 Enable Recording
-    Set Checkbox Value    ${RECORING CHECK BOX}//input    true
+    Wait Until Element Is Visible    ${ENABLED RECORDING SLIDER}
+    Click Element    ${RECORDING CHECK BOX}
 
 Select Camera By Name
     [Arguments]    ${camera name}

@@ -1,4 +1,4 @@
-@import 'theme_variables';
+@use 'theme_variables' as *;
 
 $dark-color:         $dark1;
 $light-color:        $body-bg;

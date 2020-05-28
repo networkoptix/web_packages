@@ -21,50 +21,34 @@ Remove Temporary Users
     # Run Keyword And Continue On Failure     Delete All Local Users    //span[contains(text(),"ocal+")]
     # Close Browser
     
-Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-
-Check System Text
-    [Arguments]    ${user}
-    Log Out
-    Log in to Auto Tests System    ${user}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]
-    
 Check Special Hint
     [Arguments]    ${type}
-    Wait Until Element is Visible    ${SHARE PERMISSIONS DROPDOWN}
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${type}']
-    Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${SHARE MODAL}//nx-permissions-select//li//span[text()="${type}"]
+    Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Set Suite Variable    ${dropdown type}    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${type}']
+    Run Keyword If    "${LANGUAGE}"=="nl_NL"    Set Suite Variable    ${dropdown type}    ${ADD USER MODAL}//nx-permissions-select//li//span[text()="${type}"]
     Wait Until Element is Visible    ${dropdown type}
     Sleep    1
     Click Link    ${dropdown type}/..
     ${type}    Convert To Uppercase    ${type}
     Run Keyword If    "${type}"=="${ADMIN TEXT}"          Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     ...    ELSE IF    "${type}"=="${ADV VIEWER TEXT}"     Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
     ...    ELSE IF    "${type}"=="${VIEWER TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
     ...    ELSE IF    "${type}"=="${LIVE VIEWER TEXT}"    Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     ...    ELSE IF    "${type}"=="${CUSTOM TEXT}"         Wait Until Element Contains
-    ...    ${SHARE PERMISSIONS HINT}    ${SHARE PERMISSIONS HINT CUSTOM}
+    ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
 
 Verify Changed Info Via API
     [Arguments]    ${new locals}
     @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    &{node}[name]    ocal+
-        Run Keyword If    &{node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     FOR    ${user}    IN    @{locals}
         Keep in Dictionary    ${user}    name    fullName    permissions    email
@@ -78,12 +62,16 @@ Verify In Local Users UI
     [Arguments]    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
         Wait Until Element is Visible    //span[text()="Local+${user}"]
-        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    &{role names}[${user}] 
+        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}] 
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
+	    Run Keyword Unless    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
+	    ...    ${DISABLE USER SWITCH}
+	    ...    ${LOCAL USER DELETE BUTTON}
+	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
 	    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+${user}
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
@@ -91,7 +79,7 @@ Verify In Local Users UI
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]
 	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' != '${ADMIN TEXT}'
 	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]   
-	    ...    ELSE    Element Should Not Be Visible    //*[@id="permissionsSelect"]
+		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
     END
     
 Modify Local Users via Cloud UI
@@ -124,7 +112,7 @@ Modify Local Users via Cloud UI
         Wait Until Element is Not Visible    //input[@id="newPassword"]
         
         ${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]    
+        &{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]    
         
         Append To List    ${new locals}    ${new local}
         #Append To List    @{old locals}    &{old local} 
@@ -152,10 +140,10 @@ Change Permission Level for Local User
     FOR    ${x}    IN RANGE    5
         ${random int} =	    Evaluate	random.randint(0, ${n})	modules=random 
         ${new permission} =     Get From List    ${permissions set}    ${random int}   
-        Exit For Loop If  '${new permission}' != '&{role names}[${user}]'
+        Exit For Loop If  '${new permission}' != '${role names}[${user}]'
     END
-    # ${new permission} =    Set Variable If     '&{role names}[${user}]' == 'Viewer'    Live Viewer
-    # ...     '&{role names}[${user}]' != 'Viewer'    Viewer 
+    # ${new permission} =    Set Variable If     '${role names}[${user}]' == 'Viewer'    Live Viewer
+    # ...     '${role names}[${user}]' != 'Viewer'    Viewer 
     Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
     Click Button    ${ACCESS LEVEL DROPDOWN}
     Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="${new permission}"] 
@@ -184,5 +172,13 @@ Modify All Local User Info
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    ${new local user email} 
 	Wait Until Element is Visible    //span[text()="${new login}"]/following-sibling::span[text()="${new permission}"]
 	${reverse permission} =    Get Key from Value    ${role names}    ${new permission}
-	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=&{permissions}[${reverse permission}]
+	&{new local} =    Create Dictionary    email=${new local user email}    fullName=${new full name}     name=${new login}    permissions=${permissions}[${reverse permission}]
     [Return]    ${new local}
+    
+Local User Start
+    [Arguments]    ${email}
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    Log in to Auto Tests System    ${email} 
+    Go To Users List
+    [Return]    ${local users}

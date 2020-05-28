@@ -1,5 +1,4 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
+@use '../../../styles/theme_variables' as *;
 
 $brand-white : rgba(255, 255, 255, 1);
 $brand-dark : rgba(84, 88, 90, 1);

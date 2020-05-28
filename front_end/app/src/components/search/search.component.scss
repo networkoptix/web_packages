@@ -1,7 +1,6 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/_mixins';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
+@use '../../styles/_mixins';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -44,7 +43,7 @@
         }
 
         .search-input {
-            @extend #regular15;
+            @include typography.regular15;
             color         : $light16;
             height        : 40px;
             padding-left  : 48px;
@@ -54,7 +53,7 @@
             background    : transparent;
 
             &:placeholder-shown {
-                @include placeholder();
+                @include mixins.placeholder();
             }
 
             &:active, &:focus, &.non-empty {
@@ -123,7 +122,7 @@
             }
 
             .dropdown .dropdown-toggle span {
-                @include ellipsis;
+                @include mixins.ellipsis;
             }
         }
     }

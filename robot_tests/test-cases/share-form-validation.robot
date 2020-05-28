@@ -64,16 +64,16 @@ Open Share Dialog
     # Run Keyword Unless    '${email}' == '${EMAIL OWNER}' or '${email}' == '${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Elements Are Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Visible    ${SHARE BUTTON MODAL}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element Is Visible    ${ADD USER BUTTON MODAL}
 
 Test Email Invalid
     [Arguments]   ${email}
-    Wait Until Element Is Visible    ${SHARE EMAIL}
-    Input Text    ${SHARE EMAIL}    ${email}
-    Click Element    ${SHARE MODAL}
-    Run Keyword If    '${email}' == '${EMPTY}'    Click Button    ${SHARE BUTTON MODAL}
+    Wait Until Element Is Visible    ${ADD USER EMAIL}
+    Input Text    ${ADD USER EMAIL}    ${email}
+    Click Element    ${ADD USER MODAL}
+    Run Keyword If    '${email}' == '${EMPTY}'    Click Button    ${ADD USER BUTTON MODAL}
     Run Keyword Unless    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'     Wait Until Element Is Visible    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-invalid")]
     Run Keyword If    '${email}' == '${SPACE}myemail@gmail.com' or '${email}' == 'myemail@gmail.com${SPACE}' or '${email}' == 'myemail@gmail.com'     Wait Until Element Is Visible    //form[@name='addUserForm']//nx-email-input[@id='addUserEmail' and contains(@class,"ng-valid")]

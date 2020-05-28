@@ -59,12 +59,16 @@ export class NxSystemsService implements OnDestroy {
     removeFromMergeList(systemId: string) {
         if (this.mergingSystems.has(systemId)) {
             this.mergingSystems.delete(systemId);
+
+            const message = this.LANG.toastMessage.system.merge.success
+                .replace('{{primaryName}}', this.systemsMerging.primary.name)
+                .replace('{{secondaryName}}', this.systemsMerging.secondary.name);
             const options = {
                 autohide  : true,
                 classname : this.CONFIG.toast.success,
                 delay     : this.CONFIG.alertTimeout
             };
-            this.toastService.show(this.LANG.toastMessage.system.merge.success, options);
+            this.toastService.show(message, options);
         }
     }
 
@@ -173,11 +177,11 @@ export class NxSystemsService implements OnDestroy {
                 if (this.systemsMerging.primary && currentSystemId === this.systemsMerging.primary.id) {
                     this.ribbonService.hide();
                 }
+                this.removeFromMergeList(system.id);
                 this.systemsMerging = {
                     primary   : undefined,
                     secondary : undefined
                 };
-                this.removeFromMergeList(system.id);
             }
         });
     }

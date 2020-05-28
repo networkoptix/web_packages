@@ -1,11 +1,9 @@
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/mixins';
-@import '../../../styles/typography';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 
 
 .menu-level-2 {
-    @extend #medium13;
+    @include typography.medium13;
     position         : relative;
     background-color : $light4;
     border-radius    : 0;

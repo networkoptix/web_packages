@@ -61,16 +61,17 @@
         "viewer": {
             "description": "可以查看实时视频和浏览存档",
             "label": "操作员"
-        }
+        },
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "account": {
         "accountSavedSuccess": "您的帐户已成功保存",
         "accountSettings": "帐户设置",
         "activationLinkSent": "激活链接已发送",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "协议已被接受",
         "changePassword": "更改密码",
         "newPasswordLabel": "新密码",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "密码成功保存",
         "saveChanges": "保存"
     },
     "activeActions": {
@@ -95,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "帐户已创建",
+                "message": "已将带有激活链接的确认消息发送到 {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "激活账户成功。"
             }
         },
         "cameraLinks": {
@@ -127,24 +128,24 @@
             "unauthorized": "需要身份验证"
         },
         "chromeCastWarning": "Chromecast是资源密集型的，可能会导致您的服务器出现问题。",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "请更新遗失的录像设置。",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "连续录像",
+            "motion": "移动录像",
+            "motionLowRes": "位移+低分辨率"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "-- 不同数值--",
             "auto": "自动",
-            "best": "Best",
+            "best": "最佳",
             "high": "高",
-            "medium": "Medium",
+            "medium": "中",
             "low": "低"
         },
-        "general": "General",
+        "general": "一般",
         "searchCamPlaceholder": "搜索",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "无摄像机",
+        "systemHasNoCamerasMessage": "系统中没有可连接的摄像机。<br><br>请连接摄像机至服务器的本地网络以利搜寻，或要求系统管理员变更您的访问权限。",
         "systemNewVersion": "更新您的系统",
         "systemNewVersionMessage": "当前版本与此功能不兼容。请更新您的服务器到最新版本以使用此功能。",
         "systemNoAlerts": "没有警报",
@@ -169,14 +170,14 @@
             "stop listening": "停止监听",
             "view": "查看+ [相机名称]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "您目前所查看的是旧版报告。"
     },
     "dialogs": {
         "buttons": {
             "cancel": "取消",
             "createAccount": "新增帐户",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "删除",
+            "deleteAccount": "删除帐户",
             "download": "下载 %VMS_NAME%",
             "logoutAuthorised": "退出登录",
             "ok": "确定",
@@ -185,50 +186,51 @@
             "stayLoggedIn": "保持登录状态"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "云存储",
+            "enableStorage": "启用云存储",
+            "otherSystem": "其它系统...",
+            "initial": "为了帮助您入门, 我们为每个系统提供 {{compCapacity}} 个免费的云存储。",
+            "available": "此系统中的所有服务器皆可使用云存储位置。您可用桌面 {{vmsName}} 客户端对其进行管理。",
+            "camera": "摄像机",
+            "cameras": "摄像机",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "云存储已成功从系统中删除",
+                "errorPrefix": "删除云存储时发生错误"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "无法启用云存储",
+                "message": "系统已加入 <volume>个云存储，无法增加更多。<br/><br/>您可以在其他系统中删除内存，或将其移动至另一个系统。 "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "无法从 %CLOUD_NAME%断开系统",
+                "message": "该系统已启用云存储, 并存有档案。 <br/> <br/>在从%CLOUD_NAME%断开系统连接之前，必须手动删除云存储。"
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "移动云存储",
+                "success": "存储移动成功",
+                "errorPrefix": "移动云存储时发生错误",
+                "notFound": "找不到存储空间。可能已被其他用户移动或删除",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "无法移动云存储到离线系统。"
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "启用云存储",
+                "errorPrefix": "启用云存储时发生错误"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "云存储仅能在您为该系统拥有者的系统间移动。 <br/><br/>请使用您的云帐号系统连接到 %CLOUD_NAME%，以便将云存储移至该系统。"
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "checking": "Checking...",
+            "adminPasswordTitle": "请输入密码于拥有者帐号中 <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "本地管理员用户密码错误",
+            "checking": "检查中...",
             "commonText": "无法合并系统 <strong>{{primarySystem}}</strong> 和 <strong>{{secondarySystem}}</strong>。",
             "connectToCloud": "请将要与此合并的系统连接到 <strong>{{cloudName}}</strong> 或使用 <strong>{{vmsName}}</strong> 客户端进行本地合并。",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Merge current system with",
             "mergeFailedTitle": "系统合并失败",
@@ -242,7 +244,7 @@
             "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
             "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "建议您进行咨询",
+                "a_recommend": "We recommend that you consult with",
                 "b_support": "技术支持",
                 "c_proceeding": "在继续执行之前："
             },
@@ -261,7 +263,7 @@
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "合并系统中将有超过 <strong>{{maxServers}}</strong> 台的服务器。"
+            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
         },
         "message": {
             "storageSettingsSaved": "Storage settings saved.",
@@ -386,7 +388,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "某些服务器列表并存于选定的和当前的两个系统中 。 <br>请从各系统中删除并断线不相容的服务器，然后重连一次。",
         "EmailAlreadyExists": "此电子邮件已被注册",
         "FAIL": "系统 <strong>{{failedSystem}}</strong> 目前无法连上。<br>请稍后再试一次, 或联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
-        "INCOMPATIBLE": "系统有不同的软件版本。请将它们更新到 <a href=\"/download\">最新版本</a>。",
+        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "No server found",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "此帐户已激活",
         "accountBlocked": "此帐户被阻止。请在几分钟后再试一次。",
         "accountNotActivated": "此帐户尚未激活。<a href=\"/activate\"> 发送激活链接，再一次</a>",
@@ -426,7 +433,8 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
         "Access Control": "门禁管理",
@@ -634,7 +642,7 @@
         "loggers": {
             "none": {
                 "text": "None",
-                "help": "(log disabled)"
+                "help": "(日志已禁用)"
             },
             "error": {
                 "text": "错误",
@@ -677,7 +685,7 @@
             },
             "merge": {
                 "failed": "系统合并失败",
-                "success": "系统合并完成"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "保存的系统名称"
@@ -719,7 +727,7 @@
         "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
         "cloudHost": "Cloud host",
         "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
+        "disabledVendors": "禁用的供应商",
         "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
         "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
         "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
@@ -777,6 +785,7 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

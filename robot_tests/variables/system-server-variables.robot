@@ -7,8 +7,9 @@ ${RENAME SERVER BUTTON}             //nx-section//button/span[contains(text(),"$
 ${RESTART SESRVER BUTTON}           //nx-section//button/span[contains(text(),"${RESTART}")]/..
 ${RESTART SERVER FORM}              //form[@name="restartServerFrom"]
 ${RESTART DIALOG CLOSE BUTTON}      ${RESTART SERVER FORM}//button[contains(@class,"close")]
-${RESTART DIALOG CANCEL BUTTON}     ${RESTART SERVER FORM}//button[contains(text(),"${CANCEL BUTTON TEXT")]
+${RESTART DIALOG CANCEL BUTTON}     ${RESTART SERVER FORM}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
 ${RESTART DIALOG RESTART BUTTON}    ${RESTART SERVER FORM}//button[@type="submit"]
+${RESTARTING BADGE}                 
 ${RESET SERVER TO DEFAULTS}         //nx-section//button/span[contains(text(),"${RESET TO DEFAULTS TEXT}")]/..
 ${RENAME SERVER FORM}               //form[@name="renameServerForm"]
 ${RENAME SAVE BUTTON}               ${RENAME SERVER FORM}//button[contains(text(),"${SAVE BUTTON TEXT}")]

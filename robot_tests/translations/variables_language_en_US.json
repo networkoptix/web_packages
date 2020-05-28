@@ -48,11 +48,11 @@
     "CODE USED/INCORRECT"                  :    "Confirmation code is already used or incorrect",
     "CHANGE PASSWORD TITLE TEXT"           :    "Change password",
     "CHANGE PASSWORD LEFT MENU TEXT"       :    "Change Password",
-    "SHARE PERMISSIONS HINT ADMINISTRATOR" :    "Unrestricted access including the ability to share",
-    "SHARE PERMISSIONS HINT ADVANCED VIEWER" :  "Can view live video, browse the archive, control PTZ etc",
-    "SHARE PERMISSIONS HINT VIEWER"        :    "Can view live video and browse the archive",
-    "SHARE PERMISSIONS HINT LIVE VIEWER"   :    "Can only view live video",
-    "SHARE PERMISSIONS HINT CUSTOM"        :    "Use the %VMS_NAME% Client application to set up custom permissions",
+    "ADD USER PERMISSIONS HINT ADMINISTRATOR" :    "Unrestricted access including the ability to share",
+    "ADD USER PERMISSIONS HINT ADVANCED VIEWER" :  "Can view live video, browse the archive, control PTZ etc",
+    "ADD USER PERMISSIONS HINT VIEWER"        :    "Can view live video and browse the archive",
+    "ADD USER PERMISSIONS HINT LIVE VIEWER"   :    "Can only view live video",
+    "ADD USER PERMISSIONS HINT CUSTOM"        :    "Use the %VMS_NAME% Client application to set up custom permissions",
 
     "SYSTEM NAME IS REQUIRED TEXT"         :    "System name is required",
 
@@ -275,5 +275,6 @@
     "SERVER NAME SAVED"                    :    "Server name saved.",
 
     "CHANGE PASSWORD BUTTON TEXT"		   :	"Change Password",
-    "DELETE USER TEXT"					   :	"Delete User"
+    "DELETE USER TEXT"					   :	"Delete User",
+    "LOGIN IS REQUIRED TEXT"			   :	"Login is required"
 }

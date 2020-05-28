@@ -20,181 +20,18 @@ ${url}         ${ENV}
 ...    ${LIMIT SESSION DURATION CHECKBOX REAL}
 
 *** Keywords ***
-Log in to Auto Tests System
-    [Arguments]    ${email}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${email}    ${password}    button=None
-    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
-    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
-    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
-
-Check System Text
-    [Arguments]    ${user}
-    Log Out
-    Log in to Auto Tests System    ${user}
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
-    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-
+Restart
+    Common Restart Logout    ${url}
+    
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    10.1.5.169    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO SYS IP}    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
     FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
     Open Browser and go to URL    ${url}
-
-Restart
-    Common Restart Logout    ${url}
-
-Settings on page should match settings on server
-    Log    Enable auto discovery of cameras and servers
-    Setting on page matches server    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}     autoDiscoveryEnabled
-    Log    Send anonymous usage and crash statistics to developers
-    Setting on page matches server     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}    statisticsAllowed
-    Log    Allow system to optimize camera settings
-    Setting on page matches server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}    cameraSettingsOptimization
-    Log    Enable audit trail
-    Setting on page matches server    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}    auditTrailEnabled
-    Log    Allow only secure connections
-    Setting on page matches server    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}    trafficEncryptionForced
-    Log    Encrypt video traffic
-    Setting on page matches server    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     videoTrafficEncryptionForced
-    Log    Limit session duration to
-    ${status} =    Run Keyword and Return Status    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
-    Run Keyword If    ${status}==False    Evaluate Auto System Settings via API    sessionLimitMinutes    0
-    ...    ELSE     Evaluate Session Limit
-
-Setting on page matches server
-    [Arguments]    ${setting}    ${id}
-    ${status}=   Run Keyword and Return Status    Element Attribute Value Should Be     ${setting}//span    class    tick checked
-    ${string}=   Convert To String    ${status}
-    ${selected}=   Convert To Lowercase    ${string}
-    Run Keyword And Continue On Failure    Evaluate Auto System Settings via API     ${id}    ${selected}
-
-Evaluate Session Limit
-    ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Sleep    5
-    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${multiplier}=   Set Variable If    "${interval}"=="hours"    60
-    ...    "${interval}"=="minutes"    1
-    ${number}=   Evaluate      ${multiplier}*${value}
-    Evaluate Auto System Settings via API    sessionLimitMinutes      ${number}
-
-Changing setting changes it on server
-    [Arguments]    ${setting}    ${id}
-    Wait until element is enabled    ${setting}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Evaluate Auto System Settings via API     ${id}    ${selected}
-
-Change Setting and Save
-    [Arguments]    ${setting}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected}=   Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-
-Just Change Setting
-    [Arguments]    ${setting}
-    ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
-    ${selected} =    Set Variable If    ${status}==True    false
-    ...    ${status}==False    true
-    Set Checkbox Value    ${setting}    ${selected}
-
-Set Hidden Checkbox
-     Log    BOTH CHECKBOXES ARE UNCHECKED TO START
-     Set Checkbox Value    ${ALLOW ONLY SECURE CHECKBOX REAL}    true
-     Sleep    1
-     Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
-     Sleep    2
-     Capture Page Screenshot
-
-Change Setting Encrypt video traffic
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ALLOW ONLY SECURE CHECKBOX REAL}
-    ${status2}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
-    ${selected}=   Set Variable If    ${status}==False or ${status2}==False    true
-    ...    ${status}==True and ${status2}==True     false
-    Run Keyword If    ${status}==True and ${status2}==False   Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    true
-    ...    ELSE IF     ${status}==True and ${status2}==True    Set Checkbox Value    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}    false
-    ...    ELSE    Set Hidden Checkbox
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${SYSTEM SAVE}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    [Return]    ${selected}
-
-Changing Several Settings at Random
-    [Arguments]     ${action}
-    ${random}=   Evaluate    random.randint(2, 6)    modules=random    #need to uncomment and set to 6 max when bug fixed
-    FOR    ${idx}    IN RANGE   ${random}
-        ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
-        Log    ${checkbox}
-        Just Change Setting    ${checkbox}
-    END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Sleep    2
-    Settings on page should match settings on server
-
-Changing All Settings
-    [Arguments]    ${action}
-    FOR    ${checkbox}    IN   @{checkboxes}
-        Log    ${checkbox}
-        Just Change Setting    ${checkbox}
-    END
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Sleep    2
-    Settings on page should match settings on server
-
-Change Duration Time Interval
-    [Arguments]    ${action}
-    ${interval}=   Get Text    ${TIME DURATION INTERVAL TEXT}
-    ${random}=   Evaluate    random.randint(1, 59)    modules=random
-    Input Text    ${TIME NUMBER INPUT}    ${random}
-    FOR    ${i}    IN RANGE    2
-           ${status}=   Run Keyword And Return Status    Textfield Value Should Be    ${TIME NUMBER INPUT}    ${random}
-           Run Keyword If    ${status}==False    Input Text    ${TIME NUMBER INPUT}    ${random}
-           ...    ELSE    Exit For Loop
-    END
-    FOR    ${i}    IN RANGE    9
-           ${status} =    Run Keyword And Return Status    Element Text Should Be    ${TIME DURATION INTERVAL TEXT}    ${interval}
-           Run Keyword If    ${status}==False    Run Keywords
-           ...    Click Button    ${TIME DURATION INTERVAL BUTTON}    AND
-           ...    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}    AND
-           ...    Click Link    ${TIME DURATION NEW SELECTION}
-           ...    ELSE    Exit For Loop
-    END
-
-    Click Button    ${TIME DURATION INTERVAL BUTTON}
-    Wait Until Element Is Visible    ${TIME DURATION NEW SELECTION}
-    Click Link    ${TIME DURATION NEW SELECTION}
-    Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
-    Click Button    ${action}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-
-Validate Disconnect Form
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FORM HEADER}
-    ...    ${DISCONNECT FORM CLOSE BUTTON}
-    ...    ${DISCONNECT FORM ALL USERS WILL BE DELETED}
-    ...    ${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}
-    ...    ${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}
-    ...    ${DISCONNECT PASSWORD INPUT}
-    ...    ${DISCONNECT FORM CANCEL BUTTON}
-    ...    ${DISCONNECT FORM DISCONNECT BUTTON}
-
+    
 *** Test Cases ***
 Systems dropdown should allow you to go back to the systems page
     [Tags]    Threaded
@@ -226,7 +63,7 @@ Correct items are shown for owner
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}    ${current owner name}    ${MERGE BUTTON SYSTEM}
     Go To Users List
-    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 Correct items are shown for admin
     [Tags]    C41561    Threaded
@@ -235,7 +72,7 @@ Correct items are shown for admin
     ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM MY ACCOUNT}    ${OWNER LABEL}    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
     Go To Users List
-    Wait Until Elements are Visible    ${USERS LIST}    ${SHARE BUTTON SYSTEMS}
+    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 Correct items are shown for advanced viewer and below
     [Tags]    C41562    Threaded
@@ -247,7 +84,7 @@ Correct items are shown for advanced viewer and below
         Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
         Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
         Element Should Not Be Visible    ${RENAME SYSTEM}
-        Element Should Not Be Visible    ${SHARE BUTTON SYSTEMS}
+        Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END
 
@@ -517,3 +354,177 @@ Owner can disconnect System from Cloud
     FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
         Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
     END
+    
+The page is opened and shows the user list to owner
+    [Tags]    C41881    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Location Should Be    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    # Title Should Be    Systems - ${PRODUCT_NAME}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Element Is Visible    ${USERS LIST}
+
+Should confirm, if owner deletes system (You are going to disconnect your system from cloud)
+    [Tags]    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Click Button    ${DISCONNECT FROM NX}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
+    Click Element    ${DISCONNECT FORM}
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+
+Offline system should confirm, if not owner deletes system (You will lose access to this system)
+    [Tags]    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Click Button    ${DISCONNECT FROM NX}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
+    Click Element    ${DISCONNECT FORM}
+    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
+    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
+
+Share button should be disabled
+    [Tags]    C41881    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Page Does Not Contain Element    //div[contains(@uib-modal-backdrop, "modal-backdrop")]
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
+
+Open in nx button should be disabled
+    [Tags]    C41881    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
+    Log Out
+    Log in to Autotests 2 System    ${EMAIL VIEWER}
+    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
+    Click Element    ${SYSTEMS DROPDOWN}
+    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
+
+Should show offline next to system name
+    [Tags]    C41881    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
+    Log Out
+    Log in to Autotests 2 System    ${EMAIL VIEWER}
+    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
+
+Should not be able to delete/edit users
+    [Tags]    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    ${USERS LIST LINK}
+    Click Link    ${USERS LIST LINK}
+    ${User In List}=   Set Variable    ${USERS LIST}//nx-level-3-item//span[text()='${EMAIL VIEWER}']/../../../a
+    Wait Until Element Is Visible    ${User In List}
+    Click Link    ${User In List}
+    Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}${DISABLED}    ${REMOVE USER BUTTON}${DISABLED}
+
+Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
+    [Tags]    Threaded    System-offline
+    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
+    Click Button    ${LOG IN CLOSE BUTTON}
+    Wait Until Element Is Visible    ${JUMBOTRON}
+
+Offline system should open System page by link to not authorized user and show it, after owner logs in
+    [Tags]    Threaded    System-offline
+    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Log In    ${EMAIL OWNER}   ${password}    button=None
+    Verify In System    Auto Tests 2
+
+Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
+    [Tags]    C41572    Threaded    System-offline
+    Log In    ${EMAIL NOPERM}    ${password}
+    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${AVAILABLE SYSTEMS LIST}
+    Click Link    ${AVAILABLE SYSTEMS LIST}
+    # If there is another system connected to account url is different from ${url}/systems
+    ${actual url}=   Get Location
+    Should not Contain    ${actual url}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    # Location Should Be    ${url}/systems
+
+Offline system should open System page by link not authorized user, and show alert if logs in and has no permission
+    [Tags]    Threaded    System-offline
+    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Log In    ${EMAIL NOPERM}   ${password}    button=None
+    Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
+
+Offline system rename button opens dialog and clicking cancel closes rename dialog without rename
+    [Tags]    C41880    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Open Rename System Dialog
+    Click Button    ${RENAME CANCEL}
+    Wait Until Page Does Not Contain Element    //div[@uib-modal-backdrop="modal-backdrop"]
+    Verify In System    Auto Tests 2
+
+Offline system clicking 'X' closes rename dialog without rename
+    [Tags]    C41880    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Open Rename System Dialog
+    Wait Until Textfield Contains    ${RENAME INPUT}    ${AUTO TESTS 2}
+    Click Button    ${RENAME X BUTTON}
+    Wait Until Page Does Not Contain Element    ${BACKDROP}
+    Verify In System    Auto Tests 2
+
+Offline system clicking save with no input in rename dialog throws error
+    [Tags]    C41880    Threaded    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    Open Rename System Dialog
+    Input Text    ${RENAME INPUT}    ${SPACE}
+    Press Keys    ${RENAME INPUT}    BACKSPACE
+    Click Button    ${RENAME SAVE}
+    Wait Until Elements Are Visible    ${RENAME INPUT WITH ERROR}    ${SYSTEM NAME IS REQUIRED}
+    Click Button    ${RENAME CANCEL}
+
+Owner is able to rename offline system via Cloud
+    [Tags]    C41889    System-offline
+    Log in to Autotests 2 System    ${EMAIL OWNER}
+    ${current name}=   Get text    ${SYSTEM NAME}
+    ${new name}=   Get random system name
+    Open Rename System Dialog
+    Input Text    ${RENAME INPUT}    ${new name}
+    Click button    ${RENAME SAVE}
+    Log Out
+
+    # Make sure new name is saved
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    ${system info}[name]     ${new name}
+
+    # Return to initial name
+    Rename System    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    ${current name}
+
+    # Make sure old name is saved
+    ${system info}=   Get Cloud System Settings    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}
+    Should be equal as strings    ${system info}[name]     ${current name}
+
+Does not show Share button to viewer, advanced viewer, live viewer
+    [Tags]    Threaded    System-offline
+    @{emails}    Set Variable    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL ADV VIEWER}
+    FOR    ${user}    IN    @{emails}
+        Log in to Autotests 2 System    ${user}
+        Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
+        Log Out
+    END
+
+Your permissions is shown for non-owners
+    [Tags]    Threaded    C41881    System-offline
+    ${users}         Set Variable    ${EMAIL ADVVIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVEVIEWER}    ${EMAIL CUSTOM}    ${EMAIL ADMIN}
+    ${users text}    Set Variable    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}     ${ADMIN TEXT}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    FOR    ${user}  ${text}  IN ZIP  ${users}  ${users text}
+        Log in to Auto Tests 2 System    ${user}
+        Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),"${text}")]
+        Log Out
+    END
+
+Should show (you) for owner and (owner's name & email) for non-owners
+    [Tags]    C41881    Threaded    System-offline
+    Log in to AutoTests 2 System    ${EMAIL OWNER}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
+    Wait Until Element Is Visible    ${current owner name}
+    Log Out
+    Log in to Autotests 2 System    ${EMAIL VIEWER}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}
+

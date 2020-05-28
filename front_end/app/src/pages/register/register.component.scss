@@ -1,4 +1,4 @@
-@import '../../styles/buttons';
+@use '../../../styles/theme_variables' as *;
 
 .status-wrapper {
     position: relative;

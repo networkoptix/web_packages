@@ -1,7 +1,5 @@
-@import '../../../../styles/custom/custom_palette';
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '~bootstrap/scss/bootstrap';
+@use '~bootstrap/scss/bootstrap';
+@use '../../../../styles/theme_palette';
 
 integration-detail-component {
     
@@ -9,7 +7,7 @@ integration-detail-component {
     }
     
     .menu {
-        background-color : $light5;
+        background-color : theme_palette.$light5;
         padding          : .5rem 0 0;
         
         .menu-level-2 {
@@ -20,7 +18,7 @@ integration-detail-component {
     .right-menu {
         position: absolute;
 
-        @include media-breakpoint-down(md) {
+        @include bootstrap.media-breakpoint-down(md) {
             position: inherit;
         }
     }

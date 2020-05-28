@@ -1,6 +1,5 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -155,13 +154,13 @@ nx-system-health-component {
   }
 
   .contentZone {
-    @extend #light14;
+    @include typography.light14;
     text-align : center;
   }
 
   .importInfo {
     p {
-      @extend #light13;
+      @include typography.light13;
     }
   }
 }

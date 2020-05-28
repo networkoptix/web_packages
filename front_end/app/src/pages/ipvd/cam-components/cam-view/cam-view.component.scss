@@ -1,7 +1,6 @@
-@import '../../../../../styles/theme_palette';
-@import '../../../../../styles/theme_variables';
-@import '../../../../styles/typography';
-@import '../../../../styles/mixins';
+@use '../../../../styles/typography';
+@use '../../../../../styles/theme_variables' as *;
+@use '../../../../styles/mixins';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -80,14 +79,14 @@
     }
 
     .disclaimer {
-        @extend #regular12;
+        @include typography.regular12;
     }
 
     header {
         position : relative;
 
         .camera-vendor-model {
-            @include ellipsis;
+            @include mixins.ellipsis;
             width : 90%;
         }
 

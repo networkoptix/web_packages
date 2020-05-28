@@ -220,7 +220,7 @@
     "System name is required": "Název systému je povinný",
     "System will be accessible through local network with local administrator account.": "Systém bude přístupný prostřednictvím místní sítě s účtem místního správce.",
     "Systems": "Systémy",
-    "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.": "Systems of such size can work, but may be unstable and have troubles with updates and synchronization.",
+    "Systems of such size may be unstable and have troubles with updates and synchronization.": "Systems of such size may be unstable and have troubles with updates and synchronization.",
     "Tags": "Značky",
     "Take system name and settings from": "Take system name and settings from",
     "Terms of Use": "Smluvní podmínky",

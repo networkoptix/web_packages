@@ -1,7 +1,5 @@
-@import '../../../app/styles/native-theme/theme_palette';
-@import '../../../app/styles/custom/custom_palette';
-@import '../../../app/styles/theme_variables';
-@import '../styles/typography';
+@use '../styles/typography';
+@use '../../../app/styles/theme_variables';
 
 
 @keyframes slide-down-fade-in {
@@ -67,7 +65,7 @@
     &-content {
         border        : none;
         border-radius : 2px;
-        box-shadow    : 0 1rem 2rem 0 transparentize($dark15, 0.8);
+        box-shadow    : 0 1rem 2rem 0 transparentize(theme_variables.$dark15, 0.8);
     }
 
     &-paragraph {
@@ -78,22 +76,22 @@
     }
 
     &-header {
-        background-color : $additional_light1;
+        background-color : theme_variables.$additional_light1;
         border-top       : 1px solid transparent;
-        border-bottom    : 1px solid $light3;
-        padding          : $modal-title-padding 1rem;
+        border-bottom    : 1px solid theme_variables.$light3;
+        padding          : theme_variables.$modal-title-padding 1rem;
         border-radius    : 2px 2px 0 0;
 
         .modal-title {
-            @extend #medium14;
-            font-weight : $modal-title-font-weight;
-            line-height : $modal-title-line-height;
+            @include typography.medium14;
+            font-weight : theme_variables.$modal-title-font-weight;
+            line-height : theme_variables.$modal-title-line-height;
             margin      : 0;
             padding     : 0;
         }
 
         .close {
-            color           : $dark9;
+            color           : theme_variables.$dark9;
             opacity         : 1;
             width           : 40px;
             height          : 40px;
@@ -119,13 +117,13 @@
 
             &:hover {
                 .close-content {
-                    background-color : $additional_light2;
+                    background-color : theme_variables.$additional_light2;
                 }
             }
 
             &:active {
                 .close-content {
-                    background-color : $additional_light3;
+                    background-color : theme_variables.$additional_light3;
                 }
             }
 
@@ -145,7 +143,7 @@
 
     &-body {
         padding          : 1rem 1rem 0;
-        background-color : $light1;
+        background-color : theme_variables.$light1;
 
         label {
             margin  : 0 0 .5rem;
@@ -175,7 +173,7 @@
         .help-block {
             display          : block;
             background-color : transparent;
-            color            : $light16;
+            color            : theme_variables.$light16;
             padding          : .5rem 0 0;
         }
 

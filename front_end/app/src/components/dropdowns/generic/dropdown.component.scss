@@ -1,6 +1,6 @@
-@import '../../../../styles/theme_palette';
-@import '../../../styles/typography';
-@import '../../../styles/mixins';
+@use '../../../styles/typography';
+@use '../../../styles/mixins';
+@use '../../../../styles/theme_variables' as *;
 
 nx-select {
     width: 100%;
@@ -12,7 +12,7 @@ nx-select {
     }
 
     .additional-help {
-        @extend #regular13;
+        @include typography.regular13;
         margin-left: 0.25rem;
         color : $light16;
     }
@@ -21,7 +21,7 @@ nx-select {
         color : $light1;
     }
 
-    @include keyframe(bubblingG) {
+    @include mixins.keyframe(bubblingG) {
         0% {
             opacity:1;
         }

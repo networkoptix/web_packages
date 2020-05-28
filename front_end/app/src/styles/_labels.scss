@@ -1,10 +1,10 @@
-@import '../../styles/custom/custom_palette';
-@import '../../styles/theme_palette';
-@import '../../styles/theme_variables';
-@import '../styles/typography';
+@use '../styles/typography';
+// @import '../../styles/custom/custom_palette';
+// @import '../../styles/theme_palette';
+// @import '../../styles/theme_variables';
 
 label {
-    @extend #regular13;
+    @include typography.regular13;
     line-height   : 16px;
     margin-bottom : 8px;
 
