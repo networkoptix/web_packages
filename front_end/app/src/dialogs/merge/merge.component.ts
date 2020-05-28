@@ -247,7 +247,6 @@ export class MergeModalContent {
                     template[clearText] = '';
                 });
         }
-        console.log('end of updateShow');
     }
 
     setTargetSystem(targetSystem, serverUrlInputValue = '') {
