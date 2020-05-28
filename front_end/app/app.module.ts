@@ -31,11 +31,13 @@ import { ServiceModule }          from './src/services/services.module';
 import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
 import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard, SystemGuard } from './src/routeGuards';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 // AoT requires an exported function for factories
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
+        // eslint-disable-next-line no-useless-escape
         return !url.toString().match('\/(systems|embed)\/[A-Za-z0-9\-:]+\/view\/?(?:[A-Za-z0-9\-:]+)?');
     }
 
@@ -78,7 +80,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
-        })
+        }),
+        NgxMaskModule.forRoot(options)
     ],
     entryComponents: [],
     providers      : [

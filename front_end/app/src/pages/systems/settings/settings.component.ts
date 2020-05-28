@@ -25,10 +25,8 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 
 @AutoUnsubscribe()
 @Component({
-    // eslint-disable-next-line no-multi-spaces
     selector    : 'nx-system-settings-component',
     templateUrl : 'settings.component.html',
-    // eslint-disable-next-line no-multi-spaces
     styleUrls   : ['settings.component.scss']
 })
 

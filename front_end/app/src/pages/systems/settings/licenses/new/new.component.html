@@ -1,0 +1,86 @@
+<nx-block>
+    <header>
+        <h4 translate>New License</h4>
+    </header>
+    <nx-section>
+        <form class="form" role="form"
+              id="newLicenseForm" name="newLicenseForm" #newLicenseForm="ngForm"
+              novalidate autocomplete="off">
+
+            <div class="row p-0">
+                <label class="col-4 col-lg-3 m-0 mt-2 d-flex align-items-top justify-content-end"
+                       translate>License key</label>
+
+                <div class="position-relative pl-2">
+                    <input type="text"
+                           class="form-control input-sm license-key"
+                           [specialCharacters]="[ '&mdash;' ]"
+                           [showMaskTyped]="true"
+                           placeHolderCharacter=" "
+                           mask="AAAA&mdash;AAAA&mdash;AAAA&mdash;AAAA"
+                           pattern="[a-zA-Z0-9]*"
+                           id="licenseKey"
+                           name="licenseKey"
+                           [ngModel]="license"
+                           (ngModelChange)="setLicenseKey($event, newLicenseForm)"
+                           required
+                           #licenseKey="ngModel"/>
+                    <button class="btn btn-text has-icon input-paste"
+                            (click)="pasteFn(newLicenseForm)">
+                        <svg-icon [src]="CONFIG.icons.dir + 'paste.svg'"
+                                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+                        <span class="ml-1" [innerText]="'Paste'"></span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row p-0">
+                <div class="col-4 col-lg-3 m-0 mt-2"></div>
+                <div class="col-8 col-lg-9 mt-1" style="padding-left: 12px" *ngIf="licenseKey.invalid && licenseKey.touched">
+
+                    <span class="input-error" *ngIf="licenseKey.errors.required"
+                        translate>Enter license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.mask"
+                          translate>Invalid license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.offline"
+                          translate>Server needs to be online to get license activated</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.alreadyRegistered"
+                          translate>License key has already been activated in this system</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.inuse"
+                          [translate]="'license.messages.inuse'"
+                          [translateParams]="{ hwid: keyUsedIn }"></span>
+                </div>
+            </div>
+
+            <div class="row p-0 form-group" *ngIf="serverOptions.length > 1">
+                <label class="col-4 col-lg-3 m-0 mt-2 d-flex align-items-top justify-content-end"
+                       translate>Bind to server</label>
+
+                <div class="col-8 col-lg-9">
+                    <nx-select id="bindToServer"
+                               name="bindToServer"
+                               class="dd-servers"
+                               [items]="serverOptions"
+                               [ngModel]="selectedServer"
+                               (ngModelChange)="changeServer($event)"
+                               [selected]="serverOptions[0]">
+                    </nx-select>
+                    <div class="hint mt-1" translate>This server must be available in the system to make the license key work</div>
+                </div>
+            </div>
+        </form>
+    </nx-section>
+    <nx-section >
+        <nx-process-button
+                [form]="newLicenseForm"
+                [process]="activateKey"
+                [buttonText]="'Activate' | translate">
+        </nx-process-button>
+    </nx-section>
+</nx-block>
+
+<nx-license-trial-component
+        [system]="system"
+        [selectedServer]="selectedServer"
+        [licenses]="licenses">
+</nx-license-trial-component>

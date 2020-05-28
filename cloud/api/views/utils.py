@@ -58,7 +58,8 @@ def get_settings_from_cache():
         'searchTags': customization_cache['search_tags'],
         'vendorsShown': customization_cache['vendors_shown'],
         'pushConfig': customization_cache['push_config'],
-        'googleTagManagerId': customization_cache['google_tag_manager_id']
+        'googleTagManagerId': customization_cache['google_tag_manager_id'],
+        'trialLicenseKey': customization_cache['trial_license_key']
     }
 
 

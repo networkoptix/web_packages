@@ -272,6 +272,14 @@ export const nxConfig: IConfig = {
                     online       : ''
                 }
             },
+            general: {
+                id  : 'general',
+                path: '/'
+            },
+            licenses: {
+                id  : 'licenses',
+                path: 'licenses'
+            },
             buttons: {
                 id: 'buttons'
             }
@@ -356,6 +364,7 @@ export const nxConfig: IConfig = {
     },
     footerItems        : '',
     googleTagManagerId : '',
+    trialLicenseKey    : '',
     pushConfig         : '',
     trafficRelayHost   : '',
     vmsName            : '',

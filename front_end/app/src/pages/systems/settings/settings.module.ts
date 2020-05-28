@@ -66,6 +66,11 @@ const appRoutes: Routes = [
                 component     : NxCloudStorageComponent,
                 canActivate   : [SystemGuard],
                 canDeactivate : [ApplyGuard]
+            },
+            {
+                path        : 'licenses',
+                component   : NxSystemLicensesComponent,
+                canActivate : [AdminGuard]
             }
         ]
     }
@@ -85,6 +90,7 @@ const appRoutes: Routes = [
         NxSystemServersModule,
         NxCamerasModule,
         NxCloudStorageModule,
+        NxSystemLicensesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [
