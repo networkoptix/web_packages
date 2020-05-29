@@ -278,7 +278,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera.status = 'Online';
             setTimeout(() => {
                 this.system.getCameras().then(() => {
-                    this.reload$.next(this.reload$.value + Math.random() * 1000 | 0);
+                    this.reload$.next(this.reload$.value + 1);
                 });
             }, 2000);
         };
@@ -378,7 +378,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         );
     }
 
-    public reload$ = new BehaviorSubject(Math.random() * 1000);
+    public reload$ = new BehaviorSubject(0);
 
     toggleMotionGrid() {
         this.showOverlay = false;
