@@ -4,6 +4,7 @@
     "Integrations": "Integrationen",
     "Privacy": "Datenschutz",
     "Support": "Support",
+    "Supported Devices": "Unterstützte Geräte",
     "Terms": "Bedingungen",
     "accessRoles": {
         "Administrator": {
@@ -685,7 +686,7 @@
             },
             "merge": {
                 "failed": "Systemzusammenführung fehlgeschlagen",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Zusammenführung der Systeme {{primaryName}} und {{secondaryName}} abgeschlossen"
             },
             "rename": {
                 "success": "Systemname wurde gespeichert"
