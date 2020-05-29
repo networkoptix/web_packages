@@ -170,7 +170,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 if (this.systemsService.finishedMerged) {
                     this.systemsService.finishedMerged = false;
-                    console.log('system getInfo triggered');
                     this.system.getInfo(true, false);
                 }
             });
