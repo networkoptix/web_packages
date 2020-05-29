@@ -18,10 +18,11 @@ import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
 import { Subscription }              from 'rxjs';
-import { filter }                    from 'rxjs/operators';
+import { filter, tap }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
+import { NxApplyService }            from '../../../services/apply.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -99,7 +100,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private router: Router,
                 private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService
+                private scrollMechanicsService: NxScrollMechanicsService,
+                private applyService: NxApplyService
     ) {
         this.setupDefaults(configService);
     }
@@ -242,7 +244,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.systemSubscription.unsubscribe();
                     }
                     this.systemSubscription = this.system.infoSubject
-                        .pipe(filter((system: any) => system !== undefined))
+                        .pipe(
+                            filter((system: any) => system !== undefined),
+                            tap(({ isOnline }) => this.applyService.isOnline$.next(isOnline))
+                        )
                         .subscribe(() => {
                             // if system is removed while on page, redirects to systems page
                             if (

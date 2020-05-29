@@ -1,4 +1,4 @@
-import { Component, Input }          from '@angular/core';
+import { Component, Input, Injector }          from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxRibbonService }           from '../../components/ribbon/ribbon.service';
@@ -11,6 +11,7 @@ import {
     tap, mergeMap
 }                                    from 'rxjs/operators';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxApplyService }            from '../../services/apply.service';
 
 @Component({
     selector    : 'nx-modal-restart-server-content',
@@ -26,6 +27,7 @@ export class RestartServerModalContent {
     LANG: LanguageI18NStaticTypes;
     CONFIG: IConfig;
     restartServer: any;
+    private applyService: NxApplyService
 
     constructor(
         configService: NxConfigService,
@@ -33,10 +35,14 @@ export class RestartServerModalContent {
         private activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private ribbonService: NxRibbonService,
-        private toastService: NxToastService
+        private toastService: NxToastService,
+        injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+        setTimeout(() => {
+            this.applyService = injector.get(NxApplyService);
+        }, 0);
     }
 
     ngOnInit() {
@@ -47,6 +53,7 @@ export class RestartServerModalContent {
         };
         this.restartServer = this.processService
             .createProcess(() => {
+                this.applyService.isOnline$.next(false);
                 return this.system.restartServer(this.serverId);
             }, { ignoreError: true })
             .then(

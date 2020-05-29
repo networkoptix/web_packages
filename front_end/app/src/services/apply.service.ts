@@ -8,7 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
-import { Process, NxProcessService } from './process.service';
+import { Process, NxProcessService }            from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -108,6 +108,7 @@ export class NxApplyService {
     component: ViewContainerRef;
     discardFunction: () => void;
     lockedSubject = new BehaviorSubject<boolean>(undefined);
+    isOnline$ = new BehaviorSubject(true);
     popupActive = false;
     form: NgForm;
     private lockedSubscription: Subscription;
@@ -235,6 +236,9 @@ export class NxApplyService {
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
+        this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
+            (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
+        });
     }
 
     private setDiscardFunction(func: any) {
