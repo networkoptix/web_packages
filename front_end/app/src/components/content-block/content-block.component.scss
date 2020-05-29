@@ -39,7 +39,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
             float               : left;
             display             : flex;
             align-items         : center;
-            height              : rem(48px);
+            height              : theme_variables.rem(48px);
             max-width           : 160px;
             background-size     : contain;
             width               : 100%;
@@ -294,7 +294,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
     }
 
     &.fixed-height {
-        height   : rem(300px);
+        height   : theme_variables.rem(300px);
         overflow : hidden;
 
         .card--header {
@@ -324,7 +324,7 @@ $grid-breakpoints: typography.$grid-breakpoints;
     &.slim-header {
         .card--header {
             height  : auto;
-            padding : rem(12px);
+            padding : theme_variables.rem(12px);
 
             .title {
                 line-height : 15px;

@@ -21,9 +21,9 @@ body {
     box-shadow    : 0 1px 2px transparentize(theme_variables.$dark15, 0.9);
 
     .card-body {
-        padding : rem(16px);
+        padding : theme_variables.rem(16px);
         h2 {
-            font-size: rem(20px);
+            font-size: theme_variables.rem(20px);
             display: inline;
         }
     }
@@ -261,7 +261,7 @@ ngb-tabset {
     .nav-tabs {
         .nav-item {
 
-            height: rem(48px);
+            height: theme_variables.rem(48px);
 
             .nav-link {
                 border-top-left-radius  : 2px;
