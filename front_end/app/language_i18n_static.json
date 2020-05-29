@@ -156,6 +156,7 @@
         "systemServerError": "Internal server error",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Unknown",
         "voiceCommands": {
             "clear search": "clear search",

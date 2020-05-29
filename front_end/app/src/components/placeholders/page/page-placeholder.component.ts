@@ -88,6 +88,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.message = this.LANG.common.systemOfflineMessage;
                     this.iconName = 'Offline';
                     break;
+                case 'OFFLINE_INACCESSIBLE' :
+                    this.placeholderTitle = this.LANG.common.systemOffline;
+                    this.message = this.LANG.common.inaccessibleFeatureMessage;
+                    this.iconName = 'Wrong';
+                    break;
                 case 'NO_ALERTS' :
                     this.placeholderTitle = this.LANG.common.systemNoAlerts;
                     this.message = this.LANG.common.systemNoAlertsMessage;

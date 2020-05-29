@@ -98,29 +98,30 @@ export interface CameraFilters {
 }
 
 export interface Common {
-    account:                   CommonAccount;
-    cameraLinks:               CameraLinks;
-    cameraStates:              CameraStates;
-    chromeCastWarning:         string;
-    recordingSettingsWarning:  string;
-    recordingModes:            RecordingModes;
-    resolution:                Resolution;
-    general:                   string;
-    searchCamPlaceholder:      string;
-    systemHasNoCameras:        string;
-    systemHasNoCamerasMessage: string;
-    systemNewVersion:          string;
-    systemNewVersionMessage:   string;
-    systemNoAlerts:            string;
-    systemNoAlertsMessage:     string;
-    systemOffline:             string;
-    systemOfflineMessage:      string;
-    systemServerError:         string;
-    systemServerErrorMessage:  string;
-    systemUnreachable:         string;
-    unknown:                   string;
-    voiceCommands:             VoiceCommands;
-    viewingOutdatedReport:     string;
+    account:                    CommonAccount;
+    cameraLinks:                CameraLinks;
+    cameraStates:               CameraStates;
+    chromeCastWarning:          string;
+    recordingSettingsWarning:   string;
+    recordingModes:             RecordingModes;
+    resolution:                 Resolution;
+    general:                    string;
+    searchCamPlaceholder:       string;
+    systemHasNoCameras:         string;
+    systemHasNoCamerasMessage:  string;
+    systemNewVersion:           string;
+    systemNewVersionMessage:    string;
+    systemNoAlerts:             string;
+    systemNoAlertsMessage:      string;
+    systemOffline:              string;
+    systemOfflineMessage:       string;
+    systemServerError:          string;
+    systemServerErrorMessage:   string;
+    systemUnreachable:          string;
+    inaccessibleFeatureMessage: string;
+    unknown:                    string;
+    voiceCommands:              VoiceCommands;
+    viewingOutdatedReport:      string;
 }
 
 export interface CommonAccount {
@@ -1141,6 +1142,7 @@ const typeMap: any = {
         { json: "systemServerError", js: "systemServerError", typ: "" },
         { json: "systemServerErrorMessage", js: "systemServerErrorMessage", typ: "" },
         { json: "systemUnreachable", js: "systemUnreachable", typ: "" },
+        { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "" },
         { json: "unknown", js: "unknown", typ: "" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
