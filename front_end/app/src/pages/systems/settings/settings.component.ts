@@ -68,6 +68,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
+    private checkMergeSubscription: Subscription;
 
     private setupDefaults(configService) {
         this.CONFIG = configService.getConfig();
@@ -275,7 +276,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     updateAlert() {
-        this.system.checkMergeStatus()
+        if (this.checkMergeSubscription) {
+            this.checkMergeSubscription.unsubscribe();
+        }
+        this.checkMergeSubscription = this.system.checkMergeStatus()
             .subscribe(res => {
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
