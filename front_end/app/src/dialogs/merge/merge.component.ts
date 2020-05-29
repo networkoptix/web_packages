@@ -753,7 +753,7 @@ export class MergeModalContent {
         }
 
         if (stateOfHealth === 'Incompatible') {
-            return system.olderProtocol ? 'serverVersionOld' : 'serverVersionNew';
+            return system.olderProtocol ? 'systemVersionOld' : 'systemVersionNew';
         }
 
         if (!this.system.canMerge) {
