@@ -1,7 +1,7 @@
 <ng-container *ngIf="registerSuccess">
     <div class="status-wrapper" *ngIf="!activated">
         <nx-page-placeholder type="ACCOUNT_CREATED"
-            [message]="'common.account.created.message' | translate: { email: accountInfo.email }">
+            [message]="'common.account.created.message' | translate: { email: accountInfo.email || accountService.email }">
         </nx-page-placeholder>
     </div>
     <div class="status-wrapper" *ngIf="activated">
