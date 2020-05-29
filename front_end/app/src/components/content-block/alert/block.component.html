@@ -1,17 +1,17 @@
 <div class="card simple-{{type}}">
     <nx-section [nonPadded]="type === 'warning' || type === 'error'">
-        <div class="row p-0" [ngClass]="{'warning-error-padding': type === 'warning' || type === 'error'}">
-            <div class="col-12 col-md-6 d-flex flex-row">
-                <div>
+        <div class="d-flex row justify-content-between" [ngClass]="{'warning-error-padding': type === 'warning' || type === 'error'}">
+            <div class="d-flex flex-row ml-2">
+                <div class="d-flex align-items-center">
                     <svg-icon [src]="iconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
                 </div>
                 <div [ngClass]="type === 'warning' || type === 'error' ? 'warning-margin': 'ml-2'">
                     <span [innerHTML]="line1"></span><br>
-                    <span [innerHTML]="line2"></span>
+                    <span *ngIf="line2" [innerHTML]="line2"></span>
                 </div>
             </div>
-            <div class="col-12 col-md-6 mt-3 mt-md-0 d-flex justify-content-start justify-content-md-end">
-                <button *ngIf="btnCaption || btnIconSrc" class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 20px"
+            <div *ngIf="btnCaption || btnIconSrc" class="d-flex align-items-center">
+                <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 20px"
                         (click)="onClick()">
                     <svg-icon [src]="btnIconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
                     <span class="ml-1" [innerText]="btnCaption || ''"></span>
