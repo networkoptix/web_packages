@@ -45,6 +45,7 @@ export interface BaseConfig {
     company: Company;
     footerItems: any;
     googleTagManagerId: string;
+    trialLicenseKey: string;
     pushConfig: string;
     trafficRelayHost: string;
     vmsName: string;
@@ -393,6 +394,8 @@ export interface SystemSettings {
     cloudStorage: Admin;
     users: Admin;
     servers: Admin;
+    general: Admin;
+    licenses: Admin;
     buttons: Buttons;
     cameras: Cameras;
 }
@@ -1041,6 +1044,7 @@ const typeMap: any = {
         { json: 'admin', js: 'admin', typ: r('Admin') },
         { json: 'users', js: 'users', typ: r('Admin') },
         { json: 'servers', js: 'servers', typ: r('Admin') },
+        { json: 'licenses', js: 'licenses', typ: r('Admin') },
         { json: 'buttons', js: 'buttons', typ: r('Buttons') }
     ], false),
     Admin: o([

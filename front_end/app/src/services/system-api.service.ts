@@ -125,14 +125,18 @@ export class NxSystemAPI {
         );
     }
 
-    private post(url: string, data?: any) {
+    private post(url: string, data?: any, paramsToAdd?: any) {
         let headers = new HttpHeaders();
+        let params: any = {};
         const fullUrl = `${this.urlBase}${url}`;
-        const params: any = {};
         data = data || {};
 
+        Object.keys(paramsToAdd).forEach((key) => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
         if (this.authPost) {
-            params.auth = this.authPost;
+            params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
@@ -298,12 +302,17 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    getHardwareIdsOfServers() {
+        return this.get('/ec2/getHardwareIdsOfServers');
+    }
+
     getLicenses() {
         return this.get('/ec2/getLicenses');
     }
 
     activateLicense(key) {
-        return this.post('/api/activateLicense', { licenseKey: key });
+        const params: any = { key }; // 3.2 systems expect key as param
+        return this.post('/api/activateLicense', { licenseKey: key }, params);
     }
 
     logLevel(logId?, name?, value?) {

@@ -5,8 +5,8 @@ import { UpgradeModule }              from '@angular/upgrade/static';
 import { RouterModule, Routes }       from '@angular/router';
 import { NgbModule }                  from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }            from '@ngx-translate/core';
-import { ComponentsModule }           from '../../../components/components.module';
-import { NxNoSystemsComponent }       from '../no-systems/no-systems.component';
+import { ComponentsModule }                   from '../../../components/components.module';
+import { NxNoSystemsComponent }               from '../no-systems/no-systems.component';
 import { ApplyGuard, AuthGuard, SystemGuard } from '../../../routeGuards';
 import {
     NxSystemSettingsComponent,
@@ -15,7 +15,9 @@ import {
     NxCloudStorageModule, NxCloudStorageComponent,
     NxSystemServersModule, NxSystemServersComponent,
     NxSystemUsersModule, NxSystemUsersComponent
-} from './';
+}                                             from './';
+import { NxSystemLicensesComponent }          from './licenses/licenses.component';
+import { NxSystemLicensesModule }             from './licenses/licenses.module';
 
 const appRoutes: Routes = [
     // root path is handles by AJS for now
@@ -66,6 +68,11 @@ const appRoutes: Routes = [
                 component     : NxCloudStorageComponent,
                 canActivate   : [SystemGuard],
                 canDeactivate : [ApplyGuard]
+            },
+            {
+                path        : 'licenses',
+                component   : NxSystemLicensesComponent,
+                canActivate : [SystemGuard]
             }
         ]
     }
@@ -85,6 +92,7 @@ const appRoutes: Routes = [
         NxSystemServersModule,
         NxCamerasModule,
         NxCloudStorageModule,
+        NxSystemLicensesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [

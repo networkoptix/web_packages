@@ -1,0 +1,201 @@
+import {
+    Component, LOCALE_ID, Inject,
+    OnInit
+}                                        from '@angular/core';
+import { NxConfigService, IConfig }      from '../../../../services/nx-config';
+import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
+import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
+import { SubscriptionLike }              from 'rxjs';
+import { NxUtilsService }                from '../../../../services/utils.service';
+import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
+import { NxSettingsService }             from '../settings.service';
+import { NxSystem }                      from '../../../../services/system.service';
+import { NxCloudApiService }             from '../../../../services/nx-cloud-api';
+import { NxProcessService }              from '../../../../services/process.service';
+import { NxMenuService }                 from '../../../../components/menu/menu.service';
+import { delay, filter, map, retryWhen } from 'rxjs/operators';
+
+@Component({
+    selector    : 'nx-system-licenses',
+    templateUrl : 'licenses.component.html',
+    styleUrls   : ['licenses.component.scss']
+})
+export class NxSystemLicensesComponent implements OnInit {
+    CONFIG: IConfig;
+    LANG: LanguageI18NStaticTypes;
+
+    system: NxSystem;
+    systemSubscription: SubscriptionLike;
+    serverSubscription: SubscriptionLike;
+    licensesSubscription: SubscriptionLike;
+
+    licenses: any;
+    classMap: any = {};
+
+    // Constructor and class initialization methods
+    private setupDefaults() {
+        this.classMap = {
+            digital       : this.LANG.license.info.digital,
+            analog        : 'Analog',
+            edge          : 'Edge',
+            vmax          : 'VMAX',
+            videowall     : 'Video Wall',
+            analogencoder : 'Analog Encoder',
+            starter       : 'Starter',
+            iomodule      : 'IO Module',
+            bridge        : 'Bridge'
+        };
+
+        this.systemSubscription = this.settingsService.systemSubject
+            .pipe(filter(data => data !== undefined))
+            .subscribe((system) => {
+                this.system = system;
+
+                this.getLicenses();
+
+                if (this.licensesSubscription) {
+                    this.licensesSubscription.unsubscribe();
+                }
+                this.licensesSubscription = this.system.licensesModifiedSubject
+                    .subscribe(() => {
+                        this.getLicenses();
+                    });
+
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system
+                                    .initSystemMediaServers()
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+                        }
+                    });
+            });
+    }
+
+    constructor(
+        configService: NxConfigService,
+        languageService: NxLanguageProviderService,
+        @Inject(LOCALE_ID) private locale: string,
+        private dialogService: NxDialogsService,
+        private utilsService: NxUtilsService,
+        private settingsService: NxSettingsService,
+        private cloudApiService: NxCloudApiService,
+        private processService: NxProcessService,
+        private menuService: NxMenuService
+    ) {
+        this.CONFIG = configService.getConfig();
+        this.LANG = languageService.translations;
+
+        this.setupDefaults();
+    }
+
+    ngOnInit() {
+        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
+        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.licenses.id);
+    }
+
+    private getLicenses() {
+        this.system.getLicenses()
+            .then((result) => {
+                if (result.length) {
+                    result.forEach((item) => {
+                        item.info = {
+                            type          : '',
+                            count         : '',
+                            inuse         : '',
+                            required      : 0,
+                            serverName    : '',
+                            hwid          : '',
+                            expired       : false,
+                            status        : '',
+                            expiration    : '',
+                            deactivations : '-'
+                        };
+
+                        item.licenseBlock
+                            .split('\n')
+                            .map((property) => {
+                                const prop = property.split('=');
+                                item.info[prop[0].toLowerCase()] = prop[1];
+                            });
+
+                        item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
+                        item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
+
+                        // Set license type
+                        if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
+                            item.info.type = this.LANG.license.info.trial;
+                        } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
+                            item.info.type = this.classMap[item.info.class];
+                        } else {
+                            item.info.type = this.LANG.license.info.time;
+                        }
+
+                        // Set license usage /Pending VMS-18155/
+                        if (item.info.inuse !== '') {
+                            item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
+                        }
+                    });
+
+                    if (this.serverSubscription) {
+                        this.serverSubscription.unsubscribe();
+                    }
+                    this.serverSubscription = this.system.infoSubject
+                        .pipe(
+                            map(system => {
+                                if (!system.servers || system.servers.length === 0) {
+                                    throw system;
+                                }
+                            }),
+                            retryWhen(err => err.pipe(delay(1000)))
+                        )
+                        .subscribe(() => {
+                            if (this.system.currentServerNotBusy) {
+                                if (this.system && this.system.servers && this.system.servers.length) {
+                                    this.system
+                                        .getHardwareIdsOfServers()
+                                        .then((data) => {
+                                            if (data.reply.length) {
+                                                result.forEach((item) => {
+                                                    const boundServer = data.reply.find((server) => {
+                                                        return server.hardwareIds.find((id) => id === item.info.hwid);
+                                                    });
+
+                                                    const server = this.system.servers.find((server) => server.id === boundServer.serverId);
+                                                    if (Object.keys(server).length) {
+                                                        item.info.serverName = server.name;
+                                                        item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                    }
+                                                });
+                                            }
+                                        })
+                                        .finally(() => {
+                                            this.licenses = result;
+                                        });
+                                }
+                            }
+                        });
+                } else {
+                    this.licenses = [];
+                }
+            })
+            .catch(() => {
+                this.licenses = [];
+            });
+    }
+}

@@ -27,7 +27,7 @@ export class SystemGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const routesChecked = ['users', 'cloud-storage', 'health'];
+        const routesChecked = ['users', 'cloud-storage', 'health', 'licenses'];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
         const systemId = route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
@@ -43,7 +43,8 @@ export class SystemGuard implements CanActivate {
                             const canViewChecks = {
                                 users           : system.permissions.editUsers,
                                 'cloud-storage' : system.canUserViewCloudStorage(),
-                                health          : system.canViewInfo()
+                                health          : system.canViewInfo(),
+                                licenses        : system.isAdmin || system.isOwner
                             };
                             return canViewChecks[currentRoute] || this.router.navigate([`/systems/${systemId}`]);
                         })

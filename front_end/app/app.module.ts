@@ -3,8 +3,8 @@ import { BrowserModule, Title }                       from '@angular/platform-br
 import { BrowserAnimationsModule }                    from '@angular/platform-browser/animations';
 import {
     Location, PathLocationStrategy,
-    LocationStrategy, CommonModule
-}                                                     from '@angular/common';
+    LocationStrategy, CommonModule, DatePipe
+} from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule }     from '@angular/common/http';
 import { FormsModule }                                from '@angular/forms';
@@ -31,8 +31,11 @@ import { ServiceModule }          from './src/services/services.module';
 import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
 import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard, SystemGuard } from './src/routeGuards';
+import { NgxMaskModule, IConfig } from 'ngx-mask';
 
 // AoT requires an exported function for factories
+// @ts-ignore
+export const options: Partial<IConfig> | (() => Partial<IConfig>);
 
 class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
     shouldProcessUrl(url: UrlTree) {
@@ -78,7 +81,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             scrollPositionRestoration: 'enabled',
             anchorScrolling          : 'enabled',
             enableTracing            : false
-        })
+        }),
+        NgxMaskModule.forRoot(options)
     ],
     entryComponents: [],
     providers      : [
@@ -97,7 +101,8 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
             useFactory: initializeApp
         },
         AuthGuard,
-        SystemGuard
+        SystemGuard,
+        DatePipe
     ],
     declarations   : [
         AppComponent

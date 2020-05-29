@@ -84,6 +84,121 @@ $grid-breakpoints: typography.$grid-breakpoints;
                 }
             }
         }
+
+        & .nx-panel-row {
+            .nx-panel {
+                display : flex;
+                height  : fit-content;
+
+                .row-title {
+                    height      : fit-content;
+                    width       : fit-content;
+                    width       : -moz-fit-content;
+                    float       : left;
+                    z-index     : 9;
+                    max-width   : calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
+                    line-height : 16px;
+                    margin      : 4px 0;
+
+                    span {
+                        background-color : theme_variables.$light4;
+                        padding-right    : 4px;
+                        word-break       : keep-all;
+                    }
+                }
+
+                .row-line {
+                    border-bottom : 1px dotted theme_variables.$light7;
+                    width         : calc(100% - 1rem);
+                    position      : absolute;
+                    bottom        : 6px;
+                    height        : 14px;
+                }
+            }
+
+            .row-value {
+                line-height : 16px;
+                margin      : 4px 0;
+                word-break  : break-all;
+
+                &.error {
+                    color : theme_variables.$error;
+                }
+            }
+        }
+
+        table {
+            display         : grid;
+            border-collapse : collapse;
+            min-width       : 100%;
+            //grid-template-columns : 10% 20% 20% auto; <- set this in your component
+        }
+
+        .table-row-spacer {
+            height  : .5rem;
+            //grid-column-end : span 6; <- set this in your component
+            display : grid;
+        }
+
+        thead,
+        tbody,
+        tr {
+            display : contents;
+        }
+
+        th,
+        td {
+            overflow      : hidden;
+            text-overflow : ellipsis;
+            white-space   : nowrap;
+        }
+
+        th {
+            @include typography.medium13;
+            padding          : 5px 15px;
+            background-color : theme_variables.$additional_light1;
+            border-bottom    : 1px solid theme_variables.$light3;
+            color            : theme_variables.$dark9;
+        }
+
+        th:last-child {
+            border : 0;
+        }
+
+        td {
+            padding          : 5px 15px;
+            background-color : theme_variables.$light1;
+            color            : theme_variables.$dark9;
+            display          : flex;
+            align-items      : center;
+        }
+
+        td:first-child {
+            display : block;
+        }
+
+        tr:hover td {
+            background : transparentize(theme_variables.$brand_core, 0.9);
+        }
+
+        ::-webkit-scrollbar {
+            width  : initial;
+            height : 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            -webkit-border-radius : initial;
+            border-radius         : 6px;
+            -webkit-box-shadow    : initial;
+            height                : 8px;
+            border                : 2px solid theme_variables.$light4;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow    : initial;
+            -webkit-border-radius : initial;
+            border-radius         : initial;
+        }
     }
 
     &--footer {

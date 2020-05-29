@@ -456,21 +456,33 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
+
+        const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
+
+        adminNode.level3 = [{
+            id    : this.CONFIG.menus.systemSettings.general.id,
+            svg   : this.CONFIG.menus.systemSettings.general.icon,
+            label : this.LANG.menu.titles.general,
+            path  : this.CONFIG.menus.systemSettings.general.path
+        }];
+
+        if (this.system.isAdmin || this.system.isOwner) {
+            adminNode.level3.push({
+                id    : this.CONFIG.menus.systemSettings.licenses.id,
+                svg   : this.CONFIG.menus.systemSettings.licenses.icon,
+                label : this.LANG.menu.titles.licenses,
+                path  : this.CONFIG.menus.systemSettings.licenses.path
+            });
+        }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (!this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
-            const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
-            const generalNode = {
-                id    : this.CONFIG.menus.systemSettings.admin.id,
-                label : this.LANG.common.general,
-                path  : this.CONFIG.menus.systemSettings.admin.path
-            };
-            const cloudStorageNode = {
+        if (this.system.canUserViewCloudStorage()) {
+            adminNode.level3.push({
                 id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
+                icon  : '',
                 label : this.LANG.dialogs.cloudStorage.title,
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
-            };
-            adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
+            });
         }
 
         this.content = { ...this.content };
