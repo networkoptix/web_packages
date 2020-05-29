@@ -394,7 +394,8 @@ export class MergeModalContent {
                             { checkingErrorText: errorMessageExists ? err.message : this.unknownError }
                         );
                     }
-                    this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+                    this.serverUrlInputFocus ? this.serverUrlInputFocus.nativeElement.focus()
+                        : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
                 }
             );
 
