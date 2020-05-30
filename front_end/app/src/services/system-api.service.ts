@@ -125,7 +125,7 @@ export class NxSystemAPI {
         );
     }
 
-    private post(url: string, data?: any, paramsToAdd?: any) {
+    private post(url: string, data?: any, paramsToAdd = {}) {
         let headers = new HttpHeaders();
         let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
