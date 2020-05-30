@@ -156,6 +156,7 @@
         "systemServerError": "Internt serverfel",
         "systemServerErrorMessage": "Ett fel har inträffat. Vänligen försök igen senare. Om problemet kvarstår, kontakta ditt supportteam.",
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Okänd",
         "voiceCommands": {
             "clear search": "rensa sökningen",
@@ -254,13 +255,11 @@
             "serverAtUrl": "server vid {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Har inte åtkomst till {{targetSystem}} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
-            "serverVersionOld": "Denna server har en äldre programversion som är inkompatibel med det nuvarande systemet. Uppdatera den till den senaste versionen för att slå ihop den med den nuvarande.",
-            "serverVersionNew": "Denna server har nyare programversion än det nuvarande systemet. Uppdatera båda systemen till samma bygga för att slå samman dem.",
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
             "systemOfflineUrl": "{{targetSystem}} är otillgänglig",
             "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
-            "systemVersionOld": "System {{targetSystem}} har en äldre programversion som inte är kompatibel med det aktuella systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste version</a> att slå samman den med den nuvarande.",
-            "systemVersionNew": "System {{targetSystem}} har en nyare programversion som inte är kompatibel med det nuvarande systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman det med {{targetSystem}} systemet.",
+            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -434,6 +433,7 @@
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
         "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,6 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Systemadministration",
+            "general": "General",
+            "licenses": "Licenses",
             "users": "Användare"
         }
     },
@@ -691,6 +693,38 @@
             "rename": {
                 "success": "Systemnamnet sparat"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Typ",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "deactivations": "Deactivation left",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Fel",
+            "expired": "Expired",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {

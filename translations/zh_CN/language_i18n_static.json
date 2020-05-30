@@ -156,6 +156,7 @@
         "systemServerError": "内部服务器错误",
         "systemServerErrorMessage": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "systemUnreachable": "系统无法连接",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "未知的",
         "voiceCommands": {
             "clear search": "清除搜索",
@@ -204,7 +205,7 @@
             },
             "systemDisconnectError": {
                 "title": "无法从 %CLOUD_NAME%断开系统",
-                "message": "该系统已启用云存储, 并存有档案。 <br/> <br/>在从%CLOUD_NAME%断开系统连接之前，必须手动删除云存储。"
+                "message": "该系统已启用云存储, 并存有档案。 <br/> <br/>在从%CLOUD_NAME%中断系统连接之前，必须手动删除云存储。"
             },
             "moveCloudStorage": {
                 "title": "移动云存储",
@@ -254,13 +255,11 @@
             "serverAtUrl": "服务器在 {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">无法访问系统 {{targetSystem}} 。</p><p>请确保指定的服务器在线，然后重试。</p>",
             "serverNotYours": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
-            "serverVersionOld": "该服务器的软件版本较旧，与当前系统不兼容。请更新为最新版本再行合并。",
-            "serverVersionNew": "此服务器的软件版本比当前系统更新。请将两个系统更新到同一版本再行合并。",
             "systemOffline": "系统 {{targetSystem}} 处于离线状态，无法与当前系统合并。",
             "systemOfflineUrl": "无法访问{{targetSystem}}",
             "systemsIncompatible": "该服务器软件版本不兼容。请将两个系统更新为同一版本再行合并。",
-            "systemVersionOld": "系统 {{targetSystem}} 具有较旧的软件版本，与当前系统不兼容。请将 {{targetSystem}} 更新到 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 以将与其当前版本合并。",
-            "systemVersionNew": "系统 {{targetSystem}} 的软件版本较新，与当前系统不相容。请更新目前系统<a href=\"/download\" target=\"_blank\" translate>为最新版本</a>，再与 {{targetSystem}} 系统合并。",
+            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
             "urlEmpty": "输入服务器地址",
             "urlNotValid": "请输入有效的URL。",
             "unknownError": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
@@ -417,7 +416,7 @@
         "cantSharePrefix": "不能共享系统",
         "cantUnshareWithMeSystemPrefix": "不能删除系统",
         "emailNotFound": "帐户不存在.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "此连结无法连接至任何系统。可能当系统断开 %CLOUD_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
         "forbidden": "您没有权限执行此操作",
         "lostConnection": "连接到 {{systemName}} 失去了",
         "mergedSystemIsOffline": "系统 <strong>{{failedSystem}}</strong> 处于离线状态。",
@@ -434,7 +433,8 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
     "integration": {
@@ -496,6 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "系统管理",
+            "general": "General",
+            "licenses": "Licenses",
             "users": "用户"
         }
     },
@@ -569,8 +571,8 @@
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "正合并到该系统",
+            "mayTake": "根据录影资料的大小，可能会花费数小时"
         },
         "finishingMerge": "完成系统合并",
         "integration": {
@@ -578,7 +580,7 @@
             "previewRibbon": "此页面是最新更改的预览，不与公开版本相符。"
         },
         "systemOffline": "系统离线。某些设置可能无法使用。",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "此系统正在合并中。"
     },
     "search": {
         "Any": "任何",
@@ -597,15 +599,15 @@
     },
     "servers": {
         "beginDetach": "服务器正在分离",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginReset": "服务器正在重置。",
+        "detachSystemFailed": "无法从系统分离服务器。请检查输入密码是否正确以及服务器是否在线，然后重试。",
+        "detachSystemSuccess": "服务器已成功从系统分离。",
+        "portWarning": "若使用小于1024的端口号, 可能无法访问服务器。",
+        "removeMediaserverFailed": "无法从系统中删除服务器。",
+        "resetFailed": "无法重置服务器。请检查输入密码是否正确以及服务器是否在线，然后重试。",
+        "resetSuccessful": "服务器 {{ serverName }} 已重置为默认值。",
+        "restartFailed": "重新启动服务器时出现问题。",
+        "restartSuccessful": "服务器已成功重启。",
         "serverOffline": "服务器已离线.",
         "servers": "服务器",
         "status": {
@@ -614,15 +616,15 @@
             "reseting": "重置中...",
             "restarting": "重启中……"
         },
-        "successRename": "Server name saved."
+        "successRename": "服务器名称已保存。"
     },
     "system": {
         "MERGE_FINISHES": "合并完成后, 此系统中的所有用户和摄相机都将可用于<strong>{{targetSystemName}}</strong>, 同时此系统将被删除",
         "mergeUnknownName": "未知的系统名称（由云合并引起）",
         "mySystemSearch": "我的",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "无法加载安全设置.",
+            "notAbleToLoadSystem": "无法加载系统设置.",
             "sessionLimitDuration": {
                 "hours": "小时",
                 "minutes": "分"
@@ -636,34 +638,34 @@
             "unavailable": "系统无法访问"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "移除用户",
+            "localDelete": "删除用户"
         },
         "yourSystem": "您的系统",
         "loggers": {
             "none": {
-                "text": "None",
+                "text": "无",
                 "help": "(日志已禁用)"
             },
             "error": {
                 "text": "错误",
-                "help": "(log errors only)"
+                "help": "（仅记录错误）"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "警告",
+                "help": "（记录警告和错误）"
             },
             "info": {
-                "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "text": "详情",
+                "help": "（记录警告，错误和所有讯息）"
             },
             "debug": {
                 "text": "调试",
-                "help": "(log every System message and debug information)"
+                "help": "(记录每个系统和调试信息)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "详细",
+                "help": "(记录所有可用信息)"
             }
         }
     },
@@ -686,53 +688,85 @@
             },
             "merge": {
                 "failed": "系统合并失败",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "系统 {{primaryName}} 和 {{secondaryName}} 合并完成"
             },
             "rename": {
                 "success": "保存的系统名称"
             }
         }
     },
+    "license": {
+        "info": {
+            "type": "类型",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "deactivations": "Deactivation left",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "错误",
+            "expired": "Expired",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+        }
+    },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "其他本地FS类型",
+        "autoDiscoveryResponseEnabled": "自动查找回复",
+        "crossdomainEnabled": "跨域",
+        "defaultExportVideoCodec": "回复导出视频编解码器为默认值",
+        "defaultVideoCodec": "回复视频编解码器为默认值",
+        "downloaderPeers": "对等下载器",
+        "lastMergeMasterId": "最后合并MasterID",
+        "lastMergeSlaveId": "最后合并SlaveID",
+        "ldapSearchTimeoutS": "LDAP搜索超时 (秒)",
+        "licenseServer": "授权服务器",
+        "lowQualityScreenVideoCodec": "低质量的屏幕视频编解码器",
+        "maxP2pAllClientsSizeBytes": "全客户端最大P2P大小 Bytes",
+        "maxRtpRetryCount": "最大RTP重试次数",
+        "metadataStorageChangePolicy": "Meta数据存储更改策略",
+        "pushNotificationsLanguage": "推送通知语言",
+        "resourceFileUri": "资源文件URI",
+        "sessionLimitMinutes": "登录时间限制(分钟)",
+        "specificFeatures": "特点",
         "systemName": "系统名称",
         "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
+        "arecontRtspEnabled": "Arecont RTSP已启用",
+        "auditTrailEnabled": "已启用审核跟踪",
+        "auditTrailPeriodDays": "审计追踪期限",
+        "autoDiscoveryEnabled": "启用设备自动查找",
+        "autoUpdateThumbnails": "自动更新缩图",
+        "backupNewCamerasByDefault": "默认情况下备份新摄像机",
+        "backupQualities": "备份质量",
+        "cameraSettingsOptimization": "允许设备设置优化",
+        "clientStatisticsSettingsUrl": "客户统计相关网址",
+        "cloudAccountName": "云所有者帐户",
+        "cloudConnectRelayingEnabled": "为云连接启用中继",
+        "cloudConnectUdpHolePunchingEnabled": "启用云连接UDP洞穿技术",
+        "cloudHost": "云主机",
+        "cloudSystemID": "云系统ID",
         "disabledVendors": "禁用的供应商",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
+        "ec2AliveUpdateIntervalSec": "系统刷新间隔 (秒)",
+        "ec2ConnectionKeepAliveTimeoutSec": "保持连接超时（秒）",
+        "ec2KeepAliveProbeCount": "保持连接侦测（秒）",
+        "emailFrom": "电子邮件发件人",
         "emailSignature": "Email signature",
         "emailSupportEmail": "Support Email",
         "enableEdgeRecording": "Enable edge recording",
@@ -760,21 +794,21 @@
         "smtpSimple": "SMTP simple",
         "smtpTimeout": "SMTP timeout",
         "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "statisticsAllowed": "发送匿名使用统计信息和崩溃报告",
+        "statisticsReportLastNumber": "统计报告-最后一个数字",
+        "statisticsReportLastTime": "统计报告-上一次",
+        "statisticsReportLastVersion": "统计报告-上一版",
+        "statisticsReportServerApi": "统计服务器API",
+        "statisticsReportTimeCycle": "统计报告间隔",
+        "statisticsReportUpdateDelay": "统计报告 - 更新延迟",
+        "synchronizeTimeWithInternet": "与互联网校时",
         "SystemName": "系统名称",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "takeCameraOwnershipWithoutLock": "取得摄影机所有权而不锁定",
+        "timeSynchronizationEnabled": "启用时间同步",
+        "primaryTimeServer": "將主時間同步校時服務器",
+        "osTimeChangeCheckPeriodMs": "作业系统时间变更检查期",
+        "syncTimeExchangePeriod": "发送网络校时请求的时间间隔",
+        "syncTimeEpsilon": "容许误差。如果时间最小误差容许值小于目前误差则不更新时间",
         "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
         "updateNotificationsEnabled": "Update notifications enabled",
         "upnpPortMappingEnabled": "UPNP port mapping enabled",

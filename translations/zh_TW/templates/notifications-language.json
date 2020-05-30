@@ -1,6 +1,6 @@
 {
   "activate_account": {
-    "emailSubject": "啟動您的帳號"
+    "emailSubject": "啟用您的帳號"
   },
   "cloud_invite": {
     "emailSubject": "您已被邀請到 %CLOUD_NAME%"

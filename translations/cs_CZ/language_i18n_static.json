@@ -156,6 +156,7 @@
         "systemServerError": "Interní chyba serveru",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Neznámý",
         "voiceCommands": {
             "clear search": "smazat hledání",
@@ -254,13 +255,11 @@
             "serverAtUrl": "server at {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "Systém {{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} <a href=\"/download\" target=\"_blank\" translate> na nejnovější verzi </a> pro sloučení se systémem.",
-            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
+            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -434,6 +433,7 @@
         "wrongCode": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
         "wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
         "wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,6 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Správce systému",
+            "general": "General",
+            "licenses": "Licenses",
             "users": "Uživatelé"
         }
     },
@@ -691,6 +693,38 @@
             "rename": {
                 "success": "Název systému byl uložen"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Typ",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "deactivations": "Deactivation left",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Chyba",
+            "expired": "Expired",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {

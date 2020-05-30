@@ -156,6 +156,7 @@
         "systemServerError": "Lỗi nội bộ máy chủ",
         "systemServerErrorMessage": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Không xác định",
         "voiceCommands": {
             "clear search": "xóa tìm kiếm",
@@ -254,13 +255,11 @@
             "serverAtUrl": "máy chủ ở {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Không thể truy cập hệ thống {{targetSystem}}.</p><p>Đảm bảo rằng máy chủ được chỉ định đang trực tuyến và thử lại.</p>",
             "serverNotYours": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
-            "serverVersionOld": "Máy chủ này có phiên bản phần mềm cũ không tương thích với Hệ thống hiện tại. Cập nhật nó lên bản dựng mới nhất để hợp nhất nó với bản dựng hiện tại.",
-            "serverVersionNew": "Máy chủ này có phiên bản phần mềm mới hơn hệ thống hiện tại. Cập nhật cả hai hệ thống vào cùng một bản dựng để hợp nhất chúng.",
             "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại",
             "systemOfflineUrl": "{{targetSystem}} là không thể truy cập",
             "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Cập nhật cả hai hệ thống vào cùng một bản dựng để hợp nhất chúng.",
-            "systemVersionOld": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với Hệ thống hiện tại. Cập nhật các hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>mới nhất build</a>để hợp nhất với hệ thống {{targetSystem}}.",
-            "systemVersionNew": "Hệ thống {{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất nó với hệ thống {{targetSystem}}.",
+            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -434,6 +433,7 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,6 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Quản trị hệ thống",
+            "general": "General",
+            "licenses": "Licenses",
             "users": "Người sử dụng"
         }
     },
@@ -691,6 +693,38 @@
             "rename": {
                 "success": "Đã lưu tên hệ thống"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Kiểu",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "deactivations": "Deactivation left",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Lỗi",
+            "expired": "Expired",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
