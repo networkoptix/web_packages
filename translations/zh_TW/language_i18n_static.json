@@ -1,7 +1,7 @@
 {
 	"account": {
 		"accountSavedSuccess": "您的帳號已成功儲存",
-		"activationLinkSent": "啟動連結已發送",
+		"activationLinkSent": "啟用連結已發送",
 		"passwordChangedSuccess": "您的帳號已成功儲存",
 		"changePassword": "變更密碼",
 		"newPasswordLabel": "新密碼",
@@ -10,7 +10,7 @@
 		"agreementAccepted": "協議已被同意"
 	},
 	"activeActions": {
-		"sendConfirm": "重新發送啟動連結",
+		"sendConfirm": "重新發送啟用連結",
 		"resetPassword": "重置密碼",
 		"setNewPassword": "儲存密碼",
 		"setNewPasswordLabel": "新密碼"
@@ -94,9 +94,9 @@
 			"win64": "x64"
 		},
 		"appTypes": {
-			"bundle": "用戶端和伺服器",
+			"bundle": "客戶端和伺服器",
 			"camera_sdk": "影像來源SDK",
-			"client": "僅用戶端",
+			"client": "僅客戶端",
 			"metadata_sdk": "Meta數據SDK",
 			"package": "套件",
 			"server": "僅伺服器",
@@ -174,7 +174,7 @@
 		"default": "%CLOUD_NAME%",
 		"about": "關於",
 		"registerSuccess": "歡迎來到",
-		"register": "新建帳戶",
+		"register": "新增帳號",
 		"changePassword": "變更密碼",
 		"account": "帳號設定",
 		"systems": "系統",
@@ -200,7 +200,7 @@
 	"dialogs": {
 		"okButton": "確定",
 		"cancelButton": "取消",
-		"createNewAccount": "新增帳戶",
+		"createNewAccount": "新增帳號",
 		"changeAccountLogged": "您已經以{email} 的帳號登入。",
 		"loggedFromOther": "您將使用其他帳號登入",
 		"loginTitle": "登入到 %CLOUD_NAME%",
@@ -246,7 +246,7 @@
 			}
 		},
 		"sharing": {
-			"confirmOwner": "如果您更改系統擁有者, 您將註銷目前此帳號的所有權. 此操作是不可逆的, 是否確定?",
+			"confirmOwner": "如果您更改系統所有者, 將註銷目前此帳號的所有權. 此操作是不可逆的, 是否確定?",
 			"shareTitle": "新增",
 			"shareConfirmButton": "新增",
 			"editShareTitle": "編輯權限",
@@ -266,21 +266,21 @@
 		"cantGetSystemInfoPrefix": "系統資訊不可用",
 		"cantChangeAccountPrefix": "無法儲存變更",
 		"cantChangePasswordPrefix": "無法儲存密碼",
-		"cantActivatePrefix": "無法啟動您的帳號",
+		"cantActivatePrefix": "無法啟用您的帳號",
 		"cantSendConfirmationPrefix": "無法發送確認郵件",
 		"notAuthorized": "密碼不正確",
 		"brokenAccount": "帳號出現意外問題. <a href=\"/restore_password\">還原帳號</a>",
 		"wrongParameters": "表單上的一些參數不正確",
-		"wrongCode": "帳號已經啟動或確認碼不正確",
+		"wrongCode": "帳號已經啟用或確認碼不正確",
 		"wrongCodeRestore": "確認代碼已使用或不正確",
 		"wrongAuthCode": "代碼已過期或不正確",
 		"forbidden": "您沒有權限執行此操作",
-		"accountNotActivated": "此帳號尚未啟動. <a href=\"/activate\"> 再發送一次啟動連結</a>",
+		"accountNotActivated": "此帳號尚未啟用. <a href=\"/activate\"> 再發送一次啟用連結</a>",
 		"accountBlocked": "此帳號已被封鎖。請在幾分鐘後再試一次。",
 		"notFound": "找不到",
 		"alreadyExists": "此帳號已存在",
 		"unknownError": "發生意外的錯誤",
-		"accountAlreadyActivated": "此帳號已啟動",
+		"accountAlreadyActivated": "此帳號已啟用",
 		"emailNotFound": "帳號不存在.",
 		"EmailAlreadyExists": "此電子郵件已被註冊",
 		"oldPasswordMistmatch": "目前密碼不正確.",
@@ -288,7 +288,7 @@
 		"cantEditYourself": "不允許變更自己的權限",
 		"cantEditAdmin": "此使用者具有管理員權限",
 		"cantOpenClient": "未檢測到應用程序%VMS_NAME% 。",
-		"lostConnection": "與 {{systemName}} 的連線斷開了",
+		"lostConnection": "與 {{systemName}} 的連線已中斷",
 		"thisSystem": "系統",
 		"oldSafariNotSupported": "不支持10歲以上的Safari版本",
 		"DUPLICATE_MEDIASERVER_FOUND": "某些伺服器列表並存於選定的和當前的兩個系統中 。<br>請從各系統中刪除並斷線不相容的伺服器，然後重連一次。",
@@ -328,16 +328,16 @@
 		"confirmRenameTitle": "系統名稱",
 		"confirmRenameAction": "儲存",
 		"successRename": "系統名稱已儲存",
-		"confirmDisconnectTitle": "是否從 %CLOUD_NAME% 中斷開系統?",
+		"confirmDisconnectTitle": "是否從 %CLOUD_NAME% 中斷系統?",
 		"confirmDisconnectAction": "斷線",
-		"confirmUnshareFromMe": "您正要從您的帳號斷開此系統. 您將再也無法存取此系統. 確定?",
-		"confirmUnshareFromMeTitle": "斷開系統?",
+		"confirmUnshareFromMe": "正要從您的帳號中斷此系統. 您將再也無法存取. 是否確定?",
+		"confirmUnshareFromMeTitle": "是否中斷系統?",
 		"confirmUnshareFromMeAction": "斷線",
 		"confirmUnshare": "此使用者將無法存取系統. 確定?",
 		"confirmUnshareTitle": "是否要移除使用者？",
 		"confirmUnshareAction": "移除",
 		"successDisconnected": "系統已成功從 %CLOUD_NAME%斷線",
-		"successDeleted": "從您的帳戶成功刪除系統 {{systemName}}",
+		"successDeleted": "從您的帳號成功刪除系統 {{systemName}}",
 		"mergeFailed": "系統合併失敗",
 		"mergeStart": "系統開始合併中",
 		"mergeSuccess": "系統合併完成",
@@ -356,10 +356,10 @@
 		}
 	},
 	"systemStatuses": {
-		"activated": "啟動",
+		"activated": "啟用",
 		"incompatible": "不相容",
 		"merging": "合併中",
-		"notActivated": "未啟動",
+		"notActivated": "未啟用",
 		"online": "線上",
 		"offline": "離線",
 		"unavailable": "不可用的"
@@ -370,8 +370,8 @@
 			"description": "使用者被停用, 無法登入到系統"
 		},
 		"Owner": {
-			"label": "擁有者",
-			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
+			"label": "所有者",
+			"description": "不受限權限包括共用及從雲端連接/中斷系統的能力"
 		},
 		"Viewer": {
 			"label": "瀏覽",
@@ -391,7 +391,7 @@
 		},
 		"Custom": {
 			"label": "自訂",
-			"description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
+			"description": "請使用 %VMS_NAME% 客戶端應用程式設定自訂權限"
 		},
 		"cloudAdmin": {
 			"label": "管理者",
@@ -402,8 +402,8 @@
 			"description": "在系統中指定的自訂使用者角色"
 		},
 		"owner": {
-			"label": "擁有者",
-			"description": "不受限權限包括共用及從雲端連接/斷開系統的能力"
+			"label": "所有者",
+			"description": "不受限權限包括共用及從雲端連接/中斷系統的能力"
 		},
 		"viewer": {
 			"label": "瀏覽",
@@ -419,7 +419,7 @@
 		},
 		"custom": {
 			"label": "自訂",
-			"description": "使用 %VMS_NAME% 用戶端應用程式可以設置自訂權限"
+			"description": "請使用 %VMS_NAME% 客戶端應用程式設定自訂權限"
 		}
 	},
 	"privacyPolicy": {
@@ -495,7 +495,7 @@
 	"Supported Devices": "支持設備",
 	"Terms": "條款",
 	"pleaseSelect": "請選擇...",
-	"WHEN_MERGE_FINISHES": "合併完成後, 此系統中的所有用戶和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
+	"WHEN_MERGE_FINISHES": "合併完成後, 此系統中的所有使用者和攝影機都將可用於<strong>{{targetSystemName}}</strong>, 同時此系統將被刪除",
 	"FAILED_SYSTEM_DESCR": "此連結已損毀,<br> 系統可能會從 %CLOUD_NAME% 離線,<br>於此系統的權限可能被註銷,<br>或請您用不同的帳號登錄.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "您沒有任何系統連接到 %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "使用%VMS_NAME% 登入到您的系統",
