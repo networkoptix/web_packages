@@ -1,9 +1,11 @@
+import { DialogsMerge } from '../../../language_i18n_static_types';
+
 export const State: {
     [state: string]: {
         show: any,
         showUpdates: any,
         template: any,
-        errorText: Partial<ErrorText>
+        errorText: Partial<DialogsMerge>
     }
 } = Object.assign({
     thisSystemHasOutdatedServerError : { show: {}, showUpdates: {}, template: {}, errorText: {} },
@@ -125,26 +127,3 @@ export const State: {
         }
     }
 });
-
-export interface ErrorText {
-    adminPasswordWrong : string,
-    differentOwners : string,
-    duplicateServers : string,
-    noServerFound : string,
-    passwordRequired : string,
-    passwordWrong : string,
-    primarySystemOffline : string,
-    primarySystemUnavailable : string,
-    secondaryCannotMerge : string,
-    secondarySystemUnavailable : string,
-    serverNotAvailable : string,
-    serverNotYours : string,
-    systemOffline : string,
-    systemOfflineUrl : string,
-    systemsIncompatible : string,
-    systemVersionOld : string,
-    systemVersionNew : string,
-    unknownError : string,
-    urlEmpty : string,
-    urlNotValid : string,
-};
