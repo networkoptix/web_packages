@@ -156,7 +156,7 @@
         "systemServerError": "Lỗi nội bộ máy chủ",
         "systemServerErrorMessage": "Một lỗi xảy ra, xin vui lòng thử lại sau. Nếu vấn đề vẫn tiếp tục, vui lòng liên hệ với nhóm hỗ trợ của bạn.",
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Hệ thống là ngoại tuyến và do đó, thông tin không thể truy cập.",
         "unknown": "Không xác định",
         "voiceCommands": {
             "clear search": "xóa tìm kiếm",
@@ -258,8 +258,8 @@
             "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại",
             "systemOfflineUrl": "{{targetSystem}} là không thể truy cập",
             "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Cập nhật cả hai hệ thống vào cùng một bản dựng để hợp nhất chúng.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemVersionOld": "{{targetSystem}} có phiên bản phần mềm cũ không tương thích với hệ thống hiện tại. Cập nhật {{targetSystem}} lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất với bản dựng hiện tại.",
+            "systemVersionNew": "{{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất nó với {{targetSystem}}.",
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,8 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Quản trị hệ thống",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "Chung",
+            "licenses": "Mã bản quyền",
             "users": "Người sử dụng"
         }
     },
@@ -688,7 +688,7 @@
             },
             "merge": {
                 "failed": "Hợp nhất hệ thống không thành công",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Hợp nhất các hệ thống {{primaryName}} và {{secondaryName}} đã hoàn thành"
             },
             "rename": {
                 "success": "Đã lưu tên hệ thống"
@@ -698,33 +698,33 @@
     "license": {
         "info": {
             "type": "Kiểu",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "Kênh truyền hình",
+            "server": "Máy chủ",
+            "hwid": "ID phần cứng",
+            "status": "Trạng thái",
+            "expires": "Hết hạn",
+            "time": "Thời gian",
+            "deactivations": "Vô hiệu hóa trái",
+            "trial": "Thử nghiệm",
+            "online": "Trực tuyến",
             "error": "Lỗi",
-            "expired": "Expired",
+            "expired": "Đã hết hạn",
             "ok": "Ok",
-            "digital": "Professional",
-            "analog": "Analog",
+            "digital": "Chuyên nghiệp",
+            "analog": "Tương tự",
             "edge": "Edge",
             "vmax": "VMAX",
-            "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
-            "starter": "Starter",
-            "iomodule": "IO Module",
-            "bridge": "Bridge"
+            "videowall": "Bức tường video",
+            "analogencoder": "Bộ mã hóa tương tự",
+            "starter": "Bắt đầu",
+            "iomodule": "Mô đun IO",
+            "bridge": "Cầu"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "Yêu cầu thêm {{number}}",
+            "activated": "Mã bản quyền được kích hoạt",
+            "inuse": "Mã bản quyền đã được kích hoạt và ràng buộc với máy chủ có ID phần cứng {{hwid}} trong hệ thống khác",
+            "trialActivated": "Giấy phép dùng thử kích hoạt. Bắt đầu từ hôm nay, bạn có thể ghi lại tới 4 camera trong 30 ngày."
         }
     },
     "settingsConfig": {

@@ -156,7 +156,7 @@
         "systemServerError": "שגיאת שרת פנימית",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "אי אפשר להגיע למערכת",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
         "unknown": "לא ידוע",
         "voiceCommands": {
             "clear search": "נקה את החיפוש",
@@ -258,8 +258,8 @@
             "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemVersionOld": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
+            "systemVersionNew": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
             "urlEmpty": "הזן כתובת שרת",
             "urlNotValid": "הזן כתובת URL חוקית",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
         "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
         "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,8 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "ניהול המערכת",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "כללי",
+            "licenses": "רשיונות",
             "users": "משתמשים"
         }
     },
@@ -698,33 +698,33 @@
     "license": {
         "info": {
             "type": "סוג",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "ערוצים",
+            "server": "שרת",
+            "hwid": "מזהה חומרה",
+            "status": "מצב",
+            "expires": "יפוג",
+            "time": "זמן",
+            "deactivations": "זמן עד ההשבתה",
+            "trial": "נסיון",
+            "online": "מקוון",
             "error": "שגיאה",
-            "expired": "Expired",
-            "ok": "Ok",
-            "digital": "Professional",
-            "analog": "Analog",
-            "edge": "Edge",
+            "expired": "פג תוקף",
+            "ok": "אישור",
+            "digital": "מקצועי",
+            "analog": "אנלוגי",
+            "edge": "קצה",
             "vmax": "VMAX",
             "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "analogencoder": "דוחס אנלוגי",
+            "starter": "מתחיל",
+            "iomodule": "מודול קלט/פלט",
             "bridge": "Bridge"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "נדרש {{number}} נוספים",
+            "activated": "הרשיון הופעל",
+            "inuse": "מפתח הרישיון כבר הופעל ומחובר לשרת עם מזהה חומרה {{hwid}} במערכת אחרת",
+            "trialActivated": "רישיון ניסיון הופעל. החל מהיום תוכלו להקליט עד 4 מצלמות למשך 30 יום."
         }
     },
     "settingsConfig": {
