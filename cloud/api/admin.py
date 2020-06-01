@@ -198,8 +198,7 @@ class AccountLoginHistoryAdmin(admin.ModelAdmin):
     def has_delete_permission(self, request, obj=None):
         return False
 
-    clean_old_records.short_description = "Remove messages older than {} days".format(
-        settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+    clean_old_records.short_description = f"Remove messages older than {settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS} days"
 
 
 admin.site.unregister(Group)

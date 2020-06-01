@@ -172,16 +172,16 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
             # if its option and not a valid guid set error message and go to next DataStructure
             if new_record_value and not re.match(GUID_REGEXP, new_record_value):
-                upload_errors.append((data_structure_name, 'Invalid GUID {} it should formatted like {}'
-                                      .format(new_record_value, "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}")))
+                guid_format = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+                upload_errors.append(
+                    (data_structure_name, f'Invalid GUID {new_record_value} it should formatted like {guid_format}'))
                 continue
 
             # no guid submitted or default value and is not optional generate a guid
             elif not new_record_value and not data_structure.optional:
                 new_record_value = '{' + str(uuid.uuid4()) + '}'
-                upload_errors.append((data_structure_name,
-                                      'No submitted GUID or default value. GUID has been generated as {}'
-                                      .format(new_record_value)))
+                upload_errors.append(
+                    (data_structure_name, f'No submitted GUID or default value. GUID has been generated as {new_record_value}'))
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
             getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
@@ -514,33 +514,27 @@ def check_image_dimensions(data_structure_name,
         return size_error_msgs
 
     if 'height' in meta_dimensions and meta_dimensions['height'] != image_dimensions['height']:
-        error_msg = "Image height must be equal to {}. Uploaded image's height is {}."\
-            .format(meta_dimensions['height'], image_dimensions['height'])
+        error_msg = f"Image height must be equal to {meta_dimensions['height']}. Uploaded image's height is {image_dimensions['height']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'width' in meta_dimensions and meta_dimensions['width'] != image_dimensions['width']:
-        error_msg = "Image width must be equal to {}. Uploaded image's width is {}."\
-            .format(meta_dimensions['width'], image_dimensions['width'])
+        error_msg = f"Image width must be equal to {meta_dimensions['width']}. Uploaded image's width is {image_dimensions['width']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'height_le' in meta_dimensions and meta_dimensions['height_le'] < image_dimensions['height']:
-        error_msg = "Image height must be equal to or less than {}. Uploaded image's height is {}."\
-            .format(meta_dimensions['height_le'], image_dimensions['height'])
+        error_msg = f"Image height must be equal to or less than {meta_dimensions['height_le']}. Uploaded image's height is {image_dimensions['height']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'width_le' in meta_dimensions and meta_dimensions['width_le'] < image_dimensions['width']:
-        error_msg = "Image width must be equal to or less than {}. Uploaded image's width is {}."\
-            .format(meta_dimensions['width_le'], image_dimensions['width'])
+        error_msg = f"Image width must be equal to or less than {image_dimensions['width_le']}. Uploaded image's width is {image_dimensions['width']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'height_ge' in meta_dimensions and meta_dimensions['height_ge'] > image_dimensions['height']:
-        error_msg = "Image height must be equal to or more than {}. Uploaded image's height is {}."\
-            .format(meta_dimensions['height_ge'], image_dimensions['height'])
+        error_msg = f"Image height must be equal to or more than {meta_dimensions['height_ge']}. Uploaded image's height is {image_dimensions['height']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'width_ge' in meta_dimensions and meta_dimensions['width_ge'] > image_dimensions['width']:
-        error_msg = "Image width must be equal to or more than {}. Uploaded image's width is {}." \
-            .format(meta_dimensions['width_ge'], image_dimensions['width'])
+        error_msg = f"Image width must be equal to or more than {meta_dimensions['width_ge']}. Uploaded image's width is {image_dimensions['width']}." 
         size_error_msgs.append((data_structure_name, error_msg))
 
     return size_error_msgs
@@ -550,9 +544,7 @@ def check_meta_settings(data_structure, new_file):
     meta_settings = data_structure.meta_settings
     if 'format' in meta_settings and is_not_valid_file_extension(new_file.name, meta_settings['format']) and \
             is_not_valid_file_type(new_file.content_type, meta_settings['format']):
-        error_msg = "Invalid file type. Uploaded file is {}. It should be {}." \
-            .format(new_file.content_type,
-                    data_structure.meta_settings['format'].replace(',', ' or '))
+        error_msg = f"Invalid file type. Uploaded file is {new_file.content_type}. It should be {data_structure.meta_settings['format'].replace(',', ' or ')}."
         return [(data_structure.name, error_msg)]
 
     if 'size' in meta_settings and meta_settings['size'] < new_file.size:

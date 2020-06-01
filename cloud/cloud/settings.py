@@ -474,7 +474,7 @@ if os.path.isfile(common_list_file):
     with open(common_list_file) as data_file:
         PASSWORD_REQUIREMENTS['common_passwords'] = json.load(data_file)
 else:
-    print("Warning: Can't read from {}".format(common_list_file), file=sys.stderr)
+    print(f"Warning: Can't read from {common_list_file}", file=sys.stderr)
 
 
 NOTIFICATIONS_CONFIG = {

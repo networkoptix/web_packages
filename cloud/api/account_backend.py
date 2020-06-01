@@ -60,18 +60,19 @@ class AccountBackend(ModelBackend):
 @receiver(user_logged_in)
 def user_logged_in_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info('User logged in: {}, IP: {}'.format(user.email, ip))
+    logger.info(f'User logged in: {user.email}, IP: {ip}')
     AccountLoginHistory.objects.create(action='user_logged_in', ip=ip, email=user.email)
 
 
 @receiver(user_logged_out)
 def user_logged_out_callback(sender, request, user, **kwargs):
     ip = get_ip(request)
-    logger.info('User logged out: {}, IP: {}'.format(user.email, ip))
+    logger.info(f'User logged out: {user.email}, IP: {ip}')
     AccountLoginHistory.objects.create(action='user_logged_out', ip=ip, email=user.email)
 
 
 @receiver(user_login_failed)
 def user_login_failed_callback(sender, credentials, **kwargs):
-    logger.info('Failed login attempt: {}'.format(credentials.get('username', None)))
-    AccountLoginHistory.objects.create(action='user_login_failed', email=credentials.get('username', None))
+    user_name = credentials.get('username', None)
+    logger.info(f'Failed login attempt: {user_name}')
+    AccountLoginHistory.objects.create(action='user_login_failed', email=user_name)

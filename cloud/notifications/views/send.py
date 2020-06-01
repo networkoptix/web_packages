@@ -165,7 +165,7 @@ def send_event(request):
         request.data['sender_name'] = request.data['userName']
 
         ip = get_client_ip(request)
-        logging.info("ip: {}\t user: {}\nrequest data: {}".format(ip, request.user, request.data))
+        logging.info(f"ip: {ip}\t user: {request.user}\nrequest data: {request.data}")
 
         notifications_api.send_feedback(request.data['type'], asset_id, request.data)
 

@@ -29,7 +29,7 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @app.task(bind=True)
 def debug_task(self):
-    print('Request: {0!r}'.format(self.request))
+    print(f'Request: {repr(self.request)}')
 
 
 @app.task

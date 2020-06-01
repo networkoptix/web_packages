@@ -49,7 +49,7 @@ def move_contexts_to_assettype(logger):
     cloud_portal_type = structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
     for context in cloud_portal.context_set.all():
-        logger.stdout.write(logger.style.SUCCESS("\tMoving {}".format(context.name)))
+        logger.stdout.write(logger.style.SUCCESS(f"\tMoving {context.name}"))
         context.asset_type = cloud_portal_type
         context.save()
     logger.stdout.write(logger.style.SUCCESS("Done moving contexts to asset_type cloud_portal"))

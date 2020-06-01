@@ -241,7 +241,7 @@ class AccountLoginHistory(models.Model):
         verbose_name_plural = 'Authentication log'
 
     def __unicode__(self):
-        return '{0} - {1} - {2}'.format(self.action, self.email, self.ip)
+        return f'{self.action} - {self.email} - {self.ip}'
 
 
 class ProxyGroup(Group):

@@ -20,7 +20,7 @@ def _get_sqs_metrics():
     metric_result = {}
 
     conf = get_config()
-    queue_name = '{}-celery'.format(conf['queue_name'])
+    queue_name = f'{conf["queue_name"]}-celery'
 
     cloudwatch = boto3.client('cloudwatch')
     paginator = cloudwatch.get_paginator('get_metric_data')

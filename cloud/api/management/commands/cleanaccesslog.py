@@ -6,11 +6,11 @@ from cloud import settings
 
 
 class Command(BaseCommand):
-    help = 'Cleans out access log older than {} days'\
-        .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+    days = settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS
+    help = f'Cleans out access log older than {days} days'
 
     def handle(self, *args, **options):
-        cutoff_date = datetime.now() - timedelta(days=settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+        cutoff_date = datetime.now() - timedelta(days=self.days)
         AccountLoginHistory.objects.filter(date__lt=cutoff_date).delete()
-        self.stdout.write(self.style.SUCCESS('Successfully deleted task results and messages older than {} days'
-                                             .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)))
+        self.stdout.write(self.style.SUCCESS(
+            f'Successfully deleted task results and messages older than {self.days} days'))
