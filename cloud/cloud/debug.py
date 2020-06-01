@@ -24,7 +24,7 @@ class Timer:
 
     def __enter__(self):
         self.start_time = time.time()
-        logger.info(f"Starting {self.measure_name}.".format(self.measure_name))
+        logger.info(f"Starting {self.measure_name}.")
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
