@@ -281,8 +281,6 @@ export interface DialogsMerge {
     serverAtUrl:                string;
     serverNotAvailable:         string;
     serverNotYours:             string;
-    serverVersionOld:           string;
-    serverVersionNew:           string;
     systemOffline:              string;
     systemOfflineUrl:           string;
     systemsIncompatible:        string;
@@ -1289,8 +1287,6 @@ const typeMap: any = {
         { json: "serverAtUrl", js: "serverAtUrl", typ: "" },
         { json: "serverNotAvailable", js: "serverNotAvailable", typ: "" },
         { json: "serverNotYours", js: "serverNotYours", typ: "" },
-        { json: "serverVersionOld", js: "serverVersionOld", typ: "" },
-        { json: "serverVersionNew", js: "serverVersionNew", typ: "" },
         { json: "systemOffline", js: "systemOffline", typ: "" },
         { json: "systemOfflineUrl", js: "systemOfflineUrl", typ: "" },
         { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },

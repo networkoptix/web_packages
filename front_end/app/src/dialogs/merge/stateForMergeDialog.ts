@@ -60,8 +60,6 @@ export default Object.assign({
             secondarySystemUnavailable : '',
             serverNotAvailable         : '',
             serverNotYours             : '',
-            serverVersionOld           : '',
-            serverVersionNew           : '',
             systemOffline              : '',
             systemsIncompatible        : '',
             systemVersionOld           : '',
