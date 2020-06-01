@@ -40,6 +40,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
     checking: boolean;
+    serverLoaded = false;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -112,6 +113,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
 
         if (changes.selectedServer && changes.selectedServer.currentValue) {
+            const { currentValue, previousValue } = changes.selectedServer;
+            if (previousValue && currentValue.id !== previousValue.id) {
+                this.serverLoaded = false;
+            }
             this.setServer();
         }
     }
@@ -175,11 +180,13 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                     const servers = Object.entries(res).map(server => server[1]);
                     this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
                         ? '' : this.CONFIG.servers.status.offline);
+                    this.serverLoaded = true;
                 }
             })
             .catch(err => {
                 console.error(err);
                 this.setStatus(this.CONFIG.servers.status.offline);
+                this.serverLoaded = true;
             });
     }
 

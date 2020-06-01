@@ -1,9 +1,9 @@
 <div class="row auth-visible">
     <nx-page-placeholder class="sectional-div server-placeholder" type="OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
-    <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !selectedServer">
+    <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !serverLoaded">
         <nx-pre-loader type="wrapper"></nx-pre-loader>
     </div>
-    <div class="col-12 server-info" *ngIf="selectedServer">
+    <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded">
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
