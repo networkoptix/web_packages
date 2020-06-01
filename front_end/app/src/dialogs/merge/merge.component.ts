@@ -12,7 +12,7 @@ import { NxSystemsService }            from '../../services/systems.service';
 import { NxUtilsService }              from '../../services/utils.service';
 import { LanguageI18NStaticTypes }     from '../../../language_i18n_static_types';
 import StateMachine                    from './stateMachine';
-import State                           from './stateForMergeDialog';
+import { State }                       from './stateForMergeDialog';
 import * as md5                        from 'md5';
 
 @Component({

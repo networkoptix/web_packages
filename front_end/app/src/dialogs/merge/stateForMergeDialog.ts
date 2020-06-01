@@ -1,5 +1,12 @@
-export default Object.assign({
-    thisSystemHasOutdatedServerError : { show: {}, template: {}, errorText: {} },
+export const State: {
+    [state: string]: {
+        show: any,
+        showUpdates: any,
+        template: any,
+        errorText: Partial<ErrorText>
+    }
+} = Object.assign({
+    thisSystemHasOutdatedServerError : { show: {}, showUpdates: {}, template: {}, errorText: {} },
     checkMerge                       : {
         show: {
             systemDropdown                    : true,
@@ -99,7 +106,7 @@ export default Object.assign({
             unknownError       : ''
         }
     },
-    choosePrimary : { show: {}, template: {}, errorText: {} },
+    choosePrimary : { show: {}, showUpdates: {}, template: {}, errorText: {} },
     confirmMerge  : {
         show        : { passwordError: false },
         showUpdates : {
@@ -118,3 +125,26 @@ export default Object.assign({
         }
     }
 });
+
+export interface ErrorText {
+    adminPasswordWrong : string,
+    differentOwners : string,
+    duplicateServers : string,
+    noServerFound : string,
+    passwordRequired : string,
+    passwordWrong : string,
+    primarySystemOffline : string,
+    primarySystemUnavailable : string,
+    secondaryCannotMerge : string,
+    secondarySystemUnavailable : string,
+    serverNotAvailable : string,
+    serverNotYours : string,
+    systemOffline : string,
+    systemOfflineUrl : string,
+    systemsIncompatible : string,
+    systemVersionOld : string,
+    systemVersionNew : string,
+    unknownError : string,
+    urlEmpty : string,
+    urlNotValid : string,
+};
