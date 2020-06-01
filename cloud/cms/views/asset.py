@@ -141,7 +141,7 @@ def context_editor_action(request, asset, context_id, language_code):
 def page_editor(request):
     asset = Asset.objects.get(id=request.POST['asset_id'])
     context_id = request.POST['context_id']
-    language_code = request.POST['language'] if 'language' in request.POST else None
+    language_code = request.POST.get('language')
 
     if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
         raise PermissionDenied
@@ -172,7 +172,7 @@ def page_editor(request):
 @require_http_methods(["POST"])
 @permission_required("cms.change_assetcustomizationreview")
 def review(request):
-    review_id = request.POST['review_id'] if 'review_id' in request.POST else None
+    review_id = request.POST.get('review_id')
     asset_review = AssetCustomizationReview.objects.filter(id=review_id).first()
 
     if not asset_review:
@@ -234,7 +234,7 @@ def review(request):
 @require_http_methods(["POST"])
 @permission_required('cms.change_assetcustomizationreview')
 def make_preview(request):
-    version_id = request.POST['version_id'] if 'version_id' in request.POST else None
+    version_id = request.POST.get('version_id')
     context = Context.objects.filter(id=request.POST['context_id']).first()
     asset = get_asset_by_revision(version_id)
     cloud = get_cloud_portal_asset()
@@ -364,8 +364,8 @@ def download_file(request, path):
     if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
         raise PermissionDenied
 
-    language_code = request.GET['lang'] if 'lang' in request.GET else None
-    version_id = request.GET['version_id'] if 'version_id' in request.GET else None
+    language_code = request.GET.get('lang')
+    version_id = request.GET.get('version_id')
     preview = 'draft' in request.GET
     file = filldata.read_customized_file(path, asset, language_code, version_id, preview)
     if file:
@@ -391,7 +391,7 @@ def download_package(request, asset_id):
     if not request.user.has_perm("cms.can_download_package"):
         raise PermissionDenied
 
-    version_id = request.GET['version_id'] if 'version_id' in request.GET else None
+    version_id = request.GET.get('version_id')
     preview = 'draft' in request.GET
 
     if not preview and not version_id:

@@ -163,7 +163,7 @@ class CustomContextForm(forms.Form):
                 continue
 
             elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-                options = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
+                options = data_structure.meta_settings.get('options', [])
                 choices = []
                 for choice in options:
                     if type(choice) == dict:

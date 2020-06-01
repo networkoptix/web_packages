@@ -342,8 +342,8 @@ MEDIA_URL = '/integrations/'
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
 AWS_DEFAULT_ACL = 'public-read'
 
-S3_DOMAIN = conf['s3_domain'] if 's3_domain' in conf else '%s.s3.amazonaws.com'
-AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN % AWS_STORAGE_BUCKET_NAME
+S3_DOMAIN = conf.get('s3_domain', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
+AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN
 AWS_S3_OBJECT_PARAMETERS = {
     'ContentDisposition': 'attachment',
 }

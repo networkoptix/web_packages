@@ -157,7 +157,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         update_global_cache(customization, data['version_id'])
 
     if value:
-        return data[value] if value in data else None
+        return data.get(value)
 
     return data
 

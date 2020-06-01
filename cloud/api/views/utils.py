@@ -263,7 +263,7 @@ def downloads(request):
             logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
-        latest_version = updates_record['download_version'] if 'download_version' in updates_record else None
+        latest_version = updates_record.get('download_version')
 
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):
