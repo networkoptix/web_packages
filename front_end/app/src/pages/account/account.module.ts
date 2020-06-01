@@ -7,13 +7,14 @@ import { FormsModule }                   from '@angular/forms';
 import { TranslateModule }               from '@ngx-translate/core';
 
 
-import { ComponentsModule }      from '../../components/components.module';
-import { ApplyGuard, AuthGuard } from '../../routeGuards';
+import { ComponentsModule }             from '../../components/components.module';
+import { ApplyGuard, AuthGuard }        from '../../routeGuards';
 import {
     NxAccountComponent,
     NxAccountSettingsModule, NxAccountSettingsComponent,
     NxAccountPasswordModule, NxAccountPasswordComponent
 } from './';
+import { DirectivesModule }             from '../../directives/directives.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         FormsModule,
         NxAccountSettingsModule,
         NxAccountPasswordModule,

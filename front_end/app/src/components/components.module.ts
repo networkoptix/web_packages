@@ -51,13 +51,13 @@ import { NxThreeDotDropdown } from './dropdowns/three-dot/three-dot.component';
 @NgModule({
     imports: [
         CommonModule,
-        DirectivesModule,
         TranslateModule,
         RouterModule,
         FormsModule,
         MenuModule,
         NgbToastModule,
         NgbModule,
+        DirectivesModule,
         AngularSvgIconModule.forRoot()
     ],
     declarations: [

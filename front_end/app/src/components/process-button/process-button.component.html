@@ -11,7 +11,7 @@
             type="submit"
             (click)="clickFn(); checkForm(); $event.stopPropagation();">
         <ng-container>{{buttonText}}</ng-container>
-        <ng-container *ngIf="svg"><svg-icon [src]="CONFIG.icons.dir + svg.src + '.svg'"
+        <ng-container *ngIf="svg"><svg-icon NxAddSvgSrc [src]="CONFIG.icons.dir + svg.src + '.svg'"
             [ngClass]="{ 'white-svg': svg.color === 'light1', 'ml-2': true }"
             [svgStyle]="{ 'height.px': svg.height }"
             [applyCss]="true"></svg-icon>

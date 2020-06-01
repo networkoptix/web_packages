@@ -1,15 +1,18 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import {
+    downgradeComponent, UpgradeModule
+}                               from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule }          from '@angular/forms';
 
-import { PushComponent } from './push-notifications.component';
+import { PushComponent }        from './push-notifications.component';
 
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
-import { NxConfigService } from '../../services/nx-config';
+import { TranslateModule }      from '@ngx-translate/core';
+import { ComponentsModule }     from '../../components/components.module';
+import { NxConfigService }      from '../../services/nx-config';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     {
@@ -28,6 +31,7 @@ export function initializeApp(CONFIG: NxConfigService) {
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         FormsModule,
         RouterModule.forChild(appRoutes)
     ],

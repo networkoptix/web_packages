@@ -1,14 +1,14 @@
-import { NgModule }             from '@angular/core';
-import { CommonModule }         from '@angular/common';
-import { BrowserModule }        from '@angular/platform-browser';
-import { UpgradeModule }        from '@angular/upgrade/static';
-import { RouterModule, Routes } from '@angular/router';
-import { FormsModule }          from '@angular/forms';
+import { NgModule }               from '@angular/core';
+import { CommonModule }           from '@angular/common';
+import { BrowserModule }          from '@angular/platform-browser';
+import { UpgradeModule }          from '@angular/upgrade/static';
+import { RouterModule, Routes }   from '@angular/router';
+import { FormsModule }            from '@angular/forms';
 
-import { NgbModule }            from '@ng-bootstrap/ng-bootstrap';
-import { TranslateModule }      from '@ngx-translate/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { NgxFileDropModule }    from 'ngx-file-drop';
+import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule }        from '@ngx-translate/core';
+import { AngularSvgIconModule }   from 'angular-svg-icon';
+import { NgxFileDropModule }      from 'ngx-file-drop';
 
 import { ComponentsModule }       from '../../components/components.module';
 import { AuthGuard, SystemGuard } from '../../routeGuards';
@@ -21,6 +21,7 @@ import {
     NxImageComponent, NxImageSectionComponent,
     NxSystemAlertCardComponent, NxUpdateInfoComponent
 } from './';
+import { DirectivesModule }       from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     {
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         AngularSvgIconModule.forRoot(),
         NgxFileDropModule,
         PipesModule,

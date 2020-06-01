@@ -6,11 +6,11 @@ import { RouterModule, Routes }              from '@angular/router';
 import { FormsModule }                       from '@angular/forms';
 import { NgbModule }                         from '@ng-bootstrap/ng-bootstrap';
 
-import { DirectivesModule }       from '../../../directives/directives.module';
-import { NxAccountPasswordComponent } from './password.component';
+import { DirectivesModule }                  from '../../../directives/directives.module';
+import { NxAccountPasswordComponent }        from './password.component';
 
-import { TranslateModule }     from '@ngx-translate/core';
-import { ComponentsModule }    from '../../../components/components.module';
+import { TranslateModule }                   from '@ngx-translate/core';
+import { ComponentsModule }                  from '../../../components/components.module';
 
 @NgModule({
     imports        : [
@@ -22,7 +22,7 @@ import { ComponentsModule }    from '../../../components/components.module';
         NgbModule,
         TranslateModule,
         ComponentsModule,
-        DirectivesModule,
+        DirectivesModule
     ],
     providers      : [],
     declarations   : [

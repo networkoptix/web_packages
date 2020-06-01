@@ -39,6 +39,7 @@ import { BoolIconComponent } from '../app/src/pages/ipvd/cam-components/bool-ico
 
 // Services
 import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
+import { DirectivesModule } from '../app/src/directives/directives.module';
 
 @NgModule({
     imports: [
@@ -48,6 +49,7 @@ import { WINDOWS_PROVIDERS } from '../app/src/services/window-provider';
         HttpClientModule,
         NgbModule,
         WebStorageModule,
+        DirectivesModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([
             { path: '**', redirectTo: 'ipvd' },

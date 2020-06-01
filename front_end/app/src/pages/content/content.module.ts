@@ -4,11 +4,12 @@ import { BrowserModule }        from '@angular/platform-browser';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 
-import { NxContentComponent } from './content.component';
+import { NxContentComponent }   from './content.component';
 
-import { TranslateModule }  from '@ngx-translate/core';
-import { ComponentsModule } from '../../components/components.module';
-import { NxLandingComponent } from '../landing/landing.component';
+import { TranslateModule }      from '@ngx-translate/core';
+import { ComponentsModule }     from '../../components/components.module';
+import { NxLandingComponent }   from '../landing/landing.component';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     { path    : 'content/about', component: NxLandingComponent },
@@ -23,7 +24,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
-
+        DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers      : [],

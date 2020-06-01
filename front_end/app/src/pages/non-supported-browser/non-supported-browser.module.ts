@@ -1,11 +1,16 @@
 import { NgModule }             from '@angular/core';
 import { CommonModule }         from '@angular/common';
 import { BrowserModule }        from '@angular/platform-browser';
-import { downgradeComponent, UpgradeModule } from '@angular/upgrade/static';
+import {
+    downgradeComponent, UpgradeModule
+}                               from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 
 
-import { NonSupportedBrowserComponent } from './non-supported-browser.component';
+import {
+    NonSupportedBrowserComponent
+}                               from './non-supported-browser.component';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     {path: 'browser', component: NonSupportedBrowserComponent},
@@ -16,7 +21,7 @@ const appRoutes: Routes = [
         CommonModule,
         BrowserModule,
         UpgradeModule,
-
+        DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [],

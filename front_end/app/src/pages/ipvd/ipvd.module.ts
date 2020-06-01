@@ -33,7 +33,6 @@ const appRoutes: Routes = [
         DirectivesModule,
         ReactiveFormsModule,
         Angular2CsvModule,
-
         RouterModule.forChild(appRoutes)
     ],
     providers      : [],

@@ -3,15 +3,13 @@ import { CommonModule }                          from '@angular/common';
 import { BrowserModule }                         from '@angular/platform-browser';
 import { UpgradeModule }                         from '@angular/upgrade/static';
 import { Resolve, Router, RouterModule, Routes } from '@angular/router';
-
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { ComponentsModule }         from '../../components/components.module';
-import { ReleaseComponent }         from './release/release.component';
-import { DownloadHistoryComponent } from './download-history.component';
-import { TranslateModule }          from '@ngx-translate/core';
-import { DeviceDetectorService }    from 'ngx-device-detector';
-import { EMPTY as empty }           from 'rxjs';
+import { ComponentsModule }                      from '../../components/components.module';
+import { ReleaseComponent }                      from './release/release.component';
+import { DownloadHistoryComponent }              from './download-history.component';
+import { TranslateModule }                       from '@ngx-translate/core';
+import { EMPTY as empty }                        from 'rxjs';
+import { DirectivesModule }                      from '../../directives/directives.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -41,7 +39,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         NgbModule,
         TranslateModule,
-
+        DirectivesModule,
         ComponentsModule,
         RouterModule.forChild(appRoutes),
     ],
