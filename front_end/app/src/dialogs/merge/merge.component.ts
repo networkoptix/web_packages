@@ -130,9 +130,11 @@ export class MergeModalContent {
                                 if (system.moduleInfo) {
                                     system.protoVersion = system.moduleInfo.protoVersion;
                                     system.isNew = system.moduleInfo.serverFlags.includes(this.CONFIG.system.flags.newSystem);
-                                    system.moduleInfo.remoteAddresses.forEach((addy: string) => {
-                                        this.systemUrls[`${addy}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
-                                    });
+                                    if (system.moduleInfo.remoteAddresses) {
+                                        system.moduleInfo.remoteAddresses.forEach((addy: string) => {
+                                            this.systemUrls[`${addy}:${system.moduleInfo.port}`] = system.id.replace(/{|}/g, '');
+                                        });
+                                    }
                                 }
                             })
                         );
@@ -300,9 +302,11 @@ export class MergeModalContent {
                 this.peerSystems = res.reply
                     .filter(peer => !peer.cloudSystemId)
                     .map(peer => {
-                        peer.remoteAddresses.forEach((addy: string) => {
-                            this.systemUrls[`${addy}:${peer.port}`] = peer.id.replace(/{|}/g, '');
-                        });
+                        if (peer.remoteAddresses) {
+                            peer.remoteAddresses.forEach((addy: string) => {
+                                this.systemUrls[`${addy}:${peer.port}`] = peer.id.replace(/{|}/g, '');
+                            });
+                        }
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
                             ...peer,
