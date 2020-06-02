@@ -26,7 +26,7 @@ Verify Delete User Dialog
     ...    ${DELETE ACCOUNT MODAL BUTTON}
     ...    ${DELETE ACCOUNT CANCEL BUTTON}
     ...    ${DELETE ACCOUNT PASSWORD INPUT}
-    ...    ${DELTE ACCOUNT CLOSE BUTTON}
+    ...    ${DELETE ACCOUNT CLOSE BUTTON}
     ...    ${DELETE ACCOUNT PASSWORD LABEL}
     ...    ${DELETE ACCOUNT INFO}
     ...    ${DELETE ACCOUNT HEADER}
@@ -309,13 +309,13 @@ Language change is new default
     Check Language Logged In    ${EMAIL NOPERM}    ${password}
 
 Should open account page in anonymous state
-    [tags]    anonymous
+    [tags]    anonymous    threaded
     Run keyword and continue on failure    Open page anonymously    ${url}/account    ${PRODUCT_NAME}
     Wait Until Element Is Visible    ${LOG IN MODAL}
     Check Log In    button=None
 
 User who owns a system cannot remove themselves
-    [tags]    C69855
+    [tags]    C69855    threaded
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -324,7 +324,7 @@ User who owns a system cannot remove themselves
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
 
 Delete account button is enabled
-    [tags]    C69854
+    [tags]    C69854    threaded
     Go To    ${url}/account
     Log In    ${EMAIL ADMIN}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -337,7 +337,7 @@ Delete account button is enabled
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
 Account Deletion is cancelled
-    [tags]    C69858
+    [tags]    C69858    threaded
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    ${False}    button=None
@@ -353,7 +353,7 @@ Account Deletion is cancelled
     Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
 
 Password is required to delete account
-    [tags]    C69859
+    [tags]    C69859    threaded
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    ${False}    button=None
@@ -367,7 +367,7 @@ Password is required to delete account
     Element Text Should Be    ${DELETE ACCOUNT PASSWORD LABEL}    ${PASSWORD IS REQUIRED TEXT}
 
 Correct password is required to delete account
-    [tags]    C69860
+    [tags]    C69860    threaded
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    ${False}    button=None
@@ -380,7 +380,7 @@ Correct password is required to delete account
     Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD LABEL}    ${WRONG PASSWORD}
 
 User can delete their own account
-    [tags]    C69861
+    [tags]    C69861    threaded
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    ${False}    button=None
@@ -392,3 +392,56 @@ User can delete their own account
     Validate Log Out
     Log In    ${random email}    ${BASE PASSWORD}    ${False}
     Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+
+After account deletion user is deleted from all systems that were shared with this user
+    [tags]    C69862    threaded
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
+    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    Administrator    ${random email}
+    Share    ${auth}    ${AUTOTESTS OFFLINE SYSTEM ID}    Viewer    ${random email}
+    Share    ${auth}    ${AUTOTESTS 2 SERVER SYSTEM ID}    Custom    ${random email}
+
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Verify Delete User Dialog
+    Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
+    Validate Log Out
+    Log In    ${random email}    ${password}    ${False}
+    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+    Log In    ${EMAIL OWNER}    ${password}    validate=$True    button=None
+    Go To   ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Go to Users List
+    Wait Until Element Is Visible    ${USERS LIST}
+    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
+
+    Go To   ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Go to Users List
+    Wait Until Element Is Visible    ${USERS LIST}
+    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
+
+    Go To   ${url}/systems/${AUTOTESTS 2 SERVER SYSTEM ID}
+    Go to Users List
+    Wait Until Element Is Visible    ${USERS LIST}
+    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
+
+After account deletion user can create account with the same email again
+    [tags]    C69864    threaded
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Verify Delete User Dialog
+    Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
+    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
+    Validate Log Out
+    Log In    ${random email}    ${password}    ${False}
+    Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
+    
+    Go To    ${url}/register
+    Register    mark    hamil    ${random email}    ${password}    
+    Activate    ${random email}
+    Log In    ${random email}    ${password}
