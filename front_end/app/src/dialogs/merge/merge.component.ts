@@ -352,6 +352,12 @@ export class MergeModalContent {
             if (this.targetSystem.value === this.otherSystem) {
                 this.serverUrlInput.control.markAsTouched();
                 this.serverUrlChange(this.serverUrlInput);
+            } else if (this.targetSystem.localSystemId && !this.dryRunAvailable) {
+                this.serverUrlInput.control.setErrors({ invalid: true });
+                setTimeout(() => {
+                    this.serverUrlInput.control.setErrors({ invalid: false });
+                    this.serverUrlInput.control.updateValueAndValidity();
+                });
             }
         };
 
@@ -804,9 +810,12 @@ export class MergeModalContent {
         if (this.targetSystem.systemName && serverUrlInputValue !== input.value) {
             this.setTargetSystem({ value: this.otherSystem, name: this.LANG.dialogs.merge.otherSystem });
         }
-        // handles validation error messages
-        const serverUrlError = this.processedSystems.length ? 'serverUrlValidationError' : 'noOtherSystemValidationError';
-        let showUpdate = this.processedSystems.length ? this.serverUrlState : 'noOtherSystemServerUrl';;
+        // handles validation and check error messages
+        const serverUrlError = this.processedSystems.length
+            ? 'serverUrlValidationError' : 'noOtherSystemValidationError';
+        const defaultState = this.machine.state.show.checkingErrorText
+            ? this.serverUrlMergeError : this.serverUrlState;
+        let showUpdate = this.processedSystems.length ? defaultState : 'noOtherSystemServerUrl';
         const templateUpdates: any = { serverUrlInputValue: input.value };
         if (input.touched && input.errors && input.errors.required) {
             showUpdate = serverUrlError;
