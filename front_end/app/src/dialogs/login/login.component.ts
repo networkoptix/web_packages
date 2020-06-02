@@ -34,6 +34,7 @@ export class LoginModalContent implements OnInit {
     next: string;
     password: string;
     remember: boolean;
+    loginProcess: any;
 
     wrongPassword: boolean;
     accountBlocked: boolean;
@@ -55,10 +56,10 @@ export class LoginModalContent implements OnInit {
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
         private localStorage: LocalStorageService,
-        private activeModal: NgbActiveModal,
         private genericModal: NxModalGenericComponent,
         private renderer: Renderer2,
         private router: Router,
+        public activeModal: NgbActiveModal,
         @Inject(DOCUMENT) private document: any
     ) {
         this.CONFIG = configService.getConfig();
@@ -116,11 +117,17 @@ export class LoginModalContent implements OnInit {
         }
         this.password = '';
 
-        this.login = this.processService.createProcess(() => {
+        this.loginProcess = this.processService.createProcess(() => {
             this.loginForm.controls.login_email.setErrors(undefined);
             this.loginForm.controls.login_password.setErrors(undefined);
             this.wrongPassword = false;
             this.accountBlocked = false;
+
+            if (this.password === '') {
+                this.loginForm.controls.login_password.setErrors({ required: true });
+                this.renderer.selectRootElement('#login_password').focus();
+                return Promise.reject();
+            }
 
             return this.account.login(this.auth.email, this.password, this.remember);
         }, {
