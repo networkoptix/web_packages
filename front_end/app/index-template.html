@@ -90,8 +90,10 @@
         j.src =
             '//www.googletagmanager.com/gtm.js?id=' + i + dl;
         f.parentNode.insertBefore(j, f);
+    } else {
+        console.info('Google Tag Manager ID is not set')
     }
-})(window, document, 'script', 'dataLayer', Config.googleTagManagerId);</script>
+})(window, document, 'script', 'dataLayer', Config.googleTagManagerId.trim());</script>
 <!-- End Google Tag Manager -->
 
 </body>
