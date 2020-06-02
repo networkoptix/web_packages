@@ -21,6 +21,17 @@ Reset DB and Open New Browser On Failure
     Set Account Name    ${url}    ${EMAIL NOPERM}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
     Open Browser and go to URL    ${url}
 
+Verify Delete User Dialog
+    Wait Until Elements are Visible
+    ...    ${DELETE ACCOUNT MODAL BUTTON}
+    ...    ${DELETE ACCOUNT CANCEL BUTTON}
+    ...    ${DELETE ACCOUNT PASSWORD INPUT}
+    ...    ${DELTE ACCOUNT CLOSE BUTTON}
+    ...    ${DELETE ACCOUNT PASSWORD LABEL}
+    ...    ${DELETE ACCOUNT INFO}
+    ...    ${DELETE ACCOUNT HEADER}
+
+
 *** Test Cases ***
 Can access the account page from dropdown
     [tags]    Threaded
@@ -304,6 +315,7 @@ Should open account page in anonymous state
     Check Log In    button=None
 
 User who owns a system cannot remove themselves
+    [tags]    C69855
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -311,35 +323,70 @@ User who owns a system cannot remove themselves
     Mouse Over    ${DELETE ACCOUNT BUTTON}
     Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
 
-User can delete their own account
+Delete account button is enabled
+    [tags]    C69854
+    Go To    ${url}/account
+    Log In    ${EMAIL ADMIN}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
+
+    Log Out
+    Go To    ${url}/account
+    Log In    ${EMAIL NOT OWNER}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
+
+Account Deletion is cancelled
+    [tags]    C69858
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    ${False}    button=None
     Verify in Account Page
     Click Button    ${DELETE ACCOUNT BUTTON}
-    Wait Until Elements are Visible
-    ...    ${DELETE ACCOUNT MODAL BUTTON}
-    ...    ${CANCEL DELETE ACCOUNT BUTTON}
-    ...    ${DELETE ACCOUNT PASSWORD INPUT}
+    Verify Delete User Dialog
+    Click Button    ${ DELETE ACCOUNT CANCEL BUTTON}
 
-    Click Button    ${CANCEL DELETE ACCOUNT BUTTON}
     Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
     Click Button    ${DELETE ACCOUNT BUTTON}
-    Wait Until Elements are Visible
-    ...    ${DELETE ACCOUNT MODAL BUTTON}
-    ...    ${CANCEL DELETE ACCOUNT BUTTON}
-    ...    ${DELETE ACCOUNT PASSWORD INPUT}
+    Verify Delete User Dialog
+    Click Button    ${DELETE ACCOUNT CLOSE BUTTON}
+    Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
+
+Password is required to delete account
+    [tags]    C69859
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Verify Delete User Dialog
 
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element is Visible    ${DELETE ACCOUNT PASSWORD LABEL}
     Element Text Should Be    ${DELETE ACCOUNT PASSWORD LABEL}    ${PASSWORD IS REQUIRED TEXT}
 
+Correct password is required to delete account
+    [tags]    C69860
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    qweasdqwe
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD LABEL}    ${WRONG PASSWORD}
 
+User can delete their own account
+    [tags]    C69861
+    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
+    Go To    ${url}/account
+    Log In    ${random email}    ${password}    ${False}    button=None
+    Verify in Account Page
+    Click Button    ${DELETE ACCOUNT BUTTON}
+    Verify Delete User Dialog
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Validate Log Out

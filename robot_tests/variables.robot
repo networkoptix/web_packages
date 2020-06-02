@@ -186,13 +186,13 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
-${ADD USER MODAL}                        //form[@name='addUserForm']
-${ADD USER EMAIL}                        ${ADD USER MODAL}//input[@id='addUserEmail']
-${ADD USER PERMISSIONS DROPDOWN}         ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
-${ADD USER BUTTON MODAL}                 ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
-${ADD USER CANCEL}                       ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
-${ADD USER CLOSE}                        ${ADD USER MODAL}//button[@data-dismiss='modal']
-${ADD USER PERMISSIONS HINT}             ${ADD USER MODAL}//span[contains(@class,'help-block')]
+${ADD USER MODAL}                     //form[@name='addUserForm']
+${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
+${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
+${ADD USER CANCEL}                    ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
+${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-dismiss='modal']
+${ADD USER PERMISSIONS HINT}          ${ADD USER MODAL}//span[contains(@class,'help-block')]
 
 ${EDIT PERMISSIONS EMAIL}             //form[@name='shareForm']//input[@ng-model='user.email']
 ${EDIT PERMISSIONS DROPDOWN}          //form[@name='shareForm']//button[@id='permissionsSelect']
@@ -213,13 +213,19 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${ACCOUNT CANCEL}                     //nx-apply//button[contains(text(), "${CANCEL BUTTON TEXT}")]
+
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
 ${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
-${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
-${CANCEL DELETE ACCOUNT BUTTON}       //nx-modal-delete-cloud-user-content//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${DELETE ACCOUNT PASSWORD INPUT}      //form[@name="deleteCloudUserForm"]//input[@id="password"]
-${DELETE ACCOUNT PASSWORD LABEL}      //form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
+${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
+${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
+${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE ACCOUNT CLOSE BUTTON}         ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
+${DELETE ACCOUNT HEADER}              ${DELTE ACCOUNT DIALOG}//h1[contains(text(),"${DELETE ACCOUNT HEADER TEXT}")]
+${DELETE ACCOUNT INFO}                ${DELTE ACCOUNT DIALOG}//span[contains(text(),"${DELETE ACCOUNT INFO TEXT}")]
+${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]
+${DELETE ACCOUNT PASSWORD LABEL}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"] and contains(text(),"${DELETE ACCOUNT PASSWORD LABEL TEXT}")
+
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
