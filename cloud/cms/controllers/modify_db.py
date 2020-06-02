@@ -272,8 +272,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 if len(new_record_value) > char_limit:
                     upload_errors.append(
                         (data_structure_name,
-                         'Character limit exceeded. Text was {} characters but should not be more than {} characters'.
-                         format(len(new_record_value), char_limit)))
+                         f'Character limit exceeded. Text was {len(new_record_value)} characters but should not be more than {char_limit} characters'))
                     has_error = True
 
         if has_error:
@@ -548,8 +547,7 @@ def check_meta_settings(data_structure, new_file):
         return [(data_structure.name, error_msg)]
 
     if 'size' in meta_settings and meta_settings['size'] < new_file.size:
-        error_msg = "The file's size it too large. Its size was {0:.2f}MB but must be less than {1:.2f}MB".\
-            format(new_file.size/BYTES_TO_MEGABYTES, meta_settings['size']/BYTES_TO_MEGABYTES)
+        error_msg = f"The file's size it too large. Its size was {new_file.size/BYTES_TO_MEGABYTES:.2f}MB but must be less than {meta_settings['size']/BYTES_TO_MEGABYTES:.2f}MB"
         return [(data_structure.name, error_msg)]
 
     if data_structure.is_image:
@@ -566,8 +564,7 @@ def check_meta_settings(data_structure, new_file):
 # End of file upload helpers
 def upload_file(data_structure, new_file):
     if new_file.size >= settings.CMS_MAX_FILE_SIZE:
-        return None, [(data_structure.name, 'Its size was {0:.2f}MB but must be less than {1:.2f} MB'.
-                       format(new_file.size/BYTES_TO_MEGABYTES, settings.CMS_MAX_FILE_SIZE/BYTES_TO_MEGABYTES))]
+        return None, [(data_structure.name, f'Its size was {new_file.size/BYTES_TO_MEGABYTES:.2f}MB but must be less than {settings.CMS_MAX_FILE_SIZE/BYTES_TO_MEGABYTES:.2f} MB')]
 
     file_errors = check_meta_settings(data_structure, new_file)
     if file_errors:

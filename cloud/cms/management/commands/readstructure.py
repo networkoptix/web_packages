@@ -30,12 +30,12 @@ def create_new_cloudportals_for_each_customization(logger):
             .exclude(version=None).last()
         if records_with_name:
             asset_name = records_with_name.value
-            logger.stdout.write(logger.style.SUCCESS("\tAsset name for {} is {}".
-                                                     format(customization.name, asset_name)))
+            logger.stdout.write(logger.style.SUCCESS(
+                f"\tAsset name for {customization.name} is {asset_name}"))
         else:
             asset_name = "Cloud Portal"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find asset name for {} using {}".
-                                                     format(customization.name, asset_name)))
+            logger.stdout.write(logger.style.SUCCESS(
+                f"\tCouldn't find asset name for {customization.name} using {asset_name}"))
         cloud = structure.find_or_add_asset_with_single_customization(asset_name, customization, "cloud_portal", "")
         cloud.customizations.add(customization)
         cloud.save()
@@ -66,8 +66,8 @@ def move_revisions_to_new_cloud_portals(logger):
 
     for cloud in new_clouds:
         logger.stdout.write(
-            logger.style.SUCCESS("\tMoving {} revisions to {}".
-                                 format(cloud.customizations.first(), cloud.name)))
+            logger.style.SUCCESS(
+                f"\tMoving {cloud.customizations.first()} revisions to {cloud.name}"))
         customization_content_versions = original_content_versions.filter(
             customization=cloud.customizations.first())
         for content_version in customization_content_versions:
