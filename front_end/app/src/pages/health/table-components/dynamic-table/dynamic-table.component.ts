@@ -57,8 +57,7 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
     public selectedGroup;
     public selectedHeader;
     public showHeaders;
-
-    private sortOrderASC: boolean;
+    public sortOrderASC: boolean;
 
     offset: number;
     currentPage: number;
@@ -97,10 +96,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private router: Router,
                 private route: ActivatedRoute,
                 private location: Location,
-                private healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
-                private healthLayoutService: NxHealthLayoutService
+                private healthLayoutService: NxHealthLayoutService,
+                public healthService: NxHealthService
     ) {
         this.CONFIG = configService.getConfig();
         this.elements = this.elements || [];

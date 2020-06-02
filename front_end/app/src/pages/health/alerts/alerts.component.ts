@@ -73,10 +73,10 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                 private location: Location,
                 private menuService: NxMenuService,
                 private configService: NxConfigService,
-                private healthService: NxHealthService,
                 private uriService: NxUriService,
                 private scrollMechanicsService: NxScrollMechanicsService,
-                private healthLayoutService: NxHealthLayoutService
+                public healthService: NxHealthService,
+                public healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = this.configService.getConfig();
         this.filterModel = {
@@ -98,7 +98,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
                     return isError ? 2 : 6;
                 case 'storages':
                     return isError ? 3 : 7;
-                case 'networks':
+                case 'networkInterfaces':
                     return isError ? 4 : 8;
 
                 default:
@@ -128,6 +128,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         this.processAlerts();
 
         this.alerts = this.healthService.alertsSearch(this.healthService.alertsValues, this.filterModel);
+        this.alerts.sort(NxUtilsService.byParam(this.sortAlertsFunc(), true /* sort defined in func() */));
         this.countAlerts();
 
         if (this.params.id && this.params.metric) {
