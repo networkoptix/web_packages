@@ -328,14 +328,19 @@ export class NxAccountService implements OnDestroy {
             return;
         }
 
-        this.applyService
-            .canMove()
-            .then((allowed: boolean) => {
-                if (allowed) {
-                    this.loggingOut = true;
-                    this.logoutHelper(doNotRedirect);
-                }
-            });
+        if (this.applyService) {
+            this.applyService
+                .canMove()
+                .then((allowed: boolean) => {
+                    if (allowed) {
+                        this.loggingOut = true;
+                        this.logoutHelper(doNotRedirect);
+                    }
+                });
+        } else {
+            this.loggingOut = true;
+            this.logoutHelper(doNotRedirect);
+        }
     }
 
     logoutAuthorised() {
