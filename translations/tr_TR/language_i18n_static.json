@@ -156,7 +156,7 @@
         "systemServerError": "Yerel sunucu hatası",
         "systemServerErrorMessage": "Bir hata oluştu, daha sonra tekrar deneyin. Sorun devam ederse, lütfen destek ekibinize başvurun.",
         "systemUnreachable": "SİSTEM KULLANILAMAZ",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor.",
         "unknown": "Belirtilmemiş",
         "voiceCommands": {
             "clear search": "aramayı temizle",
@@ -496,8 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Sistem Yönetimi",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "Genel",
+            "licenses": "Lisanslar",
             "users": "Kullanıcılar"
         }
     },
@@ -698,33 +698,33 @@
     "license": {
         "info": {
             "type": "Tür",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "Kanallar",
+            "server": "Sunucu",
+            "hwid": "Donanım Kimliği",
+            "status": "Durum",
+            "expires": "Bitiş tarihi",
+            "time": "Zaman",
+            "deactivations": "Devre dışı bırakabilme sayısı",
+            "trial": "Deneme",
+            "online": "Çevrimiçi",
             "error": "Hata",
-            "expired": "Expired",
-            "ok": "Ok",
-            "digital": "Professional",
+            "expired": "Süresi Dolmuş",
+            "ok": "Tamam",
+            "digital": "Profesyonel",
             "analog": "Analog",
-            "edge": "Edge",
+            "edge": "Uç",
             "vmax": "VMAX",
             "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
-            "starter": "Starter",
-            "iomodule": "IO Module",
-            "bridge": "Bridge"
+            "analogencoder": "Analog Kodlayıcı",
+            "starter": "Başlangıç",
+            "iomodule": "I/O Modül",
+            "bridge": "Köprü"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} daha gerekli",
+            "activated": "Lisans deaktif edildi",
+            "inuse": "Lisans anahtarı zaten etkinleştirildi ve başka bir sistemde donanım kimliği {{hwid}} olan sunucuya bağlı",
+            "trialActivated": "Deneme lisansı etkinleştirildi. Bugünden itibaren 30 gün boyunca 4 adede kadar kamera kaydedebilirsiniz."
         }
     },
     "settingsConfig": {

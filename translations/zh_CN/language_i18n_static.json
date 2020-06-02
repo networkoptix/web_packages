@@ -156,7 +156,7 @@
         "systemServerError": "内部服务器错误",
         "systemServerErrorMessage": "发生错误。请稍后重试。如果问题仍然存在，请联系您的支持团队。",
         "systemUnreachable": "系统无法连接",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "系统处于离线状态，无法读取资讯",
         "unknown": "未知的",
         "voiceCommands": {
             "clear search": "清除搜索",
@@ -433,7 +433,7 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "无法激活授权。请重试或联系客服。",
         "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,8 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "系统管理",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "一般",
+            "licenses": "授权",
             "users": "用户"
         }
     },
@@ -698,31 +698,31 @@
     "license": {
         "info": {
             "type": "类型",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "授权数",
+            "server": "服务器",
+            "hwid": "硬件ID",
+            "status": "状态",
+            "expires": "到期",
+            "time": "时效性",
+            "deactivations": "剩余重置次数",
+            "trial": "测试版",
+            "online": "在线",
             "error": "错误",
-            "expired": "Expired",
-            "ok": "Ok",
-            "digital": "Professional",
-            "analog": "Analog",
+            "expired": "已经到期",
+            "ok": "确定",
+            "digital": "专业版",
+            "analog": "类比",
             "edge": "Edge",
             "vmax": "VMAX",
-            "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
+            "videowall": "电视墙",
+            "analogencoder": "类比",
             "starter": "Starter",
-            "iomodule": "IO Module",
-            "bridge": "Bridge"
+            "iomodule": "I/O模块",
+            "bridge": "桥接"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
+            "required": "还需要{{number}} 个",
+            "activated": "授权已激活",
             "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
             "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }

@@ -156,7 +156,7 @@
         "systemServerError": "Error de servidor interno",
         "systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "El sistema está fuera de línea y, por lo tanto, la información no es accesible.",
         "unknown": "Uesconocido",
         "voiceCommands": {
             "clear search": "borrar búsqueda",
@@ -232,7 +232,7 @@
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
+            "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor ubicado en el sistema que desea combinar con éste.",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.</p><p>Configuraciones y el nombre se tomarán de <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
             "mergeFailedTitle": "La fusión de sistemas falló",
@@ -246,7 +246,7 @@
             "primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}",
             "primarySystemUnavailable": "El sistema {{primarySystem}} no está disponible actualmente. Inténtalo de nuevo en unos minutos o ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Le recomendamos que consulte con",
                 "b_support": "asistencia",
                 "c_proceeding": "antes de continuar."
             },
@@ -258,7 +258,7 @@
             "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual",
             "systemOfflineUrl": "{{targetSystem}} es inaccesible",
             "systemsIncompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la misma versión para fusionarlos.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionOld": "{{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
             "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
@@ -710,21 +710,21 @@
             "error": "Error",
             "expired": "Expired",
             "ok": "Ok",
-            "digital": "Professional",
-            "analog": "Analog",
+            "digital": "Profesional",
+            "analog": "Análogo",
             "edge": "Edge",
             "vmax": "VMAX",
-            "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
+            "videowall": "Pared de vídeo",
+            "analogencoder": "Codificador analógico",
             "starter": "Starter",
-            "iomodule": "IO Module",
+            "iomodule": "Módulo E/S",
             "bridge": "Bridge"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} más requerido",
+            "activated": "Clave de licencia activada",
+            "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {{hwid}} en otro sistema",
+            "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
     "settingsConfig": {

@@ -156,7 +156,7 @@
         "systemServerError": "Внутрішня помилка сервера",
         "systemServerErrorMessage": "Сталася помилка, повторіть спробу пізніше. Якщо проблема залишиться, будь ласка, зв'яжіться з вашою командою підтримки.",
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Система офлайн, інформація недоступна.",
         "unknown": "Невідомо",
         "voiceCommands": {
             "clear search": "очистити вікно пошуку",
@@ -213,31 +213,31 @@
                 "errorPrefix": "Помилка переміщення хмарного сховища",
                 "notFound": "Сховище не знайдено. Сховище було переміщено або видалено іншим користувачем",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "Хмарне сховище неможливо перемістити до офлайн-систем."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Хмарне зберігання ввімкнено",
+                "errorPrefix": "Помилка ввімкнення хмарного сховища"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Ви можете переміщувати хмарне сховище лише між системами, власником яких ви є. <br/><br/>Підключіть систему до %CLOUD_NAME% за допомогою свого хмарного облікового запису, щоб мати змогу перемістити до неї хмарне сховище."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Введіть пароль до акаунта власника в <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Неправильний пароль локального користувача",
+            "checking": "Перевірка...",
             "commonText": "Не вдалося об’єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Підключіть систему, яку хочете об’єднати з цією <strong>{{cloudName}}</strong> або об’єднайте локально з <strong>{{vmsName}}</strong> Клієнтом.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "І вибрана, і поточна система підключені до %CLOUD_NAME% і мають різних власників. Хмарні системи можна об’єднати, лише якщо обліковий запис власника однаковий.",
+            "duplicateServers": "<p class=\"mb-2\">Здається, що сервер перелічує себе як у вибраній, так і в поточній системі.</p><p>Видаліть офлайн і несумісні сервери з кожної системи та повторіть спробу.</p>",
+            "enterSystemAddressTitle": "Введіть адресу будь-якого сервера, що знаходиться в системі, яку ви хочете об’єднати з цим.",
+            "mergeConfirmation": "<p class=\"mb-0\">Ви збираєтеся об'єднати системи <strong>{{primarySystem}}</strong> та <strong>{{secondarySystem}}</strong>.</p><p>Налаштування та ім'я будуть взяті з <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Об'єднати поточну систему з",
             "mergeFailedTitle": "Не вдалося об’єднати систему",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
+            "noServerFound": "Жодного сервера не знайдено",
+            "newSystemDisplayName": "Нова Система",
             "otherSystem": "Other System...",
             "ownerCanMergeText": "You can only merge Systems where you are the owner",
             "passwordRequired": "Необхідно вказати пароль",

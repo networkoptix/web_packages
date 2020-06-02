@@ -69,10 +69,10 @@
         "accountSavedSuccess": "Votre compte est enregistré avec succès",
         "accountSettings": "Paramètres compte",
         "activationLinkSent": "Lien d'activation envoyé",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "L'accord a été accepté",
         "changePassword": "Changer mot de passe",
         "newPasswordLabel": "Nouveau mot de passe",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Mot de passe enregistré avec succès",
         "saveChanges": "Enregistrer"
     },
     "activeActions": {
@@ -97,11 +97,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Compte créé",
+                "message": "Un message de confirmation avec le lien d'activation est envoyé à {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Compte activé avec succès"
             }
         },
         "cameraLinks": {
@@ -129,24 +129,24 @@
             "unauthorized": "Authentification requise"
         },
         "chromeCastWarning": "Chromecast consommer beaucoup de ressources et peut provoquer des problèmes avec votre serveur.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Veuillez mettre à jour les paramètres d'enregistrement manquants.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Toujours enregistrer",
+            "motion": "Enregistrer sur mouvement seulement",
+            "motionLowRes": "Mouv. + Basse réso"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Différentes valeurs -",
             "auto": "Auto",
-            "best": "Best",
+            "best": "Meilleure",
             "high": "Élevée",
-            "medium": "Medium",
+            "medium": "Moyenne",
             "low": "Basse"
         },
-        "general": "General",
+        "general": "Général",
         "searchCamPlaceholder": "Recherche",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Aucune caméra",
+        "systemHasNoCamerasMessage": "Il n'y a pas de caméras accessibles pour vous dans le système. <br><br>Connectez quelques caméras au réseau local du serveur pour les rendre détectables ou demandez à l'administrateur système de modifier votre niveau d'accès.",
         "systemNewVersion": "Mettre à jour votre système",
         "systemNewVersionMessage": "Votre version actuelle est incompatible avec cette fonctionnalité. Veuillez mettre à jour vos serveurs vers la dernière version pour utiliser cette fonction.",
         "systemNoAlerts": "Aucune alerte",
