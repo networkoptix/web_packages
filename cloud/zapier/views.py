@@ -1,25 +1,23 @@
 import base64
-import django
 import json
 import urllib
 import uuid
+import logging
 
+import django
+from django.utils.http import urlencode
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-
 from drf_yasg.utils import swagger_auto_schema
-
-from django.utils.http import urlencode
+from html_sanitizer import Sanitizer
+from zapier.models import *
 
 from api.helpers.exceptions import api_success, APINotAuthorisedException, APIException, log_error
 from api.controllers import cloud_api, cloud_gateway
 
-from zapier.models import *
 from cloud import settings
-import logging
-from html_sanitizer import Sanitizer
 sanitizer = Sanitizer()
 
 CLOUD_INSTANCE_URL = settings.conf['cloud_portal']['url']

@@ -1,27 +1,27 @@
 import base64
-import django
 import time
+import logging
+
+import django
+from django.conf import settings
+from django.utils import timezone
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.serializers import ValidationError
-from django.conf import settings
-from django.utils import timezone
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
+from dal import autocomplete
 
+from api import models
 from api.controllers.cloud_api import Account
 from api.account_backend import AccountManager, get_ip
-from api.helpers.exceptions import handle_exceptions, APIRequestException, APINotAuthorisedException, \
-    APIInternalException, APINotFoundException, api_success, ErrorCodes, require_params, kill_session
-from api.views.account_serializers import AccountSerializer, CreateAccountSerializer, AccountUpdateSerializer
-
-from dal import autocomplete
-from api import models
-
-
-import logging
+from api.helpers.exceptions import (
+    handle_exceptions, APIRequestException, APINotAuthorisedException,
+    APIInternalException, APINotFoundException, api_success, ErrorCodes,
+    require_params, kill_session)
+from api.views.account_serializers import (
+    AccountSerializer, CreateAccountSerializer, AccountUpdateSerializer)
 
 logger = logging.getLogger(__name__)
 

@@ -1,16 +1,16 @@
-import django
 import logging
 import json
 import time
 import traceback
+from enum import Enum
 
-from rest_framework.response import Response
-from rest_framework.request import Request
-from rest_framework import status
+import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.http import QueryDict
-from enum import Enum
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
 

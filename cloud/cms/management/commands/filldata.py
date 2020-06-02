@@ -1,10 +1,12 @@
 import logging
 import time
+
 from django.core.management.base import BaseCommand
-from ...controllers import filldata, structure
-from ...models import Customization, Language, get_cloud_portal_asset
-from cloud import settings
+from django.conf import settings
+
 from cloud.debug import timer
+from ...controllers import filldata, structure
+from ...models import Customization, Language
 
 logger = logging.getLogger(__name__)
 

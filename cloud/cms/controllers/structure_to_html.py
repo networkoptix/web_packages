@@ -1,5 +1,7 @@
 import json
+
 import pystache
+
 from cms.forms import convert_meta_to_description
 from cms.models import DataStructure
 

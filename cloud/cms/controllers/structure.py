@@ -3,13 +3,12 @@ import json
 import codecs
 import os
 import re
-
+import logging
 from zipfile import ZipFile
 
 from ..controllers.generate_structure import templatify_json
 from ..models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType
 
-import logging
 logger = logging.getLogger(__name__)
 
 

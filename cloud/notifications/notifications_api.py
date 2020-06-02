@@ -1,16 +1,17 @@
-import django
 import json
+import logging
+from urllib.parse import quote_plus
+
+import django
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from urllib.parse import quote_plus
 
 from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
-from notifications.models import Message, Event, Feedback, PushDevice, PushSubscription
-from cms.models import Asset, cloud_portal_customization_cache, get_cloud_portal_asset
+from notifications.models import Message, Event, Feedback, PushDevice
+from cms.models import Asset, get_cloud_portal_asset
 
-import logging
 
 logger = logging.getLogger(__name__)
 

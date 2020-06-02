@@ -7,14 +7,15 @@ import os
 import re
 import json
 import codecs
-import time
-from cloud import settings
+import logging
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.core.cache import caches
+
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
-from django.core.management.base import BaseCommand
-from django.core.cache import caches
-import logging
 logger = logging.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'

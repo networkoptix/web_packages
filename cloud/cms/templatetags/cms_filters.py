@@ -1,7 +1,8 @@
-from django import template
-from ..models import *
-
 import json
+
+from django import template
+
+from ..models import *
 
 register = template.Library()
 

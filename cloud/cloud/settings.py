@@ -15,13 +15,13 @@ import os
 import re
 import json
 import sys
+
 from util.config import get_config
 from cloud.logger import downgrade_unauthorized_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 conf = get_config()
-
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:

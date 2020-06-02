@@ -1,24 +1,24 @@
 from datetime import datetime
-
-from notifications.notifications_api import send
-from django.contrib.auth.models import Permission
-from django.urls import reverse
-from django.db.models import Q
-from django.utils.http import urlencode
-
-from PIL import Image
 import base64
 import json
 import re
 import uuid
 import hashlib
 
+from notifications.notifications_api import send
+from django.contrib.auth.models import Permission
+from django.urls import reverse
+from django.db.models import Q
+from django.utils.http import urlencode
+from PIL import Image
+
 from .filldata import fill_content
 from api.models import Account
 from ..models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
-PENDING = AssetCustomizationReview.REVIEW_STATES[AssetCustomizationReview.REVIEW_STATES.pending].lower()
+PENDING = AssetCustomizationReview.REVIEW_STATES[
+    AssetCustomizationReview.REVIEW_STATES.pending].lower()
 GUID_REGEXP = r'\{[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}\}$'
 
 

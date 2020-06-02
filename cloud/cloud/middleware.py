@@ -1,10 +1,11 @@
 import traceback
+import logging
+
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework import status
 
-import logging
 logger = logging.getLogger(__name__)
 
 

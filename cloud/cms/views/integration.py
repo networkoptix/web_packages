@@ -1,16 +1,15 @@
+from django.conf import settings
+from django.core.cache import caches
+from django.db.models import Q
+
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 
-from django.core.cache import caches
-from django.db.models import Q
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from cloud import settings
 from api.helpers.exceptions import api_success, handle_exceptions
-
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import Context, DataStructure, Asset, AssetCustomizationReview, AssetType,\
     UserGroupsToAssetPermissions, cloud_portal_customization_cache, get_cloud_portal_asset

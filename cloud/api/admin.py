@@ -1,18 +1,16 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.admin import helpers, SimpleListFilter
+from django.contrib.auth.models import Permission
 from django.conf.urls import url
-
 from django.shortcuts import render, redirect
 from django.urls import reverse
-
-from cloud import settings
-from cms.admin import CMSAdmin
-from api.forms import *
-from api.models import *
-from cms.models import *
 from django_csv_exports.admin import CSVExportAdmin
 
-from django.contrib.auth.models import Permission
+from api.forms import *
+from api.models import *
+from cms.admin import CMSAdmin
+from cms.models import *
 
 
 @admin.register(Permission)

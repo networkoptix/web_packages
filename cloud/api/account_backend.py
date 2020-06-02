@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
@@ -8,8 +9,6 @@ from django.dispatch import receiver
 from api.models import *
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
-
-from cloud import settings
 
 logger = logging.getLogger(__name__)
 
@@ -74,5 +73,5 @@ def user_logged_out_callback(sender, request, user, **kwargs):
 @receiver(user_login_failed)
 def user_login_failed_callback(sender, credentials, **kwargs):
     user_name = credentials.get('username', None)
-    logger.info(f'Failed login attempt: {user_name}')
+    logger.info(f'Failed login attempt: %{user_name}')
     AccountLoginHistory.objects.create(action='user_login_failed', email=user_name)

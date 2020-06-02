@@ -1,15 +1,18 @@
-import requests
-from rest_framework.response import Response
-from rest_framework import status
-from requests.auth import HTTPDigestAuth
 from hashlib import md5, sha256
 import base64
 import random
 import string
-from cloud import settings
-from api.helpers.exceptions import validate_response, ErrorCodes, APIRequestException, APINotAuthorisedException, APINotFoundException
-
 import logging
+
+import requests
+from requests.auth import HTTPDigestAuth
+from django.conf import settings
+from rest_framework.response import Response
+from rest_framework import status
+
+from api.helpers.exceptions import (validate_response, ErrorCodes, APIRequestException,
+                                    APINotAuthorisedException, APINotFoundException)
+
 logger = logging.getLogger(__name__)
 
 CLOUD_DB_URL = settings.CLOUD_CONNECT['url']

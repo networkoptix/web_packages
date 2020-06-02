@@ -1,12 +1,14 @@
 import time
 import sys
+import logging
+
 from django.core.management.base import BaseCommand
+from django.core.cache import caches
 from django.db import DEFAULT_DB_ALIAS, connections
 from django.db.migrations.executor import MigrationExecutor
-from django.core.cache import caches
+
 from cloud.settings import DEPLOYMENT_READY
 
-import logging
 logger = logging.getLogger(__name__)
 
 

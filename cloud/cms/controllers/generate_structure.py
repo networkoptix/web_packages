@@ -4,13 +4,14 @@ import re
 import io
 import json
 from collections import OrderedDict
-from PIL import Image  # get Pillow
 from zipfile import ZipFile
-from ..models import Context, DataStructure, AssetType
+import logging
+
+from PIL import Image  # get Pillow
 from cms.serializers import AssetTypeSerializer
 from cms.controllers.modify_db import GUID_REGEXP
+from ..models import Context, DataStructure, AssetType
 
-import logging
 logger = logging.getLogger(__name__)
 
 IGNORE_DIRECTORIES = ('help',)

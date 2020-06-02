@@ -1,12 +1,11 @@
 import os
+import logging
 
 from celery import Celery
 from celery.schedules import crontab
-
 from django.conf import settings  # noqa
 from django.core.management import call_command
 
-import logging
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cloud.settings')
 

@@ -1,14 +1,15 @@
-from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException, APIForbiddenException
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
-    DataStructure
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
-from util.helpers import detect_language_by_request
 
+from api.helpers.exceptions import (
+    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Language, 
+                        AssetCustomizationReview, DataStructure)
+from util.helpers import detect_language_by_request
 
 state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
                                        description="State of the article. Ex: draft, published, or review",

@@ -19,7 +19,7 @@ except ImportError:
 from admin_tools.dashboard import modules, Dashboard
 from admin_tools.utils import get_admin_site_name
 
-from cloud import settings
+from django.conf import settings
 
 
 class CustomIndexDashboard(Dashboard):

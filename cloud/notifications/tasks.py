@@ -1,22 +1,20 @@
-from celery import shared_task
-from .engines import email_engine
-
 from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
-from celery.exceptions import Ignore
+import traceback
+import logging
 
+from celery import shared_task
+from celery.exceptions import Ignore
 from django.conf import settings
 from django.utils import timezone
 
 from api.models import Account
 from notifications import notifications_api
 from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
-from notifications.models import Message, PushSubscription, PushNotification
+from notifications.models import Message
 from util.helpers import get_language_for_email
+from .engines import email_engine
 
-import json
-import traceback
-import logging
 logger = logging.getLogger(__name__)
 
 
