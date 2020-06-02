@@ -1,5 +1,5 @@
 from django.contrib import admin
-from zapier.models import *
+from zapier.models import GeneratedRule, ZapHook
 
 
 @admin.register(GeneratedRule)

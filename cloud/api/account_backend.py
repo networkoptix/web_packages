@@ -1,4 +1,5 @@
 import logging
+import zlib
 
 from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
@@ -6,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 
-from api.models import *
+from api.models import AccountLoginHistory, AccountManager
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
@@ -38,7 +39,6 @@ class AccountBackend(ModelBackend):
                 if username != user['email']:  # code and email from cloud_db are wrong
                     raise APILogicException('Login does not match users email', ErrorCodes.wrong_code)
             elif username.find('-') > -1:  # CLOUD-1661 - temp login now has format: guid-crc32(accountEmail)
-                import zlib
                 (uuid, temp_crc32) = username.split('-')
                 email_crc32 = zlib.crc32(user['email'].encode('utf-8')) & 0xffffffff  # convert signed to unsigned crc32
                 if email_crc32 != int(temp_crc32):

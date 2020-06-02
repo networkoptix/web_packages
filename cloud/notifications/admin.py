@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django_celery_results.models import TaskResult
 import pytz
-from push_notifications import models as push_notifications_models
 from push_notifications.admin import GCMDeviceAdmin
 
 # Register your models here.

@@ -4,7 +4,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django_celery_results.models import TaskResult
 
-from ...models import *
+from ...models import Message
 
 
 class Command(BaseCommand):

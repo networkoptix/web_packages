@@ -2,7 +2,7 @@ import os
 
 from django.core.management.base import BaseCommand
 
-from ...models import *
+from ...models import Account
 
 
 class Command(BaseCommand):
