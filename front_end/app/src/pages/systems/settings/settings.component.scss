@@ -20,21 +20,26 @@ nx-block {
 }
 
 .fixed-sidebar{
+  margin: 0 !important;
+  padding-left: 1rem !important;
+  padding-right: 0 !important;
+
   @include bootstrap.media-breakpoint-down(sm) {
     height: auto !important;
+    padding-right : 1rem !important;
   }
 
   // replicate col-md-4
   @include bootstrap.media-breakpoint-up(md) {
     position: fixed;
     left: 0;
-    width: calc((100% - (#{variables.$grid-gutter-width} + #{variables.$scrollbar-height})) / 3)
+    width: calc((100% - #{variables.$scrollbar-height}) / 3)
   }
 
   // replicate col-xl-3
   @include bootstrap.media-breakpoint-up(xl) {
-    width: calc((100% - (#{variables.$grid-gutter-width} + #{variables.$scrollbar-height})) / 4);
-    max-width:  calc((#{variables.$fluid-container-max-width} - #{variables.$grid-gutter-width}) / 4);
+    width: calc((100% - #{variables.$scrollbar-height}) / 4);
+    max-width:  calc(#{variables.$fluid-container-max-width} / 4);
   }
   nx-menu {
     max-height: 100%;
