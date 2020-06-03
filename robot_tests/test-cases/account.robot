@@ -364,7 +364,7 @@ Password is required to delete account
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element is Visible    ${DELETE ACCOUNT PASSWORD LABEL}
-    Element Text Should Be    ${DELETE ACCOUNT PASSWORD LABEL}    ${PASSWORD IS REQUIRED TEXT}
+    Element Text Should Be    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
 
 Correct password is required to delete account
     [tags]    C69860    threaded
@@ -377,7 +377,7 @@ Correct password is required to delete account
     Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    qweasdqwe
     Click Button    ${DELETE ACCOUNT MODAL BUTTON}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
-    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD LABEL}    ${WRONG PASSWORD}
+    Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${WRONG PASSWORD}
 
 User can delete their own account
     [tags]    C69861    threaded
@@ -445,3 +445,8 @@ After account deletion user can create account with the same email again
     Register    mark    hamil    ${random email}    ${password}    
     Activate    ${random email}
     Log In    ${random email}    ${password}
+
+Deletion attempt when Delete Account button is disabled (via API)
+    [tags]    C76389    threaded
+    Delete Account    ${ENV}    ${EMAIL OWNER}    ${password}
+    Log In    ${EMAIL OWNER}    ${password}

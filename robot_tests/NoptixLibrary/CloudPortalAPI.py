@@ -111,6 +111,12 @@ class CloudPortalAPI(object):
             r = s.post(f'{env}/api/systems/disconnect', json={'system_id': system_id, 'password': password})
             return r.status_code
 
+    def delete_account(self, env, email, password):
+        with self.log_in(env, email, password) as s:
+            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
+            r = s.post(f'{env}/api/account/delete', json={'password': password})
+            return r.json()
+
     def get_code_from_email(self, env, auth, email, message_type):
         with self.log_in(env, auth[0], auth[1]) as s:
             s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
