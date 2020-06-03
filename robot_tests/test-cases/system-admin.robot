@@ -473,6 +473,146 @@ Checking the dependency of checkboxes
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
     Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
+Check Limit session duration
+    [Tags]    C65703    checkbox settings testing
+    ${new focus} =    Set Variable    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 24    Fail    Interval not 24 hours as expected
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    
+    Log    Step 2
+    Input Text    ${TIME NUMBER INPUT}    0
+    Sleep    1
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 3
+    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Input Text    ${TIME NUMBER INPUT}    hjkl
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 4
+    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Input Text    ${TIME NUMBER INPUT}    "&*("
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1    
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 5
+    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Input Text    ${TIME NUMBER INPUT}    654
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 65    Fail    Interval not 65 minutes as expected
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    65
+        
+    Log    Step 6
+    Input Text    ${TIME NUMBER INPUT}    1
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    1
+    
+    Log    Step 7
+    Input Text    ${TIME NUMBER INPUT}    600
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION HOURS}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${minutes} =    Evaluate    600*60
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    ${minutes}
+    
+    Log    Step added by auto qa (CLOUD-5221 found)
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
+    Sleep    1
+    Click Button     ${SYSTEM SAVE} 
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 10    Fail    Interval not 10 hours as expected
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    600
+    
+    Log    Step 8
+    Input Text    ${TIME NUMBER INPUT}    5
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button     ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 5   Fail    Interval not 5 minutes as expected
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
+    Evaluate Auto System Settings via API    sessionLimitMinutes    5
+
 Disconnect dialog interface checks
     [Tags]    C48834
     Log    Step 1
