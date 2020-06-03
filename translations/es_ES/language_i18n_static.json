@@ -263,7 +263,7 @@
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
             "unknownError": "Se ha producido un error desconocido. Actualice la página y vuelva a intentarlo. Si el problema persiste, póngase en contacto con el servicio de asistencia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "warning": "Habrá más de <strong>{{maxServers}}</strong> servidores en el sistema combinado."
         },
         "message": {
             "storageSettingsSaved": "Ajustes de almacenamiento guardados.",
@@ -388,7 +388,7 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Algunas listas de servidores existen en ambos sistemas, en el seleccionado y en el actual.<br>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.",
         "EmailAlreadyExists": "Este correo electrónico ya ha sido registrado",
         "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "INCOMPATIBLE": "Los sistemas tienen versiones de software incorrectas. Por favor, actualice ambas a la <a href=\"/download\">última compilación</a>.",
         "cloud_systems_have_different_owners": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un propietario diferente. Los sistemas en la nube solo pueden fusionarse si la cuenta del propietario es la misma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
         "fail": "No se encontró servidor",
@@ -433,7 +433,7 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Error al activar la licencia. Por favor, inténtelo de nuevo o póngase en contacto con el servicio de soporte al cliente.",
         "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -497,7 +497,7 @@
         "titles": {
             "systemAdministration": "Administración del sistema",
             "general": "General",
-            "licenses": "Licenses",
+            "licenses": "Licencias",
             "users": "Usuarios"
         }
     },
@@ -688,7 +688,7 @@
             },
             "merge": {
                 "failed": "La fusión de sistemas falló",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Combinación de sistemas {{primaryName}} y {{secondaryName}} completada"
             },
             "rename": {
                 "success": "Nombre del sistema guardado"
@@ -698,15 +698,15 @@
     "license": {
         "info": {
             "type": "Tipo",
-            "channels": "Channels",
-            "server": "Server",
-            "hwid": "Hardware ID",
-            "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "channels": "Canales",
+            "server": "Servidor",
+            "hwid": "ID de hardware",
+            "status": "Estado",
+            "expires": "Expira",
+            "time": "Hora",
+            "deactivations": "Desactivaciones restantes",
+            "trial": "Prueba",
+            "online": "En línea",
             "error": "Error",
             "expired": "Expired",
             "ok": "Ok",

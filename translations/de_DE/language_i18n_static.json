@@ -156,7 +156,7 @@
         "systemServerError": "Interner Serverfehler",
         "systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
         "unknown": "Unbekannt",
         "voiceCommands": {
             "clear search": "suche zurücksetzen",
@@ -258,8 +258,8 @@
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
             "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemVersionOld": "{{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
+            "systemVersionNew": "{{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Lizenz konnte nicht aktiviert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundensupport.",
         "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
         "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     },
@@ -496,8 +496,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "System-Administration",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "Allgemein",
+            "licenses": "Lizenzen",
             "users": "Benutzer"
         }
     },
@@ -698,33 +698,33 @@
     "license": {
         "info": {
             "type": "Typ",
-            "channels": "Channels",
+            "channels": "Kanäle",
             "server": "Server",
-            "hwid": "Hardware ID",
+            "hwid": "Hardware-ID",
             "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
+            "expires": "Läuft ab",
+            "time": "Zeit",
+            "deactivations": "Deaktivierung übrig",
             "trial": "Trial",
             "online": "Online",
             "error": "Fehler",
-            "expired": "Expired",
+            "expired": "Abgelaufen",
             "ok": "Ok",
             "digital": "Professional",
             "analog": "Analog",
-            "edge": "Edge",
+            "edge": "Kante",
             "vmax": "VMAX",
-            "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
+            "videowall": "Videowand",
+            "analogencoder": "Analoger Encoder",
             "starter": "Starter",
-            "iomodule": "IO Module",
+            "iomodule": "I/O-Modul",
             "bridge": "Bridge"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} weitere erforderlich",
+            "activated": "Lizenzschlüssel aktiviert",
+            "inuse": "Der Lizenzschlüssel wurde bereits aktiviert und in einem anderen System an den Server mit der Hardware-ID {{hwid}} gebunden",
+            "trialActivated": "Testlizenz aktiviert. Ab heute können Sie 30 Tage lang mit bis zu 4 Kameras aufnehmen."
         }
     },
     "settingsConfig": {

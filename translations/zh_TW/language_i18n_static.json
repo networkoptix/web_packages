@@ -768,7 +768,7 @@
         "ec2KeepAliveProbeCount": "連線偵測器（秒）",
         "emailFrom": "Email寄件者",
         "emailSignature": "Email簽名檔",
-        "emailSupportEmail": "技術支援信箱",
+        "emailSupportEmail": "技術支援Email",
         "enableEdgeRecording": "啟用斷線回補",
         "eventLogPeriodDays": "事件日誌天數 (天)",
         "ldapAdminDn": "LDAP 管理者 DN",

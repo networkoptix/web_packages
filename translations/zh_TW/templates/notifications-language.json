@@ -6,7 +6,7 @@
     "emailSubject": "您已被邀請到 %CLOUD_NAME%"
   },
   "cloud_notification": {
-    "emailSubject": "{{{message.subject}}}"
+    "emailSubject": "{{{message.subject}}"
   },
   "sales_inquiry": {
     "emailSubject": "Sales inquiry for {{{message.asset}}}"
