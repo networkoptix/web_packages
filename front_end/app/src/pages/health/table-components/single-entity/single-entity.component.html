@@ -18,7 +18,7 @@
                                   [innerText]="[undefined, ''].indexOf(entity[paramGroup.id][param.id].text) === -1
                                   ? entity[paramGroup.id][param.id].text : '−'"></span>
                     <svg-icon *ngIf="entity[paramGroup.id][param.id].icon"
-                              NxAddSvgSrc 
+                              nx-add-svg-src 
                               class="pl-1"
                               [svgStyle]="{'width.px': '20'}"
                               [src]="CONFIG.icons.dir + entity[paramGroup.id][param.id].icon + '.svg'"></svg-icon>

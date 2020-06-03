@@ -7,7 +7,7 @@
     <div class="ellipsis">
         <span *ngIf="item.icon" class="menu-level-3-icon glyphicon" [ngClass]="item.icon"></span>
         <svg-icon *ngIf="item.svgIcon"
-                NxAddSvgSrc  
+                nx-add-svg-src  
                 [src]="CONFIG.icons.dir + item.svgIcon + '.svg'"
                 [applyCss]="true"
                 class=" ml-n1 menu-level-3-svg-icon"></svg-icon>

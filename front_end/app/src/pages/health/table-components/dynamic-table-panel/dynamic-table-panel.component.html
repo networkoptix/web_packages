@@ -31,7 +31,7 @@
                                   [innerText]="[undefined, ''].indexOf(healthLayoutService.activeEntity[paramGroup.id][param.id].text) === -1
                                   ? healthLayoutService.activeEntity[paramGroup.id][param.id].text : '−'"></span>
                             <svg-icon *ngIf="healthLayoutService.activeEntity[paramGroup.id][param.id].icon"
-                                      NxAddSvgSrc
+                                      nx-add-svg-src
                                       [src]="CONFIG.icons.dirNonStandard + healthLayoutService.activeEntity[paramGroup.id][param.id].icon + '.svg'"
                                       [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
                                       style="height: 16px"

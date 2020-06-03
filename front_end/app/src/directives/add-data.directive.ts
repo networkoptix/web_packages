@@ -1,7 +1,7 @@
 import { Directive, Input, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 
 @Directive({
-    selector: '[NxAddSvgSrc]'
+    selector: '[nx-add-svg-src]'
 })
 export class NxAddSvgSrc implements OnChanges {
     @Input() src: string;

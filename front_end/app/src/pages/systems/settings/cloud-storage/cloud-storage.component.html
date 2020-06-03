@@ -3,7 +3,7 @@
 <nx-block *ngIf="cloudStorageSystemEnabled === false" type="mt-3 mb-3">
     <header><h4 translate>Cloud Storage</h4></header>
     <div class="header-svg">
-        <svg-icon NxAddSvgSrc [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'city' + '.svg'"></svg-icon>
     </div>
     <div class="initial-state">
         <h2 translate>Enhance your data storage experience</h2>
@@ -55,7 +55,7 @@
         <div class="pt-3">
             <button class="btn btn-default" (click)="moveCloudStorage()">Move to Another System</button>
             <button class="btn btn-default" (click)="deleteCloudStorage()">
-                <svg-icon NxAddSvgSrc 
+                <svg-icon nx-add-svg-src 
                     [src]="CONFIG.icons.dir + 'delete.svg'" 
                     [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                     class="ml-n2 mr-1"></svg-icon>

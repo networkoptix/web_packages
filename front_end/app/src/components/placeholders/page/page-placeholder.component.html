@@ -11,7 +11,7 @@
             <div *ngIf="condition" class="mx-2">
                 <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
                 <div *ngIf="!iconClass && iconVisible" [attr.name]="type" class="placeholder-icon">
-                    <svg-icon NxAddSvgSrc [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
+                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
                               [svgStyle]="{ 'width.px': iconSize }"></svg-icon>
                 </div>
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"

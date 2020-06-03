@@ -25,7 +25,7 @@
                         *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
-                            <svg-icon NxAddSvgSrc [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                                 [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>Check Status</span>
@@ -34,7 +34,7 @@
                         [routerLink]="fullInfoPath"
                         [queryParams]="{id: parsedServerId}">
                             <span>
-                                <svg-icon NxAddSvgSrc [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
                                     [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>

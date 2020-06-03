@@ -57,7 +57,7 @@
                 <nx-health-update *ngIf="!importedData.imported" (updateHealth)="updateValues()"></nx-health-update>
                 <div>
                     <a href class="btn-text pl-1" (click)="exportReport(); false;">
-                        <svg-icon NxAddSvgSrc [src]="CONFIG.icons.dirNonStandard + 'download.svg'"
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'download.svg'"
                                   [svgStyle]="{'width.px': '20'}"></svg-icon>
                         <span>Download Full Report</span>
                     </a>

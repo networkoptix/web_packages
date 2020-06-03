@@ -3,7 +3,7 @@
         <div class="d-flex row justify-content-between" [ngClass]="{'warning-error-padding': type === 'warning' || type === 'error'}">
             <div class="d-flex flex-row ml-2">
                 <div class="d-flex align-items-center">
-                    <svg-icon NxAddSvgSrc [src]="iconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
+                    <svg-icon nx-add-svg-src [src]="iconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
                 </div>
                 <div [ngClass]="type === 'warning' || type === 'error' ? 'warning-margin': 'ml-2'">
                     <span [innerHTML]="line1"></span><br>
@@ -13,7 +13,7 @@
             <div *ngIf="btnCaption || btnIconSrc" class="d-flex align-items-center">
                 <button class="float-right float-md-left btn btn-text has-icon pr-0" style="height: 20px"
                         (click)="onClick()">
-                    <svg-icon NxAddSvgSrc [src]="btnIconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
+                    <svg-icon nx-add-svg-src [src]="btnIconSrc" [svgStyle]="{'width.px': 20, 'height.px': 20}"></svg-icon>
                     <span class="ml-1" [innerText]="btnCaption || ''"></span>
                 </button>
             </div>
