@@ -431,6 +431,10 @@ export class MergeModalContent {
                         .then(res => {
                             if (res.error === '0') {
                                 this.machine.transition(this.confirmMerge);
+                                const { history } = this.machine;
+                                if (history[history.length - 1] === this.serverUrlErrors) {
+                                    history.pop();
+                                }
                             } else if (res.errorString === 'UNAUTHORIZED') {
                                 this.adminPassword.form.controls.adminPassword.setErrors({ passwordWrong: true });
                                 this.updateShow(this.confirmPasswordError, {
