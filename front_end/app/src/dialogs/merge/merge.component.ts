@@ -458,7 +458,11 @@ export class MergeModalContent {
                         })
                         .catch(err => {
                             console.error(err);
-                            this.updateShow('confirmPasswordError', { passwordErrorText: this.unknownError });
+                            let passwordErrorText = this.unknownError;
+                            if (err.message === 'Timeout has occurred') {
+                                passwordErrorText = this.systemOffline;
+                            }
+                            this.updateShow('confirmPasswordError', { passwordErrorText });
                             this.adminPasswordInput.nativeElement.focus();
                         });
                 }
