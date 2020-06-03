@@ -282,7 +282,54 @@ Changing All Checkboxes Works
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing All Settings    ${SYSTEM SAVE}
     Changing All Settings    ${SYSTEM CANCEL}
-
+    
+Security block is available for administrator or owner
+    [Tags]    C65697    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+    Log    Step 2
+    Log Out
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+Security block is not available for other users
+    [Tags]    C65698    checkbox settings testing
+    @{users} =    Create List    ${EMAIL ADV VIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL CUSTOM}
+    FOR    ${user}    IN    @{users}
+	    Log in to Auto Tests System    ${user}
+	    Sleep    1
+	    Page Should Not Contain Element    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE} 
+	    Page Should Not Contain Element    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+	    Page Should Not Contain Element    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+	    Page Should Not Contain Element    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+	    Log Out
+	END  
+    
 Disconnect dialog interface checks
     [Tags]    C48834
     Log    Step 1

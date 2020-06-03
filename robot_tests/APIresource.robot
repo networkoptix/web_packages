@@ -156,7 +156,13 @@ Evaluate Auto System Settings via API
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
-
+    
+Set Auto System Settings via API
+    [Arguments]    ${setting}    ${state}
+    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${state}
 
 # Keywords which use System/Server API
 Setup Local System
