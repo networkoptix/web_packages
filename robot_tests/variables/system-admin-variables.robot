@@ -37,6 +37,8 @@ ${RENAME CANCEL}                      //form[@name='renameForm']//button[text()=
 ${RENAME X BUTTON}                    //form[@name='renameForm']//button[contains(@class,'close')]
 ${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
 
+${ENCRYPTING VIDEO WARNING}           //div[text()='${ENCRYPTING VIDEO WARNING TEXT}'] 
+
 #Disconnect from cloud portal
 ${DISCONNECT FORM}                      //form[@name='disconnectForm']
 ${DISCONNECT FORM HEADER}               ${DISCONNECT FORM}//h1["${DISCONNECT FORM HEADER TEXT}"]

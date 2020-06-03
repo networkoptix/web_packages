@@ -26,7 +26,7 @@ Restart
 Reset DB and Open New Browser On Failure
     Close Browser
     Reset System Names
-    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO SYS IP}    7001    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
+    ${cloud system id}=   Connect system to cloud if not    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${AUTO TESTS}    ${EMAIL OWNER}    ${BASE PASSWORD}
     FOR    ${user email}   ${user role}    IN ZIP   ${AUTO TESTS USERS.keys()}     ${AUTO TESTS USERS.values()}
         Add user to cloud system if not there    ${cloud system id}    ${user role}    ${user email}
     END
@@ -246,7 +246,7 @@ Changing the Setting "Limit session duration to" changes it on the server
     ...    ELSE     Evaluate Session Limit
 
 Change Time Interval And Verify on Server
-    [Tags]    checkbox settings testing
+    [Tags]    checkbox settings testing    C65722
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Elements Are Visible
     ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
@@ -274,15 +274,79 @@ Changing Several Random Checkboxes Works
     Changing Several Settings at Random    ${SYSTEM CANCEL}
 
 Changing All Checkboxes Works
-    [Tags]    checkbox settings testing
+    [Tags]    checkbox settings testing    C65722
+    Log    Testrail: Changes in the security block are displayed in the thick client
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    Log    Steps 1 - 8
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Elements Are Visible
     ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing All Settings    ${SYSTEM SAVE}
     Changing All Settings    ${SYSTEM CANCEL}
+    Changing All Settings    ${SYSTEM SAVE}
     
+Changes made in the thick client are displayed in the security block in Cloud Portal
+    [Tags]    C65723    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 1
+    Set Auto System Settings via API    auditTrailEnabled    false
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick unchecked
+    
+    Log    Step 2
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    
+    Log    Step 3
+    Set Auto System Settings via API    trafficEncryptionForced    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick checked
+    
+    Log    Step 4
+    Set Auto System Settings via API    videoTrafficEncryptionForced    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick checked
+    
+    Log    Step 5
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Sleep    30
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+    Log    Step 6
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Sleep    30
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked   
+    
+    Log    Step 7
+    Set Auto System Settings via API    sessionLimitMinutes    30
+    Sleep    30
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked 
+    ${value}=   Get Value    ${TIME NUMBER INPUT}
+    Run Keyword If    ${value} != 30    Fail
+    
+    Log    Step 8
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    Sleep    30
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+
 Security block is available for administrator or owner
     [Tags]    C65697    checkbox settings testing
     Log    Preconditions
@@ -329,6 +393,85 @@ Security block is not available for other users
 	    Page Should Not Contain Element    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
 	    Log Out
 	END  
+	
+Cancel changes in Security block
+    [Tags]    C65724    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Just Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    
+    Log    Step 2
+    Click Button    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+    Log    Step 3
+    Just Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Just Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
+    Just Change Setting    ${LIMIT SESSION DURATION CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    
+    Log    Step 4
+    Click Button    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+Checking the dependency of checkboxes
+    [Tags]    C65700    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    auditTrailEnabled    true
+    Set Auto System Settings via API    trafficEncryptionForced    false
+    Set Auto System Settings via API    videoTrafficEncryptionForced    false
+    Set Auto System Settings via API    sessionLimitMinutes    0
+    
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true    
+    Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+    Log    Step 2
+    Just Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true
+    
+    Log    Step 3
+    Just Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}
+    Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
+    Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
+    
+    Log    Step 4
+    Just Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//label    disabled    true  
+    Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
     
 Disconnect dialog interface checks
     [Tags]    C48834
