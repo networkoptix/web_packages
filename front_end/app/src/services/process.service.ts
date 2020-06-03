@@ -4,10 +4,10 @@ import { NxToastService }                      from '../dialogs/toast.service';
 import { NxCloudApiService }                   from './nx-cloud-api';
 import { NxConfigService, IConfig }            from './nx-config';
 import { NxSessionService }                    from './session.service';
-import { LanguageI18NStaticTypes, ErrorCodes } from '../../language_i18n_static_types';
+import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 
 interface ProcessSettings {
-    errorCodes: Partial<ErrorCodes> | string;
+    errorCodes: LanguageI18NStaticTypes['errorCodes'] | string;
     errorMessage?: string;
     errorPrefix: string;
     holdAlerts: boolean;

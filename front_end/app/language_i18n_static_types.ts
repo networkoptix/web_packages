@@ -15,7 +15,7 @@ export interface LanguageI18NStaticTypes {
     Support:               string;
     "Supported Devices":   string;
     Terms:                 string;
-    accessRoles:           AccessRoles;
+    accessRoles:           { [key: string]: AccessRole };
     account:               LanguageI18NStaticTypesAccount;
     activeActions:         ActiveActions;
     cameraFilters:         CameraFilters;
@@ -23,7 +23,7 @@ export interface LanguageI18NStaticTypes {
     common:                Common;
     dialogs:               Dialogs;
     downloads:             Downloads;
-    errorCodes:            ErrorCodes;
+    errorCodes:            { [key: string]: string };
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     menu:                  Menu;
@@ -43,25 +43,7 @@ export interface LanguageI18NStaticTypes {
     settingsConfig:        SettingsConfig;
 }
 
-export interface AccessRoles {
-    Administrator:                          Administrator;
-    "Advanced Viewer":                      Administrator;
-    Custom:                                 Administrator;
-    "Live Viewer":                          Administrator;
-    Owner:                                  Administrator;
-    Viewer:                                 Administrator;
-    advancedViewer:                         Administrator;
-    cloudAdmin:                             Administrator;
-    custom:                                 Administrator;
-    customRole:                             Administrator;
-    disabled:                               Administrator;
-    liveViewer:                             Administrator;
-    owner:                                  Administrator;
-    viewer:                                 Administrator;
-    DO_NOT_USE_FORCES_INTERFACE_GENERATION: number;
-}
-
-export interface Administrator {
+export interface AccessRole {
     description: string;
     label:       string;
 }
@@ -422,61 +404,6 @@ export interface ReleasesTypes {
     rc:       string;
     release:  string;
     releases: string;
-}
-
-export interface ErrorCodes {
-    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS:    string;
-    DUPLICATE_MEDIASERVER_FOUND:            string;
-    EmailAlreadyExists:                     string;
-    FAIL:                                   string;
-    INCOMPATIBLE:                           string;
-    cloud_systems_have_different_owners:    string;
-    duplicate_mediaserver_found:            string;
-    fail:                                   string;
-    incompatible:                           string;
-    unknown_error:                          string;
-    accountAlreadyActivated:                string;
-    accountBlocked:                         string;
-    accountNotActivated:                    string;
-    alreadyExists:                          string;
-    brokenAccount:                          string;
-    cantActivatePrefix:                     string;
-    cantAddYourOwnEmail:                    string;
-    cantChangeAccountPrefix:                string;
-    cantChangePasswordPrefix:               string;
-    cantDisconnectSystemPrefix:             string;
-    cantEditAdmin:                          string;
-    cantEditYourself:                       string;
-    cantGetSystemInfoPrefix:                string;
-    cantGetSystemsListPrefix:               string;
-    cantGetUsersListPrefix:                 string;
-    cantOpenClient:                         string;
-    cantRegisterPrefix:                     string;
-    cantSendActivationPrefix:               string;
-    cantSendConfirmationPrefix:             string;
-    cantSharePrefix:                        string;
-    cantUnshareWithMeSystemPrefix:          string;
-    emailNotFound:                          string;
-    failedToAccessSystem:                   string;
-    forbidden:                              string;
-    lostConnection:                         string;
-    mergedSystemIsOffline:                  string;
-    notAuthorized:                          string;
-    notFound:                               string;
-    ok:                                     string;
-    oldPasswordMistmatch:                   string;
-    oldSafariNotSupported:                  string;
-    passwordMismatch:                       string;
-    thisSystem:                             string;
-    unknownError:                           string;
-    unknownMergeError:                      string;
-    wrongAuthCode:                          string;
-    wrongCode:                              string;
-    wrongCodeRestore:                       string;
-    wrongParameters:                        string;
-    licenseFail:                            string;
-    networkConnection:                      string;
-    DO_NOT_USE_FORCES_INTERFACE_GENERATION: number;
 }
 
 export interface LanguageI18NStaticTypesIntegration {
@@ -1043,7 +970,7 @@ const typeMap: any = {
         { json: "Support", js: "Support", typ: "" },
         { json: "Supported Devices", js: "Supported Devices", typ: "" },
         { json: "Terms", js: "Terms", typ: "" },
-        { json: "accessRoles", js: "accessRoles", typ: r("AccessRoles") },
+        { json: "accessRoles", js: "accessRoles", typ: m(r("AccessRole")) },
         { json: "account", js: "account", typ: r("LanguageI18NStaticTypesAccount") },
         { json: "activeActions", js: "activeActions", typ: r("ActiveActions") },
         { json: "cameraFilters", js: "cameraFilters", typ: r("CameraFilters") },
@@ -1051,7 +978,7 @@ const typeMap: any = {
         { json: "common", js: "common", typ: r("Common") },
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
-        { json: "errorCodes", js: "errorCodes", typ: r("ErrorCodes") },
+        { json: "errorCodes", js: "errorCodes", typ: m("") },
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "menu", js: "menu", typ: r("Menu") },
@@ -1070,24 +997,7 @@ const typeMap: any = {
         { json: "license", js: "license", typ: r("License") },
         { json: "settingsConfig", js: "settingsConfig", typ: r("SettingsConfig") },
     ], false),
-    "AccessRoles": o([
-        { json: "Administrator", js: "Administrator", typ: r("Administrator") },
-        { json: "Advanced Viewer", js: "Advanced Viewer", typ: r("Administrator") },
-        { json: "Custom", js: "Custom", typ: r("Administrator") },
-        { json: "Live Viewer", js: "Live Viewer", typ: r("Administrator") },
-        { json: "Owner", js: "Owner", typ: r("Administrator") },
-        { json: "Viewer", js: "Viewer", typ: r("Administrator") },
-        { json: "advancedViewer", js: "advancedViewer", typ: r("Administrator") },
-        { json: "cloudAdmin", js: "cloudAdmin", typ: r("Administrator") },
-        { json: "custom", js: "custom", typ: r("Administrator") },
-        { json: "customRole", js: "customRole", typ: r("Administrator") },
-        { json: "disabled", js: "disabled", typ: r("Administrator") },
-        { json: "liveViewer", js: "liveViewer", typ: r("Administrator") },
-        { json: "owner", js: "owner", typ: r("Administrator") },
-        { json: "viewer", js: "viewer", typ: r("Administrator") },
-        { json: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", js: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", typ: 0 },
-    ], false),
-    "Administrator": o([
+    "AccessRole": o([
         { json: "description", js: "description", typ: "" },
         { json: "label", js: "label", typ: "" },
     ], false),
@@ -1411,60 +1321,6 @@ const typeMap: any = {
         { json: "rc", js: "rc", typ: "" },
         { json: "release", js: "release", typ: "" },
         { json: "releases", js: "releases", typ: "" },
-    ], false),
-    "ErrorCodes": o([
-        { json: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", js: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", typ: "" },
-        { json: "DUPLICATE_MEDIASERVER_FOUND", js: "DUPLICATE_MEDIASERVER_FOUND", typ: "" },
-        { json: "EmailAlreadyExists", js: "EmailAlreadyExists", typ: "" },
-        { json: "FAIL", js: "FAIL", typ: "" },
-        { json: "INCOMPATIBLE", js: "INCOMPATIBLE", typ: "" },
-        { json: "cloud_systems_have_different_owners", js: "cloud_systems_have_different_owners", typ: "" },
-        { json: "duplicate_mediaserver_found", js: "duplicate_mediaserver_found", typ: "" },
-        { json: "fail", js: "fail", typ: "" },
-        { json: "incompatible", js: "incompatible", typ: "" },
-        { json: "unknown_error", js: "unknown_error", typ: "" },
-        { json: "accountAlreadyActivated", js: "accountAlreadyActivated", typ: "" },
-        { json: "accountBlocked", js: "accountBlocked", typ: "" },
-        { json: "accountNotActivated", js: "accountNotActivated", typ: "" },
-        { json: "alreadyExists", js: "alreadyExists", typ: "" },
-        { json: "brokenAccount", js: "brokenAccount", typ: "" },
-        { json: "cantActivatePrefix", js: "cantActivatePrefix", typ: "" },
-        { json: "cantAddYourOwnEmail", js: "cantAddYourOwnEmail", typ: "" },
-        { json: "cantChangeAccountPrefix", js: "cantChangeAccountPrefix", typ: "" },
-        { json: "cantChangePasswordPrefix", js: "cantChangePasswordPrefix", typ: "" },
-        { json: "cantDisconnectSystemPrefix", js: "cantDisconnectSystemPrefix", typ: "" },
-        { json: "cantEditAdmin", js: "cantEditAdmin", typ: "" },
-        { json: "cantEditYourself", js: "cantEditYourself", typ: "" },
-        { json: "cantGetSystemInfoPrefix", js: "cantGetSystemInfoPrefix", typ: "" },
-        { json: "cantGetSystemsListPrefix", js: "cantGetSystemsListPrefix", typ: "" },
-        { json: "cantGetUsersListPrefix", js: "cantGetUsersListPrefix", typ: "" },
-        { json: "cantOpenClient", js: "cantOpenClient", typ: "" },
-        { json: "cantRegisterPrefix", js: "cantRegisterPrefix", typ: "" },
-        { json: "cantSendActivationPrefix", js: "cantSendActivationPrefix", typ: "" },
-        { json: "cantSendConfirmationPrefix", js: "cantSendConfirmationPrefix", typ: "" },
-        { json: "cantSharePrefix", js: "cantSharePrefix", typ: "" },
-        { json: "cantUnshareWithMeSystemPrefix", js: "cantUnshareWithMeSystemPrefix", typ: "" },
-        { json: "emailNotFound", js: "emailNotFound", typ: "" },
-        { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "" },
-        { json: "forbidden", js: "forbidden", typ: "" },
-        { json: "lostConnection", js: "lostConnection", typ: "" },
-        { json: "mergedSystemIsOffline", js: "mergedSystemIsOffline", typ: "" },
-        { json: "notAuthorized", js: "notAuthorized", typ: "" },
-        { json: "notFound", js: "notFound", typ: "" },
-        { json: "ok", js: "ok", typ: "" },
-        { json: "oldPasswordMistmatch", js: "oldPasswordMistmatch", typ: "" },
-        { json: "oldSafariNotSupported", js: "oldSafariNotSupported", typ: "" },
-        { json: "passwordMismatch", js: "passwordMismatch", typ: "" },
-        { json: "thisSystem", js: "thisSystem", typ: "" },
-        { json: "unknownError", js: "unknownError", typ: "" },
-        { json: "unknownMergeError", js: "unknownMergeError", typ: "" },
-        { json: "wrongAuthCode", js: "wrongAuthCode", typ: "" },
-        { json: "wrongCode", js: "wrongCode", typ: "" },
-        { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "" },
-        { json: "wrongParameters", js: "wrongParameters", typ: "" },
-        { json: "licenseFail", js: "licenseFail", typ: "" },
-        { json: "networkConnection", js: "networkConnection", typ: "" },
-        { json: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", js: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", typ: 0 },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "" },
