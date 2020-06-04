@@ -186,6 +186,7 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
+${ADD USER BUTTON SYSTEMS}            //nx-system-settings-component//nx-menu//nx-menu-button//button
 ${ADD USER MODAL}                     //form[@name='addUserForm']
 ${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
 ${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
