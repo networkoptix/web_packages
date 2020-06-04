@@ -87,7 +87,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.LANG = language.translations;
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
-        this.menuService.setSection('cameras');
+        this.menuService.section = 'cameras';
     }
 
     ngOnInit() {
@@ -102,7 +102,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.errors = [];
                     this.showUnauthorized = false;
                     this.showOverlay = false;
-                    this.menuService.setDetailsSection(params.cameraId);
+                    this.menuService.detail = params.cameraId;
                     this.cameraIdFromParams = params.cameraId;
                     this.parsedCameraId = params.cameraId.replace(/\s|\{|\}/g, '');
                     if (!this.applyService.locked) this.setCamera();
@@ -662,7 +662,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     });
             }
 
-            this.menuService.setDetailsSection(this.parsedCameraId);
+            this.menuService.detail = this.parsedCameraId;
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;

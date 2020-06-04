@@ -24,6 +24,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
 
     itemPath: string;
     _toggle: boolean;
+    _type: string;
 
     CONFIG: IConfig;
 
@@ -46,11 +47,15 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
             this.itemPath = changes.base.currentValue;
             this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         }
+
+        if (changes.searchMode?.currentValue) {
+            this._type = changes.searchMode?.currentValue ? 'arrow_collapse' : 'arrow_expand';
+        }
     }
 
     menuClick(sectionId) {
         if (!this.searchMode) {
-            this.menuService.setSection(sectionId);
+            this.menuService.section = sectionId;
             this.router
                 .navigate([this.itemPath], { queryParams: { search: this.item.query } })
                 .catch((ex) => console.error(ex));
@@ -60,6 +65,7 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     }
 
     toggleNode() {
+        this._type = this._toggle ? 'arrow_collapse' : 'arrow_expand';
         this._toggle = !this._toggle;
         this.toggle.emit(this._toggle);
     }

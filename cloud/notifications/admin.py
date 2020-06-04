@@ -2,15 +2,14 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib import admin
 from django.utils.html import format_html
+from django_celery_results.models import TaskResult
 import pytz
+from push_notifications.admin import GCMDeviceAdmin
 
 # Register your models here.
 
 from .models import *
 from .forms import *
-from django_celery_results.models import TaskResult
-from push_notifications import models as push_notifications_models
-from push_notifications.admin import GCMDeviceAdmin
 admin.site.unregister(TaskResult)
 
 # Unregister unused push_notifications model admins
@@ -55,8 +54,7 @@ class MessageAdmin(NotificationAdmin):
         cutoff_date = datetime.now() - timedelta(days=settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
         Message.objects.filter(send_date__lt=cutoff_date).delete()
 
-    clean_old_messages.short_description = "Remove messages older than {} days"\
-        .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+    clean_old_messages.short_description = f"Remove messages older than {settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS} days"
 
 
 @admin.register(Event)
@@ -126,7 +124,7 @@ class CloudNotificationAdmin(admin.ModelAdmin):
             utc = pytz.utc.localize(obj.sent_date)
             converted_time = utc.astimezone(pytz.timezone(user_timezone))\
                                 .replace(tzinfo=None).strftime("%b. %d, %Y, %H:%M")
-            return format_html('<span title="{}">{}</span>'.format(timezone, converted_time))
+            return format_html(f'<span title="{timezone}">{converted_time}</span>')
         return obj.sent_date
     convert_date.short_description = "Sent date"
     convert_date.allow_tags = True
@@ -194,8 +192,7 @@ class TaskResultAdmin(admin.ModelAdmin):
         cutoff_date = datetime.now() - timedelta(days=settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
         TaskResult.objects.filter(date_done__lt=cutoff_date).delete()
 
-    clean_old_tasks.short_description = "Remove tasks older than {} days"\
-        .format(settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS)
+    clean_old_tasks.short_description = f"Remove tasks older than {settings.CLEAR_HISTORY_RECORDS_OLDER_THAN_X_DAYS} days"
 
 
 @admin.register(PushSubscription)

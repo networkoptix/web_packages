@@ -4,6 +4,7 @@ import { NxConfigService, IConfig } from './nx-config';
 import { Account }                  from './account.service';
 import { NxSystemWithUserInfo }     from './systems.service';
 import * as t                       from './nx-cloud-api.types';
+import { NxUriCacheService } from './uri-cache.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,8 @@ export class NxCloudApiService {
 
     constructor(
         configService: NxConfigService,
-        private http: HttpClient
+        private http: HttpClient,
+        private cacheService: NxUriCacheService
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -197,12 +199,20 @@ export class NxCloudApiService {
         return this.http.post<t.CloudResponse>(this.CONFIG.apiBase + '/account/delete', { password }).toPromise();
     }
 
-    account() {
-        return this.http.get<Account>(this.CONFIG.apiBase + '/account');
+    account(forceUpdate = false) {
+        const endpoint = this.CONFIG.apiBase + '/account';
+        this.cacheService.addToCache(endpoint);
+        let headers = new HttpHeaders();
+        if (forceUpdate) {
+            headers = headers.set('reset-cache', 'true');
+        }
+        return this.http.get<Account>(endpoint, { headers });
     }
 
     getLanguages() {
-        return this.http.get<t.ILanguages>('/static/languages.json').toPromise();
+        const endpoint = '/static/languages.json';
+        this.cacheService.addToCache(endpoint);
+        return this.http.get<t.ILanguages>(endpoint).toPromise();
     }
 
     changeLanguage(language: string) {

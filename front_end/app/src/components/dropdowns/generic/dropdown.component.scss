@@ -1,5 +1,6 @@
 @import '../../../../styles/theme_palette';
 @import '../../../styles/typography';
+@import '../../../styles/mixins';
 
 nx-select {
     width: 100%;
@@ -18,5 +19,67 @@ nx-select {
 
     .selected .additional-help {
         color : $light1;
+    }
+
+    @include keyframe(bubblingG) {
+        0% {
+            opacity:1;
+        }
+        77% {
+            opacity:0;
+        }
+        100% {
+            opacity:0;
+        }
+    }
+
+    .loading {
+        width          : 100%;
+        height         : 100%;
+        
+        text-align     : center;
+        vertical-align : middle;
+        overflow       : hidden;
+        margin         : auto;
+        div {
+            margin : 0 auto;
+            span {
+                display           : inline-block;
+                width             : 8px;
+                height            : 8px;
+                margin            : auto 10px;
+                background        : $light;
+                border-radius     : 8px;
+                animation         : bubblingG 650ms infinite alternate;
+                -o-animation      : bubblingG 650ms infinite alternate;
+                -ms-animation     : bubblingG 650ms infinite alternate;
+                -webkit-animation : bubblingG 650ms infinite alternate;
+                -moz-animation    : bubblingG 650ms infinite alternate;
+            }
+        }
+        
+        .dot1 {
+            animation-delay         : 0s;
+            -o-animation-delay      : 0s;
+            -ms-animation-delay     : 0s;
+            -webkit-animation-delay : 0s;
+            -moz-animation-delay    : 0s;
+        }
+        
+        .dot2 {
+            animation-delay         : 0.3s;
+            -o-animation-delay      : 0.3s;
+            -ms-animation-delay     : 0.3s;
+            -webkit-animation-delay : 0.3s;
+            -moz-animation-delay    : 0.3s;
+        }
+        
+        .dot3 {
+            animation-delay         : 0.6s;
+            -o-animation-delay      : 0.6s;
+            -ms-animation-delay     : 0.6s;
+            -webkit-animation-delay : 0.6s;
+            -moz-animation-delay    : 0.6s;
+        }
     }
 }

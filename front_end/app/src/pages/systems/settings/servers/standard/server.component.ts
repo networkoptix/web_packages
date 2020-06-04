@@ -61,7 +61,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.portChangeDisabled = true;
         this.serverUnavailable = true;
         // this.debugMode = this.CONFIG.clientMode.debug;
-        this.menuService.setSection('servers');
+        this.menuService.section = 'servers';
         this.canSeeInfo = false;
         this.fullInfoPath = '';
     }
@@ -232,7 +232,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                             console.error(error);
                         });
 
-                    this.menuService.setDetailsSection(nextServerId);
+                    this.menuService.detail = nextServerId;
                 }
             });
     }

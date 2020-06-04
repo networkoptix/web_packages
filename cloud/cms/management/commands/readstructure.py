@@ -7,14 +7,15 @@ import os
 import re
 import json
 import codecs
-import time
-from cloud import settings
+import logging
+
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.core.cache import caches
+
 from cloud.debug import timer
 from cms.controllers import structure
 from cms.models import *
-from django.core.management.base import BaseCommand
-from django.core.cache import caches
-import logging
 logger = logging.getLogger(__name__)
 
 SOURCE_DIR = 'static/_source/{{skin}}/'
@@ -30,12 +31,12 @@ def create_new_cloudportals_for_each_customization(logger):
             .exclude(version=None).last()
         if records_with_name:
             asset_name = records_with_name.value
-            logger.stdout.write(logger.style.SUCCESS("\tAsset name for {} is {}".
-                                                     format(customization.name, asset_name)))
+            logger.stdout.write(logger.style.SUCCESS(
+                f"\tAsset name for {customization.name} is {asset_name}"))
         else:
             asset_name = "Cloud Portal"
-            logger.stdout.write(logger.style.SUCCESS("\tCouldn't find asset name for {} using {}".
-                                                     format(customization.name, asset_name)))
+            logger.stdout.write(logger.style.SUCCESS(
+                f"\tCouldn't find asset name for {customization.name} using {asset_name}"))
         cloud = structure.find_or_add_asset_with_single_customization(asset_name, customization, "cloud_portal", "")
         cloud.customizations.add(customization)
         cloud.save()
@@ -49,7 +50,7 @@ def move_contexts_to_assettype(logger):
     cloud_portal_type = structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
     for context in cloud_portal.context_set.all():
-        logger.stdout.write(logger.style.SUCCESS("\tMoving {}".format(context.name)))
+        logger.stdout.write(logger.style.SUCCESS(f"\tMoving {context.name}"))
         context.asset_type = cloud_portal_type
         context.save()
     logger.stdout.write(logger.style.SUCCESS("Done moving contexts to asset_type cloud_portal"))
@@ -66,8 +67,8 @@ def move_revisions_to_new_cloud_portals(logger):
 
     for cloud in new_clouds:
         logger.stdout.write(
-            logger.style.SUCCESS("\tMoving {} revisions to {}".
-                                 format(cloud.customizations.first(), cloud.name)))
+            logger.style.SUCCESS(
+                f"\tMoving {cloud.customizations.first()} revisions to {cloud.name}"))
         customization_content_versions = original_content_versions.filter(
             customization=cloud.customizations.first())
         for content_version in customization_content_versions:

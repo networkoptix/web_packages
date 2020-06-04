@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, Group, PermissionsMixin
-from django.utils.html import format_html
-
 from django.utils import timezone
-
+from django.utils.html import format_html
 
 from api.controllers.cloud_api import Account as cloud_api_account
 from api.helpers.exceptions import APIRequestException, APIException, APILogicException, ErrorCodes
@@ -241,7 +239,7 @@ class AccountLoginHistory(models.Model):
         verbose_name_plural = 'Authentication log'
 
     def __unicode__(self):
-        return '{0} - {1} - {2}'.format(self.action, self.email, self.ip)
+        return f'{self.action} - {self.email} - {self.ip}'
 
 
 class ProxyGroup(Group):

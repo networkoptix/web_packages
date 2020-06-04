@@ -64,8 +64,8 @@ export class NxCloudStorageComponent implements OnInit {
                 system.getInfoAndPermissions();
             }
         });
-        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.cloudStorage.id);
+        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+        this.menuService.detail = this.CONFIG.menus.systemSettings.cloudStorage.id;
     }
 
     ngOnInit() {

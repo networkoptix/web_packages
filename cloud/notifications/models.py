@@ -1,8 +1,9 @@
 import json
 import re
+
+from jsonfield import JSONField
 from django.db import models
 from django.utils import timezone
-from jsonfield import JSONField
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
@@ -11,6 +12,7 @@ from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
 from push_notifications.models import GCMDevice
 from rest_framework import serializers
+
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
 

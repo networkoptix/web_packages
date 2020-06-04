@@ -45,7 +45,7 @@ export class NxAccountPasswordComponent implements OnInit, AfterViewInit {
             password    : '',
             newPassword : ''
         };
-        this.menuService.setDetailsSection('password');
+        this.menuService.detail = 'password';
     }
 
     constructor(

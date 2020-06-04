@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, Permission
-from cms.models import UserGroupsToAssetPermissions
 
+from cms.models import UserGroupsToAssetPermissions
 
 CAN_ACCESS_CUSTOMIZATION = "Can View"
 

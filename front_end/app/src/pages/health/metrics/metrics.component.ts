@@ -130,7 +130,7 @@ export class NxSystemMetricsComponent implements OnInit, AfterViewInit {
             .subscribe((params: any) => {
                 this.metricId = params.metric;
                 this.metricName = this.healthService.manifest[this.metricId].name;
-                this.menuService.setSection(this.metricId);
+                this.menuService.section = this.metricId;
                 this.selectedData = this.healthService.tableHeaders[this.metricId];
                 this.selectedPanelData = this.healthService.panelParams[this.metricId];
                 this.healthLayoutService.metricsValuesCount = this.metricId in this.healthService.values ? Object.values(this.healthService.values[this.metricId]).length : 0;

@@ -14,7 +14,6 @@ function brew_install() {
 
     echo 'Installing node v11.15.0'
     n 11.15.0
-
     echo 'Installing python 3.7.6'
     pyenv install 3.7.6
     pip install virtualenv
@@ -233,6 +232,11 @@ do
             fi
             export CLOUD_INSTANCE=$2
             echo "If command was not run with source it will not work"
+            if [ $(python -c 'import sys; print(sys.version_info.major)') == 2 ]; then
+                echo "Py3 not found. Likely virtualenv is not activated. Proxy configuration is not updated!"
+            else
+                python update_proxy.py
+            fi
             break
             ;;
         start_celery)

@@ -1,5 +1,6 @@
+<nx-pre-loader *ngIf="showPreloader"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
-    <nx-page-placeholder *ngIf="(!system || !system.isOnline ||noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
+    <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
 
     <nx-pre-loader *ngIf="showPreloader" class="w-100"></nx-pre-loader>
 
@@ -52,13 +53,13 @@
                         </div>
                         <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
+                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyClass]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>View</span>
                         </button>
                         <button *ngIf="canSeeInfo" class="camera-buttons"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                             <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
+                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyClass]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>
                         </button>

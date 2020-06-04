@@ -825,8 +825,8 @@ export class NxSystem extends System implements OnDestroy {
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
-        this.systemPoll = this.pollService.createPoll<any>(this.update(), this.CONFIG.updateInterval);
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
+        this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
             this.mediaserver,
             this.systemApiService,
@@ -1014,7 +1014,7 @@ export class NxSystem extends System implements OnDestroy {
         }
     }
 
-    update() {
+    update = () => {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())

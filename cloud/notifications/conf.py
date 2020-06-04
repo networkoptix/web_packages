@@ -1,9 +1,9 @@
 from django.conf import settings as django_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.cache import caches
+from push_notifications.conf.legacy import LegacyConfig
 
 from cms.models import Asset, AssetType
-from push_notifications.conf.legacy import LegacyConfig
 
 
 class empty(object):

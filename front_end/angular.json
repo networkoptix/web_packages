@@ -23,7 +23,7 @@
             "polyfills": "app/polyfills.ts",
             "tsConfig": "tsconfig.json",
             "aot": true,
-            "buildOptimizer":true,
+            "buildOptimizer": true,
             "assets": [
               "app/images",
               "app/fonts",
@@ -140,5 +140,8 @@
       }
     }
   },
-  "defaultProject": "front-end"
+  "defaultProject": "front-end",
+  "cli": {
+    "analytics": "a9b206ea-be72-4bd1-8b99-710455b85aea"
+  }
 }

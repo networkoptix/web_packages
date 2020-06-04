@@ -3,6 +3,7 @@ import json
 import errno
 import codecs
 import sys
+import re
 
 US_LANGUAGE_NAME = "English (US)"
 US_LANGUAGE_CODE = "en_US"
@@ -80,7 +81,21 @@ def generate_languages_files(languages, template_filename):
         i18n_static = merge_files(base_i18n_static, lang, "language_i18n_static.json")
         i18n = merge_two_json(i18n, i18n_static)
         compiled = {"ajs": ajs, "i18n": i18n}
-        save_content(f"static/lang_{lang}/language_compiled.json", json.dumps(compiled, indent=4, ensure_ascii=False, sort_keys=True))
+
+        # replace {{XXX}} with {XXX} so pluralization plugin will not freak out
+        prep_json_for_pluralization(compiled)
+
+        save_content(f"static/lang_{lang}/language_compiled.json",
+                     json.dumps(compiled, indent=4, ensure_ascii=False, sort_keys=True))
+
+
+def prep_json_for_pluralization(adict):
+    for key in adict.keys():
+        if type(adict[key]) is dict:
+            prep_json_for_pluralization(adict[key])
+        else:
+            for match in re.findall(r'{{[#\s\w]+}}', adict[key]):
+                adict[key] = adict[key].replace(match, match[1:-1])
 
 
 languages = sys.argv[1:]

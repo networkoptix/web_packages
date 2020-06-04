@@ -1,7 +1,8 @@
-from api.models import Account
-from rest_framework import serializers
 import django
-from cloud import settings
+from django.conf import settings
+from rest_framework import serializers
+
+from api.models import Account
 
 
 class CreateAccountSerializer(serializers.Serializer):  # ModelSerializer

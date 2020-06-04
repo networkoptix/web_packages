@@ -450,8 +450,6 @@ export interface Search {
     debounceTime: number;
     maxLength: number;
     minSystems: number;
-    transitionInMs: number;
-    transitionShortInMs: number;
 }
 
 export interface Servers {
@@ -1079,9 +1077,7 @@ export interface SettingsConfig {
 //     Search: o([
 //         { json: 'debounceTime', js: 'debounceTime', typ: 0 },
 //         { json: 'maxLength', js: 'maxLength', typ: 0 },
-//         { json: 'minSystems', js: 'minSystems', typ: 0 },
-//         { json: 'transitionInMs', js: 'transitionInMs', typ: 0 },
-//         { json: 'transitionShortInMs', js: 'transitionShortInMs', typ: 0 }
+//         { json: 'minSystems', js: 'minSystems', typ: 0 }
 //     ], false),
 //     Servers: o([
 //         { json: 'port', js: 'port', typ: r('Port') },

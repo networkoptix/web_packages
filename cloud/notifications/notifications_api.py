@@ -1,16 +1,17 @@
-import django
 import json
+import logging
+from urllib.parse import quote_plus
+
+import django
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from urllib.parse import quote_plus
 
 from api.controllers import cloud_api
 from api.helpers import exceptions
 from api.models import Account
-from notifications.models import Message, Event, Feedback, PushDevice, PushSubscription
-from cms.models import Asset, cloud_portal_customization_cache, get_cloud_portal_asset
+from notifications.models import Message, Event, Feedback, PushDevice
+from cms.models import Asset, get_cloud_portal_asset
 
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -183,10 +184,10 @@ def set_subscriptions_from_targets(notification_object, request_data):
     for account in target_accounts:
         targets.remove(account.email)
         if not account.is_active:
-            log_push_result(notification_object, 'User {} is not activated'.format(account.email), logging.WARNING)
+            log_push_result(notification_object, f'User {account.email} is not activated', logging.WARNING)
 
     for target in targets:
-        log_push_result(notification_object, 'User {} not found'.format(target), logging.ERROR)
+        log_push_result(notification_object, f'User {target} not found', logging.ERROR)
 
     matching_devices = PushDevice.objects.filter(
         subscriptions__system_id__in=(system_id, 'all'), user__in=target_accounts,

@@ -50,7 +50,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
     private formSubscription: Subscription;
 
     private setupDefaults() {
-        this.menuService.setDetailsSection('settings');
+        this.menuService.detail = 'settings';
     }
 
     constructor(
@@ -116,7 +116,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy, AfterViewI
                 if (account) {
                     this.account = account;
                     this.setOriginal();
-                    if (!this.systemsService.systemsPoll.destination.observers.length) {
+                    if (!this.systemsService.systemsPoll.destination?.observers?.length) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.isUserASystemOwner();

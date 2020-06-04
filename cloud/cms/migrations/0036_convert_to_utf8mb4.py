@@ -12,7 +12,7 @@ def convert_apps_to_utf8mb(apps, schema_editor):
     with connection.cursor() as cursor:
         cursor.execute('ALTER DATABASE cloudportal CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
         for table in tables:
-            cursor.execute('ALTER TABLE {} CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'.format(table))
+            cursor.execute(f'ALTER TABLE {table} CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;')
 
 
 class Migration(migrations.Migration):

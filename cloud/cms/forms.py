@@ -1,15 +1,15 @@
 import json
+
 from django import forms
+from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.template.loader import render_to_string
-from .models import *
-from api.models import Account
-from .controllers.modify_db import are_asset_datarecords_unique
-
 from dal import autocomplete
 
-from cloud import settings
+from api.models import Account
+from .models import *
+from .controllers.modify_db import are_asset_datarecords_unique
 
 BYTES_TO_MEGABYTES = 1048576.0
 
@@ -45,7 +45,7 @@ def get_languages_list():
         is_default = ""
         if language[0] == default_language_code:
             is_default = " - default"
-        return language[0], "{} - {}{}".format(language[0], language[1], is_default)
+        return language[0], f"{language[0]} - {language[1]}{is_default}"
 
     customization = Customization.objects.get(name=settings.CUSTOMIZATION)
     default_language_code = customization.default_language.code
@@ -163,7 +163,7 @@ class CustomContextForm(forms.Form):
                 continue
 
             elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-                options = data_structure.meta_settings['options'] if 'options' in data_structure.meta_settings else []
+                options = data_structure.meta_settings.get('options', [])
                 choices = []
                 for choice in options:
                     if type(choice) == dict:

@@ -1,10 +1,9 @@
 from django import forms
 from django.contrib.admin.widgets import FilteredSelectMultiple
-
-from .models import CloudNotification, PushSubscription
-from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
-
 from dal import autocomplete
+
+from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
+from .models import CloudNotification, PushSubscription
 
 
 class CloudNotificationAdminForm(forms.ModelForm):

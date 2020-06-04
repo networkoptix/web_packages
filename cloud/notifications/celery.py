@@ -1,12 +1,11 @@
 import os
+import logging
 
 from celery import Celery
 from celery.schedules import crontab
-
 from django.conf import settings  # noqa
 from django.core.management import call_command
 
-import logging
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cloud.settings')
 
@@ -29,7 +28,7 @@ def setup_periodic_tasks(sender, **kwargs):
 
 @app.task(bind=True)
 def debug_task(self):
-    print('Request: {0!r}'.format(self.request))
+    print(f'Request: {repr(self.request)}')
 
 
 @app.task

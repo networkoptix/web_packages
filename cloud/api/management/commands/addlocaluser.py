@@ -1,7 +1,8 @@
+import os
+
 from django.core.management.base import BaseCommand
 
-import os
-from ...models import *
+from ...models import Account
 
 
 class Command(BaseCommand):
@@ -20,5 +21,4 @@ class Command(BaseCommand):
         first = email[0]
         last = email[1]
         Account(email=email, first_name=first, last_name=last, is_superuser=True, is_staff=True).save()
-        self.stdout.write(self.style.SUCCESS('Successfully added user with {} for email.'
-                                             .format(email)))
+        self.stdout.write(self.style.SUCCESS(f'Successfully added user with {email} for email.'))

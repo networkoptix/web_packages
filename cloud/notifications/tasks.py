@@ -1,22 +1,20 @@
-from celery import shared_task
-from .engines import email_engine
-
 from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
-from celery.exceptions import Ignore
+import traceback
+import logging
 
+from celery import shared_task
+from celery.exceptions import Ignore
 from django.conf import settings
 from django.utils import timezone
 
 from api.models import Account
 from notifications import notifications_api
 from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
-from notifications.models import Message, PushSubscription, PushNotification
+from notifications.models import Message
 from util.helpers import get_language_for_email
+from .engines import email_engine
 
-import json
-import traceback
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -26,18 +24,7 @@ class MaxResendException(Exception):
 
 
 def log_error(error, user_email, msg_type, message, lang, customization, queue, attempt):
-    error_formatted = '\n{}:{}\nTarget Email: {}\nType: {}\nMessage:{}\nLanguage: {}\nCustomization: {}\nQueue: {}\n' \
-                      'Attempt: {}\nCall Stack: {}'\
-        .format(error.__class__.__name__,
-                error,
-                user_email,
-                msg_type,
-                message,
-                lang,
-                customization,
-                queue,
-                attempt,
-                traceback.format_exc().replace("Traceback", ""))
+    error_formatted = f'\n{error.__class__.__name__}:{error}\nTarget Email: {user_email}\nType: {msg_type}\nMessage:{message}\nLanguage: {lang}\nCustomization: {customization}\nQueue: {queue}\n Attempt: {attempt}\nCall Stack: {traceback.format_exc().replace("Traceback", "")}'
 
     if isinstance(error, SMTPDataError) or isinstance(error, SMTPException) or isinstance(error, SMTPServerDisconnected):
         logger.warning(error_formatted)
@@ -47,7 +34,7 @@ def log_error(error, user_email, msg_type, message, lang, customization, queue, 
 
 def send_email_log(_task):
     def wrapper(*args, **kwargs):
-        logger.info("Start {} was run with args {}, kwargs: {}".format(_task.__name__, args, kwargs))
+        logger.info(f"Start {_task.__name__} was run with args {args}, kwargs: {kwargs}")
         return _task(*args, **kwargs)
     return wrapper
 
@@ -98,7 +85,7 @@ def send_email(msg_id, queue="", attempt=1):
 @shared_task
 def send_push_notification(notification_id, request_data, device_tokens=None, count=1):
     if count == 1:
-        logger.info('Start processing push notification: {}'.format(notification_id))
+        logger.info(f'Start processing push notification: {notification_id}')
 
     notification_object = PushNotification.objects.get(id=notification_id)
 

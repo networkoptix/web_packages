@@ -1,5 +1,3 @@
-from ..models import *
-from cms.controllers.special_structures import SpecialStructures
 import os
 import json
 import codecs
@@ -10,9 +8,10 @@ import distutils.dir_util
 import errno
 import traceback
 from io import BytesIO
-
 from concurrent.futures import ThreadPoolExecutor
 
+from ..models import *
+from cms.controllers.special_structures import SpecialStructures
 from cloud.debug import timer
 from api.helpers.exceptions import APIForbiddenException
 
@@ -150,8 +149,8 @@ def process_context_structure(asset, context, content, language,
         except Exception:
             # if something happens here - instance will not start and it will close to impossible to fix so we ignore
             # broken records while logging them - it will raise cloud alarm and we will go and fix the problem
-            logger.error("ERROR: Cannot process data structure {0} for asset {1}".format(
-                datastructure.name, asset.name))
+            logger.error(
+                f"ERROR: Cannot process data structure {datastructure.name} for asset {asset.name}")
             logger.error(traceback.format_exc())
 
     return content

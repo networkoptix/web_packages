@@ -1,6 +1,5 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+import re
+import logging
 
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.urls import reverse
@@ -9,6 +8,13 @@ from django.utils import timezone
 from django.contrib import messages
 from django.shortcuts import redirect
 
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from api.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
     api_success, ErrorCodes, get_client_ip
 from api.models import Account
@@ -16,12 +22,6 @@ from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud
 from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
-
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-
-import re
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -165,7 +165,7 @@ def send_event(request):
         request.data['sender_name'] = request.data['userName']
 
         ip = get_client_ip(request)
-        logging.info("ip: {}\t user: {}\nrequest data: {}".format(ip, request.user, request.data))
+        logging.info(f"ip: {ip}\t user: {request.user}\nrequest data: {request.data}")
 
         notifications_api.send_feedback(request.data['type'], asset_id, request.data)
 

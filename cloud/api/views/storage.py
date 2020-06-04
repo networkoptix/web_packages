@@ -1,4 +1,5 @@
 import statistics
+
 from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -6,7 +7,8 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from api.controllers import cloud_api
-from api.helpers.exceptions import APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params
+from api.helpers.exceptions import (
+    APIInternalException, APINotFoundException, handle_exceptions, api_success, require_params)
 from cms.models import cloud_portal_customization_cache
 
 

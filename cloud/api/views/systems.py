@@ -1,20 +1,20 @@
+import hashlib
+import base64
+
+from django.conf import settings
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from api.controllers import cloud_api, cloud_gateway
-
 from api.helpers.exceptions import handle_exceptions, api_success, require_params, \
     APINotAuthorisedException, APIRequestException, ErrorCodes
 
-from cloud import settings
-import hashlib
-import base64
-
 
 # Swagger parameters
-system_id__route_param = openapi.Parameter('system_id', openapi.IN_PATH, type=openapi.TYPE_STRING, required=True)
+system_id__route_param = openapi.Parameter(
+    'system_id', openapi.IN_PATH, type=openapi.TYPE_STRING, required=True)
 
 # Swagger schemas for body
 disconnect_user_email__body = openapi.Schema(type=openapi.TYPE_STRING,

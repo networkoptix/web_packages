@@ -1,8 +1,9 @@
 import traceback
-from django.utils.log import AdminEmailHandler
 from hashlib import md5
-
 import logging
+
+from django.utils.log import AdminEmailHandler
+
 logger = logging.getLogger(__name__)
 DOWNGRADE_ROUTES = ['/api/account', '/api/systems']
 

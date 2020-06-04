@@ -1,7 +1,14 @@
 import collections
 from math import log2
+import datetime
+import json
+import logging
+import re
 
+import requests
 from django.core.cache import cache, caches
+from django.conf import settings
+from django.shortcuts import redirect
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -10,14 +17,6 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
-import datetime
-import json
-import logging
-import re
-import requests
-from cloud import settings
-from django.shortcuts import redirect
-
 from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
@@ -263,7 +262,7 @@ def downloads(request):
             logger.warning(f"Customization not in updates.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
         updates_record = updates_json[customization]
-        latest_version = updates_record['download_version'] if 'download_version' in updates_record else None
+        latest_version = updates_record.get('download_version')
 
         # Fallback section for old structure and old versions
         if not latest_version or latest_version.startswith('2'):

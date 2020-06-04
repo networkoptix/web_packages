@@ -41,7 +41,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         this.params = this.route.snapshot.queryParams;
         this.advanced = (this.params.advanced !== undefined);
 
-        this.menuService.setSection('servers');
+        this.menuService.section = 'servers';
     }
 
     constructor(
@@ -76,7 +76,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                         this.serverIdFromParams = this.serverIdFromParams.substring(0, this.serverIdFromParams.indexOf('?'));
                     }
 
-                    this.menuService.setDetailsSection(this.serverIdFromParams);
+                    this.menuService.detail = this.serverIdFromParams;
 
                     this.setServer();
                 }
@@ -172,7 +172,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 NxUtilsService.formatURL(server);
             }
             this.selectedServer = server;
-            this.menuService.setDetailsSection(this.selectedServer.id);
+            this.menuService.detail = this.selectedServer.id;
         }
     }
 }

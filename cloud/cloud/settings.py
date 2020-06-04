@@ -15,13 +15,13 @@ import os
 import re
 import json
 import sys
+
 from util.config import get_config
 from cloud.logger import downgrade_unauthorized_requests
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
 conf = get_config()
-
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
@@ -342,8 +342,8 @@ MEDIA_URL = '/integrations/'
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
 AWS_DEFAULT_ACL = 'public-read'
 
-S3_DOMAIN = conf['s3_domain'] if 's3_domain' in conf else '%s.s3.amazonaws.com'
-AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN % AWS_STORAGE_BUCKET_NAME
+S3_DOMAIN = conf.get('s3_domain', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
+AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN
 AWS_S3_OBJECT_PARAMETERS = {
     'ContentDisposition': 'attachment',
 }
@@ -474,7 +474,7 @@ if os.path.isfile(common_list_file):
     with open(common_list_file) as data_file:
         PASSWORD_REQUIREMENTS['common_passwords'] = json.load(data_file)
 else:
-    print("Warning: Can't read from {}".format(common_list_file), file=sys.stderr)
+    print(f"Warning: Can't read from {common_list_file}", file=sys.stderr)
 
 
 NOTIFICATIONS_CONFIG = {

@@ -1,19 +1,20 @@
-from api.helpers.exceptions import api_success, handle_exceptions, APINotFoundException, APIForbiddenException
-from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
-from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview, DataStructure, \
-    ContributerAgreement
 from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from api.helpers.exceptions import (
+    api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
+from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
+from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
+                        DataStructure, ContributerAgreement)
 
-state__query_param = openapi.Parameter("state", openapi.IN_QUERY,
-                                       description="State of the agreement. Ex: draft, published, or review",
-                                       type=openapi.TYPE_STRING)
+state__query_param = openapi.Parameter(
+    "state", openapi.IN_QUERY,
+    lambdadescription="State of the agreement. Ex: draft, published, or review",
+    type=openapi.TYPE_STRING)
 id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
 

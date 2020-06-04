@@ -1,9 +1,12 @@
-import requests
-from requests.auth import HTTPDigestAuth
-from cloud import settings
-from api.helpers.exceptions import validate_mediaserver_response
 from urllib.parse import urljoin
 import logging
+
+import requests
+from requests.auth import HTTPDigestAuth
+from django.conf import settings
+
+from api.helpers.exceptions import validate_mediaserver_response
+
 logger = logging.getLogger(__name__)
 
 CLOUD_GATEWAY_URL = settings.TRAFFIC_RELAY_PROTOCOL + settings.TRAFFIC_RELAY_HOST

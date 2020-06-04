@@ -1,7 +1,8 @@
 __author__ = 'noptix'
 
 from django.conf.urls import url
-from cloud import settings
+from django.conf import settings
+
 from api.views import account, systems, common, utils, robot, storage
 from notifications.views import send
 

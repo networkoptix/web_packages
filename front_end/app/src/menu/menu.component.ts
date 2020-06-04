@@ -148,23 +148,22 @@ export class NxMenuComponent implements OnInit, OnChanges {
     }
 
     modelChanged(model) {
-        // create an illusion for search transition
-        const delay = model.query ? this.CONFIG.search.transitionInMs : this.CONFIG.search.transitionShortInMs;
         this.transition = true;
-
         this.menuModel = model;
 
-        setTimeout(() => {
-            this.menuContent = this.menuService.fillerItemsBy(model);
-            this.transition = false;
+        this.menuContent = this.menuService.fillerItemsBy(model);
+        this.transition = false;
 
-            this.navItems = [];
-            if (model.query !== '') {
+        this.navItems = [];
+        if (model.query !== '') {
+            setTimeout(() => { // Avoid selection before filter finishes
                 this.navItems = this.menuWrapper.nativeElement.querySelectorAll('.menu-level-3');
-                this.navItemIdx = 0;
-                this.menuService.navItemId = this.navItems[this.navItemIdx].id;
-            }
-        }, delay);
+                if (this.navItems.length) {
+                    this.navItemIdx = 0;
+                    this.menuService.navItemId = this.navItems[this.navItemIdx].id;
+                }
+            });
+        }
     }
 
     subLevelItemsFor(item) {

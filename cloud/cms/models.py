@@ -3,6 +3,7 @@ import re
 import json
 from datetime import datetime
 from distutils.util import strtobool
+
 from django.db import models
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
@@ -13,13 +14,12 @@ from model_utils import Choices
 from django.core.cache import cache, caches
 from util.config import get_config
 
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
 
 
 def create_default_permission_group(asset):
-    from django.contrib.auth.models import Permission
     if not (asset.is_cloud_portal or asset.is_integration):
         return None
 
@@ -157,7 +157,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         update_global_cache(customization, data['version_id'])
 
     if value:
-        return data[value] if value in data else None
+        return data.get(value)
 
     return data
 

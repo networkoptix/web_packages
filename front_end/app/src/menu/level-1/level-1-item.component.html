@@ -9,7 +9,7 @@
     </div>
     <div class="menu-level-1-icon" *ngIf="item.svg">
         <svg-icon [src]="CONFIG.icons.dir + item.svg +'.svg'"
-                  [applyCss]="true"
+                  [applyClass]="true"
                   [svgStyle]="{'width.px': '24', 'height.px': '24'}"></svg-icon>
     </div>
     <ng-container>{{item.label}}</ng-container>
@@ -19,11 +19,17 @@
                               [count]="alert.count" [type]="alert.type"></nx-alert-counter>
         </div>
     </div>
-</a>
-<div class="search-results" *ngIf="searchMode">
-    <div class="search-results-label" *ngIf="_toggle">{{item.level3.length}} <span translate [translateParams]="{ count: 0 }">result</span></div>
-    <div class="nav-arrow" [ngClass]="{ 'up': !_toggle }" (click)="toggleNode()">
-        <span></span>
-        <span></span>
+    <div class="search-results" *ngIf="searchMode">
+        <div class="search-results-label" *ngIf="_toggle">
+            <span translate [translateParams]="{ count: item.level3.length }">result</span>
+        </div>
+        <svg-icon [src]="CONFIG.icons.dir + _type + '.svg'"
+                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
+
+<!--        <div class="nav-arrow" [ngClass]="{ 'up': !_toggle }">-->
+<!--            <span></span>-->
+<!--            <span></span>-->
+<!--        </div>-->
     </div>
-</div>
+</a>
+

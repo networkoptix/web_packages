@@ -51,6 +51,8 @@
             border-radius : 2px;
             border        : 1px solid $light6;
             background    : transparent;
+            outline       : none !important;
+            box-shadow    : none !important;
 
             &:placeholder-shown {
                 @include placeholder();
@@ -80,16 +82,19 @@
         // overwrite input style by layout
         &.search {
             .icon-search {
-                margin-top : 7px;
+                margin-top  : 7px;
+                margin-left : 10px;
             }
 
             .search-input {
                 @extend #regular14;
                 height : 32px;
+                padding-left: 40px;
             }
 
             .search-clear {
-                height : 32px;
+                height      : 32px;
+                line-height : 32px;
             }
         }
 
