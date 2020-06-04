@@ -49,6 +49,7 @@ export abstract class BaseAccount implements OnDestroy {
     abstract get(forceUpdate?: boolean): Promise<Account | false>;
     abstract login(email: string, password: string, remember: boolean): any;
     abstract logout(doNotRedirect?: boolean): void;
+    abstract requireLogin(): Promise<any>;
 
     constructor(
         configService: NxConfigService,
@@ -154,22 +155,6 @@ export abstract class BaseAccount implements OnDestroy {
     protected clearLoginState() {
         this.stopAccountPoll();
         this.sessionService.invalidateSession();
-    }
-
-    requireLogin() {
-        return this.get()
-            .then((account: Account) => {
-                if (!this.loginDialogActive) {
-                    return this.showLogin();
-                }
-                return this.loginDialogActive ? undefined : account;
-            }).catch(() => {
-                if (!this.loginDialogActive) {
-                    return this.showLogin();
-                } else {
-                    return undefined;
-                }
-            });
     }
 
     redirectAuthorised() {

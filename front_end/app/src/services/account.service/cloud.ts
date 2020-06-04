@@ -168,4 +168,26 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
                 });
             });
     }
+
+    requireLogin() {
+        return this.get()
+            .then((account: Account) => {
+                if (!account && !this.loginDialogActive) {
+                    this.loginDialogActive = true;
+                    return this.dialogs
+                        .login(<any> this, true, true).then((result) => {
+                            this.localStorageService.set('loginRegister', true);
+                            if (result === 'register') {
+                                return this.router.navigate(['/register']).then(() => result);
+                            }
+                            return this.get();
+                        })
+                        .catch(() => this.router.navigate([this.CONFIG.redirect.unauthorised]))
+                        .finally(() => {
+                            this.loginDialogActive = false;
+                        });
+                }
+                return this.loginDialogActive ? undefined : account;
+            });
+    }
 }

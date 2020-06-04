@@ -99,4 +99,17 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                 });
             });
     }
+
+    requireLogin() {
+        return this.get()
+            .then((account: Account) => {
+                return account || !this.loginDialogActive && this.showLogin();
+            }).catch(() => {
+                if (!this.loginDialogActive) {
+                    return this.showLogin();
+                } else {
+                    return undefined;
+                }
+            });
+    }
 }
