@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Kan visa live video och bläddra i arkivet",
             "label": "Tittare"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Ditt konto har sparats",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
         "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
-        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
     },
     "integration": {
         "Access Control": "Åtkomstkontroll",

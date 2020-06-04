@@ -62,8 +62,7 @@
         "viewer": {
             "description": "สามารถดูวิดีโอสดและเรียกดูไฟล์ที่เก็บได้",
             "label": "ผู้ชม"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
         "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",

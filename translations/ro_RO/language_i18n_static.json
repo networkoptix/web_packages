@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Can view live video and browse the archive",
             "label": "Telespectator"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Your account is successfully saved",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Access Control",

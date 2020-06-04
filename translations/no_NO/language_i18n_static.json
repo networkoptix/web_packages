@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Kan se live video og bla gjennom arkivet",
             "label": "Bruker"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Din konto er lagret",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
         "wrongParameters": "Noen parametere på skjemaet er feil",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Adgangskontroll",

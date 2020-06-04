@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Podgląd wideo na żywo i przeglądanie archiwum",
             "label": "Użytkownik"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Twoje konto zostało pomyślnie zapisane",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
         "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Kontrola dostępu",

@@ -252,8 +252,8 @@
     "SERVER NAME SAVED": "Sunucu adı kaydedildi.",
     "CHANGE PASSWORD BUTTON TEXT": "Parola Değiştir",
     "DELETE USER TEXT": "Kullanıcıyı sil",
-    "LOGIN IS REQUIRED TEXT": "Login is required",
-    "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
-    "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue"
+    "LOGIN IS REQUIRED TEXT": "Kullanıcı girişi gerekli",
+    "DELETE ACCOUNT HEADER TEXT": "Hesabı Sil?",
+    "DELETE ACCOUNT INFO TEXT": "Hesabınız ve onunla ilişkili tüm veriler, geri yükleme olanağı olmadan kalıcı olarak silinecek.",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Devam etmek için şifrenizi giriniz"
 }

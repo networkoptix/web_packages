@@ -253,7 +253,7 @@
     "CHANGE PASSWORD BUTTON TEXT": "Passwort ändern",
     "DELETE USER TEXT": "Benutzer löschen",
     "LOGIN IS REQUIRED TEXT": "Anmeldung erforderlich",
-    "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
-    "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue"
+    "DELETE ACCOUNT HEADER TEXT": "Account löschen?",
+    "DELETE ACCOUNT INFO TEXT": "Ihr Konto und alle damit verbundenen Daten werden dauerhaft gelöscht, ohne dass die Möglichkeit zur Wiederherstellung besteht.",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Geben Sie Ihr Kontopasswort ein, um fortzufahren"
 }

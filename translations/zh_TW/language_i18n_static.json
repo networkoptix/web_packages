@@ -62,8 +62,7 @@
         "viewer": {
             "description": "可以瀏覽即時影像和回放錄影資料",
             "label": "瀏覽"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "您的帳號已成功儲存",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "確認代碼已使用或不正確",
         "wrongParameters": "表單上的一些參數不正確",
         "licenseFail": "無法啟用授權。請重試或聯繫客服。",
-        "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
     },
     "integration": {
         "Access Control": "門禁管理",

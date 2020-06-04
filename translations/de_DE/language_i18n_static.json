@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Kann Livevideos ansehen und das Archiv durchsuchen",
             "label": "Betrachter"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Ihr Account wurde erfolgreich gespeichert",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
         "licenseFail": "Lizenz konnte nicht aktiviert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundensupport.",
-        "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
         "Access Control": "Zugangskontrolle",

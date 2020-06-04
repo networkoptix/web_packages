@@ -253,7 +253,7 @@
     "CHANGE PASSWORD BUTTON TEXT": "Wijzig wachtwoord",
     "DELETE USER TEXT": "Verwijder gebruiker",
     "LOGIN IS REQUIRED TEXT": "Inloggen verplicht",
-    "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
-    "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue"
+    "DELETE ACCOUNT HEADER TEXT": "Verwijder account?",
+    "DELETE ACCOUNT INFO TEXT": "Uw account en alle bijbehorende gegevens worden definitief verwijderd zonder de mogelijkheid om deze te herstellen.",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Voer het wachtwoord in voor uw account om door te gaan"
 }

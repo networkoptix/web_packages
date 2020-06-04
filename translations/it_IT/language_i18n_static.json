@@ -62,8 +62,7 @@
         "viewer": {
             "description": "È possibile visualizzare video in diretta e sfogliare l'archivio",
             "label": "Visualizzatore"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Il tuo account è stato aggiornato correttamente",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Controllo accesso",

@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Peut afficher la vidéo en direct et parcourir les archives",
             "label": "Visualisateur"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Votre compte est enregistré avec succès",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Code de confirmation est déjà utilisé ou incorrecte",
         "wrongParameters": "Certains paramètres dans le formulaire sont incorrects",
         "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter le service client.",
-        "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau."
     },
     "integration": {
         "Access Control": "Contrôle d'accès",

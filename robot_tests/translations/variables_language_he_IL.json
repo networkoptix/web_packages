@@ -55,7 +55,7 @@
     "ACCOUNT TEXT": "חשבון",
     "ACCOUNT INFORMATION": "פרטי חשבון",
     "ACCOUNT SETTINGS TEXT": "הגדרות חשבון",
-    "DELETE ACCOUNT TEXT": "Delete Account",
+    "DELETE ACCOUNT TEXT": "מחק חשבון",
     "EDIT CREDENTIALS TEXT": "ערוך פרטי כניסה",
     "EDIT USER BUTTON TEXT": "ערוך",
     "REMOVE USER BUTTON TEXT": "הסר משתמש",
@@ -253,7 +253,7 @@
     "CHANGE PASSWORD BUTTON TEXT": "שנה סיסמא",
     "DELETE USER TEXT": "Delete User",
     "LOGIN IS REQUIRED TEXT": "Login is required",
-    "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
-    "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue"
+    "DELETE ACCOUNT HEADER TEXT": "מחק חשבון?",
+    "DELETE ACCOUNT INFO TEXT": "חשבונך וכל הנתונים המשויכים אליו יימחקו לצמיתות ללא אפשרות לשחזר אותו.",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "הזן את סיסמת חשבונך כדי להמשיך"
 }

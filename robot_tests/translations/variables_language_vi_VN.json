@@ -253,7 +253,7 @@
     "CHANGE PASSWORD BUTTON TEXT": "Đổi mật khẩu",
     "DELETE USER TEXT": "Xóa người dùng",
     "LOGIN IS REQUIRED TEXT": "Đăng nhập là bắt buộc",
-    "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
-    "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue"
+    "DELETE ACCOUNT HEADER TEXT": "Xóa tài khoản?",
+    "DELETE ACCOUNT INFO TEXT": "Tài khoản của bạn và tất cả dữ liệu liên quan đến nó sẽ bị xóa vĩnh viễn mà không có khả năng khôi phục nó.",
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Nhập mật khẩu tài khoản của bạn để tiếp tục"
 }

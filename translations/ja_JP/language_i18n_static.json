@@ -62,8 +62,7 @@
         "viewer": {
             "description": "ライブ ビデオとアーカイブを参照できます",
             "label": "ビューアー"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "アクセスコントロール",

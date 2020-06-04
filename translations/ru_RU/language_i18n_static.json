@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Может смотреть живое видео и архив",
             "label": "Видео с камер и архив"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Ваша учетная запись успешно сохранена",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Код подтверждения уже используется или неверен",
         "wrongParameters": "Некоторые параметры в форме неверны",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Контроль доступа",

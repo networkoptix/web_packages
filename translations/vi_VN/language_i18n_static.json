@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Có thể xem video trực tuyến và duyệt qua kho lưu trữ",
             "label": "Người xem"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Tài khoản của bạn đã được lưu thành công",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
         "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
-        "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn."
     },
     "integration": {
         "Access Control": "Kiểm soát truy cập",

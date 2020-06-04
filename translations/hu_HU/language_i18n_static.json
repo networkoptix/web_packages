@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Élő videó megtekintése és rögzített visszajátszása",
             "label": "Felhasználó"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "A fiók mentése sikeres",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
         "wrongParameters": "Néhány paraméter hibás",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Access Control",

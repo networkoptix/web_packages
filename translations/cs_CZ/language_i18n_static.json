@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Můžete zobrazit živé video a procházet archiv",
             "label": "Prohlížeč"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Váš účet byl úspěšně uložen",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
         "wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Kontrola Přístupu",

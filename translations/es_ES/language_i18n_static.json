@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Puede ver video en vivo y ver el archivo",
             "label": "Espectador"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Su cuenta se ha guardado",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
         "licenseFail": "Error al activar la licencia. Por favor, inténtelo de nuevo o póngase en contacto con el servicio de soporte al cliente.",
-        "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {
         "Access Control": "Control de Acceso",

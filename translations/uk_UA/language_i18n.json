@@ -240,7 +240,7 @@
     "The server will be detached from this system into a new one. Database, local users, configuration, and video archive will remain intact.": "Сервер буде від'єднаний від цієї системи в новий. База даних, локальні користувачі, конфігурація та відеоархів залишаться недоторканими.",
     "This Email has been already registered in %CLOUD_NAME%": "Ця електронна адреса вже зареєстрована в %CLOUD_NAME%",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "Цей пристрій повідомив, що підтримує деякі аналітичні події, але ми не маємо точної інформації про них.",
-    "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.",
+    "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "Ця інформація базується на тому, що камери звітують через API. Фактичний перелік подій, підтримуваних цією камерою, може бути різним.",
     "This server must be available in the system to make the license key work": "Цей сервер повинен бути доступний у системі для роботи ліцензійного ключа",
     "To": "До",
     "Too many attempts. Try again in a minute.": "Забагато спроб. Спробуйте пізніше.",

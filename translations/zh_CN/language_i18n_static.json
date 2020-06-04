@@ -62,8 +62,7 @@
         "viewer": {
             "description": "可以查看实时视频和浏览存档",
             "label": "操作员"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "您的帐户已成功保存",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
         "licenseFail": "无法激活授权。请重试或联系客服。",
-        "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。"
     },
     "integration": {
         "Access Control": "门禁管理",

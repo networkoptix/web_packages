@@ -62,8 +62,7 @@
         "viewer": {
             "description": "라이브 비디오를보고 아카이브를 열람 할 수 있습니다.",
             "label": "뷰어"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "계정이 성공적으로 저장되었습니다.",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
         "wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다.",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "접근 제어",

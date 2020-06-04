@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Kan live video bekijken en zoeken in het archief",
             "label": "Kijker"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Uw account is succesvol opgeslagen",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {
         "Access Control": "Toegangscontrole",

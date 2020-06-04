@@ -62,8 +62,7 @@
         "viewer": {
             "description": "Voi katsella reaaliaikaista videota ja selata arkistoa",
             "label": "Katsoja"
-        },
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        }
     },
     "account": {
         "accountSavedSuccess": "Tilisi on onnistuneesti päivitetty",
@@ -434,8 +433,7 @@
         "wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
         "wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection.",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
         "Access Control": "Kulunvalvonta",
