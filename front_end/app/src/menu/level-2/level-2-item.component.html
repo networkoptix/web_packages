@@ -10,7 +10,7 @@
     <div class="ellipsis" >
         <span [innerHTML]="item.label" class="user"></span>
         <span class="menu-level-2-additional"
-              *ngIf="item.additionalLabel"
-              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalLabel"></span>
+              *ngIf="item.additionalText"
+              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"></span>
     </div>
 </a>
