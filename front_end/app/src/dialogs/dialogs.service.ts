@@ -24,8 +24,8 @@ import { ResetServerModalContent }     from './reset-server/reset-server.compone
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
 import { LanguageI18NStaticTypes }     from '../../language_i18n_static_types';
-import { 
-    CloudStorageDeleteModalContent, CloudStorageMoveModalContent 
+import {
+    CloudStorageDeleteModalContent, CloudStorageMoveModalContent
 }                                      from './cloud-storage';
 import {
     UpdateCameraCredentialsModalContent

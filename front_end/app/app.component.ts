@@ -52,12 +52,12 @@ export class AppComponent {
         private deviceService: DeviceDetectorService,
         private location: Location,
         private applyService: NxApplyService,
-        private appStateService: NxAppStateService,
         private scrollMechanicsService: NxScrollMechanicsService,
         private router: Router,
         private ribbonService: NxRibbonService,
         private uriService: NxUriService,
         private pageService: NxPageService,
+        public appStateService: NxAppStateService,
         @Inject(WINDOW) private window: Window
     ) {
         this.CONFIG = configService.getConfig();
@@ -228,10 +228,21 @@ export class AppComponent {
                 this.appStateService.setFooterVisibility(false);
             }
 
+            // take care of initial app load with query params
+            if (window.location.search) {
+                const queryParams = {};
+                const searchParams = window.location.search.substring(1).split('&');
+                searchParams.forEach((param) => {
+                    const param1 = param.split('=');
+                    queryParams[param1[0]] = param1[1];
+                });
+                this.uriService.queryParams = queryParams;
+            }
+
             // Updates query params for components without routes.
             this.router.events.pipe(
                 filter((event: Event) => event instanceof ActivationStart)
-            ).subscribe(({snapshot: {queryParams}}: ActivationStart) => {
+            ).subscribe(({ snapshot: { queryParams } }: ActivationStart) => {
                 this.uriService.queryParams = queryParams;
             });
 

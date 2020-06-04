@@ -42,6 +42,7 @@ export class NxAccountService implements OnDestroy {
     loggingOut: boolean;
     requestingLogin: Promise<any>;
     loginDialogActive: boolean;
+    loginWithAuthKeyInProgress: boolean;
 
     private accountPoll: Observable<any>;
     private accountPollSubscription: Subscription;
@@ -73,6 +74,7 @@ export class NxAccountService implements OnDestroy {
         this.location = locationService;
         this.loggingOut = false;
         this.loginDialogActive = false;
+        this.loginWithAuthKeyInProgress = false;
 
         // Distinct until changed is used to prevent the logout function from looping.
         this.loginSubscription = this.sessionService.loginStateSubject
@@ -94,13 +96,12 @@ export class NxAccountService implements OnDestroy {
             });
 
         // Handles login with auth param everywhere.
-        this.queryParamSubscription = this.uriService.queryParamsSubject.pipe(
-            distinctUntilChanged()
-        ).subscribe((params: any) => {
-            if (params.auth) {
-                this.handleAuthKeyLogin(params.auth);
-            }
-        });
+        this.queryParamSubscription = this.uriService.queryParamsSubject
+            .subscribe((params: any) => {
+                if (params.auth) {
+                    this.handleAuthKeyLogin(params.auth);
+                }
+            });
 
         this.accountPoll = this.pollService.createPoll(this.cloudApi.account(), this.CONFIG.updateInterval);
 
@@ -193,7 +194,7 @@ export class NxAccountService implements OnDestroy {
     requireLogin() {
         return this.get()
             .then((account: Account) => {
-                if (!account && !this.loginDialogActive) {
+                if (!account && !this.loginDialogActive && !this.loginWithAuthKeyInProgress) {
                     this.loginDialogActive = true;
                     return this.dialogs
                         .login(this, true, true).then((result) => {
@@ -302,7 +303,9 @@ export class NxAccountService implements OnDestroy {
     }
 
     loginWithAuthKey(authKey: string) {
-        const auth         = atob(authKey).split(':');
+        this.loginWithAuthKeyInProgress = true;
+
+        const auth         = atob(decodeURIComponent(authKey)).split(':');
         const tempLogin    = auth[0];
         const tempPassword = auth[1];
 
@@ -318,6 +321,8 @@ export class NxAccountService implements OnDestroy {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
                     });
+            }).finally(() => {
+                this.loginWithAuthKeyInProgress = false;
             });
     }
 
@@ -391,7 +396,7 @@ export class NxAccountService implements OnDestroy {
 
                 this.appStateService.ready = true;
 
-                this.cloudApi.checkAuthCode(auth).then(async(result: any) => {
+                this.cloudApi.checkAuthCode(decodeURIComponent(auth)).then(async(result: any) => {
                     if (result.email === account.email) {
                         return;
                     }
