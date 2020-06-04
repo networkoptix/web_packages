@@ -104,6 +104,7 @@ export const State: {
             differentOwners    : '',
             duplicateServers   : '',
             serverNotAvailable : '',
+            systemOffline      : '',
             systemOfflineUrl   : '',
             unknownError       : ''
         }

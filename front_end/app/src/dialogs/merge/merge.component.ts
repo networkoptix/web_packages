@@ -449,7 +449,7 @@ export class MergeModalContent {
                                 const newCheckMergeErrors = {
                                     CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
                                     DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
-                                    FAIL                                : this.systemOffline
+                                    FAIL                                : 'systemOfflineUrl'
                                 };
                                 this.updateShow(this.serverUrlErrors, {
                                     urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
