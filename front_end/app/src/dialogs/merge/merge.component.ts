@@ -352,7 +352,7 @@ export class MergeModalContent {
             if (this.targetSystem.value === this.otherSystem) {
                 this.serverUrlInput.control.markAsTouched();
                 this.serverUrlChange(this.serverUrlInput);
-            } else if (this.targetSystem.localSystemId && !this.dryRunAvailable) {
+            } else if (this.targetSystem.localSystemId && this.systemMergeable && !this.dryRunAvailable) {
                 this.serverUrlInput.control.setErrors({ invalid: true });
                 setTimeout(() => {
                     this.serverUrlInput.control.setErrors({ invalid: false });
