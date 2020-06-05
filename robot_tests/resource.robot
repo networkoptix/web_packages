@@ -587,10 +587,10 @@ Add user to cloud system if not there
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
-    [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
-    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}   ${system auth}
     Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
-    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     [Return]    ${current cloud system id}
 
 Reset System Names

@@ -163,6 +163,13 @@ Set Auto System Settings via API
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${state}
+    
+Set 3 dot 2 System Settings via API
+    [Arguments]    ${setting}    ${state}
+    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${state}
 
 # Keywords which use System/Server API
 Setup Local System
@@ -233,7 +240,23 @@ Get Users
     ${resp}=   Get Request    Get Users session    /ec2/getUsers
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
-
+    
+Check Allow Only Secure Connections
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Check HTTPS   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
+    Should Be Equal As Strings    ${resp.status_code}    200
+    
+Set Camera Name
+    [Arguments]    ${server url}    ${auth}    ${camera id}    ${name}
+    &{data} =    Create Dictionary
+    ...    cameraId={${camera id}}
+    ...    cameraName=${name}
+    Create Digest Session    Save camera name    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributesList    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+    
 #Save User
 #    [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
 #    &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}

@@ -257,3 +257,8 @@ class CloudPortalAPI(object):
         f= open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
+        
+    def check_http_connection(selfself, protocol, ip, url):
+        r = requests.get(protocol+ip+url)
+        return r.status_code
+    

@@ -475,7 +475,6 @@ Checking the dependency of checkboxes
     
 Check Limit session duration
     [Tags]    C65703    checkbox settings testing
-    ${new focus} =    Set Variable    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
@@ -613,6 +612,48 @@ Check Limit session duration
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick checked
     Evaluate Auto System Settings via API    sessionLimitMinutes    5
 
+Check HTTPS traffic encryption
+    [Tags]    C65701    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    trafficEncryptionForced    true
+    
+    Log    Step 1 - 4
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Just Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Sleep    5
+    ${status code} =    Check HTTP Connection    http://    ${AUTO SYS IP ONLY}    /static/index.html#/    
+    Should Be Equal As Strings    ${status code}    200
+    
+    Log    Step 5 - 9
+    Just Change Setting    ${ALLOW ONLY SECURE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Button    ${SYSTEM SAVE}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Sleep    5
+    Run Keyword And Expect Error    *   Check HTTP Connection    http://    ${AUTO SYS IP ONLY}    /static/index.html#/    
+    Check Allow Only Secure Connections    ${AUTO SYS IP}    ${AUTO SYS AUTH}     
+    
+Security block view for 3 dot 2 System
+    [Tags]    C65829    checkbox settings testing
+    Log    Preconditions
+    Set 3 dot 2 System Settings via API    auditTrailEnabled    true
+    Log    Step 1 covered in other testcases by default
+    Log    Step 2
+    Go To    ${url}/systems
+    Log In     ${EMAIL MERGE OWNER 3.0}    ${BASE PASSWORD}    button=None
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+             
 Disconnect dialog interface checks
     [Tags]    C48834
     Log    Step 1
