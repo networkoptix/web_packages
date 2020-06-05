@@ -521,6 +521,7 @@
         "name": "License Agreement",
         "label": "License Agreement",
         "old_name": "Eula",
+        "is_global": true,
         "description": "End User License Agreement",
         "file_path": "static/lang_{{language}}/views/static/eula.html",
         "url": "/content/eula",
@@ -540,6 +541,13 @@
             "value": "Network Optix, Inc.",
             "description": "Legal name of the company (for EULA)",
             "type": "text"
+          },
+          {
+            "label": "Legal Company Address",
+            "name": "%LEGAL_COMPANY_ADDRESS%",
+            "value": "",
+            "description": "Company address to be used for legal correspondence",
+            "type": "html"
           },
           {
             "label": "Legal Company Location",

@@ -12,6 +12,7 @@ import { NxAccountService }                                                     
 import { NxProcessService }                                                           from '../../services/process.service';
 import { NxCloudApiService }      from '../../services/nx-cloud-api';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {NxStaticCacheService} from "../../services/nx-static-cache";
 
 @Component({
     selector   : 'content-component',
@@ -22,7 +23,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 export class NxContentComponent implements OnInit {
     private title: string;
     private body: SafeHtml;
-    private staticHTML: string;
+    private staticHTML: SafeHtml;
     private articleParam: string;
     private state: string;
     private id: string;
@@ -38,8 +39,7 @@ export class NxContentComponent implements OnInit {
     private showAgree = false;
     private agreeProcess: any;
 
-    @ViewChild('dynamicTemplate', { read: ViewContainerRef, static: true }) dynamicTemplate;
-    @ViewChild('dynamicImage', { read: ViewContainerRef, static: true }) dynamicImage;
+    @ViewChild('title', { static: true }) titleElement;
 
     private setupDefaults() {
         this.title = '';
@@ -61,7 +61,8 @@ export class NxContentComponent implements OnInit {
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private staticCacheService: NxStaticCacheService
     ) {
         this.setupDefaults();
         this.CONFIG = config.getConfig();
@@ -101,9 +102,9 @@ export class NxContentComponent implements OnInit {
             this.agreement = this.route.snapshot.routeConfig.path === 'agreement';
             this.state = this.route.snapshot.queryParamMap.get('state');
             this.id = this.route.snapshot.queryParamMap.get('id');
-            this.dynamicTemplate.clear();
             this.title = '';
             this.body = '';
+            this.staticHTML = '';
             this.loaded = false;
             this.showAgree = false;
             if (this.agreement) {
@@ -156,36 +157,22 @@ export class NxContentComponent implements OnInit {
     }
 
     loadStaticContent() {
-        const templateUrl = `/${this.CONFIG.viewsDir}static/${this.articleParam}.html`;
-        this.compileStaticArticle(templateUrl);
-    }
-
-    compileStaticArticle(templateUrl) {
-        @Component({ templateUrl })
-        class TemplateComponent {
-            @ViewChild('title', { static: true }) title;
-        }
-
-        @NgModule({ declarations: [TemplateComponent], imports: [ComponentsModule] })
-        class TemplateModule {
-        }
-
-        this._compiler.compileModuleAndAllComponentsAsync(TemplateModule).then((mod) => {
-            const factory = mod.componentFactories.find((comp) => comp.componentType === TemplateComponent);
-
-            const component = this.dynamicTemplate.createComponent(factory);
-            this.loaded = true;
-
-            const title = component.instance.title.nativeElement;
-            if (title) {
-                this.pageService.setPageTitle(title.innerText);
-            }
-
-            /* If content was successfully compiled from static files,
-                add to staticContent so we don't do an API call each time we switch pages */
-            this.staticContent[this.articleParam] = true;
-            this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
-        }).catch(() => this.location.go('404'));
+        this.staticCacheService.requestStatic(this.articleParam).subscribe(
+            html => {
+                this.staticHTML = this.sanitizer.bypassSecurityTrustHtml(html);
+                const titleRegex = /#title.*>(.*)</m;
+                const match = titleRegex.exec(html);
+                if (match && match[1]) {
+                    this.pageService.setPageTitle(match[1]);
+                }
+                this.loaded = true;
+                this.staticContent[this.articleParam] = true;
+                this.sessionStorage.set('staticContent', JSON.stringify(this.staticContent));
+            },
+            error => {
+                console.error(error);
+                this.location.go('404');
+            });
     }
 }
 
