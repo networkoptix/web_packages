@@ -176,7 +176,7 @@
     "SYSTEM MERGING TEXT": "系統開始合併中",
     "MERGE SERVER URL TEXT": "伺服器網址",
     "MERGE NOT OWNER MESSAGE 1 TEXT": "當您的權限為所有者時, 即可合併系統",
-    "MERGE NOT OWNER MESSAGE 2 TEXT": "請至 %PRODUCT_NAME% 雲連接您要與此系統合併的另一系統, 或透過 %VMS_NAME%客戶端應用程式於本機合併",
+    "MERGE NOT OWNER MESSAGE 2 TEXT": "請至 %PRODUCT_NAME% 連接您要與此系統合併的另一系統, 或透過 %VMS_NAME%客戶端應用程式於本機合併",
     "CANNOT MERGE WITH OFFLINE SYSTEM TEXT": "系統%SYSTEM NAME% 處於離線狀態, 無法與當前系統合併。",
     "SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT": "軟體版本較舊，與當前系統不相容",
     "SYSTEM HAS A NEWER SOFTWARE VERSION TEXT": "軟體版本較新，與當前系統不相容。請將系統更新到",

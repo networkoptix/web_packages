@@ -146,14 +146,14 @@
         "searchCamPlaceholder": "Søk",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "Oppdater systemet ditt",
+        "systemNewVersionMessage": "Din gjeldende versjon er ikke kompatibel med denne funksjonen. Vennligst oppdater dine servere til den siste versjonen for å bruke denne funksjonen.",
+        "systemNoAlerts": "Ingen varsler",
+        "systemNoAlertsMessage": "Systemet ditt må ha det bra!",
         "systemOffline": "System frakoblet",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Dette systemet er offline og kan ikke nås akkurat nå.",
         "systemServerError": "Intern server feil",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Ukjent",
@@ -301,7 +301,7 @@
             "deleteUser": "Delete user?",
             "loggedFromOtherAccount": "You will be logged in with a different account",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
-            "removeUser": "Remove user?",
+            "removeUser": "Vil du fjerne bruker?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\"?"
@@ -408,7 +408,7 @@
         "cantGetSystemInfoPrefix": "Systeminformasjon er utilgjengelig",
         "cantGetSystemsListPrefix": "Systemlisten er utilgjengelig",
         "cantGetUsersListPrefix": "Brukerlisten er utilgjengelig",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% applikasjon blir ikke oppdaget.",
         "cantRegisterPrefix": "En feil oppstod",
         "cantSendActivationPrefix": "Kan ikke sende bekreftelse via e-post",
         "cantSendConfirmationPrefix": "Kan ikke sende bekreftelse via e-post",
@@ -445,8 +445,8 @@
         "myIntegrationsLabel": "Mine",
         "phoneNumberWithLabel": "Tlf: {{number}}",
         "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "testedVersionLabel": "Testet på {{vmsName}} versjon:",
+        "testedVersionsLabel": "Testet på {{vmsName}} versjon:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Avanserte PTZ kameraer",
@@ -488,7 +488,7 @@
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
         "sndResolution": "Secondary Stream",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "Topp {{value}} etter volum:",
         "vendor": "Produsent"
     },
     "menu": {
@@ -559,13 +559,13 @@
             "message": "System is offline and hence, servers are not accessible."
         }
     },
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
         "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Jeg godtar <a href=\"/content/eula\" target=\"_blank\">Vilkår &\nBetingelser</a> og <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Personvernregler</a>"
     },
     "ribbon": {
         "beingMerged": {
@@ -577,7 +577,7 @@
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon."
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
+        "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
@@ -617,7 +617,7 @@
         "successRename": "Server name saved."
     },
     "system": {
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+        "MERGE_FINISHES": "Når sammenslåingen er ferdig, vil alle brukere og kameraer fra dette systemet bli tilgjengelige i <strong>{{targetSystemName}}</strong> System, og dette systemet blir slettet.",
         "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
