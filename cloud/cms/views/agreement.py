@@ -13,7 +13,7 @@ from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, Asset
 
 state__query_param = openapi.Parameter(
     "state", openapi.IN_QUERY,
-    lambdadescription="State of the agreement. Ex: draft, published, or review",
+    description="State of the agreement. Ex: draft, published, or review",
     type=openapi.TYPE_STRING)
 id__query_param = openapi.Parameter("id", openapi.IN_QUERY, type=openapi.TYPE_STRING)
 
