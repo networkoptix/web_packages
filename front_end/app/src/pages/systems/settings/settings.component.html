@@ -19,10 +19,7 @@
     </div>
 </ng-container>
 
-<nx-page-placeholder *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM" withFooter>
-    <button class="btn btn-primary main-button mx-auto">
-        <a routerLink="/" translate>Go to Main Page</a>
-    </button>
+<nx-page-placeholder *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM" withFooter showMainButton="true">
 </nx-page-placeholder>
 
 <nx-page-placeholder *ngIf="secondaryMerge"

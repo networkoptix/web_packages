@@ -38,6 +38,7 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() withFooter: any;
     @Input() constrainWidth: boolean;
     @Input() data: any;
+    @Input() showMainButton = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;

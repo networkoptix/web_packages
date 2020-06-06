@@ -1,6 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
-@use'../../../styles/buttons';
+@use '../../../styles/buttons';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -152,3 +152,10 @@ $preloader_small_circle_distance : 8px;
     @include preloader($preloader_circle_color, $preloader_circle_size, $preloader_circle_distance);
 }
 
+.main-button {
+    margin-top: 40px !important;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+  }

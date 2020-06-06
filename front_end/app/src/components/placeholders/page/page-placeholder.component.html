@@ -17,7 +17,9 @@
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
                      [innerHTML]="placeholderTitle"></h2>
                 <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message"></div>
-
+                <button *ngIf="showMainButton" class="btn btn-primary main-button mx-auto">
+                    <a routerLink="/" translate>Go to Main Page</a>
+                </button>
                 <ng-content></ng-content>
 
             </div>
