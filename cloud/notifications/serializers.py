@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
-from .models import PushSubscription, PushDevice
+from notifications.models import PushSubscription, PushDevice
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 

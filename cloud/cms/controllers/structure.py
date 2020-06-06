@@ -6,8 +6,8 @@ import re
 import logging
 from zipfile import ZipFile
 
-from ..controllers.generate_structure import templatify_json
-from ..models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType
+from cms.controllers.generate_structure import templatify_json
+from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType
 
 logger = logging.getLogger(__name__)
 

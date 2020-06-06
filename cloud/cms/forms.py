@@ -8,8 +8,8 @@ from django.template.loader import render_to_string
 from dal import autocomplete
 
 from api.models import Account
-from .models import *
-from .controllers.modify_db import are_asset_datarecords_unique
+from cms.models import *
+from cms.controllers.modify_db import are_asset_datarecords_unique
 
 BYTES_TO_MEGABYTES = 1048576.0
 

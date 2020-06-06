@@ -8,8 +8,8 @@ from push_notifications.admin import GCMDeviceAdmin
 
 # Register your models here.
 
-from .models import *
-from .forms import *
+from notifications.models import *
+from notifications.forms import *
 admin.site.unregister(TaskResult)
 
 # Unregister unused push_notifications model admins
