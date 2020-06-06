@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Impossible d'accéder au système {{targetSystem}}.</p><p>Assurez-vous que le serveur spécifié est en ligne et réessayez.</p>",
             "serverNotYours": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel",
-            "systemOfflineUrl": "{{targetSystem}} est inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "Ce serveur a une version logiciel incompatible. Mettez à jour les deux systèmes à la même version pour les fusionner.",
             "systemVersionOld": "{{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
             "systemVersionNew": "{{targetSystem}} a une version logiciel plus récente qui n'est pas compatible avec le système actuel. Mettez à jour le système actuel vers la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour le fusionner avec {{targetSystem}}.",

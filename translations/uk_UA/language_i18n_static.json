@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Неможливо отримати доступ до системи {{targetSystem}}.</p><p>Переконайтеся, що вказаний сервер підключений до мережі і повторіть спробу</p>",
             "serverNotYours": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
-            "systemOfflineUrl": "{{targetSystem}} недоступний",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "Цей сервер має несумісну версію Пз. Оновіть обидві системи до однакової збірки, щоб об'єднати їх.",
             "systemVersionOld": "{{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
             "systemVersionNew": "{{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}}.",

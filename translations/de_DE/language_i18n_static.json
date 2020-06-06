@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Zugriff auf das {{targetSystem}}-System nicht möglich.</p><p>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.</p>",
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
-            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
             "systemVersionOld": "{{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
             "systemVersionNew": "{{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",

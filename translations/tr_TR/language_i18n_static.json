@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} sisteme erişilemiyor.</p><p>Belirtilen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.</p>",
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} erişilemez",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
