@@ -158,7 +158,7 @@
 		"myIntegrationsLabel": "Mine",
 		"previewRibbonText": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",
 		"backToEditText": "Tilbake til redigeringsgrensesnittene",
-		"requirements": "{{name}} Requirements",
+		"requirements": "{{name}} Krav",
 		"Access Control": "Adgangskontroll",
 		"Connector": "Tilkobler",
 		"Data Analytics": "Data Analytics",
@@ -200,17 +200,17 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Avbryt",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "Opprette ny konto",
+		"changeAccountLogged": "Du er allerede logget inn som {email}",
+		"loggedFromOther": "Du blir logget inn med en annen konto",
 		"loginTitle": "Logg inn på %CLOUD_NAME%",
 		"loginButton": "Logg Inn",
 		"logoutAuthorisedTitle": "Du er allerede innlogget",
 		"logoutAuthorisedContinueButton": "Fortsette",
 		"logoutAuthorisedLogoutButton": "Logg ut",
 		"noClientDetectedTitle": "Installer %VMS_NAME% for å koble til ditt System",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Forbli logget som {email} ",
+		"stayLoggedIn": "Forbli innlogget",
 		"download": "Last ned %VMS_NAME%",
 		"merge": {
 			"commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
@@ -227,7 +227,7 @@
 				"b_support": "brukerstøtte",
 				"c_proceeding": "før du fortsetter."
 			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+			"warning": "Det vil være mer enn <strong>{{maxServers}}</strong> servere i det sammenslåtte systemet."
 		},
 		"message": {
 			"failedToSend": "Meldingen ble ikke sendt.",
@@ -239,7 +239,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Salgsforespørsel for {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Teknisk forespørsel for {{asset}}",
 				"integration_feedback": "Tilbakemelding for integrasjon {{asset}}",
 				"ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
 				"ipvd_feedback_device": "Tilbakemelding for {{asset}}"
