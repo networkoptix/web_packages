@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Har inte åtkomst till {{targetSystem}} systemet.</p><p>Se till att den angivna servern är online och försök igen.</p>",
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
+            "systemOfflineUrl": "{{targetSystem}} är otillgänglig.",
             "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
             "systemVersionOld": "{{targetSystem}} har en äldre programvaruversion som inte är kompatibel med det nuvarande systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman den med den nuvarande.",
             "systemVersionNew": "{{targetSystem}} har en nyare programversion som inte är kompatibel med det nuvarande systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman det med {{targetSystem}}.",

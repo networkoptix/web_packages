@@ -176,15 +176,15 @@
     "dialogs": {
         "buttons": {
             "cancel": "Avbryt",
-            "createAccount": "Create New Account",
+            "createAccount": "Opprette ny konto",
             "delete": "Delete",
             "deleteAccount": "Delete Account",
             "download": "Last ned %VMS_NAME%",
             "logoutAuthorised": "Logg ut",
             "ok": "OK",
             "remove": "Fjern",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "Forbli logget som {email} ",
+            "stayLoggedIn": "Forbli innlogget"
         },
         "cloudStorage": {
             "title": "Cloud Storage",
@@ -230,22 +230,22 @@
             "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
+            "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
+            "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Slå sammen nåværende system med",
             "mergeFailedTitle": "Systemsammenslåing mislyktes",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "noServerFound": "Ingen server funnet",
+            "newSystemDisplayName": "Nytt system",
+            "otherSystem": "Annet system...",
+            "ownerCanMergeText": "Du kan bare slå sammen systemer der du er eieren",
             "passwordRequired": "Passord er påkrevd",
             "passwordWrong": "Feil passord",
             "primaryCannotMerge": "System {{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> å slå det sammen med {{targetSystem}} systemet.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "System {{primarySystem}} er offline og kan ikke slås sammen med System {{targetSystem}}",
+            "primarySystemUnavailable": "System {{primarySystem}} er for tiden ikke tilgjengelig. Prøv igjen om noen få minutter eller kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Vi anbefaler at du rådfører deg med",
                 "b_support": "brukerstøtte",
                 "c_proceeding": "før du fortsetter."
             },
@@ -281,7 +281,7 @@
                 "ipvd_feedback_device": "Tilbakemelding for {{asset}}",
                 "ipvd_feedback_page": "Tilbakemelding for kameraer-siden",
                 "sales_inquiry": "Salgsforespørsel for {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Teknisk forespørsel for {{asset}}"
             },
             "title": {
                 "integration": "Kom i kontakt med {{companyName}}",
@@ -297,9 +297,9 @@
         "titles": {
             "error": "Feil",
             "success": "Success",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "Du er allerede logget inn som {email}",
             "deleteUser": "Delete user?",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "loggedFromOtherAccount": "Du blir logget inn med en annen konto",
             "noClientDetected": "Installer %VMS_NAME% for å koble til ditt System",
             "removeUser": "Vil du fjerne bruker?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
@@ -444,7 +444,7 @@
         "Storage": "Lagring",
         "myIntegrationsLabel": "Mine",
         "phoneNumberWithLabel": "Tlf: {{number}}",
-        "requirements": "{{name}} Requirements",
+        "requirements": "{{name}} Krav",
         "testedVersionLabel": "Testet på {{vmsName}} versjon:",
         "testedVersionsLabel": "Testet på {{vmsName}} versjon:"
     },
