@@ -249,18 +249,13 @@ import * as Hls from 'hls.js';
                                 .playerHandler(error)
                                 .then((response) => {
                                     scope.videoFlags.errorLoading = response;
-                                    if (!error || error.url === undefined || error.url === '') {
+                                    if (!error && window.jscd.os !== 'iOS') {
                                         return;
                                     }
-                                    
-                                    if ($window.jscd.os === 'iOS' || scope.videoFlags.errorLoading) {
-                                        return $http
-                                            .get(error.url)
-                                            .then((response) => {
-                                                scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
-                                                scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
-                                            });
-                                    }
+
+                                    var data = JSON.parse(error.networkDetails.response);
+                                    scope.videoFlags.errorCode = data.error || 'SNAFU3.14';
+                                    scope.videoFlags.errorDescription = data.errorString || 'Unexpected error';
                                     
                                 }, (error) => {
                                     scope.videoFlags.errorLoading = error;
