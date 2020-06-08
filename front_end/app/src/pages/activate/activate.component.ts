@@ -161,6 +161,6 @@ export class NxActivateComponent implements OnInit {
     }
 
     login() {
-        this.dialogs.login(this.accountService, false, true);
+        this.dialogs.login(false, true);
     }
 }

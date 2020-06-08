@@ -48,7 +48,7 @@ export class NxActiveSystemDropdown extends BaseDropdown {
             if (!('id' in changes.activeSystem.currentValue)) {
                 this.activeSystem = { id: '0' }; // Avoid JS timing error (in console)
             } else if (changes.activeSystem.currentValue.id !== '0') {
-                this.canViewInfo = this.CONFIG.accessRoles.adminAccess
+                this.canViewInfo = this.CONFIG.isLocal || this.CONFIG.accessRoles.adminAccess
                     .includes(changes.activeSystem.currentValue.accessRole.toLowerCase());
             }
         }

@@ -837,12 +837,10 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     updateSystemAuth(force?: boolean) {
-        if (!force && this.mediaserver.authGet) { // no need to update
+        if (this.CONFIG.isLocal || !force && this.mediaserver.authGet) { // no need to update
             return Promise.resolve(true);
         }
-        if (this.CONFIG.isLocal) {
-            return Promise.resolve(true);
-        }
+
         return this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
             this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
             return Promise.resolve(true);
@@ -850,7 +848,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canViewInfo() {
-        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return this.CONFIG.isLocal || this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
     }
 
     canUserViewCloudStorage() {
@@ -863,6 +861,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
+        // TODO: This needs to be changed to work with webadmin
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
             .then((response) => {
@@ -985,7 +984,7 @@ export class NxSystem extends System implements OnDestroy {
 
     startPoll() {
         if (this.subscriberCount === 0) {
-            if (this.mediaserver.authGet) {
+            if (this.CONFIG.isLocal || this.mediaserver.authGet) {
                 this.subscriberCount++;
                 this.activeSubscription = this.systemPoll instanceof Observable && this.systemPoll.subscribe(() => {});
             } else {
@@ -1018,14 +1017,12 @@ export class NxSystem extends System implements OnDestroy {
         return of('').pipe(flatMap(() => {
             return this.getInfo(true, false)
                 .then(() => this.isOnline ? this.getSystem() : Promise.reject())
-                .then(() => this.getServers().toPromise())
-                .then(() => this.getCameras())
-                .then(() => from(this.getUsers(true)))
+                .then(() => Promise.all([this.getServers().toPromise(), this.getCameras(), this.getUsers(true)]))
                 .catch((error) => {
                     this.isAvailable = false;
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 });
-        }));
+        })).toPromise();
     }
 
     updateOrGetSystemSettings<T>(updateParams?: T) {
@@ -1073,7 +1070,7 @@ export class NxSystem extends System implements OnDestroy {
 
     renameServer(serverId: string, serverName: string) {
         return this.serverManager.renameServer(serverId, serverName)
-            .then(() => this.update().toPromise())
+            .then(() => this.update())
             .catch(err => Promise.reject(err));
     }
 
@@ -1169,6 +1166,7 @@ export class NxSystemService {
             this.pollService, this.systemsService,
             '', '', '', userId);
         this.system.mediaserver = mediaServer;
+        this.system.update();
         this.system.startPoll();
         return this.system;
     }

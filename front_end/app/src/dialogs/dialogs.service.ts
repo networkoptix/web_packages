@@ -1,4 +1,4 @@
-import { Inject, Injectable }                  from '@angular/core';
+import { Inject, Injectable, Injector }                  from '@angular/core';
 import { DOCUMENT, Location }                  from '@angular/common';
 import { DomSanitizer }                        from '@angular/platform-browser';
 import { NgbModal }                            from '@ng-bootstrap/ng-bootstrap';
@@ -45,6 +45,7 @@ export class NxDialogsService {
     CONFIG: IConfig;
     location: Location;
     closeResult: string;
+    account: NxAccountService;
 
     languageSubscription: SubscriptionLike;
 
@@ -56,10 +57,14 @@ export class NxDialogsService {
         private modalService: NgbModal,
         private toastService: NxToastService,
         private domSanitizer: DomSanitizer,
-        private router: Router
+        private router: Router,
+        private injector: Injector
     ) {
         this.CONFIG = configService.getConfig();
         this.location = location;
+        setTimeout(() => {
+            this.account = this.injector.get(NxAccountService);
+        }, 0);
 
         this.languageSubscription = languageService.translateSubject
             .subscribe(() => {
@@ -148,7 +153,7 @@ export class NxDialogsService {
         return this.createModal(GenericModalContent, options, params);
     }
 
-    login(account: NxAccountService, keepPage?: boolean, redirectClose?: boolean) {
+    login(keepPage?: boolean, redirectClose?: boolean) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static',
@@ -156,7 +161,7 @@ export class NxDialogsService {
         };
 
         const params: IParams = {
-            account,
+            account       : this.account,
             login         : this.login,
             cancellable   : !keepPage || false,
             closable      : true,
@@ -350,30 +355,30 @@ export class NxDialogsService {
         return this.createModal(ChangePasswordModalContent, options, params);
     }
 
-    merge(system: NxSystem, systems: NxSystem[], user: NxAccountService) {
+    merge(system: NxSystem, systems: NxSystem[]) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            user,
+            user     : this.account,
             system,
             systems,
-            closable: true
+            closable : true
         };
 
         return this.createModal(MergeModalContent, options, params);
     }
 
-    message(account: NxAccountService, type: string, data: IParams): Promise<any> {
+    message(type: string, data: IParams): Promise<any> {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            account,
+            account     : this.account,
             messageType : type,
             data,
             closable    : true

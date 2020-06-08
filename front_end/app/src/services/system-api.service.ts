@@ -10,6 +10,7 @@ import * as t from './system-api.types';
 
 import * as md5 from 'md5';
 import { Account } from './account.service';
+import { NxUriCacheService } from './uri-cache.service';
 
 export interface User {
     canBeEdited: boolean;
@@ -74,6 +75,7 @@ export class NxSystemAPI {
     private userRequest: Promise<t.NormalResponse<User>>;
     private urlBase: string;
     unauthorizedCallback: (params: unknown) => any;
+    cacheService: NxUriCacheService;
 
     constructor(
         http: HttpClient,
@@ -82,11 +84,13 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (params: IParams) => any
+        unauthorizedCallback: (params: IParams) => any,
+        cacheService: NxUriCacheService
     ) {
         this.http = http;
         this.CONFIG = configService;
         this.location = location;
+        this.cacheService = cacheService;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
@@ -220,9 +224,11 @@ export class NxSystemAPI {
     }
 
     public getCurrentUser(forceReload?: boolean) {
+        let customHeaders;
         if (forceReload) { // Clean cache to
             this.currentUser = undefined;
             this.userRequest = undefined;
+            customHeaders = { 'reset-cache': 'true' };
         }
         if (this.currentUser) { // We have user - return him right away
             return Promise.resolve(this.currentUser);
@@ -231,7 +237,9 @@ export class NxSystemAPI {
             return this.userRequest;
         }
         if (this.userEmail) { // Cloud portal mode - getCurrentUser is not working
-            this.userRequest = this.get<Promise<t.NormalResponse<User>>>('/ec2/getUsers').toPromise()
+            const endpoint = '/ec2/getUsers';
+            this.cacheService.addToCache(endpoint);
+            this.userRequest = this.get<Promise<t.NormalResponse<User>>>(endpoint, {}, customHeaders).toPromise()
                 .then((result: any) => {
                     this.currentUser = result.find((user: User) => {
                         return user.name.toLowerCase() === this.userEmail.toLowerCase();
@@ -239,7 +247,9 @@ export class NxSystemAPI {
                     return this.currentUser;
                 });
         } else { // Local system mode ???
-            this.userRequest = this.get<t.NormalResponse<User>>('/api/getCurrentUser').toPromise()
+            const endpoint = '/api/getCurrentUser';
+            this.cacheService.addToCache(endpoint);
+            this.userRequest = this.get<t.NormalResponse<User>>(endpoint, {}, customHeaders).toPromise()
                 .then((result) => {
                     this.currentUser = result;
                     return this.currentUser;
@@ -785,7 +795,8 @@ export class NxSystemAPIService {
     constructor(
         configService: NxConfigService,
         private location: Location,
-        private http: HttpClient
+        private http: HttpClient,
+        private cacheService: NxUriCacheService
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -807,7 +818,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService);
     }
 }
 

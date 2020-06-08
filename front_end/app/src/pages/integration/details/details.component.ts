@@ -147,7 +147,7 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             asset  : this.plugin.information.name
         };
         this.dialogs
-            .message(this.accountService, this.CONFIG.dialogs.message.type.integration, data)
+            .message(this.CONFIG.dialogs.message.type.integration, data)
             .then(() => {});
     }
 }

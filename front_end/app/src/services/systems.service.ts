@@ -43,7 +43,9 @@ export class NxSystemsService implements OnDestroy {
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
-        this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+        if (!this.CONFIG.isLocal) {
+            this.systemsPoll = pollService.createPoll(() => this.cloudApi.systems(), this.CONFIG.updateInterval);
+        }
         this.mergingSystems = new Set();
     }
 

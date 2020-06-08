@@ -579,7 +579,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
             asset      : device
         };
         this.dialogs
-            .message(this.accountService, type, data)
+            .message(type, data)
             .then(() => {
             });
 

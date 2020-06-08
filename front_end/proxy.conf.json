@@ -56,12 +56,6 @@
       "^/static/lang_en_US/views": "/views"
     }
   },
-  "/static/images/": {
-    "target": "https://10.1.5.210:7001",
-    "secure": false,
-    "logLevel": "debug",
-    "changeOrigin": true
-  },
   "/static/languages.json": {
     "target": "https://10.1.5.210:7001",
     "secure": false,
@@ -74,7 +68,8 @@
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^/static/": ""
+      "^/static/": "",
+      "^/static/images/": "/static"
     }
   }
 }

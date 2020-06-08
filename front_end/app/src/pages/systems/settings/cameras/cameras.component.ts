@@ -117,21 +117,23 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
-                    this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
-                        if (!this.system.isOnline) {
-                            this.showPreloader = false;
-                            this.noCameras = this.system.cameras && this.system.cameras.length === 0;
-                        }
-                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
-                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                            this.system.info.capabilities &&
-                            this.system.info.capabilities.vms_metrics) &&
-                            this.system.canViewInfo();
-                        this.initUpdateProcess();
-                        if (this.canSeeInfo) {
-                            this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
-                        }
-                    });
+                    if (!this.CONFIG.isLocal) {
+                        this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
+                            if (!this.system.isOnline) {
+                                this.showPreloader = false;
+                                this.noCameras = this.system.cameras && this.system.cameras.length === 0;
+                            }
+                            this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
+                            this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+                                this.system.info.capabilities &&
+                                this.system.info.capabilities.vms_metrics) &&
+                                this.system.canViewInfo();
+                            this.initUpdateProcess();
+                            if (this.canSeeInfo) {
+                                this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
+                            }
+                        });
+                    }
                 } else {
                     this.showPreloader = false;
                     this.noCameras = false;

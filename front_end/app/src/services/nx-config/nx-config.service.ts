@@ -27,4 +27,14 @@ export class NxConfigService {
     getConfig() {
         return this.config;
     }
+
+    static get isLocal() {
+        return nxConfig.isLocal;
+    }
+
+    static resolveLocalOrCloud = <Local, Cloud>(local: Local, cloud: Cloud) => {
+        return NxConfigService.isLocal ? local : cloud;
+    }
+
+    public resolveLocalOrCloud = NxConfigService.resolveLocalOrCloud
 }

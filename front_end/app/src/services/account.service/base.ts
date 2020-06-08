@@ -101,7 +101,9 @@ export abstract class BaseAccount implements OnDestroy {
             }
         });
 
-        this.accountPoll = this.pollService.createPoll(() => this.cloudApi.account(true), this.CONFIG.updateInterval);
+        if (!this.CONFIG.isLocal) {
+            this.accountPoll = this.pollService.createPoll(() => this.cloudApi.account(true), this.CONFIG.updateInterval);
+        }
 
         // Imperatively inject any services that cause circular dependencies here instead of passing in constructor
         // setTimeout(() => {
@@ -212,7 +214,7 @@ export abstract class BaseAccount implements OnDestroy {
             }).catch(() => {
                 // If the key login fails ask the user to login manually.
                 return this.dialogs
-                    .login(<any> this, true, true)
+                    .login(true, true)
                     .catch(() => {
                         // @ts-ignore: TODO Type Error location.path expects boolean and is being passed a string
                         this.location.path(this.CONFIG.redirect.unauthorised);
@@ -258,7 +260,7 @@ export abstract class BaseAccount implements OnDestroy {
     protected showLogin() {
         this.loginDialogActive = true;
         return this.dialogs
-            .login(<any> this, true, true).then((result) => {
+            .login(true, true).then((result) => {
                 this.localStorageService.set('loginRegister', true);
                 if (result === 'register') {
                     return this.router.navigate(['/register']).then(() => result);

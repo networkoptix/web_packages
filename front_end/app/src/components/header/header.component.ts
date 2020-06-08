@@ -70,6 +70,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
+        this.canSeeInfo = this.CONFIG.isLocal;
     }
 
     private isActive(val) {
@@ -243,7 +244,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
         // Handling promise to satisfy the linter.
         this.dialogs
-            .login(this.accountService, !redirect)
+            .login(!redirect)
             .then(() => {});
 
         return false;
@@ -264,44 +265,44 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     }
 
     updateActiveSystem() {
-        if (!this.systems) {
-            return;
-        }
-        if (this.singleSystem) { // Special case for a single system - it always active
-            this.activeSystem = this.systems[0];
-        } else if (this.systemId) {
-            this.activeSystem = this.systems.find((system) => {
-                return this.systemId === system.id;
-            });
-        } else {
-            this.activeSystem = undefined;
-        }
+        // if (!this.systems) {
+        //     return;
+        // }
+        // if (this.singleSystem) { // Special case for a single system - it always active
+        //     this.activeSystem = this.systems[0];
+        // } else if (this.systemId) {
+        //     this.activeSystem = this.systems.find((system) => {
+        //         return this.systemId === system.id;
+        //     });
+        // } else {
+        //     this.activeSystem = undefined;
+        // }
 
-        this.accountService
-            .get()
-            .then(account => {
-                if (account) {
-                    this.user = account;
-                    if (this.activeSystem) {
-                        if (!this.system || this.system.id !== this.systemId) {
-                            this.stopActiveSubscription();
-                            this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
+        // this.accountService
+        //     .get()
+        //     .then(account => {
+        //         if (account) {
+        //             this.user = account;
+        //             if (this.activeSystem) {
+        //                 if (!this.system || this.system.id !== this.systemId) {
+        //                     this.stopActiveSubscription();
+        //                     this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
 
-                            this.system.getInfoAndPermissions(false).catch(_ => {
-                            }).then(system => {
-                                this.systems.find(sys => {
-                                    if (sys.id === this.activeSystem.id) {
-                                        sys.moduleInfo = system.moduleInfo;
-                                    }
-                                });
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                            });
-                        }
-                    } else {
-                        this.stopActiveSubscription();
-                    }
-                }
-            });
+        //                     this.system.getInfoAndPermissions(false).catch(_ => {
+        //                     }).then(system => {
+        //                         this.systems.find(sys => {
+        //                             if (sys.id === this.activeSystem.id) {
+        //                                 sys.moduleInfo = system.moduleInfo;
+        //                             }
+        //                         });
+        //                         this.canSeeInfo = this.CONFIG.isLocal || (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
+        //                     });
+        //                 }
+        //             } else {
+        //                 this.stopActiveSubscription();
+        //             }
+        //         }
+        //     });
     }
 
     canShowNav() {

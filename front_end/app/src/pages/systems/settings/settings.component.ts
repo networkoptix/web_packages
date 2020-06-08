@@ -119,7 +119,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.systemId = params.systemId;
                 this.content.base = this.CONFIG.menus.systemSettings.baseUrl + this.systemId;
                 this.content = { ...this.content }; // trigger onChange
-                if (this.system) {
+                if (!this.CONFIG.isLocal && this.system) {
                     this.system.stopPoll();
                     this.system = undefined;
                     this.settingsService.system = undefined;
@@ -234,7 +234,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .then((account) => {
                 if (account && !this.CONFIG.isLocal) {
                     // Starts the systems poll if starting on a system.
-                    if (!this.systemsService.systemsPoll.destination?.observers?.length) {
+                    if (!this.CONFIG.isLocal && !this.systemsService.systemsPoll.destination?.observers?.length) {
                         this.systemsService.getSystems(account.email);
                     }
                     this.account = account;
@@ -277,8 +277,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             this.connectionLost();
                         });
                 } else if (this.CONFIG.isLocal) {
-                    this.systemsService.stopPoll();
+                    // this.systemsService.stopPoll();
                     this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id);
+                    this.system.update();
+                    this.systems = [this.system];
                     this.system.isAvailable = true;
                     this.system.isOnline = true;
                     this.settingsService.system = this.system;
@@ -333,7 +335,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
-        if (this.system.permissions.editCameras) {
+        if (this.CONFIG.isLocal || this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -366,7 +368,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
         }
 
-        if (this.system.permissions.editUsers) {
+        if (this.CONFIG.isLocal || this.system.permissions.editUsers) {
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
 
             if (!usersNode) {
@@ -398,7 +400,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 usersNode.level2 = [];
             }
-            if (this.system && this.system.users.length > 0) {
+            if (this.system && this.system.users?.length > 0) {
                 const { cloudUsers, localUsers } = this.system.users.reduce((result, user) => {
                     const id = NxUtilsService.cleanId(user.id);
                     const node: any = {
@@ -434,7 +436,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
         }
 
-        if (this.system.permissions.isAdmin) {
+        if (this.CONFIG.isLocal || this.system.permissions.isAdmin) {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {

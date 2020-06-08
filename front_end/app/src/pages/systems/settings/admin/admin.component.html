@@ -60,7 +60,7 @@
         </nx-block>
 
         <nx-system-standard-admin-component
-                *ngIf="system && system.permissions.isAdmin"
+                *ngIf="CONFIG.isLocal || system && system.permissions.isAdmin"
                 [system]="system"
                 [settings]="settingsForSystem">
         </nx-system-standard-admin-component>

@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         // All route to pass account service will handle auth login.
-        if (state.root.queryParams.auth) {
+        if (this.CONFIG.isLocal || state.root.queryParams.auth) {
             return true;
         }
 

@@ -16,7 +16,7 @@
                 </ul>
 
                 <div class="navbar-header">
-                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [href]="user.email ? '/systems' : '/'">
+                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [href]="user.email ? '/settings' : '/'">
                         <img src="{{CONFIG.previewPath}}/static/images/logo.png">
                     </a>
                 </div>
@@ -37,14 +37,14 @@
                     class="nav navbar-nav auth-visible d-none d-md-flex">
 
                     <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" id="view" routerLink="/systems/{{activeSystem.id}}/view" (click)="onClick($event)" translate>View</a>
+                        <a class="inset" id="view" routerLink="/settings/{{activeSystem.id}}/view" (click)="onClick($event)" translate>View</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" id="systems" routerLink="/systems/{{activeSystem.id}}" (click)="onClick($event)" translate>Settings</a>
+                        <a class="inset" id="systems" routerLink="/settings/{{activeSystem.id}}" (click)="onClick($event)" translate>Settings</a>
                     </li>
                     <li [ngClass]="{ 'active' :active.information}"
                         *ngIf="canSeeInfo">
-                        <a class="inset" id="health" routerLink="/systems/{{activeSystem.id}}/health/alerts" (click)="onClick($event)" translate>Information</a>
+                        <a class="inset" id="health" routerLink="/health/alerts" (click)="onClick($event)" translate>Information</a>
                     </li>
                 </ul>
             </div>

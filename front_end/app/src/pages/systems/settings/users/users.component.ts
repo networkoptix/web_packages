@@ -144,7 +144,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.routeParamsSubscription.unsubscribe();
         this.systemSubscription.unsubscribe();
-        this.userSubscription.unsubscribe();
+        if (this.userSubscription) {
+            this.userSubscription.unsubscribe();
+        }
     }
 
     initProcesses(): void {
@@ -201,12 +203,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
         const currentUserIndex = this.system.users.findIndex((user) => {
             return user.id === this.selectedUser.id;
         });
-        const nextUserIndex = currentUserIndex + 1 !== this.system.users.length ? currentUserIndex + 1 : currentUserIndex - 1;
+        const nextUserIndex = currentUserIndex + 1 !== this.system.users?.length ? currentUserIndex + 1 : currentUserIndex - 1;
         this.nextUserId = this.system.mediaserver.cleanId(this.system.users[nextUserIndex].id);
     }
 
     setUser() {
-        if (this.system && this.system.users.length > 0) {
+        if (this.system && this.system.users?.length > 0) {
             let user;
             if (this.paramUser) {
                 user = this.system.users.find((user: any) => {

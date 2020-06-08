@@ -13,7 +13,6 @@ import { NxHeaderService }           from './nx-header.service';
 import { NxScrollMechanicsService }  from './scroll-mechanics.service';
 import { CloudAccount }              from './account.service/cloud';
 import { LocalAccount }              from './account.service/local';
-import { nxConfig }                  from './nx-config/config';
 import { NxSearchService }           from './search.service';
 
 @NgModule({
@@ -33,7 +32,7 @@ import { NxSearchService }           from './search.service';
         {
             provide  : NxAccountService,
             // TODO: Checking nxConfig.isLocal will probably be replaced with checking for a build flag
-            useClass : nxConfig.isLocal ? LocalAccount : CloudAccount
+            useClass : NxConfigService.resolveLocalOrCloud(LocalAccount, CloudAccount)
         },
         NxSearchService,
         NxUrlProtocolService,

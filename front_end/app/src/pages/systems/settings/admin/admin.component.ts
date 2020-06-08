@@ -226,7 +226,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         this.updateSettings(this.currentlyMerging);
         this.settingsService.system = this.system;
         return this.dialogs
-            .merge(this.system, this.systems, this.accountService)
+            .merge(this.system, this.systems)
             .then((mergeInfo) => {
                 if (mergeInfo) {
                     this.system.mergeInfo = mergeInfo;
