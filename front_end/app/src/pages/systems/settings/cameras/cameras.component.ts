@@ -18,7 +18,7 @@ import {
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
-import { NxUriService }              from '../../../../services/uri.service';
+import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import {
     Subscription, BehaviorSubject,
@@ -28,6 +28,7 @@ import {
     filter, map, retryWhen, delay,
     distinctUntilChanged, takeUntil
 }                                    from 'rxjs/operators';
+import { NxUtilsService }            from '../../../../services/utils.service';
 
 @Component({
     selector    : 'nx-cameras-component',
@@ -129,10 +130,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                                 this.system.info.capabilities.vms_metrics) &&
                                 this.system.canViewInfo();
                             this.initUpdateProcess();
-                            if (this.canSeeInfo) {
-                                this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + this.CONFIG.menus.systemHealth.baseUrl + this.CONFIG.menus.systemSettings.cameras.path;
-                            }
                         });
+                    } else {
+                        this.canSeeInfo = true;
+                    }
+                    if (this.canSeeInfo) {
+                        this.fullInfoPath = this.uriService.getSystemSettingsRoute({ childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;
                     }
                 } else {
                     this.showPreloader = false;
@@ -650,6 +653,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
         if (this.system && this.system.cameras && this.system.cameras.length > 0 && !this.applyService.locked) {
             this.applyService.hardReset();
+            const byParam = NxUtilsService.byParam((camera: ICamera) => {
+                return camera.name;
+            }, NxUtilsService.sortASC);
+            this.system.cameras.sort(byParam);
             let cameraIndex = this.system.cameras.findIndex(camera => camera.id === `{${this.parsedCameraId}}`);
 
             if (cameraIndex === -1) {

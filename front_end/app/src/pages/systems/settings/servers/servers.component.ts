@@ -14,6 +14,7 @@ import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';
 import { NxUriService }                  from '../../../../services/uri.service';
+import { Location }                      from '@angular/common';
 
 @AutoUnsubscribe()
 @Component({
@@ -53,7 +54,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
         private dialogs: NxDialogsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private location: Location
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -158,11 +160,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 if (this.system.servers.length > 0) {
                     server = this.system.servers[0];
                     const systemId = this.system.id ? `/${this.system.id}` : '';
-                    this.uriService
-                        .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/servers/${server.id}`)
-                        .catch(error => {
-                            console.error(error);
-                        });
+                    if (this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
+                        this.uriService
+                            .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/servers/${server.id}`)
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    };
                 } else {
                     return;
                 }

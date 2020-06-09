@@ -13,7 +13,7 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 import { NxMenuService }             from '../../../../../menu';
 import { NxSettingsService }         from '../../settings.service';
 import { NxSystem }                  from '../../../../../services/system.service';
-import { NxUriService }              from '../../../../../services/uri.service';
+import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 
 @AutoUnsubscribe()
@@ -97,14 +97,12 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info) {
-            this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+            this.canSeeInfo = (this.CONFIG.isLocal || this.CONFIG.cloudCapabilities.healthMonitoring ||
                 changes.system.currentValue.info.capabilities?.vms_metrics) &&
                 changes.system.currentValue.canViewInfo();
 
             if (this.canSeeInfo) {
-                this.fullInfoPath = this.CONFIG.menus.systemSettings.baseUrl +
-                    changes.system.currentValue.id + this.CONFIG.menus.systemHealth.baseUrl +
-                    this.CONFIG.menus.systemSettings.servers.path;
+                this.fullInfoPath = this.uriService.getSystemSettingsRoute({ childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
             }
         }
 
@@ -129,7 +127,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
-        this.portChangeDisabled = !this.system.permissions.editAdmins;
+        this.portChangeDisabled = !this.CONFIG.isLocal && !this.system.permissions.editAdmins;
 
         if (!this.applyService.locked) {
             this.applyService.hardReset();

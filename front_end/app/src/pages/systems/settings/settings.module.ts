@@ -20,7 +20,7 @@ import {
     NxSystemUsersModule, NxSystemUsersComponent
 }                                      from './';
 
-const appRoutes: Routes = [
+export const cloudSettingsRoutes: Routes = [
     // root path is handles by AJS for now
     {
         path        : 'systems/:systemId',
@@ -88,7 +88,7 @@ const appRoutes: Routes = [
         NxSystemServersModule,
         NxCamerasModule,
         NxCloudStorageModule,
-        RouterModule.forChild(appRoutes),
+        RouterModule.forChild(cloudSettingsRoutes),
         MenuModule
     ],
     providers: [

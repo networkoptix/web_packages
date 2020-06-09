@@ -19,7 +19,7 @@ import { NxCamerasComponent } from './settings/cameras/cameras.component';
 import { NxCamerasModule } from './settings/cameras/cameras.module';
 import { MenuModule } from '../../menu';
 
-const appRoutes: Routes = [
+export const localSettingsRoutes: Routes = [
     // root path is handles by AJS for now
     {
         path        : 'settings',
@@ -80,7 +80,7 @@ const appRoutes: Routes = [
         NxSystemUsersModule,
         NxSystemServersModule,
         NxCamerasModule,
-        RouterModule.forChild(appRoutes),
+        RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],
     providers: [
