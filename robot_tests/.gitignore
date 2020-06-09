@@ -16,3 +16,4 @@ Screenshots
 __pycache__
 pabot_results
 /libspecs/
+*.idea
