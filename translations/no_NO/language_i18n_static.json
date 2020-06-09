@@ -7,7 +7,7 @@
 		"newPasswordLabel": "Nytt passord",
 		"saveChanges": "Lagre",
 		"accountSettings": "Kontoinnstillinger",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "Avtalen er akseptert"
 	},
 	"activeActions": {
 		"sendConfirm": "Send aktiveringslink igjen",
@@ -120,8 +120,8 @@
 		"vendor": "Produsent",
 		"model": "Modell",
 		"hardwareType": "Skriv",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Maks</span><br><span>oppløsning</span>",
+		"maxFps": "<span>Maks</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Lyd",
 		"isTwAudioSupported": "2-veis lyd",
@@ -155,7 +155,7 @@
 		"disclaimer": "Denne listen er begrenset til enheter som er funnet på {{vmsName}} der brukere har tillatt automatisk rapportering av enhetsspesifikasjoner til {{companyName}}. Ingen personlig informasjon blir samlet inn, og hver bruker forblir helt anonym."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Utvinn",
 		"previewRibbonText": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon.",
 		"backToEditText": "Tilbake til redigeringsgrensesnittene",
 		"requirements": "{{name}} Krav",

@@ -9,13 +9,13 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Salgsforespørsel for {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Teknisk forespørsel for {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Tilbakemelding for {{{message.asset}}}"
   },
   "ipvd_feedback": {
     "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
@@ -27,9 +27,9 @@
     "emailSubject": "Tilbakestill passordet ditt"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} inviterer deg til %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Videosystem {{{message.system_name}}} ble delt med deg{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "Videosystem {{{message.system_name}}} ble delt med deg"
   }
 }
