@@ -253,10 +253,11 @@ import * as Hls from 'hls.js';
                                         return;
                                     }
 
-                                    var data = JSON.parse(error.networkDetails.response);
-                                    scope.videoFlags.errorCode = data.error || 'SNAFU3.14';
-                                    scope.videoFlags.errorDescription = data.errorString || 'Unexpected error';
-                                    
+                                    $http.get(getFormatSrc('hls')).then((response) => {
+                                        scope.videoFlags.errorLoading = true;
+                                        scope.videoFlags.errorCode = response.data.error || 'SNAFU3.14';
+                                        scope.videoFlags.errorDescription = response.data.errorString || 'Unexpected error';
+                                    });
                                 }, (error) => {
                                     scope.videoFlags.errorLoading = error;
                                 });
