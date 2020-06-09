@@ -68,10 +68,10 @@
         "accountSavedSuccess": "Din konto er lagret",
         "accountSettings": "Kontoinnstillinger",
         "activationLinkSent": "Aktiveringslink sendt",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Avtalen er akseptert",
         "changePassword": "Bytt passord",
         "newPasswordLabel": "Nytt passord",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Passordet ble lagret",
         "saveChanges": "Lagre"
     },
     "activeActions": {
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Konto opprettet",
+                "message": "Bekreftelsesmelding med aktiveringslenken sendes til {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Kontoen er aktivert"
             }
         },
         "cameraLinks": {
@@ -128,24 +128,24 @@
             "unauthorized": "Autentisering kreves"
         },
         "chromeCastWarning": "Chromecast er ressursintensiv og kan forårsake problemer på serveren.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Oppdater manglende innspillingsinnstillinger.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Alltid opptak",
+            "motion": "Spill inn bare bevegelse",
+            "motionLowRes": "Bevegelse + lavoppløselig"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "Ulike verdier –",
             "auto": "Auto",
             "best": "Best",
             "high": "Høy",
             "medium": "Medium",
             "low": "Lav"
         },
-        "general": "General",
+        "general": "Generell",
         "searchCamPlaceholder": "Søk",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Ingen kameraer",
+        "systemHasNoCamerasMessage": "Det er ingen tilgjengelige kameraer for deg i systemet. <br><br>Koble noen få kameraer til serverens lokale nettverk for å gjøre dem synlige, eller be systemadministratoren om å endre tilgangsnivået ditt.",
         "systemNewVersion": "Oppdater systemet ditt",
         "systemNewVersionMessage": "Din gjeldende versjon er ikke kompatibel med denne funksjonen. Vennligst oppdater dine servere til den siste versjonen for å bruke denne funksjonen.",
         "systemNoAlerts": "Ingen varsler",
@@ -155,7 +155,7 @@
         "systemServerError": "Intern server feil",
         "systemServerErrorMessage": "Det oppstod en feil, prøv igjen senere. Hvis problemet fortsetter, kontakt kundeservice.",
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
         "unknown": "Ukjent",
         "voiceCommands": {
             "clear search": "nullstill søk",
@@ -171,14 +171,14 @@
             "stop listening": "slutt å lytte",
             "view": "se + [kamera navn]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Du ser på en utdatert rapport."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Avbryt",
             "createAccount": "Opprette ny konto",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Slett",
+            "deleteAccount": "Slett konto",
             "download": "Last ned %VMS_NAME%",
             "logoutAuthorised": "Logg ut",
             "ok": "OK",
@@ -187,36 +187,36 @@
             "stayLoggedIn": "Forbli innlogget"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Cloud-lagring",
+            "enableStorage": "Aktiver skylagring",
+            "otherSystem": "Annet system...",
+            "initial": "Vi tilbyr {{compCapacity}} av kompatibel skylagring per system for å komme i gang.",
+            "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {{vmsName}} klienten.",
+            "camera": "kamera",
+            "cameras": "kameraer",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Skylagring ble fjernet fra systemet",
+                "errorPrefix": "Feil ved fjerning av skylagring"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Kan ikke aktivere skylagring",
+                "message": "Du har allerede totalt <volume> skylagring lagt til systemene dine, og kan ikke legge til mer. <br/><br/>Du kan slette lagring fra et annet system i stedet eller flytte det til dette. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Kan ikke koble fra systemet fra %CLOUD_NAME%",
+                "message": "Dette systemet har skylagring med noen arkiver på. <br/><br/>Skylagring må slettes manuelt før systemet kobles fra %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Flytt skylagring",
+                "success": "Lagring flyttet",
+                "errorPrefix": "Feil ved flytting av skylagring",
+                "notFound": "Lagring ikke funnet. Lagring kan ha blitt flyttet eller slettet av en annen bruker",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "Skylagring kan ikke flyttes til offline-systemer."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
+                "success": "Skylagring aktivert",
                 "errorPrefix": "Error Enabling Cloud Storage"
             },
             "noOtherSystemsError": {
@@ -442,7 +442,7 @@
         "Drone": "Drone",
         "Health Monitor": "Helse Monitor",
         "Storage": "Lagring",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Utvinn",
         "phoneNumberWithLabel": "Tlf: {{number}}",
         "requirements": "{{name}} Krav",
         "testedVersionLabel": "Testet på {{vmsName}} versjon:",
@@ -495,7 +495,7 @@
         "titles": {
             "systemAdministration": "Systemadministrasjon",
             "general": "General",
-            "licenses": "Licenses",
+            "licenses": "Lisenser",
             "users": "Brukere"
         }
     },
@@ -510,7 +510,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Last ned %VMS_NAME%",
         "downloadPlatform": "Last ned %VMS_NAME% for ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Kunne ikke få tilgang til systemet",
         "integrations": "Integrasjoner",
         "login": "Logg Inn",
         "pageNotFound": "Siden ble ikke funnet",
@@ -543,42 +543,42 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Denne siden kan ikke lastes",
+            "message": "Forsikre deg om at serverne dine er online og prøv igjen."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Dette systemet blir slått sammen til {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Avhengig av størrelsen på databasen, kan dette ta opptil flere timer.",
+                "untilFinished": "Inntil fusjonen er ferdig kan du logge inn på dette systemet og se på video, men kan ikke endre noen innstillinger.",
+                "whenFinished": "Når sammenslåingen er ferdig, vil alle brukere og kameraer fra dette systemet bli tilgjengelige i {{systemName}} system, og dette systemet blir slettet."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Serveren er ikke tilgjengelig",
+            "message": "Systemet er offline og servere er derfor ikke tilgjengelige."
         }
     },
     "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og/eller %COMPANY_NAME%.\nDu finner {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inneholder instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+        "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
         "agreement": "Jeg godtar <a href=\"/content/eula\" target=\"_blank\">Vilkår &\nBetingelser</a> og <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Personvernregler</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "blir slått sammen til dette systemet",
+            "mayTake": "Avhengig av størrelsen på databasen, kan det ta opptil flere timer."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Ferdigstiller systemsammenslåing",
         "integration": {
             "backToEditText": "Tilbake til redigeringsgrensesnittene",
             "previewRibbon": "Denne siden er en forhåndsvisning av de siste endringene, og den stemmer ikke overens med offentlig tilgjengelig versjon."
         },
         "systemOffline": "Systemet er frakoblet. Noen innstillinger er kanskje ikke tilgjengelige.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Dette systemet er for tiden involvert i en sammenslåingsoperasjon."
     },
     "search": {
         "Any": "Enhver",
@@ -597,32 +597,32 @@
     },
     "servers": {
         "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
-        "serverOffline": "Server is offline.",
-        "servers": "Servers",
+        "beginReset": "Serveren tilbakestilles.",
+        "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
+        "detachSystemSuccess": "Serveren ble koblet fra systemet.",
+        "portWarning": "Portnummere mindre enn 1024 er begrenset. Serveren kan bli utilgjengelig.",
+        "removeMediaserverFailed": "Kunne ikke fjerne serveren fra systemet.",
+        "resetFailed": "Kunne ikke tilbakestille serveren. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
+        "resetSuccessful": "Server {{ serverName }} er tilbakestilt til standardinnstillinger.",
+        "restartFailed": "Det oppstod et problem med å starte serveren på nytt.",
+        "restartSuccessful": "Serveren har startet på nytt.",
+        "serverOffline": "Serveren er frakoblet.",
+        "servers": "Servere",
         "status": {
-            "checking": "checking...",
+            "checking": "kontrollerer...",
             "offline": "offline",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "tilbakestiller...",
+            "restarting": "restarter..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Servernavn lagret."
     },
     "system": {
         "MERGE_FINISHES": "Når sammenslåingen er ferdig, vil alle brukere og kameraer fra dette systemet bli tilgjengelige i <strong>{{targetSystemName}}</strong> System, og dette systemet blir slettet.",
         "mergeUnknownName": "Ukjent navn for system (forårsaket av cloud-sammenslåing)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "Kan ikke laste sikkerhetsinnstillinger.",
+            "notAbleToLoadSystem": "Kunne ikke laste systeminnstillinger.",
             "sessionLimitDuration": {
                 "hours": "timer",
                 "minutes": "minutter"
@@ -636,33 +636,33 @@
             "unavailable": "Systemet er ikke tilgjengelig"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Fjern bruker",
+            "localDelete": "Slett bruker"
         },
         "yourSystem": "Ditt system",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Ingen",
+                "help": "(logg deaktivert)"
             },
             "error": {
                 "text": "Feil",
-                "help": "(log errors only)"
+                "help": "(bare loggfeil)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Advarsel",
+                "help": "(loggadvarsler og feil)"
             },
             "info": {
                 "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(loggadvarsler, feil og alle meldinger)"
             },
             "debug": {
                 "text": "Debug",
-                "help": "(log every System message and debug information)"
+                "help": "(logg alle systemmeldinger og feilsøkingsinformasjon)"
             },
             "verbose": {
-                "text": "Verbose",
+                "text": "Detaljert",
                 "help": "(logg all tilgjengelig informasjon)"
             }
         }
@@ -751,49 +751,49 @@
         "auditTrailPeriodDays": "Brukerlogg periode i dager",
         "autoDiscoveryEnabled": "Legg til kamera på nettverket automatisk",
         "autoUpdateThumbnails": "Automatisk oppdater miniaturer",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
+        "backupNewCamerasByDefault": "Sikkerhetskopier nye kameraer som standard",
+        "backupQualities": "Backup kvaliteter",
+        "cameraSettingsOptimization": "Tillat optimalisering av kamerainnstillinger",
+        "clientStatisticsSettingsUrl": "Klientstatistikk relativ url",
+        "cloudAccountName": "Cloud eierkonto",
+        "cloudConnectRelayingEnabled": "Aktiver relaying for cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Aktiver UDP-hole punching for cloud-tilkobling",
+        "cloudHost": "Cloud vert",
+        "cloudSystemID": "Cloud system id",
+        "disabledVendors": "Blokkerte leverandører",
+        "ec2AliveUpdateIntervalSec": "System i live oppdateringsintervall (sekunder)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Tilkoblingen holdes i live-timeout (sekunder)",
+        "ec2KeepAliveProbeCount": "Tilkobling holde levende probes (sekunder)",
+        "emailFrom": "E-post fra",
+        "emailSignature": "E-post signatur",
+        "emailSupportEmail": "Kundestøtte E-mail",
+        "enableEdgeRecording": "Aktiver edge-opptak",
+        "eventLogPeriodDays": "Hendelsesloggperiode (dager)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
+        "ldapSearchBase": "LDAP-søkebase",
+        "ldapSearchFilter": "LDAP-søkefilter",
         "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
-        "smtpSimple": "SMTP simple",
+        "localSystemId": "Lokal System-ID",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Maksimal forskjell mellom synkronisert og Internett-tid (millisekunder)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Maksimal forskjell mellom synkronisert og lokal tid (millisekunder)",
+        "maxP2pQueueSizeBytes": "Maksimal P2P køstørrelse (bytes)",
+        "maxRecordQueueSizeBytes": "Maksimal opptakskø størrelse (bytes)",
+        "maxRecordQueueSizeElements": "Maksimal opptakskøstørrelse (elementer)",
+        "maxRemoteArchiveSynchronizationThreads": "Maksimalt antall arkiver synkronisering tråder",
+        "maxRtspConnectDurationSeconds": "Maks Rtsp kobliong varighet sekunder",
+        "maxSceneItems": "Maks sceneelementer (0 betyr standard)",
+        "proxyConnectTimeoutSec": "Proxy-tilkoblingstidsavbrudd (sekunder)",
+        "rtpTimeoutMs": "RTP timeout (millisekunder)",
+        "sequentialFlirOnvifSearcherEnabled": "Bruk sekvensiell Flir Onvif søkemotor",
+        "serverDiscoveryPingTimeoutSec": "Server søk timeout",
+        "smtpConnectionType": "SMTP-tilkoblingstype",
+        "smtpHost": "SMTP-vert",
+        "smtpPort": "SMTP-port",
+        "smtpSimple": "SMTP enkelt",
         "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
+        "smtpUser": "SMTP-bruker",
+        "statisticsAllowed": "Send anonym brukstatistikk og krasjrapporter",
+        "statisticsReportLastNumber": "Statistikkrapport - siste nummer",
         "statisticsReportLastTime": "Statistikk rapport - siste gang",
         "statisticsReportLastVersion": "Statistikkrapport - siste versjon",
         "statisticsReportServerApi": "Statistikk server api",

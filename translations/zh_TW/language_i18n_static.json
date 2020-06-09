@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">無法連接系統 {{targetSystem}}。</p><p>請確認選定伺服器在線並重試。</p>",
             "serverNotYours": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
+            "systemOfflineUrl": "無法連接{{targetSystem}}",
             "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統更新為同一版本再行合併。",
             "systemVersionOld": "{{targetSystem}} 的軟體版本較舊，與當前系統不相容。請將 {{targetSystem}} 更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 與其當前版本合併。",
             "systemVersionNew": "{{targetSystem}} 的軟體版本較新，與當前系統不相容。請更新目前系統<a href=\"/download\" target=\"_blank\" translate>為最新版本</a>，再與 {{targetSystem}} 合併。",
@@ -280,8 +280,8 @@
                 "integration_feedback": "整合 {{asset}} 的回饋意見",
                 "ipvd_feedback_device": "{{asset}} 的回饋意見",
                 "ipvd_feedback_page": "攝影機頁面的回饋意見",
-                "sales_inquiry": "對{{asset}} 的銷售問題",
-                "technical_inquiry": "對{{asset}} 的技術問題"
+                "sales_inquiry": "{{asset}} 的銷售諮詢",
+                "technical_inquiry": "{{asset}} 的技術諮詢"
             },
             "title": {
                 "integration": "與 {{companyName}} 聯繫",

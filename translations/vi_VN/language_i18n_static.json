@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Không thể truy cập hệ thống {{targetSystem}}.</p><p>Đảm bảo rằng máy chủ được chỉ định đang trực tuyến và thử lại.</p>",
             "serverNotYours": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
             "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
+            "systemOfflineUrl": "{{targetSystem}} là không thể truy cập.",
             "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Cập nhật cả hai hệ thống vào cùng một bản dựng để hợp nhất chúng.",
             "systemVersionOld": "{{targetSystem}} có phiên bản phần mềm cũ không tương thích với hệ thống hiện tại. Cập nhật {{targetSystem}} lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất với bản dựng hiện tại.",
             "systemVersionNew": "{{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất nó với {{targetSystem}}.",
