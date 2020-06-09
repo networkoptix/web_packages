@@ -1,6 +1,4 @@
 *** Settings ***
-Library    Collections
-Library    SeleniumLibrary
 Resource          ../resource.robot
 Resource          ../APIresource.robot
 Resource          ../variables.robot
@@ -156,13 +154,28 @@ Integration Store catalog
     END
 #    Validate Random Tile N times    ${integration tiles}    3
 
+Changing page should change the layout to a max of four colunmns
+    [Tags]    C54622
+    Validate Integrations Landing Page
+    Set Window Size    5000    1080
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    FOR    ${tile}    IN    @{integration tiles}
+        Element Style Should be   ${tile}    flex-basis    25%
+    END
+
+    Set Window Size    500    1080
+    @{integration tiles}=   Get WebElements    ${INTEGRATION TILE}
+    FOR    ${tile}    IN    @{integration tiles}
+        Element Style Should be   ${tile}    flex-basis    100%
+    END
+
 Integration Store Search
     [Tags]    	C54620
     Wait Until Elements Are Visible
     ...  ${INTEGRATIONS SEARCH INPUT}
     ...  ${INTEGRATIONS SEARCH ICON}
     ...  ${INTEGRATIONS SEARCH FILTER}
-
+    
     ${initial number of tiles}=   Get Number of Integration Tiles
     ${number of filters}=    Get Element Count    ${INTEGRATIONS SEARCH FILTER ITEM}
     Should be equal as numbers    ${number of filters}    9

@@ -272,7 +272,7 @@ ${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, 
 ${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header extended-header"]
 #${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
 ${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
-@{INTEGRATION TILE ELEMENTS}          //div[contains(@class, "card--header-logo")]    //div[contains(@class, "card--header-info")]    //div[contains(@class, "card--body-name")]    //div[contains(@class, "card--body-descr")]    //div[@class="card--header extended-header"]    //div[@class="card--footer"]
+@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}    ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]
