@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from .models import *
 from api.models import Account
 from .controllers.modify_db import are_asset_datarecords_unique
+from .controllers.special_structures import SpecialStructures
 
 from dal import autocomplete
 
@@ -62,6 +63,11 @@ def generate_branding_variables(datastructure):
         for ds in branding_context.datastructure_set.all()
         if 'shortcut' in ds.meta_settings
     ]
+
+    brands.append((
+        {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
+        SpecialStructures.calc_cloud_link(cloud_portal)
+    ))
 
     return render_to_string(
         'cms/widgets/branding_variables.html', context={'brands': brands, 'datastructure': datastructure}

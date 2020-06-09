@@ -33,6 +33,8 @@ assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instan
 TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']  # {systemId}.relay-bur.vmsproxy.hdw.mx
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
+CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 

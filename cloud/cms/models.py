@@ -80,6 +80,7 @@ def check_update_cache(customization, version_id):
 
 
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
+    from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
     data = customization_cache.get(f'customization_{customization_name}', dict())
     asset = get_cloud_portal_asset(customization_name)
@@ -112,7 +113,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'email': {
                 'mail_from_name': asset.read_global_value('%MAIL_FROM_NAME%'),
                 'mail_from_email': asset.read_global_value('%MAIL_FROM_EMAIL%'),
-                'portal_url': custom_config['cloud_portal']['url'],
+                'portal_url': SpecialStructures.calc_cloud_portal(asset),
                 'smtp_host': asset.read_global_value('%SMTP_HOST%'),
                 'smtp_port': asset.read_global_value('%SMTP_PORT%'),
                 'smtp_user': asset.read_global_value('%SMTP_USER%'),
