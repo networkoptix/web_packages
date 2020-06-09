@@ -709,8 +709,8 @@ export class MergeModalContent {
         const statusUnavailable  = ` – ${this.LANG.systemStatuses.unavailable}`;
         const statusOffline      = ` – ${this.LANG.systemStatuses.offline}`;
 
-        let stateOfHealth      = (system.info && system.info.stateOfHealth) ||
-            system.stateOfHealth || system.stateMessage || system.status || '';
+        let stateOfHealth = (system.info && system.info.stateOfHealth) ||
+            system.stateOfHealth || system.status || '';
         if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
             stateOfHealth = 'incompatible';
         }
@@ -721,9 +721,6 @@ export class MergeModalContent {
                 if (Object.prototype.hasOwnProperty.call(system, 'canMerge') && !system.canMerge) {
                     status = statusIncompatible;
                 }
-                break;
-            case 'unavailable':
-                status = statusUnavailable;
                 break;
             case 'offline':
                 status = statusOffline;
@@ -741,7 +738,7 @@ export class MergeModalContent {
                 }
         }
 
-        let systemName;
+        let systemName: string;
         if (system.systemName) {
             systemName = system.systemName;
             status = ` (${system.name}, ${system.remoteAddresses[0]}:${system.port}) ${status}`;
@@ -754,7 +751,7 @@ export class MergeModalContent {
     }
 
     checkMergeability(system) {
-        let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.stateMessage || system.status || '';
+        let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.status || '';
         if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
             stateOfHealth = 'Incompatible';
             system.olderProtocol = system.protoVersion < this.system.moduleInfo.protoVersion;

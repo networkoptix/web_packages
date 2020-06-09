@@ -163,9 +163,9 @@
                 secondarySystem: secondaryName
             }"></p>
         <div *ngIf="tooManyServers">
-            <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
-            <p translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
-            <p>
+            <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
+            <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
+            <p class="mb-3">
                 {{LANG.dialogs.merge.recommendSupport.a_recommend}}&nbsp;
                 <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
                 {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
