@@ -45,9 +45,9 @@ Change Account Settings
 
     Log    Verifying changes are saved - API
     ${account data}=   Get Account Data    ${ENV}    ${email acc}    ${password}
-    Should Be Equal as Strings    firstnameChanged    &{account data}[first_name]
-    Should Be Equal as Strings    lastnameChanged    &{account data}[last_name]
-    Should Be Equal as Strings    ru_RU    &{account data}[language]
+    Should Be Equal as Strings    firstnameChanged    ${account data}[first_name]
+    Should Be Equal as Strings    lastnameChanged    ${account data}[last_name]
+    Should Be Equal as Strings    ru_RU    ${account data}[language]
 
 #TODO: run translations and remove setting account language and reloading the page
     Set Account Language    ${ENV}    ${email acc}    ${password}

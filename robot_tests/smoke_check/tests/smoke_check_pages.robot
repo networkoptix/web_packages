@@ -61,7 +61,7 @@ Support
 
     Wait Until Element Is Visible    ${FOOTER SUPPORT LINK}
     ${support url}=   Get Element Attribute    ${FOOTER SUPPORT LINK}    href
-    Should Be Equal As Strings    ${support url}    http://support.networkoptix.com/
+    Should Be Equal As Strings    ${support url}    https://support.networkoptix.com/
 
 Privacy
     [Tags]    C34452    pages
