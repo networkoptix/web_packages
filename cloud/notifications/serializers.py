@@ -3,7 +3,9 @@ from api.helpers.exceptions import APILogicException, APINotAuthorisedException
 from django.conf import settings
 from rest_framework import serializers
 
-from .models import PushSubscription, PushDevice
+from .models import PushSubscription, PushDevice, PushNotification
+
+import json
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 
@@ -16,17 +18,20 @@ FCM_ERRORS = {
 
 
 class NotificationSerializer(serializers.Serializer):
+    class NotificationDataSerializer(serializers.Serializer):
+        title = serializers.CharField(required=False, max_length=255, default='')
+        body = serializers.CharField(required=False, default='')
+        payload = serializers.DictField(required=False, default={})
+        options = serializers.DictField(required=False, default={})
+
+        def validate(self, data):
+            if len(data['title'] + data['body'] + json.dumps(data['payload'])) > PushNotification.SIZE_LIMIT:
+                raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
+            return data
+
     systemId = serializers.UUIDField(allow_null=False)
     targets = serializers.ListField(child=serializers.CharField(min_length=1))
-    notification = serializers.DictField()
-
-    def validate_notification(self, value):
-        value['title'] = value.get('title', '')
-        value['body'] = value.get('body', '')
-
-        if not isinstance(value['title'], str) or not isinstance(value['body'], str):
-            raise serializers.ValidationError('Title and body must be strings')
-        return value
+    notification = NotificationDataSerializer()
 
 
 class RegisterDeviceSerializer(serializers.Serializer):
