@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "Вкажіть ім'я для входу",
     "DELETE ACCOUNT HEADER TEXT": "Видалити обліковий запис?",
     "DELETE ACCOUNT INFO TEXT": "Ваш обліковий запис і всі дані, пов'язані з ним, будуть остаточно видалені без можливості їх відновлення.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Щоб продовжити, введіть пароль облікового запису"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Щоб продовжити, введіть пароль облікового запису",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

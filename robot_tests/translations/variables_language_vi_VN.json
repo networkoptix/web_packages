@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "Đăng nhập là bắt buộc",
     "DELETE ACCOUNT HEADER TEXT": "Xóa tài khoản?",
     "DELETE ACCOUNT INFO TEXT": "Tài khoản của bạn và tất cả dữ liệu liên quan đến nó sẽ bị xóa vĩnh viễn mà không có khả năng khôi phục nó.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Nhập mật khẩu tài khoản của bạn để tiếp tục"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Nhập mật khẩu tài khoản của bạn để tiếp tục",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

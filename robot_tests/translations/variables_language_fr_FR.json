@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "Identifiant requis",
     "DELETE ACCOUNT HEADER TEXT": "Supprimer le compte?",
     "DELETE ACCOUNT INFO TEXT": "Votre compte et toutes les données qui y sont associées seront définitivement supprimées sans possibilité de restauration.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Entrez le mot de passe de votre compte pour continuer"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Entrez le mot de passe de votre compte pour continuer",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

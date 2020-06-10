@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "Kullanıcı girişi gerekli",
     "DELETE ACCOUNT HEADER TEXT": "Hesabı Sil?",
     "DELETE ACCOUNT INFO TEXT": "Hesabınız ve onunla ilişkili tüm veriler, geri yükleme olanağı olmadan kalıcı olarak silinecek.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Devam etmek için şifrenizi giriniz"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Devam etmek için şifrenizi giriniz",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

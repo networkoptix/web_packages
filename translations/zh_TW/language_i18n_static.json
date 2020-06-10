@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "無法載入安全性設定",
             "notAbleToLoadSystem": "無法載入系統設定.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "小時",
                 "minutes": "分"

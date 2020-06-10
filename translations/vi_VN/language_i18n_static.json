@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Không thể tải cài đặt bảo mật.",
             "notAbleToLoadSystem": "Không thể tải cài đặt hệ thống.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "giờ",
                 "minutes": "phút"

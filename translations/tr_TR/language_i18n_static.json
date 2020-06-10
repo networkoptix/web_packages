@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Not able to load security settings.",
             "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "saat",
                 "minutes": "dakika"

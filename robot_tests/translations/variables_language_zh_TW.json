@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "需要登入",
     "DELETE ACCOUNT HEADER TEXT": "刪除帳號嗎？",
     "DELETE ACCOUNT INFO TEXT": "您的帳號及其所有相關資訊將被永久刪除且無法恢復。",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "請輸入您的帳號密碼"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "請輸入您的帳號密碼",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Не вдалося завантажити параметри безпеки.",
             "notAbleToLoadSystem": "Не вдалося завантажити системні налаштування.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "година",
                 "minutes": "хвилина"

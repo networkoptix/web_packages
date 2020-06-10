@@ -255,5 +255,6 @@
     "LOGIN IS REQUIRED TEXT": "Inloggen verplicht",
     "DELETE ACCOUNT HEADER TEXT": "Account Verwijderen?",
     "DELETE ACCOUNT INFO TEXT": "Uw account en alle bijbehorende gegevens worden definitief verwijderd zonder de mogelijkheid om deze te herstellen.",
-    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Voer het wachtwoord in voor uw account om door te gaan"
+    "DELETE ACCOUNT PASSWORD LABEL TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
+    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
 }

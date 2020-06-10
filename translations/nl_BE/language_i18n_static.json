@@ -155,7 +155,7 @@
         "systemServerError": "Interne Server Fout",
         "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
         "unknown": "Onbekend",
         "voiceCommands": {
             "clear search": "zoekopdracht wissen",
@@ -257,8 +257,8 @@
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige systeem",
             "systemOfflineUrl": "{{targetSystem}} is niet toegankelijk.",
             "systemsIncompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemVersionOld": "{{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk {{targetSystem}} bij naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige versie.",
+            "systemVersionNew": "{{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met {{targetSystem}}.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -432,7 +432,7 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale wederverkoper.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {
@@ -494,8 +494,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Systeem Administratie",
-            "general": "General",
-            "licenses": "Licenses",
+            "general": "Algemeen",
+            "licenses": "Licenties",
             "users": "Gebruikers"
         }
     },
@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Kan beveiligingsinstellingen niet laden.",
             "notAbleToLoadSystem": "Kan systeeminstellingen niet laden.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "uren",
                 "minutes": "minuten"
@@ -686,7 +687,7 @@
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Samenvoegen van systemen {{primaryName}} en {{secondaryName}} voltooid"
             },
             "rename": {
                 "success": "Systeemnaam opgeslagen"
@@ -696,33 +697,33 @@
     "license": {
         "info": {
             "type": "Type",
-            "channels": "Channels",
+            "channels": "Kanalen",
             "server": "Server",
             "hwid": "Hardware ID",
             "status": "Status",
-            "expires": "Expires",
-            "time": "Time",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
+            "expires": "Verloopt",
+            "time": "Tijd",
+            "deactivations": "Resterende deactivering",
+            "trial": "Test",
             "online": "Online",
             "error": "Fout",
-            "expired": "Expired",
-            "ok": "Ok",
+            "expired": "Verlopen",
+            "ok": "Oké",
             "digital": "Professional",
-            "analog": "Analog",
+            "analog": "Analoog",
             "edge": "Edge",
             "vmax": "VMAX",
             "videowall": "Video Wall",
-            "analogencoder": "Analog Encoder",
+            "analogencoder": "Analoge Encoder",
             "starter": "Starter",
-            "iomodule": "IO Module",
-            "bridge": "Bridge"
+            "iomodule": "I/O module",
+            "bridge": "Recorder"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} meer vereist",
+            "activated": "Licentie geactiveerd",
+            "inuse": "De licentiesleutel is al geactiveerd en gebonden aan de server met hardware-ID {{hwid}} in een ander systeem",
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
         }
     },
     "settingsConfig": {

@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Kan ikke laste sikkerhetsinnstillinger.",
             "notAbleToLoadSystem": "Kunne ikke laste systeminnstillinger.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "timer",
                 "minutes": "minutter"

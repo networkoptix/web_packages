@@ -623,6 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Impossible de charger les paramètres de sécurité.",
             "notAbleToLoadSystem": "Impossible de charger les paramètres système.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "heure",
                 "minutes": "minute"
