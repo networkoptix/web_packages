@@ -80,7 +80,7 @@
                 }
               ]
             },
-            "webadmin": {
+            "webadmin-prod": {
               "fileReplacements": [
                 {
                   "replace": "app/environments/environment.ts",
