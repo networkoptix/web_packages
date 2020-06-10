@@ -480,7 +480,7 @@ Administrator can add, disable and enable Viewer
     Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[contains(text(),'${VIEWER TEXT}')]
 
 Cloud Owner Can Change Local User Login
-    [Tags]    local user    C76244
+    [Tags]    local_user    C76244
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -502,7 +502,7 @@ Cloud Owner Can Change Local User Login
     Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Change Local User Full Name
-    [Tags]    local user    C76244
+    [Tags]    local_user    C76244
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -523,7 +523,7 @@ Cloud Owner Can Change Local User Full Name
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Email
-    [Tags]    local user
+    [Tags]    local_user
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -543,7 +543,7 @@ Cloud Owner Can Change Local User Email
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Permissions
-    [Tags]    local user    C76243
+    [Tags]    local_user    C76243
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -567,7 +567,7 @@ Cloud Owner Can Change Local User Permissions
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Password
-    [Tags]    local user    C76246
+    [Tags]    local_user    C76246
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
@@ -587,14 +587,14 @@ Cloud Owner Can Change Local User Password
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud owner can change local users' information
-    [Tags]    local user    C76239
+    [Tags]    local_user    C76239
     @{local users} =    Local User Start   ${email}
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}
     Verify Changed Info Via API    ${new locals}
     Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Disable Enable Local User
-    [Tags]    local user    C76245
+    [Tags]    local_user    C76245
     @{local users} =    Local User Start   ${email}
     Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
@@ -625,7 +625,7 @@ Cloud Owner Can Disable Enable Local User
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud administrator cannot change local administrator's or owner's information
-    [Tags]    local user    C76240
+    [Tags]    local_user    C76240
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
@@ -652,7 +652,7 @@ Cloud administrator cannot change local administrator's or owner's information
     Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Local User Removed on Server is Removed From UI
-    [Tags]    local user
+    [Tags]    local_user
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
@@ -668,7 +668,7 @@ Local User Removed on Server is Removed From UI
     Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Verify Local Users Deleted On Server
-    [Tags]    local user    C76242
+    [Tags]    local_user    C76242
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     Delete All Local Users    //span[contains(text(),"ocal+")]
@@ -679,7 +679,7 @@ Verify Local Users Deleted On Server
     END
     
 Adding New Local User Appears on Cloud Portal
-    [Tags]    C76237    local user
+    [Tags]    C76237    local_user
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     Delete All Local Users    //span[contains(text(),"ocal+")]
@@ -696,7 +696,7 @@ Cloud owner cannot change local owner's information
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
 
 Cloud administrator can make changes to local viewers (negative)
-    [Tags]    C76241    local user
+    [Tags]    C76241    local_user
     @{local users} =    Local User Start    ${EMAIL ADMIN} 
     @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     
@@ -807,7 +807,7 @@ Cloud administrator can make changes to local viewers (negative)
     Delete All Local Users    //span[contains(text(),"ocal+")]  
     
 Local User Login Field Cannot Be Left Blank
-    [Tags]    C76248    local user
+    [Tags]    C76248    local_user
     @{local users} =    Local User Start   ${email}
     @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
             
@@ -835,7 +835,7 @@ Local User Login Field Cannot Be Left Blank
     Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Local User name field can be left blank
-    [Tags]    C76249    local user
+    [Tags]    C76249    local_user
     @{local users} =    Local User Start   ${email}
     
     Log    Step 1
@@ -860,7 +860,7 @@ Local User name field can be left blank
     Delete All Local Users    //span[contains(text(),"ocal+")]
      
 Local User email field can be left blank
-    [Tags]    C76250    local user
+    [Tags]    C76250    local_user
     @{local users} =    Local User Start   ${email}
     
     Log    Step 1
