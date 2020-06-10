@@ -104,12 +104,12 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.pageService.pageTitle = this.system.info.name;
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
-                    const systemId = this.system.id ? `/${this.system.id}` : '';
                     this.uriService
-                        .updateURI(this.CONFIG.menus.systemSettings.baseUrl + systemId, {})
+                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, this.system)
                         .catch(error => {
                             console.error(error);
                         });
+
                     return;
                 }
                 if (this.userSubscription) {
@@ -185,9 +185,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 this.applyService.reset();
                 delete this.locked[user.email];
                 this.paramUser = this.nextUserId;
-                const systemId = this.system.id ? `/${this.system.id}` : '';
+
                 this.uriService
-                    .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/users/${this.nextUserId}`)
+                    .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${this.nextUserId}`, this.system)
                     .catch(error => {
                         console.error(error);
                     });
@@ -219,9 +219,9 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                 if (this.menuService.section === 'users') {
                     user = this.system.users[0];
                     const userId = this.system.mediaserver.cleanId(user.id);
-                    const systemId = this.system.id ? `/${this.system.id}` : '';
+
                     this.uriService
-                        .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/users/${userId}`)
+                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID/users/${userId}`, this.system)
                         .catch(error => {
                             console.error(error);
                         });

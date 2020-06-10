@@ -25,10 +25,9 @@
                 <ng-template #systemSelect>
                     <a class="dropdown-item inset" (keyup)="handleKeyup($event, item)" tabindex="0"
                         [ngClass]="{ 'selected': _selected && _selected.value === item.value }"
-                        (click)="show = false; change(item)"
-                    >
+                        (click)="show = false; change(item)">
                         <span [innerHTML]="item.name"></span>
-                </a>
+                    </a>
                 </ng-template>
             </li>
         </ul>

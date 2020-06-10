@@ -14,6 +14,7 @@ import { NxScrollMechanicsService }  from './scroll-mechanics.service';
 import { CloudAccount }              from './account.service/cloud';
 import { LocalAccount }              from './account.service/local';
 import { NxSearchService }           from './search.service';
+import { NxAppSourceService }        from './nx-app-source.service';
 
 @NgModule({
     imports: [
@@ -22,6 +23,7 @@ import { NxSearchService }           from './search.service';
     declarations : [],
     entryComponents : [],
     providers : [
+        NxAppSourceService,
         NxAppStateService,
         NxApplyService,
         NxLanguageProviderService,

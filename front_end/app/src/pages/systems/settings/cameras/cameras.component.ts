@@ -304,7 +304,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
     }
 
-    set selectedAspect(value) {
+    set selectedAspect(value: any) {
+        value.name = (typeof value.name === 'function') ? value.name() : value.name;
         this.showOverlay = false;
         this.selectedAspectWatcher.value = value.value;
         setTimeout(() => {

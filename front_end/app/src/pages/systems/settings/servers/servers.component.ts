@@ -91,9 +91,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
 
                 if (!this.CONFIG.isLocal && (!system.permissions || !system.permissions.editUsers)) {
-                    const systemId = this.system.id ? `/${this.system.id}` : '';
                     this.uriService
-                        .updateURI(this.CONFIG.menus.systemSettings.baseUrl + systemId, {})
+                        .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
                         .catch(error => {
                             console.error(error);
                         });
@@ -157,16 +156,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 });
             }
             if (typeof server === 'undefined') {
-                if (this.system.servers.length > 0) {
+                if (this.system.servers.length > 0 && this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
                     server = this.system.servers[0];
-                    const systemId = this.system.id ? `/${this.system.id}` : '';
-                    if (this.CONFIG.isLocal && this.location.path() === '/settings/servers') {
-                        this.uriService
-                            .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${systemId}/servers/${server.id}`)
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    };
+                    this.uriService
+                        .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}/servers/${server.id}`)
+                        .catch(error => {
+                            console.error(error);
+                        });
                 } else {
                     return;
                 }

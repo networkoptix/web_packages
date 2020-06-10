@@ -64,6 +64,23 @@ export class NxUriService {
         return this.route.queryParams;
     }
 
+    navigateSystem(navigateTo, system) {
+        navigateTo = (this.CONFIG.isLocal)
+            ? navigateTo.replace('SYSTEM_ID', '')
+            : navigateTo.replace('SYSTEM_ID', '/' + system.id);
+
+        return new Promise<boolean>((resolve, reject) => {
+            setTimeout(() => {
+                return this.router.navigate([navigateTo], {})
+                    .then(success => {
+                        resolve(success);
+                    }, error => {
+                        reject(error);
+                    });
+            });
+        });
+    }
+
     updateURI(navigateTo?: string, queryParams: Params = {}, replace?: boolean) {
         if (!navigateTo) {
             navigateTo = this.getURL();

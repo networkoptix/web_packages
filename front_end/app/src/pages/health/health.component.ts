@@ -13,17 +13,18 @@ import { NxAccountService, Account }             from '../../services/account.se
 import { NxUriService }                          from '../../services/uri.service';
 import { NxMenuService }                         from '../../menu';
 import { NxRibbonService }                       from '../../components/ribbon';
-import { NxHealthService }                       from './health.service';
-import { LanguageI18NStaticTypes }               from '../../../language_i18n_static_types';
-import { of, Subscription, throwError }          from 'rxjs';
-import { flatMap }                               from 'rxjs/operators';
-import { AutoUnsubscribe }                       from 'ngx-auto-unsubscribe';
-import { NxSystem, NxSystemService }             from '../../services/system.service';
-import { NxUtilsService }                        from '../../services/utils.service';
-import { NxAppStateService }                     from '../../services/nx-app-state.service';
-import { NxSystemAPI, NxSystemAPIService }       from '../../services/system-api.service';
-import { NxScrollMechanicsService }              from '../../services/scroll-mechanics.service';
-import { WINDOW }                                from '../../services/window-provider';
+import { NxHealthService }                 from './health.service';
+import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
+import { of, Subscription, throwError }    from 'rxjs';
+import { flatMap }                         from 'rxjs/operators';
+import { AutoUnsubscribe }                 from 'ngx-auto-unsubscribe';
+import { NxSystem, NxSystemService }       from '../../services/system.service';
+import { NxUtilsService }                  from '../../services/utils.service';
+import { NxAppStateService }               from '../../services/nx-app-state.service';
+import { NxSystemAPI, NxSystemAPIService } from '../../services/system-api.service';
+import { NxScrollMechanicsService }        from '../../services/scroll-mechanics.service';
+import { WINDOW }                          from '../../services/window-provider';
+import { NxAppSourceService }              from '../../services/nx-app-source.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -71,6 +72,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private breakpointObserver: BreakpointObserver,
         private deviceService: DeviceDetectorService,
+        private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
         @Inject(WINDOW) private window: any,
         @Inject(DOCUMENT) private document: any
@@ -135,11 +137,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 if (account && typeof account !== 'undefined') {
                     this.account = account;
                     this.system = this.systemService.createSystem(account.email, systemId);
-                    if (this.CONFIG.isLocal) {
-                        this.menu.base = `${this.CONFIG.menus.systemHealth.baseUrl}`;
-                    } else {
-                        this.menu.base = `${this.CONFIG.menus.systemSettings.baseUrl}${this.system.id}${this.CONFIG.menus.systemHealth.baseUrl}`;
-                    }
+                    this.menu.base = this.sourceService.getMenuBase(this.system);
                     infoPromise = this.system.getInfo();
                 } else {
                     // Create a mock system. All we need is the mediaserver.

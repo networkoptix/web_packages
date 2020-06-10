@@ -22,8 +22,7 @@ import {
 } from './';
 import { nxConfig } from '../../services/nx-config/config';
 
-const CONFIG = nxConfig;
-const appRoutes: Routes = !CONFIG.isLocal ? [
+const appRoutes: Routes = !nxConfig.isLocal ? [
     {
         path        : 'systems/:systemId/health',
         component   : NxHealthComponent,

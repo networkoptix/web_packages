@@ -44,23 +44,34 @@ export class AddUserModalContent {
     }
 
     private getRoleDescription() {
+        let description;
         if (this.selectedPermission.description) {
-            return this.selectedPermission.description;
+            description =  this.selectedPermission.description;
+        } else if (this.selectedPermission.userRoleId) {
+            description =  this.LANG.accessRoles.customRole.description;
+        } else if (this.LANG.accessRoles[this.selectedPermission.name]) {
+            description = this.LANG.accessRoles[this.selectedPermission.name].description;
+        } else {
+            description = this.LANG.accessRoles.customRole.description;
         }
-        if (this.selectedPermission.userRoleId) {
-            return this.LANG.accessRoles.customRole.description;
-        }
+
+        return (typeof description === 'function') ? description() : description;
+    }
+
+    private getAccessDescription() {
+        let description;
         if (this.LANG.accessRoles[this.selectedPermission.name]) {
-            return this.LANG.accessRoles[this.selectedPermission.name].description;
+            description = this.LANG.accessRoles[this.selectedPermission.name].description;
+        } else {
+            description = this.LANG.accessRoles.customRole.description;
         }
-        return this.LANG.accessRoles.customRole.description;
+
+        return (typeof description === 'function') ? description() : description;
     }
 
     setPermission(role: any) {
         this.selectedPermission = role;
-        this.accessDescription = this.LANG.accessRoles[this.selectedPermission.name]
-            ? this.LANG.accessRoles[this.selectedPermission.name].description
-            : this.LANG.accessRoles.customRole.description;
+        this.accessDescription = this.getAccessDescription();
     }
 
     saveUser() {
