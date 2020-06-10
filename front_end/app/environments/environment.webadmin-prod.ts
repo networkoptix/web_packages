@@ -1,5 +1,5 @@
 import { IEnvironment } from './environment-config';
 export const environment: IEnvironment = {
-    isLocal    : false,
+    isLocal    : true,
     production : true
 };

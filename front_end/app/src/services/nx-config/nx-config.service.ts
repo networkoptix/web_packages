@@ -2,6 +2,7 @@ import { Injectable }        from '@angular/core';
 import { IConfig }           from './config-types';
 import { nxConfig }          from './config';
 import { HttpClient }        from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -18,10 +19,13 @@ export class NxConfigService {
         // ***************************************************************
 
         this.config = nxConfig;
+        this.config.isLocal = environment.isLocal;
     }
 
     getSettings() {
-        return Promise.resolve({}); // this.http.get('/api/utils/settings').toPromise();
+        return NxConfigService.isLocal
+            ? Promise.resolve({})
+            : this.http.get('/api/utils/settings').toPromise();
     }
 
     getConfig() {

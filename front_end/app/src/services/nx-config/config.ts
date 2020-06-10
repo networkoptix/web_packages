@@ -206,7 +206,7 @@ export const nxConfig: IConfig = {
         searchTags                       : '',
         vendorsShown                     : 0
     },
-    isLocal : true,
+    isLocal : false,
     layout  : {
         table: {
             rows: 10

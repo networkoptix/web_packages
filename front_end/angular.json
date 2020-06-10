@@ -71,6 +71,22 @@
                   "maximumError": "20kb"
                 }
               ]
+            },
+            "webadmin": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.webadmin.ts"
+                }
+              ]
+            },
+            "webadmin": {
+              "fileReplacements": [
+                {
+                  "replace": "app/environments/environment.ts",
+                  "with": "app/environments/environment.webadmin-prod.ts"
+                }
+              ]
             }
           }
         },
@@ -86,6 +102,9 @@
           "configurations": {
             "production": {
               "browserTarget": "front-end:build:production"
+            },
+            "webadmin": {
+              "browserTarget": "front-end:build:webadmin"
             }
           }
         },

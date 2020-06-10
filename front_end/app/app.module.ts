@@ -8,6 +8,7 @@ import { FormsModule }                                                    from '
 import { AngularFireModule, FirebaseOptionsToken }                        from '@angular/fire';
 import { AngularFireMessagingModule }                                     from '@angular/fire/messaging';
 import { LayoutModule }                                                   from '@angular/cdk/layout';
+import { environment } from './environments/environment';
 
 import { InputTrimModule }                    from 'ng2-trim-directive';
 import { NgbToast, NgbModal }                 from '@ng-bootstrap/ng-bootstrap';
@@ -30,6 +31,7 @@ import { WINDOWS_PROVIDERS }                  from './src/services/window-provid
 import { MenuModule }                         from './src/menu';
 import { NxLanguageAndSettingsProvider }      from './src/services/nx-language-settings-provider';
 import { WebadminPageModule }                 from './src/pages/webadmin-page.module';
+import { PagesModule}                         from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
 
@@ -56,7 +58,8 @@ export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSett
         ComponentsModule,
         MenuModule,
         DialogsModule,
-        WebadminPageModule,
+        // @ts-ignore
+        environment.isLocal ? WebadminPageModule : PagesModule,
         DirectivesModule,
         PipesModule,
         ServiceModule,
