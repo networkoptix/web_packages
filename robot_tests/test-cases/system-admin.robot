@@ -123,7 +123,7 @@ Clicking save with no input in rename dialog throws error
     Click Button    ${RENAME CANCEL}
 
 Clicking save in rename dialog renames system
-    [Tags]    C41880
+    [Tags]    C41880    C30652
     Log in to Auto Tests System    ${EMAIL OWNER}
     Wait Until Elements Are Visible    ${RENAME SYSTEM}    ${DISCONNECT FROM NX}
     Click Button    ${RENAME SYSTEM}
@@ -134,6 +134,28 @@ Clicking save in rename dialog renames system
     Check For Alert    ${SYSTEM NAME SAVED}
     Verify In System    Auto Tests Rename
 
+    ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
+    Should be equal as strings    ${settings}[name]    Auto Tests Rename
+
+    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}   ${AUTO TESTS}
+    ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
+    Should be equal as strings    ${settings}[name]    ${AUTO TESTS}
+
+System name on cloud is displayed correctly after it's changed in client
+    [Tags]    C30678
+    Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}   Auto Tests Rename
+    # Check that chnaged correctly via API
+    ${local name}=   Get Local System Name    ${AUTO SYS IP}    ${AUTO SYS AUTH}
+    Should be equal as strings    ${local name}    Auto Tests Rename
+    ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
+    Should be equal as strings    ${settings}[name]    Auto Tests Rename
+
+    # Check that changed correctly in UI
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Verify In System    ${AUTO TESTS}
+
+    # Get the initial name back
     Rename System    ${auth}    ${AUTO TESTS SYSTEM ID}   ${AUTO TESTS}
     ${settings}=   Get Cloud System Settings    ${auth}    ${AUTO TESTS SYSTEM ID}
     Should be equal as strings    ${settings}[name]    ${AUTO TESTS}

@@ -31,7 +31,6 @@ Verify Delete User Dialog
     ...    ${DELETE ACCOUNT INFO}
     ...    ${DELETE ACCOUNT HEADER}
 
-
 *** Test Cases ***
 Can access the account page from dropdown
     [tags]    Threaded

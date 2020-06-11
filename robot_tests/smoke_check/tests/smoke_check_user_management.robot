@@ -26,7 +26,7 @@ Clean Up
 
 *** Test Cases ***
 Portal - Share to not registered user
-    [Tags]    C30445    users
+    [Tags]    C30445    C30648    users
 
     Go To    ${ENV}/systems
     Log In    ${email users}    ${password}    validate=${False}    button=None
@@ -81,7 +81,7 @@ Portal - Share to not registered user
     END
 
 Portal - Delete user
-    [Tags]    C30726    users
+    [Tags]    C30726    C30659    users
 
     Go To    ${ENV}/systems
     Log In    ${email users}    ${password}    validate=${False}    button=None
@@ -108,7 +108,7 @@ Portal - Delete user
     Should be True    ${is deleted}
 
 Portal - Share to registered user
-    [Tags]    C30446    users
+    [Tags]    C30446    C30648    users
 
     Log    Step 1: Share to existing user via API(viewer permissions)
     Share    ${cloud auth}    ${system id}    ${ACCESS ROLES}[viewer]    ${email existing user1}
@@ -144,7 +144,7 @@ Portal - Share to registered user
     END
 
 Client - Share to not existing cloud user
-    [Tags]    C30445    users
+    [Tags]    C30445    C30651    users
 
     ${new user}=    Get Random Email    ${email base}
     Set Suite Variable    ${new user}
@@ -201,7 +201,7 @@ Client - Share to not existing cloud user
     Select user in Users List    ${new user}
 
 Client - Delete cloud user
-    [Tags]    C30447    C30727    users
+    [Tags]    C30447    C30660    users
     Log    Step 1: Delete user
     Remove User    ${local auth}    ${server users}:${server users port}    ${new user data}[id]
 
@@ -219,7 +219,7 @@ Client - Delete cloud user
     Log Out
 
 Client - Share to existing cloud user
-    [Tags]    C30446    users
+    [Tags]    C30446    C30651    users
 
     Log    Step 1: Share to existing user(viewer permissions)
     &{existing user data}=   Save User

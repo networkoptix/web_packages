@@ -17,7 +17,7 @@ Clean Up
 
 *** Test Cases ***
 Connect System To Cloud - Client
-    [Tags]    C30443     vms
+    [Tags]    C30443    C30647    vms
 
     Log    Step 1: Connect System to cloud in VMS
     ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}:${server vms port}    ${system vms}    ${email vms}    ${password}
@@ -58,7 +58,7 @@ Check System State On Cloud Portal
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
 Disconnect System From Cloud - Portal
-    [Tags]    C69845    vms
+    [Tags]    C69845    C30653    vms
 
     Log    Step 1: Click on Disconnect from Nx button
     Click Button    ${DISCONNECT FROM NX}
@@ -88,7 +88,7 @@ Disconnect System From Cloud - Portal
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
 Disconnect System From Cloud - Client
-    [Tags]    C30444    vms
+    [Tags]    C30444    C30654    vms
     ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}:${server vms port}    ${system vms}    ${email vms}    ${password}
     Set Suite Variable    ${system id}
     Reload Page
