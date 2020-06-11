@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
         "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "No server found",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
         "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "이 계정은 이미 활성화되었습니다.",

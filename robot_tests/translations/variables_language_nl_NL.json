@@ -256,5 +256,5 @@
     "DELETE ACCOUNT HEADER TEXT": "Verwijder account?",
     "DELETE ACCOUNT INFO TEXT": "Uw account en alle bijbehorende gegevens worden definitief verwijderd zonder de mogelijkheid om deze te herstellen.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Voer het wachtwoord in voor uw account om door te gaan",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "De encryptie van het videoverkeer zal het CPU-gebruik aanzienlijk verhogen."
 }

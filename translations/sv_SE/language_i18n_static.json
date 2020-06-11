@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Systemen har felaktiga programversioner. Vänligen uppdatera dem båda till <a href=\"/download\">senaste versionen</a>.",
         "cloud_systems_have_different_owners": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server verkar visa sig själv under både det valda och det nuvarande systemet.</p><p>Ta bort offline och inkompatibla servrar från varje system och försök igen.</p>",
-        "fail": "Ingen server hittades",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
         "unknown_error": "Ett okänt fel inträffade. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Detta konto är redan aktiverat",
@@ -623,7 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Kan inte ladda säkerhetsinställningar.",
             "notAbleToLoadSystem": "Kan inte ladda systeminställningar.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Kan inte ladda lagringsinformation.",
             "sessionLimitDuration": {
                 "hours": "timmar",
                 "minutes": "minuter"

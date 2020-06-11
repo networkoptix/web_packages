@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide auf den <a href=\"/download\">neuesten Build</a>.",
         "cloud_systems_have_different_owners": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
-        "fail": "Keine Server gefunden",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
         "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
         "accountAlreadyActivated": "Dieser Account ist bereits aktiviert",
@@ -623,7 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Sicherheitseinstellungen können nicht geladen werden.",
             "notAbleToLoadSystem": "Systemeinstellungen können nicht geladen werden.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Speicherinformationen können nicht geladen werden.",
             "sessionLimitDuration": {
                 "hours": "stunden",
                 "minutes": "minuten"

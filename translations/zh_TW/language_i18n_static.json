@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "系統的軟體版本不相容。請更新為 <a href=\"/download\">最新版本</a>。",
         "cloud_systems_have_different_owners": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">伺服器似乎將自己歸列於所選系統和當前系統下 。</p><p>請從各個系統中刪除離線和不相容的伺服器, 並重試。</p>",
-        "fail": "找不到伺服器",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "該伺服器軟體版本不相容。請將兩個系統更新為同一版本再行合併。",
         "unknown_error": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
         "accountAlreadyActivated": "此帳號已啟用",
