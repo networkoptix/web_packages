@@ -18,6 +18,7 @@ import { RestartServerModalContent }   from './restart-server/restart-server.com
 import { DetachServerModalContent }    from './detach-server/detach-server.component';
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
+import { WizardModalContent }          from './wizard/wizard.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
@@ -25,7 +26,7 @@ import { AngularSvgIconModule }        from 'angular-svg-icon';
 import {
     GenericModalContent,
     NxModalGenericComponent
-}                                      from './generic/generic.component';
+}                                         from './generic/generic.component';
 import {
     ApplyModalContent,
     NxModalApplyComponent
@@ -35,6 +36,7 @@ import {
 }                                         from './update-camera-credentials/update-camera-credentials.component';
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { PipesModule }                    from '../pipes/pipes.module';
 
 @NgModule({
     imports: [
@@ -45,7 +47,8 @@ import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-sto
         ComponentsModule,
         DirectivesModule,
         RouterModule,
-        AngularSvgIconModule.forRoot()
+        AngularSvgIconModule.forRoot(),
+        PipesModule
     ],
     declarations: [
         LoginModalContent,
@@ -64,6 +67,7 @@ import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-sto
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
+        WizardModalContent,
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
@@ -87,6 +91,7 @@ import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-sto
         DetachServerModalContent,
         ResetServerModalContent,
         ChangePasswordModalContent,
+        WizardModalContent,
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,

@@ -44,6 +44,13 @@
     }
 }
 
+nx-modal-wizard {
+    .modal-body {
+        padding: 0;
+        height: 470px;
+    }
+}
+
 .modal-backdrop {
     &.fade {
         transition : none !important;

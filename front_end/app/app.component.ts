@@ -2,17 +2,18 @@ import { Location }                                           from '@angular/com
 import { Component, HostListener, Inject, ViewEncapsulation } from '@angular/core';
 import { ActivationStart, Event, Router }                     from '@angular/router';
 import { CookieService }                                      from 'ngx-cookie-service';
-import { DeviceDetectorService }                              from 'ngx-device-detector';
-import { debounceTime, filter, finalize, timeout }            from 'rxjs/operators';
-import { fromEvent }                                          from 'rxjs';
-import { NxRibbonService }                                    from './src/components/ribbon';
-import { WINDOW }                                             from './src/services/window-provider';
-import { NxApplyService }                                     from './src/services/apply.service';
-import { NxAppStateService }                                  from './src/services/nx-app-state.service';
-import { NxScrollMechanicsService }                           from './src/services/scroll-mechanics.service';
-import { NxUriService }                                       from './src/services/uri.service';
-import { NxPageService }                                      from './src/services/page.service';
-import { NxLanguageAndSettingsProvider }                      from './src/services/nx-language-settings-provider';
+import { DeviceDetectorService }                   from 'ngx-device-detector';
+import { debounceTime, filter, finalize, timeout } from 'rxjs/operators';
+import { fromEvent }                               from 'rxjs';
+import { NxRibbonService }                         from './src/components/ribbon';
+import { WINDOW }                                  from './src/services/window-provider';
+import { NxApplyService }                          from './src/services/apply.service';
+import { NxAppStateService }                       from './src/services/nx-app-state.service';
+import { NxScrollMechanicsService }                from './src/services/scroll-mechanics.service';
+import { NxUriService }                            from './src/services/uri.service';
+import { NxPageService }                           from './src/services/page.service';
+import { NxBootstrapProvider }                     from './src/services/nx-bootstrap-provider';
+import { NxDialogsService }                        from './src/dialogs/dialogs.service';
 
 require('what-input');
 
@@ -29,7 +30,7 @@ require('what-input');
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <nx-pre-loader type="page" *ngIf="!appStateService.ready"></nx-pre-loader>
+        <nx-pre-loader type="page" *ngIf="!appStateService.ready && !newSystem"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
     styleUrls     : ['./app.component.scss'],
     encapsulation : ViewEncapsulation.None
@@ -39,8 +40,10 @@ export class AppComponent {
     deviceInfo: any;
     allowedDevices: {};
     isInIframe: boolean;
+    newSystem: boolean;
 
     constructor(
+        bootstrapProvider: NxBootstrapProvider,
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
@@ -51,10 +54,10 @@ export class AppComponent {
         private ribbonService: NxRibbonService,
         private uriService: NxUriService,
         private pageService: NxPageService,
-        private languageAndSettingsProvider: NxLanguageAndSettingsProvider,
+        private dialogsService: NxDialogsService,
         @Inject(WINDOW) private window: Window
     ) {
-        if (!languageAndSettingsProvider.loaded) {
+        if (!bootstrapProvider.loaded) {
             this.router.navigate(['/503'])
                 .catch((error) => console.error(error))
                 .finally(() => {
@@ -62,7 +65,11 @@ export class AppComponent {
                 });
             this.appStateService.setHeaderVisibility(false);
             this.appStateService.setFooterVisibility(false);
+            return;
 
+        } else if (bootstrapProvider.newSystem) {
+            this.newSystem = true;
+            this.dialogsService.wizard();
             return;
         }
 

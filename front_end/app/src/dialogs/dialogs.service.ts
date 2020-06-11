@@ -37,6 +37,7 @@ import { IParams }                             from '../components/search/search
 import './../dialogs/dialogs.scss';
 import { Process }                             from '../services/process.service';
 import { NxCloudApiService }                   from '../services/nx-cloud-api';
+import { WizardModalContent }                  from './wizard/wizard.component';
 
 @AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })
@@ -353,6 +354,20 @@ export class NxDialogsService {
         };
 
         return this.createModal(ChangePasswordModalContent, options, params);
+    }
+
+    wizard() {
+        const options: IParams = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static',
+            size        : 'md'
+        };
+
+        const params: IParams = {
+            closable: false
+        };
+
+        return this.createModal(WizardModalContent, options, params);
     }
 
     merge(system: NxSystem, systems: NxSystem[]) {

@@ -6,8 +6,8 @@ import { DomSanitizer, SafeHtml }        from '@angular/platform-browser';
 import { NxPageService }                 from '../../services/page.service';
 import { NxConfigService, IConfig }      from '../../services/nx-config';
 import { NxAppStateService }             from '../../services/nx-app-state.service';
-import { NxCloudApiService }             from '../../services/nx-cloud-api';
-import { NxLanguageAndSettingsProvider } from '../../services/nx-language-settings-provider';
+import { NxCloudApiService }   from '../../services/nx-cloud-api';
+import { NxBootstrapProvider } from '../../services/nx-bootstrap-provider';
 
 @Component({
     selector  : 'nx-503',
@@ -25,7 +25,7 @@ export class Nx503Component implements OnInit {
         private router: Router,
         private sanitizer: DomSanitizer,
         private apiService: NxCloudApiService,
-        private languageAndSettingsProvider: NxLanguageAndSettingsProvider
+        private bootstrapProvider: NxBootstrapProvider
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -45,10 +45,10 @@ export class Nx503Component implements OnInit {
 
     ngAfterViewInit() {
         setTimeout(() => {
-            this.languageAndSettingsProvider
+            this.bootstrapProvider
                 .load()
                 .then(() => {
-                    if (this.languageAndSettingsProvider.loaded) {
+                    if (this.bootstrapProvider.loaded) {
                         this.router.navigate(['/']).catch(() => console.error('Error navigating to the index'));
                     }
                 });

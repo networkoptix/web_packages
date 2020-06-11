@@ -410,6 +410,12 @@ export class NxSystemAPI {
         return this.getModuleInfo().toPromise().then(res => res.reply.serverFlags.includes('SF_HasPublicIP'));
     }
 
+    checkLocalIfNew(reload = true) {
+         return NxConfigService.isLocal
+            ? Promise.resolve({})
+            : this.getModuleInfo().toPromise()
+    }
+
     createEvent(params: t.EventParams) {
         return this.get('/api/createEvent', params).toPromise();
     }

@@ -203,7 +203,7 @@ export class LoginModalContent implements OnInit {
                 });
             }
         }, (error) => {
-            if (error.resultCode === 'portalError') {
+            if (error?.resultCode === 'portalError') {
                 // close dialog ... process will show toaster
                 this.activeModal.close();
             }

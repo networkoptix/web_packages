@@ -28,15 +28,15 @@ import { AuthGuard, SystemGuard }             from './src/routeGuards';
 import { NxConfigService }                    from './src/services/nx-config';
 import { ServiceModule }                      from './src/services/services.module';
 import { WINDOWS_PROVIDERS }                  from './src/services/window-provider';
-import { MenuModule }                         from './src/menu';
-import { NxLanguageAndSettingsProvider }      from './src/services/nx-language-settings-provider';
-import { WebadminPageModule }                 from './src/pages/webadmin-page.module';
+import { MenuModule }          from './src/menu';
+import { NxBootstrapProvider } from './src/services/nx-bootstrap-provider';
+import { WebadminPageModule }  from './src/pages/webadmin-page.module';
 import { PagesModule}                         from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
 
 // AoT requires an exported function for factories
-export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSettingsProvider) {
+export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
 }
 
@@ -102,8 +102,8 @@ export function NxLanguageAndSettingsProviderFactory(provider: NxLanguageAndSett
         },
         AuthGuard,
         SystemGuard,
-        NxLanguageAndSettingsProvider,
-        { provide: APP_INITIALIZER, useFactory: NxLanguageAndSettingsProviderFactory, deps: [NxLanguageAndSettingsProvider], multi: true }
+        NxBootstrapProvider,
+        { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true }
     ],
     declarations: [
         AppComponent
