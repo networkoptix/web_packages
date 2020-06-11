@@ -73,6 +73,7 @@ export class MergeModalContent {
     readonly secondarySystemUnavailable: string = 'secondarySystemUnavailable';
     readonly serverNotAvailable: string = 'serverNotAvailable';
     readonly systemOffline: string = 'systemOffline';
+    readonly systemOfflineUrl: string = 'systemOfflineUrl';
     readonly unknownError: string = 'unknownError';
 
     machine = new StateMachine(this.checkMerge, State);
@@ -449,7 +450,7 @@ export class MergeModalContent {
                                 const newCheckMergeErrors = {
                                     CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS : this.differentOwners,
                                     DUPLICATE_MEDIASERVER_FOUND         : this.duplicateServers,
-                                    FAIL                                : 'systemOfflineUrl'
+                                    FAIL                                : this.systemOfflineUrl
                                 };
                                 this.updateShow(this.serverUrlErrors, {
                                     urlErrorText: newCheckMergeErrors[res.errorString] || this.serverNotAvailable
@@ -458,12 +459,12 @@ export class MergeModalContent {
                         })
                         .catch(err => {
                             console.error(err);
-                            let passwordErrorText = this.unknownError;
-                            if (err.message === 'Timeout has occurred') {
-                                passwordErrorText = this.systemOffline;
+                            if (this.machine.currentState !== this.serverUrlErrors) {
+                                this.machine.transition(this.serverUrlErrors);
                             }
-                            this.updateShow('confirmPasswordError', { passwordErrorText });
-                            this.adminPasswordInput.nativeElement.focus();
+                            const urlErrorText = err.message === 'Timeout has occurred'
+                                ? this.systemOfflineUrl : this.unknownError;
+                            this.updateShow(this.serverUrlErrors, { urlErrorText });
                         });
                 }
             }, { ignoreError: true });
