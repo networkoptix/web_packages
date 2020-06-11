@@ -211,6 +211,7 @@ class Customization(models.Model):
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
+            ('access_integration_store', 'Can access the integration store')
         )
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
@@ -770,6 +771,11 @@ class UserGroupsToAssetPermissions(models.Model):
     def check_customization_access(user, customization):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, 'cms.access_customization')
+
+    @staticmethod
+    def user_has_beta_access(user):
+        return UserGroupsToAssetPermissions. \
+            check_customization_permission(user, settings.CUSTOMIZATION, "cms.access_integration_store")
 
     @staticmethod
     def convert_permission_to_codename(permission):
