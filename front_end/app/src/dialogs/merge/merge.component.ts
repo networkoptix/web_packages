@@ -531,14 +531,7 @@ export class MergeModalContent {
                     this.confirmMergeInput.nativeElement.focus();
                 } else if (res.errorString) {
                     res.resultCode = res.errorString.toLowerCase();
-                    res.primarySystemName = this.primaryName;
-                    res.secondarySystemName = this.secondaryName;
-                    res.failedSystemName = this.primarySystem.stateOfHealth === 'online'
-                        ? res.secondarySystemName
-                        : res.primarySystemName;
-
-                    this.activeModal.dismiss(res);
-                    this.clearTemplate();
+                    this.handleMergeError(res);
                 }
             }, (error) => {
                 // for errors that pop up during the merge
@@ -555,16 +548,34 @@ export class MergeModalContent {
                     If the primary system's stateOfHealth is not online set it as the failedSystem.
                     Otherwise the secondary system is set as the failedSystem no matter what.
                 */
-                const err = error.data ? NxUtilsService.deepCopy(error.data) : {};
-                err.resultCode = errorCode;
-                err.errorText = (error && error.errorText) || '';
+                error.resultCode = errorCode;
+                this.handleMergeError(error);
+            });
+    }
 
-                err.primarySystemName = this.primaryName;
-                err.secondarySystemName = this.secondaryName;
+    handleMergeError(error) {
+        const err = error.data ? NxUtilsService.deepCopy(error.data) : {};
+        err.resultCode = error && error.resultCode || '';
+        err.errorText = (error && error.errorText) || '';
 
-                err.failedSystemName = this.primarySystem.stateOfHealth === 'online'
+        err.primarySystemName = this.primaryName;
+        err.secondarySystemName = this.secondaryName;
+
+        this.systemsService.forceUpdateSystems().toPromise()
+            .then(systems => {
+                this.systems = systems;
+            })
+            .finally(() => {
+                const system = this.systems.find(system => system.id === this.primarySystem.id);
+                const stateOfHealth = system && system.stateOfHealth || this.primarySystem.stateOfHealth;
+                err.failedSystemName = stateOfHealth === 'online'
                     ? err.secondarySystemName
                     : err.primarySystemName;
+
+                const { errorText } = error;
+                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR'].includes(errorText)) {
+                    err.errorText = 'mergedSystemIsOffline';
+                }
 
                 this.activeModal.dismiss(err);
                 this.clearTemplate();
