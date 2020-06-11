@@ -27,11 +27,8 @@ class NotificationAdmin(admin.ModelAdmin):
 
 
 @admin.register(Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
+class SubscriptionAdmin(NotificationAdmin):
     list_display = ('id', 'object', 'type', 'user_email', 'created_date', 'enabled')
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
 
 @admin.register(Message)
@@ -42,12 +39,6 @@ class MessageAdmin(NotificationAdmin):
     list_filter = ('type', 'created_date', 'send_date')
     search_fields = ('user_email', 'created_date', 'send_date',)
     actions = ['clean_old_messages']
-
-    def has_add_permission(self, request):  # No adding users in admin
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
     def clean_old_messages(self, request, queryset):
         from datetime import datetime, timedelta
@@ -61,9 +52,6 @@ class MessageAdmin(NotificationAdmin):
 class EventAdmin(NotificationAdmin):
     list_display = ('type', 'object', 'created_date', 'send_date', 'data')
     list_filter = ('type', 'object', 'created_date')
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
 
 @admin.register(Feedback)
@@ -143,7 +131,7 @@ class CloudNotificationAdmin(admin.ModelAdmin):
 
 
 @admin.register(TaskResult)
-class TaskResultAdmin(admin.ModelAdmin):
+class TaskResultAdmin(NotificationAdmin):
     list_display = ('task_id', 'date_done', 'status')
     readonly_fields = ('date_done', 'result', 'hidden', 'meta')
     list_filter = ('date_done', 'status')
@@ -181,11 +169,6 @@ class TaskResultAdmin(admin.ModelAdmin):
                         [field.name for field in obj._meta.fields] +
                         [field.name for field in obj._meta.many_to_many]))
 
-    def has_add_permission(self, request):  # No adding users in admin
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
     def clean_old_tasks(self, request, queryset):
         from datetime import datetime, timedelta
