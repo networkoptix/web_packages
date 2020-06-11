@@ -583,19 +583,9 @@ export class MergeModalContent {
             });
     }
 
-    deprecatedMergeSystems(password) {
-        // TO-DO (CLOUD-5154) move getting keys to system service
-        return this.system.mediaserver.getNonce().toPromise()
-            .then(res => {
-                const { nonce, realm } = res.reply;
-                const adminPassword = this.serverUrl.slice(this.serverUrl.indexOf('//admin') + 8, this.serverUrl.lastIndexOf('@'));
-                const digest = md5(`admin:${realm}:${adminPassword}`);
-                const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
-                const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
-                const postKey = btoa(`admin:${nonce}:${postSimplified}`);
-                const getKey = btoa(`admin:${nonce}:${getSimplified}`);
-                return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, getKey, postKey, password).toPromise();
-            });
+    deprecatedMergeSystems(password: string) {
+        const adminPassword = this.serverUrl.slice(this.serverUrl.indexOf('//admin') + 8, this.serverUrl.lastIndexOf('@'));
+        return this.system.mediaserver.deprecatedMergeSystems(this.serverUrl, password, adminPassword);
     }
 
     async precheckSystemMerge() {

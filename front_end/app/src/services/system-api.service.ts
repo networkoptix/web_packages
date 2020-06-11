@@ -4,7 +4,8 @@ import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
 import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { ICamera } from './system.service';
+import { ICamera }                             from './system.service';
+import * as md5                                from 'md5';
 
 interface User {
     canBeEdited: boolean;
@@ -108,7 +109,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get(url: string, params?: any) {
+    private get(url: string, params?: any): Observable<any> {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -572,19 +573,29 @@ export class NxSystemAPI {
         return this.http.get(`${localPasswordUrl}/api/`, httpOptions);
     }
 
-    getNonce() {
-        return this.get('/api/getNonce');
+    getDigestKeys(adminPassword: string) {
+        return this.get('/api/getNonce').toPromise().then(({ nonce, realm }) => {
+            const digest = md5(`admin:${realm}:${adminPassword}`);
+            const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
+            const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
+            const postKey = btoa(`admin:${nonce}:${postSimplified}`);
+            const getKey = btoa(`admin:${nonce}:${getSimplified}`);
+            return { getKey, postKey };
+        });
     }
 
-    deprecatedMergeSystems(url: string, getKey: string, postKey: string, currentPassword: string) {
-        const data = {
-            getKey,
-            postKey,
-            currentPassword,
-            takeRemoteSettings: false,
-            url
-        };
-        return this.post('/api/mergeSystems', data);
+    deprecatedMergeSystems(url: string, currentPassword: string, adminPassword: string) {
+        return this.getDigestKeys(adminPassword)
+            .then(({ getKey, postKey }) => {
+                const data = {
+                    getKey,
+                    postKey,
+                    currentPassword,
+                    takeRemoteSettings: false,
+                    url
+                };
+                return this.post('/api/mergeSystems', data).toPromise();
+            });
     }
 }
 
