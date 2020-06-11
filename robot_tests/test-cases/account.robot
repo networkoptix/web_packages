@@ -323,7 +323,7 @@ Should open account page in anonymous state
     Check Log In    button=None
 
 User who owns a system cannot remove themselves
-    [tags]    C69855    threaded    delete account
+    [tags]    C69855    threaded    delete_account
     Go To    ${url}/account
     Log In    ${EMAIL OWNER}    ${password}    button=None
     Verify in Account Page
@@ -345,7 +345,7 @@ Delete account button is enabled
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
 Delete account button becomes enabled
-    [tags]    C69856    threaded    delete account
+    [tags]    C69856    threaded    delete_account
     ${server auth}=    Create List    admin    ${BASE PASSWORD}
     Connect System to Cloud    ${server auth}    http://10.1.5.126:7012    Delete User 1    ${EMAIL DELETE USER}    ${BASE PASSWORD}
     Connect System to Cloud    ${server auth}    http://10.1.5.126:7013    Delete User 2    ${EMAIL DELETE USER}    ${BASE PASSWORD}
@@ -367,7 +367,7 @@ Delete account button becomes enabled
     Element Should Be Enabled    ${DELETE ACCOUNT BUTTON}
 
 Account Deletion is cancelled
-    [tags]    C69858    C69857    threaded    delete account
+    [tags]    C69858    C69857    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -383,7 +383,7 @@ Account Deletion is cancelled
     Wait Until Element is Visible    ${DELETE ACCOUNT BUTTON}
 
 Password is required to delete account
-    [tags]    C69859    threaded    delete account
+    [tags]    C69859    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -398,7 +398,7 @@ Password is required to delete account
     Validate Log In
 
 Correct password is required to delete account
-    [tags]    C69860    threaded    delete account
+    [tags]    C69860    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -414,7 +414,7 @@ Correct password is required to delete account
     Validate Log In
 
 User can delete their own account
-    [tags]    C69861    threaded    delete account
+    [tags]    C69861    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -428,7 +428,7 @@ User can delete their own account
     Wait Until Element is Visible    ${ACCOUNT NOT FOUND}
 
 After account deletion user is deleted from all systems that were shared with this user
-    [tags]    C69862    threaded    delete account
+    [tags]    C69862    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     @{auth}=    Create List    ${EMAIL OWNER}    ${BASE PASSWORD}
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    Administrator    ${random email}
@@ -462,7 +462,7 @@ After account deletion user is deleted from all systems that were shared with th
     Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
 
 After account deletion user can create account with the same email again
-    [tags]    C69864    threaded    delete account
+    [tags]    C69864    threaded    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
     Go To    ${url}/account
     Log In    ${random email}    ${password}    button=None
@@ -481,6 +481,6 @@ After account deletion user can create account with the same email again
     Log In    ${random email}    ${password}
 
 Deletion attempt when Delete Account button is disabled (via API)
-    [tags]    C76389    threaded    delete account
+    [tags]    C76389    threaded    delete_account
     Delete Account    ${ENV}    ${EMAIL OWNER}    ${password}
     Log In    ${EMAIL OWNER}    ${password}

@@ -220,15 +220,48 @@ Admin cannot invite another admin
     Click Button    ${ADD USER CANCEL}
 
 Edit permission works
-    [Tags]    C41900
+    [Tags]    C41900    C30657
     ${random email}=   Get Random Email    ${BASE EMAIL}
     Log in to Auto Tests System    ${email}
     Share To    ${random email}    ${ADMIN TEXT}
-    Edit User Permissions In Systems    ${random email}    ${CUSTOM TEXT}
-    Check User Permissions    ${random email}    ${CUSTOM TEXT}
+
+    # Check that the user's role is added correctly in vms
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
+        ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
+        ...    AND     Exit For Loop
+    END
+
+    Edit User Permissions In Systems    ${random email}    ${VIEWER TEXT}
+    Check User Permissions    ${random email}    ${VIEWER TEXT}
+
+    # Check that the user's role has changed in vms
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${random email}'    Run Keywords
+        ...    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[viewer]
+        ...    AND     Exit For Loop
+    END
+
     Edit User Permissions In Systems    ${random email}    ${ADMIN TEXT}
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
+
+# TODO: figure out why getting 403 when updating user via ec2/saveUser
+#User role is displayed correctly on portal if it's changed in client
+#    [Tags]     C30658
+#    ${random email}=   Register and activate account with random email    firstName    lastName    ${password}
+#    Append To List    ${TMP USERS}    ${random email}
+#    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
+#
+#    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+#    FOR    ${user}    IN    @{users}
+#        Run Keyword If    '${user}[email]'=='${random email}'    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
+#        ${id}=   Set Variable If  '${user}[email]'=='${random email}'    ${user}[id]
+#        Run Keyword If    '${user}[email]'=='${random email}'    Exit For Loop
+#    END
+#    Save User    ${AUTO SYS AUTH}    ${AUTO SYS IP}    test_user    ${permissions}[viewer]    ${random email}    firstName lastName    ${password}    user id=${id}
 
 Delete user works
     [Tags]    email    C41903
