@@ -255,6 +255,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         } else if (newTimeValue % 60 === 0) {
             sw.sessionLimitMinutes.value = newTimeValue;
             newTimeValue /= 60;
+            this.timeValue = newTimeValue;
             // handler for when minutes gets changed to hours in the same change
             // 120 hours --> 120 minutes --> 2 hours
             this.selectElement.change(this.limitSessionTimeUnits.hours);
