@@ -52,7 +52,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
         elif show_drafts:
             state = 'draft'
 
-        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
         for integration in integrations:

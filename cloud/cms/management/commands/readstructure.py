@@ -175,7 +175,7 @@ def read_structure_file(filename, asset_type, global_strings, skin):
         context_template.template = data  # update template for this context
         context_template.save()
         for string in strings:
-            structure.find_or_add_data_structure(string, None, context.id, bool(language_code))
+            structure.find_or_add_data_structure(string, None, context, bool(language_code))
 
 
 def read_structure(asset_type):

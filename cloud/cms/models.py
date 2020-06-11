@@ -97,7 +97,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
         if footer_items:
             from cms.controllers.filldata import process_global_contexts
-            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
+            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type, hidden=False)
             # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
             footer_items = process_global_contexts(asset, footer_items, asset.version_id(),
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",

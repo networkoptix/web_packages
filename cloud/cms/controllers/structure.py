@@ -55,20 +55,26 @@ def find_or_add_context(context_name, old_name, asset_type, has_language, is_glo
     return context
 
 
-def find_or_add_data_structure(name, old_name, context_id, has_language):
+def find_or_add_data_structure(name, old_name, context, has_language):
     if old_name:
-        record = DataStructure.objects.filter(name=old_name, context_id=context_id).first()
-        if record:
-            record.name = name
-            record.save()
-            return record
+        data_structure = DataStructure.objects.filter(name=old_name, context_id=context.id).first()
+        if data_structure:
+            data_structure.name = name
+            data_structure.save()
+            return data_structure
 
-    data = DataStructure.objects.filter(name=name, context_id=context_id).first()
-    if not data:
-        data = DataStructure(name=name, context_id=context_id,
-                             translatable=has_language, default=name)
-        data.save()
-    return data
+    data_structure = DataStructure.objects.filter(name=name, context_id=context.id).first()
+    if not data_structure and context.is_global:
+        data_structure = DataStructure.objects.filter(
+            name=name, context__is_global=True, context__asset_type=context.asset_type
+        ).first()
+        if data_structure:
+            data_structure.context = context
+            data_structure.save()
+    if not data_structure:
+        data_structure = DataStructure(name=name, context=context, translatable=has_language, default=name)
+        data_structure.save()
+    return data_structure
 
 
 def update_from_object(asset_type_structure, asset_type=None, preserve_files=False):
@@ -370,7 +376,7 @@ def update_data_structure(context, has_lang, record, order, preserve_file=False)
     label = record.get("label", "")
     old_name = record.get("old_name", None)
 
-    data_structure = find_or_add_data_structure(name, old_name, context.id, has_lang)
+    data_structure = find_or_add_data_structure(name, old_name, context, has_lang)
     data_structure.label = label
     data_structure.order = order
     data_structure.advanced = record.get("advanced", False)

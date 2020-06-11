@@ -73,7 +73,7 @@ def get_article(request, url_param, **kwargs):
 
             # Get global contexts and fill any matching variables in datarecords
             cloud_portal = get_cloud_portal_asset()
-            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
                                     global_contexts, global_contexts_dict)
