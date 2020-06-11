@@ -664,6 +664,15 @@
             "value": "GTM-5MRNWP",
             "optional": false,
             "advanced": true
+          },
+          {
+            "label": "Enable review emails",
+            "name": "%REVIEWS_ENABLED%",
+            "description": "Sends review emails to portal managers when enabled.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
+            "advanced": true
           }
         ]
       },
