@@ -135,7 +135,7 @@ Last name is required
     Element Should Be Visible    ${LAST NAME IS REQUIRED}
 
 Change first and last name shows in system
-    [Tags]    C41573    Threaded
+    [Tags]    C41573    C30655    Threaded
     Go To    ${url}/account
     Log In    ${EMAIL LIVE VIEWER}    ${password}    ${False}    button=None
     Verify in Account Page
@@ -158,6 +158,15 @@ Change first and last name shows in system
     Clear Element Text    ${ACCOUNT FIRST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
     Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
+
+    # Check that the user's name has changed in system via API
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${EMAIL LIVE VIEWER}'    Run Keywords
+        ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
+        ...    AND     Exit For Loop
+    END
+
     Clear Element Text    ${ACCOUNT LAST NAME}
     Input Text    ${ACCOUNT FIRST NAME}    ${TEST LAST NAME}
     Click Button    ${ACCOUNT SAVE}
