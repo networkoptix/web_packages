@@ -256,5 +256,5 @@
     "DELETE ACCOUNT HEADER TEXT": "מחק חשבון?",
     "DELETE ACCOUNT INFO TEXT": "חשבונך וכל הנתונים המשויכים אליו יימחקו לצמיתות ללא אפשרות לשחזר אותו.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "הזן את סיסמת חשבונך כדי להמשיך",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "הצפנת תעבורת וידאו תגדיל באופן משמעותי את השימוש במשאבי המחשב (מעבד)."
 }

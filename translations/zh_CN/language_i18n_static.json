@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "系统的软件版本不相容。请更新为 <a href=\"/download\">最新版本</a>。",
         "cloud_systems_have_different_owners": "该系统连接到 %CLOUD_NAME%，但是分属不同的所有者。只有当所有者帐户相同，才可以合并云系统。",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">服务器似乎将自己归列于选定系统和当前系统下 。 </p><p>请从各个系统中删除离线和不兼容的服务器, 并重试一次。 </p>",
-        "fail": "找不到服务器",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "该服务器软件版本不兼容。请将两个系统更新为同一版本再行合并。",
         "unknown_error": "不明错误。请尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
         "accountAlreadyActivated": "此帐户已激活",

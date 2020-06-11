@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Les systèmes ne correspondent pas aux versions logicielles. Veuillez les mettre à jour vers la <a href=\"/download\">dernière version</a>.",
         "cloud_systems_have_different_owners": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un serveur semble se répertorier sous le système sélectionné et le système actuel.</p><p>Supprimez les serveurs hors ligne et incompatibles de chaque système et réessayez.</p>",
-        "fail": "Aucun serveur trouvé",
+        "fail": "{{failedSystem}} is inaccessible.",
         "incompatible": "Ce serveur a une version logiciel incompatible. Mettez à jour les deux systèmes à la même version pour les fusionner.",
         "unknown_error": "Une erreur inconnue est survenue. Actualisez la page et réessayez. Si le problème persiste, veuillez contacter le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Ce compte est déjà activé",

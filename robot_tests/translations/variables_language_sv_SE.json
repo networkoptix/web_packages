@@ -256,5 +256,5 @@
     "DELETE ACCOUNT HEADER TEXT": "Radera konto?",
     "DELETE ACCOUNT INFO TEXT": "Ditt konto och all information som är kopplad till det kommer att raderas permanent utan möjlighet att återställa det.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Ange ditt kontolösenord för att fortsätta",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafik ökar väsentligt CPU-användningen."
 }
