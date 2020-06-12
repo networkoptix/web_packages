@@ -68,8 +68,9 @@ export class NxPermissionsDropdown extends BaseDropdown {
         if (changes.roles?.currentValue) {
             this.processAccessRoles();
             const role = this.accessRoles.filter(x => x.name === this.selected.name)[0];
+            const roleOptionLabel = (typeof role.optionLabel === 'function') ? role.optionLabel() : role.optionLabel;
 
-            if (!role || role.optionLabel() !== this.selection) {
+            if (!role || roleOptionLabel !== this.selection) {
                 this.selection = role.optionLabel() || this.message;
                 this.changePermission(role);
             }
@@ -81,7 +82,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
     }
 
     changePermission(role) {
-        this.selection = role.optionLabel();
+        this.selection = (typeof role.optionLabel === 'function') ? role.optionLabel() : role.optionLabel;
 
         const selectedRole = this.accessRoles.filter((accessRole) => {
             if (accessRole.name === role.name) {
