@@ -1,0 +1,21 @@
+@import '../../../styles/theme_palette';
+@import '../../../styles/theme_variables';
+@import '../../styles/typography';
+
+.logo-header {
+    background: $additional_light1;
+    height: 160px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid $light3;
+    img {
+        height: 80px;
+    }
+    @media screen and (max-height: $collapse-webadmin-width), (max-width: $collapse-webadmin-width) {
+        height: 80px;
+        img {
+            height: 40px;
+        }
+    }
+}

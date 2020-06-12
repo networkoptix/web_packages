@@ -37,6 +37,7 @@ import { IParams }                             from '../components/search/search
 import './../dialogs/dialogs.scss';
 import { Process }                             from '../services/process.service';
 import { NxCloudApiService }                   from '../services/nx-cloud-api';
+import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 
 @AutoUnsubscribe()
 @Injectable({ providedIn: 'root' })
@@ -170,7 +171,17 @@ export class NxDialogsService {
             redirectClose : redirectClose || false
         };
 
-        return this.createModal(LoginModalContent, options, params)
+        if (this.CONFIG.isLocal) {
+            Object.assign(options, {
+                centered      : true,
+                backdropClass : 'webadmin-backdrop',
+                windowClass   : 'webadmin-window'
+            });
+        }
+
+        return this.createModal(NxConfigService.resolveLocalOrCloud(
+            LoginWebadminModalContent, LoginModalContent
+        ), options, params)
             // handle how the dialog was closed
             // required if we need to have dismissible dialog otherwise
             // will raise a JS error ( Uncaught [in promise] )

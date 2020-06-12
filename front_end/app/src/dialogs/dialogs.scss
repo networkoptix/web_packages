@@ -50,6 +50,30 @@
     }
 }
 
+.webadmin {
+    &-backdrop {
+        height: 100vh !important;
+    }
+
+    &-window {
+        background: $additional_light2;
+        & > .modal-dialog {
+            height: 100vh !important;
+            margin: 0px auto !important;
+            width: $collapse-webadmin-width !important;
+            max-width: 100vw;             
+            @media screen and (max-height: $collapse-webadmin-width), (max-width: $collapse-webadmin-width) {
+                width: 100vw !important;
+                & > .modal-content {
+
+                        height: 100vh !important;
+                        width: 100vw !important;
+                }
+            }
+        }
+    }
+}
+
 .modal {
     &.fade {
         transition: none !important;
