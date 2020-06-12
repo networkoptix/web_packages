@@ -4,14 +4,10 @@ import {
 }                                        from '@angular/core';
 import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
-import { NxDialogsService }              from '../../../../dialogs/dialogs.service';
 import { SubscriptionLike }              from 'rxjs';
-import { NxUtilsService }                from '../../../../services/utils.service';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxSettingsService }             from '../settings.service';
 import { NxSystem }                      from '../../../../services/system.service';
-import { NxCloudApiService }             from '../../../../services/nx-cloud-api';
-import { NxProcessService }              from '../../../../services/process.service';
 import { NxMenuService }                 from '../../../../components/menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
@@ -92,11 +88,7 @@ export class NxSystemLicensesComponent implements OnInit {
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
         @Inject(LOCALE_ID) private locale: string,
-        private dialogService: NxDialogsService,
-        private utilsService: NxUtilsService,
         private settingsService: NxSettingsService,
-        private cloudApiService: NxCloudApiService,
-        private processService: NxProcessService,
         private menuService: NxMenuService
     ) {
         this.CONFIG = configService.getConfig();
@@ -126,7 +118,7 @@ export class NxSystemLicensesComponent implements OnInit {
                             expired       : false,
                             status        : '',
                             expiration    : '',
-                            deactivations : '-'
+                            deactivations : '&ndash;'
                         };
 
                         item.licenseBlock
@@ -189,8 +181,8 @@ export class NxSystemLicensesComponent implements OnInit {
                                         .then((data) => {
                                             if (data.reply.length) {
                                                 result.forEach((item) => {
-                                                    const boundServer = data.reply.find((server) => {
-                                                        return server.hardwareIds.find((id) => id === item.info.hwid);
+                                                    const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {
+                                                        return server.hardwareIds.find((id: string) => id === item.info.hwid);
                                                     });
 
                                                     const server = this.system.servers.find((server) => server.id === boundServer.serverId);

@@ -1,14 +1,11 @@
 import {
-    Component,
-    OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild
+    Component, OnDestroy, Input,
+    OnChanges, SimpleChanges
 }                                    from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
-import { NxProcessService }          from '../../../../../services/process.service';
-import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { DatePipe }                  from '@angular/common';
 
@@ -52,7 +49,15 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 this.orderedDetails(lic.info);
             });
 
-            this.licenses.sort((a, b) => a.order < b.order ? 1 : -1);
+            this.licenses.sort((a, b) => {
+                if (a.info.serial === this.newlyAddedLicense) {
+                    return -1;
+                }
+                if (b.info.serial === this.newlyAddedLicense) {
+                    return 1;
+                }
+                return 0;
+            });
         }
     }
 
@@ -69,16 +74,12 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
     };
 
     private orderedDetails(info): void {
-        const order = (info.serial === this.newlyAddedLicense) ? 1 : 2;
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
         const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
 
         this.orderedLicense[info.serial] = [
             {
-                name  : 'order',
-                value : order
-            }, {
                 name  : this.LANG.license.info.type,
                 value : info.type
             }, {
@@ -86,7 +87,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 value : info.count
             }, {
                 name  : this.LANG.license.info.server,
-                value : info.serverName
+                value : info.serverName || this.LANG.common.unknown
             }, {
                 name  : this.LANG.license.info.hwid,
                 value : info.hwid
@@ -96,7 +97,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 error : info.expired
             }, {
                 name  : this.LANG.license.info.expires,
-                value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
+                value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '&ndash;',
                 error : warning
             }, {
                 name  : this.LANG.license.info.deactivations,
