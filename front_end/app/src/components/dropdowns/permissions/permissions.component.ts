@@ -71,7 +71,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
             const roleOptionLabel = (typeof role.optionLabel === 'function') ? role.optionLabel() : role.optionLabel;
 
             if (!role || roleOptionLabel !== this.selection) {
-                this.selection = role.optionLabel() || this.message;
+                this.selection = roleOptionLabel || this.message;
                 this.changePermission(role);
             }
         }
