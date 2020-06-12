@@ -30,6 +30,7 @@ export class NxSystemLicensesComponent implements OnInit {
     licensesSubscription: SubscriptionLike;
 
     licenses: any;
+    licenseSummaries: { type: string, count: number, inUse: number, required: number }[];
     classMap: any = {};
 
     // Constructor and class initialization methods
@@ -113,6 +114,7 @@ export class NxSystemLicensesComponent implements OnInit {
         this.system.getLicenses()
             .then((result) => {
                 if (result.length) {
+                    this.licenseSummaries = [];
                     result.forEach((item) => {
                         item.info = {
                             type          : '',
@@ -149,6 +151,21 @@ export class NxSystemLicensesComponent implements OnInit {
                         // Set license usage /Pending VMS-18155/
                         if (item.info.inuse !== '') {
                             item.info.required = parseInt(item.info.count) - parseInt(item.info.inuse);
+                        }
+
+                        // for license summary block
+                        const license = this.licenseSummaries.find(ls => ls.type === item.info.type);
+                        if (license) {
+                            license.count += +item.info.count;
+                            license.inUse += +item.info.inuse;
+                            license.required += item.info.required;
+                        } else {
+                            this.licenseSummaries.push({
+                                type     : item.info.type,
+                                count    : +item.info.count,
+                                inUse    : +item.info.inuse,
+                                required : item.info.required
+                            });
                         }
                     });
 
