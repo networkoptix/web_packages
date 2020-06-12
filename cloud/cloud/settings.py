@@ -80,7 +80,8 @@ INSTALLED_APPS = (
     'notifications',
     'cms',
     'zapier',
-    'tinymce'
+    'tinymce',
+    'nested_admin',
 )
 
 
@@ -218,7 +219,14 @@ CACHES = {
     "deployment": REDIS_CACHE,
     "global": REDIS_CACHE,
     "integrations": REDIS_CACHE,
-    "filters": REDIS_CACHE
+    "filters": REDIS_CACHE,
+    "menus": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "TIMEOUT": None,
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "KEY_PREFIX": 'menus'
+    }
 }
 
 DEPLOYMENT_READY = 'ready'

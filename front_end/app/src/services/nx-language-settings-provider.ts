@@ -119,6 +119,7 @@ export class NxLanguageAndSettingsProvider {
         this.CONFIG.testedOperatingSystems = data.testedOperatingSystems;
         this.CONFIG.trafficRelayHost = data.trafficRelayHost;
         this.CONFIG.vmsName = data.vmsName;
+        this.CONFIG.dynamicMenus = data.menus;
 
         // detect preview mode
         if (window.location.href.indexOf('preview') >= 0) {

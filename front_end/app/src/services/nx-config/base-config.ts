@@ -8,6 +8,7 @@
 // match the expected interface, even if the JSON is valid.
 
 import { Watcher } from '../apply.service';
+import { MenuNode } from '../../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 
 export interface BaseConfig {
     isLocal: boolean;
@@ -44,6 +45,7 @@ export interface BaseConfig {
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
     company: Company;
+    dynamicMenus: MenuStructure;
     footerItems: FooterItem[];
     googleTagManagerId: string;
     pushConfig: string;
@@ -71,6 +73,10 @@ export interface FooterItem {
     url: string;
     newWindow: boolean;
     enabled: boolean;
+}
+
+export interface MenuStructure {
+    [key: string]: MenuNode[]
 }
 
 export interface Capabilities {

@@ -43,6 +43,7 @@ export interface LanguageI18NStaticTypes {
     toastMessage:          ToastMessage;
     settingsConfig:        { [key: string]: string };
     result:                any;
+    additionalSystems:     any;
 }
 
 export interface AccessRole {
@@ -750,7 +751,7 @@ function invalidValue(typ: any, val: any): never {
 
 function jsonToJSProps(typ: any): any {
     if (typ.jsonToJS === undefined) {
-        const map: any = {};
+        var map: any = {};
         typ.props.forEach((p: any) => map[p.json] = { key: p.js, typ: p.typ });
         typ.jsonToJS = map;
     }
@@ -759,7 +760,7 @@ function jsonToJSProps(typ: any): any {
 
 function jsToJSONProps(typ: any): any {
     if (typ.jsToJSON === undefined) {
-        const map: any = {};
+        var map: any = {};
         typ.props.forEach((p: any) => map[p.js] = { key: p.json, typ: p.typ });
         typ.jsToJSON = map;
     }
@@ -774,9 +775,9 @@ function transform(val: any, typ: any, getProps: any): any {
 
     function transformUnion(typs: any[], val: any): any {
         // val must validate against one typ in typs
-        const l = typs.length;
-        for (let i = 0; i < l; i++) {
-            const typ = typs[i];
+        var l = typs.length;
+        for (var i = 0; i < l; i++) {
+            var typ = typs[i];
             try {
                 return transform(val, typ, getProps);
             } catch (_) {}
@@ -795,7 +796,7 @@ function transform(val: any, typ: any, getProps: any): any {
         return val.map(el => transform(el, typ, getProps));
     }
 
-    function transformDate(val: any): any {
+    function transformDate(typ: any, val: any): any {
         if (val === null) {
             return null;
         }
@@ -810,7 +811,7 @@ function transform(val: any, typ: any, getProps: any): any {
         if (val === null || typeof val !== "object" || Array.isArray(val)) {
             return invalidValue("object", val);
         }
-        const result: any = {};
+        var result: any = {};
         Object.getOwnPropertyNames(props).forEach(key => {
             const prop = props[key];
             const v = Object.prototype.hasOwnProperty.call(val, key) ? val[key] : undefined;
@@ -841,7 +842,7 @@ function transform(val: any, typ: any, getProps: any): any {
             : invalidValue(typ, val);
     }
     // Numbers can be parsed by Date but shouldn't be.
-    if (typ === Date && typeof val !== "number") return transformDate(val);
+    if (typ === Date && typeof val !== "number") return transformDate(typ, val);
     return transformPrimitive(typ, val);
 }
 
@@ -910,6 +911,7 @@ const typeMap: any = {
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
+        { json: "additionalSystems", js: "additionalSystems", typ: "any" },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "any" },

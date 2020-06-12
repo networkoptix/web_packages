@@ -238,4 +238,8 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS(
             'Successfully initiated data structure for CMS'))
 
+        structure.read_menu_structure('cms/menus.json')
+        self.stdout.write(self.style.SUCCESS(
+            'Successfully initiated menu structure'))
+
         caches['deployment'].set(settings.DEPLOYMENT_READY, True)

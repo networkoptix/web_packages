@@ -2,6 +2,7 @@ export * from './nx-config';
 export * from './account.service';
 export * from './utils.service';
 export * from './apply.service';
+export * from './menus.service';
 export * from './nx-app-state.service';
 export * from './nx-cloud-api';
 export * from './nx-cloud-api.types';

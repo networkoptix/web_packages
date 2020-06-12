@@ -17,7 +17,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from api.helpers.exceptions import handle_exceptions, require_params,\
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes
-from cms.models import cloud_portal_customization_cache, UserGroupsToAssetPermissions
+from cms.models import cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,8 @@ def get_settings_from_cache():
         'searchTags': customization_cache['search_tags'],
         'vendorsShown': customization_cache['vendors_shown'],
         'pushConfig': customization_cache['push_config'],
-        'googleTagManagerId': customization_cache['google_tag_manager_id']
+        'googleTagManagerId': customization_cache['google_tag_manager_id'],
+        'menus': get_cached_menu(settings.CUSTOMIZATION)
     }
 
 

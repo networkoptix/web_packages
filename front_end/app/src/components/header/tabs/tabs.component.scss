@@ -1,0 +1,37 @@
+@import "../../../../styles/theme_variables";
+@import "../../../styles/typography";
+
+.active {
+    position: relative;
+    color: $brand_core;
+    & > a {
+        color: $brand_core !important;
+    }
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 16px;
+        right: 16px;
+        border-bottom: 2px solid $brand_core;
+    }
+}
+
+.tab-link {
+    height: 100%;
+    border-bottom: 1px solid transparent;
+    &:hover {
+        background: $light2;
+        border-bottom: 1px solid $light5;
+    }
+    &:active {
+        background: $light3;
+        border-bottom: 1px solid $light6;
+    }
+    & > a {
+        @extend #medium14;
+        color: $dark9;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+}

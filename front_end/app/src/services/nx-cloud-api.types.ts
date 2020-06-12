@@ -129,7 +129,7 @@ export interface RegisterUser {
     activated: boolean
 };
 
-interface System {
+export interface System {
     accessRole: string,
     authKey: string,
     capabilities: {

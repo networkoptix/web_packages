@@ -1,6 +1,7 @@
 import json
 
 from django import forms
+from django.db.models import Q
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.contrib.admin.widgets import FilteredSelectMultiple
@@ -364,3 +365,19 @@ class ContributerAgreementForm(forms.ModelForm):
                                                   'data-minimum-input-length': 2
                                               })
         }
+
+
+class MenuNodeChangeForm(forms.ModelForm):
+
+    class Media:
+        js = ('js/menuNode.js',)
+
+    def clean_enabled(self):
+        enabled = self.cleaned_data['enabled']
+        available = self.cleaned_data['available']
+        is_global = self.cleaned_data['is_global']
+        available_ids = available.values_list('id', flat=True)
+        if not is_global:
+            if enabled.filter(~Q(id__in=available_ids)):
+                raise ValidationError('Cannot enable customizations for which the node is not available. Please make sure available customizations are set first')
+        return enabled

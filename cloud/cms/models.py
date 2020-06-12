@@ -1,10 +1,12 @@
 import os
 import re
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from distutils.util import strtobool
 
 from django.db import models
+from django.db.models.signals import m2m_changed
 from django.db.utils import ProgrammingError
 from django.utils.functional import cached_property
 from django.conf import settings
@@ -58,9 +60,9 @@ def rename_permission_group(group, asset):
 
 
 def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
-    return Asset.objects.get(customizations__name__in=[customization],
+    return Asset.objects.filter(customizations__name__in=[customization],
                              asset_type__name="",
-                             asset_type__type=AssetType.ASSET_TYPES.cloud_portal)
+                             asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
 
 
 def get_asset_by_revision(version_id):
@@ -160,6 +162,15 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
         return data.get(value)
 
     return data
+
+
+def get_cached_menu(customization_name):
+    menu_cache = caches['menus']
+    menu_customization = menu_cache.get(customization_name, None)
+    if menu_customization is None:
+        menu_customization = Menu.generate_menus(customization_name)
+        menu_cache.set(customization_name, menu_customization)
+    return menu_customization
 
 
 def slugify(name, lowercase=False):
@@ -386,6 +397,16 @@ class Asset(models.Model):
 
         return data_structure.find_actual_value(asset=self, version_id=self.version_id()) if data_structure else None
 
+    def replace_global_values(self, content: str, global_contexts_dict=None):
+        if not global_contexts_dict:
+            from cms.controllers.filldata import global_contexts_to_dict
+            global_contexts = Context.objects.filter(asset_type=self.asset_type, is_global=True)
+            global_contexts_dict = global_contexts_to_dict(global_contexts, self)
+        for tag in global_contexts_dict:
+            if tag in content:
+                content = content.replace(tag, global_contexts_dict[tag])
+        return content
+
     def clean(self):
         if self.asset_type.type != AssetType.ASSET_TYPES.cloud_portal and \
                 Asset.objects.filter(name=self.name, asset_type=self.asset_type).exclude(pk=self.pk).exists():
@@ -419,6 +440,8 @@ class Asset(models.Model):
                 group = create_default_permission_group(orig or self)
                 self.primary_group = group
                 self.save()
+                if self.is_cloud_portal:
+                    MenuNode.enable_global(self)
             if self.primary_group and self.created_by:
                 self.primary_group.user_set.add(self.created_by)
                 self.created_by.is_staff = True
@@ -1021,3 +1044,146 @@ class ContributerAgreement(models.Model):
     def is_valid(self):
         review = self.get_current()
         return review and self.accepted_agreement == review
+
+
+class Menu(models.Model):
+    name = models.CharField(max_length=255, unique=True)
+    depth = models.IntegerField(default=2, blank=True)
+
+    @classmethod
+    def generate_menus_for_customization(cls, menus, customization):
+        from cms.controllers.filldata import global_contexts_to_dict
+        cloud_portal_asset = get_cloud_portal_asset(customization.name)
+        global_contexts = Context.objects.filter(asset_type=cloud_portal_asset.asset_type, is_global=True)
+        global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal_asset)
+        structures = {}
+        for menu in menus:
+            structures[menu.name] = menu.generate_structure(cloud_portal_asset, customization, global_contexts_dict)
+        return customization, structures
+
+    @classmethod
+    def generate_menus(cls, customization_name=None):
+        menus = cls.get_prefetched_menus()
+
+        if customization_name:
+            customizations = Customization.objects.filter(name=customization_name)
+        else:
+            customizations = [asset.customizations.first() for asset in Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal)]
+
+        menu_customization_structure = {}
+
+        with ThreadPoolExecutor(max_workers=4) as executer:
+            futures = [executer.submit(cls.generate_menus_for_customization, menus, customization) for customization in customizations]
+
+        for future in as_completed(futures):
+            customization, structures = future.result()
+            menu_customization_structure[customization.name] = structures
+
+        return menu_customization_structure[customization_name] if customization_name else menu_customization_structure
+
+    @classmethod
+    def get_prefetched_menus(cls):
+        max_depth = cls.objects.all().aggregate(models.Max('depth'))['depth__max']
+        # Force qs evaluation to prevent threads from messing with prefetch cache
+        return list(cls.objects.all().prefetch_related(*cls.get_prefetch_objects(max_depth=max_depth, depth=1)))
+
+    @classmethod
+    def get_prefetch_objects(cls, max_depth, depth=1):
+        parent_node_lookup = '__'.join(['nodes_list' for _ in range(1, depth)])
+        nodes_lookup = parent_node_lookup + '__nodes' if depth > 1 else 'nodes'
+        nodes_to_attr = 'nodes_list'
+        enabled_lookup = f'{parent_node_lookup}__{nodes_to_attr}__enabled' if depth > 1 else f'{nodes_to_attr}__enabled'
+        prefetches = [models.Prefetch(nodes_lookup, queryset=MenuNode.objects.order_by('order'), to_attr=nodes_to_attr),
+                      models.Prefetch(enabled_lookup, to_attr='enabled_list')]
+        child_prefetches = tuple()
+        if depth < max_depth:
+            child_prefetches = cls.get_prefetch_objects(max_depth, depth + 1)
+
+        return (*prefetches, *child_prefetches)
+
+    def generate_structure(self, cloud_portal_asset, customization, global_contexts_dict):
+        structure = []
+        for node in self.nodes_list:
+            if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
+                    (not node.condition or global_contexts_dict.get(node.condition, False)):
+                structure.append(node.process_node(
+                    cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=self.depth
+                ))
+        return structure
+
+    @classmethod
+    def cache_all_customizations(cls, **kwargs):
+        menus_cache = caches['menus']
+        structures = cls.generate_menus()
+        for customization, structure in structures.items():
+            menus_cache.set(customization, structure)
+
+
+class MenuNode(models.Model):
+    AUTH_CHOICES = Choices((0, "logged_out", "Logged Out"),
+                           (1, "logged_in", "Logged In"),
+                           (2, "both", "Both"))
+    name = models.CharField(max_length=255)
+    display_name = models.CharField(max_length=255)
+    url = models.CharField(max_length=2048, blank=True)
+    new_window = models.BooleanField(default=False)
+    icon = models.CharField(blank=True, max_length=255)
+    available = models.ManyToManyField(Customization, blank=True, related_name='available_nodes')
+    enabled = models.ManyToManyField(Customization, blank=True, related_name='enabled_nodes')
+    authentication = models.IntegerField(choices=AUTH_CHOICES, default=AUTH_CHOICES.both)
+    condition = models.CharField(blank=True, max_length=255)
+    order = models.IntegerField(default=0)
+    is_global = models.BooleanField(default=True, verbose_name='Global')
+    parent_menu = models.ForeignKey(Menu, on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    parent_node = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='nodes')
+    touched = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Item: {self.name}'
+
+    def process_node(self, cloud_portal_asset, customization, global_contexts_dict, depth=1, max_depth=2):
+        node_structure = {
+            'name': cloud_portal_asset.replace_global_values(self.name, global_contexts_dict),
+            'url': cloud_portal_asset.replace_global_values(self.url, global_contexts_dict),
+            'new_window': self.new_window,
+            'icon': self.icon,
+            'authentication': self.AUTH_CHOICES[self.authentication],
+            'order': self.order
+        }
+        node_structure['display_name'] = cloud_portal_asset.replace_global_values(
+            self.display_name, global_contexts_dict) if self.display_name else node_structure['name']
+
+        if depth < max_depth:
+            nodes = self.nodes_list
+            if nodes:
+                node_list = []
+                for node in nodes:
+                    if next((cust for cust in node.enabled_list if cust.id == customization.id), False) and \
+                            (not node.condition or global_contexts_dict.get(node.condition, False)):
+                        node_list.append(node.process_node(
+                            cloud_portal_asset, customization, global_contexts_dict, depth + 1
+                        ))
+                if node_list:
+                    node_structure['nodes'] = node_list
+        return node_structure
+
+    @classmethod
+    def enable_global(cls, cloud_portal_asset):
+        customization = cloud_portal_asset.customizations.first()
+        if customization:
+            for node in cls.objects.filter(is_global=True):
+                node.enabled.add(customization)
+            Menu.cache_all_customizations()
+
+    def get_parent(self):
+        if self.parent_node:
+            return self.parent_node.get_parent()
+        else:
+            return self.parent_menu
+
+    def save(self, *args, **kwargs):
+        # Don't set obj.touched to True when touched=False is passed
+        touched = kwargs.pop('touched', True)
+        if not self.touched and touched:
+            self.touched = True
+        super().save(*args, **kwargs)

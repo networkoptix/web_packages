@@ -8,6 +8,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.html import format_html
 
+import nested_admin
+
 from cms.forms import *
 from cms.controllers.modify_db import get_records_for_version
 from cms.views.asset import page_editor, review
@@ -841,3 +843,70 @@ class ContributerAgreementAdmin(CMSAdmin):
             link = reverse('admin:cms_assetcustomizationreview_change', args=[obj.accepted_agreement.id])
             return format_html('<a href="{}">Review</a>', link)
 
+
+class MenuNodeInline(nested_admin.NestedTabularInline):
+    model = MenuNode
+    # Hack to force inlines checking. Inlines are actually populated by get_inline_instances below
+    inlines = [None]
+    sortable_field_name = 'order'
+    extra = 0
+    verbose_name = 'Item'
+    verbose_name_plural = 'Items'
+    fields = ('name', 'display_name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'enabled_ro', 'is_global')
+    readonly_fields = ('enabled_ro', 'is_global')
+
+    def __init__(self, *args, **kwargs):
+        self.depth = kwargs.pop('depth', 1)
+        self.total_depth = kwargs.pop('total_depth', 1)
+        super().__init__(*args, **kwargs)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).order_by('order')
+
+    def get_inline_instances(self, request, obj=None):
+        if self.depth < self.total_depth:
+            return [MenuNodeInline(self.model, self.admin_site, depth=self.depth + 1, total_depth=self.total_depth)]
+        return []
+
+    def enabled_ro(self, obj):
+        if obj:
+            return format_html(f'<a href="{reverse("admin:cms_menunode_change", args=(obj.id,))}">Advanced</a>')
+        return ''
+    enabled_ro.short_description = 'Enable / Disable'
+
+
+@admin.register(Menu)
+class MenuAdmin(nested_admin.NestedModelAdmin):
+    list_display = ('name', 'depth')
+
+    def get_inline_instances(self, request, obj=None):
+        # This serves two purposes:
+        # 1. Only show inline admins after a menu is created and depth is defined
+        # 2. If depth is changed, makes sure number of expected inline forms doesn't change right before processing them
+        if obj and obj.pk:
+            obj_orig = Menu.objects.get(pk=obj.pk)
+            if obj_orig.depth > 0:
+                return [MenuNodeInline(self.model, self.admin_site, depth=1, total_depth=obj_orig.depth)]
+        return []
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        Menu.cache_all_customizations()
+
+
+@admin.register(MenuNode)
+class MenuNodeAdmin(CMSAdmin):
+    list_display = ('name', 'display_name')
+    form = MenuNodeChangeForm
+    fields = ('name', 'display_name', 'url', 'new_window', 'icon', 'order', 'condition', 'authentication', 'is_global', 'available', 'enabled')
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': FilteredSelectMultiple(verbose_name='', is_stacked=False)},
+    }
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        Menu.cache_all_customizations()
+
+    def response_change(self, request, obj):
+        parent_menu = obj.get_parent()
+        return redirect(reverse('admin:cms_menu_change', args=(parent_menu.id,)))

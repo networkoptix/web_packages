@@ -1,0 +1,31 @@
+<div class="dropdown"
+     [ngClass]="{'show': show}"
+     (nxClickElsewhere)="show = false">
+
+    <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle position-relative"
+        (click)="show = !show"
+        [disabled]="hideDropdown"
+        [ngClass]="{'hide-dropdown': hideDropdown}"
+        type="button" id="activeSystemDropdown" data-toggle="dropdown">
+        {{name | async}}
+        <div *ngIf="!hideDropdown" class="nav-arrow">
+            <span></span>
+            <span></span>
+        </div>
+    </button>
+    <div *ngIf="show" class="popup arrow up"></div>
+    <ul class="dropdown-menu"
+        *ngIf="!hideDropdown"
+        [style.display]="show ? 'inline-block' : 'none'"
+        aria-labelledby="navLocationDropdown"
+        [nxArrowNav]="show">
+        <li *ngFor="let node of nodes | async" class="dropdown-item-container">
+            <a class="dropdown-item inset"
+               [ngClass]="{ 'selected': node.url === path}"
+               [target]="node.new_window ? '_blank' : '_self'"
+               [routerLink]="node.url"
+               (click)="hide()">
+               <span>{{node.name}}</span></a>
+        </li>
+    </ul>
+</div>

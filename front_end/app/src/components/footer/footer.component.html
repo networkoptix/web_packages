@@ -4,10 +4,10 @@
                 <div class="row">
                     <ul class="nav navbar-nav col-12 pr-0 flex-row" [class.justify-content-center]="center">
                         <li *ngFor="let item of footerItems; trackBy: trackItem">
-                            <a *ngIf="item.newWindow; else internalLink"
-                               [href]="item.url" target="_blank">{{ item.name | translate }}</a>
+                            <a *ngIf="item.new_window; else internalLink"
+                               [href]="item.url" target="_blank">{{ item.display_name | translate }}</a>
                             <ng-template #internalLink>
-                                <a [routerLink]="item.url">{{ item.name | translate }}</a>
+                                <a [routerLink]="item.url">{{ item.display_name | translate }}</a>
                             </ng-template>
                         </li>
                     </ul>
