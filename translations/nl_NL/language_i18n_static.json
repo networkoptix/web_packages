@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
         "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
+        "fail": "{{failedSystem}} is ontoegankelijk.",
         "incompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
         "unknown_error": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",

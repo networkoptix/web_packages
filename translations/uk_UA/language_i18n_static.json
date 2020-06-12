@@ -255,7 +255,7 @@
             "serverNotAvailable": "<p class=\"mb-2\">Неможливо отримати доступ до системи {{targetSystem}}.</p><p>Переконайтеся, що вказаний сервер підключений до мережі і повторіть спробу</p>",
             "serverNotYours": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
+            "systemOfflineUrl": "{{targetSystem}} недоступний.",
             "systemsIncompatible": "Цей сервер має несумісну версію Пз. Оновіть обидві системи до однакової збірки, щоб об'єднати їх.",
             "systemVersionOld": "{{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
             "systemVersionNew": "{{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}}.",
@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Системи мають невідповідні версії програмного забезпечення. Будь ласка, поновіть їх до <a href=\"/download\">останньої збірки</a>.",
         "cloud_systems_have_different_owners": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Здається, що сервер перелічує себе як у вибраній, так і в поточній системі.</p><p>Видаліть офлайн і несумісні сервери з кожної системи та повторіть спробу.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
+        "fail": "{{failedSystem}} недоступний.",
         "incompatible": "Цей сервер має несумісну версію Пз. Оновіть обидві системи до однакової збірки, щоб об'єднати їх.",
         "unknown_error": "Сталася невідома помилка. Оновіть сторінку та спробуйте ще раз. Якщо проблема не зникне, будь ласка, <a href=\"%SUPPORT_LINK%\" target=\"_blank\">зв'яжіться з підтримкою</a>.",
         "accountAlreadyActivated": "Цей обліковий запис вже активовано",
@@ -623,7 +623,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Не вдалося завантажити параметри безпеки.",
             "notAbleToLoadSystem": "Не вдалося завантажити системні налаштування.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Не в змозі завантажити інформацію про носій.",
             "sessionLimitDuration": {
                 "hours": "година",
                 "minutes": "хвилина"

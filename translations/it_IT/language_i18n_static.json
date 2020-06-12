@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "I sistemi hanno diverse versioni del software. Si prega di aggiornarli entrambi all'ultima <a href=\"/download\">versione</a>.",
         "cloud_systems_have_different_owners": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Un server sembra elencare se stesso sia nel sistema selezionato che in quello corrente.</p><p>Rimuovere i server offline e incompatibili da ciascun sistema e riprovare.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
+        "fail": "{{failedSystem}} è inaccessibile.",
         "incompatible": "Questo server ha una versione software incompatibile. Aggiorna entrambi i sistemi alla stessa build per unirli.",
         "unknown_error": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "accountAlreadyActivated": "Questo account è già stato attivato",
