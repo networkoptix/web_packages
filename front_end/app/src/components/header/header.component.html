@@ -76,6 +76,7 @@
                 <ul class="nav navbar-nav d-flex">
                     <div (resize)="mainButtonWidth$.next($event.width)">
                         <nx-header-main-button
+                                *ngIf="systems?.length || headerService?.nodes?.length"
                                 [endpoint]="active"
                                 [systems]="systems"
                                 [hideArrow]="!headerService.currentLocation.parentNode?.nodes || hideTabsAndDropdown$.value"
