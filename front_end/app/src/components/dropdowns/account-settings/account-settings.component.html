@@ -3,6 +3,7 @@
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+            [ngClass]="{ 'small-icon-overrides': small}"
             (resize)="buttonWidth.next($event.width)"
             (click)="show = !show"
             type="button" id="accountSettingsSelect" data-toggle="dropdown">

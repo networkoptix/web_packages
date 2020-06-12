@@ -4,7 +4,6 @@
     margin-right: 26px;
     position: relative;
     &.hide-arrow {
-        margin-right: 0px !important;
         &::after {
             display: none;
         }
