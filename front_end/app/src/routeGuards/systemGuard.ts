@@ -27,12 +27,9 @@ export class SystemGuard implements CanActivate {
         route: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        if (this.CONFIG.isLocal) {
-            return Promise.resolve(true);
-        }
         const routesChecked = ['users', 'cloud-storage', 'health'];
         const currentRoute = routesChecked.find(route => state.url.includes(route));
-        const systemId = route.pathFromRoot.find((snapshot: any) => {
+        const systemId = this.CONFIG.isLocal || route.pathFromRoot.find((snapshot: any) => {
             return snapshot.params.systemId;
         }).params.systemId;
 
@@ -40,15 +37,23 @@ export class SystemGuard implements CanActivate {
             .get()
             .then(account => {
                 if (account) {
-                    this.system = this.systemService.createSystem(account.email, systemId);
+                    if (this.CONFIG.isLocal) {
+                        this.system = this.systemService.createLocalSystem(
+                            this.accountService.mediaServerApi, account.id, account.email
+                        );
+                    } else {
+                        this.system = this.systemService.createSystem(account.email, systemId);
+                    }
                     return this.system.getInfoAndPermissions()
                         .then((system) => {
                             const canViewChecks = {
-                                users           : system.permissions.editUsers,
-                                'cloud-storage' : system.canUserViewCloudStorage(),
-                                health          : system.canViewInfo()
+                                users           : this.system.permissions.editUsers,
+                                'cloud-storage' : this.system.canUserViewCloudStorage(),
+                                health          : this.system.canViewInfo()
                             };
-                            return canViewChecks[currentRoute] || this.router.navigate([`/systems/${systemId}`]);
+                            return canViewChecks[currentRoute] || this.router.navigate(
+                                [NxConfigService.resolveLocalOrCloud('/settings/', `/systems/${systemId}`)]
+                            );
                         })
                         .catch(() => this.router.navigate([`/systems/${systemId}`]));
                 }

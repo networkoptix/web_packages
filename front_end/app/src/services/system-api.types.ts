@@ -587,7 +587,7 @@ export class SystemConfigSettings {
     statisticReportsLastTime: Date;
     statisticReportLastVersion: string;
     systemName: string;
-
+    mergeInfo: any;
     constructor(params: Params[]) {
         params.forEach(({ name, value }) => {
             this[name] = value;

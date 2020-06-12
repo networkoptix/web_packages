@@ -90,7 +90,7 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 this.isOffline = !system.isOnline;
                 this.settingsService.footerSubject.next(true);
 
-                if (!this.CONFIG.isLocal && (!system.permissions || !system.permissions.editUsers)) {
+                if (!system.permissions?.editUsers) {
                     this.uriService
                         .navigateSystem(`${this.CONFIG.menus.systemSettings.baseUrl}SYSTEM_ID`, system)
                         .catch(error => {
@@ -101,10 +101,8 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
                 }
                 if (system) {
                     this.system = system;
-                    if (!this.CONFIG.isLocal) {
-                        this.system.getInfoAndPermissions(false)
-                            .catch(() => {});
-                    }
+                    this.system.getInfoAndPermissions(false)
+                        .catch(() => {});
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
