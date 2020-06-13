@@ -1,7 +1,7 @@
 import {
     Component,
     OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild
+    SimpleChanges, ViewChild, ElementRef, AfterViewInit
 } from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
@@ -10,6 +10,8 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
+import { SubscriptionLike }          from 'rxjs';
+import { NxScrollMechanicsService }  from '../../../../../services/scroll-mechanics.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -18,7 +20,7 @@ import { NxSystem }                  from '../../../../../services/system.servic
     styleUrls   : ['new.component.scss']
 })
 
-export class NxLicenseNewComponent implements OnChanges, OnDestroy {
+export class NxLicenseNewComponent implements AfterViewInit, OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -33,7 +35,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() licenses: any = [];
 
+    windowSizeSubscription: SubscriptionLike;
+
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
+    @ViewChild('errorDiv') errorDiv: HTMLDivElement;
+    @ViewChild('errorDivMirror') errorDivMirror: HTMLDivElement;
 
     private setupDefaults() {
         this.activateKey = this.processService.createProcess(() => {
@@ -49,7 +55,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
-
+console.log('errorDiv ->', this.errorDiv);
                     // eslint-disable-next-line prefer-promise-reject-errors
                     return reject('alreadyRegistered');
                 });
@@ -118,12 +124,25 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
 
         this.setupDefaults();
+    }
+
+    ngAfterViewInit() {
+        this.windowSizeSubscription = this.scrollMechanicsService
+            .windowSizeSubject
+            .subscribe(({ height, width }) => {
+                debugger;
+                // if (this.licenseKey.nativeElement.invalid && this.licenseKey.nativeElement.touched) {
+                //
+                // }
+                // this.errorDivMirror.nativeElement.height = this.errorDiv.nativeElement.height;
+            });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
