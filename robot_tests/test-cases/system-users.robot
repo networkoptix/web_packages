@@ -248,21 +248,6 @@ Edit permission works
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
 
-# TODO: figure out why getting 403 when updating user via ec2/saveUser
-#User role is displayed correctly on portal if it's changed in client
-#    [Tags]     C30658
-#    ${random email}=   Register and activate account with random email    firstName    lastName    ${password}
-#    Append To List    ${TMP USERS}    ${random email}
-#    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
-#
-#    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-#    FOR    ${user}    IN    @{users}
-#        Run Keyword If    '${user}[email]'=='${random email}'    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
-#        ${id}=   Set Variable If  '${user}[email]'=='${random email}'    ${user}[id]
-#        Run Keyword If    '${user}[email]'=='${random email}'    Exit For Loop
-#    END
-#    Save User    ${AUTO SYS AUTH}    ${AUTO SYS IP}    test_user    ${permissions}[viewer]    ${random email}    firstName lastName    ${password}    user id=${id}
-
 Delete user works
     [Tags]    email    C41903
     ${random email}=   Register and activate account with random email    mark    harmill    ${password}
@@ -749,7 +734,7 @@ Cloud administrator can make changes to local viewers (negative)
     Click Button    ${ACCOUNT CANCEL}
     Sleep    .1
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]
+    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
     Log    The following keywords will verify no changes were saved
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Lists Should Be Equal     ${check info}    ${locals} 

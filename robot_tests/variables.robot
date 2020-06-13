@@ -7,6 +7,7 @@ Resource     variables/change-pass-variables.robot
 Resource     variables/register-variables.robot
 Resource     variables/system-camera-variables.robot
 Resource     variables/system-admin-variables.robot
+Resource     variables/systems-page-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]

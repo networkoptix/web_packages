@@ -1,4 +1,4 @@
-*** Keywords ***   
+*** Keywords ***
 Reset DB and Open New Browser On Failure
     Close Browser
     Open Browser and go to URL    ${url}
@@ -182,3 +182,10 @@ Local User Start
     Log in to Auto Tests System    ${email} 
     Go To Users List
     [Return]    ${local users}
+
+
+
+
+
+
+
