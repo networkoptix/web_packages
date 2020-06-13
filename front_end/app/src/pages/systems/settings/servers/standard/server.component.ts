@@ -97,7 +97,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.system?.currentValue?.info) {
-            this.canSeeInfo = (this.CONFIG.isLocal || this.CONFIG.cloudCapabilities.healthMonitoring ||
+            this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
                 changes.system.currentValue.info.capabilities?.vms_metrics) &&
                 changes.system.currentValue.canViewInfo();
 
@@ -127,7 +127,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.restartDisabled = !this.system.permissions.isAdmin;
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
-        this.portChangeDisabled = !this.CONFIG.isLocal && !this.system.permissions.editAdmins;
+        this.portChangeDisabled = !this.system.permissions.editAdmins;
 
         if (!this.applyService.locked) {
             this.applyService.hardReset();

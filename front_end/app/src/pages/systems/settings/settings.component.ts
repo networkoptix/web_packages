@@ -276,10 +276,11 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .subscribe(_ => {
                             this.connectionLost();
                         });
-                } else if (this.CONFIG.isLocal) {
+                } else if (this.CONFIG.isLocal && account) {
                     // this.systemsService.stopPoll();
-                    this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id);
+                    this.system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
                     this.system.update();
+                    this.system.getInfoAndPermissions();
                     this.systems = [this.system];
                     this.system.isAvailable = true;
                     this.system.isOnline = true;
@@ -335,7 +336,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     updateMenu() {
         this.systemNoAccess = false;
         this.content.system = this.system;
-        if (this.CONFIG.isLocal || this.system.permissions.editCameras) {
+        if (this.system.permissions.editCameras) {
             let camerasNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.cameras.id);
             if (!camerasNode) {
                 camerasNode = {
@@ -368,7 +369,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.cameras.id);
         }
 
-        if (this.CONFIG.isLocal || this.system.permissions.editUsers) {
+        if (this.system.permissions.editUsers) {
             let usersNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.users.id)[0];
 
             if (!usersNode) {
@@ -436,7 +437,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             this.content.level1 = this.content.level1.filter(node => node.id !== this.CONFIG.menus.systemSettings.users.id);
         }
 
-        if (this.CONFIG.isLocal || this.system.permissions.isAdmin) {
+        if (this.system.permissions.isAdmin) {
             let serversNode = this.content.level1.find((node) => node.id === this.CONFIG.menus.systemSettings.servers.id);
             if (!serversNode) {
                 serversNode = {

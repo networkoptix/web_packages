@@ -36,6 +36,7 @@ import {
 }                                         from './update-camera-credentials/update-camera-credentials.component';
 import { CloudStorageMoveModalContent }   from './cloud-storage/move/cloud-storage-move.component';
 import { CloudStorageDeleteModalContent } from './cloud-storage/delete/cloud-storage-delete.component';
+import { LoginWebadminModalContent }      from './login-webadmin/login-webadmin.component';
 import { PipesModule }                    from '../pipes/pipes.module';
 
 @NgModule({
@@ -52,6 +53,7 @@ import { PipesModule }                    from '../pipes/pipes.module';
     ],
     declarations: [
         LoginModalContent,
+        LoginWebadminModalContent,
         DisconnectModalContent,
         RenameModalContent,
         AddUserModalContent,
@@ -76,6 +78,7 @@ import { PipesModule }                    from '../pipes/pipes.module';
     ],
     entryComponents: [
         LoginModalContent,
+        LoginWebadminModalContent,
         DisconnectModalContent,
         RenameModalContent,
         AddUserModalContent,

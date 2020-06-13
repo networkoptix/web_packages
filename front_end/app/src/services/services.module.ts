@@ -33,7 +33,6 @@ import { NxAppSourceService }        from './nx-app-source.service';
         NxSystemsService,
         {
             provide  : NxAccountService,
-            // TODO: Checking nxConfig.isLocal will probably be replaced with checking for a build flag
             useClass : NxConfigService.resolveLocalOrCloud(LocalAccount, CloudAccount)
         },
         NxSearchService,

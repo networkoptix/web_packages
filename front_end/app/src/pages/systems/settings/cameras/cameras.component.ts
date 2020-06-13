@@ -118,22 +118,19 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
-                    if (!this.CONFIG.isLocal) {
-                        this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
-                            if (!this.system.isOnline) {
-                                this.showPreloader = false;
-                                this.noCameras = this.system.cameras && this.system.cameras.length === 0;
-                            }
-                            this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
-                            this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
-                                this.system.info.capabilities &&
-                                this.system.info.capabilities.vms_metrics) &&
-                                this.system.canViewInfo();
-                            this.initUpdateProcess();
-                        });
-                    } else {
-                        this.canSeeInfo = true;
-                    }
+                    this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
+                        if (!this.system.isOnline) {
+                            this.showPreloader = false;
+                            this.noCameras = this.system.cameras && this.system.cameras.length === 0;
+                        }
+                        this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
+                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring ||
+                            this.system.info.capabilities &&
+                            this.system.info.capabilities.vms_metrics) &&
+                            this.system.canViewInfo();
+                        this.initUpdateProcess();
+                    });
+                    this.canSeeInfo = true;
                     if (this.canSeeInfo) {
                         this.fullInfoPath = this.uriService.getSystemSettingsRoute({ childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;
                     }

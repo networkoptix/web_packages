@@ -13,6 +13,7 @@ import { NxUtilsService }                  from './utils.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { IParams }                         from '../components/search/search.component';
+import { SystemConfigSettings }            from './system-api.types';
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -119,7 +120,7 @@ class UserManager {
 
     private mediaserver: NxSystemAPI;
     private _ownerEmail: string;
-    private _accessRole: string;
+    private _accessRole: string = '';
     private _userId: string;
     accessRoles: NxSystemRole[];
     currentUser: NxSystemUser;
@@ -147,7 +148,7 @@ class UserManager {
     }
 
     set accessRole(accessRole) {
-        this._accessRole = accessRole;
+        this._accessRole = accessRole || '';
         this.checkPermissions();
     }
 
@@ -187,6 +188,7 @@ class UserManager {
             permissions.isAdmin = true;
             permissions.editCameras = true;
         }
+
         this.permissions = permissions;
     }
 
@@ -689,7 +691,7 @@ export class NxSystem extends System implements OnDestroy {
 
     // Start of userManger functions
     get accessRole() {
-        return this.userManager.accessRole;
+        return this.userManager.accessRole || '';
     }
 
     get accessRoles() {
@@ -848,7 +850,7 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     canViewInfo() {
-        return this.CONFIG.isLocal || this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
+        return this.CONFIG.accessRoles.adminAccess.includes(this.accessRole.toLowerCase());
     }
 
     canUserViewCloudStorage() {
@@ -861,7 +863,42 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
-        // TODO: This needs to be changed to work with webadmin
+        const parseSettings = ({
+            cloudAccountName: ownerAccountEmail,
+            systemName: name,
+            specificFeatures,
+            mergeInfo
+        }: SystemConfigSettings) => {
+            return {
+                ownerAccountEmail,
+                name,
+                mergeInfo,
+                capabilities : JSON.parse(<any> specificFeatures),
+                isOnline     : true
+            };
+        };
+
+        if (this.CONFIG.isLocal) {
+            return this.mediaserver.getSystemSettings().then(res => {
+                const parsedSettings = parseSettings(res);
+                Object.assign(parsedSettings, this.userManager.currentUser);
+                if (this.info) {
+                    Object.assign(this.info, parsedSettings); // Update
+                } else {
+                    this.info = parsedSettings;
+                }
+                this.mergeInfo = this.info.mergeInfo;
+                this.userManager.ownerEmail = this.info.ownerAccountEmail;
+                this.isOnline = true;
+                this.cloudStorageCapable = false;
+                this.userManager.accessRole = this.info.accessRole;
+                this.userManager.checkPermissions();
+            }).catch(err => console.error(err))
+                .finally(() => {
+                    return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
+                });
+        }
+
         return this.systemsService
             .getSystemAsPromise(this.id, useCache)
             .then((response) => {
@@ -895,15 +932,14 @@ export class NxSystem extends System implements OnDestroy {
     }
 
     getInfo(force?, useCache = true, suppressUpdate = false): Promise<Partial<NxSystemWithUserInfo|any>> {
-        if (this.CONFIG.isLocal) {
-            return Promise.resolve(undefined);
-        }
         if (force) {
             this.infoPromise = undefined;
         }
         if (!this.infoPromise) {
             this.infoPromise = this.updateSystemAuth().then(() => {
-                return this.getInfoAndPermissions(useCache, suppressUpdate);
+                return this.getInfoAndPermissions(useCache, suppressUpdate).then((res) => {
+                    return res;
+                });
             });
         }
         return this.infoPromise;
@@ -1156,7 +1192,7 @@ export class NxSystemService {
         return system;
     }
 
-    createLocalSystem(mediaServer: NxSystemAPI, userId: string) {
+    createLocalSystem(mediaServer: NxSystemAPI, userId: string, userEmail = '') {
         if (this.system !== undefined) {
             return this.system;
         }
@@ -1164,7 +1200,7 @@ export class NxSystemService {
             this.CONFIG, this.LANG,
             this.cloudApi, this.systemApiService,
             this.pollService, this.systemsService,
-            '', '', '', userId);
+            userEmail, '', '', userId);
         this.system.mediaserver = mediaServer;
         this.system.update();
         this.system.startPoll();

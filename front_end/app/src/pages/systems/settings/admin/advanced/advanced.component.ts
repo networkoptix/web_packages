@@ -59,9 +59,6 @@ export class NxSystemAdvancedAdminComponent implements OnChanges, OnDestroy {
     }
 
     init() {
-        if (this.CONFIG.isLocal) {
-            return this.getAdvancedSettings();
-        }
         this.settingsService.footerSubject.next(true);
 
         if (this.serverSubscription) {
