@@ -226,7 +226,7 @@
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
             "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "checking": "Kontrollerer...",
             "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Systemene har sammenfallende programvareversjoner. Oppdater begge disse til <a href=\"/download\">siste versjon</a>.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
+        "fail": "{{failedSystem}} er utilgjengelig.",
         "incompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
         "unknown_error": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
@@ -479,22 +479,22 @@
         "isMdSupported": "Bevegelses deteksjon",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "2-veis lyd",
+        "maxFps": "FPS (maks)",
+        "maxResolution": "Oppløsning (maks)",
         "model": "Modell",
         "multiSensorCamera": "Multisensor kameraer",
         "other": "Andre",
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
-        "sndResolution": "Secondary Stream",
+        "sndResolution": "Sekundær strøm",
         "topXByVolume": "Topp {{value}} etter volum:",
         "vendor": "Produsent"
     },
     "menu": {
         "titles": {
             "systemAdministration": "Systemadministrasjon",
-            "general": "General",
+            "general": "Generell",
             "licenses": "Lisenser",
             "users": "Brukere"
         }

@@ -223,7 +223,7 @@
     "DISCONNECT FROM MY ACCOUNT TEXT": "내 계정에서 연결 해제",
     "YOU TEXT": "당신",
     "UNRESTRICTED ACCESS CONNECT TEXT": "클라우드에서 시스템을 공유하고 연결 / 연결 해제하는 기능을 포함한 무제한 액세스",
-    "ENABLE AUTO DISCOVERY TEXT": "Enable auto discovery of cameras and servers",
+    "ENABLE AUTO DISCOVERY TEXT": "카메라 및 서버 자동 검색 사용",
     "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.",
     "SEND ANONYMOUS USAGE TEXT": "Send anonymous usage and crash statistics to developers",
     "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.",
@@ -256,5 +256,5 @@
     "DELETE ACCOUNT HEADER TEXT": "Delete Account?",
     "DELETE ACCOUNT INFO TEXT": "Your account and all data associated with it will be permanently deleted without the possibility to restore it.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Enter your account password to continue",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "비디오 트래픽을 암호화하면 CPU 사용량이 크게 증가합니다."
 }

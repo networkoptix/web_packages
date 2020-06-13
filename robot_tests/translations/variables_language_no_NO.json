@@ -256,5 +256,5 @@
     "DELETE ACCOUNT HEADER TEXT": "Slett konto?",
     "DELETE ACCOUNT INFO TEXT": "Kontoen din og alle dataene som er knyttet til den blir slettet permanent uten mulighet til å gjenopprette den.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Skriv inn passordet ditt for å fortsette",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
 }
