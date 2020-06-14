@@ -7,7 +7,7 @@
 		"newPasswordLabel": "Nowe hasło",
 		"saveChanges": "Zachowaj",
 		"accountSettings": "Ustawienia konta",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "Umowa została zaakceptowana"
 	},
 	"activeActions": {
 		"sendConfirm": "Wyślij ponownie link aktywacyjny",
@@ -216,7 +216,7 @@
 			"commonText": "Nie udało się złączyć systemów <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>.",
 			"connectToCloud": "System, który chcesz złączyć z tym systemem, podłącz do <strong>{{cloudName}}</strong> lub złącz je lokalnie za pomocą klienta <strong>{{vmsName}}</strong>.",
 			"mergeConfirmation": "Zamierzasz złączyć systemy <strong>{{primarySystem}}</strong> i <strong>{{secondarySystem}}</strong>. Ustawienia i nazwa zostaną pobrane z <strong>{{primarySystem}}</strong>.",
-			"mergeFailedTitle": "Łączenie systemu nie powiodło się",
+			"mergeFailedTitle": "Łączenie systemów nie powiodło się",
 			"primaryCannotMerge": "System {{targetSystem}} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z systemem {{targetSystem}}.",
 			"primarySystemOffline": "System {{primarySystem}} jest w trybie offline i nie można go złączyć z systemem {{targetSystem}}.",
 			"secondaryCannotMerge": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
@@ -298,7 +298,7 @@
 		"unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>."
 	},
 	"passwordRequirements": {
-		"good": "dobry",
+		"good": "dobre",
 		"fair": "średnie",
 		"fairMessage": "Użyj liczb, wielkich i małych liter oraz znaków specjalnych, aby ustawić bezpieczniejsze hasło",
 		"minLength": "za krótkie",
@@ -338,9 +338,9 @@
 		"confirmUnshareAction": "Usuń",
 		"successDisconnected": "System został pomyślnie odłączony od %CLOUD_NAME%",
 		"successDeleted": "System {{systemName}} został pomyślnie usunięty z Twojego konta",
-		"mergeFailed": "Łączenie systemu nie powiodło się",
+		"mergeFailed": "Złączanie systemów nie powiodło się",
 		"mergeStart": "Rozpoczęto złączanie systemów",
-		"mergeSuccess": "Zakończono łączenie systemu",
+		"mergeSuccess": "Zakończono złączanie systemów",
 		"permissionsRemoved": "Uprawnienia zostały usunięte z {{email}}",
 		"unknownName": "Nieznana nazwa systemu (złączenie w chmurze)",
 		"shareOffline": "Nie można udostępnić systemu, gdy jest on offline",
@@ -348,7 +348,7 @@
 		"settings": {
 			"sessionLimitDuration": {
 				"hours": "godziny",
-				"minutes": "minuta"
+				"minutes": "minuty"
 			},
 			"warningMessages": {
 				"videoEncryption": "Szyfrowanie transmisji wideo znacząco zwiększy użycie procesora."
@@ -358,7 +358,7 @@
 	"systemStatuses": {
 		"activated": "aktywny",
 		"incompatible": "niekompatybilny",
-		"merging": "łączenie",
+		"merging": "złączanie",
 		"notActivated": "nieaktywny",
 		"online": "online",
 		"offline": "offline",
@@ -479,7 +479,7 @@
 			"collapse server": "zwiń serwer + [nazwa serwera]",
 			"expand all servers": "rozwiń wszystkie serwery",
 			"collapse all servers": "zwiń wszystkie serwery",
-			"stop listening": "przestań słuchać",
+			"stop listening": "przestań nasłuchiwać",
 			"help": "pomoc | pokaż polecenia"
 		}
 	},
