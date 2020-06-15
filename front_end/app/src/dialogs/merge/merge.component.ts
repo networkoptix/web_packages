@@ -574,13 +574,8 @@ export class MergeModalContent {
                     : err.primarySystemName;
 
                 const { errorText } = error;
-<<<<<<< HEAD
-                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable'].includes(errorText)) {
-                    err.errorText = 'mergedSystemIsOffline';
-=======
-                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Bad Gateway'].includes(errorText)) {
+                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable', 'Bad Gateway'].includes(errorText)) {
                     err.errorText = errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
->>>>>>> x_CLOUD-5272_error-unreachable
                 }
 
                 this.activeModal.dismiss(err);
