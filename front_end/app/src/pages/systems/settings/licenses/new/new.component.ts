@@ -87,7 +87,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                 if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 }
-                                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f25774269474ec8f9454d92ca9511cf on 2020-04-10 21:04:30.776094+00:00..
+                                // Can't activate license: This license type requires higher software version
+                                if (response.errorString.indexOf('requires higher software version') !== -1) {
+                                    this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
+                                }
+                                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
                                 // eslint-disable-next-line no-case-declarations
                                 let matchStart = response.errorString.indexOf('activated to Hardware Id');
                                 if (matchStart !== -1) {

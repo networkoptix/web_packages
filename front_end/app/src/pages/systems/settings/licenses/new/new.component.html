@@ -42,6 +42,8 @@
                         translate>Enter license key</span>
                     <span class="input-error" *ngIf="licenseKey.errors.mask"
                           translate>Invalid license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.compatibility"
+                          translate>License type is incompatible with your system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.offline"
                           translate>Server needs to be online to get license activated</span>
                     <span class="input-error" *ngIf="licenseKey.errors.alreadyRegistered"
