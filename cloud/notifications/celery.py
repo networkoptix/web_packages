@@ -1,6 +1,6 @@
 import os
 
-from celery import Celery
+from celery import Celery, signals
 from celery.schedules import crontab
 
 from django.conf import settings  # noqa
@@ -41,3 +41,10 @@ def clean_logs():
     call_command('cleanoldemails')
     logger.info('Cleaning access logs from last month')
     call_command('cleanaccesslog')
+
+
+@signals.after_setup_logger.connect
+def setup_logger(logger, format, *args, **kwargs):
+    sh = logger.handlers[0]
+    formatter = logging.Formatter('[%(levelname)s] %(processName)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s')
+    sh.setFormatter(formatter)

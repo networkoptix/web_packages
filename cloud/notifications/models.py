@@ -9,7 +9,7 @@ from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
 from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
-from push_notifications.models import GCMDevice
+from push_notifications.models import GCMDevice, GCMDeviceQuerySet
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
@@ -204,6 +204,19 @@ class PushSubscription(models.Model):
     # username = models.CharField(max_length=255, blank=True, null=True)
 
 
+class PushDeviceQuerySet(GCMDeviceQuerySet):
+    def send_message(self, message, **kwargs):
+        try:
+            super().send_message(message, **kwargs)
+        except GCMError as gcm_error:
+            return gcm_error.args[0],
+
+
+class PushDeviceManager(models.Manager):
+    def get_queryset(self):
+        return PushDeviceQuerySet(self.model)
+
+
 class PushDevice(GCMDevice):
     OS = Choices((0, 'web', 'Web'),
                  (1, 'android', 'Android'),
@@ -214,6 +227,8 @@ class PushDevice(GCMDevice):
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
+
+    objects = PushDeviceManager()
 
     def send_message(self, *args, **kwargs):
         try:
