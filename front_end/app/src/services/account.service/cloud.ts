@@ -85,7 +85,7 @@ export class CloudAccount extends BaseAccount implements Exactly<BaseAccount, Cl
         this.sessionService.email = email;
 
         if (this.CONFIG.isLocal) {
-            this.requestingLogin = this.mediaServerApi.login(email, password);
+            this.requestingLogin = this.mediaServerApi.login(email, password).toPromise();
         } else {
             this.requestingLogin = this.cloudApi.login(email, password, remember);
         }

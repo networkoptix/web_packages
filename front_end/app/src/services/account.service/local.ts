@@ -1,4 +1,6 @@
-import { Inject, Injectable, Injector } from '@angular/core';
+import {
+    Inject, Injectable, Injector
+}                                     from '@angular/core';
 import { DOCUMENT, Location }         from '@angular/common';
 import { Router }                     from '@angular/router';
 import { LocalStorageService }        from 'ngx-store';
@@ -14,6 +16,7 @@ import { NxPollService }              from '../poll.service';
 import { NxSystemAPIService }         from '../system-api.service';
 import { BaseAccount }                from './base';
 import { Account }                    from './account';
+import { tap, catchError }            from 'rxjs/operators';
 
 /**
  * LocalAcount overrides BaseAccount, should maintain the same interface.
@@ -61,13 +64,26 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
             return new Account(user);
         } catch (err) {
             if (!this.loginDialogActive) {
-                return this.showLogin();
+                return this.showLogin().then(() => <false> false);
             }
         }
     }
 
     login(login, password, remember = false) {
-        return this.mediaServerApi.login(login, password);
+        return this.mediaServerApi.login(login, password, remember)
+            .pipe(
+                catchError(({ errorString: errorText, ...res }) => {
+                    const errorLookup = {
+                        'Wrong username or password.'                                                             : 'notAuthorized',
+                        'This user on your IP is locked out due to many filed attempts. Please, try again later.' : 'accountBlocked'
+                    };
+                    const resultCode = errorLookup[errorText];
+                    return Promise.resolve({ ...res, errorText, resultCode });
+                }),
+                tap(res => {
+                    this.sessionService.loginState = login;
+                })
+            );
     }
 
     logout(doNotRedirect = false) {

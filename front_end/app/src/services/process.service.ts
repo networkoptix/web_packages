@@ -234,9 +234,10 @@ export interface ProcessSettings {
 }
 
 export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): string | false => {
-    const errorCode = (error && error.data && error.data.resultCode) ||
-        (error && error.resultCode) ||
-        (error && error.type === 'error' && error.type === 'networkConnection') ||
+    const errorCode = (error?.data?.resultCode) ||
+        (error?.resultCode) ||
+        (error?.type === 'error' &&
+        'networkConnection') ||
         error;
     if (!errorCode) {
         return lang.errorCodes.unknownError();

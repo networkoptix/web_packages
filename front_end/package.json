@@ -56,7 +56,7 @@
     "ngstorage": "0.3.11",
     "ngx-auto-unsubscribe": "3.0.1",
     "ngx-clipboard": "13.0.0",
-    "ngx-cookie-service": "2.4.0",
+    "ngx-cookie-service": "3.0.4",
     "ngx-device-detector": "1.4.2",
     "ngx-file-drop": "8.0.8",
     "ngx-order-pipe": "2.0.1",

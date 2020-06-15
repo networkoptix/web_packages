@@ -2,15 +2,18 @@ import { Injectable }                          from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
-import { flatMap, map, mergeMap, retryWhen, timeout } from 'rxjs/operators';
+import {
+    flatMap, map, mergeMap, retryWhen, timeout, tap
+}                                              from 'rxjs/operators';
 import { Location }                            from '@angular/common';
-import { ICamera, NxSystemUser } from './system.service';
-import { IParams } from '../components/search/search.component';
-import * as t from './system-api.types';
+import { ICamera, NxSystemUser }               from './system.service';
+import { IParams }                             from '../components/search/search.component';
+import * as t                                  from './system-api.types';
 
-import * as md5 from 'md5';
-import { Account } from './account.service';
-import { NxUriCacheService } from './uri-cache.service';
+import * as md5                                from 'md5';
+import { Account }                             from './account.service';
+import { NxUriCacheService }                   from './uri-cache.service';
+import { CookieService }                       from 'ngx-cookie-service';
 
 export interface User {
     canBeEdited: boolean;
@@ -76,6 +79,7 @@ export class NxSystemAPI {
     private urlBase: string;
     unauthorizedCallback: (params: unknown) => any;
     cacheService: NxUriCacheService;
+    cookieService: CookieService
 
     constructor(
         http: HttpClient,
@@ -85,12 +89,14 @@ export class NxSystemAPI {
         systemId: string,
         serverId: string,
         unauthorizedCallback: (params: IParams) => any,
-        cacheService: NxUriCacheService
+        cacheService: NxUriCacheService,
+        cookieService: CookieService
     ) {
         this.http = http;
         this.CONFIG = configService;
         this.location = location;
         this.cacheService = cacheService;
+        this.cookieService = cookieService;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
@@ -100,8 +106,15 @@ export class NxSystemAPI {
         // console.log('ex. > systemService.login(\'admin\', \'qweasd1234\'');
     }
 
-    private cookieLogin(auth) {
-        return this.post('/api/cookieLogin', { auth });
+    private cookieLogin(auth, remember = false, maxAge = 365) {
+        return this.post('/api/cookieLogin', { auth }).pipe(
+            tap(() => {
+                const cookie = 'x-runtime-guid';
+                if (remember) {
+                    this.cookieService.set(cookie, this.cookieService.get(cookie), maxAge);
+                }
+            })
+        );
     }
 
     private digest(login: string, password: string, realm: string, nonce: string, method?: string) {
@@ -148,7 +161,9 @@ export class NxSystemAPI {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
 
-        Object.entries(customHttpHeaders).forEach((entry) => headers.set(...entry));
+        Object.entries(customHttpHeaders).forEach((entry) => {
+            headers = headers.set(...entry);
+        });
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request))
@@ -167,7 +182,9 @@ export class NxSystemAPI {
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
         }
-        Object.entries(customHttpHeaders).forEach((entry) => headers.set(...entry));
+        Object.entries(customHttpHeaders).forEach((entry) => {
+            headers = headers.set(...entry);
+        });
         return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)
@@ -279,7 +296,7 @@ export class NxSystemAPI {
         return this.get('/ec2/getUserRoles', { id: roleId });
     }
 
-    login(login: string, password: string): Promise<{data: {account: Account, resultCode: string}}|any> {
+    login(login: string, password: string, remember = false): Observable<{data: {account: Account, resultCode: string}}|any> {
         let auth, authPost, authRtsp, nonce, realm;
         return this.getNonce(login).pipe(
             flatMap((response : any) => {
@@ -288,15 +305,15 @@ export class NxSystemAPI {
                 auth = this.digest(login, password, realm, nonce);
                 authPost = this.digest(login, password, realm, nonce, 'POST');
                 authRtsp = this.digest(login, password, realm, nonce, 'PLAY');
-                return this.cookieLogin(auth);
+                return this.cookieLogin(auth, remember);
             }),
             flatMap((data: any) => {
                 if (data.error !== '0') {
-                    return Promise.reject(data.data);
+                    return Promise.reject(data.data || data);
                 }
                 this.setAuthKeys(auth, authPost, authRtsp);
                 return of(data.reply);
-            })).toPromise();
+            }));
     }
 
     logout() {
@@ -802,7 +819,8 @@ export class NxSystemAPIService {
         configService: NxConfigService,
         private location: Location,
         private http: HttpClient,
-        private cacheService: NxUriCacheService
+        private cacheService: NxUriCacheService,
+        private cookieService: CookieService
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -824,7 +842,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService);
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService);
     }
 }
 

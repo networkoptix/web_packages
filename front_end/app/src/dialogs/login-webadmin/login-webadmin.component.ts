@@ -14,8 +14,6 @@ import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxModalGenericComponent }   from '../generic/generic.component';
-import { NxDialogsService }          from '../dialogs.service';
-import { NxApplyService }            from '../../services/apply.service';
 
 @Component({
     selector    : 'nx-login-webadmin-modal',
@@ -25,8 +23,6 @@ import { NxApplyService }            from '../../services/apply.service';
 export class LoginWebadminModalContent implements OnInit {
     @Input() account: NxAccountService;
     @Input() login: Process;
-    @Input() cancellable;
-    @Input() closable;
     @Input() keepPage;
 
     LANG: LanguageI18NStaticTypes;
@@ -83,20 +79,12 @@ export class LoginWebadminModalContent implements OnInit {
             },
             holdAlerts  : true,
             errorPrefix : this.LANG.errorCodes.cantSendConfirmationPrefix
-        })
-            .run()
-            .then(() => {
-                this.genericModal.openConfirm(
-                    'Check your inbox and visit provided link to activate account',
-                    'Activation email sent',
-                    'OK');
-            });
+        });
     }
 
     resetForm() {
         const { errors } = this.loginForm.controls.login_email;
         if (errors) {
-            delete errors.not_activated;
             this.loginForm.controls.login_email.setErrors(Object.keys(errors).length ? errors : undefined);
         }
         if (!this.loginForm.valid) {
@@ -129,28 +117,11 @@ export class LoginWebadminModalContent implements OnInit {
         }, {
             ignoreUnauthorized : true,
             errorCodes         : {
-                accountNotActivated: () => {
-                    this.password = '';
-                    this.loginForm.controls.login_password.markAsPristine();
-                    this.loginForm.controls.login_password.markAsUntouched();
-
-                    this.loginForm.controls.login_email.setErrors({ not_activated: true });
-                    this.renderer.selectRootElement('#login_email').select();
-                },
                 notAuthorized: () => {
                     this.wrongPassword = true;
                     this.loginForm.controls.login_password.setErrors({ nx_wrong_password: true });
                     this.password = '';
-
                     this.renderer.selectRootElement('#login_password').focus();
-                },
-                notFound: () => {
-                    this.password = '';
-                    this.loginForm.controls.login_password.markAsPristine();
-                    this.loginForm.controls.login_password.markAsUntouched();
-
-                    this.loginForm.controls.login_email.setErrors({ no_user: true });
-                    this.renderer.selectRootElement('#login_email').select();
                 },
                 accountBlocked: () => {
                     this.loginForm.controls.login_password.markAsPristine();
@@ -158,10 +129,7 @@ export class LoginWebadminModalContent implements OnInit {
 
                     this.accountBlocked = true;
                     this.loginForm.controls.login_password.setErrors({ nx_account_blocked: true });
-                },
-                wrongParameters: () => {
-                },
-                portalError: this.LANG.errorCodes.brokenAccount
+                }
             }
         }).then((result) => {
             if (this.CONFIG.isLocal) {
@@ -203,18 +171,7 @@ export class LoginWebadminModalContent implements OnInit {
                 });
             }
         }, (error) => {
-            if (error.resultCode === 'portalError') {
-                // close dialog ... process will show toaster
-                this.activeModal.close();
-            }
+            console.error(error);
         });
-    }
-
-    close() {
-        // prevent unnecessary reload
-        this.activeModal.close('canceled');
-        if (!this.keepPage) { // && this.accountService.email === undefined) {
-            return this.router.navigate([this.CONFIG.redirect.unauthorised]);
-        }
     }
 }

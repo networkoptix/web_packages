@@ -247,6 +247,7 @@
     "When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.": "When enabled, the system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Status check prohibition may be skipped on some servers that have failover enabled.",
     "When fully used": "When fully used",
     "Works with:": "Works with:",
+    "Wrong login or password": "Wrong login or password",
     "Wrong password": "Wrong password",
     "You have no Systems connected to %CLOUD_NAME%": "You have no Systems connected to %CLOUD_NAME%",
     "You have registered in": "You have registered in",

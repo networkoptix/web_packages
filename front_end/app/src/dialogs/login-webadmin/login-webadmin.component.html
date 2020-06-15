@@ -2,7 +2,6 @@
     <div class="logo-header">
         <img src="{{CONFIG.previewPath}}/static/images/logo.png">
     </div>
-
     <div class="modal-body">
         <div class="form-group">
             <label for="login_email" translate>Login</label>
@@ -10,18 +9,8 @@
                    id="login_email" name="login_email" #login_email="ngModel"
                    [ngModel]="auth.email"
                    (ngModelChange)="setEmail($event);"
-                   pattern="{{ CONFIG.credentialsValidation.emailRegex }}" maxlength="255"
+                   maxlength="255"
                    required nxFocusMe>
-            <ng-container *ngIf="login_email.invalid">
-                <div *ngIf="login_email.errors.no_user" class="clearfix">
-                    <div class="input-error float-left" translate>Account not found</div>
-                    <a class="float-right justify-content-end" routerLink="/register" (click)="activeModal.close('register')" translate>Create account</a>
-                </div>
-                <div *ngIf="login_email.errors.not_activated" class="clearfix">
-                    <div class="input-error float-left" translate>Account not activated</div>
-                    <a class="float-right" href (click)="resendActivation(login_email.value); false;" translate>Resend activation email</a>
-                </div>
-            </ng-container>
         </div>
         <div class="form-group">
             <label for="login_password" translate>Password</label>
@@ -32,7 +21,7 @@
                    maxlength="255"
                    required>
             <ng-container *ngIf="login_password.invalid">
-                <div class="input-error" *ngIf="wrongPassword" translate>Wrong password</div>
+                <div class="input-error" *ngIf="wrongPassword" translate>Wrong login or password</div>
                 <div class="input-error" *ngIf="accountBlocked" translate>Too many attempts. Try again in a minute.</div>
             </ng-container>
         </div>
