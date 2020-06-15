@@ -574,7 +574,7 @@ export class MergeModalContent {
                     : err.primarySystemName;
 
                 const { errorText } = error;
-                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR'].includes(errorText)) {
+                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Service Unavailable'].includes(errorText)) {
                     err.errorText = 'mergedSystemIsOffline';
                 }
 
