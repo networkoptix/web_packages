@@ -1,7 +1,6 @@
-//@import "../../../../../styles/typography";
-//@import "../../../../../../styles/theme_palette";
 @use "../../../../../styles/typography";
 @use "../../../../../../styles/theme_variables" as *;
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .server-info {
     font-family : $font-family-regular;
@@ -98,6 +97,15 @@
 
 .item {
     min-height : 36px;
+}
+
+.speciality-label {
+    height: 32px;
+    text-align: right;
+
+    @include media-breakpoint-down(sm) {
+        height: 16px;
+    }
 }
 
 .help-block {

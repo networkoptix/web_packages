@@ -1,7 +1,7 @@
 import {
     Component,
     OnDestroy, Input, OnChanges,
-    SimpleChanges, ViewChild, ElementRef, AfterViewInit
+    SimpleChanges, ViewChild
 } from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
@@ -20,7 +20,7 @@ import { NxScrollMechanicsService }  from '../../../../../services/scroll-mechan
     styleUrls   : ['new.component.scss']
 })
 
-export class NxLicenseNewComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
 
@@ -55,7 +55,6 @@ export class NxLicenseNewComponent implements AfterViewInit, OnChanges, OnDestro
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
-console.log('errorDiv ->', this.errorDiv);
                     // eslint-disable-next-line prefer-promise-reject-errors
                     return reject('alreadyRegistered');
                 });
@@ -131,18 +130,6 @@ console.log('errorDiv ->', this.errorDiv);
         this.LANG = language.translations;
 
         this.setupDefaults();
-    }
-
-    ngAfterViewInit() {
-        this.windowSizeSubscription = this.scrollMechanicsService
-            .windowSizeSubject
-            .subscribe(({ height, width }) => {
-                debugger;
-                // if (this.licenseKey.nativeElement.invalid && this.licenseKey.nativeElement.touched) {
-                //
-                // }
-                // this.errorDivMirror.nativeElement.height = this.errorDiv.nativeElement.height;
-            });
     }
 
     ngOnChanges(changes: SimpleChanges): void {

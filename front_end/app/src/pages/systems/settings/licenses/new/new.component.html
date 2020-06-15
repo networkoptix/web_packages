@@ -7,89 +7,8 @@
               id="newLicenseForm" name="newLicenseForm" #newLicenseForm="ngForm"
               novalidate autocomplete="off">
 
-
-            <div class="d-flex">
-                <div class="d-flex flex-column">
-                    <label class="m-0 d-flex align-items-top justify-content-end" style="line-height: 32px; white-space: nowrap;"
-                           translate>License key</label>
-                    <div class="position-relative ml-2 mt-1" id="errorDivMirror" #errorDivMirror
-                         *ngIf="licenseKey.invalid && licenseKey.touched">
-
-                        <span class="input-error" *ngIf="licenseKey.errors.required"
-                              translate>&nbsp;</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.mask"
-                              translate>Invalid license key</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.offline"
-                              translate>Server needs to be online to get license activated</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.alreadyRegistered"
-                              translate>&nbsp;</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.inuse"
-                              [translate]="'license.messages.inuse'"
-                              [translateParams]="{ hwid: keyUsedIn }"></span>
-                    </div>
-
-                    <label class="m-0 mt-2 d-flex align-items-top justify-content-end" style="line-height: 32px; white-space: nowrap;"
-                           translate>Bind to server balksjda asd</label>
-                </div>
-                <div class="d-flex flex-column">
-                    <div class="position-relative ml-2">
-                        <input type="text"
-                               class="form-control input-sm license-key"
-                               [specialCharacters]="[ '&mdash;' ]"
-                               [showMaskTyped]="true"
-                               placeHolderCharacter=" "
-                               mask="AAAA&mdash;AAAA&mdash;AAAA&mdash;AAAA"
-                               pattern="[a-zA-Z0-9]*"
-                               id="licenseKey"
-                               name="licenseKey"
-                               [ngModel]="license"
-                               (ngModelChange)="setLicenseKey($event, newLicenseForm)"
-                               required
-                               #licenseKey="ngModel"/>
-                        <button class="btn btn-text has-icon input-paste"
-                                (click)="pasteFn(newLicenseForm)">
-                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'paste.svg'"
-                                      [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
-                            <span class="ml-1" [innerText]="'Paste'"></span>
-                        </button>
-                    </div>
-
-                    <div class="position-relative ml-2 mt-1" id="errorDiv" #errorDiv
-                         *ngIf="licenseKey.invalid && licenseKey.touched">
-
-                        <span class="input-error" *ngIf="licenseKey.errors.required"
-                          translate>Enter license key asdsdasasd wdwqdqqwdqw dwqdqwdq sdasdasd sadasdsad asdwqdwqd</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.mask"
-                              translate>Invalid license key</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.offline"
-                              translate>Server needs to be online to get license activated</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.alreadyRegistered"
-                              translate>License key has already been activated in this system</span>
-                        <span class="input-error" *ngIf="licenseKey.errors.inuse"
-                              [translate]="'license.messages.inuse'"
-                              [translateParams]="{ hwid: keyUsedIn }"></span>
-                    </div>
-
-                    <div class="position-relative ml-2 mt-2">
-                        <nx-select id="bindToServer"
-                                   name="bindToServer"
-                                   class="dd-servers"
-                                   [items]="serverOptions"
-                                   [ngModel]="selectedServer"
-                                   (ngModelChange)="changeServer($event)"
-                                   [selected]="serverOptions[0]">
-                        </nx-select>
-                        <div class="hint mt-1" translate>This server must be available in the system to make the license
-                            key work
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <br><br><br>
-
             <div class="row p-0">
-                <label class="col-12 col-md-3 pr-0 m-0 mb-1 mb-md-0 mt-2 d-flex align-items-top justify-content-start justify-content-md-end"
+                <label class="speciality-label col-12 col-md-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
                        translate>License key</label>
 
                 <div class="position-relative pl-2">
@@ -116,8 +35,8 @@
             </div>
 
             <div class="row p-0">
-                <div class="col-4 col-lg-3 m-0 mt-2"></div>
-                <div class="col-8 col-lg-9 mt-1" style="padding-left: 12px" *ngIf="licenseKey.invalid && licenseKey.touched">
+                <div class="d-none d-md-block col-md-2 m-0"></div>
+                <div class="col-8 col-md-10 pl-2 mt-1" style="padding-left: 12px" *ngIf="licenseKey.invalid && licenseKey.touched">
 
                     <span class="input-error" *ngIf="licenseKey.errors.required"
                         translate>Enter license key</span>
@@ -133,12 +52,11 @@
                 </div>
             </div>
 
-<!--            <div class="row p-0 form-group" *ngIf="serverOptions.length > 1">-->
-            <div class="row p-0 form-group">
-                <label class="col-12 col-md-3 pr-0 m-0 mb-1 mb-md-0 mt-2 d-flex align-items-top justify-content-start justify-content-md-end"
+            <div class="row p-0 mt-2 mb-0 form-group" *ngIf="serverOptions.length == 1">
+                <label class="speciality-label col-12 col-md-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
                        translate>Bind to server</label>
 
-                <div class="col-8 col-lg-9">
+                <div class="col-12 col-md-10">
                     <nx-select id="bindToServer"
                                name="bindToServer"
                                class="dd-servers"
