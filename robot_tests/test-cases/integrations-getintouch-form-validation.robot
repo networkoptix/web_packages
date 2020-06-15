@@ -16,24 +16,24 @@ ${feedback}             ${FEEDBACK TEXT}
 ${valid name}           mark hamil
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
-Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com         ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com    ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid sales inquiry valid email       success     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid sales inquiry valid email       success     ${valid name}    ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid technical inquiry valid email     success     ${valid name}    ${valid email}            ${technical inquiry}  ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid technical inquiry valid email   success     ${valid name}    ${valid email}       ${technical inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Valid Feedback valid email            success     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Valid Feedback valid email            success     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
 # Using ${SPACE} below for now due to selenium shortcomings. but really want to be testing for ${EMPTY}
-Empty name                            failure     ${SPACE}         ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Empty name                            failure     ${SPACE}         ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
+Invalid Email 2 noptixq@gmail         failure     ${valid name}    noptixqa@gmail       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
     [tags]    C54681
-Close button no submit                failure     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH CLOSE BUTTON}    Sample message
+Close button no submit                failure     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH CLOSE BUTTON}    Sample message
     [tags]    C54681
-Empty message                         failure     ${valid name}    ${valid email}            ${sales inquiry}    ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
+Empty message                         failure     ${valid name}    ${valid email}       ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     ${EMPTY}
     [tags]    C54681
-Cancel button no submit               failure     ${valid name}    ${valid email}            ${feedback}         ${INTEGRATION GET IN TOUCH CANCEL BUTTON}   Sample message
+Cancel button no submit               failure     ${valid name}    ${valid email}       ${feedback}             ${INTEGRATION GET IN TOUCH CANCEL BUTTON}   Sample message
     [tags]    C54681
 
 

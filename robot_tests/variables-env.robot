@@ -29,7 +29,19 @@ ${EMAIL CUSTOM}                       ${TEST EMAIL}+custom${BASE EMAIL DOMAIN}
 ${EMAIL CLIENT CUSTOM}                ${TEST EMAIL}+clientcustom${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS ANCHOR}            ${TEST EMAIL}+autotestsanchor${BASE EMAIL DOMAIN}
 ${EMAIL AUTO TESTS 2 ANCHOR}          ${TEST EMAIL}+autotests2anchor${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
 ${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
+${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
+
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
+${EMAIL DELETE USER}                  ${TEST EMAIL}+deleteuser${BASE EMAIL DOMAIN}
+${EMAIL MOBILE CAMERA DEV}            ${TEST EMAIL}+mobile_camera-Developer${BASE EMAIL DOMAIN}
+${EMAIL PORTAL MANAGER}               ${TEST EMAIL}+Portal_Manager${BASE EMAIL DOMAIN}
+${EMAIL SUPER USER}                   ${TEST EMAIL}+super${BASE EMAIL DOMAIN}
+${EMAIL FACE REC DEV}                 ${TEST EMAIL}+face_recognition-Developer${BASE EMAIL DOMAIN}
 &{AUTO TESTS USERS}
 ...    ${EMAIL VIEWER}=viewer
 ...    ${EMAIL ADV VIEWER}=advancedViewer

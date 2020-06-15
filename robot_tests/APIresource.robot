@@ -156,20 +156,12 @@ Evaluate Auto System Settings via API
     ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings   timeout=10
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
-    
-Set Auto System Settings via API
-    [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
-    ${string}=   Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${state}
-    
-Set 3 dot 2 System Settings via API
-    [Arguments]    ${setting}    ${state}
-    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
-    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
-    ${string}=   Convert To String    ${systemSettings.json()}
-    Should Contain    ${string}    ${setting}': '${state}
+
+Disconnect Server via API
+    [Arguments]    ${auth}    ${sysId}    ${password}
+    Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 # Keywords which use System/Server API
 Setup Local System
@@ -220,7 +212,7 @@ Detach Server From System
 
 Detach Server From Cloud
     [Arguments]    ${server url}    ${auth}
-    &{data}=   Create Dictionary    currentPassword=${auth[1]}
+    &{data}=   Create Dictionary    currentPassword=${auth[1]}    password=${BASE PASSWORD}
     Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200

@@ -262,17 +262,18 @@ ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@cla
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
 ${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
 ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
+${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and contains(text(),"${INTEGRATION BANNER MESSAGE TEXT}")]/following-sibling::div[@class="action"]/a[contains(text(),"${INTEGRATION BANNER ACTION TEXT}")]
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATION TILE}/a
-${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
-${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
-${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
-${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
-${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header extended-header"]
+${INTEGRATION TEST INTEGRATION LINK}  //a
+${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
+${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]
+${INTEGRATION TILE NAME}              //div[contains(@class, "card--body-name")]
+${INTEGRATION TILE TEXT}              //div[contains(@class, "card--body-descr")]
+${INTEGRATION TILE HEADER}            //div[@class="card--header extended-header"]
 #${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
-${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
+${INTEGRATION TILE FOOTER}            //div[@class="card--footer"]
 @{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}    ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}
 
 #Integration Details Page
