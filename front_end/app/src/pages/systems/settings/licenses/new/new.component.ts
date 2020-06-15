@@ -111,6 +111,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             this.dialogsService
                                 .notify(this.LANG.errorCodes.licenseFail, 'danger');
                         } else {
+                            if (fail.name === 'TimeoutError') {
+                                this.dialogsService
+                                    .notify(this.LANG.errorCodes.licenseTimeout, 'danger');
+                            }
                             console.error(fail);
                         }
                     });
