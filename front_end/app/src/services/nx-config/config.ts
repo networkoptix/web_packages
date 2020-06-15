@@ -215,8 +215,8 @@ export const nxConfig: IConfig = {
         }
     },
     maintenanceTimeout : 60 * 1000,
-    maxServers : 100, // The maximum amount of server that can be in a system
-    meta       : {
+    maxServers         : 100, // The maximum amount of server that can be in a system
+    meta               : {
         viewport: {
             default       : 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
             desktopLayout : 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
@@ -344,13 +344,14 @@ export const nxConfig: IConfig = {
 
     // Dynamic from cloud_portal
     cloudCapabilities: {
-        feedbackEnabled     : '',
-        healthMonitor       : '',
-        integrationStore    : '',
-        publicDownloads     : '',
-        publicReleases      : '',
-        cloudStorageEnabled : '',
-        cloudStorageSize    : 0
+        feedbackEnabled           : '',
+        healthMonitor             : '',
+        integrationStore          : '',
+        publicDownloads           : '',
+        publicReleases            : '',
+        cloudStorageEnabled       : '',
+        cloudStorageSize          : 0,
+        healthMonitorCacheTimeout : '60'
     },
     cloudName : '',
     company   : {
