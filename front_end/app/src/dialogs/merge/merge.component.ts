@@ -503,7 +503,6 @@ export class MergeModalContent {
                 ignoreError: true
             })
             .then(res => {
-                console.log('res from merge', res);
                 if (res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     this.systemsService.forceUpdateSystems();
@@ -536,7 +535,6 @@ export class MergeModalContent {
                     this.handleMergeError(res);
                 }
             }, (error) => {
-                console.log('error from merge', error);
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data && error.data.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
