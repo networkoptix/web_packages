@@ -503,6 +503,7 @@ export class MergeModalContent {
                 ignoreError: true
             })
             .then(res => {
+                console.log('res from merge', res);
                 if (res.error === '0' || res.resultCode === this.LANG.errorCodes.ok) {
                     // handles telling the app which systems are getting merged and the proper messaging
                     this.systemsService.forceUpdateSystems();
@@ -535,6 +536,7 @@ export class MergeModalContent {
                     this.handleMergeError(res);
                 }
             }, (error) => {
+                console.log('error from merge', error);
                 // for errors that pop up during the merge
                 let errorCode = error.resultCode || (error.data && error.data.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
@@ -574,8 +576,8 @@ export class MergeModalContent {
                     : err.primarySystemName;
 
                 const { errorText } = error;
-                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR'].includes(errorText)) {
-                    err.errorText = 'mergedSystemIsOffline';
+                if (err.resultCode === 'vmsRequestFailure' && ['FAIL', 'CONFIGURATION_ERROR', 'Bad Gateway'].includes(errorText)) {
+                    err.errorText = errorText === 'Bad Gateway' ? 'systemUnavailable' : 'mergedSystemIsOffline';
                 }
 
                 this.activeModal.dismiss(err);
