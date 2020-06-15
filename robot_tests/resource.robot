@@ -387,6 +387,16 @@ Get Cloud User Id By Email
        Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
    END
 
+Get System User Id By Email
+    [Arguments]    ${email}
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${email}'    Run Keywords
+        ...    Set Test Variable    ${id}    ${user}[id]
+        ...    AND     Exit For Loop
+    END
+    [Return]    ${id}
+
 Change User Permissions
     [arguments]    ${permissions}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
@@ -439,9 +449,9 @@ Disconnect from cloud
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
 #    Sleep    5
 
