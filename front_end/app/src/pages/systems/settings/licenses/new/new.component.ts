@@ -159,12 +159,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         }
     }
 
-    pasteFn(form) {
-        navigator.clipboard.readText().then(clipText => {
-            this.setLicenseKey(clipText.replace(/-/g, ''), form); // don't confuse ngModel - remove dashes :)
-        });
-    }
-
     setLicenseKey(key, form) {
         this.license = key;
         form.controls.licenseKey.markAsUntouched();

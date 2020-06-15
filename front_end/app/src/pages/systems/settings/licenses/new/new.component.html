@@ -25,12 +25,6 @@
                            (ngModelChange)="setLicenseKey($event, newLicenseForm)"
                            required
                            #licenseKey="ngModel"/>
-                    <button class="btn btn-text has-icon input-paste"
-                            (click)="pasteFn(newLicenseForm)">
-                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'paste.svg'"
-                                  [svgStyle]="{'width.px': '20', 'height.px': '20'}"></svg-icon>
-                        <span class="ml-1" [innerText]="'Paste'"></span>
-                    </button>
                 </div>
             </div>
 
@@ -54,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="row p-0 mt-2 mb-0 form-group" *ngIf="serverOptions.length == 1">
+            <div class="row p-0 mt-2 mb-0 form-group" *ngIf="serverOptions.length > 1">
                 <label class="speciality-label col-12 col-md-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
                        translate>Bind to server</label>
 
