@@ -45,6 +45,7 @@ def get_settings_from_cache():
         'integrationFilterLimitation': customization_cache['integration_filter_limitation'],
         'integrationStoreEnabled': customization_cache['integration_store_enabled'],
         'healthMonitoringEnabled': customization_cache['health_monitoring_enabled'],
+        'healthMonitorCacheTimeout': customization_cache['health_monitor_cache_timeout'],
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],

@@ -123,7 +123,7 @@ export interface ClientMode {
 export interface CloudCapabilities {
     feedbackEnabled: string;
     healthMonitor?: string;
-    healthMonitorCacheTimeout?: string;
+    healthMonitorCacheTimeout?: number;
     // TODO Need to find out which are valid
     healthMonitoring?: string;
     integrationStore: string;
