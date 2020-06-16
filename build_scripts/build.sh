@@ -40,19 +40,10 @@ if [[ ! $PWD =~ $REPO ]]; then
         echo "Blindly Copying cloud_portal"
         rsync -pr --exclude="robot_tests" $VMS_REPOSITORY/cloud_portal .
     fi
-
-    mkdir -p webadmin
-    pushd webadmin
-        [ -d 'app/styles' ] && rm -rf app/styles
-        mkdir -p app/styles && cp -pr $VMS_REPOSITORY/webadmin/app/styles/* "$_"
-
-        [ -e 'package.json' ] && rm -rf 'package.json'
-        cp $VMS_REPOSITORY/webadmin/package.json ./
-    popd
-    cd cloud_portal
+    pushd cloud_portal
 else
     echo "In repository skip copying sources"
-    cd $VMS_REPOSITORY/cloud_portal
+    pushd $VMS_REPOSITORY/cloud_portal
 fi
 
 echo "pip install requirements"
@@ -65,12 +56,8 @@ pushd front_end
     echo "npm install cloud portal"
     npm install
 popd
-pushd ../webadmin
-    echo "npm install webadmin"
-    npm install
-popd
 
-cd build_scripts
+pushd build_scripts
 
 TARGET_DIR="../cloud/static"
 

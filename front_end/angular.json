@@ -86,6 +86,27 @@
                   "replace": "app/environments/environment.ts",
                   "with": "app/environments/environment.webadmin-prod.ts"
                 }
+              ],
+              "deployUrl": "static/",
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "16kb",
+                  "maximumError": "20kb"
+                }
               ]
             }
           }

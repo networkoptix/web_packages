@@ -38,7 +38,8 @@ def save_content(filename, content):
 
 def merge_files(base_lang, lang, file_name):
     merged_lang = base_lang.copy()
-    lang_json_file = os.path.join("../../../..", "translations", lang, file_name)
+    current_generate_path = os.path.dirname(os.path.realpath(__file__))
+    lang_json_file = os.path.join(current_generate_path, "..", "translations", lang, file_name)
     print(f"Load {lang_json_file}")
 
     if os.path.exists(lang_json_file):

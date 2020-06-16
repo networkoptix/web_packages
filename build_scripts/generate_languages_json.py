@@ -28,14 +28,14 @@ def save_content(filename, content):
 def generate_languages_files():
     languages_json = []
     languages_names = []
-
-    translations_path = os.path.join("../../../..", "translations")
+    current_generate_path = os.path.dirname(os.path.realpath(__file__))
+    translations_path = os.path.join(current_generate_path, "..", "translations")
     for lang in os.listdir(translations_path):
 
         if '.' in lang:
             continue
 
-        language_json_filename = os.path.join("../../../..", "translations", lang, 'language.json')
+        language_json_filename = os.path.join(current_generate_path, "..", "translations", lang, 'language.json')
 
         if not os.path.isfile(language_json_filename): # ignore incomplete languages without language.json
             if lang != 'en_US':
