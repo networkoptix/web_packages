@@ -69,18 +69,20 @@ def get_asset_by_revision(version_id):
 
 def update_global_cache(customization, version_id):
     global_cache = caches['global']
-    global_cache.set(customization, version_id)
+    global_cache.set(f'global_version_{customization}', version_id)
 
 
 def check_update_cache(customization, version_id):
     global_cache = caches['global']
-    global_id = global_cache.get(customization)
+    global_id = global_cache.get(f'global_version_{customization}')
 
     return version_id != global_id, global_id
 
 
 def cloud_portal_customization_cache(customization_name, value=None, force=False):
-    data = cache.get(customization_name)
+    from cms.controllers.special_structures import SpecialStructures
+    customization_cache = caches['customization']
+    data = customization_cache.get(f'customization_{customization_name}', dict())
     asset = get_cloud_portal_asset(customization_name)
 
     if data and 'version_id' in data and not force:
@@ -95,7 +97,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
 
         if footer_items:
             from cms.controllers.filldata import process_global_contexts
-            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
+            global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type, hidden=False)
             # Replaces cms tags. If you add the key as itself in the global_context_dict it effectively is not replaced
             footer_items = process_global_contexts(asset, footer_items, asset.version_id(),
                                                    False, global_contexts, {"%CLOUD_NAME%": "%CLOUD_NAME%",
@@ -111,7 +113,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'email': {
                 'mail_from_name': asset.read_global_value('%MAIL_FROM_NAME%'),
                 'mail_from_email': asset.read_global_value('%MAIL_FROM_EMAIL%'),
-                'portal_url': custom_config['cloud_portal']['url'],
+                'portal_url': SpecialStructures.calc_cloud_portal(asset),
                 'smtp_host': asset.read_global_value('%SMTP_HOST%'),
                 'smtp_port': asset.read_global_value('%SMTP_PORT%'),
                 'smtp_user': asset.read_global_value('%SMTP_USER%'),
@@ -152,10 +154,11 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
             },
             'cloud_capabilities': {
-                'integration_store_enabled': integration_store_enabled
+                'integration_store_enabled': integration_store_enabled,
+                'reviews_enabled': asset.read_global_value('%REVIEWS_ENABLED%')
             }
         }
-        cache.set(customization_name, data)
+        customization_cache.set(f'customization_{customization_name}', data)
         update_global_cache(customization, data['version_id'])
 
     if value:
@@ -211,6 +214,7 @@ class Customization(models.Model):
         # Cloud portal(s) are now a asset so customization is not necessary for giving access anymore
         permissions = (
             ('access_customization', 'Can access customization'),
+            ('access_integration_store', 'Can access the integration store')
         )
     name = models.CharField(max_length=255, unique=True)
     default_language = models.ForeignKey(
@@ -775,6 +779,11 @@ class UserGroupsToAssetPermissions(models.Model):
             check_customization_permission(user, customization, 'cms.access_customization')
 
     @staticmethod
+    def user_has_beta_access(user):
+        return UserGroupsToAssetPermissions. \
+            check_customization_permission(user, settings.CUSTOMIZATION, "cms.access_integration_store")
+
+    @staticmethod
     def convert_permission_to_codename(permission):
         if permission.find('.') > -1:
             # need to remove app_label to get codename
@@ -1004,7 +1013,7 @@ class DataRecord(models.Model):
         super(DataRecord, self).save(*args, **kwargs)
 
 
-class ContributerAgreement(models.Model):
+class ContributorAgreement(models.Model):
     accepted_date = models.DateTimeField(auto_now_add=True)
     accepted_agreement = models.ForeignKey(AssetCustomizationReview, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

@@ -1,9 +1,9 @@
 from django.core.cache import caches
+from django.db import transaction
 from django.http import Http404
 from rest_framework import exceptions, status
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-from rest_framework.exceptions import APIException, ValidationError
 from rest_framework.generics import GenericAPIView, RetrieveAPIView
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -38,20 +38,27 @@ def get_mobile_compatible_customization():
 
 class CloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, user, password, request=None):
-        try:
-            ip = get_client_ip(request)
-            # System credentials should fail account.get and raise an exception
-            Clouddb_Account.get(user, password, ip)
-            raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
-        except (APINotAuthorisedException, APILogicException):
-            try:
-                system_response = Clouddb_System.get(user, password, user)
-                if 'systems' in system_response and system_response['systems'][0]:
-                    request.data['system'] = system_response['systems'][0]
-                else:
-                    raise exceptions.AuthenticationFailed('Invalid system credentials')
-            except APINotAuthorisedException:
-                raise exceptions.AuthenticationFailed('Invalid system credentials')
+        if request.data.get('pre-authenticate'):
+            authentication_cache = caches['push_authentication']
+            system = authentication_cache.get(f'{user}:{password}')
+            if system:
+                request.data['system'] = system
+            else:
+                try:
+                    ip = get_client_ip(request)
+                    # System credentials should fail account.get and raise an exception
+                    Clouddb_Account.get(user, password, ip)
+                    raise exceptions.AuthenticationFailed('Must use system credentials, not account credentials')
+                except (APINotAuthorisedException, APILogicException):
+                    try:
+                        system_response = Clouddb_System.get(user, password, user)
+                        if 'systems' in system_response and system_response['systems'][0]:
+                            request.data['system'] = system_response['systems'][0]
+                            authentication_cache.set(f'{user}:{password}', request.data['system'])
+                        else:
+                            raise exceptions.AuthenticationFailed('Invalid system credentials')
+                    except APINotAuthorisedException:
+                        raise exceptions.AuthenticationFailed('Invalid system credentials')
 
         request.data['username'] = user
         request.data['password'] = password
@@ -114,56 +121,12 @@ def push_notification(request):
         raw_system_id=data['systemId'], customization=get_mobile_compatible_customization()
     )
 
-    send_push_notification.apply_async(
+    transaction.on_commit(lambda: send_push_notification.apply_async(
         args=[notification_object.id], kwargs={'request_data': request.data},
         queue=settings.NOTIFICATIONS_CONFIG['push_notification']['queue']
-    )
+    ))
 
     return api_success({'notificationId': notification_object.id})
-
-
-# @api_view(['GET', 'POST'])
-# @permission_classes((IsAuthenticated,))
-# @authentication_classes((CloudAccountBasicAuthentication, CloudSessionAuthentication))
-# def register_device(request):
-#     if request.method == 'GET':
-#         serializer = RegisterDeviceSerializer(data=request.GET)
-#         serializer.is_valid(raise_exception=True)
-#         data = serializer.validated_data
-#
-#         registered = PushDevice.objects.filter(registration_id=data['deviceToken']).exists()
-#         return api_success({'registered': registered})
-#
-#     elif request.method == 'POST':
-#         serializer = RegisterDeviceSerializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         data = serializer.validated_data
-#
-#         error_data = dict()
-#         device = PushDevice.objects.filter(registration_id=data['deviceToken']).first()
-#
-#         if not device:
-#             device = PushDevice(
-#                 registration_id=data['deviceToken'], model=data['model'], name=data['name'], cloud_message_type='FCM',
-#                 user=request.user
-#             )
-#             response = device.send_message(message='', dry_run=True)
-#             if response['success'] == 1:
-#                 device.save()
-#             else:
-#                 error_data['deviceToken'] = "Token could not be validated"
-#         else:
-#             device.model = data['model']
-#             device.name = data['name']
-#             if device.user != request.user:
-#                 device.subscriptions.all().delete()
-#                 device.user = request.user
-#             device.save()
-#
-#         if error_data:
-#             raise ValidationError(error_data)
-#
-#         return api_success()
 
 
 class DeviceSubscriptionListView(RetrieveAPIView):

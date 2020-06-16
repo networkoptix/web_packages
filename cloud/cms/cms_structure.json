@@ -347,122 +347,6 @@
         ]
       },
       {
-        "name": "Support page",
-        "label": "Support page",
-        "file_path": "static/lang_{{language}}/views/static/support.html",
-        "url": "/content/support",
-        "translatable": true,
-        "values": [
-          {
-            "label": "Support Page Content",
-            "name": "%CONTENT%",
-            "value": "",
-            "description": "Content for support page",
-            "type": "html"
-          }
-        ]
-      },
-      {
-        "name": "ARM support policy page",
-        "label": "ARM support policy page",
-        "file_path": "static/lang_{{language}}/views/static/arm.html",
-        "url": "/content/arm",
-        "translatable": true,
-        "values":[
-          {
-            "label": "Arm Support Page Policy Title",
-            "name": "%TITLE%",
-            "value": "ARM Support Policy",
-            "description": "Title for the ARM support policy page",
-            "type": "text",
-            "advanced": true
-          },
-          {
-            "label": "ARM Support Policy Page Content",
-            "name": "%CONTENT%",
-            "value": "",
-            "description": "Content for ARM support policy page",
-            "type": "html",
-            "advanced": true
-          }
-        ]
-      },
-      {
-        "name": "ARM guide page",
-        "label": "ARM guide page",
-        "file_path": "static/lang_{{language}}/views/static/arm-guide.html",
-        "url": "/content/arm-guide",
-        "translatable": true,
-        "values":[
-          {
-            "label": "Arm Guide Page Title",
-            "name": "%TITLE%",
-            "value": "ARM Guide",
-            "description": "Title for the ARM guide page",
-            "type": "text",
-            "advanced": true
-          },
-          {
-            "label": "ARM Guide Page Content",
-            "name": "%CONTENT%",
-            "value": "",
-            "description": "Content for ARM guide page",
-            "type": "html",
-            "advanced": true
-          }
-        ]
-      },
-      {
-        "name": "End user license agreement(VMS) page",
-        "label": "End user license agreement(VMS) page",
-        "file_path": "static/lang_{{language}}/views/static/eula-vms.html",
-        "url": "/content/eula-vms",
-        "translatable": true,
-        "values": [
-          {
-            "label": "End user license agreement(VMS) Title",
-            "name": "%TITLE%",
-            "value": "End user license agreement(VMS)",
-            "description": "Title for the End user license agreement(VMS) page",
-            "type": "text",
-            "advanced": true
-          },
-          {
-            "label": "End user license agreement(VMS) Page Content",
-            "name": "%CONTENT%",
-            "value": "",
-            "description": "Content for End user license agreement(VMS) page",
-            "type": "html",
-            "advanced": true
-          }
-        ]
-      },
-      {
-        "name": "Developer license agreement page",
-        "label": "Developer license agreement page",
-        "file_path": "static/lang_{{language}}/views/static/eula-developers.html",
-        "url": "/content/eula-developers",
-        "translatable": true,
-        "values": [
-          {
-            "label": "Developer license agreement Title",
-            "name": "%TITLE%",
-            "value": "Developer license agreement",
-            "description": "Title for the Developer license agreement page",
-            "type": "text",
-            "advanced": true
-          },
-          {
-            "label": "Developer license agreement Page Content",
-            "name": "%CONTENT%",
-            "value": "",
-            "description": "Content for Developer license agreement page",
-            "type": "html",
-            "advanced": true
-          }
-        ]
-      },
-      {
         "name": "Open Source Libraries Disclosure Page",
         "file_path": "static/lang_{{language}}/views/static/libraries.html",
         "url": "/content/libraries",
@@ -485,33 +369,10 @@
         ]
       },
       {
-        "name": "Privacy policy page",
-        "label": "Privacy policy page",
-        "description": "Embedded privacy policy page",
-        "file_path": "static/lang_{{language}}/views/static/privacy.html",
-        "url": "/content/privacy",
-        "translatable": true,
-        "values": [
-          {
-            "label": "Privacy policy header",
-            "name": "%TITLE%",
-            "type": "text",
-            "value": "Personal data and privacy policy",
-            "description": "Title for privacy policy"
-          },
-          {
-            "label": "Privacy policy content",
-            "name": "%CONTENT%",
-            "value": "<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy Policy</a>",
-            "description": "Content for privacy policy",
-            "type": "html"
-          }
-        ]
-      },
-      {
         "name": "License Agreement",
         "label": "License Agreement",
         "old_name": "Eula",
+        "is_global": true,
         "description": "End User License Agreement",
         "file_path": "static/lang_{{language}}/views/static/eula.html",
         "url": "/content/eula",
@@ -531,6 +392,13 @@
             "value": "Network Optix, Inc.",
             "description": "Legal name of the company (for EULA)",
             "type": "text"
+          },
+          {
+            "label": "Legal Company Address",
+            "name": "%LEGAL_COMPANY_ADDRESS%",
+            "value": "",
+            "description": "Company address to be used for legal correspondence",
+            "type": "html"
           },
           {
             "label": "Legal Company Location",
@@ -601,6 +469,52 @@
             "type": "text",
             "value": true,
             "description": "Tls for smtp server",
+            "advanced": true
+          }
+        ]
+      },
+      {
+        "name": "Push Config",
+        "label": "Push Config",
+        "is_global": true,
+        "description": "Holds settings for push notifications + Firebase",
+        "translatable": false,
+        "hidden": true,
+        "values": [
+          {
+            "label": "Push Notifications Configuration",
+            "name": "%PUSH_CONFIG%",
+            "description": "Backend API Settings for push notifications",
+            "advanced": true,
+            "optional": true,
+            "type": "object",
+            "value": {
+              "FCM_API_KEY": "AAAAkheYdWQ:APA91bEGYOZ_evrmTB2kc_6jRTVrLRdlXIE2vzjvFD1bb-mHLt80BMUIRfGhxJ3w442DvO1GKkJaI-P3PWTnwylQo2DZi236gGPLL0MFQImkxUJ-p6fEbVxKDHydELUWadhMemJETz1e"
+            }
+          },
+          {
+            "label": "Push Notifications Web Configuration",
+            "name": "%PUSH_CONFIG_WEB%",
+            "description": "Web app config for push notifications",
+            "advanced": true,
+            "optional": true,
+            "type": "object",
+            "value": {
+              "apiKey": "AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI",
+              "authDomain": "nx-push-test.firebaseapp.com",
+              "databaseURL": "https://nx-push-test.firebaseio.com",
+              "projectId": "nx-push-test",
+              "storageBucket": "nx-push-test.appspot.com",
+              "messagingSenderId": "627461092708",
+              "appId": "1:627461092708:web:1b140238961b4213"
+            }
+          },
+          {
+            "label": "Push Customization",
+            "name": "%PUSH_CUSTOMIZATION%",
+            "description": "If there is no unique mobile customization for this portal, enter the name of the customization that notifications should be targeted to.",
+            "type": "text",
+            "optional": true,
             "advanced": true
           }
         ]
@@ -743,57 +657,21 @@
             }
           },
           {
-            "label": "Push Notifications Auto-Enabled",
-            "name": "%PUSH_SUB_ACTIVE%",
-            "description": "Enable push notifications from all systems by default for existing devices. Otherwise, they are only enabled for system owners by default. A device's notification settings always take priority over this if they are set.",
-            "type": "check_box",
-            "value": "false",
-            "optional": false,
-            "advanced": true
-          },
-          {
-            "label": "Push Notifications Configuration",
-            "name": "%PUSH_CONFIG%",
-            "description": "Backend API Settings for push notifications",
-            "advanced": true,
-            "optional": true,
-            "type": "object",
-            "value": {
-              "FCM_API_KEY": "AAAAkheYdWQ:APA91bEGYOZ_evrmTB2kc_6jRTVrLRdlXIE2vzjvFD1bb-mHLt80BMUIRfGhxJ3w442DvO1GKkJaI-P3PWTnwylQo2DZi236gGPLL0MFQImkxUJ-p6fEbVxKDHydELUWadhMemJETz1e"
-            }
-          },
-          {
-            "label": "Push Notifications Web Configuration",
-            "name": "%PUSH_CONFIG_WEB%",
-            "description": "Web app config for push notifications",
-            "advanced": true,
-            "optional": true,
-            "type": "object",
-            "value": {
-              "apiKey": "AIzaSyA8bA6jCS4GnzmfGEg_I6mQyG5JIBKFrLI",
-              "authDomain": "nx-push-test.firebaseapp.com",
-              "databaseURL": "https://nx-push-test.firebaseio.com",
-              "projectId": "nx-push-test",
-              "storageBucket": "nx-push-test.appspot.com",
-              "messagingSenderId": "627461092708",
-              "appId": "1:627461092708:web:1b140238961b4213"
-            }
-          },
-          {
-            "label": "Push Customization",
-            "name": "%PUSH_CUSTOMIZATION%",
-            "description": "If there is no unique mobile customization for this portal, enter the name of the customization that notifications should be targeted to.",
-            "type": "text",
-            "optional": true,
-            "advanced": true
-          },
-          {
             "label": "Google Tag Manager ID",
             "name": "%GOOGLE_TAG_MANAGER_ID%",
             "description": "ID used for Google Analytics. If not used, enter <b>N/A</b>",
             "type": "text",
             "value": "GTM-5MRNWP",
             "optional": false,
+            "advanced": true
+          },
+          {
+            "label": "Enable review emails",
+            "name": "%REVIEWS_ENABLED%",
+            "description": "Sends review emails to portal managers when enabled.",
+            "type": "check_box",
+            "value": false,
+            "optional": true,
             "advanced": true
           },
           {

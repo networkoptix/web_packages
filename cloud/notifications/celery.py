@@ -1,6 +1,6 @@
 import os
 
-from celery import Celery
+from celery import Celery, signals
 from celery.schedules import crontab
 
 from django.conf import settings  # noqa
@@ -16,7 +16,7 @@ app = Celery('notifications')
 
 # Using a string here means the worker will not have to
 # pickle the object when using Windows.
-app.config_from_object('django.conf:settings')
+app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
 
@@ -41,3 +41,10 @@ def clean_logs():
     call_command('cleanoldemails')
     logger.info('Cleaning access logs from last month')
     call_command('cleanaccesslog')
+
+
+@signals.after_setup_logger.connect
+def setup_logger(logger, format, *args, **kwargs):
+    sh = logger.handlers[0]
+    formatter = logging.Formatter('[%(levelname)s] %(processName)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s')
+    sh.setFormatter(formatter)

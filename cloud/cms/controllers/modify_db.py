@@ -46,8 +46,12 @@ def notify_version_ready(asset, version, exclude_user):
     for customization in asset.customizations.values_list('name', flat=True):
         cloud_capabilities = cloud_portal_customization_cache(customization, 'cloud_capabilities')
         # Ignore integrations if the integration store is disabled.
-        if not asset.is_integration or cloud_capabilities['integration_store_enabled']:
+        if cloud_capabilities['reviews_enabled'] and \
+                (not asset.is_integration or cloud_capabilities['integration_store_enabled']):
             asset_customizations_set.add(customization)
+
+    if len(asset_customizations_set) == 0:
+        return
 
     for user in users:
         # If the user has a customization in common with asset send them a notification

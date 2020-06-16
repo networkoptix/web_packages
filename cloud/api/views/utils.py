@@ -285,6 +285,14 @@ def get_settings(request):
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
         del settings_object['cloudMerge']
+
+    if not settings_object.get('integrationStoreEnabled') and \
+            UserGroupsToAssetPermissions.user_has_beta_access(request.user):
+        settings_object['integrationStoreEnabled'] = True
+        for item in settings_object['footerItems']:
+            if item['url'] == '/integrations':
+                item['enabled'] = True
+                break
     return Response(settings_object)
 
 

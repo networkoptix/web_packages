@@ -815,7 +815,7 @@ class ExternalFileAdmin(CMSAdmin):
 admin.site.register(ExternalFile, ExternalFileAdmin)
 
 
-@admin.register(ContributerAgreement)
+@admin.register(ContributorAgreement)
 class ContributerAgreementAdmin(CMSAdmin):
     form = ContributerAgreementForm
     search_fields = ('user__email',)
