@@ -71,7 +71,7 @@
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "تم حفظ كلمة المرور بنجاح",
         "saveChanges": "Save"
     },
     "activeActions": {
@@ -177,7 +177,7 @@
         "buttons": {
             "cancel": "Cancel",
             "createAccount": "Create New Account",
-            "delete": "Delete",
+            "delete": "حذف",
             "deleteAccount": "Delete Account",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
@@ -259,7 +259,7 @@
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
             "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
-            "urlEmpty": "Enter server address",
+            "urlEmpty": "أدخل عنوان الخادم",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "Current password is incorrect.",
         "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
         "passwordMismatch": "كلمة مرور خاطئة",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -572,7 +573,7 @@
             "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "انتهاء دمج الأنظمة",
         "integration": {
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."
@@ -637,7 +638,7 @@
             "unavailable": "System is unreachable"
         },
         "users": {
-            "cloudDelete": "Remove User",
+            "cloudDelete": "حذف المستخدم",
             "localDelete": "Delete User"
         },
         "yourSystem": "النظام الخاص بك",
@@ -708,7 +709,7 @@
             "online": "Online",
             "error": "Error",
             "expired": "Expired",
-            "ok": "Ok",
+            "ok": "OK",
             "digital": "Professional",
             "analog": "Analog",
             "edge": "Edge",
@@ -777,7 +778,7 @@
         "localSystemId": "Local System ID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "حجم قائمة انتظار P2P الأقصى (بايت)",
         "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
         "maxRecordQueueSizeElements": "Max record queue size (elements)",
         "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
@@ -806,7 +807,7 @@
         "timeSynchronizationEnabled": "Time synchronization enabled",
         "primaryTimeServer": "Primary time synchronization server",
         "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeExchangePeriod": "مزامنة الفاصل الزمني لمزامنة الوقت لطلبات الشبكة",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
         "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
         "updateNotificationsEnabled": "Update notifications enabled",

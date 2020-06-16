@@ -747,7 +747,7 @@ Owner can disconnect System from Cloud
     FOR    ${user email}   ${user role}    IN ZIP   ${Auto Tests users.keys()}     ${Auto Tests users.values()}
         Share    ${cloud auth}   ${cloud system id}    ${user role}    ${user email}
     END
-    
+
 The page is opened and shows the user list to owner
     [Tags]    C41881    Threaded    System-offline
     Log in to Autotests 2 System    ${EMAIL OWNER}

@@ -211,6 +211,8 @@
     "INTEGRATION SUPPORT EMAIL TEXT": "Brukerstøtte E-post",
     "INTEGRATION GET IN TOUCH LEGAL TEXT": "Ved å sende inn dette skjemaet samtykker du i å bli kontaktet av {{developer}} og / eller Network Optix. Du vil finne de {{developer}} personvernreglene her og Network Optix personvernregler her som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Meldingen er sendt.",
+    "INTEGRATION BANNER MESSAGE TEXT": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+    "INTEGRATION BANNER ACTION TEXT": "Back to the editing interfaces",
     "REGISTER TITLE TEXT": "Opprett konto i",
     "DOWNLOAD TITLE TEXT": "Last ned %VMS_NAME%",
     "DOWNLOADS HEADER TEXT": "Last ned",
@@ -256,5 +258,5 @@
     "DELETE ACCOUNT HEADER TEXT": "Slett konto?",
     "DELETE ACCOUNT INFO TEXT": "Kontoen din og alle dataene som er knyttet til den blir slettet permanent uten mulighet til å gjenopprette den.",
     "DELETE ACCOUNT PASSWORD LABEL TEXT": "Skriv inn passordet ditt for å fortsette",
-    "ENCRYPTING VIDEO WARNING TEXT": "Encrypting video traffic will significantly increase CPU usage."
+    "ENCRYPTING VIDEO WARNING TEXT": "Kryptering av videotrafikk vil øke CPU-bruken betydelig."
 }

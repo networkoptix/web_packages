@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "目前密碼不正確.",
         "oldSafariNotSupported": "不支持10歲以上的Safari版本",
         "passwordMismatch": "密碼不正確",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "系統",
         "unknownError": "發生未知錯誤",
         "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -561,7 +562,7 @@
     },
     "pleaseSelect": "請選擇...",
     "privacyPolicy": {
-        "integration": "提交表單即同意與{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策 </a> 和 %COMPANY_NAME% 隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤回您的同意。",
+        "integration": "提交表單即同意{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策, 這裡</a> 和 %COMPANY_NAME% 的隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤回您的同意。",
         "ipvd": "提交表單即同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {

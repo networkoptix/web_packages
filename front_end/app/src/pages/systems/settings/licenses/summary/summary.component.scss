@@ -2,11 +2,13 @@
 @import "../../../../../../styles/theme_palette";
 
 .section-table-wrapper {
-    overflow-x : scroll;
+    @media screen and (max-width: 576px) {
+        overflow-x : scroll;
+    }
 
     table {
-        grid-template-columns : 15% 20% 15% auto;
-        min-width             : 680px !important;
+        grid-template-columns : 120px 140px 85px auto;
+        min-width             : 450px !important;
 
         .table-row-spacer {
             grid-column-end : span 4;

@@ -3,7 +3,7 @@
 <div *ngIf="plugin && LANG" class="integration-details">
     <div class="d-flex mt-3 m-0 pl-3" style="max-width: 1440px;">
         <div class="p-0" style="width: 300px;">
-            <button class="btn btn-default btn-back mb-3" routerLink="/integrations">
+            <button class="btn btn-default btn-back mb-3 d-flex align-items-center" routerLink="/integrations">
                 <span class="back-arrow"></span>
                 <span translate>All Integrations</span>
             </button>
@@ -49,7 +49,7 @@
                     <label class="group-label" translate>Contact</label>
                 </div>
                 <div class="d-inline-flex flex-wrap justify-content-start w-100">
-                    <button class="btn btn-primary" (click)="openMessageDialog()" translate>Get in touch</button>
+                    <button class="btn btn-primary" style="line-height: 1" (click)="openMessageDialog()" translate>Get in touch</button>
                 </div>
             </div>
 

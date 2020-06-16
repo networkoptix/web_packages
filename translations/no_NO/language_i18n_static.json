@@ -217,19 +217,19 @@
             },
             "enableCloudStorage": {
                 "success": "Skylagring aktivert",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "errorPrefix": "Feil ved aktivering av skylagring"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Du kan bare flytte skylagring mellom systemer du er eier av. <br/><br/>Koble et system til %CLOUD_NAME% ved hjelp av skykontoen din for å kunne flytte skylagring til den."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Skriv inn passord til eierens konto i <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Feil passord for lokal admin bruker",
+            "checking": "Kontrollerer...",
             "commonText": "Kunne ikke slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Koble System du vil slå sammen med denne til <strong>{{cloudName}}</strong> eller slå sammen lokalt ved hjelp av <strong>{{vmsName}}</strong> Klienten.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "Både det valgte og det gjeldende systemet er koblet til %CLOUD_NAME% og har forskjellige eiere. Skysystemer kan bare slås sammen hvis eierkontoen er den samme.",
             "duplicateServers": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
             "enterSystemAddressTitle": "Skriv inn adressen til en hvilken som helst server i systemet du vil slå sammen med denne.",
             "mergeConfirmation": "<p class=\"mb-0\">Du er i ferd med å slå sammen systemer <strong>{{primarySystem}}</strong> og <strong>{{secondarySystem}}</strong>.</p><p>Innstillinger og navnet vil bli tatt fra <strong>{{primarySystem}}</strong>.</p>",
@@ -390,7 +390,7 @@
         "INCOMPATIBLE": "Systemene har sammenfallende programvareversjoner. Oppdater begge disse til <a href=\"/download\">siste versjon</a>.",
         "cloud_systems_have_different_owners": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">En server ser ut til å liste seg selv under både det valgte og det gjeldende systemet.</p><p>Fjern frakoblede og inkompatible servere fra hver system og prøv igjen.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
+        "fail": "{{failedSystem}} er utilgjengelig.",
         "incompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
         "unknown_error": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Denne kontoen er allerede aktivert",
@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "Nåværende passord er feil.",
         "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
         "passwordMismatch": "Feil passord",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "systemet",
         "unknownError": "En ukjent feil oppstod",
         "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
@@ -479,22 +480,22 @@
         "isMdSupported": "Bevegelses deteksjon",
         "isMultiSensor": "Multi Sensor",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "2-veis lyd",
+        "maxFps": "FPS (maks)",
+        "maxResolution": "Oppløsning (maks)",
         "model": "Modell",
         "multiSensorCamera": "Multisensor kameraer",
         "other": "Andre",
         "primaryCodec": "Kodek",
         "resolutionArea": "Område",
-        "sndResolution": "Secondary Stream",
+        "sndResolution": "Sekundær strøm",
         "topXByVolume": "Topp {{value}} etter volum:",
         "vendor": "Produsent"
     },
     "menu": {
         "titles": {
             "systemAdministration": "Systemadministrasjon",
-            "general": "General",
+            "general": "Generell",
             "licenses": "Lisenser",
             "users": "Brukere"
         }
@@ -596,7 +597,7 @@
         "vendors": "Produsenter"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
+        "beginDetach": "Serveren kobles fra nå",
         "beginReset": "Serveren tilbakestilles.",
         "detachSystemFailed": "Kunne ikke fjerne serveren fra systemet. Kontroller om passordet du oppga er riktig, og serveren er online, og prøv igjen.",
         "detachSystemSuccess": "Serveren ble koblet fra systemet.",
@@ -623,7 +624,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Kan ikke laste sikkerhetsinnstillinger.",
             "notAbleToLoadSystem": "Kunne ikke laste systeminnstillinger.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Kan ikke laste lagringsinformasjon.",
             "sessionLimitDuration": {
                 "hours": "timer",
                 "minutes": "minutter"
@@ -708,7 +709,7 @@
             "online": "Online",
             "error": "Feil",
             "expired": "Utløpt",
-            "ok": "Ok",
+            "ok": "OK",
             "digital": "Profesjonell",
             "analog": "Analog",
             "edge": "Edge",
@@ -730,16 +731,16 @@
         "additionalLocalFsTypes": "Ytterligere lokale FS-typer",
         "autoDiscoveryResponseEnabled": "Automatisk oppdagelsesrespons",
         "crossdomainEnabled": "På tvers av domener",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
+        "defaultExportVideoCodec": "Standard videokodek for eksport",
+        "defaultVideoCodec": "Standard videokodek",
+        "downloaderPeers": "Nedlasting peers",
+        "lastMergeMasterId": "MasterId for forrige sammenslåing",
+        "lastMergeSlaveId": "Slaveid for forrige sammenslåing",
         "ldapSearchTimeoutS": "Tidsavbrudd for LDAP-søk (sek)",
         "licenseServer": "Lisensserver",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "lowQualityScreenVideoCodec": "Skjermvideokodek i lav kvalitet",
         "maxP2pAllClientsSizeBytes": "Maks P2P alle klienter størrelse byte",
-        "maxRtpRetryCount": "Max RTP retry count",
+        "maxRtpRetryCount": "Maks antall gjentatte RTP forsøk",
         "metadataStorageChangePolicy": "Retningslinjer for endring av metadata-lagring",
         "pushNotificationsLanguage": "Trykk på varslingsspråk",
         "resourceFileUri": "Ressursfil URI",
@@ -807,7 +808,7 @@
         "primaryTimeServer": "Primær tidssynkroniseringsserver",
         "osTimeChangeCheckPeriodMs": "OS-tidsendring, sjekk periode",
         "syncTimeExchangePeriod": "Synkroniser tidssynkroniseringsintervall for nettverksforespørsler",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "syncTimeEpsilon": "Synkroniser epsilon. Ny verdi blir ikke brukt hvis tidsavgrensningen er mindre enn epsilon",
         "maxWearableArchiveSynchronizationThreads": "Maksimalt antall synkroniseringstråder i kameraarkiv",
         "updateNotificationsEnabled": "Oppdateringsvarsler aktivert",
         "upnpPortMappingEnabled": "UPNP port kartlegging aktivert",

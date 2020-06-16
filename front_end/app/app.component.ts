@@ -158,10 +158,11 @@ export class AppComponent {
                 name: companyName
             };
             // @ts-ignore
-            const {feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize} = window.SETTINGS;
+            const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, healthMonitorCacheTimeout } = window.SETTINGS;
             this.CONFIG.cloudCapabilities = {
                 feedbackEnabled,
                 healthMonitor,
+                healthMonitorCacheTimeout,
                 integrationStore: integrationStoreEnabled,
                 publicDownloads,
                 publicReleases,

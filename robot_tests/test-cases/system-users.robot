@@ -11,6 +11,8 @@ ${email}       ${EMAIL OWNER}
 ${password}    ${BASE PASSWORD}
 @{auth}        ${email}    ${password}
 ${url}         ${ENV}
+${offline system url}     http://10.1.5.182:7077
+${offline system name}    4.0_system_users_test_1
 @{TMP USERS}
 
 *** Keywords ***
@@ -51,7 +53,57 @@ Cancel should cancel disconnection and disconnect should remove it when not owne
     Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
     Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
 
+    # Verify the user is removed from the list via API
+    ${sys id}=   Get Cloud System Id      ${AUTO SYS IP}    ${AUTO SYS AUTH}
+    ${users}=   Get Cloud System Users    ${auth}    ${sys id}
+    ${is there}=   Set Variable    ${False}
+    FOR    ${obj}    IN    @{users}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${EMAIL NOT OWNER}'    ${True}
+    END
+    Should Not Be True    ${is there}
+
     Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[viewer]    ${EMAIL NOT OWNER}
+
+Owner / user can unlink offline System from Cloud / Account
+    [Tags]    C41897    C41898
+    Log    Prepare offline system with owner and viewer
+    ${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${user email}=   Register and activate account with random email    firstName    lastName    ${password}
+    ${id}=   Create system and attach to cloud    http://10.1.5.182    7077    ${offline system name}    ${owner email}    ${password}
+    @{auth}=   Create List    ${owner email}    ${password}
+    Share    ${auth}    ${id}    ${ACCESS ROLES}[viewer]    ${user email}
+    # Make the system offline
+    Detach Server From System    ${offline system url}    ${auth}
+
+    Log    C41898: Step 1
+    Go To    ${url}/systems/${id}
+    Log In    ${user email}    ${password}    button=None
+    Disconnect from my account
+    Log out
+
+    Log    C41898: Step 2
+    ${users}=   Get Cloud System Users    ${auth}    ${id}
+    ${is there}=   Set Variable    ${False}
+    FOR    ${obj}    IN    @{users}
+        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${user email}'    ${True}
+    END
+    Should Not Be True    ${is there}
+
+    Go To    ${url}/systems/${id}
+    Log In    ${owner email}    ${password}    button=None
+    Wait Until Element Is Visible    ${USERS LIST LINK}
+    Run keyword and expect error    *    Select user in Users List    ${user email}
+
+    Log    C41897: Step 1 - add user and disconnect system from cloud
+    Share    ${auth}    ${id}    ${ACCESS ROLES}[viewer]    ${user email}
+    Disconnect from cloud
+    Log Out
+
+    Log    C41897: Step 2 - make sure viewer has no systems
+    ${systems}=   Get Account Systems    ${ENV}    ${user email}    ${password}
+    Should Be Empty    ${systems}
+    Log In   ${user email}    ${password}
+    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
 Should display same user data as user provided during registration
     [Tags]    email    Threaded
@@ -247,21 +299,6 @@ Edit permission works
     Edit User Permissions In Systems    ${random email}    ${ADMIN TEXT}
     Check User Permissions    ${random email}    ${ADMIN TEXT}
     Remove User Permissions    ${random email}
-
-# TODO: figure out why getting 403 when updating user via ec2/saveUser
-#User role is displayed correctly on portal if it's changed in client
-#    [Tags]     C30658
-#    ${random email}=   Register and activate account with random email    firstName    lastName    ${password}
-#    Append To List    ${TMP USERS}    ${random email}
-#    Share    ${auth}    ${AUTO TESTS SYSTEM ID}    ${ACCESS ROLES}[admin]    ${random email}
-#
-#    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
-#    FOR    ${user}    IN    @{users}
-#        Run Keyword If    '${user}[email]'=='${random email}'    Should Be Equal As Strings    ${user}[permissions]    ${permissions}[cloudAdmin]
-#        ${id}=   Set Variable If  '${user}[email]'=='${random email}'    ${user}[id]
-#        Run Keyword If    '${user}[email]'=='${random email}'    Exit For Loop
-#    END
-#    Save User    ${AUTO SYS AUTH}    ${AUTO SYS IP}    test_user    ${permissions}[viewer]    ${random email}    firstName lastName    ${password}    user id=${id}
 
 Delete user works
     [Tags]    email    C41903
@@ -749,7 +786,7 @@ Cloud administrator can make changes to local viewers (negative)
     Click Button    ${ACCOUNT CANCEL}
     Sleep    .1
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[advancedViewer]
+    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
     Log    The following keywords will verify no changes were saved
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Lists Should Be Equal     ${check info}    ${locals} 
