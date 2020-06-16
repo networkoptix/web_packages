@@ -83,23 +83,29 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             // eslint-disable-next-line no-fallthrough
                             case '3':
+                                // Network error has occurred during license activation. Error code: -1
+                                if (response.errorString.indexOf('Network error has occurred') !== -1) {
+                                    this.dialogsService
+                                        .notify(this.LANG.errorCodes.licenseServerError, 'danger');
+                                    break;
+                                }
                                 // Can't activate license:  License Key you have entered is invalid.
                                 if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
-                                }
-                                // Can't activate license: This license type requires higher software version
-                                if (response.errorString.indexOf('requires higher software version') !== -1) {
+                                } else if (response.errorString.indexOf('requires higher software version') !== -1) {
+                                    // Can't activate license: This license type requires higher software version
                                     this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
-                                }
-                                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
-                                // eslint-disable-next-line no-case-declarations
-                                let matchStart = response.errorString.indexOf('activated to Hardware Id');
-                                if (matchStart !== -1) {
-                                    // get HWID
-                                    matchStart += 'activated to Hardware Id '.length;
-                                    const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
-                                    this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
-                                    this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                                } else {
+                                    // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
+                                    // eslint-disable-next-line no-case-declarations
+                                    let matchStart = response.errorString.indexOf('activated to Hardware Id');
+                                    if (matchStart !== -1) {
+                                        // get HWID
+                                        matchStart += 'activated to Hardware Id '.length;
+                                        const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
+                                        this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
+                                        this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                                    }
                                 }
                                 this.licenseForm.controls.licenseKey.markAsTouched();
                                 break;
