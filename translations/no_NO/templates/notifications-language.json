@@ -18,10 +18,10 @@
     "emailSubject": "Tilbakemelding for {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Kamerasidetilbakemelding{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} har en ny versjon å gjennomgå"
   },
   "restore_password": {
     "emailSubject": "Tilbakestill passordet ditt"

@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
         "oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",
         "passwordMismatch": "סיסמא שגויה",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "המערכת",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",

@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "Aktuelles Passwort ist falsch.",
         "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
         "passwordMismatch": "Falsches Passwort",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "das System",
         "unknownError": "Es ist ein unerwarteter Fehler aufgetreten",
         "unknownMergeError": "Unbekannter Fehler. Sie können versuchen, die Seite zu aktualisieren und den Versuch zu wiederholen. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",

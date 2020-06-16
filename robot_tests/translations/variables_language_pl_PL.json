@@ -211,6 +211,8 @@
     "INTEGRATION SUPPORT EMAIL TEXT": "E-mail do wsparcia technicznego",
     "INTEGRATION GET IN TOUCH LEGAL TEXT": "Przesyłając ten formularz, wyrażasz zgodę na kontakt z {{developer}} i/lub Network Optix. Znajdziesz tutaj politykę prywatności {{developer}} oraz politykę prywatności Network Optix, która zawiera instrukcje dotyczące wycofania Twojej zgody.",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "Wiadomość została wysłana.",
+    "INTEGRATION BANNER MESSAGE TEXT": "This page is a preview of the latest changes, and it doesn't match publicly available version.",
+    "INTEGRATION BANNER ACTION TEXT": "Back to the editing interfaces",
     "REGISTER TITLE TEXT": "Utwórz konto w",
     "DOWNLOAD TITLE TEXT": "Pobierz %VMS_NAME%",
     "DOWNLOADS HEADER TEXT": "Pobieranie",

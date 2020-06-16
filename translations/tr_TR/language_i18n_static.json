@@ -131,11 +131,11 @@
         "recordingSettingsWarning": "Lütfen eksik kayıt ayarlarını güncelleyin.",
         "recordingModes": {
             "always": "Her zaman kaydet",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "motion": "Yalnızca hareketi kaydet",
+            "motionLowRes": "Hareket + Düşük-Çözünürlük"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Farklı değerler -",
             "auto": "Oto",
             "best": "En iyi",
             "high": "Yüksek",
@@ -144,8 +144,8 @@
         },
         "general": "Genel",
         "searchCamPlaceholder": "Arama",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Kamera yok",
+        "systemHasNoCamerasMessage": "Sistemde sizin için erişilebilir kamera yok. <br><br>Keşfedilebilir hale getirmek için birkaç kamerayı sunucunun yerel ağına bağlayın veya sistem yöneticisinden erişim düzeyinizi değiştirmesini isteyin.",
         "systemNewVersion": "Sisteminizi güncelleyin",
         "systemNewVersionMessage": "Mevcut sürümünüz bu özellik ile uyumlu değil. Lütfen bu özelliği kullanmak için sunucularınızı en son sürüme güncelleyin.",
         "systemNoAlerts": "Uyarı Yok",
@@ -171,7 +171,7 @@
             "stop listening": "dinlemeyi durdur",
             "view": "görüntüle + [kamera adı]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Güncel olmayan bir tarayıcı kullanıyorsunuz."
     },
     "dialogs": {
         "buttons": {
@@ -188,89 +188,89 @@
         },
         "cloudStorage": {
             "title": "Bulut depolama",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "enableStorage": "Bulut Depolamayı Etkinleştir",
+            "otherSystem": "Diğer Sistemler...",
+            "initial": "Başlamanız için sistem başına {{compCapacity}} ücretsiz bulut depolama alanı sunuyoruz.",
+            "available": "Bulut depolama konumu, bu sistemdeki tüm sunucular için kullanılabilir. Masaüstü {{vmsName}} istemcisini kullanarak yönetebilirsiniz.",
             "camera": "kamera",
             "cameras": "kameralar",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Bulut depolama sistemi başarıyla kaldırıldı",
+                "errorPrefix": "Bulut depolama alanı kaldırılırken hata oluştu"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Bulut Depolamayı Etkinleştiremiyor",
+                "message": "Sistemlerinize zaten toplam <volume> bulut depolama alanı eklediniz ve daha fazlasını ekleyemezsiniz. <br/><br/>Depolamayı başka bir sistemden silebilir veya bu sisteme taşıyabilirsiniz. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "%CLOUD_NAME% den bağlantı kesilemedi",
+                "message": "Bu sistem, üzerinde bazı arşivlerin bulunduğu bulut depolama alanına sahiptir. <br/><br/>Sistem %CLOUD_NAME%çıkarılmadan önce bulut depolama alanı manuel olarak silinmelidir."
             },
             "moveCloudStorage": {
                 "title": "Bulut Depolama Alanını Taşı",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "success": "Depolama alanı başarıyla taşındı",
+                "errorPrefix": "Bulut depolama alanı taşınırken hata oluştu",
+                "notFound": "Depolama alanı bulunamadı. Depolama alanı başka bir kullanıcı tarafından taşınmış veya silinmiş olabilir",
                 "status": {
                     "offline": "Bulut depolama, çevrimdışı sistemlere taşınamaz."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Bulut Depolama Etkin",
+                "errorPrefix": "Bulut Depolamayı Etkinleştirme Hatası"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Bulut depolama alanını yalnızca sahibi olduğunuz sistemler arasında taşıyabilirsiniz. <br/><br/>Bulut depolama birimini ona taşıyabilmek için bulut hesabınızı kullanarak bir sistemi %CLOUD_NAME% bağlayın."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "<strong>{{secondarySystem}}</strong>ile sahibinin hesabına şifre girin",
+            "adminPasswordWrong": "Yerel yönetici kullanıcı için yanlış şifre",
+            "checking": "Kontrol Ediliyor...",
             "commonText": "Sistem <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong> birleştirilemedi.",
             "connectToCloud": "Birleştirmek istediğiniz <strong>{{cloudName}}</strong> sistemine bağlanın veya yerel sistemi <strong>{{vmsName}}</strong> kullanarak birleştirin.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
+            "differentOwners": "Hem seçilen hem de mevcut sistem %CLOUD_NAME% bağlı ve farklı sahiplere sahip. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
             "duplicateServers": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
+            "enterSystemAddressTitle": "Sistemde bulunan ve bu sunucuyla birleştirmek istediğiniz herhangi bir sunucunun adresini girin.",
+            "mergeConfirmation": "<p class=\"mb-0\"> <strong>{{primarySystem}}</strong> ve <strong>{{secondarySystem}}</strong>sistemlerini birleştirmek üzeresiniz.</p><p>Ayarlar ve isim <strong>{{primarySystem}}</strong>alınacaktır.</p>",
             "mergeSystemsTitle": "Mevcut sistemi ile birleştir",
             "mergeFailedTitle": "Sistem birleştirme işlemi başarısız oldu",
-            "noServerFound": "No server found",
+            "noServerFound": "Hiç bir sunucu bulunamadı",
             "newSystemDisplayName": "Yeni sistem",
-            "otherSystem": "Other System...",
+            "otherSystem": "Diğer Sistemler...",
             "ownerCanMergeText": "Yalnızca sahibi olduğunuz Sistemleri birleştirebilirsiniz",
             "passwordRequired": "Parola gerekmektedir",
             "passwordWrong": "Hatalı parola",
             "primaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahip. Geçerli sistemi, {{targetSystem}} Sistemle birleştirmek için en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
             "primarySystemOffline": "Sistem {{primarySystem}} çevrimdışıdır ve Sistem {{targetSystem}} ile birleştirilemez",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemUnavailable": "Sistem {{primarySystem}} şu anda ulaşılamıyor. Birkaç dakika içinde tekrar deneyin veya <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Aşağıdakilere danışmanızı öneririz",
                 "b_support": "destek",
                 "c_proceeding": "işlemden önce."
             },
             "secondaryCannotMerge": "Sistem {{targetSystem}}, mevcut sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahip. Geçerli olanla birleştirmek için {{targetSystem}} en son <a href=\"/download\" target=\"_blank\" translate>derleme</a> güncelleyin.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "secondarySystemUnavailable": "Sistem {{targetSystem}} şu anda ulaşılamıyor. Birkaç dakika içinde tekrar deneyin veya <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
             "serverAtUrl": "{{url}} server",
             "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} sisteme erişilemiyor.</p><p>Belirtilen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "serverNotYours": "Bu sistem %CLOUD_NAME%, bağlı ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
             "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez",
             "systemOfflineUrl": "{{targetSystem}} erişilemez.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemsIncompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
+            "systemVersionOld": "{{targetSystem}} geçerli sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahiptir. Güncelleme {{targetSystem}} ile <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> akım biri ile birleştirmeye.",
+            "systemVersionNew": "{{targetSystem}}, geçerli sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahiptir. İçin mevcut sistemi güncelleyin <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> ile birleştirmeye {{targetSystem}}.",
             "urlEmpty": "Sunucu adresini girin",
             "urlNotValid": "Geçerli bir URL girin",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "unknownError": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
+            "warning": "Birleştirilmiş sistemde <strong>{{maxServers}}</strong> sunucu olacaktır."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "storageSettingsSaved": "Depolama ayarları kaydedildi.",
+            "storageSettingsNotSaved": "Depolama alanı ayarları kaydedilemedi.",
             "settingsSaved": "Ayarlar kaydedildi.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "settingsNotSaved": "Ayarlar kaydedilemedi.",
+            "logLevelsSaved": "Günlük düzeyleri kaydedildi.",
+            "logLevelsNotSaved": "Günlük düzeyleri kaydedilemedi.",
             "failedToSend": "Mesaj gönderilemedi.",
             "placeholders": {
                 "feedback": "Kamera üreticisi ve modelinin olduğundan emin olun..."
@@ -302,12 +302,12 @@
             "loggedFromOtherAccount": "Farklı bir hesapla giriş yapacaksınız",
             "noClientDetected": "Sisteminizi görüntülemek için %VMS_NAME% yükleyin",
             "removeUser": "Kullanıcı kaldırılsın mı?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "Sunucuyu mevcut sistemden ayır?",
+            "serversReset": "\"{{ title }}\" sunucusu varsayılanlara sıfırlansın mı?",
+            "serversRestart": "\"{{ title }}\" sunucusu yeniden başlatılsın mı?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Hesabınızı silmek için sahibi olduğunuz tüm sistemlerin %CLOUD_NAME% portalından bağlantısını kesin."
         }
     },
     "downloads": {
@@ -383,23 +383,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Bu sistem %CLOUD_NAME%bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
         "DUPLICATE_MEDIASERVER_FOUND": "Bazı sunucular, her iki sistemde de mevcut olanları - seçilenleri ve geçerli olanları listeler.<br>Çevrimdışı ve uyumsuz sunucuları her bir Sistemden kaldırın ve tekrar deneyin.",
         "EmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı",
         "FAIL": "Sistem <strong>{{failedSystem}}</strong> şu anda erişilemiyor.<br>Birkaç dakika sonra tekrar deneyin veya iletişim <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "INCOMPATIBLE": "Sistemler, uyumsuz yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\">sürüm</a>.",
+        "cloud_systems_have_different_owners": "Bu sistem %CLOUD_NAME%bağlı, ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
         "duplicate_mediaserver_found": "<p class=\"mb-2\">Bir sunucu, hem seçilen hem de geçerli sistem altında kendisini listeliyor gibi görünüyor.</p><p>Çevrimdışı ve uyumsuz sunucuları her sistemden kaldırın ve tekrar deneyin.</p>",
         "fail": "{{failedSystem}} erişilemez.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "incompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
+        "unknown_error": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
         "accountAlreadyActivated": "Bu hesap zaten etkinleştirildi",
         "accountBlocked": "Bu hesap geçici olarak kilitlendi. Lütfen bir süre sonra tekrar deneyin.",
         "accountNotActivated": "Bu hesap henüz etkinleştirilmedi. <a href=\"/activate\">Yalnızca etkinleştirme bağlantısını gönder</a>",
         "alreadyExists": "Bu hesap zaten mevcut",
         "brokenAccount": "Hesapla beklenmeyen bir problem. <a href=\"/restore_password\">Hesabı geri yükle</a>",
         "cantActivatePrefix": "Hesabınız etkinleştirilemedi",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "Kendi e-postanızı eklemenize izin verilmiyor",
         "cantChangeAccountPrefix": "Değişiklikler kaydedilemiyor",
         "cantChangePasswordPrefix": "Parola kaydedilemiyor",
         "cantDisconnectSystemPrefix": "Sistem silinemiyor",
@@ -425,15 +425,16 @@
         "oldPasswordMistmatch": "Mevcut şifre hatalı.",
         "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
         "passwordMismatch": "Hatalı parola",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "sistem",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Beklenmedik bir hata oluştu",
         "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun.",
         "wrongAuthCode": "Kodun süresi dolmuş veya yanlış",
         "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
         "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
         "wrongParameters": "Formdaki bazı parametreler yanlış",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "Bu işlem tamamlanamadı. Lütfen tekrar deneyin veya Müşteri Desteği birimiyle iletişime geçin.",
+        "networkConnection": "{{cloudName}} bağlanılamıyor, lütfen ağ bağlantınızı kontrol edin."
     },
     "integration": {
         "Access Control": "Erişim Kontrolü",
@@ -543,26 +544,26 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Bu sayfa bulunamıyor",
+            "message": "Lütfen sunucularınızın çevrimiçi olduğundan emin olun ve tekrar deneyin."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Bu sistem {{systemName}} ile birleştiriliyor.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Veritabanının boyutuna bağlı olarak, bu işlem birkaç saat sürebilir.",
+                "untilFinished": "Birleştirme tamamlanana kadar bu sisteme giriş yapabilir ve video izleyebilir, ancak herhangi bir ayarı değiştiremezsiniz.",
+                "whenFinished": "Birleştirme işlemi tamamlandığında, bu sistemdeki tüm kullanıcılar ve kameralar kullanılabilir hale gelir \" Sistem{{systemName}} \" ve bu sistem silinecektir."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Sunucuya erişilemiyor",
+            "message": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor."
         }
     },
     "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Bu formu göndererek {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+        "ipvd": "Bu formu göndererek %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
     },
     "registration": {
         "agreement": "Kabul et <a href=\"/content/eula\" target=\"_blank\">Şartlar ve Koşullar</a>ve<a href=\"%PRIVACY_LINK%\" target=\"_blank\">Gizlilik Politikası</a>"
@@ -570,7 +571,7 @@
     "ribbon": {
         "beingMerged": {
             "to": "bu sistemle birleştiriliyor",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "mayTake": "Veritabanının boyutuna bağlı olarak, bu işlem birkaç saat sürebilir."
         },
         "finishingMerge": "Sistem birleştirme bitiriliyor",
         "integration": {
@@ -578,7 +579,7 @@
             "previewRibbon": "Bu sayfa en son değişikliklerin önizlemesidir ve herkese açık kullanılabilir sürümle eşleşmiyor."
         },
         "systemOffline": "Sistem çevrimdışı. Bazı ayarlara erişim olmayabilir.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Bu sistem şu anda bir birleştirme işleminde yer almaktadır."
     },
     "search": {
         "Any": "Herhangi",
@@ -596,23 +597,23 @@
         "vendors": "Üreticiler"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginDetach": "Sunucu şimdi ayrılıyor",
+        "beginReset": "Sunucu şimdi sıfırlanıyor.",
+        "detachSystemFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
+        "detachSystemSuccess": "Sunucu başarıyla sistemden ayrıldı.",
+        "portWarning": "1024'ten küçük bağlantı noktası numaraları kısıtlanır. Sunucuya erişilemez hale gelebilir.",
+        "removeMediaserverFailed": "Sunucu sistemden kaldırılamadı.",
+        "resetFailed": "Sunucu sistemden kaldırılamadı. Lütfen girdiğiniz şifrenin doğru olup olmadığını ve sunucunun çevrimiçi olup olmadığını kontrol edin ve tekrar deneyin.",
+        "resetSuccessful": "Sunucu {{ serverName }} varsayılanlara sıfırlandı.",
+        "restartFailed": "Sunucu yeniden başlatılırken bir sorun oluştu.",
+        "restartSuccessful": "Sunucu başarıyla yeniden başlatıldı.",
         "serverOffline": "Sunucu Çevrimdışı.",
         "servers": "Sunucular",
         "status": {
-            "checking": "checking...",
+            "checking": "kontrol Ediliyor...",
             "offline": "çevrimdışı",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "sıfırlanmasını...",
+            "restarting": "yeniden başlatılıyor..."
         },
         "successRename": "Sunucu adı kaydedildi."
     },
@@ -621,8 +622,8 @@
         "mergeUnknownName": "Sistem için Bilinmeyen Ad (Bulut birleştirme yüzünden)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "Güvenlik ayarları yüklenemiyor.",
+            "notAbleToLoadSystem": "Sistem ayarları yüklenemiyor.",
             "notAbleToLoadStorageInfo": "Depolama bilgileri yüklenemiyor.",
             "sessionLimitDuration": {
                 "hours": "saat",
@@ -644,27 +645,27 @@
         "loggers": {
             "none": {
                 "text": "Hiç",
-                "help": "(log disabled)"
+                "help": "(günlük devre dışı)"
             },
             "error": {
                 "text": "Hata",
-                "help": "(log errors only)"
+                "help": "(yalnızca günlük hataları)"
             },
             "warning": {
                 "text": "Uyarı",
-                "help": "(log warnings and errors)"
+                "help": "(günlük uyarıları ve hataları)"
             },
             "info": {
                 "text": "Bilgi",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(günlük uyarıları, hatalar ve tüm iletiler)"
             },
             "debug": {
                 "text": "Hata ayıklama",
-                "help": "(log every System message and debug information)"
+                "help": "(her Sistem mesajını ve hata ayıklama bilgilerini günlüğe kaydet)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "Ayrıntılı",
+                "help": "(Detaylar: Kullanılabilir tüm bilgileri günlükle)"
             }
         }
     },
@@ -687,7 +688,7 @@
             },
             "merge": {
                 "failed": "Sistem birleştirme işlemi başarısız oldu",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "{{primaryName}} ve {{secondaryName}} sistemlerinin birleştirilmesi tamamlandı"
             },
             "rename": {
                 "success": "Sistem ismi kaydedildi"
@@ -727,26 +728,26 @@
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "Ek yerel FS türleri",
+        "autoDiscoveryResponseEnabled": "Otomatik keşif yanıtı",
+        "crossdomainEnabled": "Etki Alanları Arası",
+        "defaultExportVideoCodec": "Varsayılan video codec'i",
+        "defaultVideoCodec": "Varsayılan video codec bileşeni",
+        "downloaderPeers": "İndirici eşleri",
+        "lastMergeMasterId": "Son birleştirme yöneticisi",
+        "lastMergeSlaveId": "Son birleştirme yöneticisi",
+        "ldapSearchTimeoutS": "LDAP arama zaman aşımı (sn)",
+        "licenseServer": "Lisans sunucusu",
+        "lowQualityScreenVideoCodec": "Düşük kaliteli ekran video codec bileşeni",
+        "maxP2pAllClientsSizeBytes": "Max P2P tüm istemciler boyut bayt",
+        "maxRtpRetryCount": "Maks RTP yeniden deneme sayısı",
+        "metadataStorageChangePolicy": "Meta veri depolama değişikliği politikası",
+        "pushNotificationsLanguage": "Anlık bildirim dili",
+        "resourceFileUri": "Kaynak dosya URI'sı",
+        "sessionLimitMinutes": "Oturum sınırı (dakika)",
+        "specificFeatures": "Spesifik özellikler",
         "systemName": "Sistem Adı",
-        "webSocketEnabled": "Web sockets",
+        "webSocketEnabled": "Web soketleri",
         "arecontRtspEnabled": "Arecont RTSP Etkin",
         "auditTrailEnabled": "Denetim etkinleştirildi",
         "auditTrailPeriodDays": "Denetim izi dönemi günleri",

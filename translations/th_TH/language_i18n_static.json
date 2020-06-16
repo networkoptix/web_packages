@@ -425,6 +425,7 @@
         "oldPasswordMistmatch": "ต้องระบุรหัสผ่านปัจจุบัน.",
         "oldSafariNotSupported": "ไม่สนับสนุน Safari ที่เก่ากว่าเวอร์ชั่น 10",
         "passwordMismatch": "รหัสผ่านผิด",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "ระบบ",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
