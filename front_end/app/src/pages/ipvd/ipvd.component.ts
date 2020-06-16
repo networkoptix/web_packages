@@ -297,6 +297,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                     } else {
                         if (select.id === 'vendors' && this.params.camera) { // direct navigation to camera
                             select.selected = this.findVendorForCamera(this.params.camera);
+                            if (select.selected === '') { // not found. wrong camera model? try search...
+                                this.filterModel.search = this.params.camera;
+                            }
                         } else {
                             select.selected = [];
                         }
@@ -446,9 +449,9 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
                         });
 
                 this.updateFilterModel();
-                this.searchVendor();
                 // Trigger model change for search component
                 this.filterModel = { ...this.filterModel };
+                this.searchVendor();
             },
             ex => console.error(ex));
     }

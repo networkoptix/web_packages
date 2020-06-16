@@ -1,1 +1,3 @@
-pabot --processes 5 --outputdir smoke_check/results -v ENV:https://dev2.cloud.hdw.mx smoke_check/tests
+#!/bin/bash
+
+pabot --processes 5 --outputdir smoke_check/test_results -v ENV:$1 -v VMS:$2 smoke_check/tests

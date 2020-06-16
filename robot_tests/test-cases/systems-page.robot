@@ -13,15 +13,6 @@ ${url}         ${ENV}
 @{TMP USERS}
 
 *** Keywords ***
-Check Systems Text
-    [Arguments]    ${user}
-    Sleep    1
-    Log Out
-    Log In    ${user}    ${password}
-    Wait Until Page Contains Element    ${AUTO TESTS USER}
-    Element Text Should Be    ${AUTO TESTS USER}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    Wait Until Element Is Not Visible    //h2[.='${YOUR SYSTEM TEXT}']
-
 Reset DB and Open New Browser On Failure
     Close Browser
     Set Account Name    ${url}    ${EMAIL OWNER}    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
@@ -29,12 +20,6 @@ Reset DB and Open New Browser On Failure
 
 Restart
     Common Restart Logout    ${url}
-
-Remove Temporary Users
-    FOR    ${user}    IN     @{TMP USERS}
-        ${user id}=   Get Cloud User Id By Email    ${auth}    ${user}    ${AUTO TESTS SYSTEM ID}
-        Remove User    ${auth}    ${AUTO SYS IP}    ${user id}
-    END
 
 *** Test Cases ***
 System tiles represent actual information

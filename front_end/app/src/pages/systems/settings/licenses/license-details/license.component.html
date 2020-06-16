@@ -1,0 +1,21 @@
+<nx-block type="gray" *ngFor="let license of licenses" class="d-block mt-3">
+    <header>
+        <h4 [innerText]="license.key"></h4>
+    </header>
+    <nx-section>
+        <div class="row nx-panel-row align-items-end" *ngFor="let detail of orderedLicense[license.key]">
+            <div class="col-4 col-lg-3 nx-panel">
+                <div class="row-title">
+                    <span [innerText]="detail.name"></span>
+                </div>
+                <div class="row-line"></div>
+            </div>
+            <div class="col-8 col-lg-9 pl-0 d-flex align-items-end">
+                <span class="row-value"
+                      [ngClass]="{ 'error': detail.error }"
+                      [innerHTML]="detail.value">
+                </span>
+            </div>
+        </div>
+    </nx-section>
+</nx-block>

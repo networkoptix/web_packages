@@ -51,7 +51,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     settings: Settings;
     settingsSubscription: Subscription;
     settingsServiceSubscription: Subscription;
+    systemsSubscription: Subscription;
     systemSubscription: Subscription;
+    currentMergeInfo: any = undefined;
 
     settingsForSystem;
 
@@ -135,6 +137,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
+                        this.synceMergeAlerts();
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
@@ -153,6 +156,26 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     () => { this.updateAndGoToSystems(); },
                     error => error
                 );
+            });
+    }
+
+    synceMergeAlerts() {
+        if (this.system.mergeInfo) {
+            this.currentMergeInfo = this.system.mergeInfo;
+        } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+            this.currentMergeInfo = undefined;
+            this.systemsService.forceUpdateSystems().toPromise();
+        }
+
+        if (this.systemsSubscription) {
+            this.systemsSubscription.unsubscribe();
+        }
+        this.systemsSubscription = this.systemsService.systemsSubject
+            .subscribe(() => {
+                if (this.systemsService.finishedMerged) {
+                    this.systemsService.finishedMerged = false;
+                    this.system.getInfo(true, false);
+                }
             });
     }
 
@@ -262,6 +285,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
+                this.synceMergeAlerts();
                 this.settingsService.system = this.system;
             });
     }

@@ -5,9 +5,11 @@ import { FormsModule }          from '@angular/forms';
 import { UpgradeModule }        from '@angular/upgrade/static';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule }      from '@ngx-translate/core';
+
 import { NxDebugComponent }     from './debug.component';
 import { ComponentsModule }     from '../../components/components.module';
 import { AuthGuard }            from '../../routeGuards';
+import { DirectivesModule }     from '../../directives/directives.module';
 
 const appRoutes: Routes = [
     {
@@ -23,7 +25,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
-
+        DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers      : [],

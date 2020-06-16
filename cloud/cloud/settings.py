@@ -33,6 +33,8 @@ assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instan
 TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']  # {systemId}.relay-bur.vmsproxy.hdw.mx
 TRAFFIC_RELAY_PROTOCOL = 'https://'
 
+CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -41,6 +43,7 @@ SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
 # Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
 CELERY_WORKER = 'celery' in sys.argv[0]
+PUSH_WORKER = 'push-notification' in sys.argv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
@@ -128,7 +131,7 @@ ADMIN_DASHBOARD = ('cms.models.ContentVersion',
                    'cms.models.AssetType',
                    'cms.models.UserGroupsToAssetPermissions',
                    'cms.models.UserGroupsToAssetType',
-                   'cms.models.ContributerAgreement',
+                   'cms.models.ContributorAgreement',
                    '*.auth.models.Permission',
                    'django_celery_beat.*',
                    'django_celery_results.*',
@@ -206,9 +209,13 @@ else:
     REDIS_CACHE['LOCATION'] = 'redis://localhost:6379/1'
 
 CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "TIMEOUT": None
+    "default": REDIS_CACHE,
+    "customization": REDIS_CACHE,
+    "push_authentication": {
+        "BACKEND": REDIS_CACHE['BACKEND'],
+        "OPTIONS": REDIS_CACHE['OPTIONS'],
+        "LOCATION": REDIS_CACHE['LOCATION'],
+        "TIMEOUT": 60 * 60 * 24  # 1 day
     },
     "push_config": {
         "BACKEND": REDIS_CACHE['BACKEND'],
@@ -237,7 +244,7 @@ if LOCAL_ENVIRONMENT:
     conf["cloud_storage"]["url"] = f"{_HOST}/storage"
     conf["cloud_storages"]["url"] = f"{_HOST}/storages"
 
-    # BROKER_URL = 'sqs://...'
+    # CELERY_BROKER_URL = 'sqs://...'
     # This setting is removed because every developer needs personal AWS credentials
     # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
     # Or go through file history in source control to find the last time it was here
@@ -387,26 +394,33 @@ HOOK_EVENTS = {
 
 # Configure AWS SQS
 # Broker_url = 'sqs://{aws_access_key_id}:{aws_secret_access_key}@'
-# BROKER_TRANSPORT_OPTIONS
+# CELERY_BROKER_TRANSPORT_OPTIONS
 #   queue_name_prefix allows you to name the queue for sqs
 #   region allows you to specify the aws region
 
 
-BROKER_URL = os.getenv('QUEUE_BROKER_URL')
-BROKER_CONNECTION_MAX_RETRIES = 1
-if not BROKER_URL:
-    BROKER_URL = 'sqs://'
+CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
+if not CELERY_BROKER_URL:
+    CELERY_BROKER_URL = 'sqs://'
 
-BROKER_TRANSPORT_OPTIONS = {
+CELERY_BROKER_TRANSPORT_OPTIONS = {
     'queue_name_prefix': conf['queue_name'] + '-',
     'region': os.getenv('AWS_REGION', 'us-east-1')
 }
 
-RESULT_PERSISTENT = True
+CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_SEND_EVENTS = False
-CELERYD_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages it wants
-BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+CELERY_WORKER_SEND_TASK_EVENTS = False
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages as it wants
+CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+if PUSH_WORKER:
+    CELERY_WORKER_CONCURRENCY = 2
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 30
+    CELERY_RESULT_BACKEND = None
+
+DJANGO_CELERY_BEAT_TZ_AWARE = False
+
 
 # / End of Celery settings section
 

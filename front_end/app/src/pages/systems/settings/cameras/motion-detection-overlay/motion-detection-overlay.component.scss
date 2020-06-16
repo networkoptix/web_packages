@@ -1,4 +1,4 @@
-@import '../../../../../../styles/theme_variables';
+@use '../../../../../../styles/theme_variables' as *;
 
 nx-motion-detection-overlay {
     position: absolute;

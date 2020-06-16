@@ -12,6 +12,7 @@
                     <a *ngIf="updateFunction" (click)="updateFunction()" target="_blank" class='action-link'>
                         <svg-icon
                             *ngIf="action === 'Refresh'"
+                            nx-add-svg-src
                             [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                             [svgStyle]="{'height.px': '20'}" title="Reload"></svg-icon>
                         <span>{{action}}</span>

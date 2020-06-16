@@ -1,5 +1,4 @@
-@import '../styles/mixins';
-
+@use '../../styles/mixins' as *;
 
 :host {
     min-height: 0;

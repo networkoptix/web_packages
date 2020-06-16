@@ -1,24 +1,37 @@
+import json
+
 from django.conf import settings
 from rest_framework import serializers
 
 from api.controllers.cloud_api import System
 from api.helpers.exceptions import APILogicException, APINotAuthorisedException
-from notifications.models import PushSubscription, PushDevice
+from notifications.models import PushSubscription, PushDevice, PushNotification
 
 PUSHDEVICE_TYPES = tuple(PushDevice.TYPES._identifier_map.keys())
 
+FCM_ERRORS = {
+    'MismatchSenderId': 'Device token does not match with the current configuration',
+    'InvalidRegistration': 'Device token is invalid',
+    'NotRegistered': 'Device token is no longer valid',
+    'InvalidApnsCredential': 'APNs key is not valid for this device'
+}
+
+
 class NotificationSerializer(serializers.Serializer):
+    class NotificationDataSerializer(serializers.Serializer):
+        title = serializers.CharField(required=False, max_length=255, default='')
+        body = serializers.CharField(required=False, default='')
+        payload = serializers.DictField(required=False, default={})
+        options = serializers.DictField(required=False, default={})
+
+        def validate(self, data):
+            if len(data['title'] + data['body'] + json.dumps(data['payload'])) > PushNotification.SIZE_LIMIT:
+                raise serializers.ValidationError(f'Title, body, and payload cannot total more than {PushNotification.SIZE_LIMIT} characters')
+            return data
+
     systemId = serializers.UUIDField(allow_null=False)
     targets = serializers.ListField(child=serializers.CharField(min_length=1))
-    notification = serializers.DictField()
-
-    def validate_notification(self, value):
-        value['title'] = value.get('title', '')
-        value['body'] = value.get('body', '')
-
-        if not isinstance(value['title'], str) or not isinstance(value['body'], str):
-            raise serializers.ValidationError('Title and body must be strings')
-        return value
+    notification = NotificationDataSerializer()
 
 
 class RegisterDeviceSerializer(serializers.Serializer):
@@ -50,7 +63,12 @@ class SubscriptionSerializer(serializers.Serializer):
             if response['success'] == 1:
                 return value
             else:
-                raise serializers.ValidationError("Token could not be validated")
+                fcm_error = response['results'][0]['error']
+                raise serializers.ValidationError({
+                    'message': 'Token could not be validated',
+                    'code': fcm_error,
+                    'error': FCM_ERRORS.get(fcm_error, fcm_error)
+                })
 
     def validate_systems(self, value):
         if value is not None:

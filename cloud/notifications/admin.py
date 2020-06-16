@@ -183,5 +183,11 @@ class PushSubscriptionAdmin(admin.ModelAdmin):
     form = PushSubscriptionForm
 
 
+@admin.register(PushNotification)
+class PushNotificationAdmin(admin.ModelAdmin):
+    readonly_fields = ('devices',)
+    search_fields = ('title', 'body', 'raw_system_id', 'raw_targets', 'devices__user__email', 'result_data')
+    list_filter = ('customization',)
+
+
 admin.site.register(PushDevice, GCMDeviceAdmin)
-admin.site.register(PushNotification)

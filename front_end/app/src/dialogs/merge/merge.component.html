@@ -36,6 +36,7 @@
             <input
                 class="mb-2 form-control"
                 #serverUrlInput="ngModel"
+                #checkMergeUrlInput
                 name="serverUrl"
                 id="serverUrl"
                 type="url"
@@ -84,6 +85,7 @@
             <label for="adminPassword" translate>Password</label>
             <input class="form-control"
                     #adminPassword="ngModel"
+                    #adminPasswordInput
                     [ngClass]="{ 'invalid-state': adminPassword.touched && adminPassword.invalid }"
                     id="adminPassword" autocomplete="new-password"
                     name="adminPassword" type="password" required
@@ -100,7 +102,7 @@
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="checkPasswordProcess"
@@ -116,7 +118,7 @@
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="checkPasswordProcess"
@@ -145,12 +147,12 @@
     </div>
     <div class="modal-footer d-flex justify-content-between">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <button class="btn btn-primary svg-icon next-button" type="button" (click)="machine.transition('confirmMerge')">
             <ng-container>{{ 'Next' | translate }}</ng-container>
-            <svg-icon [src]="CONFIG.icons.dir + 'arrow_right.svg'"
-                class="white-svg ml-2" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_right.svg'"
+                class="white-svg ml-2" [applyCss]="true"></svg-icon>
         </button>
     </div>
 </form>
@@ -161,9 +163,9 @@
                 secondarySystem: secondaryName
             }"></p>
         <div *ngIf="tooManyServers">
-            <p [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
-            <p translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
-            <p>
+            <p class="error-label" [innerHTML]="'dialogs.merge.warning'| translate: { maxServers: CONFIG.maxServers }"></p>
+            <p class="error-label" translate>Systems of such size may be unstable and have troubles with updates and synchronization.</p>
+            <p class="mb-3">
                 {{LANG.dialogs.merge.recommendSupport.a_recommend}}&nbsp;
                 <a [href]="CONFIG.company.links.support" target="_blank">{{LANG.dialogs.merge.recommendSupport.b_support}}</a>&nbsp;
                 {{LANG.dialogs.merge.recommendSupport.c_proceeding}}
@@ -174,6 +176,7 @@
             <label for="cloudOwnerPassword" translate>Enter password for your account to continue</label>
             <input class="form-control"
                     #cloudOwnerPassword="ngModel"
+                    #confirmMergeInput
                     [ngClass]="{ 'invalid-state': cloudOwnerPassword.touched && cloudOwnerPassword.invalid }"
                     id="cloudOwnerPassword" autocomplete="new-password"
                     name="cloudOwnerPassword" type="password" required
@@ -181,16 +184,16 @@
                     [ngModel]="machine.state.template.passwordValue"
                     (blur)="passwordChange(cloudOwnerPassword)"
                     nxFocusMe>
-            <label
-                *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText"
-                class="error-label password-label-margin mb-0" for="cloudOwnerPassword">
+            <label 
+                *ngIf="machine.state.show.passwordError" 
+                [innerHTML]="machine.state.template.passwordErrorText" 
+                class="error-label error-text-margin mb-0" for="cloudOwnerPassword">
             </label>
         </div>
     </div>
     <div class="modal-footer d-flex justify-content-between next-button">
         <button class="btn btn-default svg-icon" (click)="goBack()" type="button">
-            <svg-icon [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyClass]="true"></svg-icon>
+            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'arrow_left.svg'" [applyCss]="true"></svg-icon>
         </button>
         <nx-process-button
             [process]="mergingProcess"

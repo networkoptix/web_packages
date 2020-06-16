@@ -389,7 +389,7 @@ class Storage(object):
     def _merge(email, password, master_storage_id, slave_storage_id):
         request = f"{CLOUD_STORAGE_URL}/{master_storage_id}/merged-storages/"
         body = {
-            "id": slave_storage_id
+            "slaveStorageId": slave_storage_id
         }
         return put_wrapper(request, json=body, auth=(HTTPDigestAuth(email, password)))
 

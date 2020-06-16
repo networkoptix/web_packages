@@ -1,7 +1,5 @@
-@import '../../../../styles/custom/custom_palette';
-@import '../../../../styles/theme_palette';
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/mixins/breakpoints';
 
@@ -14,7 +12,7 @@ nx-no-systems {
         padding          : 2rem 0;
 
         &-body {
-            @extend #light18;
+            @include typography.light18;
         }
     }
 

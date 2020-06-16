@@ -13,6 +13,7 @@ import {
     NxAccountPasswordModule, NxAccountPasswordComponent
 }                                        from './';
 import { MenuModule }                    from '../../menu';
+import { DirectivesModule }             from '../../directives/directives.module';
 
 @Injectable()
 export class TypeResolver implements Resolve<any> {
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
         UpgradeModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         FormsModule,
         NxAccountSettingsModule,
         NxAccountPasswordModule,

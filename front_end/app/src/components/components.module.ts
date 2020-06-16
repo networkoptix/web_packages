@@ -55,12 +55,12 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
 @NgModule({
     imports: [
         CommonModule,
-        DirectivesModule,
         TranslateModule,
         RouterModule,
         FormsModule,
         NgbToastModule,
         NgbModule,
+        DirectivesModule,
         AngularSvgIconModule.forRoot()
     ],
     declarations: [

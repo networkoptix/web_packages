@@ -8,17 +8,14 @@ Suite Teardown   Close Browser
 *** Test Cases ***
 Log In as Existing User
     [Tags]    T169283    auth
-
     Log In    ${email auth}    ${password}
 
 Log Out
     [Tags]    T169276    auth
-
     Log Out
 
 Create Account
     [Tags]    T169275    auth
-
     ${random email}=    Get Random Email    ${email base}
 
     Log    Step 1: Fill and send Create account form

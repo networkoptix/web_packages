@@ -1,7 +1,5 @@
-@import '../../../../styles/native-theme/_theme_palette';
-@import '../../../../styles/_theme_palette';
-@import '../../../../styles/custom/_custom_palette';
-@import '../../../styles/_mixins';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/_mixins';
 
 //nx-systems-list-component {
     .input-overlay {
@@ -33,7 +31,7 @@
         overflow    : hidden;
         
         h2 {
-            @include ellipsis;
+            @include mixins.ellipsis;
             
             line-height   : 24px;
             margin-bottom : 2px;

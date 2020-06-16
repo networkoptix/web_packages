@@ -8,9 +8,13 @@ import { NxScrollMechanicsDirective } from './nx-scroll-mechanics';
 import { NxUrlValidatorDirective }    from './nx-url-validator';
 import { NxEditableDirective }        from './nx-editable.directive';
 import { NxResizeObserver }           from './nx-resize.directive';
+import { NxAddSvgSrc }                from './add-data.directive';
+import { AngularSvgIconModule }       from 'angular-svg-icon';
 
 @NgModule({
-    imports     : [],
+    imports     : [
+        AngularSvgIconModule.forRoot()
+    ],
     declarations: [
         NxArrowNavDirective,
         NxClickElsewhereDirective,
@@ -20,7 +24,8 @@ import { NxResizeObserver }           from './nx-resize.directive';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxEditableDirective,
-        NxResizeObserver
+        NxResizeObserver,
+        NxAddSvgSrc
     ],
     entryComponents: [],
     exports        : [
@@ -32,7 +37,8 @@ import { NxResizeObserver }           from './nx-resize.directive';
         NxScrollMechanicsDirective,
         NxUrlValidatorDirective,
         NxEditableDirective,
-        NxResizeObserver
+        NxResizeObserver,
+        NxAddSvgSrc
     ]
 })
 export class DirectivesModule {

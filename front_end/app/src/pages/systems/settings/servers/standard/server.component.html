@@ -1,9 +1,9 @@
 <div class="row auth-visible">
-    <nx-page-placeholder class="placeholder-section" type="OFFLINE" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
-
-    <nx-pre-loader class="w-100" *ngIf="!isOffline && !selectedServer"></nx-pre-loader>
-
-    <div class="col-12 server-info" *ngIf="selectedServer">
+    <nx-page-placeholder class="sectional-div server-placeholder" type="NO_SETTINGS" *ngIf="isOffline && !selectedServer"></nx-page-placeholder>
+    <div class="col-12 sectional-div server-loader" *ngIf="!isOffline && !serverLoaded">
+        <nx-pre-loader type="wrapper"></nx-pre-loader>
+    </div>
+    <div class="col-12 server-info" *ngIf="selectedServer && serverLoaded">
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
@@ -25,8 +25,8 @@
                         *ngIf="serverOffline"
                         (click)="checkStatus()">
                         <span [ngClass]="{ 'animate-rotation': checking }">
-                            <svg-icon [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                                [applyClass]="true"></svg-icon>
+                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                                [applyCss]="true"></svg-icon>
                         </span>
                         <span class="ml-1" translate>Check Status</span>
                     </button>
@@ -34,8 +34,8 @@
                         [routerLink]="fullInfoPath"
                         [queryParams]="{id: parsedServerId}">
                             <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
-                                    [applyClass]="true"></svg-icon>
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                    [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>
                     </button>

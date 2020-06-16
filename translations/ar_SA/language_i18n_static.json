@@ -4,6 +4,7 @@
     "Integrations": "Integrations",
     "Privacy": "Privacy",
     "Support": "Support",
+    "Supported Devices": "Supported Devices",
     "Terms": "Terms",
     "accessRoles": {
         "Administrator": {
@@ -70,7 +71,7 @@
         "agreementAccepted": "Agreement has been accepted",
         "changePassword": "Change Password",
         "newPasswordLabel": "New password",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "تم حفظ كلمة المرور بنجاح",
         "saveChanges": "Save"
     },
     "activeActions": {
@@ -154,6 +155,7 @@
         "systemServerError": "خطأ داخلي بالخادم",
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "النظام غير قابل للوصول",
+        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Unknown",
         "voiceCommands": {
             "clear search": "مسح البحث",
@@ -175,7 +177,7 @@
         "buttons": {
             "cancel": "Cancel",
             "createAccount": "Create New Account",
-            "delete": "Delete",
+            "delete": "حذف",
             "deleteAccount": "Delete Account",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
@@ -223,6 +225,7 @@
         },
         "merge": {
             "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Wrong password for local admin user",
             "checking": "Checking...",
             "commonText": "Failed to merge Systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connect System you want to merge with this one to <strong>{{cloudName}}</strong> or merge locally using <strong>{{vmsName}}</strong> Client.",
@@ -251,14 +254,12 @@
             "serverAtUrl": "server at {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
+            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "System {{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address",
+            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
+            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "urlEmpty": "أدخل عنوان الخادم",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
@@ -387,6 +388,11 @@
         "EmailAlreadyExists": "هذا البريد الإلكتروني مسجل مسبقاً",
         "FAIL": "النظام <strong>{{failedSystem}}</strong> غير قابل للوصول حاليًا.<br>حاول مرة أخرى بعد لحظات قليلة أو اتصل بـ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">دعم</a>.",
         "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
+        "fail": "{{failedSystem}} is inaccessible.",
+        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
+        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "تم مسبقاً تنشيط هذا الحساب",
         "accountBlocked": "تم حظر هذا الحساب مؤقتًا. يرجى المحاولة مرة أخرى في بضع دقائق.",
         "accountNotActivated": "لم يتم تفعيل هذا الحساب بعد. <a href=\"/activate\">أرسل رابط التفعيل مرة أخرى</a>",
@@ -419,6 +425,7 @@
         "oldPasswordMistmatch": "Current password is incorrect.",
         "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
         "passwordMismatch": "كلمة مرور خاطئة",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -426,6 +433,7 @@
         "wrongCode": "الحساب مفعل بالفعل أو رمز التأكيد غير صحيح",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
@@ -487,6 +495,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "System Administration",
+            "general": "General",
+            "licenses": "Licenses",
             "users": "Users"
         }
     },
@@ -563,7 +573,7 @@
             "to": "is being merged to this system",
             "mayTake": "Depending on the size of the database, it may take up to several hours."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "انتهاء دمج الأنظمة",
         "integration": {
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."
@@ -614,6 +624,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Not able to load security settings.",
             "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadStorageInfo": "Not able to load storage information.",
             "sessionLimitDuration": {
                 "hours": "ساعات",
                 "minutes": "minutes"
@@ -627,7 +638,7 @@
             "unavailable": "System is unreachable"
         },
         "users": {
-            "cloudDelete": "Remove User",
+            "cloudDelete": "حذف المستخدم",
             "localDelete": "Delete User"
         },
         "yourSystem": "النظام الخاص بك",
@@ -677,11 +688,43 @@
             },
             "merge": {
                 "failed": "System merge failed",
-                "success": "System merge completed"
+                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
             },
             "rename": {
                 "success": "System name saved"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Type",
+            "channels": "Channels",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Expires",
+            "time": "Time",
+            "deactivations": "Deactivation left",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Error",
+            "expired": "Expired",
+            "ok": "OK",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analog Encoder",
+            "starter": "Starter",
+            "iomodule": "IO Module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} more required",
+            "activated": "License key activated",
+            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
+            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
         }
     },
     "settingsConfig": {
@@ -735,7 +778,7 @@
         "localSystemId": "Local System ID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "حجم قائمة انتظار P2P الأقصى (بايت)",
         "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
         "maxRecordQueueSizeElements": "Max record queue size (elements)",
         "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
@@ -764,7 +807,7 @@
         "timeSynchronizationEnabled": "Time synchronization enabled",
         "primaryTimeServer": "Primary time synchronization server",
         "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
+        "syncTimeExchangePeriod": "مزامنة الفاصل الزمني لمزامنة الوقت لطلبات الشبكة",
         "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
         "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
         "updateNotificationsEnabled": "Update notifications enabled",
@@ -777,6 +820,7 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

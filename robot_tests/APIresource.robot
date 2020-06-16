@@ -157,6 +157,11 @@ Evaluate Auto System Settings via API
     ${string}=   Convert To String    ${systemSettings.json()}
     Should Contain    ${string}    ${setting}': '${selected}
 
+Disconnect Server via API
+    [Arguments]    ${auth}    ${sysId}    ${password}
+    Create Digest Session    disconnectServer   ${ENV}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
 
 # Keywords which use System/Server API
 Setup Local System
@@ -207,7 +212,7 @@ Detach Server From System
 
 Detach Server From Cloud
     [Arguments]    ${server url}    ${auth}
-    &{data}=   Create Dictionary    currentPassword=${auth[1]}
+    &{data}=   Create Dictionary    currentPassword=${auth[1]}    password=${BASE PASSWORD}
     Create Digest Session    Detach From Cloud session    ${server url}    auth=${auth}    disable_warnings=1
     ${resp}=   Post Request    Detach From Cloud session     /api/detachFromCloud    json=${data}    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
@@ -227,15 +232,23 @@ Get Users
     ${resp}=   Get Request    Get Users session    /ec2/getUsers
     Should Be Equal As Strings    ${resp.status_code}    200
     Return From Keyword    ${resp.json()}
-
-#Save User
-#    [Arguments]    ${auth}    ${server url}    ${user id}    ${user role id}
-#    &{data}=   Create Dictionary    isCloud=${true}    id=${user id}    userRoleId=${user role id}
-#    Create Digest Session    Save User session    ${server url}    auth=${auth}    disable_warnings=1
-#    ${resp}=   Post Request    Save User session    /ec2/saveUser    json=${data}    timeout=10
-#    Should Be Equal As Strings    ${resp.status_code}    200
-#    Return From Keyword    ${resp.json()}
-
+    
+Check Allow Only Secure Connections
+    [Arguments]    ${server url}    ${auth}
+    Create Digest Session    Check HTTPS   ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Get Request    Check HTTPS    /static/index.html#/   
+    Should Be Equal As Strings    ${resp.status_code}    200
+    
+Set Camera Name
+    [Arguments]    ${server url}    ${auth}    ${camera id}    ${name}
+    &{data} =    Create Dictionary
+    ...    cameraId={${camera id}}
+    ...    cameraName=${name}
+    Create Digest Session    Save camera name    ${server url}    auth=${auth}    disable_warnings=1
+    ${resp}=   Post Request    Save camera name     /ec2/saveCameraUserAttributesList    json=${data}    timeout=10
+    Should Be Equal As Strings    ${resp.status_code}    200
+    [Return]    ${resp.json()}
+    
 Save User
     [Arguments]
     ...    ${auth}

@@ -18,7 +18,9 @@ import {
     NxCloudStorageModule, NxCloudStorageComponent,
     NxSystemServersModule, NxSystemServersComponent,
     NxSystemUsersModule, NxSystemUsersComponent
-}                                      from './';
+}                                             from './';
+import { NxSystemLicensesComponent }          from './licenses/licenses.component';
+import { NxSystemLicensesModule }             from './licenses/licenses.module';
 
 export const cloudSettingsRoutes: Routes = [
     // root path is handles by AJS for now
@@ -69,6 +71,11 @@ export const cloudSettingsRoutes: Routes = [
                 component     : NxCloudStorageComponent,
                 canActivate   : [SystemGuard],
                 canDeactivate : [ApplyGuard]
+            },
+            {
+                path        : 'licenses',
+                component   : NxSystemLicensesComponent,
+                canActivate : [SystemGuard]
             }
         ]
     }
@@ -88,8 +95,9 @@ export const cloudSettingsRoutes: Routes = [
         NxSystemServersModule,
         NxCamerasModule,
         NxCloudStorageModule,
-        RouterModule.forChild(cloudSettingsRoutes),
-        MenuModule
+        NxSystemLicensesModule,
+        MenuModule,
+        RouterModule.forChild(appRoutes)
     ],
     providers: [
         ApplyGuard

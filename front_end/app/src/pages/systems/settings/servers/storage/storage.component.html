@@ -2,8 +2,14 @@
     <header><h4 translate>Storage Locations</h4></header>
     <nx-section nonPadded>
         <div class="storage-container">
+            <nx-pre-loader *ngIf="loading"></nx-pre-loader>
+            <nx-section-placeholder
+                    *ngIf="!loading && !storages.length"
+                    svgFileName="system_settings_placeholder"
+                    width="64"
+                    [translatedMessage]="LANG.system.settings.notAbleToLoadStorageInfo">
+            </nx-section-placeholder>
             <form class="form form-horizontal" role="form" name="storageSettings" novalidate>
-                <nx-pre-loader *ngIf="!showStorage"></nx-pre-loader>
                 <table *ngIf="showStorage">
                     <thead>
                         <tr>

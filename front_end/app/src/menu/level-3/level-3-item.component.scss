@@ -1,10 +1,9 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/mixins';
-@import '../../styles/typography';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
+@use '../../../styles/mixins';
 
 .menu-level-3 {
-    @extend #medium13;
+    @include typography.medium13;
     position         : relative;
     background-color : $light5;
     border-radius    : 0;
@@ -109,7 +108,7 @@
     }
 
     .ellipsis {
-        @include ellipsis;
+        @include mixins.ellipsis;
         line-height : inherit;
     }
 

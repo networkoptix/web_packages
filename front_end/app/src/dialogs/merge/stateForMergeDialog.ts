@@ -1,5 +1,14 @@
-export default Object.assign({
-    thisSystemHasOutdatedServerError : { show: {}, template: {}, errorText: {} },
+import { DialogsMerge } from '../../../language_i18n_static_types';
+
+export const State: {
+    [state: string]: {
+        show: any,
+        showUpdates: any,
+        template: any,
+        errorText: Partial<DialogsMerge>
+    }
+} = Object.assign({
+    thisSystemHasOutdatedServerError : { show: {}, showUpdates: {}, template: {}, errorText: {} },
     checkMerge                       : {
         show: {
             systemDropdown                    : true,
@@ -60,8 +69,6 @@ export default Object.assign({
             secondarySystemUnavailable : '',
             serverNotAvailable         : '',
             serverNotYours             : '',
-            serverVersionOld           : '',
-            serverVersionNew           : '',
             systemOffline              : '',
             systemsIncompatible        : '',
             systemVersionOld           : '',
@@ -97,11 +104,12 @@ export default Object.assign({
             differentOwners    : '',
             duplicateServers   : '',
             serverNotAvailable : '',
+            systemOffline      : '',
             systemOfflineUrl   : '',
             unknownError       : ''
         }
     },
-    choosePrimary : { show: {}, template: {}, errorText: {} },
+    choosePrimary : { show: {}, showUpdates: {}, template: {}, errorText: {} },
     confirmMerge  : {
         show        : { passwordError: false },
         showUpdates : {
@@ -113,9 +121,10 @@ export default Object.assign({
             passwordValue     : ''
         },
         errorText: {
-            passwordRequired : '',
-            passwordWrong    : '',
-            unknownError     : ''
+            adminPasswordWrong : '',
+            passwordRequired   : '',
+            passwordWrong      : '',
+            unknownError       : ''
         }
     }
 });

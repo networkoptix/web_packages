@@ -67,7 +67,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         language: NxLanguageProviderService,
         @Inject(ViewContainerRef) viewContainerRef,
         private applyService: NxApplyService,
-        private processService: NxProcessService
+        private processService: NxProcessService,
+        private menuService: NxMenuService
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
@@ -90,6 +91,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 max   : 600
             }
         };
+        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
+        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.general.id);
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
         this.initApplyService();
     }
@@ -250,6 +253,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         } else if (newTimeValue % 60 === 0) {
             sw.sessionLimitMinutes.value = newTimeValue;
             newTimeValue /= 60;
+            this.timeValue = newTimeValue;
             // handler for when minutes gets changed to hours in the same change
             // 120 hours --> 120 minutes --> 2 hours
             this.selectElement.change(this.limitSessionTimeUnits.hours);

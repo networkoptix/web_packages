@@ -14,7 +14,7 @@
                             componentId="user-active-status"
                     ></nx-switch>
                 </div>
-                <h2 class="user-email" [ngClass]="{'mb-2': selectedUser.isCloud }">{{ selectedUser.isCloud ? selectedUser.email : selectedUser.name }}</h2>
+                <h2 class="user-email" [ngClass]="{'mb-2': selectedUser.isCloud }">{{ selectedUser.isCloud ? email.originalValue : name.originalValue }}</h2>
                 <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
             </header>
 
@@ -105,8 +105,8 @@
                     <button class="btn btn-default"
                             [disabled]="!systemAvailable"
                             (click)="removeUser()">
-                        <svg-icon [src]="CONFIG.icons.dir + 'delete.svg'"
-                            [applyClass]="true"
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'delete.svg'"
+                            [applyCss]="true"
                             [svgStyle]="{'width.px': '24', 'height.px': '24', 'pointer-events': 'none'}"
                             class="ml-n2 mr-1"></svg-icon>
                         <ng-container>{{deleteMessage}}</ng-container>

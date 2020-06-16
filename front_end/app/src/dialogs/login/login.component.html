@@ -61,7 +61,7 @@
     <div class="modal-footer">
         <nx-process-button buttonText="{{ 'Log In' | translate }}"
                            [form]="loginForm"
-                           [process]="login">
+                           [process]="loginProcess">
         </nx-process-button>
 
         <a routerLink="/restore_password" (click)="activeModal.close()" translate>Forgot password?</a>

@@ -612,6 +612,10 @@ class ServerManager {
             });
     };
 
+    activateLicense(serverId: string, key: string) {
+        return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
+    }
+
     renameServer(serverId: string, serverName: string) {
         const cleanServerId = serverId.replace(/[{}]/g, '');
         return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
@@ -653,6 +657,7 @@ export class NxSystem extends System implements OnDestroy {
     infoPromise: Promise<Partial<NxSystemWithUserInfo>>;
     usersPromise: Promise<void>;
     systemPoll: Subscription | Observable<string | NxSystem>;
+    licensesModifiedSubject = new BehaviorSubject<string>('');
     connectionSubject = new BehaviorSubject<boolean>(false);
     infoSubject = new BehaviorSubject<NxSystem>(undefined);
 
@@ -679,6 +684,14 @@ export class NxSystem extends System implements OnDestroy {
 
     set lostConnection(value) {
         this.connectionSubject.next(value);
+    }
+
+    get licensesModified() {
+        return this.licensesModifiedSubject.getValue();
+    }
+
+    set licensesModified(value) {
+        this.licensesModifiedSubject.next(value);
     }
 
     get systemInfo() {
@@ -1148,6 +1161,22 @@ export class NxSystem extends System implements OnDestroy {
 
     setLogLevels(serverId: string, loggers: IParams) {
         return this.serverManager.setLogLevels(serverId, loggers);
+    }
+
+    getHardwareIdsOfServers() {
+        return this.mediaserver
+            .getHardwareIdsOfServers()
+            .toPromise();
+    }
+
+    getLicenses() {
+        return this.mediaserver
+            .getLicenses()
+            .toPromise();
+    }
+
+    activateLicense(serverId, key) {
+        return this.serverManager.activateLicense(serverId, key);
     }
 }
 

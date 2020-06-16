@@ -4,6 +4,7 @@
     "Integrations": "Integrationen",
     "Privacy": "Datenschutz",
     "Support": "Support",
+    "Supported Devices": "Unterstützte Geräte",
     "Terms": "Bedingungen",
     "accessRoles": {
         "Administrator": {
@@ -154,6 +155,7 @@
         "systemServerError": "Interner Serverfehler",
         "systemServerErrorMessage": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut. Wenn das Problem weiterhin besteht, wenden Sie sich an Ihr Supportteam.",
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
+        "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
         "unknown": "Unbekannt",
         "voiceCommands": {
             "clear search": "suche zurücksetzen",
@@ -223,6 +225,7 @@
         },
         "merge": {
             "adminPasswordTitle": "Geben Sie das Passwort für das Besitzerkonto in <strong>{{secondarySystem}}</strong> ein",
+            "adminPasswordWrong": "Falsches Passwort für lokalen Adminbenutzer",
             "checking": "Prüfung...",
             "commonText": "Fehler beim Zusammenführen der Systeme <strong>{{primarySystem}}</strong> und <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbinden Sie das System, mit dem Sie fusionieren möchten, mit <strong>{{cloudName}}</strong> oder fusionieren Sie lokal mit dem <strong>{{vmsName}}</strong>-Client.",
@@ -251,13 +254,11 @@
             "serverAtUrl": "Server bei {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Zugriff auf das {{targetSystem}}-System nicht möglich.</p><p>Stellen Sie sicher, dass der angegebene Server online ist, und versuchen Sie es erneut.</p>",
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
-            "serverVersionOld": "Dieser Server verfügt über eine ältere Softwareversion, die nicht mit dem aktuellen System kompatibel ist. Aktualisieren Sie es auf den neuesten Build, um es mit dem aktuellen zusammenzuführen.",
-            "serverVersionNew": "Dieser Server verfügt über eine neuere Softwareversion als das aktuelle System. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
-            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar",
+            "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar.",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
-            "systemVersionOld": "Das System {{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
-            "systemVersionNew": "Das System {{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
+            "systemVersionOld": "{{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
+            "systemVersionNew": "{{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -387,6 +388,11 @@
         "EmailAlreadyExists": "Diese E-Mail ist bereits registriert",
         "FAIL": "System <strong>{{failedSystem}}</strong> ist derzeit nicht erreichbar.<br>Versuchen Sie es in ein paar Minuten erneut oder kontaktieren Sie den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
         "INCOMPATIBLE": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide auf den <a href=\"/download\">neuesten Build</a>.",
+        "cloud_systems_have_different_owners": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Ein Server scheint sich sowohl unter dem ausgewählten als auch unter dem aktuellen System aufzulisten.</p><p>Entfernen Sie Offline- und inkompatible Server von jedem System und versuchen Sie es erneut.</p>",
+        "fail": "{{failedSystem}} ist nicht erreichbar.",
+        "incompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
+        "unknown_error": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
         "accountAlreadyActivated": "Dieser Account ist bereits aktiviert",
         "accountBlocked": "Dieses Konto ist vorübergehend gesperrt. Bitte versuchen Sie es in ein paar Minuten noch einmal.",
         "accountNotActivated": "Dieser Account ist noch nicht aktiviert. <a href=\"/activate\">Bestätigungsmail erneut senden</a>",
@@ -419,6 +425,7 @@
         "oldPasswordMistmatch": "Aktuelles Passwort ist falsch.",
         "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
         "passwordMismatch": "Falsches Passwort",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "das System",
         "unknownError": "Es ist ein unerwarteter Fehler aufgetreten",
         "unknownMergeError": "Unbekannter Fehler. Sie können versuchen, die Seite zu aktualisieren und den Versuch zu wiederholen. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -426,6 +433,7 @@
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
+        "licenseFail": "Lizenz konnte nicht aktiviert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundensupport.",
         "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
@@ -487,6 +495,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "System-Administration",
+            "general": "Allgemein",
+            "licenses": "Lizenzen",
             "users": "Benutzer"
         }
     },
@@ -614,6 +624,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Sicherheitseinstellungen können nicht geladen werden.",
             "notAbleToLoadSystem": "Systemeinstellungen können nicht geladen werden.",
+            "notAbleToLoadStorageInfo": "Speicherinformationen können nicht geladen werden.",
             "sessionLimitDuration": {
                 "hours": "stunden",
                 "minutes": "minuten"
@@ -677,11 +688,43 @@
             },
             "merge": {
                 "failed": "Systemzusammenführung fehlgeschlagen",
-                "success": "Systemzusammenführung abgeschlossen"
+                "success": "Zusammenführung der Systeme {{primaryName}} und {{secondaryName}} abgeschlossen"
             },
             "rename": {
                 "success": "Systemname wurde gespeichert"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Typ",
+            "channels": "Kanäle",
+            "server": "Server",
+            "hwid": "Hardware-ID",
+            "status": "Status",
+            "expires": "Läuft ab",
+            "time": "Zeit",
+            "deactivations": "Deaktivierung übrig",
+            "trial": "Trial",
+            "online": "Online",
+            "error": "Fehler",
+            "expired": "Abgelaufen",
+            "ok": "Ok",
+            "digital": "Professional",
+            "analog": "Analog",
+            "edge": "Kante",
+            "vmax": "VMAX",
+            "videowall": "Videowand",
+            "analogencoder": "Analoger Encoder",
+            "starter": "Starter",
+            "iomodule": "I/O-Modul",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} weitere erforderlich",
+            "activated": "Lizenzschlüssel aktiviert",
+            "inuse": "Der Lizenzschlüssel wurde bereits aktiviert und in einem anderen System an den Server mit der Hardware-ID {{hwid}} gebunden",
+            "trialActivated": "Testlizenz aktiviert. Ab heute können Sie 30 Tage lang mit bis zu 4 Kameras aufnehmen."
         }
     },
     "settingsConfig": {
@@ -777,6 +820,7 @@
         "watermarkSettings": "Wasserzeicheneinstellungen",
         "maxWebMTranscoders": "Maximale Anzahl von WEBM-Verbindungen für den Server. Chrome öffnet 2 Verbindungen auf einmal und schließt dann die erste. Es wird daher empfohlen, den Wert >=2 auf diesen Parameter zu setzen.",
         "maxEventLogRecords": "Maximale Ereignisprotokollaufzeichnungen, die in der Datenbank gespeichert werden sollen. Die tatsächliche Anzahl der nicht gelöschten Datensätze kann bis zu 20% höher sein als der angegebene Wert.",
-        "forceLiveCacheForPrimaryStream": "Gibt an, ob einige Frames für den primären Stream zwischengespeichert werden sollen. Werte: \"Ja\" - immer aktiviert (verwendet möglicherweise viel RAM), \"Nein\" - immer deaktiviert, außer wenn dies für die Wiedergabe erforderlich ist (z. B. HLS), \"Auto\" - ähnlich wie \"Nein\", wird aber eingeschaltet, wenn die Benutzerfreundlichkeit verbessert wird (z.B. wenn einige Analytics-Plugins an der Kamera arbeiten)."
+        "forceLiveCacheForPrimaryStream": "Gibt an, ob einige Frames für den primären Stream zwischengespeichert werden sollen. Werte: \"Ja\" - immer aktiviert (verwendet möglicherweise viel RAM), \"Nein\" - immer deaktiviert, außer wenn dies für die Wiedergabe erforderlich ist (z. B. HLS), \"Auto\" - ähnlich wie \"Nein\", wird aber eingeschaltet, wenn die Benutzerfreundlichkeit verbessert wird (z.B. wenn einige Analytics-Plugins an der Kamera arbeiten).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

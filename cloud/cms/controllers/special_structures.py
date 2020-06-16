@@ -1,4 +1,5 @@
 from cms.models import get_cloud_portal_asset, Asset
+from django.conf import settings
 
 
 class SpecialStructures:
@@ -12,6 +13,7 @@ class SpecialStructures:
         self.function_dict = {}
         self.add_function("%CUSTOMIZATION_NAME%", self.calc_customization)
         self.add_function("%LANGUAGES%", self.calc_lang_codes)
+        self.add_function("%CLOUD_LINK%", self.calc_cloud_link)
 
     def add_function(self, tag: str, function):
         self.function_dict[tag] = function
@@ -36,3 +38,7 @@ class SpecialStructures:
     @staticmethod
     def calc_lang_codes(asset: Asset):
         return asset.languages_list
+
+    @staticmethod
+    def calc_cloud_link(asset: Asset):
+        return settings.CLOUD_PORTAL_URL

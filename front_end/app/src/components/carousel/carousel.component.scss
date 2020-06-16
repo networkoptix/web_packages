@@ -1,4 +1,4 @@
-@import '../../../styles/theme_palette';
+@use '../../../styles/theme_palette' as *;
 
 .carousel {
     background-color: $additional_light1;

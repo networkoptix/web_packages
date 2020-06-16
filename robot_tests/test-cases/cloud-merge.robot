@@ -75,9 +75,9 @@ Validate system available
     [arguments]    ${system name}
     Verify In System    ${system name}
     Go to Users List
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    ${elements}    Set Variable    ${SHARE BUTTON SYSTEMS}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    ${elements}    Set Variable    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
 
 Prepare System With Users
     [arguments]
@@ -279,7 +279,7 @@ Only one system connected to Cloud Account - Merge Button should be disabled
     ...    ${RENAME SYSTEM}
     #TODO switch to share via API
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
     Share To    ${EMAIL MERGE OWNER 2}    ${ADMIN TEXT}
     Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
     ${email}    Wait For Email    recipient=${EMAIL MERGE OWNER 2}    timeout=120    status=UNSEEN
@@ -382,7 +382,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
     Elements Should Not Be Visible    ${MERGE BUTTON SYSTEM}
     Go To    ${url}/systems
     Validate Log In
@@ -392,7 +392,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
     Go to System Administration
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}
     Click Button    ${MERGE BUTTON SYSTEM}
@@ -428,7 +428,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
     Go To    ${url}/systems
     Validate Log In
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 2")]
@@ -438,7 +438,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
 
     Go to System Administration
     Merge    API made system 1    API made system 1    API made system 1
@@ -460,7 +460,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
     Go To    ${url}/systems
     Wait Until Element Is Visible    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
     Click Element    ${SYSTEMS TILE}//h2[contains(text(),"API made system 1")]
@@ -469,7 +469,7 @@ Merge with 3.0
     ...    ${DISCONNECT FROM NX}
     ...    ${RENAME SYSTEM}
     Go to Users List
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}    180
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}    180
 
     Go to System Administration
     Merge    API made system 1    API made system 2    API made system 2

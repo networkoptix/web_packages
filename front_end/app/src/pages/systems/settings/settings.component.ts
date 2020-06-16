@@ -8,21 +8,20 @@ import { NxLanguageProviderService }          from '../../../services/nx-languag
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
-import { NxToastService }                     from '../../../dialogs/toast.service';
-import { NxSettingsService }                  from './settings.service';
-import { NxMenuService }                      from '../../../menu';
-import { NxRibbonService }                    from '../../../components/ribbon';
-import { Subscription }                       from 'rxjs';
-import { filter }                             from 'rxjs/operators';
-import { AutoUnsubscribe }                    from 'ngx-auto-unsubscribe';
-import { NxPageService }                      from '../../../services/page.service';
+import { NxSettingsService }         from './settings.service';
+import { NxMenuService }             from '../../../components/menu/menu.service';
 import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
-import { NxSystemAPIService }                 from '../../../services/system-api.service';
+import { NxSystemsService }          from '../../../services/systems.service';
 import { Account, NxAccountService }          from '../../../services/account.service';
-import { NxUtilsService }                     from '../../../services/utils.service';
-import { NxUriService }                       from '../../../services/uri.service';
-import { NxScrollMechanicsService }           from '../../../services/scroll-mechanics.service';
-import { NxSystemsService }                   from '../../../services/systems.service';
+import { NxUtilsService }            from '../../../services/utils.service';
+import { NxUriService }              from '../../../services/uri.service';
+import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
+import { NxToastService }            from '../../../dialogs/toast.service';
+import { Subscription }              from 'rxjs';
+import { filter, tap }                    from 'rxjs/operators';
+import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
+import { NxApplyService }            from '../../../services/apply.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -68,6 +67,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private resizeSubscription: Subscription;
     private routerParamsSubscription: Subscription;
     private systemSubscription: Subscription;
+    private checkMergeSubscription: Subscription;
 
     private setupDefaults() {
         this.debugMode = this.CONFIG.clientMode.debug;
@@ -98,7 +98,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 private ribbonService: NxRibbonService,
                 private router: Router,
                 private toastService: NxToastService,
-                private scrollMechanicsService: NxScrollMechanicsService
+                private scrollMechanicsService: NxScrollMechanicsService,
+                private applyService: NxApplyService
     ) {
         this.LANG = languageService.translations;
         this.CONFIG = configService.getConfig();
@@ -247,7 +248,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         this.systemSubscription.unsubscribe();
                     }
                     this.systemSubscription = this.system.infoSubject
-                        .pipe(filter((system: any) => system !== undefined))
+                        .pipe(
+                            filter((system: any) => system !== undefined),
+                            tap(({ isOnline }) => this.applyService.isOnline$.next(isOnline))
+                        )
                         .subscribe(() => {
                             // if system is removed while on page, redirects to systems page
                             if (
@@ -294,7 +298,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     updateAlert() {
-        this.system.checkMergeStatus()
+        if (this.checkMergeSubscription) {
+            this.checkMergeSubscription.unsubscribe();
+        }
+        this.checkMergeSubscription = this.system.checkMergeStatus()
             .subscribe(res => {
                 const { mergeInProgress } = res.reply;
                 const { primary, secondary } = this.systemsService.systemsMerging || {};
@@ -466,21 +473,33 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         } else {
             this.content.level1 = this.content.level1.filter((node: any) => node.id !== this.CONFIG.menus.systemSettings.servers.id);
         }
+
+        const adminNode = this.content.level1.filter((node) => node.id === this.CONFIG.menus.systemSettings.admin.id)[0];
+
+        adminNode.level3 = [{
+            id    : this.CONFIG.menus.systemSettings.general.id,
+            svg   : this.CONFIG.menus.systemSettings.general.icon,
+            label : this.LANG.menu.titles.general(),
+            path  : this.CONFIG.menus.systemSettings.general.path
+        }];
+
+        if (this.system.isAdmin || this.system.isOwner) {
+            adminNode.level3.push({
+                id    : this.CONFIG.menus.systemSettings.licenses.id,
+                svg   : this.CONFIG.menus.systemSettings.licenses.icon,
+                label : this.LANG.menu.titles.licenses(),
+                path  : this.CONFIG.menus.systemSettings.licenses.path
+            });
+        }
         // Need to replace hard coded 'true' once services for cloud storage are setup, should be checking system for cloud storage capability
         // eslint-disable-next-line no-constant-condition
-        if (!this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id).level2.find(({ id }) => id === this.CONFIG.menus.systemSettings.cloudStorage.id)) {
-            const adminNode = this.content.level1.find(({ id }) => id === this.CONFIG.menus.systemSettings.admin.id);
-            const generalNode = {
-                id    : this.CONFIG.menus.systemSettings.admin.id,
-                label : this.LANG.common.general(),
-                path  : this.CONFIG.menus.systemSettings.admin.path
-            };
-            const cloudStorageNode = {
+        if (this.system.canUserViewCloudStorage()) {
+            adminNode.level3.push({
                 id    : this.CONFIG.menus.systemSettings.cloudStorage.id,
+                icon  : '',
                 label : this.LANG.dialogs.cloudStorage.title(),
                 path  : this.CONFIG.menus.systemSettings.cloudStorage.path
-            };
-            adminNode.level3 = this.system.canUserViewCloudStorage() ? [generalNode, cloudStorageNode] : [];
+            });
         }
 
         this.content = { ...this.content };

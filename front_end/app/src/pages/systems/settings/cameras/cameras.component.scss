@@ -1,23 +1,25 @@
-@import "../../../../styles/typography";
-@import "../../../../../styles/theme_palette";
+@use "../../../../styles/typography";
+@use '../../../../../styles/theme_variables' as *;
 
 .camera-settings-info {
-    font-family: $font-family-regular;
-    font-size: $font-size-base;
+    font-family: typography.$font-family-regular;
+    font-size: typography.$font-size-base;
     color: $dark9;
     .header-top-bar {
         width: 100%;
         display: flex;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
         .header-title {
             flex: 0 1 auto;
             min-width: 0;
+            height: 40px;
             text-align: left !important;
             h2 {
-                font-family: $font-family-regular;
-                height: 32px;
-                font-weight: bold;
+                font-family: $font-family-medium;
+                line-height: 40px;
+                vertical-align: middle;
+                height: 40px;
                 font-size: 24px;
             }
         }
@@ -29,6 +31,7 @@
             padding-left: 8px;
             justify-content: flex-start;
             align-items: center;
+            cursor: pointer;
         }
         .camera-buttons {
             flex: 0 0 auto;
@@ -43,7 +46,7 @@
                     }
                 }
             }
-            @extend #regular13;
+            @include typography.regular13;
             // flex: 0 0 auto;
             background-color: inherit;
             color: $light16;
@@ -69,14 +72,14 @@
     }
 
     .header-table {
-        font-size: $font-size-base;
+        font-size: typography.$font-size-base;
         padding: 0;
         .header-table-cell {
             display: flex;
             height: 20px;
             align-items: flex-end;
             .cell-title {
-                @extend #regular13;
+                @include typography.regular13;
             }
             .cell-ellipsis {
                 margin-bottom: 2px;
@@ -287,7 +290,7 @@
         }
         &-keys {
             p {
-                @extend #regular13;
+                @include typography.regular13;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
@@ -310,7 +313,7 @@
         }
         &-values {
             p {
-                @extend #medium13;
+                @include typography.medium13;
                 margin-right: 16px;
             }
         }
@@ -327,7 +330,7 @@
 }
 
 .recording-hint {
-    @extend #regular13;
+    @include typography.regular13;
     margin: -8px 0 16px 64px;
     pointer-events: none;
     user-select: none;

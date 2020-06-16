@@ -4,6 +4,7 @@
     "Integrations": "Integraties",
     "Privacy": "Privacy",
     "Support": "Ondersteuning",
+    "Supported Devices": "Ondersteunde apparaten",
     "Terms": "Voorwaarden",
     "accessRoles": {
         "Administrator": {
@@ -154,6 +155,7 @@
         "systemServerError": "Interne Server Fout",
         "systemServerErrorMessage": "Er is een fout opgetreden, probeer het later opnieuw. Als het probleem zich blijft voordoen, neem dan contact op met uw supportteam.",
         "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
+        "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
         "unknown": "Onbekend",
         "voiceCommands": {
             "clear search": "zoekopdracht wissen",
@@ -223,18 +225,19 @@
         },
         "merge": {
             "adminPasswordTitle": "Voer wachtwoord in voor eigenaarsaccount in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Verkeerd wachtwoord voor lokale admin gebruiker",
             "checking": "Controleren...",
             "commonText": "Fouten bij het samenvoegen van systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Verbind het systeem dat u met deze wilt samenvoegen tot <strong>{{cloudName}}</strong> of plaats lokaal samen met behulp van de <strong>{{vmsName}}</strong> Client.",
             "differentOwners": "Zowel het geselecteerde als het huidige systeem zijn verbonden met %CLOUD_NAME% en hebben verschillende eigenaren. Cloudsystemen kunnen alleen worden samengevoegd als het eigenaarsaccount hetzelfde is.",
             "duplicateServers": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
+            "enterSystemAddressTitle": "Voer het adres in van een server in het systeem die u met deze wilt samenvoegen.",
             "mergeConfirmation": "<p class=\"mb-0\">U staat op het punt om de systemen <strong>{{primarySystem}}</strong> en <strong>{{secondarySystem}}</strong>samen te voegen.</p><p>De instellingen en de naam worden overgenomen van <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Voeg het huidige systeem samen met",
             "mergeFailedTitle": "Het samenvoegen van systemen is mislukt",
             "noServerFound": "Geen server gevonden",
             "newSystemDisplayName": "Nieuw systeem",
-            "otherSystem": "Andere systemen...",
+            "otherSystem": "Ander systeem...",
             "ownerCanMergeText": "Je kunt alleen systemen samenvoegen waarvan je eigenaar bent",
             "passwordRequired": "Wachtwoord is vereist",
             "passwordWrong": "Wachtwoord onjuist",
@@ -242,7 +245,7 @@
             "primarySystemOffline": "Systeem {{primarySystem}} is offline en kan niet worden samengevoegd met systeem {{targetSystem}}",
             "primarySystemUnavailable": "Systeem {{primarySystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "We raden u aan om te overleggen met",
                 "b_support": "ondersteuning",
                 "c_proceeding": "voordat u verder gaat."
             },
@@ -251,17 +254,15 @@
             "serverAtUrl": "server op {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">Geen toegang tot het {{targetSystem}} systeem.</p><p>Zorg ervoor dat de opgegeven server online is en probeer het opnieuw.</p>",
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
-            "serverVersionOld": "Deze server heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk het bij naar de nieuwste versie om het samen te voegen met de huidige versie.",
-            "serverVersionNew": "Deze server heeft nieuwere softwareversie dan het huidige systeem. Update beide systemen naar dezelfde build om ze samen te voegen.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige systeem",
-            "systemOfflineUrl": "{{targetSystem}} is ontoegankelijk",
+            "systemOfflineUrl": "{{targetSystem}} is niet toegankelijk.",
             "systemsIncompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
-            "systemVersionOld": "Systeem {{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Update {{targetSystem}} naar de <a href=\"/download\" target=\"_blank\" translate>nieuwste versie</a> om deze samen te voegen met de huidige versie.",
-            "systemVersionNew": "Systeem {{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met het {{targetSystem}} systeem.",
+            "systemVersionOld": "{{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk {{targetSystem}} bij naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige versie.",
+            "systemVersionNew": "{{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met {{targetSystem}}.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "warning": "Er zullen meer dan <strong>{{maxServers}}</strong> servers in het samengevoegde systeem zijn."
         },
         "message": {
             "storageSettingsSaved": "Instellingen voor opslag opgeslagen.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Sommige servers zijn aanwezig in beide systemen - in de geselecteerde en in de huidige. <br>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.",
         "EmailAlreadyExists": "Dit Email is al geregistreerd",
         "FAIL": "Systeem <strong>{{failedSystem}}</strong> is momenteel niet bereikbaar.<br>Probeer het over een paar momenten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">ondersteuning</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "INCOMPATIBLE": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\">build</a>.",
+        "cloud_systems_have_different_owners": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Een server lijkt zichzelf te vermelden onder zowel het geselecteerde als het huidige systeem.</p><p>Verwijder offline en incompatibele servers van elk systeem en probeer het opnieuw.</p>",
+        "fail": "{{failedSystem}} is niet toegankelijk.",
+        "incompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
+        "unknown_error": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "accountAlreadyActivated": "Deze account is al geactiveerd",
         "accountBlocked": "Dit account is tijdelijk geblokkeerd. Probeer het over een paar minuten opnieuw.",
         "accountNotActivated": "Dit account is nog niet geactiveerd. <a href=\"/activate\">Stuur de activeringslink opnieuw</a>",
@@ -419,6 +425,7 @@
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "het systeem",
         "unknownError": "Onverwachte fout opgetreden",
         "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -426,6 +433,7 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
+        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale verdeler.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {
@@ -487,6 +495,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Systeem Administratie",
+            "general": "Algemeen",
+            "licenses": "Licenties",
             "users": "Gebruikers"
         }
     },
@@ -614,6 +624,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Kan beveiligingsinstellingen niet laden.",
             "notAbleToLoadSystem": "Kan systeeminstellingen niet laden.",
+            "notAbleToLoadStorageInfo": "Kan opslaginformatie niet laden.",
             "sessionLimitDuration": {
                 "hours": "uren",
                 "minutes": "minuten"
@@ -653,7 +664,7 @@
                 "help": "(log elk systeembericht en debug-informatie)"
             },
             "verbose": {
-                "text": "Verbose",
+                "text": "Uitgebreid",
                 "help": "(log alle beschikbare informatie)"
             }
         }
@@ -677,26 +688,58 @@
             },
             "merge": {
                 "failed": "Het samenvoegen van systemen is mislukt",
-                "success": "Systeem samenvoegen voltooid"
+                "success": "Samenvoegen van systemen {{primaryName}} en {{secondaryName}} voltooid"
             },
             "rename": {
                 "success": "Systeemnaam opgeslagen"
             }
         }
     },
+    "license": {
+        "info": {
+            "type": "Type",
+            "channels": "Kanalen",
+            "server": "Server",
+            "hwid": "Hardware ID",
+            "status": "Status",
+            "expires": "Verloopt",
+            "time": "Tijd",
+            "deactivations": "Resterende deactivering",
+            "trial": "Test",
+            "online": "Online",
+            "error": "Fout",
+            "expired": "Verlopen",
+            "ok": "Oké",
+            "digital": "Professional",
+            "analog": "Analoog",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Analoge Encoder",
+            "starter": "Starter",
+            "iomodule": "I/O module",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} meer vereist",
+            "activated": "Licentie geactiveerd",
+            "inuse": "De licentiesleutel is al geactiveerd en gebonden aan de server met hardware-ID {{hwid}} in een ander systeem",
+            "trialActivated": "Proeflicentie geactiveerd. Vanaf vandaag kunt u gedurende 30 dagen tot 4 camera's opnemen."
+        }
+    },
     "settingsConfig": {
         "additionalLocalFsTypes": "Extra lokale FS types",
-        "autoDiscoveryResponseEnabled": "Uitslag automatische ontdekking",
-        "crossdomainEnabled": "Cross domain",
+        "autoDiscoveryResponseEnabled": "Resultaten automatische ontdekking",
+        "crossdomainEnabled": "Cross domein",
         "defaultExportVideoCodec": "Standaard video codec export",
         "defaultVideoCodec": "Standaard video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Laatste merge master-ID",
-        "lastMergeSlaveId": "Laatste merge slave-ID",
+        "downloaderPeers": "Downloader connecties",
+        "lastMergeMasterId": "Laatste merge masterId",
+        "lastMergeSlaveId": "Laatste merge slaveID",
         "ldapSearchTimeoutS": "LDAP search timeout(sec)",
         "licenseServer": "Licentieserver",
         "lowQualityScreenVideoCodec": "Lage kwaliteit scherm video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P alle clients grootte bytes",
+        "maxP2pAllClientsSizeBytes": "Max P2P alle clients bytes grootte",
         "maxRtpRetryCount": "Max. Aantal RTP-pogingen",
         "metadataStorageChangePolicy": "Verandering van beleid voor Meta-opslag",
         "pushNotificationsLanguage": "Taal voor pushmeldingen",
@@ -706,33 +749,33 @@
         "systemName": "Systeemnaam",
         "webSocketEnabled": "Web sockets",
         "arecontRtspEnabled": "Arecont RTSP ingeschakeld",
-        "auditTrailEnabled": "Audit trail ingeschakeld",
-        "auditTrailPeriodDays": "Audit trail periode dagen",
-        "autoDiscoveryEnabled": "Schakel de automatische detectie van apparaten in",
-        "autoUpdateThumbnails": "Miniaturen automatisch bijwerken",
+        "auditTrailEnabled": "Audit historiek ingeschakeld",
+        "auditTrailPeriodDays": "Periode van audittrail",
+        "autoDiscoveryEnabled": "Schakel automatische detectie van apparaten in",
+        "autoUpdateThumbnails": "Auto-update voorbeeldweergaves",
         "backupNewCamerasByDefault": "Maak standaard een back-up van nieuwe camera's",
         "backupQualities": "Backup Kwaliteit",
         "cameraSettingsOptimization": "Optimalisatie van apparaatinstellingen toestaan",
-        "clientStatisticsSettingsUrl": "Relatieve url van de clientstatistieken",
-        "cloudAccountName": "Account van de cloud eigenaar",
-        "cloudConnectRelayingEnabled": "Schakel relaying in voor cloud verbinding",
-        "cloudConnectUdpHolePunchingEnabled": "Schakel UDP hole punching in voor cloud verbinding",
+        "clientStatisticsSettingsUrl": "Relatieve url van klantstatistieken",
+        "cloudAccountName": "Cloud eigenaar-account",
+        "cloudConnectRelayingEnabled": "Schakel relaying in voor cloud connect",
+        "cloudConnectUdpHolePunchingEnabled": "Schakel UDP hole punching in voor de cloud verbinding",
         "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloudsysteem ID",
+        "cloudSystemID": "Cloud systeem id",
         "disabledVendors": "Uitgeschakelde leveranciers",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconden)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Verbinding keep alive timeout (seconden)",
-        "ec2KeepAliveProbeCount": "Verbinding keep alive probes (seconden)",
-        "emailFrom": "Email van",
+        "ec2AliveUpdateIntervalSec": "Systeem actief polling interval (seconden)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Connectie verbinding-time-out (seconden)",
+        "ec2KeepAliveProbeCount": "Verbinding connectie keep alive (seconden)",
+        "emailFrom": "E-mail van",
         "emailSignature": "Email handtekening",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Edge recording inschakelen",
-        "eventLogPeriodDays": "Event log periode (dagen)",
+        "emailSupportEmail": "Ondersteuning e-mail",
+        "enableEdgeRecording": "Edge opname inschakelen",
+        "eventLogPeriodDays": "Gebeurtenislogboek periode (dagen)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
-        "ldapUri": "LDAP URI",
-        "localSystemId": "Lokaal systeem ID",
+        "ldapSearchBase": "LDAP zoekbasis",
+        "ldapSearchFilter": "LDAP zoekfilter",
+        "ldapUri": "LDAP uri",
+        "localSystemId": "Lokale systeem ID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max verschil tussen gesynchroniseerde en lokale tijd (milliseconden)",
         "maxP2pQueueSizeBytes": "Max P2P wachtrijgrootte (bytes)",
@@ -777,6 +820,7 @@
         "watermarkSettings": "Watermerk instellingen",
         "maxWebMTranscoders": "Maximaal aantal WEBM-verbindingen voor de server. Chrome opent twee verbindingen tegelijk en sluit vervolgens de eerste. Het is dus aan te raden om waarde> = 2 in te stellen op deze parameter.",
         "maxEventLogRecords": "Maximum logboek evenementen om in de database te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
-        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
+        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"ja\" - altijd ingeschakeld (kan veel RAM gebruiken), \"nee\" - altijd uitgeschakeld behalve wanneer vereist door het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"nee\", maar ingeschakeld wanneer de gebruikerservaring (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

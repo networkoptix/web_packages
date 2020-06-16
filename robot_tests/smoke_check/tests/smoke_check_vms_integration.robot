@@ -11,16 +11,16 @@ Clean Up
     ${connected}=   Run Keyword and Return Status    Should Contain    ${systems}    ${system id}
     Run Keyword If    ${connected}==${True}    Run Keywords
     ...    Disconnect    ${ENV}    ${email vms}    ${password}    ${system id}
-    ...    AND    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server vms}:${server port}    ${auth}
-    ...    AND    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server vms}:${server port}    ${password}     ${server vms name}
+    ...    AND    Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server vms}:${server vms port}    ${auth}
+    ...    AND    Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server vms}:${server vms port}    ${password}     ${server vms name}
     Close Browser
 
 *** Test Cases ***
 Connect System To Cloud - Client
-    [Tags]    C30443     vms
+    [Tags]    C30443    C30647    vms
 
     Log    Step 1: Connect System to cloud in VMS
-    ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}    ${server port}    ${system vms}    ${email vms}    ${password}
+    ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}:${server vms port}    ${system vms}    ${email vms}    ${password}
     Set Suite Variable    ${system id}
 
     Log    Step 2: Check system appeared on portal
@@ -29,7 +29,7 @@ Connect System To Cloud - Client
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
 
     Log    Step 3: Restart the server and reload the page to force the system page elements loading faster(can be omitted)
-    Restart Server    ${server vms}:${server port}    ${local auth}
+    Restart Server    ${server vms}:${server vms port}    ${local auth}
     Sleep    30
     Reload Page
     Sleep    10
@@ -41,13 +41,13 @@ Log in to VMS as cloud owner
     [Tags]    C30825    vms
     # Perform an API call to system with cloud credentials
     ${auth}=    Create List    ${email vms}    ${password}
-    Get Users    ${auth}    ${server vms}:${server port}
+    Get Users    ${auth}    ${server vms}:${server vms port}
 
 Check System State On Cloud Portal
     [Tags]    C30826    vms
 
     Log    Step 1: Make System offline
-    Restart Server    ${server vms}:${server port}    ${local auth}
+    Restart Server    ${server vms}:${server vms port}    ${local auth}
 
     Log    Step 2: Check System Status
     Run Keyword and Ignore Error    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    timeout=30
@@ -58,7 +58,7 @@ Check System State On Cloud Portal
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${USERS LIST LINK}    ${SERVERS LINK}    ${MERGE BUTTON SYSTEM}    timeout=60
 
 Disconnect System From Cloud - Portal
-    [Tags]    C69845    vms
+    [Tags]    C69845    C30653    vms
 
     Log    Step 1: Click on Disconnect from Nx button
     Click Button    ${DISCONNECT FROM NX}
@@ -82,21 +82,21 @@ Disconnect System From Cloud - Portal
     Run Keyword and Ignore Error    Wait Until Element Is Visible    ${SYSTEM IS SUCCESSFULLY DISCONNECTED}
 
     Log    Step 5: Verify System is not connected to cloud
-    Restart Server    ${server vms}:${server port}    ${local auth}
+    Restart Server    ${server vms}:${server vms port}    ${local auth}
     Sleep    10
-    ${cloud system id}=   Get Cloud System Id    ${server vms}:${server port}    ${local auth}
+    ${cloud system id}=   Get Cloud System Id    ${server vms}:${server vms port}    ${local auth}
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
 Disconnect System From Cloud - Client
-    [Tags]    C30444    vms
-    ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}    ${server port}    ${system vms}    ${email vms}    ${password}
+    [Tags]    C30444    C30654    vms
+    ${system id}=   Connect System to Cloud    ${local auth}    ${server vms}:${server vms port}    ${system vms}    ${email vms}    ${password}
     Set Suite Variable    ${system id}
     Reload Page
     Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}
 
     Log    Step 1: Disconnect system from cloud in client and verify it is disconnected successfully
-    Detach Server From Cloud    ${server vms}:${server port}    ${local auth}
-    ${cloud system id}=   Get Cloud System Id    ${server vms}:${server port}    ${local auth}
+    Detach Server From Cloud    ${server vms}:${server vms port}    ${local auth}
+    ${cloud system id}=   Get Cloud System Id    ${server vms}:${server vms port}    ${local auth}
     Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
 
     Log    Step 2: Verify system is disconnected from cloud

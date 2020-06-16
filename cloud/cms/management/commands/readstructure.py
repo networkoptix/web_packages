@@ -129,14 +129,16 @@ def iterate_cms_files(skin_name, ignore_not_english):
 
 def find_or_add_context_by_file(file_path, asset_type, has_language):
     context = Context.objects.filter(file_path=file_path, asset_type=asset_type).first()
-    if not context:
-        context = Context(name=file_path, file_path=file_path, asset_type=asset_type,
-                          translatable=has_language, hidden=True, is_global=False)
-    else:
-        context.deprecated=False
+    # Check so that static article contexts stay deprecated
+    if 'views/static/' not in file_path:
+        if not context:
+            context = Context(name=file_path, file_path=file_path, asset_type=asset_type,
+                              translatable=has_language, hidden=True, is_global=False)
+        else:
+            context.deprecated=False
 
-    context.save()
-    return context
+        context.save()
+        return context
 
 
 def find_or_add_context_template(context, language_code, skin):
@@ -169,11 +171,12 @@ def read_structure_file(filename, asset_type, global_strings, skin):
     # Here we check if there are any unique strings (which are not global)
     strings = [string for string in strings if string not in global_strings]
     context = find_or_add_context_by_file(context_name, asset_type, bool(language_code))
-    context_template = find_or_add_context_template(context, language_code, skin)
-    context_template.template = data  # update template for this context
-    context_template.save()
-    for string in strings:
-        structure.find_or_add_data_structure(string, None, context.id, bool(language_code))
+    if context:
+        context_template = find_or_add_context_template(context, language_code, skin)
+        context_template.template = data  # update template for this context
+        context_template.save()
+        for string in strings:
+            structure.find_or_add_data_structure(string, None, context, bool(language_code))
 
 
 def read_structure(asset_type):

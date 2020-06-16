@@ -198,7 +198,7 @@ def read_customized_file(filename, asset, language_code=None,
     context = Context.objects.filter(file_path=clean_name, asset_type=asset.asset_type).first()
     if context:
         # success -> return process_context
-        global_contexts = Context.objects.filter(is_global=True, asset_type=asset.asset_type)
+        global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
         return process_context(asset, context, language, skin, preview, version_id, global_contexts)
 
     # 2. try to find datastructure for this file

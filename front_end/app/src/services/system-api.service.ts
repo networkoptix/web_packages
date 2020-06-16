@@ -170,14 +170,18 @@ export class NxSystemAPI {
         );
     }
 
-    private post<ResponseType>(url: string, data?: any, customHttpHeaders: IParams<string> = {}) {
+    private post<ResponseType>(url: string, data?: any, paramsToAdd = {}) {
         let headers = new HttpHeaders();
+        let params = new HttpParams();
         const fullUrl = `${this.urlBase}${url}`;
-        const params: IParams = {};
         data = data || {};
 
+        Object.keys(paramsToAdd).forEach((key) => {
+            params = params.append(key, paramsToAdd[key]);
+        });
+
         if (this.authPost) {
-            params.auth = this.authPost;
+            params = params.append('auth', this.authPost);
         }
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
@@ -538,12 +542,17 @@ export class NxSystemAPI {
         return this.post('/api/restoreState', { currentPassword });
     }
 
+    getHardwareIdsOfServers() {
+        return this.get('/ec2/getHardwareIdsOfServers');
+    }
+
     getLicenses() {
         return this.get('/ec2/getLicenses');
     }
 
     activateLicense(key) {
-        return this.post('/api/activateLicense', { licenseKey: key });
+        const params: any = { key }; // 3.2 systems expect key as param
+        return this.post('/api/activateLicense', { licenseKey: key }, params);
     }
 
     logLevel(logId?: string, name?: string, value?: string) {
@@ -805,6 +814,31 @@ export class NxSystemAPI {
 
     checkMergeStatus() {
         return this.get<t.MergeStatus>('/ec2/mergeStatus');
+    }
+
+    getDigestKeys(adminPassword: string) {
+        return this.get('/api/getNonce').toPromise().then(({ nonce, realm }) => {
+            const digest = md5(`admin:${realm}:${adminPassword}`);
+            const postSimplified = md5(`${digest}:${nonce}:${md5('POST:')}`);
+            const getSimplified = md5(`${digest}:${nonce}:${md5('GET:')}`);
+            const postKey = btoa(`admin:${nonce}:${postSimplified}`);
+            const getKey = btoa(`admin:${nonce}:${getSimplified}`);
+            return { getKey, postKey };
+        });
+    }
+
+    deprecatedMergeSystems(url: string, currentPassword: string, adminPassword: string) {
+        return this.getDigestKeys(adminPassword)
+            .then(({ getKey, postKey }) => {
+                const data = {
+                    getKey,
+                    postKey,
+                    currentPassword,
+                    takeRemoteSettings: false,
+                    url
+                };
+                return this.post('/api/mergeSystems', data).toPromise();
+            });
     }
 }
 

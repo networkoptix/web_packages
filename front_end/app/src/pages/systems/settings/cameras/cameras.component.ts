@@ -64,6 +64,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showOffline = false;
     showOverlay = false;
     unsub$: Subject<boolean> = new Subject();
+    alertsLoaded = false;
     showPreloader = true;
     availableLicenses = 0;
     noCameras = false;
@@ -121,6 +122,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
                         if (!this.system.isOnline) {
                             this.showPreloader = false;
+                            this.alertsLoaded = true;
                             this.noCameras = this.system.cameras && this.system.cameras.length === 0;
                         }
                         this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
@@ -136,6 +138,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     }
                 } else {
                     this.showPreloader = false;
+                    this.alertsLoaded = true;
                     this.noCameras = false;
                 }
                 if (this.cameraSubscription) {
@@ -284,15 +287,13 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     updateCredentials() {
         const update = () => {
             this.showUnauthorized = false;
-            return this.system.getCameras().then(() => {
-                this.setCamera(true);
-                setTimeout(() => {
-                    this.reload += 1;
-                }, 1500);
-                this.settingsService.system = this.system;
-            });
+            this.selectedCamera.status = 'Online';
+            setTimeout(() => {
+                this.system.getCameras().then(() => {
+                    this.reload$.next(this.reload$.value + 1);
+                });
+            }, 2000);
         };
-
         this.dialogService.updateCameraCredentials(this.selectedCamera, this.system, update);
     }
 
@@ -380,7 +381,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return Math.min(Math.floor(this.canvasWidth / aspect / 32) * 32, this.maxHeight);
     }
 
-    private get _preview() {
+    public get preview() {
         return this.system.getPreviewUrl(
             this.selectedCamera.id,
             null,
@@ -390,11 +391,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         );
     }
 
-    private reload = 0;
-
-    get motionPreviewImage() {
-        return this._preview + `&reload=${this.reload}`;
-    }
+    public reload$ = new BehaviorSubject(0);
 
     toggleMotionGrid() {
         this.showOverlay = false;
@@ -639,6 +636,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     }
 
     setCamera = (forceUpdate = false) => {
+        this.applyService.setVisible(false);
         if (this.selectedCamera && this.parsedCameraId === this.selectedCamera.id && !forceUpdate) {
             return;
         }
@@ -668,7 +666,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         console.error(error);
                     });
             }
-
+            this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
@@ -685,7 +683,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
-            this.applyService.setVisible();
             this.system.getLicenseChannels().then(({ available }) => {
                 this.availableLicenses = available;
             }).catch(_ => {
@@ -706,32 +703,42 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }
         this.showUnauthorized = this.selectedCamera && this.selectedCamera.status === 'Unauthorized';
         this.showOffline = this.selectedCamera && this.selectedCamera.status === 'Offline';
+        this.alertsLoaded = true;
     }
 
     updateValues() {
         this.healthService.ready = false;
-        this.healthReportSubscription = this.system.mediaserver
-            .getAggregateHealthReport()
-            .pipe(takeUntil(this.unsub$))
-            .subscribe(
-                result => {
-                    const alerts = result?.reply?.['ec2/metrics/alarms']?.reply.cameras;
-                    this.alerts = Object.entries(alerts || {}).map(
-                        ([cameraId, alertInfo]) =>
-                            new Alert(cameraId, alertInfo, 'Camera')
+        if (this.system.canViewInfo) {
+            if (!this.alertsLoaded) {
+                this.healthReportSubscription = this.system.mediaserver
+                    .getAggregateHealthReport()
+                    .pipe(takeUntil(this.unsub$))
+                    .subscribe(
+                        result => {
+                            this.applyService.setVisible();
+                            const alerts = result && result.reply && result.reply['ec2/metrics/alarms'] && result.reply['ec2/metrics/alarms'].reply.cameras;
+                            this.alerts = Object.entries(alerts || {}).map(
+                                ([cameraId, alertInfo]) =>
+                                    new Alert(cameraId, alertInfo, 'Camera')
+                            );
+                            if (!this.applyService.locked) {
+                                this.updateAlerts();
+                            }
+                        },
+                        () => {
+                            if (!this.system.id) {
+                                !this.window.parent
+                                    ? this.window.location.reload()
+                                    : this.window.parent.location.reload();
+                            }
+                        }
                     );
-                    if (!this.applyService.locked) {
-                        this.updateAlerts();
-                    }
-                },
-                () => {
-                    if (!this.system.id) {
-                        !this.window.parent
-                            ? this.window.location.reload()
-                            : this.window.parent.location.reload();
-                    }
-                }
-            );
+            } else {
+                this.updateAlerts();
+            }
+        } else {
+            this.alertsLoaded = true;
+        }
     }
 
     toggle(property: string, disabled = false) {

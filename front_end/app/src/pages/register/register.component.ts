@@ -52,7 +52,7 @@ export class NxRegisterComponent implements OnInit {
                 private urlProtocol: NxUrlProtocolService,
                 private route: ActivatedRoute,
                 private localStorage: LocalStorageService,
-                private accountService: NxAccountService,
+                public accountService: NxAccountService,
                 private language: NxLanguageProviderService,
                 private pageService: NxPageService,
                 private dialogs: NxDialogsService,

@@ -34,7 +34,8 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
     @Input() condition: boolean;
     @Input() withFooter;
     @Input() constrainWidth: boolean;
-    @Input() data;
+    @Input() data: any;
+    @Input() showMainButton = false;
 
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
@@ -84,6 +85,11 @@ export class NxPagePlaceholderComponent implements OnInit, OnDestroy {
                     this.placeholderTitle = this.LANG.common.systemOffline();
                     this.message = this.LANG.common.systemOfflineMessage();
                     this.iconName = 'Offline';
+                    break;
+                case 'OFFLINE_INACCESSIBLE' :
+                    this.placeholderTitle = this.LANG.common.systemOffline();
+                    this.message = this.LANG.common.inaccessibleFeatureMessage();
+                    this.iconName = 'Wrong';
                     break;
                 case 'NO_ALERTS' :
                     this.placeholderTitle = this.LANG.common.systemNoAlerts();

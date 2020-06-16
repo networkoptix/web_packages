@@ -7,17 +7,17 @@ def get_variables(cloud_url, test_email):
         p = re.compile("https")
         cloud_url = p.sub("http", cloud_url)
     #get the system id for the system with the autotestsanchor email and add it to the dictionary
-    r = requests.post("{}/cdb/system/get".format(cloud_url), auth=requests.auth.HTTPDigestAuth(f"{test_email}+autotestsanchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    r = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+autotestsanchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
     s = r.json()
     systemIds["AUTO TESTS SYSTEM ID"] = s["systems"][0]["id"]
 
     #get the system id for the system with the autotests2anchor email and add it to the dictionary
-    t = requests.post("{}/cdb/system/get".format(cloud_url), auth=requests.auth.HTTPDigestAuth(f"{test_email}+autotests2anchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    t = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+autotests2anchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
     u = t.json()
     systemIds["AUTOTESTS OFFLINE SYSTEM ID"] = u["systems"][0]["id"]
 
     #get the system id for the system with the 2serveranchor email and add it to the dictionary
-    t = requests.post("{}/cdb/system/get".format(cloud_url), auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    t = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
     u = t.json()
     systemIds["AUTOTESTS 2 SERVER SYSTEM ID"] = u["systems"][0]["id"]
 

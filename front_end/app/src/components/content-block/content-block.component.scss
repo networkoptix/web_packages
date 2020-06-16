@@ -1,14 +1,15 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../styles/typography';
+@use '../../../styles/theme_variables';
 @import '~bootstrap/scss/mixins/breakpoints';
+
+$grid-breakpoints: typography.$grid-breakpoints;
 
 .card {
     box-shadow   : none;
-    border-color : $light4;
+    border-color : typography.$light4;
 
     .sticky1rem {
-        box-shadow: 0 -14px 0 2px $additional_light2;
+        box-shadow: 0 -14px 0 2px typography.$additional_light2;
         position: sticky;
         top: 1rem;
         z-index: 99;
@@ -24,9 +25,9 @@
         height           : unset;
         display          : flex;
         align-items      : center;
-        background-color : $additional_light1;
+        background-color : typography.$additional_light1;
         padding          : 0.75rem 1rem;
-        border-bottom    : 1px solid $light3;
+        border-bottom    : 1px solid typography.$light3;
         position         : relative;
 
         h4 {
@@ -38,7 +39,7 @@
             float               : left;
             display             : flex;
             align-items         : center;
-            height              : rem(48px);
+            height              : theme_variables.rem(48px);
             max-width           : 160px;
             background-size     : contain;
             width               : 100%;
@@ -49,7 +50,7 @@
 
     &--body {
         padding          : 1rem;
-        background-color : $light1;
+        background-color : typography.$light1;
 
         img {
             max-width : 100%;
@@ -73,8 +74,8 @@
                     height      : 1rem;
                     width       : 1rem;
                     margin-left : .25rem;
-                    color       : $light12;
-                    font-size   : $font-size-sm;
+                    color       : typography.$light12;
+                    font-size   : typography.$font-size-sm;
                     line-height : 1rem;
                 }
 
@@ -83,6 +84,121 @@
                 }
             }
         }
+
+        & .nx-panel-row {
+            .nx-panel {
+                display : flex;
+                height  : fit-content;
+
+                .row-title {
+                    height      : fit-content;
+                    width       : fit-content;
+                    width       : -moz-fit-content;
+                    float       : left;
+                    z-index     : 9;
+                    max-width   : calc(100% - 1.5rem); // min with for line -> 16px + right padding (white space)
+                    line-height : 16px;
+                    margin      : 4px 0;
+
+                    span {
+                        background-color : theme_variables.$light4;
+                        padding-right    : 4px;
+                        word-break       : keep-all;
+                    }
+                }
+
+                .row-line {
+                    border-bottom : 1px dotted theme_variables.$light7;
+                    width         : calc(100% - 1rem);
+                    position      : absolute;
+                    bottom        : 6px;
+                    height        : 14px;
+                }
+            }
+
+            .row-value {
+                line-height : 16px;
+                margin      : 4px 0;
+                word-break  : break-all;
+
+                &.error {
+                    color : theme_variables.$error;
+                }
+            }
+        }
+
+        table {
+            display         : grid;
+            border-collapse : collapse;
+            min-width       : 100%;
+            //grid-template-columns : 10% 20% 20% auto; <- set this in your component
+        }
+
+        .table-row-spacer {
+            height  : .5rem;
+            //grid-column-end : span 6; <- set this in your component
+            display : grid;
+        }
+
+        thead,
+        tbody,
+        tr {
+            display : contents;
+        }
+
+        th,
+        td {
+            overflow      : hidden;
+            text-overflow : ellipsis;
+            white-space   : nowrap;
+        }
+
+        th {
+            @include typography.medium13;
+            padding          : 5px 15px;
+            background-color : theme_variables.$additional_light1;
+            border-bottom    : 1px solid theme_variables.$light3;
+            color            : theme_variables.$dark9;
+        }
+
+        th:last-child {
+            border : 0;
+        }
+
+        td {
+            padding          : 5px 15px;
+            background-color : theme_variables.$light1;
+            color            : theme_variables.$dark9;
+            display          : flex;
+            align-items      : center;
+        }
+
+        td:first-child {
+            display : block;
+        }
+
+        tr:hover td {
+            background : transparentize(theme_variables.$brand_core, 0.9);
+        }
+
+        ::-webkit-scrollbar {
+            width  : initial;
+            height : 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            -webkit-border-radius : initial;
+            border-radius         : 6px;
+            -webkit-box-shadow    : initial;
+            height                : 8px;
+            border                : 2px solid theme_variables.$light4;
+        }
+
+        ::-webkit-scrollbar-track {
+            -webkit-box-shadow    : initial;
+            -webkit-border-radius : initial;
+            border-radius         : initial;
+        }
     }
 
     &--footer {
@@ -90,7 +206,7 @@
         width            : 100%;
         bottom           : 0;
         padding          : .5rem 1rem 1rem;
-        background-color : $light1;
+        background-color : typography.$light1;
         box-shadow       : 0px -22px 22px -6px rgb(255, 255, 255);
 
         footer {
@@ -100,7 +216,7 @@
             width            : 100%;
             border           : none;
             padding          : 0;
-            background-color : $light1;
+            background-color : typography.$light1;
             z-index          : 9;
         }
     }
@@ -112,60 +228,60 @@
     }
 
     &.gray {
-        background-color : $light4;
-        border           : 1px solid $light4;
+        background-color : typography.$light4;
+        border           : 1px solid typography.$light4;
         border-bottom    : none;
 
         .card--header {
-            background-color    : $light4;
-            border-bottom-color : $light6;
+            background-color    : typography.$light4;
+            border-bottom-color : typography.$light6;
         }
 
         .card--body {
-            background-color : $light4;
-            border-top       : 1px solid $light6;
+            background-color : typography.$light4;
+            border-top       : 1px solid typography.$light6;
         }
 
         .card--footer {
-            background-color : $light4;
+            background-color : typography.$light4;
         }
     }
 
     &.simple-alert {
-        background-color : $red2;
-        border           : 1px solid $red1;
+        background-color : typography.$red2;
+        border           : 1px solid typography.$red1;
 
         .card--header {
             display : none;
         }
 
         .card--body {
-            background-color : $red2;
-            border-top       : 1px solid $red1;
+            background-color : typography.$red2;
+            border-top       : 1px solid typography.$red1;
         }
 
         .card--footer {
-            background-color : $red2;
+            background-color : typography.$red2;
         }
     }
 
     &.menu {
-        background-color : $light5;
-        border           : 1px solid $light5;
+        background-color : typography.$light5;
+        border           : 1px solid typography.$light5;
         border-bottom    : none;
 
         .card--header {
-            background-color    : $light5;
-            border-bottom-color : $light7;
+            background-color    : typography.$light5;
+            border-bottom-color : typography.$light7;
         }
 
         .card--body {
-            background-color : $light5;
-            border-top       : 1px solid $light7;
+            background-color : typography.$light5;
+            border-top       : 1px solid typography.$light7;
         }
 
         .card--footer {
-            background-color : $light5;
+            background-color : typography.$light5;
         }
 
         &.top {
@@ -178,7 +294,7 @@
     }
 
     &.fixed-height {
-        height   : rem(300px);
+        height   : theme_variables.rem(300px);
         overflow : hidden;
 
         .card--header {
@@ -208,15 +324,15 @@
     &.slim-header {
         .card--header {
             height  : auto;
-            padding : rem(12px);
+            padding : theme_variables.rem(12px);
 
             .title {
                 line-height : 15px;
             }
 
             .minor-text {
-                @extend #regular11;
-                color      : $light16;
+                @include typography.regular11;
+                color      : typography.$light16;
                 margin-top : 5px;
             }
         }

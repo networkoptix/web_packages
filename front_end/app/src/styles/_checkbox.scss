@@ -1,4 +1,4 @@
-@import './theme_variables';
+@use'./theme_variables';
 
 /* Customize the label (the container) */
 .checkbox {
@@ -16,9 +16,9 @@
     user-select         : none;
 
     .text {
-        font-family : $font-family-regular;
+        font-family : theme_variables.$font-family-regular;
         user-select : none;
-        color       : $dark9
+        color       : theme_variables.$dark9
     }
 
     /* Hide the browser's default checkbox */
@@ -45,22 +45,22 @@
     & input:hover ~ .checkmark {
         svg polygon.box,
         svg polyline.box {
-            stroke : $dark1;
+            stroke : theme_variables.$dark1;
         }
 
         & ~ .text {
-            color : $dark1;
+            color : theme_variables.$dark1;
         }
     }
 
     & input:active ~ .checkmark {
         svg polygon.box,
         svg polyline.box {
-            stroke : $dark9 !important;
+            stroke : theme_variables.$dark9 !important;
         }
 
         & ~ .text {
-            color : $dark9 !important;
+            color : theme_variables.$dark9 !important;
         }
     }
 }
@@ -76,7 +76,7 @@
 
     & svg polygon.box {
         fill              : none;
-        stroke            : $dark9;
+        stroke            : theme_variables.$dark9;
         stroke-linecap    : round;
         stroke-linejoin   : round;
         stroke-miterlimit : 10;
@@ -84,7 +84,7 @@
 
     & svg polyline.box {
         fill              : none;
-        stroke            : $dark9;
+        stroke            : theme_variables.$dark9;
         stroke-linecap    : round;
         stroke-linejoin   : round;
         stroke-miterlimit : 10;
@@ -94,7 +94,7 @@
 
     & svg polyline.tick {
         fill              : none;
-        stroke            : $brand_core;
+        stroke            : theme_variables.$brand_core;
         stroke-width      : 2px;
         stroke-linecap    : round;
         stroke-linejoin   : round;

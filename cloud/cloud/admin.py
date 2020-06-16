@@ -15,9 +15,9 @@ class CMSAdminSite(AdminSite):
     def admin_view(self, view, cacheable=False):
         def force_agreement(request, *args, **kwargs):
             if request.user.is_authenticated and request.user.is_staff and not request.user.is_superuser:
-                agreement = ContributerAgreement.get_current()
-                if not agreement or \
-                        not ContributerAgreement.objects.filter(
+                agreement = ContributorAgreement.get_current()
+                if agreement and \
+                        not ContributorAgreement.objects.filter(
                             user=request.user, accepted_agreement=agreement
                         ).exists():
                     return redirect('/agreement')

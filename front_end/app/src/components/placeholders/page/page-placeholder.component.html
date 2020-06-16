@@ -11,13 +11,15 @@
             <div *ngIf="condition" class="mx-2">
                 <div *ngIf="iconClass" class="placeholder-icon" [ngClass]="iconClass"></div>
                 <div *ngIf="!iconClass && iconVisible" [attr.name]="type" class="placeholder-icon">
-                    <svg-icon [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
+                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirPagePlaceholder + iconName + '.svg'"
                               [svgStyle]="{ 'width.px': iconSize }"></svg-icon>
                 </div>
                 <h2 *ngIf="placeholderTitle" [attr.name]="type" class="placeholder-title"
                      [innerHTML]="placeholderTitle"></h2>
                 <div *ngIf="message" [attr.name]="type" class="placeholder-message" [innerHTML]="message"></div>
-
+                <button *ngIf="showMainButton" class="btn btn-primary main-button mx-auto">
+                    <a routerLink="/" translate>Go to Main Page</a>
+                </button>
                 <ng-content></ng-content>
 
             </div>

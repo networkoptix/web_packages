@@ -223,7 +223,7 @@ Handles two tabs, updates second tab state if logout is done on first
     # load slowly and doesn't redirect correctly after login.
     Sleep    5
     Log In    ${email}    ${password}
-    Select Window    @{tabs}[0]
+    Select Window    ${tabs}[0]
     Location Should Be    ${url}/register
     Reload Page
     Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}

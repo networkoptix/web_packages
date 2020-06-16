@@ -14,6 +14,7 @@ import { NxButtonModule }        from './menu-button/button.module';
 import { AngularSvgIconModule }  from 'angular-svg-icon';
 import { NxAlertCounter }        from './alert-counter/alert-counter.component';
 import { ComponentsModule }      from '../components/components.module';
+import { DirectivesModule }      from '../../directives/directives.module';
 
 @NgModule({
     imports: [
@@ -22,7 +23,7 @@ import { ComponentsModule }      from '../components/components.module';
         UpgradeModule,
         RouterModule,
         NgbModule,
-
+        DirectivesModule,
         TranslateModule,
         NxButtonModule,
         AngularSvgIconModule.forRoot(),

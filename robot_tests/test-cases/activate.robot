@@ -75,24 +75,24 @@ Should save user data to user account correctly
     [Tags]    email
     ${email}=   Register and activate account with random email    mark    hamill    ${password}
     ${user data}=   Get Account Data    ${url}    ${email}    ${password}
-    Should be equal as strings    &{user data}[first_name]    mark
-    Should be equal as strings    &{user data}[last_name]    hamill
+    Should be equal as strings    ${user data}[first_name]    mark
+    Should be equal as strings    ${user data}[last_name]    hamill
 
 Should allow to enter more than 255 symbols in First and Last names and cut it to 255
     [Tags]    email
     ${email}=   Get Random Email    ${BASE EMAIL}
     Register and activate account    ${300CHARS}    ${300CHARS}    ${email}    ${password}    reg=ui
     ${user data}=   Get Account Data    ${url}    ${email}    ${password}
-    Should be equal as strings    &{user data}[first_name]    ${255CHARS}
-    Should be equal as strings    &{user data}[last_name]    ${255CHARS}
+    Should be equal as strings    ${user data}[first_name]    ${255CHARS}
+    Should be equal as strings    ${user data}[last_name]    ${255CHARS}
 
 Should trim leading and trailing spaces
     [Tags]    email
     ${email}=  Get Random Email    ${BASE EMAIL}
     Register and activate account    ${SPACE}mark${SPACE}    ${SPACE}hamill${SPACE}    ${email}    ${password}    reg=ui
     ${user data}=   Get Account Data    ${url}    ${email}    ${password}
-    Should be equal as strings    &{user data}[first_name]    mark
-    Should be equal as strings    &{user data}[last_name]    hamill
+    Should be equal as strings    ${user data}[first_name]    mark
+    Should be equal as strings    ${user data}[last_name]    hamill
 
 Should allow activation, if user is registered by link /register/?from=client
     [Tags]    email

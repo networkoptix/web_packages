@@ -11,6 +11,7 @@ from dal import autocomplete
 from api.models import Account
 from cms.models import *
 from cms.controllers.modify_db import are_asset_datarecords_unique
+from cms.controllers.special_structures import SpecialStructures
 
 BYTES_TO_MEGABYTES = 1048576.0
 
@@ -63,6 +64,11 @@ def generate_branding_variables(datastructure):
         for ds in branding_context.datastructure_set.all()
         if 'shortcut' in ds.meta_settings
     ]
+
+    brands.append((
+        {'name': '%CLOUD_LINK%', 'label': 'Cloud Link', 'description': 'URL for the cloud portal'},
+        SpecialStructures.calc_cloud_link(cloud_portal)
+    ))
 
     return render_to_string(
         'cms/widgets/branding_variables.html', context={'brands': brands, 'datastructure': datastructure}
@@ -354,7 +360,7 @@ class CustomizationForm(forms.ModelForm):
 
 class ContributerAgreementForm(forms.ModelForm):
     class Meta:
-        model = ContributerAgreement
+        model = ContributorAgreement
         exclude = []
         widgets = {
             'user': autocomplete.ModelSelect2(url='account-autocomplete',

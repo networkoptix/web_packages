@@ -13,6 +13,7 @@ import { NxProcessService, Process } from '../../services/process.service';
 import { NxCloudApiService }         from '../../services/nx-cloud-api';
 import { WINDOW }                    from '../../services/window-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
+import { NxStaticCacheService }      from '../../services/nx-static-cache';
 
 @Component({
     selector    : 'content-component',
@@ -58,7 +59,8 @@ export class NxContentComponent implements OnInit {
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        private sanitizer: DomSanitizer
+        private sanitizer: DomSanitizer,
+        private staticCacheService: NxStaticCacheService
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();

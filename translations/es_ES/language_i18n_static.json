@@ -4,6 +4,7 @@
     "Integrations": "Integraciones",
     "Privacy": "Privacidad",
     "Support": "Asistencia",
+    "Supported Devices": "Dispositivos soportados",
     "Terms": "Términos",
     "accessRoles": {
         "Administrator": {
@@ -154,6 +155,7 @@
         "systemServerError": "Error de servidor interno",
         "systemServerErrorMessage": "Se produjo un error. Vuelve a intentarlo más tarde. Si el problema continúa, comuníquese con su equipo de soporte.",
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
+        "inaccessibleFeatureMessage": "El sistema está fuera de línea y, por lo tanto, la información no es accesible.",
         "unknown": "Uesconocido",
         "voiceCommands": {
             "clear search": "borrar búsqueda",
@@ -223,12 +225,13 @@
         },
         "merge": {
             "adminPasswordTitle": "Ingrese la contraseña de la cuenta del propietario en <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Contraseña incorrecta para el usuario administrador local",
             "checking": "Comprobación...",
             "commonText": "Error al fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conectar el sistema que desea fusionar con este a <strong>{{cloudName}}</strong> o fusionar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "differentOwners": "Tanto el sistema seleccionado como el actual están conectados a %CLOUD_NAME% y tienen diferentes propietarios. Los sistemas en la nube solo se pueden fusionar si la cuenta del propietario es la misma.",
             "duplicateServers": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
+            "enterSystemAddressTitle": "Introduzca la dirección de cualquier servidor ubicado en el sistema que desea combinar con éste.",
             "mergeConfirmation": "<p class=\"mb-0\">Está a punto de fusionar los sistemas <strong>{{primarySystem}}</strong> y <strong>{{secondarySystem}}</strong>.</p><p>Configuraciones y el nombre se tomarán de <strong>{{primarySystem}}</strong>.</p>",
             "mergeSystemsTitle": "Fusionar el sistema actual con",
             "mergeFailedTitle": "La fusión de sistemas falló",
@@ -242,7 +245,7 @@
             "primarySystemOffline": "El sistema {{primarySystem}} está desconectado y no puede ser fusionado con el Sistema {{targetSystem}}",
             "primarySystemUnavailable": "El sistema {{primarySystem}} no está disponible actualmente. Inténtalo de nuevo en unos minutos o ponte en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Le recomendamos que consulte con",
                 "b_support": "asistencia",
                 "c_proceeding": "antes de continuar."
             },
@@ -251,17 +254,15 @@
             "serverAtUrl": "servidor a {{url}}",
             "serverNotAvailable": "<p class=\"mb-2\">No se puede acceder al {{targetSystem}} sistema.</p><p>Asegúrese de que el servidor especificado esté en línea e intente nuevamente.</p>",
             "serverNotYours": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un propietario diferente. Los sistemas de la nube solo pueden fusionarse si la cuenta del propietario es la misma.",
-            "serverVersionOld": "Este servidor tiene una versión de software antigua que es incompatible con el sistema actual. Actualízala a la última versión para fusionarla con la actual.",
-            "serverVersionNew": "Este servidor tiene una versión de software más reciente que el sistema actual. Actualice ambos sistemas a la misma versión para fusionarlos.",
             "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual",
-            "systemOfflineUrl": "{{targetSystem}} es inaccesible",
+            "systemOfflineUrl": "{{targetSystem}} es inaccesible.",
             "systemsIncompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la misma versión para fusionarlos.",
-            "systemVersionOld": "El sistema {{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
-            "systemVersionNew": "El sistema {{targetSystem}} tiene una versión de software más reciente que es incompatible con el sistema actual. Actualice el sistema actual a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para combinarlo con el sistema {{targetSystem}}.",
+            "systemVersionOld": "{{targetSystem}} tiene una versión de software anterior que es incompatible con el sistema actual. Actualice {{targetSystem}} a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarla con la actual.",
+            "systemVersionNew": "{{targetSystem}} tiene una versión de software más nueva que es incompatible con el sistema actual. Actualice el sistema actual a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a> para fusionarlo con {{targetSystem}}.",
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
             "unknownError": "Se ha producido un error desconocido. Actualice la página y vuelva a intentarlo. Si el problema persiste, póngase en contacto con el servicio de asistencia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "warning": "Habrá más de <strong>{{maxServers}}</strong> servidores en el sistema combinado."
         },
         "message": {
             "storageSettingsSaved": "Ajustes de almacenamiento guardados.",
@@ -386,7 +387,12 @@
         "DUPLICATE_MEDIASERVER_FOUND": "Algunas listas de servidores existen en ambos sistemas, en el seleccionado y en el actual.<br>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.",
         "EmailAlreadyExists": "Este correo electrónico ya ha sido registrado",
         "FAIL": "El sistema <strong>{{failedSystem}}</strong> es actualmente inalcanzable.<br>Vuelva a intentarlo en unos momentos o póngase en contacto con <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "INCOMPATIBLE": "Los sistemas tienen versiones de software incorrectas. Por favor, actualice ambas a la <a href=\"/download\">última compilación</a>.",
+        "cloud_systems_have_different_owners": "Este sistema está conectado a %CLOUD_NAME%, pero tiene un propietario diferente. Los sistemas en la nube solo pueden fusionarse si la cuenta del propietario es la misma.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Parece que un servidor se enumera tanto en el sistema seleccionado como en el actual.</p><p>Elimine los servidores fuera de línea e incompatibles de cada sistema e intente nuevamente.</p>",
+        "fail": "{{failedSystem}} es inaccesible.",
+        "incompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la misma compilación para fusionarlos.",
+        "unknown_error": "Un error desconocido ocurrió. Actualice la página e intente nuevamente. Si el problema persiste, póngase en contacto con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "accountAlreadyActivated": "Esta cuenta ya está activada",
         "accountBlocked": "Esta cuenta está bloqueada. Por favor, intente nuevamente en unos minutos.",
         "accountNotActivated": "Esta cuenta aún no es activada. <a href=\"/activate\"> Envíe enlace de activación de nuevo</a>",
@@ -419,6 +425,7 @@
         "oldPasswordMistmatch": "La contraseña actual es incorrecta.",
         "oldSafariNotSupported": "Las versiones de Safari anteriores a 10 no son compatibles",
         "passwordMismatch": "Contraseña incorrecta",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "el sistema",
         "unknownError": "Error inesperado",
         "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -426,6 +433,7 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
+        "licenseFail": "Error al activar la licencia. Por favor, inténtelo de nuevo o póngase en contacto con el servicio de soporte al cliente.",
         "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {
@@ -487,6 +495,8 @@
     "menu": {
         "titles": {
             "systemAdministration": "Administración del sistema",
+            "general": "General",
+            "licenses": "Licencias",
             "users": "Usuarios"
         }
     },
@@ -614,6 +624,7 @@
         "settings": {
             "notAbleToLoadSecurity": "No se puede cargar la configuración de seguridad.",
             "notAbleToLoadSystem": "No se puede cargar la configuración del sistema.",
+            "notAbleToLoadStorageInfo": "No se puede cargar la información de almacenamiento.",
             "sessionLimitDuration": {
                 "hours": "horas",
                 "minutes": "minutos"
@@ -677,11 +688,43 @@
             },
             "merge": {
                 "failed": "La fusión de sistemas falló",
-                "success": "Fusión del sistema completada"
+                "success": "Combinación de sistemas {{primaryName}} y {{secondaryName}} completada"
             },
             "rename": {
                 "success": "Nombre del sistema guardado"
             }
+        }
+    },
+    "license": {
+        "info": {
+            "type": "Tipo",
+            "channels": "Canales",
+            "server": "Servidor",
+            "hwid": "ID de hardware",
+            "status": "Estado",
+            "expires": "Expira",
+            "time": "Hora",
+            "deactivations": "Desactivaciones restantes",
+            "trial": "Prueba",
+            "online": "En línea",
+            "error": "Error",
+            "expired": "Expired",
+            "ok": "Aceptar",
+            "digital": "Profesional",
+            "analog": "Análogo",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Pared de vídeo",
+            "analogencoder": "Codificador analógico",
+            "starter": "Starter",
+            "iomodule": "Módulo E/S",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} más requerido",
+            "activated": "Clave de licencia activada",
+            "inuse": "La clave de licencia ya ha sido activada y vinculada al servidor con el ID de hardware {{hwid}} en otro sistema",
+            "trialActivated": "Licencia de prueba activada. A partir de hoy, puede grabar hasta 4 cámaras durante 30 días."
         }
     },
     "settingsConfig": {
@@ -777,6 +820,7 @@
         "watermarkSettings": "Configuraciones de marca de agua",
         "maxWebMTranscoders": "Cantidad máxima de conexiones WEBM para el servidor. Chrome abre 2 conexiones a la vez, luego cierra la primera. Por lo tanto, se recomienda fijar el valor >=2 a este parámetro.",
         "maxEventLogRecords": "Máximo registro de eventos para mantener en la base de datos. La cantidad real de registros no eliminados puede ser hasta un 20% más alta que el valor especificado.",
-        "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara)."
+        "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

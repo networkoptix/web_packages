@@ -8,10 +8,12 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
-Resource     resources/health-monitor-resource.robot
-Resource     resources/system-server-resource.robot
-Resource     resources/system-camera-resource.robot
-Resource     resources/ipvd-resource.robot
+Resource     Resources/health-monitor-resource.robot
+Resource     Resources/system-server-resource.robot
+Resource     Resources/system-camera-resource.robot
+Resource     Resources/ipvd-resource.robot
+Resource     Resources/system-user-resource.robot
+Resource     Resources/system-admin-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -30,14 +32,14 @@ ${selenium_timeout}    30
 *** Keywords ***
 Open Browser and go to URL
     [Arguments]    ${url}
-    Run Keyword If    "${options}"=="false" or "${headless}"=="false"    Regular Open Browser
+    Run Keyword If    "${options}"=="false" or "${headless}"=="false" or "${headless}"=="False"    Regular Open Browser
     ...          ELSE    Open Browser With Options
     Set Selenium Speed    ${speed}
     Set Selenium Timeout    ${selenium_timeout}
+    Go To    ${ENV}
     Check Language Anonymous
     Go To    ${url}
     
-
 Regular Open Browser
     Set Screenshot Directory    ${SCREENSHOT_DIRECTORY}
     ${chrome_options}=    Set Chrome Options
@@ -128,6 +130,14 @@ Log In With Remember Me
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
     Validate Log In
+
+Log in to Auto Tests System
+    [Arguments]    ${email}
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
     [Arguments]    ${timeout}=${selenium_timeout}
@@ -305,24 +315,24 @@ Share To
     [arguments]    ${email}    ${permissions}    ${alert}=success
     Wait Until Element Is Visible    ${USERS LIST LINK}
     Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Enabled    ${SHARE BUTTON SYSTEMS}
+    Wait Until Element Is Enabled    ${ADD USER BUTTON SYSTEMS}
     Sleep    1
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${email}
-    Wait Until Element Is Visible    ${SHARE PERMISSIONS DROPDOWN}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${email}
+    Wait Until Element Is Visible    ${ADD USER PERMISSIONS DROPDOWN}
     Sleep    1
-    Click Button    ${SHARE PERMISSIONS DROPDOWN}
-    Wait Until Elements Are Visible    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Link    ${SHARE MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
-    Click Button    ${SHARE BUTTON MODAL}
+    Click Button    ${ADD USER PERMISSIONS DROPDOWN}
+    Wait Until Elements Are Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Link    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${permissions}']/..
+    Click Button    ${ADD USER BUTTON MODAL}
     Run Keyword if    '${alert}'=='fail'    Wait Until Element Is Visible    //span[contains(text(),"${EMAIL IS ALREADY REGISTERED TEXT}")]    ${selenium timeout}
     ${new user}    Replace String    ${USER IN SYSTEM}    %user%    ${email}
     Run Keyword unless    '${alert}'=='fail'    Wait Until Element is Visible    ${new user}
 
 Edit User Permissions In Systems
     [arguments]    ${user email address}    ${permissions}
-    Wait Until Element Is Not Visible    ${SHARE MODAL}
+    Wait Until Element Is Not Visible    ${ADD USER MODAL}
     Wait Until Elements Are Visible    ${USER EMAIL}    ${ACCESS LEVEL DROPDOWN}
     Element Text Should Be    ${USER EMAIL}    ${user email address}
     Select user in Users List    ${user email address}
@@ -347,19 +357,19 @@ Check User Permissions
     ...    ${UNRESTRICTED ACCESS CONNECT TEXT}
     Run Keyword If    '${permissions}'=='${ADMIN TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADMINISTRATOR}
+    ...    ${ADD USER PERMISSIONS HINT ADMINISTRATOR}
     Run Keyword If    '${permissions}'=='${ADV VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT ADVANCED VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT ADVANCED VIEWER}
     Run Keyword If    '${permissions}'=='${VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT VIEWER}
     Run Keyword If    '${permissions}'=='${LIVE VIEWER TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT LIVE VIEWER}
+    ...    ${ADD USER PERMISSIONS HINT LIVE VIEWER}
     Run Keyword If    '${permissions}'=='${CUSTOM TEXT}'
     ...    Element Text Should Be    ${HELP BLOCK}
-    ...    ${SHARE PERMISSIONS HINT CUSTOM}
+    ...    ${ADD USER PERMISSIONS HINT CUSTOM}
 
     Set Selenium Timeout    ${original timeout}
 
@@ -376,6 +386,16 @@ Get Cloud User Id By Email
    FOR    ${user}    IN    @{users}
        Run Keyword If   '${user}[accountEmail]'=='${email}'    return from keyword    ${user}[vmsUserId]
    END
+
+Get System User Id By Email
+    [Arguments]    ${email}
+    ${users}=   Get Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${user}    IN    @{users}
+        Run Keyword If    '${user}[email]'=='${email}'    Run Keywords
+        ...    Set Test Variable    ${id}    ${user}[id]
+        ...    AND     Exit For Loop
+    END
+    [Return]    ${id}
 
 Change User Permissions
     [arguments]    ${permissions}
@@ -400,7 +420,7 @@ Remove User Permissions
 
 Select user in Users List
     [arguments]    ${user email address}
-    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${SHARE BUTTON SYSTEMS}   5
+    ${status}=   Run Keyword And Return Status    Wait Until Element Is Visible   ${ADD USER BUTTON SYSTEMS}   5
     Run Keyword Unless    ${status}   Go To Users List
     ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${user email address}']/../../../a
     Wait Until Element Is Visible    ${User In List}
@@ -429,9 +449,9 @@ Disconnect from cloud
     Go to System Administration
     Wait Until Element Is Visible    ${DISCONNECT FROM NX}
     Click Element    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM CANCEL}    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
+    Wait Until Elements Are Visible    ${DISCONNECT FORM DISCONNECT BUTTON}    ${DISCONNECT PASSWORD INPUT}
     Input Text    ${DISCONNECT PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${DISCONNECT FORM DISCONNECT BUTTON}
+    Click Element    ${DISCONNECT FORM DISCONNECT BUTTON}
 #    Check For Alert    ${SUCCESSFULLY DISCONNECTED}
 #    Sleep    5
 
@@ -528,11 +548,11 @@ Reset user noperm first/last name
     Close Browser
 
 Add notowner
-    Wait Until Element Is Visible    ${SHARE BUTTON SYSTEMS}
-    Click Button    ${SHARE BUTTON SYSTEMS}
-    Wait Until Elements Are Visible    ${SHARE EMAIL}    ${SHARE BUTTON MODAL}
-    Input Text    ${SHARE EMAIL}    ${EMAIL NOT OWNER}
-    Click Button    ${SHARE BUTTON MODAL}
+    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
+    Click Button    ${ADD USER BUTTON SYSTEMS}
+    Wait Until Elements Are Visible    ${ADD USER EMAIL}    ${ADD USER BUTTON MODAL}
+    Input Text    ${ADD USER EMAIL}    ${EMAIL NOT OWNER}
+    Click Button    ${ADD USER BUTTON MODAL}
     Check For Alert    ${NEW PERMISSIONS SAVED}
     Check User Permissions    ${EMAIL NOT OWNER}    ${CUSTOM TEXT}
     Close Browser
@@ -577,10 +597,10 @@ Add user to cloud system if not there
     Run Keyword If    ${is there}==False    Run Keyword    Share    ${auth}    ${system id}    ${access role}    ${email}
 
 Connect system to cloud if not
-    [Arguments]    ${system auth}    ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
-    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    [Arguments]    ${system auth}    ${server ip}     ${system name}    ${cloud owner email}    ${cloud owner password}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}   ${system auth}
     Run Keyword If    '${current cloud system id}'=='${EMPTY}'    Connect System to Cloud    ${system auth}   ${server ip}    ${server port}    ${system name}    ${cloud owner email}    ${cloud owner password}
-    ${current cloud system id}=    Get Cloud System Id      ${server ip}:${server port}    ${system auth}
+    ${current cloud system id}=    Get Cloud System Id      ${server ip}    ${system auth}
     [Return]    ${current cloud system id}
 
 Reset System Names
@@ -745,8 +765,8 @@ Check Password Badge
     Run Keyword Unless    '''${pass}'''=='''${EMPTY}'''    Wait Until Element Is Visible    ${PASSWORD BADGE}
     Run Keyword If    '''${pass}''' in ${weak passwords}    Element Should Be Visible    ${PASSWORD IS WEAK BADGE}
     ...    ELSE IF    '''${pass}''' in ${incorrect passwords}    Element Should Be Visible    ${PASSWORD INCORRECT BADGE}
-    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${click}
-    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${click}
+    ...    ELSE IF    '''${pass}''' in ${fair passwords}    Move focus and check badge    ${PASSWORD IS FAIR BADGE}    ${new focus}
+    ...    ELSE IF    '''${pass}''' in ${good passwords}    Move focus and check badge    ${PASSWORD IS GOOD BADGE}    ${new focus}
 
 Move focus and check badge
     [Arguments]    ${badge}    ${new focus}
@@ -776,3 +796,11 @@ Check New Password Outline
     ...    ELSE IF    '''${new pw}'''=="${common password}"    Move focus and check element    ${PASSWORD TOO COMMON}    ${new focus}
     ...    ELSE IF    '''${new pw}''' in "${weak passwords}"    Move focus and check element    ${PASSWORD IS WEAK}    ${new focus}
 # ${CURRENT PASSWORD INPUT}  put that into  register or change pass for intput
+
+Check System Text
+    [Arguments]    ${user}
+    Log Out
+    Log in to Auto Tests System    ${user}
+    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    testFirstName testLastName
+    Wait Until Elements Are Visible    ${current owner name}    ${OWNER EMAIL}    ${YOUR ACCESS LEVEL}
+    Run Keyword Unless    "${user}"=="${EMAIL ADMIN}"    Wait Until Element Is Not Visible    ${YOUR ACCESS LEVEL}/span[contains(text(),'${ADMIN TEXT}')]

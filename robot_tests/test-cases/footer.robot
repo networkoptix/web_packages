@@ -21,7 +21,6 @@ About page is correctly displayed
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
-    ...    ${FOOTER ABOUT LINK}
     Wait Until Element Has Style
     ...    ${CREATE ACCOUNT BODY}
     ...    background-color
@@ -31,7 +30,6 @@ About page is correctly displayed
     Wait Until Elements are Visible
     ...    ${FOOTER ABOUT LINK}
     ...    ${CREATE ACCOUNT BODY}
-    ...    ${FOOTER ABOUT LINK}
     Wait Until Element Has Style
     ...    ${CREATE ACCOUNT BODY}
     ...    background-color

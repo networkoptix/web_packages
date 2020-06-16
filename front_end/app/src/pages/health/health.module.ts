@@ -8,6 +8,7 @@ import { NgbModule }              from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule }        from '@ngx-translate/core';
 import { AngularSvgIconModule }   from 'angular-svg-icon';
 import { NgxFileDropModule }      from 'ngx-file-drop';
+
 import { MenuModule }             from '../../menu';
 import { ComponentsModule }       from '../../components/components.module';
 import { AuthGuard, SystemGuard } from '../../routeGuards';
@@ -20,6 +21,7 @@ import {
     NxImageComponent, NxImageSectionComponent,
     NxSystemAlertCardComponent, NxUpdateInfoComponent
 } from './';
+import { DirectivesModule }       from '../../directives/directives.module';
 import { nxConfig } from '../../services/nx-config/config';
 
 const appRoutes: Routes = !nxConfig.isLocal ? [
@@ -70,6 +72,7 @@ const appRoutes: Routes = !nxConfig.isLocal ? [
         NgbModule,
         TranslateModule,
         ComponentsModule,
+        DirectivesModule,
         AngularSvgIconModule.forRoot(),
         NgxFileDropModule,
         PipesModule,

@@ -30,12 +30,13 @@ import { AuthGuard, SystemGuard }             from './src/routeGuards';
 import { NxConfigService }                    from './src/services/nx-config';
 import { ServiceModule }                      from './src/services/services.module';
 import { WINDOWS_PROVIDERS }                  from './src/services/window-provider';
-import { MenuModule }          from './src/menu';
-import { NxBootstrapProvider } from './src/services/nx-bootstrap-provider';
-import { WebadminPageModule }  from './src/pages/webadmin-page.module';
+import { MenuModule }                         from './src/menu';
+import { NxBootstrapProvider }                from './src/services/nx-bootstrap-provider';
+import { WebadminPageModule }                 from './src/pages/webadmin-page.module';
 import { PagesModule}                         from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
+import { NgxMaskModule, IConfig }             from 'ngx-mask';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -75,11 +76,12 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         }),
         DeviceDetectorModule.forRoot(),
         RouterModule.forRoot([], {
-            initialNavigation         : true,
-            scrollPositionRestoration : 'enabled',
-            anchorScrolling           : 'enabled',
-            enableTracing             : false
-        })
+            initialNavigation        : true,
+            scrollPositionRestoration: 'enabled',
+            anchorScrolling          : 'enabled',
+            enableTracing            : false
+        }),
+        NgxMaskModule.forRoot(options)
     ],
     entryComponents : [],
     providers       : [
@@ -104,6 +106,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         AuthGuard,
         SystemGuard,
+        DatePipe,
         NxBootstrapProvider,
         { provide: APP_INITIALIZER, useFactory: NxBootstrapProviderFactory, deps: [NxBootstrapProvider], multi: true }
     ],

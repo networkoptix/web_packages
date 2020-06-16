@@ -15,6 +15,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { DownloadComponent }     from './download.component';
 import { ComponentsModule }      from '../../components/components.module';
 import { NxConfigService }       from '../../services/nx-config';
+import { DirectivesModule }      from '../../directives/directives.module';
 
 @Injectable()
 export class OsResolver implements Resolve<any> {
@@ -59,7 +60,7 @@ const appRoutes: Routes = [
         FormsModule,
         TranslateModule,
         ComponentsModule,
-
+        DirectivesModule,
         RouterModule.forChild(appRoutes)
     ],
     providers: [

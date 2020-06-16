@@ -4,6 +4,7 @@
     "Integrations": "Integrazioni",
     "Privacy": "Privacy",
     "Support": "Supporto",
+    "Supported Devices": "Dispositivi supportati",
     "Terms": "Termini di servizio",
     "accessRoles": {
         "Administrator": {
@@ -67,10 +68,10 @@
         "accountSavedSuccess": "Il tuo account è stato aggiornato correttamente",
         "accountSettings": "Impostazioni dell'account",
         "activationLinkSent": "Link di attivazione inviato",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "L'accordo è stato accettato",
         "changePassword": "Cambio Password",
         "newPasswordLabel": "Nuova password",
-        "passwordChangedSuccess": "Password successfully saved",
+        "passwordChangedSuccess": "Password salvata correttamente",
         "saveChanges": "Salva"
     },
     "activeActions": {
@@ -95,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Account creato",
+                "message": "Il messaggio di conferma con il collegamento di attivazione verrà inviato a {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Account creato con successo"
             }
         },
         "cameraLinks": {
@@ -127,24 +128,24 @@
             "unauthorized": "Autenticazione richiesta"
         },
         "chromeCastWarning": "Chromecast richiede molte risorse e potrebbe causare problemi al suo server.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Aggiorna le impostazioni di registrazione mancanti.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Registra sempre",
+            "motion": "Registra solo il movimento",
+            "motionLowRes": "Movimento + bassa risoluzione"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Valori diversi -",
             "auto": "Automatico",
-            "best": "Best",
+            "best": "Migliore",
             "high": "Alta",
-            "medium": "Medium",
+            "medium": "Media",
             "low": "Basso"
         },
-        "general": "General",
+        "general": "Generale",
         "searchCamPlaceholder": "Ricerca",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "Nessuna telecamera",
+        "systemHasNoCamerasMessage": "Non ci sono telecamere accessibili nel sistema. <br><br>Collegare alcune telecamere alla rete locale del server per renderle rilevabili o chiedere all'amministratore di sistema di modificare il livello di accesso.",
         "systemNewVersion": "Aggiorna il tuo sistema",
         "systemNewVersionMessage": "La tua versione attuale non è compatibile con questa funzione. Aggiorna i tuoi server all'ultima versione per utilizzare questa funzione.",
         "systemNoAlerts": "Nessun avviso",
@@ -154,6 +155,7 @@
         "systemServerError": "Errore interno del server",
         "systemServerErrorMessage": "Si è verificato un errore, riprova più tardi. Se il problema persiste, contattare il team di supporto.",
         "systemUnreachable": "Il sistema è inaccessibile",
+        "inaccessibleFeatureMessage": "Il sistema è offline e quindi le informazioni non sono accessibili.",
         "unknown": "Sconosciuto",
         "voiceCommands": {
             "clear search": "cancella ricerca",
@@ -169,14 +171,14 @@
             "stop listening": "interrompere l'ascolto",
             "view": "visualizza + [nome telecamera]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Stai visualizzando un rapporto obsoleto."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Annulla",
             "createAccount": "Crea nuovo account",
-            "delete": "Delete",
-            "deleteAccount": "Delete Account",
+            "delete": "Elimina",
+            "deleteAccount": "Eliminare l'account",
             "download": "Scarica %VMS_NAME%",
             "logoutAuthorised": "Disconnetti",
             "ok": "Ok",
@@ -185,91 +187,90 @@
             "stayLoggedIn": "Rimani collegato"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
-            "camera": "camera",
-            "cameras": "cameras",
+            "title": "Archiviazione Cloud",
+            "enableStorage": "Abilita l'archiviazione cloud",
+            "otherSystem": "Altro sistema...",
+            "initial": "Per iniziare, offriamo {{compCapacity}} l' archiviazione cloud gratuita per sistema.",
+            "available": "La posizione dell' archiviazione cloud è disponibile per tutti i server in questo sistema. Puoi gestirlo usando il client desktop {{vmsName}}.",
+            "camera": "telecamera",
+            "cameras": "telecamere",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Archiviazione cloud rimossa correttamente dal sistema",
+                "errorPrefix": "Errore durante la rimozione dell'archiviazione cloud"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Impossibile abilitare l'archiviazione cloud",
+                "message": "Hai già aggiunto un totale di <volume> archiviazione cloud ai tuoi sistemi e non puoi aggiungerne altri. <br/><br/>È possibile invece eliminare l'archiviazione da un altro sistema o spostarlo su questo. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Impossibile disconnettere il sistema da %CLOUD_NAME%",
+                "message": "Questo sistema ha l'archiviazionecloud con alcuni archivi. <br/><br/>L'archiviazione cloud deve essere eliminata manualmente prima di disconnettere il sistema da %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Sposta l'archiviazione cloud",
+                "success": "Archiviazione spostata correttamente",
+                "errorPrefix": "Errore durante lo spostamento dell'archiviazione cloud",
+                "notFound": "Archiviazione non trovata. Lo spazio di archiviazione potrebbe essere stato spostato od eliminato da un altro utente",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "L'archiviazione cloud non può essere spostata su sistemi offline."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Archiviazione Cloud Attivata",
+                "errorPrefix": "Errore durante l'abilitazione dell'archiviazione cloud"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Puoi spostare l'archivazione cloud solo tra i sistemi di cui sei il proprietario. <br/><br/>Connetti un sistema a %CLOUD_NAME% usando il tuo account cloud per poterlo spostare."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Immettere la password per l'account del proprietario in <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Password errata per l'utente amministratore locale",
+            "checking": "Verifica in corso...",
             "commonText": "Impossibile unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Connetti il Sistema che vuoi unire con questo <strong>{{cloudName}}</strong> o unisci localmente usando <strong>{{vmsName}}</strong> il Client.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "Sia il sistema selezionato che quello attuale sono collegati a %CLOUD_NAME% e hanno proprietari diversi. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
+            "duplicateServers": "<p class=\"mb-2\">Un server sembra elencare se stesso sia nel sistema selezionato che in quello corrente.</p><p>Rimuovere i server offline ed incompatibili da ciascun sistema e riprovare.</p>",
+            "enterSystemAddressTitle": "Immettere l'indirizzo di qualsiasi server situato nel sistema che si desidera unire con questo.",
+            "mergeConfirmation": "<p class=\"mb-0\">Stai per unire i sistemi <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.</p><p>Le impostazioni ed il nome verranno presi da <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Unisci il sistema corrente con",
             "mergeFailedTitle": "Unione di sistemi fallita",
-            "noServerFound": "No server found",
-            "newSystemDisplayName": "New System",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "noServerFound": "Nessun server trovato",
+            "newSystemDisplayName": "Nuovo sistema",
+            "otherSystem": "Altro sistema...",
+            "ownerCanMergeText": "Puoi solo unire i sistemi in cui sei il proprietario",
             "passwordRequired": "È richiesta la password",
             "passwordWrong": "Password errata",
             "primaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "Il sistema {{primarySystem}} è offline e non può essere unito al sistema {{targetSystem}}",
+            "primarySystemUnavailable": "Il sistema {{primarySystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Si consiglia di consultarsi con",
                 "b_support": "supporto",
                 "c_proceeding": "prima di procedere."
             },
             "secondaryCannotMerge": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "serverVersionOld": "This server has an older software version that is incompatible with the current System. Update it to the latest build to merge it with the current one.",
-            "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "Il sistema {{targetSystem}} ha una versione più recente del software che è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
-            "systemVersionNew": "System {{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {{targetSystem}} system.",
-            "urlEmpty": "Enter server address",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "secondarySystemUnavailable": "Il sistema {{targetSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
+            "serverAtUrl": "server a {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Impossibile accedere al sistema {{targetSystem}}.</p><p>Assicurarsi che il server specificato sia online e riprovare.</p>",
+            "serverNotYours": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
+            "systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito al corrente",
+            "systemOfflineUrl": "{{targetSystem}} è inaccessibile.",
+            "systemsIncompatible": "Questo server ha una versione software incompatibile. Aggiorna entrambi i sistemi alla stessa versione per unirli.",
+            "systemVersionOld": "Il sistema {{targetSystem}} ha una versione precedente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
+            "systemVersionNew": "Il sistema {{targetSystem}} ha una versione più recente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
+            "urlEmpty": "Inserire l'indirizzo del server",
+            "urlNotValid": "Inserisci un URL valido",
+            "unknownError": "Si è verificato un errore sconosciuto. Aggiorna la pagina e riprova. Se il problema persiste, contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
+            "warning": "Ci saranno più di <strong>{{maxServers}}</strong> server nel sistema unito."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "storageSettingsSaved": "Impostazioni di archiviazione salvate.",
+            "storageSettingsNotSaved": "Impossibile salvare le impostazioni di archiviazione.",
+            "settingsSaved": "Impostazioni salvate.",
+            "settingsNotSaved": "Impossibile salvare le impostazioni.",
+            "logLevelsSaved": "Livelli di registro salvati.",
+            "logLevelsNotSaved": "Impossibile salvare i livelli di registro.",
             "failedToSend": "Impossibile inviare il messaggio.",
             "placeholders": {
                 "feedback": "Assicurati di includere il modello della telecamera e il produttore..."
@@ -295,18 +296,18 @@
         },
         "titles": {
             "error": "Errore",
-            "success": "Success",
+            "success": "Successo",
             "changeAccount": "Hai già effettuato l'accesso come {email}",
-            "deleteUser": "Delete user?",
+            "deleteUser": "Eliminare utente?",
             "loggedFromOtherAccount": "Verrà effettuato l'accesso con un altro account",
             "noClientDetected": "Installa %VMS_NAME% per visualizzare il tuo sistema",
             "removeUser": "Rimuovere l'utente?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "Scollega il server \"{{ title }}\" dal sistema corrente?",
+            "serversReset": "Ripristinare i valori predefiniti del server \"{{ title }}\"?",
+            "serversRestart": "Riavviare il server \"{{ title }}\"?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Disconnetti tutti i sistemi di cui sei il proprietario dal portale %CLOUD_NAME% per eliminare il tuo account."
         }
     },
     "downloads": {
@@ -382,18 +383,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
         "DUPLICATE_MEDIASERVER_FOUND": "Alcuni elenchi di server come esistenti in entrambi i sistemi, sia quelli selezionati che quelli attuali.<br>Rimuovere i server offline e incompatibili da ciascun sistema e riprovare.",
         "EmailAlreadyExists": "Questa email è già registrata",
         "FAIL": "Il sistema <strong>{{failedSystem}}</strong> è attualmente irraggiungibile.<br>Riprovare tra qualche istante o contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
+        "INCOMPATIBLE": "I sistemi hanno diverse versioni del software. Si prega di aggiornarli entrambi all'ultima <a href=\"/download\">versione</a>.",
+        "cloud_systems_have_different_owners": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Un server sembra elencare se stesso sia nel sistema selezionato che in quello corrente.</p><p>Rimuovere i server offline e incompatibili da ciascun sistema e riprovare.</p>",
+        "fail": "{{failedSystem}} è inaccessibile.",
+        "incompatible": "Questo server ha una versione software incompatibile. Aggiorna entrambi i sistemi alla stessa build per unirli.",
+        "unknown_error": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "accountAlreadyActivated": "Questo account è già stato attivato",
         "accountBlocked": "Questo account è temporaneamente bloccato. Riprova tra qualche minuto.",
         "accountNotActivated": "Questo account non è ancora stato attivato. <a href=\"/activate\">Invia nuovamente il link di attivazione</a>",
         "alreadyExists": "Questo account esiste già",
         "brokenAccount": "Problema inaspettato con l'account. <a href=\"/restore_password\">Ripristina account</a>",
         "cantActivatePrefix": "Impossibile attivare il tuo account",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "Aggiungere la propria email non è consentito",
         "cantChangeAccountPrefix": "Impossibile salvare le modifiche",
         "cantChangePasswordPrefix": "Impossibile salvare la password",
         "cantDisconnectSystemPrefix": "Impossibile cancellare il sistema",
@@ -409,7 +415,7 @@
         "cantSharePrefix": "Impossibile condividere il sistema",
         "cantUnshareWithMeSystemPrefix": "Impossibile cancellare il sistema",
         "emailNotFound": "L'account non esiste.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Nessun sistema è accessibile da questo link. Ciò può accadere quando un sistema è stato disconnesso da %CLOUD_NAME%, e l'accesso a questo sistema è stato revocato o se si è effettuato l'accesso con un account errato.",
         "forbidden": "Non ha il permesso per effettuare questa azione",
         "lostConnection": "Connessione a {{systemName}} persa",
         "mergedSystemIsOffline": "Il sistema <strong>{{failedSystem}}</strong> non è in linea.",
@@ -419,14 +425,16 @@
         "oldPasswordMistmatch": "Password corrente non è corretta.",
         "oldSafariNotSupported": "Le versioni di Safari precedenti alla 10 non sono supportate",
         "passwordMismatch": "Password errata",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
         "thisSystem": "il sistema",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Si è verificato un errore imprevisto",
         "unknownMergeError": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
         "wrongAuthCode": "Il codice è scaduto o errato",
         "wrongCode": "L'account è già attivato o il codice di conferma non è corretto",
         "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "Impossibile attivare la licenza. Riprova o contatta l'assistenza clienti.",
+        "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {
         "Access Control": "Controllo accesso",
@@ -472,21 +480,23 @@
         "isMdSupported": "Motion Detection",
         "isMultiSensor": "Multi sensore",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "Audio a 2 vie",
+        "maxFps": "FPS (max)",
+        "maxResolution": "Risoluzione (max)",
         "model": "Modello",
         "multiSensorCamera": "Telecamera multisensore",
         "other": "Altro",
         "primaryCodec": "Codec",
         "resolutionArea": "Area",
-        "sndResolution": "Secondary Stream",
+        "sndResolution": "Stream secondario",
         "topXByVolume": "Top {{value}} per volume:",
         "vendor": "Produttore"
     },
     "menu": {
         "titles": {
             "systemAdministration": "Amministratore di sistema",
+            "general": "Generale",
+            "licenses": "Licenze",
             "users": "Utenti"
         }
     },
@@ -501,7 +511,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Scarica %VMS_NAME%",
         "downloadPlatform": "Scarica %VMS_NAME% per ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Impossibile accedere al sistema",
         "integrations": "Integrazioni",
         "login": "Accesso",
         "pageNotFound": "Pagina non trovata",
@@ -534,42 +544,42 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Impossibile caricare la pagina",
+            "message": "Assicurarsi che i tuoi server siano online e riprova."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Questo sistema è in fase di unione con {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "A seconda delle dimensioni del database possono essere necessarie diverse ore.",
+                "untilFinished": "Fino al termine dell'unione, è possibile accedere a questo sistema e alle immagini, ma non è possibile modificare alcuna impostazione.",
+                "whenFinished": "Una volta completata l'unione, tutti gli utenti e le telecamere di questo sistema diventeranno disponibili nel sistema \"{{systemName}} \"e questo sistema sarà cancellato."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Server non accessibile",
+            "message": "Il sistema è offline e quindi i server non sono accessibili."
         }
     },
     "pleaseSelect": "Selezionare...",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+        "ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
     },
     "registration": {
         "agreement": "Accetto i <a href=\"/content/eula\" target=\"_blank\"> Termini e condizioni </a> e <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Informativa sulla privacy </a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "è in fase di unione con questo sistema",
+            "mayTake": "A seconda delle dimensioni del database possono essere necessarie diverse ore."
         },
-        "finishingMerge": "Finishing systems merge",
+        "finishingMerge": "Completamento unione sistemi",
         "integration": {
             "backToEditText": "Torna alle interfacce di modifica",
             "previewRibbon": "Questa pagina è un'anteprima delle ultime modifiche e non corrisponde alla versione disponibile al pubblico."
         },
         "systemOffline": "Il sistema non è in linea. Alcune impostazioni potrebbero non essere disponibili.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Questo sistema è attualmente attivato per l'operazione di unione."
     },
     "search": {
         "Any": "Qualsiasi",
@@ -587,33 +597,34 @@
         "vendors": "Produttori"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginDetach": "Il server si sta ora scollegando",
+        "beginReset": "Il server si sta ripristinando.",
+        "detachSystemFailed": "Impossibile scollegare il server dal sistema. Verificare se la password inserita è corretta ed il server è online e riprovare.",
+        "detachSystemSuccess": "Il server è stato scollegato correttamente dal sistema.",
+        "portWarning": "I numeri di porta inferiori a 1024 sono riservati. Il server potrebbe diventare inaccessibile.",
+        "removeMediaserverFailed": "Rimozione del server dal sistema non riuscita.",
+        "resetFailed": "Impossibile scollegare il server dal sistema. Verificare se la password inserita è corretta ed il server è online e riprovare.",
+        "resetSuccessful": "Il server {{ serverName }} è stato ripristinato ai valori predefiniti.",
+        "restartFailed": "Si è verificato un problema durante il riavvio del server.",
+        "restartSuccessful": "Il server è stato riavviato correttamente.",
         "serverOffline": "Il server è offline.",
-        "servers": "Servers",
+        "servers": "Server",
         "status": {
-            "checking": "checking...",
+            "checking": "verifica in corso...",
             "offline": "non in linea",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "reset in corso...",
+            "restarting": "riavviando..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Nome del server salvato."
     },
     "system": {
         "MERGE_FINISHES": "Una volta completata l'unione, tutti gli utenti e le telecamere di questo sistema diventeranno disponibili nel sistema \"<strong>{{targetSystemName}}</strong> \"e questo sistema sarà cancellato.",
         "mergeUnknownName": "Nome sconosciuto per il sistema (causato da cloud merge)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
+            "notAbleToLoadSecurity": "Impossibile caricare le impostazioni di sicurezza.",
+            "notAbleToLoadSystem": "Impossibile caricare le impostazioni di sistema.",
+            "notAbleToLoadStorageInfo": "Impossibile caricare le informazioni di archiviazione.",
             "sessionLimitDuration": {
                 "hours": "ore",
                 "minutes": "minuti"
@@ -627,34 +638,34 @@
             "unavailable": "Il server è irraggiungibile"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "Rimuovere utente",
+            "localDelete": "Cancellare utente"
         },
         "yourSystem": "Il suo sistema",
         "loggers": {
             "none": {
-                "text": "None",
-                "help": "(log disabled)"
+                "text": "Nessuna",
+                "help": "(registro disabilitato)"
             },
             "error": {
                 "text": "Errore",
-                "help": "(log errors only)"
+                "help": "(solo errori di registro)"
             },
             "warning": {
-                "text": "Warning",
-                "help": "(log warnings and errors)"
+                "text": "Attenzione",
+                "help": "(registro avvisi ed errori)"
             },
             "info": {
-                "text": "Info",
-                "help": "(log warnings, errors and all messages)"
+                "text": "Informazioni",
+                "help": "(registro avvisi, errori e tutti i messaggi)"
             },
             "debug": {
                 "text": "Debug",
-                "help": "(log every System message and debug information)"
+                "help": "(registra tutti i messaggi di sistema e le informazioni di debug)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "Verboso",
+                "help": "(registra tutte le informazioni disponibili)"
             }
         }
     },
@@ -677,106 +688,139 @@
             },
             "merge": {
                 "failed": "Unione di sistemi fallita",
-                "success": "Unione del sistema completata"
+                "success": "Unione dei sistemi {{primaryName}} e {{secondaryName}} completata"
             },
             "rename": {
                 "success": "Nome del sistema salvato"
             }
         }
     },
+    "license": {
+        "info": {
+            "type": "Tipo",
+            "channels": "Canali",
+            "server": "Server",
+            "hwid": "ID Hardware",
+            "status": "Stato",
+            "expires": "Scade il",
+            "time": "Orario",
+            "deactivations": "Disattivazione rimanente",
+            "trial": "Prova",
+            "online": "Online",
+            "error": "Errore",
+            "expired": "Scaduta",
+            "ok": "Ok",
+            "digital": "Professionale",
+            "analog": "Analogico",
+            "edge": "Edge",
+            "vmax": "VMAX",
+            "videowall": "Video Wall",
+            "analogencoder": "Encoder analogico",
+            "starter": "Iniziale",
+            "iomodule": "Modulo I / O",
+            "bridge": "Bridge"
+        },
+        "messages": {
+            "required": "{{number}} richieste",
+            "activated": "Licenza attivata",
+            "inuse": "La chiave di licenza è già stata attivata e associata al server con ID hardware {{hwid}} in un altro sistema",
+            "trialActivated": "Licenza di prova attivata. A partire da oggi, puoi registrare fino a 4 telecamere per 30 giorni."
+        }
+    },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
+        "additionalLocalFsTypes": "Tipi di FS locali aggiuntivi",
+        "autoDiscoveryResponseEnabled": "Risposta di rilevamento automatico",
         "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "defaultExportVideoCodec": "Codec video di esportazione predefinito",
+        "defaultVideoCodec": "Codec video predefinito",
+        "downloaderPeers": "Peer downloader",
+        "lastMergeMasterId": "Ultimo masterId di unione",
+        "lastMergeSlaveId": "Ultima unione SlaveId",
+        "ldapSearchTimeoutS": "Timeout di ricerca LDAP (sec)",
+        "licenseServer": "Server di licenza",
+        "lowQualityScreenVideoCodec": "Codec video di bassa qualità",
+        "maxP2pAllClientsSizeBytes": "P2P massimo per tutte le dimensioni di byte dei client",
+        "maxRtpRetryCount": "Numero massimo di tentativi RTP",
+        "metadataStorageChangePolicy": "Politica di modifica della memorizzazione dei metadati",
+        "pushNotificationsLanguage": "Lingua per la notifica push",
+        "resourceFileUri": "URI del file di risorse",
+        "sessionLimitMinutes": "Limite di sessione (minuti)",
+        "specificFeatures": "Caratteristiche specifiche",
         "systemName": "Nome del sistema",
         "webSocketEnabled": "Web sockets",
-        "arecontRtspEnabled": "Arecont RTSP Enabled",
-        "auditTrailEnabled": "Audit trail enabled",
-        "auditTrailPeriodDays": "Audit trail period days",
-        "autoDiscoveryEnabled": "Enable device auto discovery",
-        "autoUpdateThumbnails": "Auto-update thumbnails",
-        "backupNewCamerasByDefault": "Backup new cameras by default",
-        "backupQualities": "Backup qualities",
-        "cameraSettingsOptimization": "Allow device setting optimization",
-        "clientStatisticsSettingsUrl": "Client statistics relative url",
-        "cloudAccountName": "Cloud owner account",
-        "cloudConnectRelayingEnabled": "Enable relaying for cloud connect",
-        "cloudConnectUdpHolePunchingEnabled": "Enable UDP hole punching for cloud connect",
-        "cloudHost": "Cloud host",
-        "cloudSystemID": "Cloud System id",
-        "disabledVendors": "Disabled vendors",
-        "ec2AliveUpdateIntervalSec": "System alive update interval (seconds)",
-        "ec2ConnectionKeepAliveTimeoutSec": "Connection keep alive timeout (seconds)",
-        "ec2KeepAliveProbeCount": "Connection keep alive probes (seconds)",
-        "emailFrom": "Email from",
-        "emailSignature": "Email signature",
-        "emailSupportEmail": "Support Email",
-        "enableEdgeRecording": "Enable edge recording",
-        "eventLogPeriodDays": "Event log period (days)",
+        "arecontRtspEnabled": "Arecont RTSP abilitato",
+        "auditTrailEnabled": "Controllo Audit abilitato",
+        "auditTrailPeriodDays": "Giorni del periodo di controllo audit",
+        "autoDiscoveryEnabled": "Abilita il rilevamento automatico del dispositivo",
+        "autoUpdateThumbnails": "Aggiorna automaticamente le miniature",
+        "backupNewCamerasByDefault": "Impostazione predefinita per eseguire il backup delle nuove telecamere",
+        "backupQualities": "Qualità di backup",
+        "cameraSettingsOptimization": "Consenti ottimizzazione delle impostazioni del dispositivo",
+        "clientStatisticsSettingsUrl": "Url relativo alle statistiche del client",
+        "cloudAccountName": "Account del proprietario del cloud",
+        "cloudConnectRelayingEnabled": "Abilita l'inoltro per la connessione cloud",
+        "cloudConnectUdpHolePunchingEnabled": "Abilitala connessione cloud tramite UDP hole punching",
+        "cloudHost": "Host cloud",
+        "cloudSystemID": "Id sistema cloud",
+        "disabledVendors": "Fornitori disabili",
+        "ec2AliveUpdateIntervalSec": "Intervallo di aggiornamento attivo del sistema (secondi)",
+        "ec2ConnectionKeepAliveTimeoutSec": "Timeout (secondi) della connessione keep alive",
+        "ec2KeepAliveProbeCount": "Interrogazione connessione keep-alive (secondi)",
+        "emailFrom": "Email da",
+        "emailSignature": "Firma e-mail",
+        "emailSupportEmail": "Email di supporto",
+        "enableEdgeRecording": "Abilitazione della registrazione edge",
+        "eventLogPeriodDays": "Periodo del registro eventi (giorni)",
         "ldapAdminDn": "LDAP admin DN",
-        "ldapSearchBase": "LDAP search base",
-        "ldapSearchFilter": "LDAP search filter",
-        "ldapUri": "LDAP URI",
-        "localSystemId": "Local System ID",
-        "maxDifferenceBetweenSynchronizedAndInternetTime": "Max difference between synchronized and Internet time (milliseconds)",
-        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Max difference between synchronized and local time (milliseconds)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
-        "maxRecordQueueSizeBytes": "Max record queue size (bytes)",
-        "maxRecordQueueSizeElements": "Max record queue size (elements)",
-        "maxRemoteArchiveSynchronizationThreads": "Max remote archive synchronization threads",
-        "maxRtspConnectDurationSeconds": "Max Rtsp connect duration seconds",
-        "maxSceneItems": "Max scene items (0 means default)",
-        "proxyConnectTimeoutSec": "Proxy connection timeout (seconds)",
-        "rtpTimeoutMs": "RTP timeout (milliseconds)",
-        "sequentialFlirOnvifSearcherEnabled": "Use sequential Flir Onvif searcher",
-        "serverDiscoveryPingTimeoutSec": "Server discovery timeout",
-        "smtpConnectionType": "SMTP connection type",
-        "smtpHost": "SMTP host",
-        "smtpPort": "SMTP port",
-        "smtpSimple": "SMTP simple",
-        "smtpTimeout": "SMTP timeout",
-        "smtpUser": "SMTP user",
-        "statisticsAllowed": "Send anonymous usage statistics and crash reports",
-        "statisticsReportLastNumber": "Statistics report - last number",
-        "statisticsReportLastTime": "Statistics report - last time",
-        "statisticsReportLastVersion": "Statistics report - last version",
-        "statisticsReportServerApi": "Statistics server api",
-        "statisticsReportTimeCycle": "Statistics report interval",
-        "statisticsReportUpdateDelay": "Statistics report - update delay",
-        "synchronizeTimeWithInternet": "Synchronize time with Internet",
+        "ldapSearchBase": "Base di ricerca LDAP",
+        "ldapSearchFilter": "Filtro di ricerca LDAP",
+        "ldapUri": "URI LDAP",
+        "localSystemId": "ID del sistema locale",
+        "maxDifferenceBetweenSynchronizedAndInternetTime": "Differenza massima tra tempo sincronizzato e Internet (millisecondi)",
+        "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Differenza massima tra ora sincronizzata e locale (millisecondi)",
+        "maxP2pQueueSizeBytes": "Dimensione massima della coda P2P (byte)",
+        "maxRecordQueueSizeBytes": "Dimensione massima della coda di registrazione (byte)",
+        "maxRecordQueueSizeElements": "Dimensione massima della coda di registrazione (elementi)",
+        "maxRemoteArchiveSynchronizationThreads": "Numero massimo di thread di sincronizzazione dell'archivio remoto",
+        "maxRtspConnectDurationSeconds": "Durata massima connessione Rtsp in secondi",
+        "maxSceneItems": "Numero massimo di elementi della scena (0 significa predefinito)",
+        "proxyConnectTimeoutSec": "Timeout connessione proxy (secondi)",
+        "rtpTimeoutMs": "Timeout RTP (millisecondi)",
+        "sequentialFlirOnvifSearcherEnabled": "Utilizzare la ricerca sequenziale Flir Onvif",
+        "serverDiscoveryPingTimeoutSec": "Timeout rilevamento server",
+        "smtpConnectionType": "Tipo di connessione SMTP",
+        "smtpHost": "Host SMTP",
+        "smtpPort": "Porta SMTP",
+        "smtpSimple": "SMTP semplice",
+        "smtpTimeout": "Timeout SMTP",
+        "smtpUser": "Utente SMTP",
+        "statisticsAllowed": "Invia statistiche di utilizzo anonime e rapporti sugli arresti anomali",
+        "statisticsReportLastNumber": "Rapporto statistiche - ultimo numero",
+        "statisticsReportLastTime": "Rapporto statistiche - ultima volta",
+        "statisticsReportLastVersion": "Rapporto statistiche - ultima versione",
+        "statisticsReportServerApi": "Statistiche del server api",
+        "statisticsReportTimeCycle": "Intervallo dei report statistici",
+        "statisticsReportUpdateDelay": "Rapporto statistiche - ritardo aggiornamento",
+        "synchronizeTimeWithInternet": "Sincronizza l'ora con Internet",
         "SystemName": "Nome del sistema",
-        "takeCameraOwnershipWithoutLock": "Take cameras ownership without lock",
-        "timeSynchronizationEnabled": "Time synchronization enabled",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
-        "updateNotificationsEnabled": "Update notifications enabled",
-        "upnpPortMappingEnabled": "UPNP port mapping enabled",
-        "useTextEmailFormat": "Send plain-text emails",
-        "useWindowsEmailLineFeed": "Use Windows line feed in emails",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
-        "maxWebMTranscoders": "Max amount of WEBM connections for the server. Chrome opens 2 connections at once, then close the first one. So, it is recommended to set value >=2 to this parameter.",
-        "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "takeCameraOwnershipWithoutLock": "Assumi la proprietà delle telecamere senza blocco",
+        "timeSynchronizationEnabled": "Sincronizzazione dell'ora abilitata",
+        "primaryTimeServer": "Server primario di sincronizzazione dell'ora",
+        "osTimeChangeCheckPeriodMs": "Periodo di controllo della modifica dell'ora del sistema operativo",
+        "syncTimeExchangePeriod": "Intervallo sincronizzazione orario per le richieste di rete",
+        "syncTimeEpsilon": "Tempo di sincronizzazione epsilon. Il nuovo valore non viene applicato se il tempo delta è inferiore a epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Thread di sincronizzazione massima dell'archivio della telecamera indossabili",
+        "updateNotificationsEnabled": "Notifiche di aggiornamento abilitate",
+        "upnpPortMappingEnabled": "Funzione UPNP abilitata",
+        "useTextEmailFormat": "Invia e-mail di testo",
+        "useWindowsEmailLineFeed": "Utilizza la riga di Windows nei messaggi di posta elettronica",
+        "trafficEncryptionForced": "Forzare la Crittografia del traffico",
+        "videoTrafficEncryptionForced": "Forzare la Crittografia del traffico Video",
+        "updateStatus": "Aggiorna stato",
+        "watermarkSettings": "Impostazioni del watermark",
+        "maxWebMTranscoders": "Quantità massima di connessioni WEBM per il server. Chrome apre due connessioni contemporaneamente, quindi chiude la prima. Pertanto, si consiglia di impostare il valore> = 2 su questo parametro.",
+        "maxEventLogRecords": "Numero massimo di record del registro degli eventi da conservare nel database. La quantità reale di record non eliminati può essere maggiore del 20% rispetto al valore specificato.",
+        "forceLiveCacheForPrimaryStream": "Indica se memorizzare nella cache alcuni frame per lo stream principale. Valori: \"sì\" - sempre abilitato (può utilizzare molta RAM), \"no\" - sempre disabilitato tranne quando richiesto dalla riproduzione (ad es. HLS), \"auto\" - simile a \"no\", ma attivo quando si migliora l'esperienza dell'utente (ad esempio quando alcuni plug-in di Analytics funzionano sulla telecamera).",
+        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
     }
 }

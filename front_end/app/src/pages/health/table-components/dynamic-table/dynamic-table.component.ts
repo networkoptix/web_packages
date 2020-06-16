@@ -96,10 +96,10 @@ export class NxDynamicTableComponent implements OnChanges, OnInit, AfterViewInit
                 private router: Router,
                 private route: ActivatedRoute,
                 private location: Location,
-                public healthService: NxHealthService,
                 private scrollMechanicsService: NxScrollMechanicsService,
                 private deviceDetectorService: DeviceDetectorService,
-                private healthLayoutService: NxHealthLayoutService
+                private healthLayoutService: NxHealthLayoutService,
+                public healthService: NxHealthService
     ) {
         this.CONFIG = configService.getConfig();
         this.elements = this.elements || [];

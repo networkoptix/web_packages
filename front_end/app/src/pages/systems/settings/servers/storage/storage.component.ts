@@ -25,6 +25,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     LANG: LanguageI18NStaticTypes;
 
+    loading: boolean;
     showStorage: boolean;
     systemSubscription: Subscription;
     saveSettings: Process;
@@ -40,6 +41,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         this.LANG = languageService.translations;
 
         this.showStorage = false;
+        this.loading = true;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -72,6 +74,7 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
 
     updateAndGetStorage() {
         this.system.updateOrGetSystemStorage().toPromise().then(response => {
+            this.loading = false;
             this.showStorage = (Object.keys(response.reply.storages).length > 0);
             const { storages, watchers } = mapStorages(response.reply.storages);
             this.storages = storages;

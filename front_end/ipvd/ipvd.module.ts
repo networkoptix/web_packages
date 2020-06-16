@@ -53,6 +53,7 @@ import { DirectivesModule }  from '../app/src/directives/directives.module';
         HttpClientModule,
         NgbModule,
         WebStorageModule,
+        DirectivesModule,
         TranslateModule.forRoot(),
         RouterModule.forRoot([
             { path: '**', redirectTo: 'ipvd' },

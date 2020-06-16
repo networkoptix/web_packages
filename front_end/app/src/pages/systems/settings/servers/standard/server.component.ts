@@ -38,6 +38,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     ipPortWatcher: any = new Watcher<number>();
     previousInputValue: number;
     checking: boolean;
+    serverLoaded = false;
 
     betaMode: boolean;
     renameDisabled: boolean;
@@ -107,6 +108,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         }
 
         if (changes.selectedServer?.currentValue) {
+            const { currentValue, previousValue } = changes.selectedServer;
+            if (previousValue && currentValue.id !== previousValue.id) {
+                this.serverLoaded = false;
+            }
             this.setServer();
         }
     }
@@ -118,7 +123,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         const { ip, port } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
-        this.selectedServer.osName = this.selectedServer.osInfo !== '' ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
+        this.selectedServer.osName = this.selectedServer.osInfo ? JSON.parse(this.selectedServer.osInfo).platform : this.LANG.common.unknown;
 
         this.checkIfOnline(this.selectedServer.id)
             .catch(error => console.error(error));
@@ -167,14 +172,16 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         return this.system.getServers().toPromise()
             .then(res => {
                 if (res) {
-                    const servers: any = Object.entries(res).map(server => server[1]);
+                    const servers: any[] = Object.entries(res).map(server => server[1]);
                     this.setStatus(servers.find(server => server.id === serverId).status === 'Online'
                         ? '' : this.CONFIG.servers.status.offline);
+                    this.serverLoaded = true;
                 }
             })
             .catch(err => {
                 console.error(err);
                 this.setStatus(this.CONFIG.servers.status.offline);
+                this.serverLoaded = true;
             });
     }
 
@@ -184,7 +191,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.system.getServers().toPromise()
             .then(res => {
                 if (res) {
-                    const servers: any = Object.entries(res).map(server => server[1]);
+                    const servers: any[] = Object.entries(res).map(server => server[1]);
                     const isOnline = servers.find(server => server.id === this.selectedServer.id).status === 'Online';
                     setTimeout(() => {
                         this.setStatus(isOnline ? '' : this.CONFIG.servers.status.offline);

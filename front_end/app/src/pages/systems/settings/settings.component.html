@@ -4,13 +4,13 @@
     <div class="block-container mt-3">
         <div class="row">
             <!-- Calculate height of menu, offset by height of header div and 16px on top and bottom -->
-            <div class="fixed-sidebar col-12 d-flex flex-column ml-md-2 fill-screen-height"
+            <div class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
                  [ngStyle]="{'height': 'calc(100% - ('+ headerHeight + 'px + 32px))'}">
                 <nx-pre-loader *ngIf="!menuVisible"></nx-pre-loader>
                 <nx-menu *ngIf="menuVisible" [content]="content" [system]="system" searchable></nx-menu>
             </div>
             <!-- Offset for the fixed menu -->
-            <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 offset-md-4 offset-xl-3">
+            <div class="col-12 col-md-8 col-xl-7 pt-3 pt-md-0 px-3 offset-md-4 offset-xl-3">
                 <router-outlet></router-outlet>
                 <nx-footer *ngIf="menuVisible"></nx-footer>
             </div>
@@ -18,10 +18,7 @@
     </div>
 </ng-container>
 
-<nx-page-placeholder *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM" withFooter>
-    <button class="btn btn-primary main-button mx-auto">
-        <a routerLink="/" translate>Go to Main Page</a>
-    </button>
+<nx-page-placeholder *ngIf="systemNoAccess" type="FAILED_TO_ACCESS_SYSTEM" withFooter showMainButton="true">
 </nx-page-placeholder>
 
 <nx-page-placeholder *ngIf="secondaryMerge"

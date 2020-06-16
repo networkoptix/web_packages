@@ -1,10 +1,7 @@
-<nx-pre-loader *ngIf="showPreloader"></nx-pre-loader>
+<nx-pre-loader *ngIf="showPreloader || !alertsLoaded"></nx-pre-loader>
 <div *ngIf="system" class="row auth-visible">
     <nx-page-placeholder *ngIf="!selectedCamera && (!system || !system.isOnline || noCameras) && !showPreloader" class="placeholder-section" [type]="!system.isOnline ? 'NO_SETTINGS' : 'NO_CAMS'" ></nx-page-placeholder>
-
-    <nx-pre-loader *ngIf="showPreloader" class="w-100"></nx-pre-loader>
-
-    <ng-container *ngIf="!noCameras && selectedCamera && system.isOnline">
+    <ng-container *ngIf="!noCameras && selectedCamera && alertsLoaded">
         <div *ngIf="showUnauthorized || errors || warnings" class="col-12 camera-settings-info">
             <nx-alert-block
                 *ngIf="showUnauthorized"
@@ -38,28 +35,29 @@
         <div class="col-12 camera-settings-info">
             <nx-block header-style="extended">
                 <header>
-                    <div class="header-top-bar">
-                        <div class="header-title">
+                    <div class="header-top-bar" [ngClass]="{'mb-3': cameraName}">
+                        <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
-                            [(content)]="cameraName"
-                            (blur)="handleBlur()"
+                            #editTitle
+                            [(content)]="cameraName" 
+                            (blur)="handleBlur()" 
                             (focus)="handleFocus()"
-                            [hasError]="cameraName"
+                            [hasError]="!cameraName"
                             id="editable-title"></h2>
                             <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
-                        <div class="edit-button" [ngClass]="{invisible: editMode}">
+                        <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
                             <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
                         </div>
                         <button class="camera-buttons"[routerLink]="cameraViewPath"  id="view-camera">
                             <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyClass]="true"></svg-icon>
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'play.svg'" [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>View</span>
                         </button>
                         <button *ngIf="canSeeInfo" class="camera-buttons"  id="detailed-info" [routerLink]="fullInfoPath" [queryParams]="{ id: parsedCameraId }">
                             <span>
-                                <svg-icon [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyClass]="true"></svg-icon>
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'" [applyCss]="true"></svg-icon>
                             </span>
                             <span class="ml-1" translate>Detailed Info</span>
                         </button>
@@ -67,9 +65,9 @@
                     <div [style.width.px]="previewWidth">
                         <nx-health-image [isPrimary]="true"
                             aspect="override"
-                            [preloader]="true"
-                            [state]="selectedCamera.status"
-                            [url]="motionPreviewImage"
+                            [preloader]="true" 
+                            [state]="selectedCamera.status" 
+                            [url]="preview + '&reload=' + (reload$ | async)"
                             [lightBackground]="true"></nx-health-image>
                     </div>
                     <div class="details">
@@ -203,11 +201,11 @@
                 </header>
                 <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)">
                     <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
-                        <nx-health-image [isPrimary]="true"
-                            [motionPreview]="true"
-                            [preloader]="true"
-                            [state]="selectedCamera.status"
-                            [url]="motionPreviewImage"
+                        <nx-health-image [isPrimary]="true" 
+                            [motionPreview]="true" 
+                            [preloader]="true" 
+                            [state]="selectedCamera.status" 
+                            [url]="preview + '&reload=' + (reload$ | async)"
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>
                         <nx-motion-detection-overlay

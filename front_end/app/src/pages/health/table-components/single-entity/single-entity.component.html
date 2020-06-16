@@ -17,8 +17,9 @@
                             <span [ngClass]="entity[paramGroup.id][param.id].class"
                                   [innerText]="[undefined, ''].indexOf(entity[paramGroup.id][param.id].text) === -1
                                   ? entity[paramGroup.id][param.id].text : '−'"></span>
-                    <svg-icon class="pl-1"
-                              *ngIf="entity[paramGroup.id][param.id].icon"
+                    <svg-icon *ngIf="entity[paramGroup.id][param.id].icon"
+                              nx-add-svg-src 
+                              class="pl-1"
                               [svgStyle]="{'width.px': '20'}"
                               [src]="CONFIG.icons.dir + entity[paramGroup.id][param.id].icon + '.svg'"></svg-icon>
                 </div>

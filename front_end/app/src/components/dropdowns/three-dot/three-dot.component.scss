@@ -1,5 +1,4 @@
-@import '../../../../styles/theme_palette';
-@import '../../../styles/typography';
+@use '../../../../styles/theme_variables' as *;
 
 nx-three-dot {
     display: inline-block;

@@ -1,10 +1,10 @@
-/*.png
-/*.xml
-/*.html
-/*.tar
-/*.deb
-/*.exe
-/*.pabotsuitenames
+*.png
+*.xml
+*.html
+*.tar
+*.deb
+*.exe
+*.pabotsuitenames
 outputs
 syntax: glob
 Docker/Video
@@ -16,3 +16,4 @@ Screenshots
 __pycache__
 pabot_results
 /libspecs/
+*.idea

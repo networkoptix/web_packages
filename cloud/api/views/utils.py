@@ -56,6 +56,7 @@ def get_settings_from_cache():
         'integrationFilterLimitation': customization_cache['integration_filter_limitation'],
         'integrationStoreEnabled': customization_cache['integration_store_enabled'],
         'healthMonitoringEnabled': customization_cache['health_monitoring_enabled'],
+        'healthMonitorCacheTimeout': customization_cache['health_monitor_cache_timeout'],
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
         'publicDownloads': customization_cache['public_downloads'],
         'publicReleases': customization_cache['public_releases'],
@@ -332,6 +333,14 @@ def get_settings(request):
     # Hide cloud merge setting if its disabled to not reveal this feature to users.
     if 'cloudMerge' in settings_object and not settings_object['cloudMerge']:
         del settings_object['cloudMerge']
+
+    if not settings_object.get('integrationStoreEnabled') and \
+            UserGroupsToAssetPermissions.user_has_beta_access(request.user):
+        settings_object['integrationStoreEnabled'] = True
+        for item in settings_object['footerItems']:
+            if item['url'] == '/integrations':
+                item['enabled'] = True
+                break
     return Response(settings_object)
 
 

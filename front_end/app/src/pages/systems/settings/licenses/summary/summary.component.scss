@@ -1,0 +1,17 @@
+@import "../../../../../styles/typography";
+@import "../../../../../../styles/theme_palette";
+
+.section-table-wrapper {
+    @media screen and (max-width: 576px) {
+        overflow-x : scroll;
+    }
+
+    table {
+        grid-template-columns : 120px 140px 85px auto;
+        min-width             : 450px !important;
+
+        .table-row-spacer {
+            grid-column-end : span 4;
+        }
+    }
+}

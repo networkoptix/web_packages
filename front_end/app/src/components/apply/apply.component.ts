@@ -28,6 +28,7 @@ export class NxApplyComponent {
     @Input() form: NgForm;
 
     applyVisible: boolean;
+    isOnline = true;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) {

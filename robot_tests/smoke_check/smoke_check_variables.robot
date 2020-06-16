@@ -14,11 +14,8 @@ ${restored password}       qweasd777$
 ${email password}    QWEasd!@#
 @{local auth}        admin    ${password}
 
-${server vms}      http://10.1.5.114
-${server users}    http://10.1.5.187
-${server port}     7001
+${ENV}    https://cloud-test.hdw.mx
+${VMS}    4.0
 
-${system vms}      smoke-vpc1
-${system users}    smoke-vpc2
 
 

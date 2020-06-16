@@ -8,7 +8,7 @@ import { NxDialogsService }                     from '../dialogs/dialogs.service
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
 import { NxUtilsService }                       from './utils.service';
-import { Process }                              from './process.service';
+import { Process, NxProcessService }            from './process.service';
 
 /**
  * Allows making subscriptions to variables similar to $watch from AngularJS.
@@ -116,6 +116,7 @@ export class NxApplyService {
     private lockedSubscription: Subscription;
     private watchers: Watcher<any>[];
     private watchersSubscription: Subscription;
+    isOnline$ = new BehaviorSubject(true);
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
@@ -237,6 +238,9 @@ export class NxApplyService {
         this.component.clear();
         this.applyComponentRef = this.component.createComponent(compFactory);
         (<NxApplyComponent> this.applyComponentRef.instance).applyVisible = false;
+        this.isOnline$.pipe(distinctUntilChanged()).subscribe(isOnline => {
+            (<NxApplyComponent> this.applyComponentRef.instance).isOnline = isOnline;
+        });
     }
 
     private setDiscardFunction(func: () => void) {
@@ -289,4 +293,26 @@ export class NxApplyService {
             this.touched();
         });
     }
+
+    public addWatchersAndFunctionsFromChild(watchers: Watcher<any>[], applyFunction: Process, discardFunction) {
+        this.addWatchers([...this.watchers, ...watchers]);
+        this.extendApplyFunction(applyFunction);
+        this.extendDiscardFunction(discardFunction);
+    }
+
+    private extendApplyFunction(applyFunction: Process) {
+        const prevApply: any = this.applyFunction;
+        this.setSaveFunction(this.processService.createProcess(() => {
+            applyFunction.run();
+            return prevApply.run();
+        }));
+    }
+
+    private extendDiscardFunction(discardFunction: () => void) {
+        const prevDiscard = this.discardFunction;
+        (<NxApplyComponent> this.applyComponentRef.instance).discard = () => {
+            prevDiscard();
+            discardFunction();
+        };
+    };
 }

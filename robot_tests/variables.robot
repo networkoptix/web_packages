@@ -6,6 +6,8 @@ Resource     variables/restore-pass-variables.robot
 Resource     variables/change-pass-variables.robot
 Resource     variables/register-variables.robot
 Resource     variables/system-camera-variables.robot
+Resource     variables/system-admin-variables.robot
+Resource     variables/systems-page-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
@@ -19,7 +21,7 @@ ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="
 
 @{LANGUAGES LIST}                             en_US                  en_GB                  ru_RU                           fr_FR                  de_DE                 es_ES                       hu_HU                  zh_CN      zh_TW      ja_JP          ko_KR       tr_TR              th_TH                  nl_NL                he_IL                  pl_PL                  vi_VN
 @{LANGUAGES ACCOUNT TEXT LIST}                Account                Account                Учетная запись                  Compte                 Account               Cuenta                      Fiók                   帐户        帳號       アカウント        계정         Hesap             บัญชีผู้ใช้                 Account             חשבון                   Konto                  Tài khoản
-@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Compte Information     Kontoinformationen    Información de la Cuenta    Account Information    帐户信息    帳戶資訊    アカウント情報    계정 정보    Hesap Bilgileri    Account Information    Accountinformatie    פרטי חשבון             Informacje o koncie    Account Information
+@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Compte Information     Kontoinformationen    Información de la Cuenta    Account Information    帐户信息    帳號資訊    アカウント情報    계정 정보    Hesap Bilgileri    Account Information    Accountinformatie    פרטי חשבון             Informacje o koncie    Thông tin tài khoản
 
 @{LANGUAGES CREATE ACCOUNT TEXT LIST}    Create Account  Create Account  Зарегистрироваться  Créer compte  Account erstellen  Crear Cuenta  Fiók létrehozása  创建帐户  新建帳號  アカウント作成  계정 만들기  Hesap oluştur  สร้างบัญชี   Account aanmaken  צור חשבון   Utwórz konto  Tạo tài khoản
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
@@ -53,7 +55,6 @@ ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${A
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
 ${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
-${YOU HAVE NO SYSTEMS}                //span[contains(text(),"${YOU HAVE NO SYSTEMS TEXT}")]
 
 #Header
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
@@ -64,7 +65,6 @@ ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
 ${SYSTEMS DROPDOWN}                   //header//li[contains(@class, 'collapse-second')]//button[@id='systemsDropdown']
 ${OPEN IN NX BUTTON}                  //nx-client-button//nx-process-button//button
-${OPEN IN NX BUTTON DISABLED}         ${OPEN IN NX BUTTON}${DISABLED}
 ${ALL SYSTEMS}                        //header//li[contains(@class, 'collapse-second')]//a[@href='/systems']
 
 ${AUTHORIZED BODY}                    //body[contains(@class, 'authorized')]
@@ -100,24 +100,12 @@ ${SYSTEM NAME}                        //h2[contains(@class,"system-name")]
 ${FIRST USER OWNER}                   //table[@ng-if='system.users.length']/tbody/tr/td[3]/span[contains(text(),"${OWNER TEXT}")]
 ${DISCONNECT FROM NX}                 //button/span[text()='${DISCONNECT FROM CLOUD TEXT}']/..
 ${RENAME SYSTEM}                      //button/span[text()='${RENAME}']/..
-${RENAME CANCEL}                      //form[@name='renameForm']//button[text()='${CANCEL BUTTON TEXT}']
-${RENAME X BUTTON}                    //form[@name='renameForm']//button[contains(@class,'close')]
-${RENAME SAVE}                        //form[@name='renameForm']//button[text()='${SAVE BUTTON TEXT}']
-
-${RENAME INPUT}                       //form[@name='renameForm']//input[@id='systemName']
-${RENAME INPUT WITH ERROR}            //form[@name='renameForm']//input[@id='systemName' and contains(@class,'ng-invalid')]
-${SYSTEM NAME IS REQUIRED}            //form[@name='renameForm']//span[@class='input-error' and contains(text(),"${SYSTEM NAME IS REQUIRED TEXT}")]
 
 ${SYSTEM USER DETAILS}                //nx-system-settings-component//nx-block/..
 
 ${SYSTEM SAVE}                        //nx-apply//nx-process-button//button
 ${SYSTEM CANCEL}                      //nx-apply//button[@type='button']
 
-${USER EMAIL}                         ${SYSTEM USER DETAILS}//header//h2[contains(@class,'user-email')]
-${USER NAME}                          ${USER EMAIL}/following-sibling::span[contains(@class,'user-name')]
-${OWNER LABEL}                        ${SYSTEM USER DETAILS}//header//h2/following-sibling::span[contains(@class,'system-owner')]/span[contains(text(),'${OWNER TEXT}')]
-${OWNER NAME}                         ${OWNER LABEL}//following-sibling::span//span[contains(text(),'%OWNER_NAME%')]
-${OWNER EMAIL}                        ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${EMAIL OWNER}")]
 ${YOUR ACCESS LEVEL}                  ${SYSTEM USER DETAILS}//nx-section//span[contains(@class,'system-owner')]/span[contains(text(),"${YOUR ACCESS LEVEL TEXT}")]
 
 ${DISCONNECT FROM MY ACCOUNT}         //button[contains(text(),'${DISCONNECT FROM MY ACCOUNT TEXT}')]
@@ -133,37 +121,13 @@ ${REMOVE CANCEL BUTTON}               ${MODAL DIALOG}//button[contains(text(),"$
 
 ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
+
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
 
-${SYSTEM ADMINISTRATION LINK}         //a[@id='admin']
 
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
-${SHARE BUTTON DISABLED}              ${SHARE BUTTON SYSTEMS}${DISABLED}
 
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
-${AVAILABLE SYSTEMS LIST}             //a[@href='/systems']
-${SYSTEMS SEARCH INPUT}               //nx-systems-list-component//div[contains(@class,'search-block')]//input
-${SYSTEM SEARCH X BUTTON}             ${SYSTEMS SEARCH INPUT}//preceding::a[contains(@class,'input-overlay-right')]
-
-${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}    //nx-checkbox[@name="autoDiscoveryEnabled"]
-${ENABLE AUTO DISCOVERY CHECKBOX REAL}     //*[@id="autoDiscoveryEnabled"]
-${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}      //nx-checkbox[@name="statisticsAllowed"]
-${SEND ANONYMOUS USAGE CHECKBOX REAL}      //*[@id="statisticsAllowed"]
-${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}     //nx-checkbox[@name="cameraSettingsOptimization"]
-${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}     //*[@id="cameraSettingsOptimization"]
-
-${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}        //nx-checkbox[@name='auditTrailEnabled']
-${ENABLE AUDIT TRAIL CHECKBOX REAL}        //*[@id='auditTrailEnabled']
-${ALLOW ONLY SECURE CHECKBOX VISIBLE}         //nx-checkbox[@name='trafficEncryptionForced']
-${ALLOW ONLY SECURE CHECKBOX REAL}         //*[@id='trafficEncryptionForced']
-${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}     //nx-checkbox[@name='videoTrafficEncryptionForced']
-${ENCRYPT VIDEO TRAFFIC CHECKBOX REAL}     //*[@id='videoTrafficEncryptionForced']
-${LIMIT SESSION DURATION CHECKBOX VISIBLE}    //nx-checkbox[@name='sessionLimitMinutes']
-${LIMIT SESSION DURATION CHECKBOX REAL}    //*[@id='sessionLimitMinutes']
-${TIME NUMBER INPUT}                  //*[@type='number']
-${TIME DURATION INTERVAL BUTTON}        //*[@id="genericSelect"]
-${TIME DURATION INTERVAL TEXT}            ${TIME DURATION INTERVAL BUTTON}/span
-${TIME DURATION NEW SELECTION}            //*[@aria-labelledby='genericSelect']//a[contains(@class,"dropdown-item inset")]
 
 #Merge
 ${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
@@ -212,19 +176,6 @@ ${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), 
 ${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
 ${MERGE PASSWORD INPUT}               ${CONFIRM MERGE FORM}//input[@name="cloudOwnerPassword"]
 
-#Disconnect from cloud portal
-${DISCONNECT FORM}                      //form[@name='disconnectForm']
-${DISCONNECT FORM HEADER}               ${DISCONNECT FORM}//h1["${DISCONNECT FORM HEADER TEXT}"]
-${DISCONNECT FORM CLOSE BUTTON}         ${DISCONNECT FORM}//button[contains(@class, "close")]
-${DISCONNECT FORM ALL USERS WILL BE DELETED}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ALL USERS WILL BE DELETED TEXT}")]
-${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE}    ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM SYSTEM WILL BE ACCESSIBLE TEXT}")]
-${DISCONNECT FORM ENTER PASSWORD TO CONTINUE}   ${DISCONNECT FORM}//p[contains(text(), "${DISCONNECT FORM ENTER PASSWORD TO CONTINUE TEXT}")]
-${DISCONNECT PASSWORD INPUT}             ${DISCONNECT FORM}//input[@id="password"]
-${DISCONNECT FORM DISCONNECT BUTTON}     ${DISCONNECT FORM}//nx-process-button/div[contains(@class, "process-button")]//button[contains(text(),"${DISCONNECT BUTTON TEXT}")]/..
-${DISCONNECT FORM CANCEL BUTTON}         ${DISCONNECT FORM}//button[text()='${CANCEL BUTTON TEXT}']
-${DISCONNECT FORM WRONG PASSWORD}        ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${WRONG PASSWORD}")]
-${DISCONNECT FORM PASSWORD IS REQUIRED}  ${DISCONNECT FORM}//div[contains(@class, "error") and contains(text(), "${PASSWORD IS REQUIRED TEXT}")]
-${SYSTEM IS SUCCESSFULLY DISCONNECTED}   ${SUCCESSFULLY DISCONNECTED}
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]
 # extra spaces here temporarily
@@ -236,13 +187,14 @@ ${PROMO BLOCK}                        //div[contains(@class,'promo-block') and n
 ${ALREADY ACTIVATED}                  //h1[contains(@class,"process-success") and contains(text(),"${ALREADY ACTIVATED TEXT}")]
 
 #Share Elements (Note: Share and Permissions are the same form so these are the same variables.  Making two just in case they do diverge at some point.)
-${SHARE MODAL}                        //form[@name='addUserForm']
-${SHARE EMAIL}                        ${SHARE MODAL}//input[@id='addUserEmail']
-${SHARE PERMISSIONS DROPDOWN}         ${SHARE MODAL}//nx-permissions-select//button[@id='permissionsSelect']
-${SHARE BUTTON MODAL}                 ${SHARE MODAL}//button[text()='${ADD BUTTON TEXT}']
-${SHARE CANCEL}                       ${SHARE MODAL}//button[text()='${CANCEL BUTTON TEXT}']
-${SHARE CLOSE}                        ${SHARE MODAL}//button[@data-dismiss='modal']
-${SHARE PERMISSIONS HINT}             ${SHARE MODAL}//span[contains(@class,'help-block')]
+${ADD USER BUTTON SYSTEMS}            //nx-system-settings-component//nx-menu//nx-menu-button//button
+${ADD USER MODAL}                     //form[@name='addUserForm']
+${ADD USER EMAIL}                     ${ADD USER MODAL}//input[@id='addUserEmail']
+${ADD USER PERMISSIONS DROPDOWN}      ${ADD USER MODAL}//nx-permissions-select//button[@id='permissionsSelect']
+${ADD USER BUTTON MODAL}              ${ADD USER MODAL}//button[text()='${ADD BUTTON TEXT}']
+${ADD USER CANCEL}                    ${ADD USER MODAL}//button[text()='${CANCEL BUTTON TEXT}']
+${ADD USER CLOSE}                     ${ADD USER MODAL}//button[@data-dismiss='modal']
+${ADD USER PERMISSIONS HINT}          ${ADD USER MODAL}//span[contains(@class,'help-block')]
 
 ${EDIT PERMISSIONS EMAIL}             //form[@name='shareForm']//input[@ng-model='user.email']
 ${EDIT PERMISSIONS DROPDOWN}          //form[@name='shareForm']//button[@id='permissionsSelect']
@@ -263,13 +215,20 @@ ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='la
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
 ${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
 ${ACCOUNT CANCEL}                     //nx-apply//button[contains(text(), "${CANCEL BUTTON TEXT}")]
+
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
 ${CAN NOT DELETE ACCOUNT TOOLTIP}     //ngb-tooltip-window/div[contains(@class,"tooltip-inner")]
-${DELETE ACCOUNT MODAL BUTTON}        //nx-modal-delete-cloud-user-content//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
-${CANCEL DELETE ACCOUNT BUTTON}       //nx-modal-delete-cloud-user-content//button[contains(text(),"${CANCEL BUTTON TEXT}")]
-${DELETE ACCOUNT PASSWORD INPUT}      //form[@name="deleteCloudUserForm"]//input[@id="password"]
-${DELETE ACCOUNT PASSWORD LABEL}      //form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
+${DELTE ACCOUNT DIALOG}               //nx-modal-delete-cloud-user-content
+${DELETE ACCOUNT MODAL BUTTON}        ${DELTE ACCOUNT DIALOG}//nx-process-button//button[contains(text(),"${DELETE BUTTON TEXT}")]
+${DELETE ACCOUNT CANCEL BUTTON}       ${DELTE ACCOUNT DIALOG}//button[contains(text(),"${CANCEL BUTTON TEXT}")]
+${DELETE ACCOUNT CLOSE BUTTON}         ${DELTE ACCOUNT DIALOG}//button[contains(@class,"close")]
+${DELETE ACCOUNT HEADER}              ${DELTE ACCOUNT DIALOG}//h1[contains(text(),"${DELETE ACCOUNT HEADER TEXT}")]
+${DELETE ACCOUNT INFO}                ${DELTE ACCOUNT DIALOG}//span[contains(text(),"${DELETE ACCOUNT INFO TEXT}")]
+${DELETE ACCOUNT PASSWORD INPUT}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]
+${DELETE ACCOUNT PASSWORD LABEL}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/preceding-sibling::label[@for="password" and contains(text(),"${DELETE ACCOUNT PASSWORD LABEL TEXT}")]
+${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="deleteCloudUserForm"]//input[@id="password"]/following-sibling::label[@for="password"]
+
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
@@ -303,18 +262,19 @@ ${INTEGRATIONS SEARCH ICON}           ${INTEGRATIONS SEARCH}//span[contains(@cla
 ${INTEGRATIONS SEARCH FILTER}         ${INTEGRATIONS SEARCH}//div[contains(@class, "search-tags")]//nav[contains(@aria-label, "table")]/ul[contains(@class, "pagination")]
 ${INTEGRATIONS SEARCH FILTER ITEM}    ${INTEGRATIONS SEARCH FILTER}/li
 ${INTEGRATIONS CATALOG}               ${INTEGRATIONS COMPONENT}//integrations-list-component/div[1]
+${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and contains(text(),"${INTEGRATION BANNER MESSAGE TEXT}")]/following-sibling::div[@class="action"]/a[contains(text(),"${INTEGRATION BANNER ACTION TEXT}")]
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}   ${INTEGRATION TILE}/a
-${INTEGRATION TILE LOGO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-logo")]
-${INTEGRATION TILE INFO}              ${INTEGRATION TILE}//div[contains(@class, "card--header-info")]
-${INTEGRATION TILE NAME}              ${INTEGRATION TILE}//div[contains(@class, "card--body-name")]
-${INTEGRATION TILE TEXT}              ${INTEGRATION TILE}//div[contains(@class, "card--body-descr")]
-${INTEGRATION TILE HEADER}            ${INTEGRATION TILE}//div[@class="card--header extended-header"]
+${INTEGRATION TEST INTEGRATION LINK}  //a
+${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
+${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]
+${INTEGRATION TILE NAME}              //div[contains(@class, "card--body-name")]
+${INTEGRATION TILE TEXT}              //div[contains(@class, "card--body-descr")]
+${INTEGRATION TILE HEADER}            //div[@class="card--header extended-header"]
 #${INTEGRATION TILE BODY}              ${INTEGRATION TILE}//nx-section/child::div[@class="card--body"]
-${INTEGRATION TILE FOOTER}            ${INTEGRATION TILE}//div[@class="card--footer"]
-@{INTEGRATION TILE ELEMENTS}          //div[contains(@class, "card--header-logo")]    //div[contains(@class, "card--header-info")]    //div[contains(@class, "card--body-name")]    //div[contains(@class, "card--body-descr")]    //div[@class="card--header extended-header"]    //div[@class="card--footer"]
+${INTEGRATION TILE FOOTER}            //div[@class="card--footer"]
+@{INTEGRATION TILE ELEMENTS}          ${INTEGRATION TILE LOGO}    ${INTEGRATION TILE INFO}    ${INTEGRATION TILE NAME}    ${INTEGRATION TILE TEXT}    ${INTEGRATION TILE HEADER}    ${INTEGRATION TILE FOOTER}
 
 #Integration Details Page
 ${INTEGRATION DETAILS COMPONENT}          //nx-app//integration-detail-component/div[contains(@class, "integration-details")]
@@ -548,6 +508,9 @@ ${LOCAL USER LOGIN}                  //input[@id='name']
 ${LOCAL USER NAME}                   //input[@id='fullName']
 ${LOCAL USER EMAIL}                  //input[@id='email']
 ${LOCAL USER CHANGE PASSWORD BUTTON}     //button[text()="${CHANGE PASSWORD BUTTON TEXT}"]
+${LOCAL USER CHANGE PASSWORD SAVE}    //form[@name="changePasswordForm"]//button[text()="Save"]
+${LOCAL USER CHANGE PASSWORD CANCEL}    //form[@name="changePasswordForm"]//button[text()="Cancel"]
 ${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
+${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="Cancel"]

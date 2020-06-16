@@ -78,14 +78,14 @@ def get_agreement(request):
                 'id': agreement.id,
                 'review_id': agreement_review.id if agreement_review else 0,
                 'preview': review or draft,
-                'accepted': ContributerAgreement.objects.filter(
+                'accepted': ContributorAgreement.objects.filter(
                     accepted_agreement=agreement_review, user=request.user
                 ).exists() if agreement_review and request.user.is_authenticated else False
             }
 
             # Get global contexts and fill any matching variables in datarecords
             cloud_portal = get_cloud_portal_asset()
-            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+            global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, agreement_dict, agreement.version_id(), False,
                                     global_contexts, global_contexts_dict)
@@ -120,7 +120,7 @@ def accept_agreement(request):
     ).first()
 
     if agreement_review:
-        ContributerAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
+        ContributorAgreement.objects.get_or_create(accepted_agreement=agreement_review, user=request.user)
         return api_success()
     else:
         return api_success("Agreement review not found.", status_code=status.HTTP_404_NOT_FOUND)

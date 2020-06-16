@@ -1,0 +1,9 @@
+@use '../../../styles/typography';
+
+svg-icon {
+  line-height: 20px;
+}
+
+span {
+  @include typography.regular13;
+}

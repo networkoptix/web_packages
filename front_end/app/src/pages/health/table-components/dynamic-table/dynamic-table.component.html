@@ -53,6 +53,7 @@
                                 <ng-container *ngFor="let header of headerGroup.values; first as firstHeader; trackBy: trackItem">
                                     <td *ngIf="firstGroup && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].icon; else showValue">
                                         <svg-icon *ngIf="firstHeader"
+                                                  nx-add-svg-src
                                                   [title]="item && item[headerGroup.id] && item[headerGroup.id][header.id] && item[headerGroup.id][header.id].tooltip || ''"
                                                   [svgStyle]="{'width.px': '20'}"
                                                   [src]="CONFIG.icons.dirNonStandard + item[headerGroup.id][header.id].icon + '.svg'"></svg-icon>

@@ -48,6 +48,7 @@ export interface BaseConfig {
     dynamicMenus: MenuStructure;
     footerItems: FooterItem[];
     googleTagManagerId: string;
+    trialLicenseKey: string;
     pushConfig: string;
     testedOperatingSystems: string;
     trafficRelayHost: string;
@@ -136,6 +137,7 @@ export interface ClientMode {
 export interface CloudCapabilities {
     feedbackEnabled: string;
     healthMonitor?: string;
+    healthMonitorCacheTimeout?: number;
     // TODO Need to find out which are valid
     healthMonitoring?: string;
     integrationStore: string;
@@ -407,6 +409,8 @@ export interface SystemSettings {
     cloudStorage: Admin;
     users: Admin;
     servers: Admin;
+    general: Admin;
+    licenses: Admin;
     buttons: Buttons;
     cameras: Cameras;
 }

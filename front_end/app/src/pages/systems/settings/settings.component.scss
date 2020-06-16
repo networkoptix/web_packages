@@ -1,51 +1,49 @@
-@import '../../../../styles/theme_variables';
-@import '../../../styles/typography';
-@import '../../../styles/buttons';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/mixins/breakpoints';
+@use '../../../styles/typography';
+@use '../../../../styles/theme_variables' as variables;
+@use '../../../styles/buttons' as buttons;
+@use '~bootstrap/scss/bootstrap';
 
 nx-block {
   .user-email,
   .system-name {
-    font-family: $font-family-medium;
+    font-family: variables.$font-family-medium;
   }
 
   .user-name,
   .system-owner {
-    @extend #regular13;
+    @include typography.regular13;
   }
 
   .name {
-    font-family: $font-family-bold;
+    font-family: variables.$font-family-bold;
   }
 }
 
 .fixed-sidebar{
-  @include media-breakpoint-down(sm) {
+  margin: 0 !important;
+  padding-left: 1rem !important;
+  padding-right: 0 !important;
+
+  @include bootstrap.media-breakpoint-down(sm) {
     height: auto !important;
+    padding-right : 1rem !important;
   }
 
   // replicate col-md-4
-  @include media-breakpoint-up(md) {
+  @include bootstrap.media-breakpoint-up(md) {
     position: fixed;
     left: 0;
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 3)
+    width: calc((100% - #{variables.$scrollbar-height}) / 3)
   }
 
   // replicate col-xl-3
-  @include media-breakpoint-up(xl) {
-    width: calc((100% - (#{$grid-gutter-width} + #{$scrollbar-height})) / 4);
-    max-width:  calc((#{$fluid-container-max-width} - #{$grid-gutter-width}) / 4);
+  @include bootstrap.media-breakpoint-up(xl) {
+    width: calc((100% - #{variables.$scrollbar-height}) / 4);
+    max-width:  calc(#{variables.$fluid-container-max-width} / 4);
   }
   nx-menu {
     max-height: 100%;
   }
 }
 
-.main-button {
-  margin-top: 40px !important;
-  a {
-      text-decoration: none;
-      color: inherit;
-  }
-}
+
