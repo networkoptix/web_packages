@@ -32,7 +32,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.message = this.LANG.pleaseSelect;
+        this.message = this.LANG.pleaseSelect();
         this.show = false;
     }
 

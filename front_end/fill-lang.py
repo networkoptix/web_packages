@@ -16,8 +16,26 @@ def replace_empty(json_elem):
     else:
         return json_elem
 
+
 with open('app/language_i18n.json', 'r') as language:
     json_data = json.load(language)
+
+parsed_menu = {}
+
+
+def parseMenus(nodes):
+    for node in nodes:
+        string = node.get('display_name', node['name'])
+        parsed_menu[string] = string
+        if 'nodes' in node:
+            parseMenus(node['nodes'])
+
+
+with open('../cloud/cms/menus.json') as cms_static_menus:
+    menus = json.load(cms_static_menus)
+    parseMenus(menus)
+
+json_data.update(parsed_menu)
 
 copy = json_data.copy()
 
@@ -30,4 +48,5 @@ for item in copy.keys():
 
 
 with open("./app/language_i18n.json", "w") as outfile:
-    json.dump(json_data, outfile, indent=4, sort_keys=True, separators=(',', ': '))
+    json.dump(json_data, outfile, indent=4,
+              sort_keys=True, separators=(',', ': '))

@@ -44,6 +44,13 @@ import { AngularSvgIconModule }               from 'angular-svg-icon';
 import { NxPasswordTagValidationComponent }   from './password-input-tag-validation/password-tag-validation.component';
 import { NxThreeDotDropdown }                 from './dropdowns/three-dot/three-dot.component';
 import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-cancel-button.component';
+import { NxDropMenu } from './dropdowns/drop-menu/drop-menu.component';
+import { NxHeaderMainButtonComponent } from './header/main-button/main-button.component';
+import { NxSystemTileComponent } from './dropdowns/drop-menu/system-tile/system-tile.component';
+import { NxNavigiationTileComponent } from './dropdowns/drop-menu/navigation-tile/navigation-tile.component';
+import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
+import { NxTabsComponent } from './header/tabs/tabs.component';
+import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
 
 @NgModule({
     imports: [
@@ -66,6 +73,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
+        NxDropMenu,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
@@ -83,6 +91,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
+        NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -94,7 +103,12 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer
+        ToastsContainer,
+        NxSystemTileComponent,
+        NxNavigiationTileComponent,
+        NxAdditionalSystemsTileComponent,
+        NxTabsComponent,
+        NxNavDropdownComponent
     ],
     entryComponents: [
         NxThreeDotDropdown,
@@ -106,6 +120,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
+        NxDropMenu,
         NxProcessButtonComponent,
         NxPreLoaderComponent,
         NxCheckboxComponent,
@@ -122,6 +137,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
+        NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -134,6 +150,9 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
+        NxSystemTileComponent,
+        NxNavigiationTileComponent,
+        NxAdditionalSystemsTileComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent
     ],
@@ -154,6 +173,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
+        NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -178,6 +198,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxSystemsDropdown,
         NxPermissionsDropdown,
         NxMultiSelectDropdown,
+        NxDropMenu,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxPreLoaderComponent,
@@ -195,6 +216,7 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxVendorListComponent,
         NxSearchComponent,
         NxHeaderComponent,
+        NxHeaderMainButtonComponent,
         NxFooterComponent,
         NxLandingDisplayComponent,
         NxPasswordComponent,
@@ -206,7 +228,11 @@ import { NxProcessCancelButtonComponent } from './process-cancel-Button/process-
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
-        ToastsContainer
+        ToastsContainer,
+        NxSystemTileComponent,
+        NxNavigiationTileComponent,
+        NxAdditionalSystemsTileComponent,
+        NxNavDropdownComponent
     ]
 })
 export class ComponentsModule {

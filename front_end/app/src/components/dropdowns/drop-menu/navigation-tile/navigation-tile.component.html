@@ -1,0 +1,34 @@
+<div class="navigation-tile" [style.width.px]="width">
+    <svg-icon *ngIf="node.icon"
+        [src]="iconsDir + node.icon"
+        [svgStyle]="{
+            'width.px': 24,
+            'height.px': 24,
+            'position': 'absolute',
+            'top.px': 0,
+            'left.px': 16,
+            'display': 'inline-block',
+            'padding-bottom.px': 4
+        }"></svg-icon>
+    <h5 class="section-title">{{node.name}}</h5>
+    <ul *ngIf="node.nodes && node.nodes.length" class="list-unstyled nav-links-section">
+        <ng-container *ngFor="let link of node.nodes" >
+            <li class="nav-links" 
+                [ngClass]="{'active': headerService.currentLocation.path === link.url }"
+                (click)="handleNav(link)">
+                {{link.name}}
+                <svg-icon *ngIf="link.new_window || link.icon" 
+                    [src]="iconsDir + (link.icon ? link.icon : 'external.svg')"
+                    [svgStyle]="{
+                        'margin-top.px': -8,
+                        'margin-bottom.px': -4,
+                        'padding-top.px': 0,
+                        'padding-bottom.px': 0,
+                        'width.px': 20,
+                        'height.px': 20,
+                        'display': 'inline-block'
+                    }"></svg-icon>
+            </li>
+        </ng-container>
+    </ul>
+</div>

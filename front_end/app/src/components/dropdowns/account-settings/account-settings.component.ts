@@ -1,10 +1,15 @@
-import { Component }                 from '@angular/core';
+import {
+    Component, Input, OnDestroy
+}                                    from '@angular/core';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
-import { Subscription }              from 'rxjs';
+import {
+    BehaviorSubject, combineLatest, Subject
+}                                    from 'rxjs';
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '../../../services/nx-config';
 import { Account, NxAccountService } from '../../../services/account.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
+import { takeUntil }                 from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -13,14 +18,19 @@ import { NxLanguageProviderService } from '../../../services/nx-language-provide
     styleUrls   : ['account-settings.component.scss']
 })
 
-export class NxAccountSettingsDropdown extends BaseDropdown {
+export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {
+    @Input() small = false;
+
+    dropdownWidth$ = new BehaviorSubject(0);
+    buttonWidth = new BehaviorSubject(0);
+    rightOffset$ = new BehaviorSubject(0)
+    unsub$ = new Subject();
+
     settings: Pick<Account, 'email' | 'is_staff' | 'is_superuser'> = {
         email        : '',
         is_staff     : false,
         is_superuser : false
     };
-
-    private loginSubscription: Subscription;
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -31,7 +41,8 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     }
 
     ngOnInit() {
-        this.loginSubscription = this.accountService.accountSubject
+        this.accountService.accountSubject
+            .pipe(takeUntil(this.unsub$))
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
@@ -47,6 +58,17 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
                     };
                 }
             });
+        combineLatest(this.dropdownWidth$, this.buttonWidth)
+            .pipe(takeUntil(this.unsub$))
+            .subscribe(([dropdown, button]) => {
+                if (dropdown && button) {
+                    this.rightOffset$.next(Math.max(button - dropdown + 16, 0) | 0);
+                }
+            });
+    }
+
+    ngOnDestroy() {
+        this.unsub$.next('done');
     }
 
     logout(): void {

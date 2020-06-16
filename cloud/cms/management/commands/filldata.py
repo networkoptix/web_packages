@@ -5,8 +5,8 @@ from django.core.management.base import BaseCommand
 from django.conf import settings
 
 from cloud.debug import timer
-from ...controllers import filldata, structure
-from ...models import Customization, Language
+from cms.controllers import filldata, structure
+from cms.models import Customization, Language
 
 logger = logging.getLogger(__name__)
 

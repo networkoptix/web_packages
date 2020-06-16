@@ -2,7 +2,7 @@ import json
 
 from django import template
 
-from ..models import *
+from cms.models import *
 
 register = template.Library()
 

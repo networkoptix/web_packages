@@ -13,7 +13,7 @@
                 class=" ml-n1 menu-level-3-svg-icon"></svg-icon>
         <span [innerHTML]="item.label" class="user" [ngClass]="{'indent': item.indent && !item.icon && !item.svgIcon}"></span>
         <span class="menu-level-3-additional"
-              *ngIf="item.additionalLabel"
-              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalLabel"></span>
+              *ngIf="item.additionalText"
+              [innerHTML]="'<span class=\'ml-1 mr-1\'>&ndash;</span>' + item.additionalText"></span>
     </div>
 </a>

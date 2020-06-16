@@ -10,7 +10,7 @@ import traceback
 from io import BytesIO
 from concurrent.futures import ThreadPoolExecutor
 
-from ..models import *
+from cms.models import *
 from cms.controllers.special_structures import SpecialStructures
 from cloud.debug import timer
 from api.helpers.exceptions import APIForbiddenException

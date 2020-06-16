@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 
 /* Usage
  */
@@ -23,5 +23,13 @@ export class NxLevel2ItemComponent implements OnInit {
         this.itemPath = this.base;
         this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         this.isEnabled = this.item.isEnabled === undefined ? true : this.item.isEnabled;
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.item?.currentValue) {
+            this.isEnabled = changes.item.currentValue.isEnabled;
+            this.item.additionalText = (typeof changes.item.currentValue.additionalLabel === 'function')
+                ? changes.item.currentValue.additionalLabel() : changes.item.currentValue.additionalLabel;
+        }
     }
 }

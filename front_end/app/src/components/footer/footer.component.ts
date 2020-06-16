@@ -7,6 +7,8 @@ import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxAppStateService }        from '../../services/nx-app-state.service';
 import { Subscription }             from 'rxjs';
 import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { NxMenusService }           from '../../services/menus.service';
+import { MenuNode }                 from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -19,7 +21,7 @@ export class NxFooterComponent implements OnInit, OnDestroy {
     companyLink: string;
     companyName: string;
     copyrightYear: string;
-    footerItems;
+    footerItems: MenuNode[];
     viewFooter: boolean;
 
     // options
@@ -29,7 +31,8 @@ export class NxFooterComponent implements OnInit, OnDestroy {
 
     constructor(configService: NxConfigService,
                 private sanitizer: DomSanitizer,
-                private appState: NxAppStateService,) {
+                private appState: NxAppStateService,
+                private menusService: NxMenusService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -40,7 +43,9 @@ export class NxFooterComponent implements OnInit, OnDestroy {
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
-        this.footerItems = this.CONFIG.footerItems ? this.CONFIG.footerItems.filter((item) => item.enabled) : [];
+        this.menusService.getMenu('Footer').subscribe(footer => {
+            this.footerItems = footer;
+        });
 
         this.footerSubscription = this.appState.footerVisibleSubject.subscribe((visible) => {
             this.viewFooter = visible;

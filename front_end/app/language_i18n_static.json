@@ -780,5 +780,6 @@
         "maxEventLogRecords": "Maximum event log records to keep into the database. Real amount of undeleted records may be up to 20% higher than the specified value.",
         "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
     },
-    "result": "{count, plural, =0{# results} one{# result} other{# results}}"
+    "result": "{count, plural, =0{# results} one{# result} other{# results}}",
+    "additionalSystems": "{count, plural, =0{+ # Systems} one{+ # System} other{+ # Systems}}"
 }

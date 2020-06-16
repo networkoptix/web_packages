@@ -12,8 +12,8 @@ from api.models import Account
 from notifications import notifications_api
 from notifications.notifications_api import log_push_result, set_subscriptions_from_targets
 from notifications.models import Message
+from notifications.engines import email_engine
 from util.helpers import get_language_for_email
-from .engines import email_engine
 
 logger = logging.getLogger(__name__)
 

@@ -6,8 +6,9 @@ import re
 import logging
 from zipfile import ZipFile
 
-from ..controllers.generate_structure import templatify_json
-from ..models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType
+from cms.controllers.generate_structure import templatify_json
+from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
+    Menu
 
 logger = logging.getLogger(__name__)
 
@@ -95,6 +96,50 @@ def read_structure_json(filename):
             asset_type_type = AssetType.get_type_by_name(asset_type_structure["type"])
             asset_type = find_or_add_asset_type(asset_type_type)
             update_from_object(asset_type_structure, asset_type)
+
+
+def process_node(node_obj, node_struct):
+    if not node_obj.touched:
+        node_obj.name = node_struct['name']
+        node_obj.display_name = node_struct.get('display_name', '')
+        node_obj.url = node_struct.get('url', '')
+        node_obj.new_window = node_struct.get('new_window', False)
+        node_obj.condition = node_struct.get('condition', '')
+        node_obj.authentication = MenuNode.AUTH_CHOICES.__getattr__(node_struct.get('authentication', 'both'))
+        node_obj.icon = node_struct.get('icon', '')
+        node_obj.order = node_struct.get('order', 0)
+        node_obj.save(touched=False)
+
+        enabled = node_struct.get('enabled', False)
+        if enabled and node_obj.is_global:
+            node_obj.enabled.set(Customization.objects.all())
+        else:
+            node_obj.enabled.clear()
+
+    for inner_node_structure in node_struct.get('nodes', []):
+        inner_node_obj = node_obj.nodes.filter(name=inner_node_structure['name']).first()
+        if not inner_node_obj:
+            inner_node_obj = MenuNode(parent_node=node_obj, is_global=True)
+        process_node(inner_node_obj, inner_node_structure)
+
+
+def read_menu_structure(filename):
+    with open(filename, 'r', encoding='utf-8') as file_descriptor:
+        menu_structure = json.load(file_descriptor)
+        for menu in menu_structure:
+            menu_obj = Menu.objects.filter(name=menu['name']).first()
+            if not menu_obj:
+                menu_obj = Menu(name=menu['name'], depth=menu['depth'])
+            else:
+                menu_obj.depth = max(menu_obj.depth, menu['depth'])
+            menu_obj.save()
+
+            for node_structure in menu.get('nodes', []):
+                node_obj = menu_obj.nodes.filter(name=node_structure['name']).first()
+                if not node_obj:
+                    node_obj = MenuNode(parent_menu=menu_obj, is_global=True)
+                process_node(node_obj, node_structure)
+    Menu.cache_all_customizations()
 
 
 def process_data_structure_type(data_structure, name, value):

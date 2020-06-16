@@ -1,0 +1,55 @@
+@import '../../../../../styles/theme_palette';
+@import '../../../../styles/typography';
+@import '../../../../styles/mixins';
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+.active {
+    background: $light5 !important;
+    border: 1px solid $light6 !important;
+}
+
+.navigation-tile {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px 6px 6px 0px;
+    border-radius: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.section-title {
+    @include ellipsis;
+    max-width: calc(100% - 40px);
+    margin-left: 40px;
+}
+
+.nav-links-section {
+    display: flex;
+    flex-direction: column;
+    margin-left: 32px;
+    max-width: calc(100% - 32px);
+}
+
+.nav-links {
+    @extend #regular13;
+    color: $dark9;
+    border: 1px solid transparent;
+    display: block;
+    border-radius: 4px;
+    padding: 4px 8px 5px 8px;
+    line-height: 1;
+    cursor: pointer;
+    &:hover {
+        background: $light3;
+    }
+
+    &:active {
+        @extend .active;
+    }
+}

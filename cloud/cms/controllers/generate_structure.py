@@ -10,7 +10,7 @@ import logging
 from PIL import Image  # get Pillow
 from cms.serializers import AssetTypeSerializer
 from cms.controllers.modify_db import GUID_REGEXP
-from ..models import Context, DataStructure, AssetType
+from cms.models import Context, DataStructure, AssetType
 
 logger = logging.getLogger(__name__)
 

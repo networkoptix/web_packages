@@ -1,91 +1,101 @@
-<header *ngIf="viewHeader">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="app-header-left">
-                <ul *ngIf="activeSystem" class="nav navbar-nav navbar-left auth-visible d-block d-md-none">
-                    <li>
-                        <nx-active-system [activeSystem]="activeSystem"></nx-active-system>
-                    </li>
-                </ul>
+<!-- Templates used for render and for size calculations -->
+<ng-template #navIcon>
+    <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
+        <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
+            <img src="{{CONFIG.previewPath}}/static/images/logo.png">
+        </a>
+    </div>
+</ng-template>
 
-                <ul *ngIf="active.integrations || active.ipvd"
-                    class="nav navbar-nav navbar-left d-block d-md-none">
-                    <li>
-                        <nx-nav-location [location]="active"></nx-nav-location>
-                    </li>
-                </ul>
+<ng-template #menuTabs>
+    <nx-header-tabs *ngFor="let node of headerService.currentLocation.parentNode?.nodes" [node]="node"></nx-header-tabs>
+</ng-template>
 
-                <div class="navbar-header">
-                    <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [href]="user.email ? '/settings' : '/'">
-                        <img src="{{CONFIG.previewPath}}/static/images/logo.png">
-                    </a>
+<ng-template #rightNav let-showSmall="showSmall">
+    <ul class="nav navbar-nav navbar-right auth-hidden mr-3">
+        <li>
+            <span>
+                <a routerLink="/register" class="btn btn-primary" [ngClass]="{'small-button': showSmall}">
+                    <span *ngIf="showSmall" class="glyphicon glyphicon-create-user"></span>
+                    <span *ngIf="!showSmall" class="btn-caption" translate>Create Account</span>
+                </a>
+            </span>
+            <span>
+                <a href class="btn btn-default" (click)="login()" [ngClass]="showSmall ? 'small-button': 'login-button'">
+                    <span *ngIf="showSmall" class="glyphicon glyphicon-login"></span>
+                    <span *ngIf="!showSmall" class="btn-caption" translate>Log In</span>
+                </a>
+            </span>
+            <span *ngIf="!this.loginState">
+                <nx-language-select
+                        class="auto"
+                        short="true" altStyle="true"
+                        instantReload="true" instantApply="true"></nx-language-select>
+            </span>
+        </li>
+    </ul>
+</ng-template>
+
+<!-- Hidden menu for calculations -->
+<nav class="navbar navbar-default nav-override hidden-menu">
+    <div class="container-fluid flex-no-wrap">
+        <div class="app-header-left">
+            <ng-container *ngTemplateOutlet="navIcon"></ng-container>
+            <ul class="nav navbar-nav d-md-flex">
+                <div class="tab-wrapper" (resize)="tabsWidth$.next($event.width)">
+                <ng-container *ngTemplateOutlet="menuTabs"></ng-container>
                 </div>
+            </ul>
 
-                <ul *ngIf="active.integrations" class="nav navbar-nav d-none d-md-flex">
-                    <li class="active">
-                        <a class="inset" id="integrations" routerLink="/integrations" (click)="onClick($event)" translate>Integrations</a>
-                    </li>
-                </ul>
+        </div>
+        <div (resize)="menuTabsCollapsed$.next($event.width)">
+            <nx-nav-dropdown></nx-nav-dropdown>
+        </div>
+        <div class="app-header-right" (resize)="rightNavWidth$.next($event.width)">
+            <ng-container *ngTemplateOutlet="rightNav;context:{showSmall:false}"></ng-container>
+            <ul class="nav navbar-nav navbar-right auth-visible">
+                <li>
+                    <nx-account-settings-select></nx-account-settings-select>
+                </li>
+            </ul>
+        </div>
+        <div (resize)="rightNavWidthCollapsed$.next($event.width)">
+            <ng-container *ngTemplateOutlet="rightNav;context:{showSmall:true}"></ng-container>
+        </div>
+    </div>
+</nav>
 
-                <ul *ngIf="active.ipvd" class="nav navbar-nav d-none d-md-flex">
-                    <li class="active">
-                        <a class="inset" id="ipvd" routerLink="/ipvd" (click)="onClick($event)" translate>Supported IP Video Devices</a>
-                    </li>
-                </ul>
-
-                <ul *ngIf="canShowNav()"
-                    class="nav navbar-nav auth-visible d-none d-md-flex">
-
-                    <li [ngClass]="{ 'active' :active.view }">
-                        <a class="inset" id="view" routerLink="/settings/{{activeSystem.id}}/view" (click)="onClick($event)" translate>View</a>
-                    </li>
-                    <li [ngClass]="{ 'active' :active.settings}">
-                        <a class="inset" id="systems" routerLink="/settings/{{activeSystem.id}}" (click)="onClick($event)" translate>Settings</a>
-                    </li>
-                    <li [ngClass]="{ 'active' :active.information}"
-                        *ngIf="canSeeInfo">
-                        <a class="inset" id="health" routerLink="/health/alerts" (click)="onClick($event)" translate>Information</a>
-                    </li>
+<!-- Menu for render -->
+<header *ngIf="viewHeader" (nxClickElsewhere)="headerService.show$ = false">
+    <nav class="navbar navbar-default nav-override">
+        <div class="container-fluid flex-no-wrap">
+            <div class="app-header-left">
+                <ng-container *ngIf="showIcon$ | async">
+                    <ng-container *ngTemplateOutlet="navIcon"></ng-container>
+                </ng-container>
+                <ul class="nav navbar-nav d-flex">
+                    <div (resize)="mainButtonWidth$.next($event.width)">
+                        <nx-header-main-button
+                                *ngIf="systems?.length || headerService?.nodes?.length"
+                                [endpoint]="active"
+                                [systems]="systems"
+                                [hideArrow]="!headerService.currentLocation.parentNode?.nodes || hideTabsAndDropdown$.value"
+                                [node]="headerService.currentLocation.parentNode">
+                        </nx-header-main-button>
+                    </div>
+                    <div  *ngIf="!(hideTabsAndDropdown$ | async)" class="tab-wrapper">
+                        <ng-container *ngIf="!(showTabs$ | async); else menuTabs">
+                            <nx-nav-dropdown></nx-nav-dropdown>
+                        </ng-container>
+                    </div>
                 </ul>
             </div>
 
             <div class="app-header-right">
-                <ul class="nav navbar-nav navbar-right auth-hidden">
-                    <li>
-                        <span>
-                            <a routerLink="/register" class="btn btn-primary btn-collapse">
-                                <span class="glyphicon glyphicon-create-user"></span>
-                                <span class="btn-caption" translate>Create Account</span>
-                            </a>
-                        </span>
-                        <span>
-                            <a href class="btn btn-default btn-collapse" (click)="login()">
-                                <span class="glyphicon glyphicon-login"></span>
-                                <span class="btn-caption" translate>Log In</span>
-                            </a>
-                        </span>
-                        <span *ngIf="!this.loginState">
-                            <nx-language-select
-                                    class="auto"
-                                    short="true" altStyle="true"
-                                    instantReload="true" instantApply="true"></nx-language-select>
-                        </span>
-                    </li>
-                </ul>
-
+                <ng-container *ngTemplateOutlet="rightNav;context:{showSmall: showSmallRightNav$ | async}"></ng-container>
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
-                    <li *ngIf="systemCounter" class="collapse-second">
-                        <nx-systems
-                                [endpoint]="active"
-                                [systems]="systems"
-                                [activeSystem]="activeSystem">
-                        </nx-systems>
-                    </li>
-
-                    <li class="vertical-bar"></li>
-
-                    <li class="collapse-first">
-                        <nx-account-settings-select></nx-account-settings-select>
+                    <li>
+                            <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
                     </li>
                 </ul>
             </div>

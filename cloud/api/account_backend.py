@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.signals import user_logged_in, user_logged_out, user_login_failed
 from django.dispatch import receiver
 
-from api.models import AccountLoginHistory, AccountManager
+from api.models import AccountLoginHistory, AccountManager, Account
 from api.controllers.cloud_api import Account as Clouddb_Account
 from api.helpers.exceptions import APILogicException, ErrorCodes, APINotAuthorisedException
 
@@ -19,7 +19,7 @@ IP_MAX_LENGTH = 255
 def get_ip(request):
     ip = request.META.get('HTTP_X_FORWARDED_FOR')
     if settings.LOCAL_ENVIRONMENT and not ip:  # When ran locally there is no http_x_forwared_for
-        return ''
+        ip = request.META.get('REMOTE_ADDR')
 
     return ip if len(ip) <= IP_MAX_LENGTH else ip[:IP_MAX_LENGTH]
 
@@ -71,7 +71,10 @@ def user_logged_out_callback(sender, request, user, **kwargs):
 
 
 @receiver(user_login_failed)
-def user_login_failed_callback(sender, credentials, **kwargs):
+def user_login_failed_callback(sender, credentials, request, **kwargs):
+    ip = None
+    if request:
+        ip = get_ip(request)
     user_name = credentials.get('username', None)
-    logger.info(f'Failed login attempt: %{user_name}')
-    AccountLoginHistory.objects.create(action='user_login_failed', email=user_name)
+    logger.info(f'Failed login attempt: %{user_name}, IP: {ip}')
+    AccountLoginHistory.objects.create(action='user_login_failed', ip=ip, email=user_name)

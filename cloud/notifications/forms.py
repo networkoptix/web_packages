@@ -3,7 +3,7 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from dal import autocomplete
 
 from cms.models import AssetType, Customization, UserGroupsToAssetPermissions
-from .models import CloudNotification, PushSubscription
+from notifications.models import CloudNotification, PushSubscription
 
 
 class CloudNotificationAdminForm(forms.ModelForm):

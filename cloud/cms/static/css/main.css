@@ -210,3 +210,21 @@ img.light {
 .defaultSkin * {
     color: #aaaaaa !important;
 }
+
+.nested-menu-items {
+    padding: 10px 0 10px 50px !important;
+}
+
+.nested-object-name {
+    height: auto !important;
+    font-size: 12px !important;
+}
+
+.djn-table td {
+    padding: 8px;
+}
+
+.enable-all-button {
+    display: block;
+    margin-bottom: 4px;
+}

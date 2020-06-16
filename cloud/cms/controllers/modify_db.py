@@ -12,9 +12,9 @@ from django.db.models import Q
 from django.utils.http import urlencode
 from PIL import Image
 
-from .filldata import fill_content
+from cms.controllers.filldata import fill_content
 from api.models import Account
-from ..models import *
+from cms.models import *
 
 BYTES_TO_MEGABYTES = 1048576.0
 PENDING = AssetCustomizationReview.REVIEW_STATES[

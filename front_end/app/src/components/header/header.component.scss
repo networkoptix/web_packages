@@ -25,6 +25,14 @@ $collapse-second-width-max : $collapse-second-width - 1px;
 /* here we kill $grid-float-breakpoint-max to */
 $header-collapsing-width-1 : 1px;
 
+.app-header-left {
+    flex-grow: 1;
+    & > ul {
+        flex-wrap: nowrap;
+        flex-shrink: 1;
+    }
+}
+
 .navbar {
     height        : $navbar-height;
     border-top    : none;
@@ -72,12 +80,13 @@ $header-collapsing-width-1 : 1px;
         margin-right : $horizontal-spacing !important;
     }
 
-    .nav > li {
+    .nav li {
         margin      : 0;
         padding     : 0;
         font-size   : $font-size-lg;
         display     : flex;
         align-items : center;
+        height      : 100%;
 
         &.vertical-bar {
             border-right : 1px solid $light4;
@@ -231,48 +240,43 @@ $header-collapsing-width-1 : 1px;
             display : none !important;
         }
     }
+}
 
-    .collapse-first {
-        @media (min-width : $collapse-first-width) {
-            .hidden-expanded {
-                display : none;
-            }
-        }
-        @media (max-width : $collapse-first-width-max) {
-            .hidden-expanded {
-                display : block;
-            }
+.login-button {
+        min-width: 80px;
+}
 
-            .hidden-collapsed,
-            .icon-caret,
-            .ellipsis {
-                display : none !important;
-            }
-
-            .glyphicon {
-                margin-right : 0 !important;
-            }
-
-        }
-    }
-
-    .collapse-second {
-        @media (min-width : $collapse-second-width) {
-            .hidden-expanded {
-                display : none;
-            }
-        }
-        @media (max-width : $collapse-second-width-max) {
-            .hidden-expanded {
-                display : block;
-            }
-
-            .hidden-collapsed,
-            .icon-caret,
-            .ellipsis {
-                display : none !important;
-            }
-        }
+.nav-icon {
+    display: block;
+    &.collapsed {
+        display: none;
     }
 }
 
+.hidden-menu {
+    list-style: none;
+    position: fixed;
+    display: flex;
+    top: -10000vh;
+    left: -10000vw;
+}
+
+.tab-wrapper {
+    display: flex;
+    flex-wrap: nowrap;
+    height: 100%;
+}
+
+.nav-override {
+    max-width: 100vw !important;
+    padding-right: 0px !important;
+    flex-wrap: nowrap !important;
+    & > div {
+        flex-wrap: nowrap !important;
+    }
+}
+
+.small-button {
+    padding: 0 !important;
+    width: 48px !important;
+}

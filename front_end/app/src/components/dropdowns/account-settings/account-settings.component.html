@@ -3,21 +3,21 @@
      (nxClickElsewhere)="show = false">
 
     <button class="inset btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
+            [ngClass]="{ 'small-icon-overrides': small}"
+            (resize)="buttonWidth.next($event.width)"
             (click)="show = !show"
             type="button" id="accountSettingsSelect" data-toggle="dropdown">
-
-        <div class="popup arrow up"></div>
-
+        <div class="popup arrow up" [ngClass]="{'invisible': !dropdownWidth$.value, 'small-override': small}"></div>
         <span class="glyphicon glyphicon-user"></span>
-        <span class="ellipsis" [innerHTML]="settings.email"></span>
-        <div class="nav-arrow">
-            <span></span>
-            <span></span>
-        </div>
+        <span *ngIf="!small" class="user-email" [innerHTML]="settings.email"></span>
     </button>
-    <div class="dropdown-menu" [nxArrowNav]="show"
-         [style.display]="show ? 'inline-block' : 'none'"
-         aria-labelledby="accountSettingsSelect">
+    <div class="dropdown-menu"
+        [ngClass]="{'invisible': !dropdownWidth$.value}"
+        (resize)="dropdownWidth$.next($event.width)"
+        [nxArrowNav]="show"
+        [style.display]="show ? 'inline-block' : 'none'"
+        [style.right.px]="rightOffset$.value"
+        aria-labelledby="accountSettingsSelect">
 
         <ul class="dropdown-menu--list">
             <li class="dropdown-item-container">

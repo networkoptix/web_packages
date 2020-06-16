@@ -308,7 +308,7 @@ def cloud_notification_action(request):
 @permission_classes((AllowAny, ))
 @handle_exceptions
 def test(request):
-    from .. import tasks
+    from notifications import tasks
     from random import seed, randint
     seed()
     tasks.test_task.delay(randint(1, 100), randint(1, 5))

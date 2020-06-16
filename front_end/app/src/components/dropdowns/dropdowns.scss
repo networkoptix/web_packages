@@ -16,7 +16,7 @@ header {
             position : inherit !important;
             
             .dropdown-menu {
-                right : 0 !important;
+                right : 0;
             }
         }
         
@@ -31,11 +31,6 @@ header {
             @media (max-width : $collapse-second-width) {
                 padding : 5px 8px !important;
             }
-        }
-        
-        .dropdown-menu {
-            border-top                 : 1px solid $light6;
-            border-radius              : 0 0 2px 2px;
         }
     }
 }
@@ -54,12 +49,11 @@ header {
     &.alt-style {
         .dropdown-toggle {
             height : 32px;
+            position: relative;
     
             .nav-arrow {
-                @media (max-width : $collapse-second-width) {
-                    right : 26px;
-                    bottom: 12px;
-                }
+                right : 6px !important;
+                bottom: 6px !important;
             }
         }
     
@@ -118,14 +112,14 @@ header {
     }
     
     .dropdown-menu {
-        margin-top       : 0;
-        background-color : $light4;
+        margin-top       : 3px;
+        background-color : $additional_light1;
         box-shadow       : 0 1rem 2rem 0 transparentize($dark15, 0.4);
         position         : absolute !important;
         border           : none;
         border-radius    : 2px;
         width            : 100%;
-        padding          : 4px 0 0 !important;
+        padding          : 4px 0 !important;
         
         &--list {
             max-height      : $dropdown-list-height;
@@ -174,12 +168,12 @@ header {
                 }
 
                 &:hover {
-                    background-color : $light5;
+                    background-color : $light3;
                     color            : $dark9 !important;
                 }
 
                 &:active {
-                    background-color : $light6 !important;
+                    background-color : $light4 !important;
                     //color            : $light1 !important;
                 }
 

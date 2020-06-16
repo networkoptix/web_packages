@@ -118,7 +118,7 @@ class Message(models.Model):
         self.save()
 
         # TODO: initiate business-logic here
-        from .tasks import send_email
+        from notifications.tasks import send_email
 
         if settings.USE_ASYNC_QUEUE and USE_SQS_FOR_CLOUD_NOTIFICATIONS:
             queue_name = ""

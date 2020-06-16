@@ -355,6 +355,7 @@ export const nxConfig: IConfig = {
         },
         name: ''
     },
+    dynamicMenus           : {},
     footerItems            : [],
     googleTagManagerId     : '',
     pushConfig             : '',
