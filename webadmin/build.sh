@@ -39,6 +39,14 @@ echo "Build webadmin" >&2
 npm run build-webadmin
 mv dist static
 
+# Build the inline wizard
+pushd inline-wizard
+npm install
+npm run build
+rm dist/index.html
+cp -r dist/* ../static
+popd
+
 # Make translations
 echo "Create translations" >&2
 $SOURCE_DIR/webadmin/localize.sh $SOURCE_DIR

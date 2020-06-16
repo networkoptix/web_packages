@@ -1,7 +1,9 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule, Title }      from '@angular/platform-browser';
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
-import { Location, PathLocationStrategy, LocationStrategy, CommonModule } from '@angular/common';
+import {
+    Location, PathLocationStrategy, HashLocationStrategy, LocationStrategy, CommonModule
+}                                                                         from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }                         from '@angular/common/http';
 import { FormsModule }                                                    from '@angular/forms';
@@ -94,7 +96,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         NxConfigService,
         WINDOWS_PROVIDERS,
-        { provide: LocationStrategy, useClass: PathLocationStrategy },
+        { provide: LocationStrategy, useClass: environment.isLocal ? HashLocationStrategy : PathLocationStrategy },
         {
             provide    : FirebaseOptionsToken,
             deps       : [NxConfigService],

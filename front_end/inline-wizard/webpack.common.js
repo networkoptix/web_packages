@@ -20,7 +20,7 @@ module.exports = {
             chunks: ['commons', 'webInline', 'inline'],
             chunksSortMode: 'manual',
             template: 'index.html',
-            filename: 'index.html',
+            filename: 'inline.html',
             inject:false
         }),
         new ExtractTextPlugin({filename: 'styles/[name].css'}),

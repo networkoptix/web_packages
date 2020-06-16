@@ -574,7 +574,7 @@ angular.module('webInlineWizard')
                 if (top !== self) {
                     // TODO: This need to be revised as in dev mode wizard running on different port cause cross-origin error.
                     // Current code is only for development purposes
-                    top.window.location.href = window.location.protocol + '//localhost:9000';
+                    top.window.location.href = window.location.protocol + '//' + window.location.host;
                 } else {
                     // original code
                     window.location.href = window.location.protocol + '//' + window.location.host;
