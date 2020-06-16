@@ -194,7 +194,7 @@
     "YOU TEXT": "您",
     "UNRESTRICTED ACCESS CONNECT TEXT": "不受限制地的访问包括共享和连接断开系统从云的能力",
     "ENABLE AUTO DISCOVERY TEXT": "启用摄影机和伺服器的自动搜寻",
-    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "When enabled, system will discover new cameras and servers. Also, it will automatically and persistently send discovery requests to cameras in order to get the camera's status update. Failover enabled on some servers ignore status check prohibition.",
+    "ENABLE AUTO DISCOVERY DESCRIPTION TEXT": "启用后，系统将发现新的摄像机和服务器。 而且将自动和持续地向摄像机发送搜寻请求，以便获取摄像机状态更新。在某些服务器上启用的故障转移功能将忽略状态检查禁令。",
     "SEND ANONYMOUS USAGE TEXT": "以匿名方式发送使用情况和故障统计报告至开发人员",
     "SEND ANONYMOUS USAGE DESCRIPTION TEXT": "包括有关系统资讯，例如摄像机模组，固件版本，服务器数量等。不包含任何个人信息并采完全匿名的方式。",
     "ALLOW SYSTEM OPTIMIZE TEXT": "允许系统优化摄像机设置",

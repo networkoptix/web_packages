@@ -167,7 +167,7 @@
     "The credentials of this user will be exposed! You must create a custom \"Public User\" role with access only\n            to the cameras selected for public use, and assigned only the minimum required viewing permissions. This\n            \"Public User\" should not have system-wide access of any kind.": "此用户的验证凭据将被公开！您必须创建一个自定义的“公用用户”角色，该角色仅限共用摄像机的存取权限\n            ，并且只能被分配所需的最低查看权限。\n此\n            “公用用户”不应被交予任何的系统存取权限。",
     "This Email has been already registered in %CLOUD_NAME%": "此电子邮件已在 %CLOUD_NAME% 中注册",
     "This device has reported to support some analytics events, but we don't have exact information about them.": "据传此设备支援某些分析事件，但我们并没有关于它们的确切信息。",
-    "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.",
+    "This information is based on what camera reports through API. Actual list of events supported by this camera may be different.": "此资讯是根据摄像机透过API回报的内容。摄像机支持的事件列表实际上可能有所不同。",
     "To": "发送至",
     "Too many attempts. Try again in a minute.": "尝试次数过多，请稍后重试。",
     "Tracks and logs all user actions.": "跟踪和记录所有用户操作",

@@ -30,6 +30,6 @@
     "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} 邀請您加入 %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}影像系統{{{message.system_name}} 與您共享{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "有人分享影像系統{{{message.system_name}} 給您"
+    "emailSubject": "與您分享影像系統 {{{message.system_name}}}"
   }
 }
