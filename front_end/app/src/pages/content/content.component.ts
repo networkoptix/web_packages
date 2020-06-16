@@ -164,7 +164,7 @@ export class NxContentComponent implements OnInit {
                 const titleRegex = /#title.*>(.*)</m;
                 const match = titleRegex.exec(html);
                 if (match && match[1]) {
-                    this.pageService.pageTitle(match[1]);
+                    this.pageService.pageTitle = match[1];
                 }
                 this.loaded = true;
                 this.staticContent[this.articleParam] = true;
