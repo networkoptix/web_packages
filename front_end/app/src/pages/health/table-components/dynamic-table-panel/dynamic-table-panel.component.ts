@@ -30,9 +30,9 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
 
     constructor(
         configService: NxConfigService,
-        private healthService: NxHealthService,
-        private scrollMechanicsService: NxScrollMechanicsService,
-        private healthLayoutService: NxHealthLayoutService
+        public healthService: NxHealthService,
+        public scrollMechanicsService: NxScrollMechanicsService,
+        public healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = configService.getConfig();
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
