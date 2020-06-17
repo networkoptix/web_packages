@@ -9,7 +9,7 @@ import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_type
 import { NxProcessService, Process } from '../../../services/process.service';
 import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { NxSettingsService }         from './settings.service';
-import { NxMenuService }             from '../../../components/menu/menu.service';
+import { NxMenuService }             from '../../../menu/menu.service';
 import { ICamera, NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxSystemsService }          from '../../../services/systems.service';
 import { Account, NxAccountService }          from '../../../services/account.service';
@@ -22,6 +22,8 @@ import { filter, tap }                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { NxApplyService }            from '../../../services/apply.service';
+import { NxPageService }             from '../../../services/page.service';
+import { NxSystemAPIService }        from '../../../services/system-api.service';
 
 @AutoUnsubscribe()
 @Component({

@@ -1,6 +1,5 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../../styles/theme_variables';
+@use '../../styles/typography';
 @import '../../styles/buttons';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/mixins/breakpoints';
@@ -198,7 +197,7 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-title {
-    @extend #medium24;
+    @include typography.medium24;
     text-align      : center;
     margin-bottom   : 1rem;
     justify-content : center;
@@ -206,7 +205,7 @@ $preloader_small_circle_distance : 8px;
 }
 
 .placeholder-message {
-    @extend #regular15;
+    @include typography.regular15;
     line-height : 24px;
     max-width   : 560px;
 }
@@ -216,7 +215,7 @@ $preloader_small_circle_distance : 8px;
 }
 
 .section-placeholder {
-    @extend #placeholder;
+    @include typography.placeholder;
     height          : 100%;
     width           : 100%;
     margin          : 60px 0;

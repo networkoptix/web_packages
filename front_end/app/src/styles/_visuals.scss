@@ -4,7 +4,7 @@
 
 .highlighted {
     display          : inline;
-    background-color : rgba($yellow_main, 0.5);
+    background-color : rgba(theme_variables.$yellow_main, 0.5);
 }
 
 .ellipsis {

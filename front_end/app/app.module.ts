@@ -2,7 +2,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule, Title }      from '@angular/platform-browser';
 import { BrowserAnimationsModule }                                        from '@angular/platform-browser/animations';
 import {
-    Location, PathLocationStrategy, HashLocationStrategy, LocationStrategy, CommonModule
+    Location, PathLocationStrategy, HashLocationStrategy, LocationStrategy, CommonModule, DatePipe
 }                                                                         from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree }                     from '@angular/router';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }                         from '@angular/common/http';
@@ -42,6 +42,8 @@ import { NgxMaskModule, IConfig }             from 'ngx-mask';
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     return () => provider.load();
 }
+// @ts-ignore
+export const options: Partial<IConfig> | (() => Partial<IConfig>);
 
 @NgModule({
     imports: [

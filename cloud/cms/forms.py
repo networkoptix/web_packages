@@ -358,7 +358,7 @@ class CustomizationForm(forms.ModelForm):
         return data
 
 
-class ContributerAgreementForm(forms.ModelForm):
+class ContributorAgreementForm(forms.ModelForm):
     class Meta:
         model = ContributorAgreement
         exclude = []

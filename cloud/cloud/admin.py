@@ -4,7 +4,7 @@ from django.contrib.admin import AdminSite, site
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_protect
 
-from cms.models import ContributerAgreement
+from cms.models import ContributorAgreement
 
 class CMSAdminSite(AdminSite):
     index_template = 'admin/index.html'

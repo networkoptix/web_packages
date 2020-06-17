@@ -1,5 +1,5 @@
+@use '../../../../styles/typography';
 @import '../../../../../styles/theme_palette';
-@import '../../../../styles/typography';
 @import '../../../../styles/mixins';
 
 .active {
@@ -55,13 +55,13 @@
 
 .system-name {
     @include ellipsis;
-    @extend #medium14;
+    @include typography.medium14;
     max-width: 100%;
     line-height: 24px;
 }
 
 .owner {
     @include ellipsis;
-    @extend #regular11;
+    @include typography.regular11;
     line-height: 16px;
 }

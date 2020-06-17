@@ -1,9 +1,8 @@
-@use 'theme/_variables';
 @use '../../styles/theme_variables';
 @forward '../../styles/theme_variables';
 
 // Placeholder text
-@mixin placeholder($color: variables.$input-color-placeholder) {
+@mixin placeholder($color: theme_variables.$input-color-placeholder) {
     // Firefox
     &::-moz-placeholder {
         color   : $color;

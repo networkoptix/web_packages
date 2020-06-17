@@ -12,7 +12,7 @@
     "changeOrigin": true
   },
   "/api/*": {
-    "target": "https://10.1.5.196:7001",
+    "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
@@ -30,7 +30,10 @@
     "changeOrigin": true
   },
   "/static/lang_en_US/language_compiled.json": {
-        "target": "https://dev2.cloud.hdw.mx",
+    "target": "https://0.0.0.0:9000",
+    "pathRewrite": {
+      "^/static/lang_en_US/": ""
+    },
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

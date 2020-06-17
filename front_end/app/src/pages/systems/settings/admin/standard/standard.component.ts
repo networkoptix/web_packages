@@ -8,6 +8,7 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxApplyService, Watcher }   from '../../../../../services/apply.service';
+import { NxMenuService }             from '../../../../../menu';
 
 @Component({
     selector    : 'nx-system-standard-admin-component',
@@ -91,8 +92,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
                 max   : 600
             }
         };
-        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.general.id);
+        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+        this.menuService.detail = this.CONFIG.menus.systemSettings.general.id;
         this.limitSessionTimeItems = [this.limitSessionTimeUnits.hours, this.limitSessionTimeUnits.minutes];
         this.initApplyService();
     }

@@ -86,7 +86,7 @@
             }
 
             .search-input {
-                @extend #regular14;
+                @include typography.regular14;
                 height : 32px;
                 padding-left: 40px;
             }

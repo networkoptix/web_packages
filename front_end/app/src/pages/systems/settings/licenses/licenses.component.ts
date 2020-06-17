@@ -8,7 +8,7 @@ import { SubscriptionLike }              from 'rxjs';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxSettingsService }             from '../settings.service';
 import { NxSystem }                      from '../../../../services/system.service';
-import { NxMenuService }                 from '../../../../components/menu/menu.service';
+import { NxMenuService }                 from '../../../../menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
 @Component({
@@ -98,13 +98,13 @@ export class NxSystemLicensesComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.menuService.setSection(this.CONFIG.menus.systemSettings.admin.id);
-        this.menuService.setDetailsSection(this.CONFIG.menus.systemSettings.licenses.id);
+        this.menuService.section = this.CONFIG.menus.systemSettings.admin.id;
+        this.menuService.detail = this.CONFIG.menus.systemSettings.licenses.id;
     }
 
     private getLicenses() {
         this.system.getLicenses()
-            .then((result) => {
+            .then((result: any) => {
                 if (result.length) {
                     this.licenseSummaries = [];
                     result.forEach((item) => {
@@ -178,7 +178,7 @@ export class NxSystemLicensesComponent implements OnInit {
                                 if (this.system && this.system.servers && this.system.servers.length) {
                                     this.system
                                         .getHardwareIdsOfServers()
-                                        .then((data) => {
+                                        .then((data: any) => {
                                             if (data.reply.length) {
                                                 result.forEach((item) => {
                                                     const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {

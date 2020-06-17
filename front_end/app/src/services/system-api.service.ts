@@ -186,9 +186,6 @@ export class NxSystemAPI {
         if (this.serverId) {
             headers = headers.set('X-Server-guid', this.serverId);
         }
-        Object.entries(customHttpHeaders).forEach((entry) => {
-            headers = headers.set(...entry);
-        });
         return this.http.post<ResponseType>(fullUrl, data, { params, headers }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000)

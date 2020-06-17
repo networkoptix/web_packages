@@ -28,6 +28,7 @@ export interface LanguageI18NStaticTypes {
     ipvdFeedback:          IpvdFeedback;
     ipvdTopXByVolume:      any;
     ipvdDisclaimer:        any;
+    license:               License;
     menu:                  Menu;
     pageTitles:            PageTitles;
     passwordRequirements:  PasswordRequirements;
@@ -83,29 +84,30 @@ export interface CameraFilters {
 }
 
 export interface Common {
-    account:                   CommonAccount;
-    cameraLinks:               CameraLinks;
-    cameraStates:              CameraStates;
-    chromeCastWarning:         any;
-    recordingSettingsWarning:  any;
-    recordingModes:            RecordingModes;
-    resolution:                Resolution;
-    general:                   any;
-    searchCamPlaceholder:      any;
-    systemHasNoCameras:        any;
-    systemHasNoCamerasMessage: any;
-    systemNewVersion:          any;
-    systemNewVersionMessage:   any;
-    systemNoAlerts:            any;
-    systemNoAlertsMessage:     any;
-    systemOffline:             any;
-    systemOfflineMessage:      any;
-    systemServerError:         any;
-    systemServerErrorMessage:  any;
-    systemUnreachable:         any;
-    unknown:                   any;
-    voiceCommands:             VoiceCommands;
-    viewingOutdatedReport:     any;
+    account:                    CommonAccount;
+    cameraLinks:                CameraLinks;
+    cameraStates:               CameraStates;
+    chromeCastWarning:          any;
+    recordingSettingsWarning:   any;
+    recordingModes:             RecordingModes;
+    resolution:                 Resolution;
+    general:                    any;
+    inaccessibleFeatureMessage: any;
+    searchCamPlaceholder:       any;
+    systemHasNoCameras:         any;
+    systemHasNoCamerasMessage:  any;
+    systemNewVersion:           any;
+    systemNewVersionMessage:    any;
+    systemNoAlerts:             any;
+    systemNoAlertsMessage:      any;
+    systemOffline:              any;
+    systemOfflineMessage:       any;
+    systemServerError:          any;
+    systemServerErrorMessage:   any;
+    systemUnreachable:          any;
+    unknown:                    any;
+    voiceCommands:              VoiceCommands;
+    viewingOutdatedReport:      any;
 }
 
 export interface CommonAccount {
@@ -454,6 +456,7 @@ export interface ErrorCodes {
     wrongCode:                           any;
     wrongCodeRestore:                    any;
     wrongParameters:                     any;
+    licenseFail:                         any;
     networkConnection:                   any;
 }
 
@@ -515,12 +518,51 @@ export interface IpvdFeedback {
     c_Info:   any;
 }
 
+export interface License {
+    info:     Info;
+    messages: Messages;
+}
+
+export interface Info {
+    type:          any;
+    channels:      any;
+    server:        any;
+    hwid:          any;
+    status:        any;
+    expires:       any;
+    time:          any;
+    deactivations: any;
+    trial:         any;
+    online:        any;
+    error:         any;
+    expired:       any;
+    ok:            any;
+    digital:       any;
+    analog:        any;
+    edge:          any;
+    vmax:          any;
+    videowall:     any;
+    analogencoder: any;
+    starter:       any;
+    iomodule:      any;
+    bridge:        any;
+}
+
+export interface Messages {
+    required:       any;
+    activated:      any;
+    inuse:          any;
+    trialActivated: any;
+}
+
 export interface Menu {
     titles: MenuTitles;
 }
 
 export interface MenuTitles {
     systemAdministration: any;
+    general:              any;
+    licenses:             any;
     users:                any;
 }
 
@@ -896,6 +938,7 @@ const typeMap: any = {
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
         { json: "ipvdTopXByVolume", js: "ipvdTopXByVolume", typ: "any" },
         { json: "ipvdDisclaimer", js: "ipvdDisclaimer", typ: "any" },
+        { json: "license", js: "license", typ: r("License") },
         { json: "menu", js: "menu", typ: r("Menu") },
         { json: "pageTitles", js: "pageTitles", typ: r("PageTitles") },
         { json: "passwordRequirements", js: "passwordRequirements", typ: r("PasswordRequirements") },
@@ -954,6 +997,7 @@ const typeMap: any = {
         { json: "recordingModes", js: "recordingModes", typ: r("RecordingModes") },
         { json: "resolution", js: "resolution", typ: r("Resolution") },
         { json: "general", js: "general", typ: "any" },
+        { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "any" },
         { json: "searchCamPlaceholder", js: "searchCamPlaceholder", typ: "any" },
         { json: "systemHasNoCameras", js: "systemHasNoCameras", typ: "any" },
         { json: "systemHasNoCamerasMessage", js: "systemHasNoCamerasMessage", typ: "any" },
@@ -1283,6 +1327,7 @@ const typeMap: any = {
         { json: "wrongCode", js: "wrongCode", typ: "any" },
         { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "any" },
         { json: "wrongParameters", js: "wrongParameters", typ: "any" },
+        { json: "licenseFail", js: "licenseFail", typ: "any" },
         { json: "networkConnection", js: "networkConnection", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
@@ -1340,11 +1385,47 @@ const typeMap: any = {
         { json: "b_Link", js: "b_Link", typ: "any" },
         { json: "c_Info", js: "c_Info", typ: "any" },
     ], false),
+    "License": o([
+        { json: "info", js: "info", typ: r("Info") },
+        { json: "messages", js: "messages", typ: r("Messages") },
+    ], false),
+    "Info": o([
+        { json: "type", js: "type", typ: "any" },
+        { json: "channels", js: "channels", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
+        { json: "hwid", js: "hwid", typ: "any" },
+        { json: "status", js: "status", typ: "any" },
+        { json: "expires", js: "expires", typ: "any" },
+        { json: "time", js: "time", typ: "any" },
+        { json: "deactivations", js: "deactivations", typ: "any" },
+        { json: "trial", js: "trial", typ: "any" },
+        { json: "online", js: "online", typ: "any" },
+        { json: "error", js: "error", typ: "any" },
+        { json: "expired", js: "expired", typ: "any" },
+        { json: "ok", js: "ok", typ: "any" },
+        { json: "digital", js: "digital", typ: "any" },
+        { json: "analog", js: "analog", typ: "any" },
+        { json: "edge", js: "edge", typ: "any" },
+        { json: "vmax", js: "vmax", typ: "any" },
+        { json: "videowall", js: "videowall", typ: "any" },
+        { json: "analogencoder", js: "analogencoder", typ: "any" },
+        { json: "starter", js: "starter", typ: "any" },
+        { json: "iomodule", js: "iomodule", typ: "any" },
+        { json: "bridge", js: "bridge", typ: "any" },
+    ], false),
+    "Messages": o([
+        { json: "required", js: "required", typ: "any" },
+        { json: "activated", js: "activated", typ: "any" },
+        { json: "inuse", js: "inuse", typ: "any" },
+        { json: "trialActivated", js: "trialActivated", typ: "any" },
+    ], false),
     "Menu": o([
         { json: "titles", js: "titles", typ: r("MenuTitles") },
     ], false),
     "MenuTitles": o([
         { json: "systemAdministration", js: "systemAdministration", typ: "any" },
+        { json: "general", js: "general", typ: "any" },
+        { json: "licenses", js: "licenses", typ: "any" },
         { json: "users", js: "users", typ: "any" },
     ], false),
     "PageTitles": o([

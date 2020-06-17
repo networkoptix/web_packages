@@ -97,7 +97,7 @@ export const cloudSettingsRoutes: Routes = [
         NxCloudStorageModule,
         NxSystemLicensesModule,
         MenuModule,
-        RouterModule.forChild(appRoutes)
+        RouterModule.forChild(cloudSettingsRoutes)
     ],
     providers: [
         ApplyGuard

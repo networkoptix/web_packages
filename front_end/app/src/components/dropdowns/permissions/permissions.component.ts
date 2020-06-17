@@ -33,7 +33,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         super(languageService, configService);
 
         this.accessRoles = [];
-        this.message = this.LANG.pleaseSelect;
+        this.message = this.LANG.pleaseSelect();
     }
 
     // TODO: Bind ngModel to the component and eliminate EventEmitter

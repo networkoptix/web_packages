@@ -9,7 +9,7 @@ from api.helpers.exceptions import (
     api_success, handle_exceptions, APINotFoundException, APIForbiddenException)
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import (Context, Asset, AssetType, get_cloud_portal_asset, AssetCustomizationReview,
-                        DataStructure, ContributerAgreement)
+                        DataStructure, ContributorAgreement)
 
 state__query_param = openapi.Parameter(
     "state", openapi.IN_QUERY,

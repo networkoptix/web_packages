@@ -1,6 +1,6 @@
 import {
     Component, Input, ViewChild,
-    ChangeDetectorRef
+    ChangeDetectorRef, ElementRef
 }                                    from '@angular/core';
 import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -12,7 +12,7 @@ import { NxSystemService }           from '../../services/system.service';
 import { NxSystemsService }          from '../../services/systems.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import StateMachine                  from './stateMachine';
-import State                         from './stateForMergeDialog';
+import { State }                     from './stateForMergeDialog';
 import { NxUtilsService }            from '../../services/utils.service';
 
 @Component({
@@ -537,7 +537,7 @@ export class MergeModalContent {
                 }
             }, (error) => {
                 // for errors that pop up during the merge
-                const errorCode = error.resultCode || (error.data?.resultCode);
+                let errorCode = error.resultCode || (error.data?.resultCode);
                 if (errorCode === 'missingPassword' || errorCode === 'wrongPassword') {
                     return;
                 }

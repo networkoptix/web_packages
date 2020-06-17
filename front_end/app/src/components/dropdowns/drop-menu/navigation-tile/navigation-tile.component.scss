@@ -1,5 +1,5 @@
+@use '../../../../styles/typography';
 @import '../../../../../styles/theme_palette';
-@import '../../../../styles/typography';
 @import '../../../../styles/mixins';
 @import "~bootstrap/scss/mixins/breakpoints";
 @import "~bootstrap/scss/functions";
@@ -37,7 +37,7 @@
 }
 
 .nav-links {
-    @extend #regular13;
+    @include typography.regular13;
     color: $dark9;
     border: 1px solid transparent;
     display: block;

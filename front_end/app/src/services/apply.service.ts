@@ -120,6 +120,7 @@ export class NxApplyService {
 
     constructor(private factoryResolver: ComponentFactoryResolver,
                 private dialogsService: NxDialogsService,
+                private processService: NxProcessService
     ) {}
 
     get locked() {

@@ -1,5 +1,5 @@
+@use '../../../../styles/typography';
 @import '../../../../../styles/theme_palette';
-@import '../../../../styles/typography';
 @import '../../../../styles/mixins';
 @import "~bootstrap/scss/mixins/breakpoints";
 @import "~bootstrap/scss/functions";
@@ -10,7 +10,7 @@
 }
 
 .additional-systems-tile {
-    @extend #regular14;
+    @include typography.regular14;
     display: flex;
     flex-direction: row;
     align-items: center;
