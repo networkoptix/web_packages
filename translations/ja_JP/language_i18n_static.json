@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "切断",
-            "message": "あなたのアカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
+            "message": "You will not be able to log into this system anymore.",
             "title": "システムを切断しますか？"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
         "passwordMismatch": "間違ったパスワード",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} には現在到達できません。数分後にもう一度お試しいただくか、サポートにお問い合わせください。",
         "thisSystem": "システム",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
@@ -433,7 +433,7 @@
         "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

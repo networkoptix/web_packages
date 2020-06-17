@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Koppla från",
-            "message": "Du håller på att koppla bort det här systemet från ditt konto. Du kommer inte längre få tillgång till det här systemet. Är du säker?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Koppla ifrån systemet?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta support.",
         "thisSystem": "systemet",
         "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
-        "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
     },
     "integration": {

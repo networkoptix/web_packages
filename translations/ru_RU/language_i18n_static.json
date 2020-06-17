@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Отключить",
-            "message": "Вы собираетесь отключить эту систему от учетной записи. Вы не сможете больше иметь доступ к этой системе. Вы уверены?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Отключить систему?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
         "wrongCodeRestore": "Код подтверждения уже используется или неверен",
         "wrongParameters": "Некоторые параметры в форме неверны",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
@@ -722,23 +722,23 @@
         },
         "messages": {
             "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "activated": "Лицензионный ключ активирован",
+            "inuse": "Лицензионный ключ уже активирован и привязан к серверу с идентификатором оборудования {{hwid}} в другой системе",
+            "trialActivated": "Активирована пробная лицензия. Начиная с сегодняшнего дня, можно записывать до 4 камер в течение 30 дней."
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
+        "additionalLocalFsTypes": "Дополнительные локальные типы файловых систем",
         "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
+        "crossdomainEnabled": "Кросс-домен",
+        "defaultExportVideoCodec": "Видео-кодек для экспорта по умолчанию",
+        "defaultVideoCodec": "Видео-кодек по умолчанию",
+        "downloaderPeers": "Пиры загрузчиков",
+        "lastMergeMasterId": "Последнее слияние masterId",
+        "lastMergeSlaveId": "Последнее слияние slaveId",
+        "ldapSearchTimeoutS": "Тайм-аут поиска LDAP (сек)",
+        "licenseServer": "Сервер лицензий",
+        "lowQualityScreenVideoCodec": "Кодек для низкого качества",
         "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
         "maxRtpRetryCount": "Max RTP retry count",
         "metadataStorageChangePolicy": "Meta data storage change policy",
@@ -814,10 +814,10 @@
         "upnpPortMappingEnabled": "Сопоставление портов UPNP включено",
         "useTextEmailFormat": "Отправка писем простым текстом",
         "useWindowsEmailLineFeed": "Использовать перевод строки Windows в Email",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
+        "trafficEncryptionForced": "Принудительное шифрование трафика",
+        "videoTrafficEncryptionForced": "Принудительное шифрование видеотрафика",
+        "updateStatus": "Статус обновления",
+        "watermarkSettings": "Настройки водяных знаков",
         "maxWebMTranscoders": "Максимальное количество WEBM-соединений для сервера. Chrome открывает сразу 2 соединения, затем закрывает первое. Поэтому рекомендуется установить значение >= 2 для этого параметра.",
         "maxEventLogRecords": "Максимальное количество записей журнала событий в базе данных. Реальное количество восстановленных записей может быть на 20% выше указанного значения.",
         "forceLiveCacheForPrimaryStream": "Кешировать ли некоторые кадры для основного потока. Значения: «да» - всегда включен (может использовать много оперативной памяти), «нет» - всегда отключен, за исключением случаев, когда это требуется для воспроизведения (например, HLS), «авто» - аналогично «нет», но включается для удобства использования (например, когда какой-то плагин аналитики работает на камере).",
