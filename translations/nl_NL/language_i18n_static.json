@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Verbinding verbreken",
-            "message": "U staat op het punt om dit systeem uit uw account te verbreken. U kunt dit systeem niet meer gebruiken. Weet u het zeker?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Systeem loskoppelen?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale wederverkoper.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {

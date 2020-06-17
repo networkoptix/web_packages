@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Katkaise yhteys",
-            "message": "Olet poistamassa tämän järjestelmän tilistäsi. Et voi enää käyttää tätä järjestelmää. Oletko varma?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Katkaise yhteys järjestelmään?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",
         "wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
         "wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

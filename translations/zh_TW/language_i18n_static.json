@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "斷線",
-            "message": "正要從您的帳號中斷此系統. 您將再也無法存取. 是否確定?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "是否中斷系統?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "目前密碼不正確.",
         "oldSafariNotSupported": "不支持10歲以上的Safari版本",
         "passwordMismatch": "密碼不正確",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "目前無法連上{{failedSystem}} 。請稍後再試一次或與支援人員聯繫.",
         "thisSystem": "系統",
         "unknownError": "發生未知錯誤",
         "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -433,7 +433,7 @@
         "wrongCode": "帳號已經啟用或確認碼不正確",
         "wrongCodeRestore": "確認代碼已使用或不正確",
         "wrongParameters": "表單上的一些參數不正確",
-        "licenseFail": "無法啟用授權。請重試或聯繫客服。",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
     },
     "integration": {

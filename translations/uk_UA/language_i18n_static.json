@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Відключити",
-            "message": "Ви збираєтеся відключити цю систему від свого облікового запису. Ви більше не зможете отримати доступ до цієї системи. Ти впевнений?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Відключити систему?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
         "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
         "wrongParameters": "Деякі параметри у формі невірні",
-        "licenseFail": "Не вдалося активувати ліцензію. Повторіть спробу або зв’яжіться зі службою підтримки клієнтів.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Не вдається підключитися до {{cloudName}}, перевірте підключення до мережі."
     },
     "integration": {

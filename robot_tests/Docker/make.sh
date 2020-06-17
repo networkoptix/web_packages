@@ -21,7 +21,6 @@ function stage ()
 
 	mkdir -p stage/mediaserver stage/var/log
 	#Recursive and hardlink instead of copy. f is force
-    cp -Rlf build/opt/networkoptix/mediaserver/bin/{mediaserver-bin,mediaserver}
     cp -Rl build/opt/networkoptix/mediaserver/{bin,lib,plugins} stage/mediaserver
     
 

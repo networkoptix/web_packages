@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "断开连接",
-            "message": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
+            "message": "You will not be able to log into this system anymore.",
             "title": "断开系统吗？"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "当前密码不正确.",
         "oldSafariNotSupported": "不支持10岁以上的Safari版本",
         "passwordMismatch": "错误的密码。",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "当前无法访问{{failedSystem}} 。请在几分钟后重试或与支持人员联系。",
         "thisSystem": "系统",
         "unknownError": "发生意外错误",
         "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
@@ -433,7 +433,7 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "licenseFail": "无法激活授权。请重试或联系客服。",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。"
     },
     "integration": {
@@ -714,7 +714,7 @@
             "analog": "类比",
             "edge": "Edge",
             "vmax": "VMAX",
-            "videowall": "电视墙",
+            "videowall": "大屏",
             "analogencoder": "类比",
             "starter": "Starter",
             "iomodule": "I/O模块",

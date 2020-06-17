@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "연결 끊기",
-            "message": "이 시스템을 당신의 계정과의 연결을 해제하려고합니다. 더 이상이 시스템에 액세스 할 수 없습니다. 확실합니까?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "시스템 연결을 끊으시겠습니까?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "계정이 이미 활성화되었거나 확인 코드가 잘못되었습니다.",
         "wrongCodeRestore": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
         "wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다.",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

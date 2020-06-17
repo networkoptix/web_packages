@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "נתק",
-            "message": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "נתק מערכת?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
         "oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",
         "passwordMismatch": "סיסמא שגויה",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} אינו ניתן להשגה כרגע. נסה שוב בעוד מספר דקות או צור קשר עם התמיכה.",
         "thisSystem": "המערכת",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
         "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
         "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
-        "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
