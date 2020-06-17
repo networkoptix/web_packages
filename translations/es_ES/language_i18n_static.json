@@ -820,7 +820,6 @@
         "watermarkSettings": "Configuraciones de marca de agua",
         "maxWebMTranscoders": "Cantidad máxima de conexiones WEBM para el servidor. Chrome abre 2 conexiones a la vez, luego cierra la primera. Por lo tanto, se recomienda fijar el valor >=2 a este parámetro.",
         "maxEventLogRecords": "Máximo registro de eventos para mantener en la base de datos. La cantidad real de registros no eliminados puede ser hasta un 20% más alta que el valor especificado.",
-        "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Si se deben almacenar en caché algunos fotogramas para la secuencia principal. Valores: \"sí\" - siempre habilitado (puede usar mucha RAM), \"no\" - siempre deshabilitado excepto cuando lo requiere la reproducción (por ejemplo, HLS), \"auto\" - similar a \"no\", pero se enciende cuando mejora experiencia del usuario (p. ej., cuando algún complemento de Analytics funciona en la cámara)."
     }
 }

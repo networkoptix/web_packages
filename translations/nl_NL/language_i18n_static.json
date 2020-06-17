@@ -820,7 +820,6 @@
         "watermarkSettings": "Watermerk instellingen",
         "maxWebMTranscoders": "Maximale hoeveelheid WEBM verbindingen voor de server. Chrome opent 2 verbindingen tegelijk en sluit de eerste. Dus, wordt aangeraden om de waarde >=2 in te stellen op deze parameter.",
         "maxEventLogRecords": "Maximaal aantal records in het gebeurtenislogboek om in de het logbestand te bewaren. Het werkelijke aantal niet-verwijderde records kan tot 20% hoger zijn dan de opgegeven waarde.",
-        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"yes\" - altijd ingeschakeld (kan veel RAM gebruiken), \"no\" - altijd uitgeschakeld behalve wanneer vereist voor het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"no\", maar ingeschakeld wanneer de gebruikerservaring te verbeteren (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Of u sommige frames in de cache wilt opslaan voor de primaire stream. Waarden: \"yes\" - altijd ingeschakeld (kan veel RAM gebruiken), \"no\" - altijd uitgeschakeld behalve wanneer vereist voor het afspelen (bijv. HLS), \"auto\" - vergelijkbaar met \"no\", maar ingeschakeld wanneer de gebruikerservaring te verbeteren (bijvoorbeeld wanneer een bepaalde Analytics-plug-in op de camera werkt)."
     }
 }

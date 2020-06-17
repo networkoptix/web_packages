@@ -820,7 +820,6 @@
         "watermarkSettings": "Vízjel beállítások",
         "maxWebMTranscoders": "A WEBM kapcsolatok maximális száma a szerveren. A Chrome egyszerre 2 kapcsolatot nyit meg, majd bezárja az elsőt. Tehát javasoljuk, hogy ezen a paraméternél állítson be >= 2 értéket.",
         "maxEventLogRecords": "Az adatbázisban tárolható maximális eseménynapló-nyilvántartások. A nem törölt rekordok valódi mennyisége akár 20% -kal is magasabb lehet, mint a megadott érték.",
-        "forceLiveCacheForPrimaryStream": "Az elsődleges stream képkockáinak gyorsítótárazása. Értékek: \"igen\" - mindig engedélyezve (sok RAM-ot használhat), \"nem\" - mindig letiltva, kivéve, ha a lejátszás megköveteli (pl. HLS), \"auto\" - hasonlóan a \"nem\" -hez, de bekapcsolva, amikor javítja a felhasználói élmény (pl. amikor egy Analytics plugin működik a kamerán).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Az elsődleges stream képkockáinak gyorsítótárazása. Értékek: \"igen\" - mindig engedélyezve (sok RAM-ot használhat), \"nem\" - mindig letiltva, kivéve, ha a lejátszás megköveteli (pl. HLS), \"auto\" - hasonlóan a \"nem\" -hez, de bekapcsolva, amikor javítja a felhasználói élmény (pl. amikor egy Analytics plugin működik a kamerán)."
     }
 }

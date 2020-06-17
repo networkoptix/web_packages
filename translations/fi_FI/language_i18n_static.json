@@ -820,7 +820,6 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Palvelimen WEBM-yhteyksien enimmäismäärä. Chrome avaa 2 yhteyttä yhdellä kertaa ja sulkee sitten ensimmäisen. Niinpä on suositeltavaa asettaa arvo> = 2 tähän parametriin.",
         "maxEventLogRecords": "Tapahtumalokitietueiden maksimimäärä tietokannassa. Palautettujen tietueiden todellinen määrä voi olla jopa 20% korkeampi kuin määritetty arvo.",
-        "forceLiveCacheForPrimaryStream": "Onko välimuistissa joitakin kuvia ensisijaiselle streamille. Arvot: \"kyllä\" - aina käytössä (voi käyttää paljon RAM-muistia), \"ei\" - aina pois käytöstä, paitsi jos toisto vaatii (esim. HLS), \"auto\" - samanlainen kuin \"ei\", mutta on päällä, kun se parantaa käyttökokemusta (esim. kun jokin Analytics-laajennus toimii kamerassa).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Onko välimuistissa joitakin kuvia ensisijaiselle streamille. Arvot: \"kyllä\" - aina käytössä (voi käyttää paljon RAM-muistia), \"ei\" - aina pois käytöstä, paitsi jos toisto vaatii (esim. HLS), \"auto\" - samanlainen kuin \"ei\", mutta on päällä, kun se parantaa käyttökokemusta (esim. kun jokin Analytics-laajennus toimii kamerassa)."
     }
 }

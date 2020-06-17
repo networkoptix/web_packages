@@ -820,7 +820,6 @@
         "watermarkSettings": "Watermark settings",
         "maxWebMTranscoders": "Maximální počet připojení WEBM pro server. Chrome otevře 2 připojení najednou a uzavře první. Proto se doporučuje nastavit hodnotu > = 2 na tento parametr.",
         "maxEventLogRecords": "Maximální záznamy protokolu událostí, které lze uložit do databáze. Skutečné množství nevymazaných záznamů může být až o 20% vyšší než zadaná hodnota.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
     }
 }
