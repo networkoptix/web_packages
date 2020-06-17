@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Desconectar",
-            "message": "Está a punto de desconectar este sistema de su cuenta. Usted no podrá acceder a este sistema ya. ¿Está seguro?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Desconectar el Sistema?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "La contraseña actual es incorrecta.",
         "oldSafariNotSupported": "Las versiones de Safari anteriores a 10 no son compatibles",
         "passwordMismatch": "Contraseña incorrecta",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o ponte en contacto con el servicio de asistencia.",
         "thisSystem": "el sistema",
         "unknownError": "Error inesperado",
         "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -433,7 +433,7 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
-        "licenseFail": "Error al activar la licencia. Por favor, inténtelo de nuevo o póngase en contacto con el servicio de soporte al cliente.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {

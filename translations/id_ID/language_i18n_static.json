@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Disconnect",
-            "message": "Anda akan memutuskan Sistem ini dari akun Anda. Anda tidak akan dapat mengakses Sistem ini lagi. Apakah kamu yakin?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Disconnect System?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "Account is already activated or confirmation code is incorrect",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

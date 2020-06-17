@@ -139,9 +139,8 @@
         let screen = window.screen;
         let windowScale = 0.75;
         let dim = `width=${Math.floor(screen.availWidth * windowScale)},height=${Math.floor(screen.availHeight * windowScale)}`;
-        let win = window.open('', '', `_blank,${dim}`);
+        let win = window.open('{{ preview_link | safe }}', '', `_blank,${dim}`);
         win.opener = null;
-        win.location = "{{ preview_link | safe }}";
     }
 
     {% if preview_link %}

@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Bağlantıyı kes",
-            "message": "Hesabınızın bu sistemle bağlantısını kesmek üzeresiniz. Bundan sonra bu sisteme erişim sağlayamayacaksınız. Emin misiniz?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "Sistemle bağlantıyı kes?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Mevcut şifre hatalı.",
         "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
         "passwordMismatch": "Hatalı parola",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} şu anda ulaşılamıyor. Birkaç dakika içinde tekrar deneyin veya desteğe başvurun.",
         "thisSystem": "sistem",
         "unknownError": "Beklenmedik bir hata oluştu",
         "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun.",
@@ -433,7 +433,7 @@
         "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
         "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
         "wrongParameters": "Formdaki bazı parametreler yanlış",
-        "licenseFail": "Bu işlem tamamlanamadı. Lütfen tekrar deneyin veya Müşteri Desteği birimiyle iletişime geçin.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "{{cloudName}} bağlanılamıyor, lütfen ağ bağlantınızı kontrol edin."
     },
     "integration": {

@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "ตัดการเชื่อมต่อ",
-            "message": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
+            "message": "You will not be able to log into this system anymore.",
             "title": "ยกเลิกการเชื่อมต่อระบบหรือไม่?"
         },
         "titles": {
@@ -433,7 +433,7 @@
         "wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
         "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
         "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

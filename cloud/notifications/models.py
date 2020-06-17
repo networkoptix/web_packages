@@ -8,8 +8,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MaxLengthValidator
 from django.db.models import Q
 from model_utils import Choices
-from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS
-from push_notifications.models import GCMDevice
+from push_notifications.gcm import FCM_NOTIFICATIONS_PAYLOAD_KEYS, FCM_OPTIONS_KEYS, GCMError
+from push_notifications.models import GCMDevice, GCMDeviceQuerySet
 from rest_framework import serializers
 from cms.models import Customization, Asset, DataStructure
 from api.models import Account
@@ -20,7 +20,7 @@ FCM_OPTIONS_KEYS.append('mutable_content')
 
 # When cloudportal is ran locally it uses amqp by default. BROKER_TRANSPORT_OPTIONS is related to sqs.
 # This allows cloud notifications to run locally without changing settings to use sqs.
-USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "BROKER_TRANSPORT_OPTIONS")
+USE_SQS_FOR_CLOUD_NOTIFICATIONS = hasattr(settings, "CELERY_BROKER_TRANSPORT_OPTIONS")
 
 RELAY_GUID_PATTERN = re.compile('([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(/)')
 
@@ -219,6 +219,19 @@ class PushSubscription(models.Model):
         return f'{self.SUB_TYPES[self.type]} - {self.system_id}'
 
 
+class PushDeviceQuerySet(GCMDeviceQuerySet):
+    def send_message(self, message, **kwargs):
+        try:
+            super().send_message(message, **kwargs)
+        except GCMError as gcm_error:
+            return gcm_error.args[0],
+
+
+class PushDeviceManager(models.Manager):
+    def get_queryset(self):
+        return PushDeviceQuerySet(self.model)
+
+
 class PushDevice(GCMDevice):
     OS = Choices((0, 'web', 'Web'),
                  (1, 'android', 'Android'),
@@ -229,6 +242,14 @@ class PushDevice(GCMDevice):
     subscriptions = models.ManyToManyField(PushSubscription)
     os = models.IntegerField(choices=OS, default=OS.web)
     type = models.IntegerField(choices=TYPES, default=TYPES.notification)
+
+    objects = PushDeviceManager()
+
+    def send_message(self, *args, **kwargs):
+        try:
+            return super().send_message(*args, **kwargs)
+        except GCMError as gcm_error:
+            return gcm_error.args[0]
 
     def __str__(self):
         return self.name or 'Unnamed Device'
@@ -249,6 +270,7 @@ class PushNotification(models.Model):
     raw_targets = models.TextField(null=True)
     result_data = models.TextField(null=True, blank=True)
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
+    count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title or 'Untitled Notification'
@@ -270,11 +292,11 @@ class PushNotification(models.Model):
             url = url.replace(system_id, relay_host)
         return url
 
-    def send_notifications(self, device_tokens=None):
+    def send_notifications(self, device_tokens=None, devices=None):
         if device_tokens:
-            devices = PushDevice.objects.filter(registration_id__in=device_tokens)
-        else:
-            devices = self.devices.all()
+            devices = PushDevice.objects.filter(id__in=device_tokens)
+        # else:
+        #     devices = self.devices.all()
 
         title = self.title or None
         body = self.body or None
@@ -290,8 +312,10 @@ class PushNotification(models.Model):
         data_devices = devices.filter(type=PushDevice.TYPES.data)
 
         notification_response = notification_devices.send_message(body, title=title, extra=payload, **options)
+
         payload['caption'] = title or ''
         payload['description'] = body or ''
+
         data_response = data_devices.send_message(None, title=None, extra=payload, **options)
 
         return notification_response, data_response

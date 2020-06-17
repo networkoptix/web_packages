@@ -1,5 +1,5 @@
 <div class="container">
-    <ng-container *ngIf="title || body">
+    <ng-container *ngIf="title || body; else dynamicTemplate">
         <h1 set-title>{{ title }}</h1>
         <div class="card">
             <div class="card-body"
@@ -7,7 +7,7 @@
             </div>
         </div>
     </ng-container>
-    <ng-container #dynamicTemplate></ng-container>
+    <ng-template #dynamicTemplate><div [innerHTML]="staticHTML"></div></ng-template>
     <nx-process-button *ngIf="showAgree"
                        customClass="mt-3"
                        actionType="primary"

@@ -52,7 +52,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
         elif show_drafts:
             state = 'draft'
 
-        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True)
+        global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
         global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
 
         for integration in integrations:
@@ -145,6 +145,9 @@ def check_integration_store_enabled():
 def get_integration(request, asset_id=None):
     draft = "draft" in request.GET
     review = "pending" in request.GET
+    is_enabled = check_integration_store_enabled()
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
+
     if not asset_id:
         return api_success("Integration not found.", status_code=status.HTTP_404_NOT_FOUND)
 
@@ -168,6 +171,9 @@ def get_integration(request, asset_id=None):
                     check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
                 return api_success(f"You do not have permission to view this review.",
                                    status_code=status.HTTP_403_FORBIDDEN)
+    elif not (is_enabled or has_beta_access):
+        return api_success(f"You do not have permission to view this integration.",
+                           status_code=status.HTTP_403_FORBIDDEN)
 
     return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft, user=request.user))
 
@@ -212,8 +218,10 @@ def get_integrations(request):
     # if is_enabled:
     #     integration_list.extend(make_integrations_json(integrations, user=request.user))
 
-    is_portal_manager = UserGroupsToAssetPermissions. \
-                check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+    is_portal_manager = UserGroupsToAssetPermissions.\
+        check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version')
+
+    has_beta_access = UserGroupsToAssetPermissions.user_has_beta_access(request.user)
     own_integrations = []
 
     if not request.user.is_anonymous:
@@ -232,7 +240,7 @@ def get_integrations(request):
         if review_integrations:
             integration_list.extend(make_integrations_json(review_integrations, user=request.user, show_pending=True))
 
-    if is_enabled or is_portal_manager:
+    if is_enabled or is_portal_manager or has_beta_access:
         integration_list.extend(make_integrations_json(integrations, user=request.user))
     else:
         integration_list.extend(make_integrations_json(own_integrations, user=request.user))
