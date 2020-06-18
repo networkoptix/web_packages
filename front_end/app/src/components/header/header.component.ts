@@ -288,25 +288,25 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     .then(account => {
                         this.renderer.removeClass(document.body, 'loading');
 
-                    if (account) {
-                        this.dropdownsVisible = true;
-                        this.loginState = true;
-                        this.renderer.removeClass(document.body, 'anonymous');
-                        this.renderer.addClass(document.body, 'authorized');
-                        if (!this.CONFIG.isLocal) {
-                            this.systemsService.getSystem(account.email);
-                            this.systemsService
-                                .forceUpdateSystems(loginState)
-                                .toPromise()
-                                .then(() => this.updateActive());
+                        if (account) {
+                            this.dropdownsVisible = true;
+                            this.loginState = true;
+                            this.renderer.removeClass(document.body, 'anonymous');
+                            this.renderer.addClass(document.body, 'authorized');
+                            if (!this.CONFIG.isLocal) {
+                                this.systemsService.getSystem(account.email);
+                                this.systemsService
+                                    .forceUpdateSystems(loginState)
+                                    .toPromise()
+                                    .then(() => this.updateActive());
+                            }
+                        } else {
+                            this.loginState = false;
+                            this.renderer.removeClass(document.body, 'authorized');
+                            this.renderer.addClass(document.body, 'anonymous');
                         }
-                    } else {
-                        this.loginState = false;
-                        this.renderer.removeClass(document.body, 'authorized');
-                        this.renderer.addClass(document.body, 'anonymous');
-                    }
-                });
-        });
+                    });
+            });
 
         this.systemSubscription = this.systemsService.systemsSubject.pipe(takeUntil(this.unsub$)).subscribe((systems) => {
             if (!systems) {

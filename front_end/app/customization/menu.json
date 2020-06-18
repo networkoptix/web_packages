@@ -1,0 +1,216 @@
+[
+  {
+    "name": "Header",
+    "depth": 2,
+    "nodes": [
+      {
+        "name": "For Developers",
+        "display_name": "For Developers",
+        "url": "",
+        "new_window": false,
+        "icon": "",
+        "authentication": "both",
+        "order": 0,
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Developer Tools",
+            "display_name": "Developer Tools",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 0,
+            "enabled": true
+          },
+          {
+            "name": "Developers Support",
+            "display_name": "Developers Support",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 1,
+            "enabled": true
+          },
+          {
+            "name": "API Documentation",
+            "display_name": "API Documentation",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 2,
+            "enabled": true
+          },
+          {
+            "name": "Submit an Integration",
+            "display_name": "Submit an Integration",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 3,
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "name": "Services",
+        "display_name": "Services",
+        "url": "",
+        "new_window": false,
+        "icon": "",
+        "authentication": "both",
+        "order": 1,
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Downloads",
+            "display_name": "Downloads",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 0,
+            "enabled": true
+          },
+          {
+            "name": "Supported Devices",
+            "display_name": "Supported Devices",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 2,
+            "enabled": true
+          }
+        ]
+      },
+      {
+        "name": "External Links",
+        "display_name": "External Links",
+        "url": "",
+        "new_window": false,
+        "icon": "",
+        "authentication": "both",
+        "order": 2,
+        "enabled": true,
+        "nodes": [
+          {
+            "name": "Hardware Calculator",
+            "display_name": "Hardware Calculator",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 0,
+            "enabled": true
+          },
+          {
+            "name": "Support",
+            "display_name": "Support",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 1,
+            "enabled": true
+          },
+          {
+            "name": "Terms",
+            "display_name": "Terms",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 2,
+            "enabled": false
+          },
+          {
+            "name": "Privacy Policy",
+            "display_name": "Privacy Policy",
+            "url": "",
+            "new_window": false,
+            "icon": "",
+            "authentication": "both",
+            "order": 3,
+            "enabled": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Footer",
+    "depth": 1,
+    "nodes": [
+      {
+        "name": "About %CLOUD_NAME%",
+        "url": "/content/about",
+        "new_window": false,
+        "enabled": true,
+        "order": 1,
+        "authentication": "both"
+      },
+      {
+        "name": "Download %VMS_NAME%",
+        "url": "/download",
+        "new_window": false,
+        "enabled": true,
+        "order": 2,
+        "authentication": "both"
+      },
+      {
+        "name": "Integrations",
+        "url": "/integrations",
+        "new_window": false,
+        "enabled": true,
+        "condition": "%INTEGRATION_STORE_ENABLED%",
+        "order": 3,
+        "authentication": "both"
+      },
+      {
+        "name": "For developers",
+        "url": "https://support.networkoptix.com/hc/en-us/categories/360000737654-Develop-with-Nx-Meta",
+        "new_window": true,
+        "enabled": true,
+        "order": 4,
+        "authentication": "both"
+      },
+      {
+        "name": "Support",
+        "url": "%SUPPORT_LINK%",
+        "new_window": true,
+        "enabled": true,
+        "order": 5,
+        "authentication": "both"
+      },
+      {
+        "name": "Terms",
+        "url": "/content/eula",
+        "new_window": false,
+        "enabled": true,
+        "order": 6,
+        "authentication": "both"
+      },
+      {
+        "name": "Privacy",
+        "url": "%PRIVACY_LINK%",
+        "new_window": true,
+        "enabled": true,
+        "order": 7,
+        "authentication": "both"
+      },
+      {
+        "name": "Supported Devices",
+        "url": "/ipvd",
+        "new_window": false,
+        "condition": "%IPVD_ENABLED%",
+        "enabled": true,
+        "order": 8,
+        "authentication": "both"
+      }
+    ]
+  }
+]

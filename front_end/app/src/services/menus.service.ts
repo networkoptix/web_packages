@@ -3,7 +3,7 @@ import { Inject, Injectable, OnDestroy } from '@angular/core';
 import { WINDOW } from './window-provider';
 import { IConfig, NxConfigService } from './nx-config';
 import { MenuStructure } from './nx-config/base-config';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, from } from 'rxjs';
 import { MenuNode } from '../components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { LanguageI18NStaticTypes } from '../../language_i18n_static_types';
 import { NxLanguageProviderService } from './nx-language-provider';
@@ -57,8 +57,11 @@ export class NxMenusService implements OnDestroy {
         if (withCurrentSystem && this.currentSystemNode$.value) {
             menu = [this.currentSystemNode$.value, ...menu];
         };
+        if (this.CONFIG.isLocal) {
+            return from([menu]);
+        }
         return this.sessionService.loginStateSubject
-            .pipe(map(login => this.filterMenu(menu, login ? Auth.LOGGED_IN : Auth.LOGGED_OUT)));
+            .pipe(map(login => this.filterMenu(menu, login || this.CONFIG.isLocal ? Auth.LOGGED_IN : Auth.LOGGED_OUT)));
     }
 
     filterMenu = (menu: MenuNode[], auth: Auth) => {

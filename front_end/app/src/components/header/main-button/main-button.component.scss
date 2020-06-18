@@ -1,7 +1,8 @@
-@import "../../../../styles/theme_variables";
+@use "../../../../styles/theme_variables" as *;
 
 .main-button {
     margin-right: 26px;
+    margin-top: 0 !important;
     position: relative;
     &.hide-arrow {
         &::after {
