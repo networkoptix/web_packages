@@ -7,7 +7,7 @@
 		"newPasswordLabel": "Новый пароль",
 		"saveChanges": "Сохранить",
 		"accountSettings": "Настройки учетной записи",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "Соглашение было принято"
 	},
 	"activeActions": {
 		"sendConfirm": "Отправить ссылку еще раз",
@@ -192,7 +192,7 @@
 		"debug": "Отладка",
 		"login": "Войти",
 		"download": "Скачать %VMS_NAME%",
-		"downloadPlatform": "Download %VMS_NAME% for ",
+		"downloadPlatform": "Скачать %VMS_NAME% для ",
 		"pageNotFound": "Страница не найдена",
 		"supportedDevices": "Поддерживаемые устройства",
 		"integrations": "Интеграции"
@@ -208,7 +208,7 @@
 		"logoutAuthorisedTitle": "Вы уже выполнили вход",
 		"logoutAuthorisedContinueButton": "Продолжить",
 		"logoutAuthorisedLogoutButton": "Выход",
-		"noClientDetectedTitle": "Install %VMS_NAME% to view your System",
+		"noClientDetectedTitle": "Установите %VMS_NAME% для просмотра вашей системы",
 		"stayAs": "Оставаться зарегистрированным как {email} ",
 		"stayLoggedIn": "Оставаться в системе",
 		"download": "Скачать %VMS_NAME%",
@@ -321,7 +321,7 @@
 		"unavailable": "Система недоступна",
 		"offline": "Система не в сети",
 		"offlineAlertRibbon": "Система не в сети. Некоторые настройки могут быть недоступны.",
-		"openClient": "Open in %VMS_NAME%",
+		"openClient": "Открыть в %VMS_NAME%",
 		"openClientNoSystem": "Открыть %VMS_NAME%",
 		"confirmMergeAction": "Объединить",
 		"mergeSystemTitle": "Объединить системы",
@@ -498,7 +498,7 @@
 	"WHEN_MERGE_FINISHES": "После завершения объединения все пользователи и камеры из этой системы станут доступны в <strong>{{targetSystemName}}</strong>, а эта система будет удалена.",
 	"FAILED_SYSTEM_DESCR": "Эта ссылка не работает,<br>Система могла быть отключена от %CLOUD_NAME%,<br>доступ к этой системе мог быть отозван, <br>или вы вошли под другой учетной записью.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "У вас нет систем, подключенных к %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "Войдите в систему с помощью %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Перейдите на вкладку \"Облако\" в окне \"Системное администрирование\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Нажмите «Подключить систему к %CLOUD_NAME%",
 	"topXByVolume": "Топ {{value}} по объему:",

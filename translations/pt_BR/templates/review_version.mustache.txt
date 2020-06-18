@@ -2,9 +2,9 @@ Há uma nova versão para {{ message.asset }}({{message.asset_type}}) para revis
 
 Clique no link para revisar o rascunho {{ message.id }} para {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link para revisão: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
-Nesta página pode
+Nesta página você pode
 1) Criar uma pré-visualização para ver as alterações mais recentes.
 2) Publicar esta versão que irá atualizar todo o conteúdo.
 3) Editar os contextos clicando no botão de edição de gravação. Para ver estar alterações, precisará criar uma nova versão.
