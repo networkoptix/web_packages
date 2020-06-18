@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Rozłącz",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Nie będziesz już mógł zalogować się do tego systemu.",
             "title": "Odłączyć system?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
         "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
         "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Nie można połączyć się z {{cloudName}}, proszę sprawdzić połączenie sieciowe."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Proszę wybrać...",
     "privacyPolicy": {
-        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od {{INTEGRATION_COMPANY}} i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy {{INTEGRATION_COMPANY}} znajdziesz <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Ustawienia znaku wodnego",
         "maxWebMTranscoders": "Maksymalna liczba połączeń WEBM do serwera. Chrome jednocześnie otwiera 2 połączenia, a następnie zamyka pierwsze z nich, dlatego zaleca się ustawienie wartości >= 2.",
         "maxEventLogRecords": "Maksymalna liczba wpisów do dziennika zdarzeń przechowywanego w bazie danych. Rzeczywista ilość rekordów może być nawet o 20% wyższa niż podana wartość.",
-        "forceLiveCacheForPrimaryStream": "Czy buforować niektóre ramki dla strumienia głównego. Wartości: „tak” - zawsze włączone (może zużywać dużo pamięci RAM), „nie” - zawsze wyłączone, chyba że wymaga tego odtwarzanie (np. HLS), „auto” - podobne do „nie”, ale włączone, gdy poprawia to wrażenia użytkownika (np. w niektórych wtyczkach analizy wideo).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Czy buforować niektóre ramki dla strumienia głównego. Wartości: „tak” - zawsze włączone (może zużywać dużo pamięci RAM), „nie” - zawsze wyłączone, chyba że wymaga tego odtwarzanie (np. HLS), „auto” - podobne do „nie”, ale włączone, gdy poprawia to wrażenia użytkownika (np. w niektórych wtyczkach analizy wideo)."
     }
 }

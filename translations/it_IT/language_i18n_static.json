@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Scollegamento",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Non sarai più in grado di accedere a questo Sistema.",
             "title": "Scollegare il sistema?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "L'account è già attivato o il codice di conferma non è corretto",
         "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Selezionare...",
     "privacyPolicy": {
-        "integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Impostazioni del watermark",
         "maxWebMTranscoders": "Quantità massima di connessioni WEBM per il server. Chrome apre due connessioni contemporaneamente, quindi chiude la prima. Pertanto, si consiglia di impostare il valore> = 2 su questo parametro.",
         "maxEventLogRecords": "Numero massimo di record del registro degli eventi da conservare nel database. La quantità reale di record non eliminati può essere maggiore del 20% rispetto al valore specificato.",
-        "forceLiveCacheForPrimaryStream": "Indica se memorizzare nella cache alcuni frame per lo stream principale. Valori: \"sì\" - sempre abilitato (può utilizzare molta RAM), \"no\" - sempre disabilitato tranne quando richiesto dalla riproduzione (ad es. HLS), \"auto\" - simile a \"no\", ma attivo quando si migliora l'esperienza dell'utente (ad esempio quando alcuni plug-in di Analytics funzionano sulla telecamera).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Indica se memorizzare nella cache alcuni frame per lo stream principale. Valori: \"sì\" - sempre abilitato (può utilizzare molta RAM), \"no\" - sempre disabilitato tranne quando richiesto dalla riproduzione (ad es. HLS), \"auto\" - simile a \"no\", ma attivo quando si migliora l'esperienza dell'utente (ad esempio quando alcuni plug-in di Analytics funzionano sulla telecamera)."
     }
 }

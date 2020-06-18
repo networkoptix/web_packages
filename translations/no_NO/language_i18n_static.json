@@ -433,7 +433,9 @@
         "wrongCode": "Kontoen er allerede aktivert eller bekreftelseskoden er feil",
         "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
         "wrongParameters": "Noen parametere på skjemaet er feil",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Kan ikke koble til {{cloudName}}, sjekk nettverkstilkoblingen din."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
-        "integration": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av {{INTEGRATION_COMPANY}} og/eller %COMPANY_NAME%.\nDu finner {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a> og %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inneholder instruksjoner om hvordan du kan trekke tilbake ditt samtykke.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Vannmerkeinnstillinger",
         "maxWebMTranscoders": "Maks antall WEBM-tilkoblinger for serveren. Chrome åpner to tilkoblinger samtidig, og lukk deretter den første. Så det anbefales å sette verdi> = 2 til denne parameteren.",
         "maxEventLogRecords": "Maksimal hendelsesloggoppføringer for å oppbevare i databasen. Den reelle mengden ubemerkede poster kan være opptil 20% høyere enn den spesifiserte verdien.",
-        "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Hvorvidt du skal buffer noen rammer for primærstrømmen. Verdier: \"ja\" - alltid aktivert (kan bruke mye RAM), \"nei\" - alltid deaktivert, bortsett fra når det kreves av avspillingen (f.eks. HLS), \"auto\" - lik \"nei\", men slått på når forbedring av brukeropplevelse (f.eks. når noen Analytics-plugin fungerer på kameraet)."
     }
 }

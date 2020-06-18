@@ -433,7 +433,9 @@
         "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
         "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
         "wrongParameters": "Деякі параметри у формі невірні",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Не вдається підключитися до {{cloudName}}, перевірте підключення до мережі."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Будь ласка виберіть...",
     "privacyPolicy": {
-        "integration": "Надіславши цю форму, ви погоджуєтеся зв'язатися з {{INTEGRATION_COMPANY}} та / або %COMPANY_NAME%.\nВи знайдете {{INTEGRATION_COMPANY}} Політику конфіденційності <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">тут</a> і %COMPANY_NAME% Політика конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> які містять інструкцію про те, як зняти вашу згоду.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Надсилаючи цю форму, ви погоджуєтесь зв'язатися з нами %COMPANY_NAME%.\nВи знайдете %COMPANY_NAME% політику конфіденційності <a href=\"%PRIVACY_LINK%\" target=\"_blank\">тут</a> яка містить інструкцію про те, як скасувати вашу згоду."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Налаштування водяного знака",
         "maxWebMTranscoders": "Максимальна кількість WEBM-з'єднань для сервера. Chrome одночасно відкриває 2 з'єднання, потім закриває перше. Отже, рекомендується встановити значення> = 2 для цього параметра.",
         "maxEventLogRecords": "Максимум запису журналу подій для зберігання в базі даних. Реальний обсяг відновлених записів може становити до 20% вище вказаного значення.",
-        "forceLiveCacheForPrimaryStream": "Чи потрібно кешувати деякі кадри для первинного потоку. Значення: \"так\" - завжди включений (може використовувати багато оперативної пам'яті), \"ні\" - завжди вимикається, за винятком випадків, коли це вимагається відтворенням (наприклад, HLS), \"авто\" - схожена \"ні\", але увімкнено, коли покращується користувальницький досвід (наприклад, коли деякий плагін Analytics працює на камері).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Чи потрібно кешувати деякі кадри для первинного потоку. Значення: \"так\" - завжди включений (може використовувати багато оперативної пам'яті), \"ні\" - завжди вимикається, за винятком випадків, коли це вимагається відтворенням (наприклад, HLS), \"авто\" - схожена \"ні\", але увімкнено, коли покращується користувальницький досвід (наприклад, коли деякий плагін Analytics працює на камері)."
     }
 }

@@ -433,7 +433,9 @@
         "wrongCode": "帳號已經啟用或確認碼不正確",
         "wrongCodeRestore": "確認代碼已使用或不正確",
         "wrongParameters": "表單上的一些參數不正確",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "請選擇...",
     "privacyPolicy": {
-        "integration": "提交表單即同意{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">瀏覽 {{INTEGRATION_COMPANY}} 隱私政策, 這裡</a> 和 %COMPANY_NAME% 的隱私政策 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">這裡</a> 可了解如何撤回您的同意。",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "提交表單即同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "浮水印設定",
         "maxWebMTranscoders": "伺服器最大的WEBM連線數。Chrome會立刻開啟2個連接，然後關閉第一個連接。因此建議將參數值設定為> = 2。",
         "maxEventLogRecords": "要保留最多筆在資料庫中的事件日誌記錄。實際未刪除記錄的數量可能比預定高出20％。",
-        "forceLiveCacheForPrimaryStream": "是否為主串流緩存一些幀數。數值：“是” - 一直啟用（可能占用大量RAM），“否” - 一直停用，除非回放需要（例如HLS），“自動” - 類似於“否”，但會在開啟時改進使用者體驗（例如當某些分析插件在攝影機上作用時）。",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "是否為主串流緩存一些幀數。數值：“是” - 一直啟用（可能占用大量RAM），“否” - 一直停用，除非回放需要（例如HLS），“自動” - 類似於“否”，但會在開啟時改進使用者體驗（例如當某些分析插件在攝影機上作用時）。"
     }
 }

@@ -433,7 +433,9 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Vui lòng chọn...",
     "privacyPolicy": {
-        "integration": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng {{INTEGRATION_COMPANY}} và / hoặc %COMPANY_NAME%.\nBạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách quyền riêng tư <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ở đây</a> và %COMPANY_NAME% chính sách bảo mật <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách quyền riêng tư <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Cài đặt hình mờ",
         "maxWebMTranscoders": "Số lượng kết nối WEBM tối đa cho máy chủ. Chrome mở 2 kết nối cùng một lúc, sau đó đóng kết nối đầu tiên. Vì vậy, nên đặt giá trị> = 2 cho tham số này.",
         "maxEventLogRecords": "Bản ghi nhật ký sự kiện tối đa để giữ vào cơ sở dữ liệu. Số lượng thực của các bản ghi chưa được xóa có thể cao hơn tới 20% so với giá trị được chỉ định.",
-        "forceLiveCacheForPrimaryStream": "Có nên lưu trữ một số khung cho luồng chính. Giá trị: \"có\" - luôn được bật (có thể sử dụng nhiều RAM), \"không\" - luôn bị tắt trừ khi được yêu cầu phát lại (ví dụ: HLS), \"tự động\" - tương tự như \"không\", nhưng được bật khi cải thiện trải nghiệm người dùng (ví dụ: khi một số plugin Analytics hoạt động trên máy ảnh).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Có nên lưu trữ một số khung cho luồng chính. Giá trị: \"có\" - luôn được bật (có thể sử dụng nhiều RAM), \"không\" - luôn bị tắt trừ khi được yêu cầu phát lại (ví dụ: HLS), \"tự động\" - tương tự như \"không\", nhưng được bật khi cải thiện trải nghiệm người dùng (ví dụ: khi một số plugin Analytics hoạt động trên máy ảnh)."
     }
 }

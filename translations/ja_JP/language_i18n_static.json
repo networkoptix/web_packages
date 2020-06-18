@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "切断",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "このシステムにログインできなくなります。",
             "title": "システムを切断しますか？"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
-        "integration": "By submitting this form you agree to be contacted by {{INTEGRATION_COMPANY}} and/or %COMPANY_NAME%.\nYou will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a> and the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "透かし設定",
         "maxWebMTranscoders": "サーバーのWEBM接続の最大数です。Chromeは一度に2つの接続を開き、次に最初の接続を閉じます　したがって、このパラメータには2以上の値を設定することをお勧めします。",
         "maxEventLogRecords": "データベースに保存する最大イベントログレコード。削除されていないレコードの実際の量は、指定された値よりも最大20％大きくなる可能性があります。",
-        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にいくつかのフレームをキャッシュするかどうか。値： \"yes\" - 常に有効（多くのRAMを使用する可能性があります）、 \"no\" - 再生で要求される場合を除いて常に無効（HLSなど）、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上すると（たとえば、Analyticsプラグインがカメラで動作しているときに）オンになります。",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "プライマリストリーム用にいくつかのフレームをキャッシュするかどうか。値： \"yes\" - 常に有効（多くのRAMを使用する可能性があります）、 \"no\" - 再生で要求される場合を除いて常に無効（HLSなど）、\"auto\" - \"no\"と似ていますが、ユーザーエクスペリエンスが向上すると（たとえば、Analyticsプラグインがカメラで動作しているときに）オンになります。"
     }
 }

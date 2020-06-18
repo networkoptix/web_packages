@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Bağlantıyı kes",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Artık bu sisteme giriş yapamazsınız.",
             "title": "Sistemle bağlantıyı kes?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
         "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
         "wrongParameters": "Formdaki bazı parametreler yanlış",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
         "networkConnection": "{{cloudName}} bağlanılamıyor, lütfen ağ bağlantınızı kontrol edin."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
-        "integration": "Bu formu göndererek {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "Bu formu göndererek %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
     },
     "registration": {
@@ -820,7 +822,6 @@
         "watermarkSettings": "Filigran ayarları",
         "maxWebMTranscoders": "Sunucu için maksimum WEBM bağlantısı. Chrome aynı anda 2 bağlantı açar ardından ilkini kapatır. Bu nedenle parametreyi value>=2 olarak ayarlamanız önerilir.",
         "maxEventLogRecords": "Veritabanında tutulacak maksimum olay günlüğü kaydı. Silinmemiş kayıtların gerçek miktarı belirtilen değerden %20 daha yüksek olabilir.",
-        "forceLiveCacheForPrimaryStream": "Birincil akış için bazı karelerin önbellekte saklanıp saklanmayacağı. Değer:\"evet\" - her zaman etkin ( çok fazla RAM kullanılabilir), \"hayır\" - geri oynatma işleminin gerektirdiği durumlar dışında devre dışı (örn. HLS), \"auto\" hayır'a benzer ancak etkinleştirildiğinde kullanıcı deneyimini arttırır (örneğin, bazı Analitik eklentileri kamera üzerinde çalışırken).",
-        "DO_NOT_USE_FORCES_INTERFACE_GENERATION": 0
+        "forceLiveCacheForPrimaryStream": "Birincil akış için bazı karelerin önbellekte saklanıp saklanmayacağı. Değer:\"evet\" - her zaman etkin ( çok fazla RAM kullanılabilir), \"hayır\" - geri oynatma işleminin gerektirdiği durumlar dışında devre dışı (örn. HLS), \"auto\" hayır'a benzer ancak etkinleştirildiğinde kullanıcı deneyimini arttırır (örneğin, bazı Analitik eklentileri kamera üzerinde çalışırken)."
     }
 }
