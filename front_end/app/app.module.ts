@@ -6,7 +6,7 @@ import {
     LocationStrategy, CommonModule, DatePipe
 } from '@angular/common';
 import { RouterModule, UrlHandlingStrategy, UrlTree } from '@angular/router';
-import { HttpClientModule, HttpClientXsrfModule }     from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS }     from '@angular/common/http';
 import { FormsModule }                                from '@angular/forms';
 import { LayoutModule }                               from '@angular/cdk/layout';
 import { AngularFireModule, FirebaseOptionsToken }    from '@angular/fire';
@@ -32,6 +32,8 @@ import { WINDOWS_PROVIDERS }      from './src/services/window-provider';
 import { initializeApp }          from './src/pages/push-notifications/push-notifications.module';
 import { AuthGuard, SystemGuard } from './src/routeGuards';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
+import { NxUriCachingInterceptor } from './src/services/uri-cache-interceptor.service';
+import { NxUriCacheService }       from './src/services/uri-cache.service';
 
 // AoT requires an exported function for factories
 // @ts-ignore
@@ -91,6 +93,12 @@ class HybridUrlHandlingStrategy implements UrlHandlingStrategy {
         Location,
         Title,
         CookieService,
+        NxUriCacheService,
+        {
+            provide : HTTP_INTERCEPTORS,
+            useClass : NxUriCachingInterceptor,
+            multi : true
+        },
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: PathLocationStrategy },

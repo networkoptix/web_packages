@@ -32,6 +32,7 @@ export class NxHealthService {
     resourceNames = {};
 
     ready: boolean;
+    lastUpdate: number;
 
     CONFIG: IConfig;
 

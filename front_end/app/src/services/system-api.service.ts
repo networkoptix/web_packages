@@ -6,6 +6,8 @@ import { map, mergeMap, retryWhen, timeout }   from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera }                             from './system.service';
 import * as md5                                from 'md5';
+import { NxUriCacheService }                   from './uri-cache.service';
+import { NxHealthService }                     from '../pages/health/health.service';
 
 interface User {
     canBeEdited: boolean;
@@ -67,6 +69,8 @@ export class NxSystemAPI {
     userRequest: any;
     urlBase: string;
     unauthorizedCallback: any;
+    cacheService: NxUriCacheService;
+    healthService: NxHealthService;
 
     constructor(
         http: HttpClient,
@@ -75,11 +79,15 @@ export class NxSystemAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: (any) => any
+        unauthorizedCallback: (any) => any,
+        cacheService: NxUriCacheService,
+        healthService: NxHealthService
     ) {
         this.http = http;
         this.CONFIG = configService;
         this.location = location;
+        this.cacheService = cacheService;
+        this.healthService = healthService;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
     }
 
@@ -109,7 +117,7 @@ export class NxSystemAPI {
         return `${url}${url.indexOf('?') > -1 ? '&' : '?'}${params}`;
     }
 
-    private get(url: string, params?: any): Observable<any> {
+    private get(url: string, params?: any, customHeaders = {}): Observable<any> {
         let headers = new HttpHeaders();
         params = params || {};
 
@@ -119,6 +127,10 @@ export class NxSystemAPI {
         if (this.serverId) {
             headers = headers.set('X-Server-Guid', this.serverId);
         }
+
+        Object.entries(customHeaders).forEach(([header, value]: [string, string]) => {
+            headers = headers.set(header, value);
+        })
 
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get(fullUrl, { headers, params }).pipe(
@@ -539,8 +551,18 @@ export class NxSystemAPI {
         return this.get('/ec2/metrics/alarms');
     }
 
-    getAggregateHealthReport() {
-        return this.get('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
+    getAggregateHealthReport(forceUpdate = false) {
+        const endpoint = '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
+        const headers = {};
+        const secondsSinceUpdate = (Date.now() - (this.healthService.lastUpdate)) / 1000 | 0;
+        const stale = secondsSinceUpdate > this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
+        if (forceUpdate || !this.cacheService.addedToCache(`${this.urlBase}${endpoint}`) || stale) {
+            this.cacheService.addToCache(`${this.urlBase}${endpoint}`);
+            this.healthService.lastUpdate = Date.now();
+            headers['reset-cache'] = true;
+        }
+
+        return this.get(endpoint, {}, headers);
     }
     // End of Health Monitor
 
@@ -609,7 +631,9 @@ export class NxSystemAPIService {
 
     constructor(configService: NxConfigService,
         location: Location,
-                private http: HttpClient
+        private http: HttpClient,
+        private cacheService: NxUriCacheService,
+        private healthService: NxHealthService
     ) {
         this.location = location;
         this.CONFIG = configService.getConfig();
@@ -632,7 +656,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.healthService);
     }
 }
 

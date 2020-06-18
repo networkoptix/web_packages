@@ -162,8 +162,8 @@ export class AppComponent {
             this.CONFIG.cloudCapabilities = {
                 feedbackEnabled,
                 healthMonitor,
-                healthMonitorCacheTimeout,
-                integrationStore: integrationStoreEnabled,
+                healthMonitorCacheTimeout : healthMonitorCacheTimeout || 60,
+                integrationStore          : integrationStoreEnabled,
                 publicDownloads,
                 publicReleases,
                 cloudStorageEnabled,
