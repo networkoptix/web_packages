@@ -257,6 +257,7 @@ class AssetSettingsForm(forms.Form):
             ('update_structure',
              'Update CMS structure and default values based on archive with structure.json and asset_type template, '
              'or upload just the structure.json'),
+            ('update_asset_by_json', 'Update data records from a json file'),
             ('update_content', 'Upload content files for asset')
         )
     )

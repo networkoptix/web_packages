@@ -7,6 +7,7 @@ import logging
 from zipfile import ZipFile
 
 from cms.controllers.generate_structure import templatify_json
+from cms.controllers.modify_db import save_unrevisioned_records
 from cms.models import Context, ContextTemplate, DataStructure, DataRecord, Asset, AssetType, MenuNode, Customization, \
     Menu
 
@@ -446,3 +447,15 @@ def update_asset_type(asset_type, asset_type_structure):
     asset_type.can_preview = asset_type_structure.get("can_preview", False)
     asset_type.single_customization = asset_type_structure.get('single_customization', False)
     asset_type.save()
+
+
+def update_asset_by_json(asset, asset_json, user):
+    asset_type = asset.asset_type
+    for context in asset_json["contexts"]:
+        context_model = Context.objects.get(asset_type=asset_type, name=context["name"])
+        data_records = {}
+        for ds in context["values"]:
+            if DataStructure.get_type_by_name(ds["type"]) not in [DataStructure.DATA_TYPES.file,
+                                                                  DataStructure.DATA_TYPES.image]:
+                data_records[ds["name"]] = ds["value"]
+        save_unrevisioned_records(asset, None, None, context_model.datastructure_set.all(), data_records, {}, user)

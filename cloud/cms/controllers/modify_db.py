@@ -189,7 +189,10 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
             getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
-            new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
+            if hasattr(request_data, 'getlist'):
+                new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
+            else:
+                new_record_value = request_data[data_structure_name] or getlist_default_value
             if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
                 new_record_value = new_record_value[0]
 
@@ -220,6 +223,9 @@ def save_unrevisioned_records(asset, context, language, data_structures,
 
             elif 'delete_' + data_structure_name in request_data:
                 delete_file = request_data['delete_' + data_structure_name]
+
+            elif request_data.get(data_structure_name):
+                new_record_value = request_data.get(data_structure_name)
 
             elif data_structure.optional:
                 continue
