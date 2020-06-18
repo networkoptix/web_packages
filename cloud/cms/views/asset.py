@@ -1,4 +1,3 @@
-
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
@@ -283,24 +282,19 @@ def asset_settings(request, asset_id):
         generate_json = action == 'generate_json'
         merge_with_db = action == 'merge_with_db'
         update_structure = action == 'update_structure'
-        create_records_by_json = action == 'create_records_by_json'
         update_content = action == 'update_content'
 
         file = request.FILES["file"]
 
         if file.name.endswith('json'):
-            if create_records_by_json:
-                structure.update_asset_by_json(asset, json.load(file)[0], request.user)
-                messages.success(request, "Content updated")
-            elif not update_structure:
+            if not update_structure:
                 return HttpResponseBadRequest('json is acceptable only for Updating structure')
-            else:
-                cms_structure = json.load(file)
-                if type(cms_structure) == list and len(cms_structure) > 1:
-                    messages.warning(request, "You can only update one asset_type at a time. "
-                                              "Only the first asset type from structure.json was used.")
-                structure.update_from_object(cms_structure, asset_type=asset.asset_type, preserve_files=True)
-                messages.success(request, "Structure updated")
+            cms_structure = json.load(file)
+            if type(cms_structure) == list and len(cms_structure) > 1:
+                messages.warning(request, "You can only update one asset_type at a time. "
+                                          "Only the first asset type from structure.json was used.")
+            structure.update_from_object(cms_structure, asset_type=asset.asset_type, preserve_files=True)
+            messages.success(request, "Structure updated")
         else:
             if not file.name.endswith('zip'):
                 return HttpResponseBadRequest('zip archive is expected')
