@@ -54,7 +54,7 @@ ${WRONG PASSWORD MESSAGE}             //form[@name='loginForm']//div[text()="${W
 ${ACCOUNT NOT FOUND MESSAGE}          //form[@name='loginForm']//div[text()="${ACCOUNT DOES NOT EXIST}"]
 ${TOO MANY ATTEMPTS MESSAGE}          //form[@name='loginForm']//div[text()="${TOO MANY ATTEMPTS TEXT}"]
 
-${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
+${LOG IN NAV BAR}                     //header//nav//a/span[contains(text(),'${LOG IN BUTTON TEXT}')]/..
 
 #Header
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
