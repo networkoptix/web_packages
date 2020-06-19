@@ -1090,7 +1090,9 @@ class Menu(models.Model):
         if customization_name:
             customizations = Customization.objects.filter(name=customization_name)
         else:
-            customizations = [asset.customizations.first() for asset in Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal)]
+            customizations = [asset.customizations.first() for asset in Asset.objects.annotate(
+                                  customization_count=models.Count('customizations')
+                              ).filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal, customization_count=1)]
 
         menu_customization_structure = {}
 
