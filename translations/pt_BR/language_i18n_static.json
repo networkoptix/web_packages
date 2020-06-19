@@ -7,7 +7,7 @@
 		"newPasswordLabel": "Nova senha",
 		"saveChanges": "Gravar",
 		"accountSettings": "Configurações da conta",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "O acordo foi aceito"
 	},
 	"activeActions": {
 		"sendConfirm": "Reenviar Link de Ativação",
@@ -53,7 +53,7 @@
 		},
 		"groups": {
 			"windows": {
-				"label": "Windows"
+				"label": "Janelas"
 			},
 			"mac": {
 				"label": "Mac OS"
@@ -97,7 +97,7 @@
 			"bundle": "Cliente e Servidor",
 			"camera_sdk": "Fonte de vídeo SDK",
 			"client": "Somente cliente",
-			"metadata_sdk": "Metadata SDK",
+			"metadata_sdk": "SDK para metadados",
 			"package": "Pacote",
 			"server": "Somente servidor",
 			"servertool": "Ferramenta de configuração",
@@ -120,8 +120,8 @@
 		"vendor": "Fabricante",
 		"model": "Modelo",
 		"hardwareType": "Tipo",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
-		"maxFps": "<span>Max</span><br><span>FPS</span>",
+		"maxResolution": "<span>Máx.</span><br><span>Resolução</span>",
+		"maxFps": "<span>Máx.</span><br><span>FPS</span>",
 		"primaryCodec": "Codec",
 		"isAudioSupported": "Audio",
 		"isTwAudioSupported": "áudio bidirecional",
@@ -155,10 +155,10 @@
 		"disclaimer": "Esta lista é limitada a dispositivos encontrados em {{vmsName}} onde os usuários permitem o auto-relatório de especificações do dispositivo para {{companyName}}. Nenhuma informação pessoal é coletada e cada usuário permanece totalmente anônimo."
 	},
 	"integration": {
-		"myIntegrationsLabel": "Mine",
+		"myIntegrationsLabel": "Meu",
 		"previewRibbonText": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente.",
 		"backToEditText": "Voltar às interfaces de edição",
-		"requirements": "{{name}} Requirements",
+		"requirements": "{{name}} Requisitos",
 		"Access Control": "Controle de Acesso",
 		"Connector": "Conector",
 		"Data Analytics": "Análise de dados",
@@ -200,17 +200,17 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Cancelar",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "Criar nova conta",
+		"changeAccountLogged": "Você já está logado como {email}",
+		"loggedFromOther": "Você será conectado com uma conta diferente",
 		"loginTitle": "Logar em %CLOUD_NAME%",
 		"loginButton": "Log in",
 		"logoutAuthorisedTitle": "Já tem sessão iniciada",
 		"logoutAuthorisedContinueButton": "Continuar",
 		"logoutAuthorisedLogoutButton": "Terminar sessão",
 		"noClientDetectedTitle": "Instalar %VMS_NAME% para visualizar o seu sistema",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Permanecer conectado como {email} ",
+		"stayLoggedIn": "Permanecer conectado",
 		"download": "Baixar %VMS_NAME%",
 		"merge": {
 			"commonText": "Falha ao mesclar Sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
@@ -227,7 +227,7 @@
 				"b_support": "suporte",
 				"c_proceeding": "antes de prosseguir."
 			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+			"warning": "Haverá mais que <strong>{{maxServers}}</strong> servidores no sistema de mesclagem."
 		},
 		"message": {
 			"failedToSend": "Falha no envio da mensagem.",
@@ -239,7 +239,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Pesquisa de vendas para {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Consulta técnica para {{asset}}",
 				"integration_feedback": "Feedback para integração {{asset}}",
 				"ipvd_feedback_page": "Feedback para página de câmaras",
 				"ipvd_feedback_device": "Comentários sobre {{asset}}"
@@ -287,7 +287,7 @@
 		"passwordMismatch": "Senha incorreta",
 		"cantEditYourself": "Não é permitido alterar as permissões próprias",
 		"cantEditAdmin": "Este utilizador tem permissões de administrador",
-		"cantOpenClient": "%VMS_NAME% application is not detected.",
+		"cantOpenClient": "%VMS_NAME% aplicativo não foi detectado.",
 		"lostConnection": "Conexão a {{systemName}} perdida",
 		"thisSystem": "o sistema",
 		"oldSafariNotSupported": "Versões do Safari anteriores à 10 não são suportadas",
@@ -313,14 +313,14 @@
 		"missingMessage": "A senha é necessária"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Eu concordo com os <a href=\"/content/eula\" target=\"_blank\">Termos &\nCondições</a> e a <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de privacidade</a>"
 	},
 	"system": {
 		"yourSystem": "O seu Sistema",
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "O sistema está inacessível",
 		"offline": "O sistema está offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
 		"openClient": "Abrir em %VMS_NAME%",
 		"openClientNoSystem": "Abrir %VMS_NAME%",
 		"confirmMergeAction": "\"Merge\"",
@@ -334,7 +334,7 @@
 		"confirmUnshareFromMeTitle": "Desconectar o Sistema?",
 		"confirmUnshareFromMeAction": "Desconectar",
 		"confirmUnshare": "Este utilizador não será capaz de aceder ao sistema. Tem certeza?",
-		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareTitle": "Remover usuário?",
 		"confirmUnshareAction": "Remover",
 		"successDisconnected": "O Sistema foi desconectado de %CLOUD_NAME% com sucesso",
 		"successDeleted": "O sistema {{systemName}} foi apagado com sucesso da sua conta",
@@ -343,8 +343,8 @@
 		"mergeSuccess": "Mesclagem de sistema concluída",
 		"permissionsRemoved": "As permissões foram removidas de {{email}}",
 		"unknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
-		"shareOffline": "Cannot share system while it is offline",
-		"shareUnauthorized": "You do not have permission to share this system",
+		"shareOffline": "Não é possível compartilhar o sistema enquanto estiver offline",
+		"shareUnauthorized": "Você não tem permissão para compartilhar este sistema",
 		"settings": {
 			"sessionLimitDuration": {
 				"hours": "hora",
@@ -437,19 +437,19 @@
 			"copyActiveText": "copiado para o Clipboard"
 		},
 		"systemOffline": "Sistema Offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Este sistema está offline e não pode ser acessado no momento.",
+		"systemNoAlerts": "Sem Alertas",
+		"systemNoAlertsMessage": "Seu sistema deve estar bem!",
 		"systemServerError": "Erro interno do servidor",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Ocorreu um erro, por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com sua equipe de suporte.",
+		"systemNewVersion": "Atualizar seu sistema",
+		"systemNewVersionMessage": "Sua versão atual é incompatível com este recurso. Por favor, atualize seus servidores para a versão mais recente para usar este recurso.",
 		"systemHasNoCameras": "SEM CÂMARAS",
 		"systemUnreachable": "SISTEMA INACESSÍVEL",
 		"cameraStates": {
 			"offline": "Desligado",
 			"error": "Erro",
-			"errorLoading": "An error occurred while loading this video.",
+			"errorLoading": "Ocorreu um erro ao carregar este vídeo.",
 			"unauthorized": "Necessária autenticação",
 			"noData": "Sem dados",
 			"iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
@@ -485,8 +485,8 @@
 	},
 	"systemAdministration": "Administração do Sistema",
 	"users": "Utilizadores",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testado com {{vmsName}} versão:",
+	"testedVersionsLabel": "Testado com {{vmsName}} versões:",
 	"About %CLOUD_NAME%": "Sobre %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Baixar %VMS_NAME%",
 	"Integrations": "Integrações",
@@ -494,13 +494,13 @@
 	"Support": "Suporte",
 	"Supported Devices": "Dispositivos suportados",
 	"Terms": "Termos",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "Por favor, selecione...",
+	"WHEN_MERGE_FINISHES": "Quando o \"Merge\" terminar, todos os usuários e câmeras deste sistema ficarão disponíveis no Sistema <strong>{{targetSystemName}}</strong> e este sistema será excluído.",
+	"FAILED_SYSTEM_DESCR": "Este link está quebrado,<br>O sistema pode ser desconectado do %CLOUD_NAME%,<br>O acesso a este sistema pode ser revogado, <br>ou você pode estar logado em uma conta diferente.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Você não tem sistemas conectados a %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Faça o login no seu sistema usando %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Vá a aba \"Cloud\" na caixa de diálogo \"Administração do sistema\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Pressione \"Conecte o sistema a %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} by volume:",
+	"topXByVolume": "Principais {{value}} por volume:",
 	"phoneNumberWithLabel": "Tel: {{number}}"
 }
