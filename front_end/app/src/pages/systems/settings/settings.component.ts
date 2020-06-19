@@ -272,6 +272,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                                 this.ribbonService.hide();
                                 this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
                             }
+                            if (this.system.canViewInfo()) {
+                                // Makes request to get health, this is used to cache request.
+                                this.system.mediaserver.getAggregateHealthReport().subscribe();
+                            }
                         });
 
                     if (this.connectionSubscription) {

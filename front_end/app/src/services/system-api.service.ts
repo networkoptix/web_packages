@@ -14,6 +14,7 @@ import * as md5                                from 'md5';
 import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
 import { CookieService }                       from 'ngx-cookie-service';
+import { NxHealthService }                     from '../pages/health/health.service';
 
 export interface User {
     canBeEdited: boolean;
@@ -80,6 +81,7 @@ export class NxSystemAPI {
     unauthorizedCallback: (params: unknown) => any;
     cacheService: NxUriCacheService;
     cookieService: CookieService
+    healthService: NxHealthService;
 
     constructor(
         http: HttpClient,
@@ -90,13 +92,15 @@ export class NxSystemAPI {
         serverId: string,
         unauthorizedCallback: (params: IParams) => any,
         cacheService: NxUriCacheService,
-        cookieService: CookieService
+        cookieService: CookieService,
+        healthService: NxHealthService
     ) {
         this.http = http;
         this.CONFIG = configService;
         this.location = location;
         this.cacheService = cacheService;
         this.cookieService = cookieService;
+        this.healthService = healthService;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
@@ -789,8 +793,18 @@ export class NxSystemAPI {
         return this.get<t.Alarms>('/ec2/metrics/alarms');
     }
 
-    getAggregateHealthReport() {
-        return this.get<t.AggregatedHealthReport>('/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms');
+    getAggregateHealthReport(forceUpdate = false) {
+        const endpoint = '/api/aggregator?exec_cmd=ec2%2Fmetrics%2Fmanifest&exec_cmd=ec2%2Fmetrics%2Fvalues&exec_cmd=ec2%2Fmetrics%2Falarms';
+        const headers = {};
+        const secondsSinceUpdate = (Date.now() - (this.healthService.lastUpdate)) / 1000 | 0;
+        const stale = secondsSinceUpdate > this.CONFIG.cloudCapabilities.healthMonitorCacheTimeout;
+        if (forceUpdate || !this.cacheService.addedToCache(`${this.urlBase}${endpoint}`) || stale) {
+            this.cacheService.addToCache(`${this.urlBase}${endpoint}`);
+            this.healthService.lastUpdate = Date.now();
+            headers['reset-cache'] = true;
+        }
+
+        return this.get(endpoint, {}, headers);
     }
     // End of Health Monitor
 
@@ -851,7 +865,8 @@ export class NxSystemAPIService {
         private location: Location,
         private http: HttpClient,
         private cacheService: NxUriCacheService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private healthService: NxHealthService
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -873,7 +888,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService);
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService);
     }
 }
 

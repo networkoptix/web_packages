@@ -21,7 +21,7 @@
     "wrongParameters": "Néhány paraméter hibás",
     "wrongCode": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
     "wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
-    "wrongAuthCode": "Code is expired or incorrect",
+    "wrongAuthCode": "A kód lejárt vagy helytelen",
     "forbidden": "Nincs engedélye erre a műveletre",
     "accountNotActivated": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",
     "accountBlocked": "A fiók zárolva van. Próbálja újra pár perc múlva.",
@@ -35,7 +35,7 @@
     "passwordMismatch": "Hibás jelszó",
     "cantEditYourself": "Saját engedélyek módosítása nem engedélyezett",
     "cantEditAdmin": "Ez a felhasználó rendszergazdai jogokkal rendelkezik",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "{{VMS_NAME}} nincs telepítve. <a href=\"/download\">Letöltés</a>",
     "lostConnection": "{{systemName}} kapcsolat megszakadt",
     "thisSystem": "a rendszer",
     "oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",
@@ -43,7 +43,7 @@
     "mergedSystemIsOffline": "A rendszer <strong>{{failedSystem}}</strong> offline állapotban van.",
     "INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
     "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
-    "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>."
+    "unknownMergeError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>."
   },
   "common": {
     "cameraLinks": {
@@ -57,7 +57,7 @@
     },
     "systemOffline": "A rendszer offline",
     "systemHasNoCameras": "NINCSENEK KAMERÁK",
-    "systemUnreachable": "SYSTEM IS UNREACHABLE",
+    "systemUnreachable": "A rendszer nem elérhető",
     "cameraStates": {
       "offline": "Offline",
       "error": "Hiba",

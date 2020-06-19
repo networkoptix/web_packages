@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Scollegamento",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Non sarai più in grado di accedere a questo Sistema.",
             "title": "Scollegare il sistema?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "L'account è già attivato o il codice di conferma non è corretto",
         "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Impossibile attivare la licenza. Riprova o contatta l'assistenza clienti.",
+        "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
+        "licenseServerError": "Impossibile attivare la licenza. Il server licenza non ha risposto. Riprova o contatta il Servizio clienti.",
         "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Selezionare...",
     "privacyPolicy": {
-        "integration": "Inviando questo modulo accetti di essere contattato da {{INTEGRATION_COMPANY}} e / o %COMPANY_NAME%.\nTroverai l'informativa sulla privacy {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a> e %COMPANY_NAME% informativa sulla privacy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso.",
+        "integration": "Troverete il {{INTEGRATION_COMPANY}} sulla privacy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a>. La politica sulla privacy %COMPANY_NAME%, che include istruzioni su come revocare il consenso, è disponibile <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a>.",
         "ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
     },
     "registration": {

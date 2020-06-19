@@ -31,9 +31,6 @@
   },
   "/static/lang_en_US/language_compiled.json": {
     "target": "https://0.0.0.0:9000",
-    "pathRewrite": {
-      "^/static/lang_en_US/": ""
-    },
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

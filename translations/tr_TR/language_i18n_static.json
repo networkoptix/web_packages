@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Bağlantıyı kes",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Artık bu sisteme giriş yapamazsınız.",
             "title": "Sistemle bağlantıyı kes?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
         "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
         "wrongParameters": "Formdaki bazı parametreler yanlış",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
+        "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
+        "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
         "networkConnection": "{{cloudName}} bağlanılamıyor, lütfen ağ bağlantınızı kontrol edin."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Lütfen seçiniz...",
     "privacyPolicy": {
-        "integration": "Bu formu göndererek {{INTEGRATION_COMPANY}} ve / veya %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nSen bulacaksınız {{INTEGRATION_COMPANY}} gizlilik politikasını <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada</a> ve %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Burada</a> onayınızı geri çekmek konusunda talimat içerir.",
+        "integration": "{{INTEGRATION_COMPANY}} gizlilik politikası <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">burada bulacaksınız</a>. %COMPANY_NAME% onayınızı geri çekmek konusunda talimat içeren gizlilik politikası, geçerli <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada</a>.",
         "ipvd": "Bu formu göndererek %COMPANY_NAME%ile iletişim kurulmasını kabul etmiş olursunuz.\nOnayınızı nasıl geri çekeceğinize ilişkin talimatları içeren %COMPANY_NAME% gizlilik politikasını <a href=\"%PRIVACY_LINK%\" target=\"_blank\">burada bulabilirsiniz</a>."
     },
     "registration": {

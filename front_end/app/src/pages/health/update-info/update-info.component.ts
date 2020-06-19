@@ -9,6 +9,7 @@ import { NxRibbonService }           from '../../../components/ribbon';
 import { NxHealthService }           from '../health.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { startWith }                 from 'rxjs/operators';
 
 @AutoUnsubscribe()
 @Component({
@@ -58,7 +59,8 @@ export class NxUpdateInfoComponent implements OnInit, OnDestroy {
         this.lastUpdate = '0 min ago';
 
         const minute = 60 * 1000;
-        this.timerSubscription = timer(0, minute).subscribe((minutes) => {
+        const currentHmAge = (Date.now() - this.healthService.lastUpdate) / minute | 0;
+        this.timerSubscription = timer(0, minute).pipe(startWith(currentHmAge)).subscribe((minutes) => {
             if (minutes >= this.CONFIG.healthMonitoring.staleReportTimeout) {
                 this.ribbonService.show(this.LANG.common.viewingOutdatedReport, 'Refresh', '', 'alert', this.refreshHealth);
             }

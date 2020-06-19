@@ -135,6 +135,7 @@
     "Latest version": "最新版本",
     "License key": "授权序号",
     "License key has already been activated in this system": "授权已在此系统中激活",
+    "License type is incompatible with your system": "License type is incompatible with your system",
     "Licenses Summary": "授权摘要",
     "Limit session duration to": "限制登入时间为",
     "Log In": "登录",

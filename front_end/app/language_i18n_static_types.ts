@@ -457,6 +457,8 @@ export interface ErrorCodes {
     wrongCodeRestore:                    any;
     wrongParameters:                     any;
     licenseFail:                         any;
+    licenseTimeout:                      any;
+    licenseServerError:                  any;
     networkConnection:                   any;
 }
 
@@ -1328,6 +1330,8 @@ const typeMap: any = {
         { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "any" },
         { json: "wrongParameters", js: "wrongParameters", typ: "any" },
         { json: "licenseFail", js: "licenseFail", typ: "any" },
+        { json: "licenseTimeout", js: "licenseTimeout", typ: "any" },
+        { json: "licenseServerError", js: "licenseServerError", typ: "any" },
         { json: "networkConnection", js: "networkConnection", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([

@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Verbinding verbreken",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "U zal niet meer kunnen inloggen in dit systeem.",
             "title": "Systeem loskoppelen?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale verdeler.",
+        "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
+        "licenseServerError": "Kan licentie niet activeren. De licentieserver reageerde niet. Probeer het opnieuw of neem contact op met de klantenservice.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Selecteer...",
     "privacyPolicy": {
-        "integration": "Door dit formulier in te dienen, ga je akkoord met contactering door {{INTEGRATION_COMPANY}} en/of %COMPANY_NAME%.\nJe vindt {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a> en %COMPANY_NAME% privacybeleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming kan intrekken.",
+        "integration": "U vindt het {{INTEGRATION_COMPANY}} privacybeleid <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a>. Het %COMPANY_NAME% privacybeleid, dat instructies bevat over het intrekken van uw toestemming, is <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier beschikbaar</a>.",
         "ipvd": "Door dit formulier in te dienen, ga je akkoord met contactering door %COMPANY_NAME%.\nJe vindt %COMPANY_NAME% privacy beleid <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a> welke instructies bevat over hoe je toestemming moet intrekken."
     },
     "registration": {

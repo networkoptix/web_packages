@@ -10,6 +10,8 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxProcessService }          from '../../../../../services/process.service';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
+import { SubscriptionLike }          from 'rxjs';
+import { NxScrollMechanicsService }  from '../../../../../services/scroll-mechanics.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -33,7 +35,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
     @Input() system: NxSystem;
     @Input() licenses: any = [];
 
+    windowSizeSubscription: SubscriptionLike;
+
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
+    @ViewChild('errorDiv') errorDiv: HTMLDivElement;
+    @ViewChild('errorDivMirror') errorDivMirror: HTMLDivElement;
 
     private setupDefaults() {
         this.activateKey = this.processService.createProcess(() => {
@@ -49,7 +55,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
-
                     // eslint-disable-next-line prefer-promise-reject-errors
                     return reject('alreadyRegistered');
                 });
@@ -78,19 +83,29 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
 
                             // eslint-disable-next-line no-fallthrough
                             case '3':
+                                // Network error has occurred during license activation. Error code: -1
+                                if (response.errorString.indexOf('Network error has occurred') !== -1) {
+                                    this.dialogsService
+                                        .notify(this.LANG.errorCodes.licenseServerError, 'danger');
+                                    break;
+                                }
                                 // Can't activate license:  License Key you have entered is invalid.
                                 if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
-                                }
-                                // Can't activate license:   This License Key has been previously activated to Hardware Id 052f25774269474ec8f9454d92ca9511cf on 2020-04-10 21:04:30.776094+00:00..
-                                // eslint-disable-next-line no-case-declarations
-                                let matchStart = response.errorString.indexOf('activated to Hardware Id');
-                                if (matchStart !== -1) {
-                                    // get HWID
-                                    matchStart += 'activated to Hardware Id '.length;
-                                    const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
-                                    this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
-                                    this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                                } else if (response.errorString.indexOf('requires higher software version') !== -1) {
+                                    // Can't activate license: This license type requires higher software version
+                                    this.licenseForm.controls.licenseKey.setErrors({ compatibility: true });
+                                } else {
+                                    // Can't activate license:   This License Key has been previously activated to Hardware Id 052f2577426947...
+                                    // eslint-disable-next-line no-case-declarations
+                                    let matchStart = response.errorString.indexOf('activated to Hardware Id');
+                                    if (matchStart !== -1) {
+                                        // get HWID
+                                        matchStart += 'activated to Hardware Id '.length;
+                                        const matchEnd = response.errorString.substr(matchStart).indexOf(' ');
+                                        this.keyUsedIn = response.errorString.substr(matchStart, matchEnd);
+                                        this.licenseForm.controls.licenseKey.setErrors({ inuse: true });
+                                    }
                                 }
                                 this.licenseForm.controls.licenseKey.markAsTouched();
                                 break;
@@ -102,6 +117,10 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             this.dialogsService
                                 .notify(this.LANG.errorCodes.licenseFail, 'danger');
                         } else {
+                            if (fail.name === 'TimeoutError') {
+                                this.dialogsService
+                                    .notify(this.LANG.errorCodes.licenseTimeout, 'danger');
+                            }
                             console.error(fail);
                         }
                     });
@@ -118,7 +137,8 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
         configService: NxConfigService,
         language: NxLanguageProviderService,
         private processService: NxProcessService,
-        private dialogsService: NxDialogsService
+        private dialogsService: NxDialogsService,
+        private scrollMechanicsService: NxScrollMechanicsService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;
@@ -147,12 +167,6 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                 this.selectedServer = this.serverOptions[0] || {};
             }
         }
-    }
-
-    pasteFn(form) {
-        navigator.clipboard.readText().then(clipText => {
-            this.setLicenseKey(clipText.replace(/-/g, ''), form); // don't confuse ngModel - remove dashes :)
-        });
     }
 
     setLicenseKey(key, form) {

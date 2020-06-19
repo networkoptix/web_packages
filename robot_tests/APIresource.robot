@@ -163,6 +163,20 @@ Disconnect Server via API
     ${resp}=   Post Request    disconnectServer    /api/systems/disconnect    timeout=10
     Should Be Equal As Strings    ${resp.status_code}    200
 
+Set Auto System Settings via API
+    [Arguments]    ${setting}    ${state}
+    Create Digest Session    returnedSetting    ${AUTO SYS IP}    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${state}
+    
+Set 3 dot 2 System Settings via API
+    [Arguments]    ${setting}    ${state}
+    Create Digest Session    returnedSetting    https://10.1.5.158:7001    auth=${AUTO SYS AUTH}     disable_warnings=1
+    ${systemSettings}=   Get Request    returnedSetting   /api/systemSettings?${setting}=${state}  timeout=10
+    ${string}=   Convert To String    ${systemSettings.json()}
+    Should Contain    ${string}    ${setting}': '${state}
+
 # Keywords which use System/Server API
 Setup Local System
     [Arguments]    ${server url}    ${new password}    ${system name}

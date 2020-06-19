@@ -1,7 +1,6 @@
-//@import "../../../../../styles/typography";
-//@import "../../../../../../styles/theme_palette";
 @use "../../../../../styles/typography";
 @use "../../../../../../styles/theme_variables" as *;
+@import '~bootstrap/scss/mixins/breakpoints';
 
 .server-info {
     font-family : $font-family-regular;
@@ -100,6 +99,15 @@
     min-height : 36px;
 }
 
+.speciality-label {
+    height: 32px;
+    text-align: right;
+
+    @include media-breakpoint-down(sm) {
+        height: 16px;
+    }
+}
+
 .help-block {
     @include typography.regular11;
     color            : $error;
@@ -113,7 +121,7 @@ nx-select .dropdown .dropdown-toggle .ellipsis {
 
 .license-key {
     font-family: robotomonoregular, monospace;
-    width : 280px;
+    width : 182px;
     float: left;
     text-transform : uppercase;
 }
@@ -124,7 +132,7 @@ nx-select .dropdown .dropdown-toggle .ellipsis {
 }
 
 .dd-servers {
-    width : 280px;
+    width : 182px;
 }
 
 .ellipsis {

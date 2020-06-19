@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Koppla från",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Du kommer inte att kunna logga in i det här systemet längre.",
             "title": "Koppla ifrån systemet?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
+        "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
+        "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "Genom att skicka detta formulär samtycker du till att kontakta {{INTEGRATION_COMPANY}} och / eller %COMPANY_NAME%.\nDu hittar de {{INTEGRATION_COMPANY}} integritetspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a> och %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke.",
+        "integration": "Du hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a>. Den %COMPANY_NAME% integritetspolicy, som omfattar instruktioner om hur att ta ut ditt medgivande, finns <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a>.",
         "ipvd": "Genom att skicka detta formulär samtycker du till att kontakta dig av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke."
     },
     "registration": {

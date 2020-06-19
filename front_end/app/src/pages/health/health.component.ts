@@ -200,7 +200,8 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.ribbonService.hide();
     }
 
-    setupReport(data) {
+    setupReport(_data) {
+        const data = NxUtilsService.deepCopy(_data);
         // Handle server not responding for "ec2/metrics/manifest"
         if (!data.reply) {
             return throwError('Error getting manifest');
@@ -534,9 +535,9 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.importShow = false;
     }
 
-    updateValues() {
+    updateValues(forceUpdate = false) {
         this.healthService.ready = false;
-        this.system.mediaserver.getAggregateHealthReport().pipe(
+        this.system.mediaserver.getAggregateHealthReport(forceUpdate).pipe(
             flatMap((result: any) => this.setupReport(result))
         ).subscribe(() => {}, () => {
             if (!this.system.id) {

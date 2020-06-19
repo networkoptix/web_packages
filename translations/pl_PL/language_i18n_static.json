@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Rozłącz",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Nie będziesz już mógł zalogować się do tego systemu.",
             "title": "Odłączyć system?"
         },
         "titles": {
@@ -433,7 +433,9 @@
         "wrongCode": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
         "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
         "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
+        "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
+        "licenseServerError": "Nie udało się aktywować licencji. Serwer licencji nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z {{cloudName}}, proszę sprawdzić połączenie sieciowe."
     },
     "integration": {
@@ -562,7 +564,7 @@
     },
     "pleaseSelect": "Proszę wybrać...",
     "privacyPolicy": {
-        "integration": "Przesyłając ten formularz, zgadzasz się na kontakt od {{INTEGRATION_COMPANY}} i/lub %COMPANY_NAME%.\nPolitykę prywatności firmy {{INTEGRATION_COMPANY}} znajdziesz <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>, a politykę prywatności firmy %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawierają one instrukcje dotyczące wycofania zgody.",
+        "integration": "Politykę prywatności firmy {{INTEGRATION_COMPANY}} można znaleźć <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">tutaj</a>. Polityka prywatności firmy %COMPANY_NAME%, która zawiera instrukcje dotyczące wycofania zgody, jest dostępna <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>.",
         "ipvd": "Przesyłając ten formularz zgadzasz się na kontakt przez %COMPANY_NAME%.\nPolitykę prywatności firmy %COMPANY_NAME% znajdziesz <a href=\"%PRIVACY_LINK%\" target=\"_blank\">tutaj</a>. Zawiera ona instrukcje dotyczące wycofania zgody."
     },
     "registration": {
