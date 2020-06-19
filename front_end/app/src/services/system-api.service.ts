@@ -10,7 +10,7 @@ import { ICamera, NxSystemUser }               from './system.service';
 import { IParams }                             from '../components/search/search.component';
 import * as t                                  from './system-api.types';
 
-import * as md5                                from 'md5';
+import md5                                     from 'md5';
 import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
 import { CookieService }                       from 'ngx-cookie-service';

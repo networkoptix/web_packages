@@ -78,14 +78,22 @@ export class NxDropMenu extends BaseDropdown {
 
     getUrl(sid = this.headerService.activeSystem.id, endpoint = this.endpoint) {
         this.headerService.show$ = false;
-        let url = '/systems/' + sid;
-        if (sid) {
+        let url = this.CONFIG.isLocal ? '/settings' : '/systems/' + sid;
+        if (!this.CONFIG.isLocal && sid) {
             if (endpoint.view) {
                 url += '/view';
             }
 
             if (endpoint.information) {
                 url += '/health';
+            }
+        } else {
+            if (endpoint.view) {
+                url = '/view';
+            }
+
+            if (endpoint.information) {
+                url = '/health';
             }
         }
         return url;
@@ -100,7 +108,7 @@ export class NxDropMenu extends BaseDropdown {
     updateActiveSystemMenu() {
         const { endpoint: { view = false, settings = false, information = false } } = this;
         const activeSystem = this.headerService.activeSystem || this.headerService.lastActive$.value || this.systems[0];
-        const name = activeSystem.name;
+        const name = activeSystem.name || activeSystem.moduleInfo.name;
         const icon = activeSystem.stateOfHealth === this.CONFIG.system.status.online ? 'systems.svg' : 'system_offline.svg';
 
         const viewNode = new MenuNode(
@@ -126,7 +134,8 @@ export class NxDropMenu extends BaseDropdown {
             '',
             icon,
             nodes,
-            Auth.LOGGED_IN
+            Auth.LOGGED_IN,
+            name
         );
 
         this.menusService.currentSystemNode$.next(this.activeSystemMenu);

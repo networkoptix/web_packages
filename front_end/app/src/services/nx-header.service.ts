@@ -72,13 +72,19 @@ export class NxHeaderService {
     setLocation(url?) {
         const bestMatch: any = {};
         // Check if system url or go through nodes
-        if (url.startsWith('/systems')) {
+        const settingsBase = this.CONFIG.isLocal ? '/settings' : '/systems';
+        if (url.startsWith(settingsBase) ||
+            (this.CONFIG.isLocal && (
+                url.startsWith('/view') ||
+                url.startsWith('/health')
+            ))
+        ) {
             bestMatch.isSystem = true;
             bestMatch.parentNode = this.menusService.currentSystemNode$.value;
-            const systemId = this.activeSystem$.value?.id;
-            const systemUrl = `/systems/${systemId}`;
-            const viewUrl = systemUrl + '/view';
-            const healthUrl = systemUrl + '/health';
+            const systemId = this.CONFIG.isLocal ? '' : this.activeSystem$.value?.id;
+            const systemUrl = `${settingsBase}${this.CONFIG.isLocal ? '' : '/'}${systemId}`;
+            const viewUrl = this.CONFIG.isLocal ? '/view' : systemUrl + '/view';
+            const healthUrl = this.CONFIG.isLocal ? '/health' : systemUrl + '/health';
             if (url.startsWith(viewUrl)) {
                 bestMatch.path = viewUrl;
             } else if (url.startsWith(healthUrl)) {
@@ -87,7 +93,7 @@ export class NxHeaderService {
                 bestMatch.path = systemUrl;
             } else {
                 bestMatch.parentNode = undefined;
-                bestMatch.path = '/systems';
+                bestMatch.path = settingsBase;
             }
         } else {
             bestMatch.isSystem = false;

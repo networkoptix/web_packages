@@ -310,23 +310,39 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                     });
             });
 
-        this.systemSubscription = this.systemsService.systemsSubject.pipe(takeUntil(this.unsub$)).subscribe((systems) => {
-            if (!systems) {
-                return;
-            }
+        if (this.CONFIG.isLocal) {
+            this.accountService.get().then(account => {
+                const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
+                system.update().then(() => {
+                    system.getInfoAndPermissions().then(() => {
+                        this.systems = [system];
+                        this.singleSystem = (this.systems.length === 1);
+                        this.systemCounter = this.systems.length;
+                        this.updateActiveSystem();
+                        this.updateActive();
+                        this.headerService.activeSystem = system.moduleInfo;
+                    });
+                });
+            });
+        } else {
+            this.systemSubscription = this.systemsService.systemsSubject.pipe(takeUntil(this.unsub$)).subscribe((systems) => {
+                if (!systems) {
+                    return;
+                }
 
-            this.systemId = this.localStorage.get('systemId');
+                this.systemId = this.localStorage.get('systemId');
 
-            if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
-                this.systemId = this.route.firstChild.snapshot.params.systemId;
-            }
-            this.systems = systems;
-            this.singleSystem = (this.systems.length === 1);
-            this.systemCounter = this.systems.length;
+                if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
+                    this.systemId = this.route.firstChild.snapshot.params.systemId;
+                }
+                this.systems = systems;
+                this.singleSystem = (this.systems.length === 1);
+                this.systemCounter = this.systems.length;
 
-            this.updateActiveSystem();
-            this.updateActive();
-        });
+                this.updateActiveSystem();
+                this.updateActive();
+            });
+        }
     }
 
     onClick(event) {
@@ -374,7 +390,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.systems) {
             return;
         }
-        if (this.singleSystem) { // Special case for a single system - it always active
+        if (this.singleSystem || this.CONFIG.isLocal) { // Special case for a single system - it always active
             this.headerService.activeSystem = this.systems[0];
         } else if (this.systemId) {
             this.headerService.activeSystem = this.systems.find((system) => {
@@ -384,31 +400,33 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             this.headerService.activeSystem = undefined;
         }
 
-        this.accountService
-            .get()
-            .then(account => {
-                if (account) {
-                    this.user = account;
-                    if (this.headerService.activeSystem) {
-                        if (!this.system || this.system.id !== this.systemId) {
-                            this.stopActiveSubscription();
-                            this.system = this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
+        if (!this.CONFIG.isLocal) {
+            this.accountService
+                .get()
+                .then(account => {
+                    if (account) {
+                        this.user = account;
+                        if (this.headerService.activeSystem) {
+                            if (!this.system || this.system.id !== this.systemId) {
+                                this.stopActiveSubscription();
+                                this.system = this.systemService.createSystem(this.user.email, this.headerService.activeSystem.id);
 
-                            this.system.getInfoAndPermissions(false).catch(_ => {
-                            }).then(system => {
-                                this.systems.find(sys => {
-                                    if (sys.id === this.headerService.activeSystem.id) {
-                                        sys.moduleInfo = system.moduleInfo;
-                                    }
+                                this.system.getInfoAndPermissions(false).catch(_ => {
+                                }).then(system => {
+                                    this.systems.find(sys => {
+                                        if (sys.id === this.headerService.activeSystem.id) {
+                                            sys.moduleInfo = system.moduleInfo;
+                                        }
+                                    });
+                                    this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
                                 });
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                            });
+                            }
+                        } else {
+                            this.stopActiveSubscription();
                         }
-                    } else {
-                        this.stopActiveSubscription();
                     }
-                }
-            });
+                });
+        }
     }
 
     canShowNav() {
