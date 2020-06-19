@@ -38,7 +38,7 @@ class CombinedWidths {
 @Component({
     selector    : 'nx-header',
     templateUrl : 'header.component.html',
-    styleUrls   : ['header.component.scss']
+    styleUrls   : [NxConfigService.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
@@ -141,8 +141,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
             if (navWidth > windowWidth) {
                 showSmallRightNav = true;
+                const collapsedSize = this.CONFIG.isLocal ? 96 : 48;
                 const widthDifference = rightNav - this.rightNavWidthCollapsed$.value;
-                navWidth = navWidth - widthDifference + 48;
+                navWidth = navWidth - widthDifference + collapsedSize;
             }
 
             if (navWidth > windowWidth) {

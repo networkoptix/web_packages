@@ -21,7 +21,7 @@ import { NxVendorListComponent }              from './vendor-list/vendor-list.co
 import { NxSearchComponent }                  from './search/search.component';
 import { NxFooterComponent }                  from './footer/footer.component';
 import { NxGenericDropdown }                  from './dropdowns/generic/dropdown.component';
-import { NxLanguageDropdown }                 from './dropdowns/language/language.component';
+import { NxLanguageDropdown, NxHeaderLanguageDropdown }                 from './dropdowns/language/language.component';
 import { NxAccountSettingsDropdown }          from './dropdowns/account-settings/account-settings.component';
 import { NxActiveSystemDropdown }             from './dropdowns/active-system/active-system.component';
 import { NxSystemsDropdown }                  from './dropdowns/systems/systems.component';
@@ -67,6 +67,7 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
+        NxHeaderLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
@@ -114,6 +115,7 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
+        NxHeaderLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,
@@ -192,6 +194,7 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxThreeDotDropdown,
         NxGenericDropdown,
         NxLanguageDropdown,
+        NxHeaderLanguageDropdown,
         NxAccountSettingsDropdown,
         NxActiveSystemDropdown,
         NxNavLocationDropdown,

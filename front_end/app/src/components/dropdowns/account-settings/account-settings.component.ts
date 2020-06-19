@@ -15,7 +15,7 @@ import { takeUntil }                 from 'rxjs/operators';
 @Component({
     selector    : 'nx-account-settings-select',
     templateUrl : 'account-settings.component.html',
-    styleUrls   : ['account-settings.component.scss']
+    styleUrls   : [NxConfigService.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {

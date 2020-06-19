@@ -27,10 +27,10 @@
                 </a>
             </span>
             <span *ngIf="!this.loginState">
-                <nx-language-select
+                <nx-header-language-select
                         class="auto"
                         short="true" altStyle="true"
-                        instantReload="true" instantApply="true"></nx-language-select>
+                        instantReload="true" instantApply="true"></nx-header-language-select>
             </span>
         </li>
     </ul>
@@ -56,6 +56,11 @@
             <ul class="nav navbar-nav navbar-right auth-visible">
                 <li>
                     <nx-account-settings-select></nx-account-settings-select>
+                    <nx-header-language-select
+                        *ngIf="this.CONFIG.isLocal"
+                        class="auto"
+                        short="true" altStyle="true"
+                        instantReload="true" instantApply="true"></nx-header-language-select>
                 </li>
             </ul>
         </div>
@@ -96,6 +101,11 @@
                 <ul class="nav navbar-nav navbar-right auth-visible" *ngIf="dropdownsVisible">
                     <li>
                             <nx-account-settings-select [small]="showSmallRightNav$ | async"></nx-account-settings-select>
+                            <nx-header-language-select
+                                *ngIf="this.CONFIG.isLocal"
+                                class="auto"
+                                short="true" altStyle="true"
+                                instantReload="true" instantApply="true"></nx-header-language-select>
                     </li>
                 </ul>
             </div>

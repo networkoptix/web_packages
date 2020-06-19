@@ -9,22 +9,7 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
 import { ILanguages }                from '../../../services/nx-cloud-api.types';
-
-@Component({
-    selector      : 'nx-language-select',
-    templateUrl   : 'language.component.html',
-    styleUrls     : ['language.component.scss'],
-    encapsulation : ViewEncapsulation.None,
-    providers     : [
-        {
-            provide     : NG_VALUE_ACCESSOR,
-            useExisting : forwardRef(() => NxLanguageDropdown),
-            multi       : true
-        }
-    ]
-})
-
-export class NxLanguageDropdown extends BaseDropdown {
+class BaseLanguageDropdown extends BaseDropdown {
     @Input() instantReload;
     @Input() instantApply;
     @Input() dropup;
@@ -128,3 +113,33 @@ export class NxLanguageDropdown extends BaseDropdown {
         this.onTouchedCallback();
     }
 }
+
+@Component({
+    selector      : 'nx-language-select',
+    templateUrl   : 'language.component.html',
+    styleUrls     : ['language.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
+        {
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxLanguageDropdown),
+            multi       : true
+        }
+    ]
+})
+export class NxLanguageDropdown extends BaseLanguageDropdown {}
+
+@Component({
+    selector      : 'nx-header-language-select',
+    templateUrl   : 'language.component.html',
+    styleUrls     : [NxConfigService.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    encapsulation : ViewEncapsulation.None,
+    providers     : [
+        {
+            provide     : NG_VALUE_ACCESSOR,
+            useExisting : forwardRef(() => NxLanguageDropdown),
+            multi       : true
+        }
+    ]
+})
+export class NxHeaderLanguageDropdown extends BaseLanguageDropdown {}

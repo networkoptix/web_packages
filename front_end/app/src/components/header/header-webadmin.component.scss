@@ -1,0 +1,9 @@
+@use '../../../styles/theme_variables';
+@import './header.component.scss';
+
+.navbar {
+    border-bottom : 1px solid transparent !important;
+    &.navbar-default {
+        background-color: theme_variables.$dark14 !important;
+    }
+}

@@ -61,7 +61,9 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
     async get(forceUpdate = false) {
         try {
             const { reply: user } = await this.mediaServerApi.getCurrentUser(forceUpdate);
-            return new Account(user);
+            const account = new Account(user);
+            this.account = account;
+            return account;
         } catch (err) {
             if (!this.loginDialogActive) {
                 return this.showLogin().then(() => <false> false);

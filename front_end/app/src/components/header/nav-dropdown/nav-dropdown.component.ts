@@ -10,7 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 @Component({
     selector   : 'nx-nav-dropdown',
     templateUrl: 'nav-dropdown.component.html',
-    styleUrls  : ['nav-dropdown.component.scss']
+    styleUrls  : [NxConfigService.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     name = new BehaviorSubject('');

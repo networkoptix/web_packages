@@ -8,7 +8,7 @@
             (click)="show = !show"
             type="button" id="accountSettingsSelect" data-toggle="dropdown">
         <div class="popup arrow up" [ngClass]="{'invisible': !dropdownWidth$.value, 'small-override': small}"></div>
-        <span class="glyphicon glyphicon-user"></span>
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + 'user.svg'" [svgStyle]="{'width.px': 24, 'height.px': 24, 'margin.px': small ? 8 : 10}"></svg-icon>
         <span *ngIf="!small" class="user-email" [innerHTML]="settings.email"></span>
     </button>
     <div class="dropdown-menu"

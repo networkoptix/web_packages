@@ -8,7 +8,7 @@
         [ngClass]="{'hide-dropdown': hideDropdown}"
         type="button" id="activeSystemDropdown" data-toggle="dropdown">
         {{name | async}}
-        <div *ngIf="!hideDropdown" class="nav-arrow">
+        <div *ngIf="!hideDropdown" class="nav-arrow" id="nav-sub-menu-dropdown">
             <span></span>
             <span></span>
         </div>
