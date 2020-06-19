@@ -33,7 +33,7 @@ const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector     : 'nx-dynamic-table',
     templateUrl  : './dynamic-table.component.html',

@@ -4,11 +4,11 @@ import {
 import { NxRibbonService }          from './ribbon.service';
 import { distinctUntilChanged }     from 'rxjs/operators';
 import { Subscription }             from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxUtilsService }           from '../../services/utils.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector     : 'nx-ribbon',
     templateUrl  : 'ribbon.component.html',

@@ -26,7 +26,7 @@ import { MessageParams }             from '../../dialogs/message/message.compone
 import { SubscriptionLike }          from 'rxjs';
 import { isArray }                   from 'rxjs/internal-compatibility';
 import { delay }                     from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxUtilsService }            from '../../services/utils.service';
 import { NxScrollMechanicsService }  from '../../services/scroll-mechanics.service';
 
@@ -34,7 +34,7 @@ interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'ipvd',
     templateUrl   : 'ipvd.component.html',

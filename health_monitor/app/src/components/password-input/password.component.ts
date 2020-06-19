@@ -17,7 +17,7 @@ import {
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-password-input',
     templateUrl: 'password.component.html',

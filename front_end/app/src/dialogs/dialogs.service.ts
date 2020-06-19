@@ -7,7 +7,7 @@ import {
     BehaviorSubject, SubscriptionLike
 }                                              from 'rxjs';
 import { NgForm }                              from '@angular/forms';
-import { AutoUnsubscribe }                     from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                        from '@ngneat/until-destroy';
 import { NxToastService }                      from './toast.service';
 import { NxLanguageProviderService }           from '../services/nx-language-provider';
 import { NxConfigService, IConfig }            from '../services/nx-config';
@@ -40,7 +40,7 @@ import { NxCloudApiService }                   from '../services/nx-cloud-api';
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
     LANG: LanguageI18NStaticTypes;

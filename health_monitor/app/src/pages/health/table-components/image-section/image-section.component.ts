@@ -10,7 +10,7 @@ interface ThumbNail {
     url: string;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-image-section',
     templateUrl: './image-section.component.html',

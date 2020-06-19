@@ -9,10 +9,10 @@ import { NxUriService }              from '../../../../services/uri.service';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { delay }                     from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxScrollMechanicsService }  from '../../../../services/scroll-mechanics.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-cam-view',
     templateUrl : './cam-view.component.html',

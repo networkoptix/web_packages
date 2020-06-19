@@ -13,10 +13,10 @@ import { NxDialogsService }          from '../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { debounceTime }              from 'rxjs/operators';
 import { Subject, Subscription }     from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxSystemsService }          from '../../../services/systems.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-systems-list-component',
     templateUrl : 'list.component.html',

@@ -1,17 +1,16 @@
 import {
     Component, Input, OnDestroy
 }                                    from '@angular/core';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import {
-    BehaviorSubject, combineLatest, Subject
-}                                    from 'rxjs';
+    BehaviorSubject, combineLatest, Subject, SubscriptionLike
+} from 'rxjs';
 import { BaseDropdown }              from '../injDropdown';
 import { NxConfigService }           from '../../../services/nx-config';
 import { Account, NxAccountService } from '../../../services/account.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
-import { takeUntil }                 from 'rxjs/operators';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-account-settings-select',
     templateUrl : 'account-settings.component.html',
@@ -23,8 +22,10 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
 
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
-    rightOffset$ = new BehaviorSubject(0)
-    unsub$ = new Subject();
+    rightOffset$ = new BehaviorSubject(0);
+
+    accountSubscription: SubscriptionLike;
+    widthSubscription: SubscriptionLike;
 
     settings: Pick<Account, 'email' | 'is_staff' | 'is_superuser'> = {
         email        : '',
@@ -41,8 +42,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
     }
 
     ngOnInit() {
-        this.accountService.accountSubject
-            .pipe(takeUntil(this.unsub$))
+        this.accountSubscription = this.accountService.accountSubject
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
@@ -58,8 +58,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
                     };
                 }
             });
-        combineLatest(this.dropdownWidth$, this.buttonWidth)
-            .pipe(takeUntil(this.unsub$))
+        this.widthSubscription = combineLatest(this.dropdownWidth$, this.buttonWidth)
             .subscribe(([dropdown, button]) => {
                 if (dropdown && button) {
                     this.rightOffset$.next(Math.max(button - dropdown + 16, 0) | 0);
@@ -67,9 +66,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
             });
     }
 
-    ngOnDestroy() {
-        this.unsub$.next('done');
-    }
+    ngOnDestroy() {}
 
     logout(): void {
         this.accountService.logout(false);

@@ -17,9 +17,9 @@ import { NxCloudApiService }            from '../../services/nx-cloud-api';
 import { NxUriService }                 from '../../services/uri.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'download-component',
     templateUrl: 'download.component.html',

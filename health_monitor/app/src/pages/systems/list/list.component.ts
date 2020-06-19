@@ -14,7 +14,7 @@ import { debounceTime }         from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-systems-list-component',
     templateUrl: 'list.component.html',

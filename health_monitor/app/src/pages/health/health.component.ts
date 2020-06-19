@@ -22,7 +22,7 @@ import { DeviceDetectorService }                 from 'ngx-device-detector';
 import { NxUriService }                          from '../../services/uri.service';
 import { flatMap } from 'rxjs/operators';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-system-health-component',
     templateUrl: 'health.component.html',

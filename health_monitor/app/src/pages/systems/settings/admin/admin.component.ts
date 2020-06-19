@@ -26,7 +26,7 @@ interface Settings {
     showMerge: boolean;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-system-admin-component',
     templateUrl: 'admin.component.html',

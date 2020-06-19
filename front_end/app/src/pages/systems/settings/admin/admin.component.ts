@@ -14,7 +14,7 @@ import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
 import { Subscription }              from 'rxjs';
 import { filter, auditTime }         from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxSystemsService }          from '../../../../services/systems.service';
 import { NxAccountService }          from '../../../../services/account.service';
@@ -28,7 +28,7 @@ interface Settings {
     showMerge: boolean;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-admin-component',
     templateUrl : 'admin.component.html',

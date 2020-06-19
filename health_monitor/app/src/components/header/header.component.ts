@@ -20,7 +20,7 @@ import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',

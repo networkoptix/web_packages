@@ -3,9 +3,9 @@ import {
     Input, OnChanges, Output,
     OnDestroy, SimpleChanges
 }                          from '@angular/core';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { UntilDestroy }    from '@ngneat/until-destroy';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-health-image',
     templateUrl : './image.component.html',

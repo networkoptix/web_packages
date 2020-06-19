@@ -3,12 +3,12 @@ import { AngularFireMessaging }         from '@angular/fire/messaging';
 import { HttpClient, HttpHeaders }      from '@angular/common/http';
 import { timer }                        from 'rxjs/observable/timer';
 import { Subscription }                 from 'rxjs';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { Router }                       from '@angular/router';
 import { NxSystemsService }             from '../../services/systems.service';
 import { NxAccountService }             from '../../services/account.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'push-notifications-component',
     templateUrl : 'push-notifications.component.html',

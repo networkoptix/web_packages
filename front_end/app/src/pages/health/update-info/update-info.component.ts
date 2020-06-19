@@ -8,9 +8,9 @@ import { NxConfigService, IConfig }  from '../../../services/nx-config';
 import { NxRibbonService }           from '../../../components/ribbon';
 import { NxHealthService }           from '../health.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector : 'nx-health-update',
     templateUrl : './update-info.component.html',

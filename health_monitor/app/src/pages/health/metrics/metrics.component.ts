@@ -22,7 +22,7 @@ interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-system-metrics-component',
     templateUrl: 'metrics.component.html',

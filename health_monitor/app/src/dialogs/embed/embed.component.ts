@@ -8,7 +8,7 @@ import { NxLanguageProviderService }             from '../../services/nx-languag
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',

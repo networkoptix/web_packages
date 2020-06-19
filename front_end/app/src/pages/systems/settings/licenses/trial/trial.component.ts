@@ -3,7 +3,7 @@ import {
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewChild
 }                                    from '@angular/core';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -11,7 +11,7 @@ import { NxProcessService }          from '../../../../../services/process.servi
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-license-trial-component',
     templateUrl : 'trial.component.html',

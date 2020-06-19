@@ -19,7 +19,7 @@ import { filter } from 'rxjs/operators';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-system-settings-component',
     templateUrl: 'settings.component.html',

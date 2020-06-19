@@ -7,7 +7,7 @@ import { NxSettingsService } from '../../pages/systems/settings/settings.service
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-footer',
     templateUrl: 'footer.component.html',

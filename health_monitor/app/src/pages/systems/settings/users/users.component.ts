@@ -21,7 +21,7 @@ import { Subscription }                         from 'rxjs';
 import { NxToastService }                       from '../../../../dialogs/toast.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-system-user-component',
     templateUrl: 'users.component.html',

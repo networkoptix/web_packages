@@ -17,7 +17,7 @@ import { NxHealthService }                 from './health.service';
 import { LanguageI18NStaticTypes }         from '../../../language_i18n_static_types';
 import { of, Subscription, throwError }    from 'rxjs';
 import { flatMap }                         from 'rxjs/operators';
-import { AutoUnsubscribe }                 from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxSystem, NxSystemService }       from '../../services/system.service';
 import { NxUtilsService }                  from '../../services/utils.service';
 import { NxAppStateService }               from '../../services/nx-app-state.service';
@@ -26,7 +26,7 @@ import { NxScrollMechanicsService }        from '../../services/scroll-mechanics
 import { WINDOW }                          from '../../services/window-provider';
 import { NxAppSourceService }              from '../../services/nx-app-source.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-system-health-component',
     templateUrl   : 'health.component.html',

@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { Utils } from '../../utils/helpers';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-ribbon',
     templateUrl: 'ribbon.component.html',

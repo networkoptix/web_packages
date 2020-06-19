@@ -12,7 +12,7 @@ import { NxHealthService }          from '../health.service';
 import { NxHealthLayoutService }    from '../health-layout.service';
 import { of, SubscriptionLike }     from 'rxjs';
 import { delay, throttleTime }      from 'rxjs/operators';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxUtilsService }           from '../../../services/utils.service';
 import { NxScrollMechanicsService } from '../../../services/scroll-mechanics.service';
 
@@ -20,7 +20,7 @@ interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-system-alerts-component',
     templateUrl   : 'alerts.component.html',

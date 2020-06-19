@@ -18,14 +18,14 @@ import { NxUriService }              from '../../../services/uri.service';
 import { NxRibbonService }           from '../../../components/ribbon/ribbon.service';
 import { NxToastService }            from '../../../dialogs/toast.service';
 import { Subscription }              from 'rxjs';
-import { filter, tap }                    from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { filter, tap }               from 'rxjs/operators';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 import { NxApplyService }            from '../../../services/apply.service';
 import { NxPageService }             from '../../../services/page.service';
 import { NxSystemAPIService }        from '../../../services/system-api.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     // eslint-disable-next-line no-multi-spaces
     selector    : 'nx-system-settings-component',
