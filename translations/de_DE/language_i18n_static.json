@@ -433,9 +433,9 @@
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Lizenz konnte nicht aktiviert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundensupport.",
+        "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
+        "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundendienst.",
         "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Bitte auswählen...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Die {{INTEGRATION_COMPANY}} Datenschutzbestimmungen finden Sie <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">hier</a>. Die %COMPANY_NAME% Datenschutzbestimmungen, die Anweisungen zum Widerruf Ihrer Einwilligung enthalten, finden Sie <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>.",
         "ipvd": "Mit dem Absenden dieses Formulars erklären Sie sich damit einverstanden, dass Sie von %COMPANY_NAME% kontaktiert werden.\nSie finden %COMPANY_NAME% Datenschutzerklärung <a href=\"%PRIVACY_LINK%\" target=\"_blank\">hier</a>, die Anweisungen zum Widerruf Ihrer Einwilligung enthält."
     },
     "registration": {

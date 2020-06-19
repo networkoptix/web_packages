@@ -68,7 +68,7 @@
         "accountSavedSuccess": "A sua conta foi gravada com sucesso",
         "accountSettings": "Configurações da conta",
         "activationLinkSent": "Link de ativação enviado",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "O acordo foi aceito",
         "changePassword": "Mudar Senha",
         "newPasswordLabel": "Nova senha",
         "passwordChangedSuccess": "Senha salva com sucesso",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Conta criada",
+                "message": "Mensagem de confirmação com o link de ativação enviada para {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Conta ativada com sucesso"
             }
         },
         "cameraLinks": {
@@ -114,7 +114,7 @@
         },
         "cameraStates": {
             "error": "Erro",
-            "errorLoading": "An error occurred while loading this video.",
+            "errorLoading": "Ocorreu um erro ao carregar este vídeo.",
             "flashOrWebmRequired": "Por favor <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> ou o <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>codec WebM</a> para reproduzir vídeo no Internet Explorer.",
             "flashRequired": "Por favor, <a href='https://get.adobe.com/flashplayer/' target='_blank'>instale o Adobe Flash</a> para reproduzir vídeos.",
             "iOSVideoTooLarge": "O iOS não suporta vídeos maiores que fullHD (2MP: 1920x1080).",
@@ -128,14 +128,14 @@
             "unauthorized": "Necessária autenticação"
         },
         "chromeCastWarning": "O Chromecast consome muitos recursos e pode causar problemas no seu servidor.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Por favor, atualize as configurações de gravação faltantes.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Gravar sempre",
+            "motion": "Registrar somente movimento",
+            "motionLowRes": "Movimento + baixa resolução"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Valores diferentes -",
             "auto": "Auto",
             "best": "Melhor",
             "high": "Alta",
@@ -144,18 +144,18 @@
         },
         "general": "Geral",
         "searchCamPlaceholder": "Pesquisa",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemHasNoCameras": "Sem câmeras",
+        "systemHasNoCamerasMessage": "Não há câmeras acessíveis para você no sistema. <br><br>Conecte algumas câmeras à rede local do servidor para torná-las detectáveis, ou peça ao administrador do sistema para mudar seu nível de acesso.",
+        "systemNewVersion": "Atualizar seu sistema",
+        "systemNewVersionMessage": "Sua versão atual é incompatível com este recurso. Por favor, atualize seus servidores para a versão mais recente para usar este recurso.",
+        "systemNoAlerts": "Sem Alertas",
+        "systemNoAlertsMessage": "Seu sistema deve estar bem!",
         "systemOffline": "Sistema Offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Este sistema está offline e não pode ser acessado no momento.",
         "systemServerError": "Erro interno do servidor",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Ocorreu um erro, por favor, tente novamente mais tarde. Se o problema persistir, entre em contato com sua equipe de suporte.",
         "systemUnreachable": "SISTEMA INACESSÍVEL",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "O sistema está offline e, portanto, a informação não está acessível.",
         "unknown": "Desconhecido",
         "voiceCommands": {
             "clear search": "limpar pesquisa",
@@ -171,62 +171,62 @@
             "stop listening": "parar de ouvir",
             "view": "view + [camera name]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Você está visualizando um relatório desatualizado."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Cancelar",
-            "createAccount": "Create New Account",
+            "createAccount": "Criar nova conta",
             "delete": "Apagar",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "Excluir Conta",
             "download": "Baixar %VMS_NAME%",
             "logoutAuthorised": "Terminar sessão",
             "ok": "OK",
             "remove": "Remover",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "Permanecer conectado como {email} ",
+            "stayLoggedIn": "Permanecer conectado"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "Armazenamento em nuvem",
+            "enableStorage": "Habilitar armazenamento em nuvem",
+            "otherSystem": "Outro sistema...",
+            "initial": "Oferecemos {{compCapacity}} de armazenamento em nuvem gratuito por sistema para você começar.",
+            "available": "O local de armazenamento da nuvem está disponível para todos os servidores neste sistema. Você pode gerenciá-lo usando o cliente desktop {{vmsName}}.",
             "camera": "câmara",
             "cameras": "câmeras",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Armazenamento em nuvem removido com sucesso do sistema",
+                "errorPrefix": "Erro ao remover armazenamento na nuvem"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Não é possível habilitar armazenamento em nuvem",
+                "message": "Você já tem um total de <volume> armazenamento em nuvem adicionado aos seus sistemas e não pode adicionar mais. <br/><br/>Você pode excluir o armazenamento de outro sistema ou movê-lo para este. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Não é possível desconectar o sistema de %CLOUD_NAME%",
+                "message": "Este sistema tem armazenamento em nuvem com alguns arquivos nele. <br/><br/>O armazenamento na nuvem tem de ser manualmente excluído antes de desconectar o sistema de %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Mover armazenamento em nuvem",
+                "success": "Armazenamento movido com sucesso",
+                "errorPrefix": "Erro ao mover armazenamento na nuvem",
+                "notFound": "O armazenamento não foi encontrado. O armazenamento pode ter sido movido ou excluído por outro usuário",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "O armazenamento em nuvem não pode ser movido para os sistemas offline."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Armazenamento em nuvem ativado",
+                "errorPrefix": "Erro ao habilitar armazenamento em nuvem"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Você só pode mover o armazenamento na nuvem entre os sistemas dos quais você é proprietário. <br/><br/>Conecte um sistema a %CLOUD_NAME% usando sua conta da nuvem para poder mover o armazenamento na nuvem para ele."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Insira a senha para a conta do proprietário no <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Senha errada para o usuário administrador local",
+            "checking": "Verificando...",
             "commonText": "Falha ao mesclar Sistemas <strong>{{primarySystem}}</strong> e <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Conecte o sistema que você deseja mesclar com este para <strong>{{cloudName}}</strong> ou mesclar localmente usando <strong>{{vmsName}}</strong> Cliente.",
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
@@ -281,7 +281,7 @@
                 "ipvd_feedback_device": "Comentários sobre {{asset}}",
                 "ipvd_feedback_page": "Feedback para página de câmaras",
                 "sales_inquiry": "Pesquisa de vendas para {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Consulta técnica para {{asset}}"
             },
             "title": {
                 "integration": "Entre em contato com {{companyName}}",
@@ -297,11 +297,11 @@
         "titles": {
             "error": "Erro",
             "success": "Sucesso",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "Você já está logado como {email}",
             "deleteUser": "Apagar utilizador?",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "loggedFromOtherAccount": "Você será conectado com uma conta diferente",
             "noClientDetected": "Instalar %VMS_NAME% para visualizar o seu sistema",
-            "removeUser": "Remove user?",
+            "removeUser": "Remover usuário?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\"?"
@@ -315,7 +315,7 @@
             "bundle": "Cliente e Servidor",
             "camera_sdk": "Fonte de vídeo SDK",
             "client": "Somente cliente",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "SDK para metadados",
             "package": "Pacote",
             "server": "Somente servidor",
             "servertool": "Ferramenta de configuração",
@@ -350,7 +350,7 @@
                 "shortLabel": "SDK"
             },
             "windows": {
-                "label": "Windows"
+                "label": "Janelas"
             }
         },
         "mobile": {
@@ -408,7 +408,7 @@
         "cantGetSystemInfoPrefix": "Informações do sistema indisponível",
         "cantGetSystemsListPrefix": "A lista de Sistemas não está disponível",
         "cantGetUsersListPrefix": "A lista de utilizadores não está disponível",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% aplicativo não foi detectado.",
         "cantRegisterPrefix": "Ocorreu um erro",
         "cantSendActivationPrefix": "Não é possível enviar um email de confirmação",
         "cantSendConfirmationPrefix": "Não é possível enviar um email de confirmação",
@@ -445,11 +445,11 @@
         "Drone": "Drone",
         "Health Monitor": "Monitor de Saúde",
         "Storage": "Armazenamento",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "Meu",
         "phoneNumberWithLabel": "Tel: {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} Requisitos",
+        "testedVersionLabel": "Testado com {{vmsName}} versão:",
+        "testedVersionsLabel": "Testado com {{vmsName}} versões:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Câmeras PTZ avançadas",
@@ -491,7 +491,7 @@
         "primaryCodec": "Codec",
         "resolutionArea": "Área",
         "sndResolution": "Fluxo Secundário",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "Principais {{value}} por volume:",
         "vendor": "Fabricante"
     },
     "menu": {
@@ -562,13 +562,13 @@
             "message": "System is offline and hence, servers are not accessible."
         }
     },
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Por favor, selecione...",
     "privacyPolicy": {
         "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Eu concordo com os <a href=\"/content/eula\" target=\"_blank\">Termos &\nCondições</a> e a <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Política de privacidade</a>"
     },
     "ribbon": {
         "beingMerged": {
@@ -580,7 +580,7 @@
             "backToEditText": "Voltar às interfaces de edição",
             "previewRibbon": "Esta página é uma pré-visualização das últimas alterações, e não corresponde à versão disponível publicamente."
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
+        "systemOffline": "O sistema está offline. Algumas configurações podem não estar disponíveis.",
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {
@@ -620,7 +620,7 @@
         "successRename": "Server name saved."
     },
     "system": {
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+        "MERGE_FINISHES": "Quando o \"Merge\" terminar, todos os usuários e câmeras deste sistema ficarão disponíveis no Sistema <strong>{{targetSystemName}}</strong> e este sistema será excluído.",
         "mergeUnknownName": "Nome desconhecido para o sistema (Causado pela mescla de nuvem)",
         "mySystemSearch": "IMeMyMine",
         "settings": {

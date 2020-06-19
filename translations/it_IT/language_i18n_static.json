@@ -433,9 +433,9 @@
         "wrongCode": "L'account è già attivato o il codice di conferma non è corretto",
         "wrongCodeRestore": "Il codice di conferma è già utilizzato o errato",
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Impossibile attivare la licenza. Riprova o contatta l'assistenza clienti.",
+        "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
+        "licenseServerError": "Impossibile attivare la licenza. Il server licenza non ha risposto. Riprova o contatta il Servizio clienti.",
         "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Selezionare...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Troverete il {{INTEGRATION_COMPANY}} sulla privacy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">qui</a>. La politica sulla privacy %COMPANY_NAME%, che include istruzioni su come revocare il consenso, è disponibile <a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a>.",
         "ipvd": "Inviando questo modulo accetti di essere contattato da %COMPANY_NAME%.\nTroverai l'informativa sulla privacy %COMPANY_NAME%<a href=\"%PRIVACY_LINK%\" target=\"_blank\">qui</a> che includono istruzioni su come revocare il tuo consenso."
     },
     "registration": {

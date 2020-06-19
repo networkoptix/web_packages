@@ -433,9 +433,9 @@
         "wrongCode": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
         "wrongCodeRestore": "Bekräftelsekoden är redan använd eller felaktig",
         "wrongParameters": "Vissa parametrar på formuläret är felaktiga",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Det gick inte att aktivera licensen. Vänligen försök igen eller kontakta kundsupport.",
+        "licenseTimeout": "Det gick inte att aktivera licensen på grund av en timeout för anslutning. Se till att servern är online och försök igen.",
+        "licenseServerError": "Det gick inte att aktivera licensen. Licensservern svarade inte. Vänligen försök igen eller kontakta kundsupport.",
         "networkConnection": "Det går inte att ansluta till {{cloudName}}, kontrollera din nätverksanslutning."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Vänligen välj...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Du hittar {{INTEGRATION_COMPANY}} sekretesspolicy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">här</a>. Den %COMPANY_NAME% integritetspolicy, som omfattar instruktioner om hur att ta ut ditt medgivande, finns <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a>.",
         "ipvd": "Genom att skicka detta formulär samtycker du till att kontakta dig av %COMPANY_NAME%.\nDu hittar %COMPANY_NAME% sekretesspolicy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">här</a> som innehåller instruktioner om hur du drar tillbaka ditt samtycke."
     },
     "registration": {
