@@ -26,7 +26,7 @@ Unbind System
     Return From Keyword    ${resp.json()}
 
 Create system and attach to cloud
-    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}
+    [Arguments]    ${server url}    ${server port}    ${system name}    ${cloud email}    ${cloud password}=${BASE PASSWORD}
     @{cloud auth}=   Create List    ${cloud email}    ${cloud password}
     @{default auth}=    Create List    admin    admin
     &{bind json}=    Bind System    ${cloud auth}    ${ENV}    name=${system name}

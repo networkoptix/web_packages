@@ -14,6 +14,7 @@ Resource     Resources/system-camera-resource.robot
 Resource     Resources/ipvd-resource.robot
 Resource     Resources/system-user-resource.robot
 Resource     Resources/system-admin-resource.robot
+Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 

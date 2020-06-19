@@ -1,4 +1,8 @@
 *** Variables ***
+# Image names will not he hardcoded once we have an option to download recent builds automatically
+${IMAGE 4.0}    4.0_test
+${IMAGE 4.1}    4.1_test
+${LOCALHOST}    https://localhost
 
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx

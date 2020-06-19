@@ -8,6 +8,7 @@ Resource     variables/register-variables.robot
 Resource     variables/system-camera-variables.robot
 Resource     variables/system-admin-variables.robot
 Resource     variables/systems-page-variables.robot
+Resource     variables/cloud-merge-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
@@ -123,58 +124,8 @@ ${USERS LIST LINK}                    //a[@id='users']
 ${USERS LIST}                         ${USERS LIST LINK}/../../div[contains(@class,'level-3-items')]
 
 ${ACCOUNT SETTINGS BUTTON SYSTEM}     //button[@id="accountSettingsButton"]
-
-
 ${SHARE BUTTON SYSTEMS}               //nx-system-settings-component//nx-menu//nx-menu-button//button   # Currently called "Add User"
-
 ${SYSTEM NO ACCESS}                   //h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(),"${SYSTEM NO ACCESS TEXT}")]
-
-#Merge
-${MERGE BUTTON SYSTEM}                //button/span[text()="${MERGE SYSTEM BUTTON TEXT}"]/..
-${MERGE BUTTON SYSTEM DISABLED}       //button[@disabled]/span[text()="${MERGE SYSTEM BUTTON TEXT}"]
-${MERGE DIALOG}                       //nx-modal-merge-content
-${MERGE FORM}                         ${MERGE DIALOG}//form[@name="mergeForm"]
-${MERGE SYSTEM DROPDOWN}              ${MERGE DIALOG}//button[@id="system"]
-${MERGE X BUTTON}                     ${MERGE DIALOG}//button[contains(@class,"close")]
-${MERGE GO BACK BUTTON}               ${MERGE DIALOG}//button[contains(@class, "svg-icon")][1]
-${MERGE NEXT BUTTON}                  ${MERGE DIALOG}//button[contains(@class,"btn btn-primary") and contains(text(),"${NEXT TEXT}")]
-${OTHER SYSTEM}                       Other System...
-${MERGE SYSTEMS HEADER}               ${MERGE DIALOG}//h1[contains(text(), "${MERGE SYSTEMS TEXT}")]
-${CURRENTLY MERGING CARD}             //div[contains(@class,"card-body")]
-${CURRENTLY MERGING DOTS}             ${CURRENTLY MERGING CARD}//div[contains(@class, "circleG circleG_")]
-${MERGE NOT OWNER MESSAGE 2}          ${MERGE DIALOG}//p[@class='help-block-no-height'][2]
-${MERGE FAILED DIALOG HEADER}         //nx-modal-generic-content//h1/span[contains(text(),"${SYSTEMS MERGE FAILED TEXT}")]
-${MERGE FAILED OK BUTTON}             //nx-modal-generic-content//button[contains(text(),"${OK TEXT}")]
-${MERGE FAILED X BUTTON}              //nx-modal-generic-content//button[contains(@class,"close")]
-${MERGE CURRENT SYSTEM WITH}          ${MERGE DIALOG}//p[contains(text(),"${MERGE CURRENT SYSTEM WITH TEXT}")]
-${MERGE ONLY AS OWNER}                ${MERGE DIALOG}//p[contains(text(),"${YOU CAN ONLY MERGE AS OWNER TEXT}")]
-${MERGE CHECKING HINT}                ${MERGE DIALOG}//p[contains(text(),"${CHECKING TEXT}")]
-${MERGE PASSWORD REQUIRED}            ${MERGE DIALOG}//label[contains(@class, "error-label") and contains(text(),"${PASSWORD IS REQUIRED TEXT}")]
-${MERGE PASSWORD INCORRECT}           ${MERGE DIALOG}//label[contains(@class, "error-label") and contains(text(),"${WRONG PASSWORD}")]
-${MERGE ENTER SERVER ADDRESS}         ${MERGE DIALOG}//label[contains(text(),"${MERGE ENTER SERVER ADDRESS TEXT}")]
-${MERGE INVALID URL}                  ${MERGE DIALOG}//label[contains(text(),"${MERGE INVALID URL TEXT}")]
-${MERGE SERVER NOT FOUND}             ${MERGE DIALOG}//label[contains(text(),"${MERGE SERVER NOT FOUND TEXT}")]
-${MERGE ADMIN FORM}                   ${MERGE DIALOG}//form[@name="adminPasswordForm"]
-${MERGE CHECK MERGE FORM}             ${MERGE DIALOG}//form[@name="checkMergeForm"]
-${MERGE FORM SERVER URL LABEL}        ${MERGE CHECK MERGE FORM}//label[@for="serverUrl" and contains(text(), "${MERGE SERVER URL TEXT}")]
-${MERGE FORM SERVER URL INPUT}        ${MERGE CHECK MERGE FORM}//input[@id="serverUrl"]
-${SYSTEM HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEM HAS AN OLDER SOFTWARE VERSION TEXT}")]
-${SYSTEM HAS A NEWER SOFTWARE VERSION}     ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SYSTEM HAS A NEWER SOFTWARE VERSION TEXT}")]
-${SERVER HAS AN OLDER SOFTWARE VERSION}    ${MERGE CHECK MERGE FORM}//p[contains(text(), "${SERVER HAS AN OLDER SOFTWARE VERSION TEXT}")]
-${MERGE ADMIN FORM LOGIN LABEL}       ${MERGE ADMIN FORM}//label[@for="adminLogin" and contains(text(), "${LOGIN TEXT}")]
-${MERGE ADMIN FORM LOGIN INPUT}       ${MERGE ADMIN FORM}//input[@name="adminLogin"]
-${MERGE ADMIN FORM PASSWORD LABEL}    ${MERGE ADMIN FORM}//label[@for="adminPassword" and contains(text(), "${PASSWORD TEXT}")]
-${MERGE ADMIN FORM PASSWORD INPUT}    ${MERGE ADMIN FORM}//input[@id="adminPassword"]
-
-${MERGE CHOOSE PRIMARY FORM}          ${MERGE DIALOG}//form[@name="choosePrimaryForm"]
-${MERGE RADIO FIRST SYSTEM}           ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="firstSystem"]
-${MERGE RADIO SECOND SYSTEM}          ${MERGE CHOOSE PRIMARY FORM}//nx-radio[@name="secondSystem"]
-${MERGE TAKE SYSTEM NAME}             ${MERGE CHOOSE PRIMARY FORM}//p[contains(text(), "${TAKE SYSTEM NAME AND SETTINGS TEXT}")]
-
-${CONFIRM MERGE FORM}                 ${MERGE DIALOG}//form[@name="confirmMergeForm"]
-${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
-${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
-${MERGE PASSWORD INPUT}               ${CONFIRM MERGE FORM}//input[@name="cloudOwnerPassword"]
 
 #Disconnect from my account
 ${DISCONNECT MODAL WARNING}              ${MODAL DIALOG}//p[contains(text(),"${DISCONNECT MODAL WARNING TEXT}")]

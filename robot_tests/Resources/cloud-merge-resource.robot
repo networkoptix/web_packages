@@ -1,0 +1,150 @@
+*** Keywords ***
+Validate Check Merge Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+    ...    ${MERGE SYSTEMS HEADER}
+    ...    ${MERGE X BUTTON}
+    ...    ${MERGE NEXT BUTTON}
+    ...    ${MERGE CURRENT SYSTEM WITH}
+    ...    ${MERGE SYSTEM DROPDOWN}
+#    ...    ${MERGE ONLY AS OWNER}
+
+Validate Admin Password Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+    ...    ${MERGE X BUTTON}
+    ...    ${MERGE GO BACK BUTTON}
+    ...    ${MERGE NEXT BUTTON}
+    ...    ${MERGE ADMIN FORM LOGIN LABEL}
+    ...    ${MERGE ADMIN FORM LOGIN INPUT}
+    ...    ${MERGE ADMIN FORM PASSWORD LABEL}
+    ...    ${MERGE ADMIN FORM PASSWORD INPUT}
+
+    ${auto populated login}=   Get Element Attribute    ${MERGE ADMIN FORM LOGIN INPUT}    value
+    Should Be Equal As Strings    ${auto populated login}    admin
+    ${disabled}=   Get Element Attribute    ${MERGE ADMIN FORM LOGIN INPUT}    disabled
+    Should Be Equal As Strings    ${disabled}    true
+
+Validate Choose Primary Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+    ...    ${MERGE X BUTTON}
+    ...    ${MERGE RADIO FIRST SYSTEM}
+    ...    ${MERGE RADIO SECOND SYSTEM}
+    ...    ${MERGE TAKE SYSTEM NAME}
+    ...    ${MERGE GO BACK BUTTON}
+    ...    ${MERGE NEXT BUTTON}
+
+Validate Confirm Merge Dialog
+    Run keyword and continue on failure    Wait Until Elements Are Visible
+    ...    ${MERGE ENTER YOUR PASSWORD}
+    ...    ${MERGE PASSWORD INPUT}
+    ...    ${MERGE X BUTTON}
+    ...    ${MERGE GO BACK BUTTON}
+    ...    ${MERGE NEXT BUTTON}
+
+Validate System Page
+    Wait Until Elements Are Visible
+    ...    ${DISCONNECT FROM NX}
+    ...    ${RENAME SYSTEM}
+    ...    ${MERGE BUTTON SYSTEM}
+    Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
+
+Validate Merge
+    Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    #TODO: add checking the merge text appears and Merge and Disconnect buttons are disabled during the merge.
+    Run keyword and continue on failure    Check For Alert    ${SYSTEM MERGE COMPLETED TEXT}
+
+Choose System From Dropdown
+    [Arguments]
+    ...    ${target system name}
+    ...    ${target system ip}=${EMPTY}
+    ...    ${target system port}=${EMPTY}
+    ...    ${input url}=${EMPTY}
+    ...    ${check url}=${False}
+
+    Click Element    ${MERGE SYSTEM DROPDOWN}
+    Wait Until Element Is Visible    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
+    # TODO: add validating server info in dropdown if check url==${True}
+    Click Element    ${MERGE CHECK MERGE FORM}//li/a//span[text()="${target system name}"]
+    Run Keyword Unless     ${check url}==${False}    Wait Until Elements Are Visible    ${MERGE FORM SERVER URL LABEL}    ${MERGE FORM SERVER URL INPUT}
+    ${url placeholder}=   Run Keyword And Return If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
+    Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host: port
+    # TODO: add auto-populated url verification(there is no text in DOM now) if check url==${True}
+    Run Keyword Unless     '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${target system ip}${target system port}
+
+Choose Primary System
+    [Arguments]    ${from target}=${False}
+    Validate Choose Primary Dialog
+    Run Keyword If    ${from target}==${True}    Click Element    ${MERGE RADIO SECOND SYSTEM}
+    # TODO: make sure choice is changed if ${from target}=${True}
+
+Complete merge steps till final password input
+    [Arguments]
+    ...    ${target system name}
+    ...    ${target system ip}=${EMPTY}
+    ...    ${target system port}=${EMPTY}
+    ...    ${input url}=${EMPTY}
+    ...    ${check url}=${False}
+    ...    ${from target}=${False}
+
+    Click Button    ${MERGE BUTTON SYSTEM}
+    Validate Check Merge Dialog
+
+    Choose System From Dropdown   ${target system name}    ${target system ip}    ${target system port}    ${input url}    ${check url}
+    Validate Check Merge Dialog
+    Click Button    ${MERGE NEXT BUTTON}
+    Wait Until Element Is Visible    ${MERGE CHECKING HINT}
+
+    Choose Primary System    ${from target}
+    Click Button    ${MERGE NEXT BUTTON}
+    Validate Confirm Merge Dialog
+
+Disconnect all systems from the account
+    [Arguments]    ${email}    ${password}
+    ${systems}=   Get Account Systems   ${ENV}    ${email}    ${password}
+    FOR    ${system id}    IN    @{systems}
+        Disconnect    ${ENV}    ${email}    ${password}    ${system id}
+    END
+
+Merge Suite Setup
+    Open Browser and go to url    ${ENV}
+    Set Suite Variable    @{test containers}    @{EMPTY}
+
+Merge Suite Teardown
+    Close All Browsers
+    Remove Test Containers
+
+Remove Test Containers
+    FOR    ${c}    IN    @{test containers}
+        Stop Container    ${c}    remove=True
+    END
+
+Reset Systems State
+    Disconnect all systems from the account    ${email 1 owner}    ${password}
+    Disconnect all systems from the account    ${email 2 owner}    ${password}
+    FOR    ${i}    IN RANGE    1  5
+        Wait Until Keyword Succeeds    5x    5s    Restore Factory Defaults    ${server ${i} ip}    ${auth}
+        Wait Until Keyword Succeeds    5x    5s    Setup Local System    ${server ${i} ip}    ${password}     ${server ${i} name}
+    END
+    Close Browser
+    Open Browser and go to url    ${ENV}
+
+#Create system and attach to cloud
+#    [Arguments]
+#    ...    ${user}
+#    ...    ${image}
+#    ...    ${port}
+#    ...    ${system name}
+#    ...    ${network}=bridge
+#    ${cont}    Run Container    ${image}    ${port}    ${network}
+#    sleep    5
+#    ${auth}=    Create List    ${user}    ${password}
+#    ${default auth}=    Create List    admin    admin
+#    &{bind json}=    Bind System    ${auth}    ${ENV}    name=${system name}
+#    sleep    5
+#    &{Setup Cloud System json}=    Setup Cloud System
+#    ...    ${default auth}
+#    ...    https://localhost:${port}
+#    ...    ${bind json["authKey"]}
+#    ...    ${bind json["name"]}
+#    ...    ${bind json["id"]}
+#    ...    ${bind json["ownerAccountEmail"]}
+#    [Return]    ${bind json["id"]}

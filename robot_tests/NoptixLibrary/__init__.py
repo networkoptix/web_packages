@@ -26,6 +26,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
 
+
 class NoptixLibrary(object):
 
     def go_forward(self):
@@ -47,36 +48,35 @@ class NoptixLibrary(object):
                 return element
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
-            
+
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
+        if self.get_os() == "MacOS":
             locator.send_keys(Keys.SHIFT, Keys.UP)
             locator.send_keys(Keys.CONTROL, Keys.INSERT)
-        else:    
+        else:
             locator.send_keys(Keys.CONTROL + 'a')
             locator.send_keys(Keys.CONTROL + 'c')
 
     def paste_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
+        if self.get_os() == "MacOS":
             locator.send_keys(Keys.SHIFT, Keys.INSERT)
-        else:    
+        else:
             locator.send_keys(Keys.CONTROL + 'v')
 
     def delete_all_text(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         locator = seleniumlib.find_element(locator)
         # locator = self.convert_locator_to_webelement(locator)
-        if self.get_os()=="MacOS":
+        if self.get_os() == "MacOS":
             locator.send_keys(Keys.SHIFT, Keys.UP)
             locator.send_keys(Keys.BACKSPACE)
-        else:     
+        else:
             logger.info("windows")
             timeout = time.time() + 5
             while time.time() < timeout:
                 locator.send_keys(Keys.BACKSPACE)
-
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -87,7 +87,6 @@ class NoptixLibrary(object):
         while time.time() < timeout:
             locator.send_keys(Keys.BACKSPACE)
         locator.send_keys(text)
-
 
     def get_random_email(self, email):
         index = email.find('@')
@@ -104,7 +103,7 @@ class NoptixLibrary(object):
     def get_random_symbol_email(self, email):
         index = email.find('@')
         email = email[:index] + \
-            "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
+                "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
 
     def get_code_from_email_link(self, url):
@@ -228,7 +227,7 @@ class NoptixLibrary(object):
         navArrows = "//div[@class='nav-arrow']/span"
         logger.debug('navArrows: ' + navArrows)
 
-        locators = locator+navArrows
+        locators = locator + navArrows
         logger.debug('locators: ' + locators)
 
         # 'rotate(45deg)'
@@ -236,8 +235,8 @@ class NoptixLibrary(object):
         # 'rotate(-45deg)'
         neg = 'matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, 0)'
 
-        logger.debug('pos: '+pos)
-        logger.debug('neg: '+neg)
+        logger.debug('pos: ' + pos)
+        logger.debug('neg: ' + neg)
 
         # First, find parent element
         to = timeout + time.time()
@@ -349,7 +348,7 @@ class NoptixLibrary(object):
 
     def check_file_exists(self, url):
         linkInfo = head(url)
-        if int(linkInfo.status_code) == 200: #and int(linkInfo.headers['Content-Length']) > 1000:
+        if int(linkInfo.status_code) == 200:  # and int(linkInfo.headers['Content-Length']) > 1000:
             return
         else:
             raise Exception("File does not appear to be available.")
@@ -408,19 +407,47 @@ class NoptixLibrary(object):
             suffix = "dev"
         client = docker.from_env()
         return client.images.build(path=f"{os.getcwd()}/Docker",
-                            tag="mergemediaserver",
-                            buildargs={"mediaserver_deb":f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
+                                   tag="mergemediaserver",
+                                   buildargs={
+                                       "mediaserver_deb": f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
 
-    def run_container(self, image, port, network):
-        tmp = {'/run':'', '/run/lock':''}
-        vol = {'/sys/fs/cgroup': {
-                    'bind':'/sys/fs/cgroup',
-                    'mode':'rw'}
-                }
-        prt = {7001:port}
+    def get_image_id(self, image_name):
         client = docker.from_env()
-        cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=f"mergemediaserver{time.time()}")
-        return cont
+        image = client.images.get(image_name)
+        return image.id
+
+    # def run_container(self, image, port, network):
+    #     tmp = {'/run':'', '/run/lock':''}
+    #     vol = {'/sys/fs/cgroup': {
+    #                 'bind':'/sys/fs/cgroup',
+    #                 'mode':'rw'}
+    #             }
+    #     prt = {7001:port}
+    #     client = docker.from_env()
+    #     cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=f"mergemediaserver{time.time()}")
+    #     return cont
+
+    def run_container(self, image_name, port, network='bridge'):
+        tmp = {'/run': '', '/run/lock': ''}
+        vol = {'/sys/fs/cgroup': {'bind': '/sys/fs/cgroup', 'mode': 'rw'}}
+        rp = {'Name': 'always', "MaximumRetryCount": 5}
+        client = docker.from_env()
+        image = client.images.get(image_name)
+        container = client.containers.run(image.id, detach=True, tmpfs=tmp, volumes=vol, ports={7001: port},
+                                          network_mode=network, name=f'{image_name}_{port}')
+        return container
+
+    def start_container(self, container):
+        client = docker.from_env()
+        container.start()
+
+    def stop_container(self, container, remove=False):
+        client = docker.from_env()
+        running_containers = client.containers.list()
+        if container in running_containers:
+            container.stop()
+        if remove:
+            container.remove()
 
     def stop_containers(self, allContainers=True):
         client = docker.from_env()
@@ -441,22 +468,22 @@ class NoptixLibrary(object):
         imgs = client.images.list(name="mergemediaserver")
         for img in imgs:
             client.images.remove(img.id)
-            
+
     def chrome_options_for_push_notifications(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-infobars")
         options.add_argument("start-maximized")
         options.add_argument("--disable-extensions")
-        #options.add_argument("--disable-gpu")
-        #options.add_argument("--headless")
+        # options.add_argument("--disable-gpu")
+        # options.add_argument("--headless")
         options.add_experimental_option("prefs", {
             "profile.default_content_setting_values.notifications": 1,
         })
         return options
-    
+
     def push_notifications_swarm(self, slaves, users, ramp, seconds):
-        txtFile = str(uuid.uuid1())    
-        f= open(f"{txtFile}.txt","w+")
+        txtFile = str(uuid.uuid1())
+        f = open(f"{txtFile}.txt", "w+")
         f.write("1\n")
         f.close()
         os.environ['LOCUSTTEXT'] = txtFile
@@ -464,18 +491,18 @@ class NoptixLibrary(object):
         ramp = int(ramp)
         slaves = int(slaves)
         seconds = int(seconds)
-#        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
-#        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
+        #        cmd = f". Load-Testing/run_load_test_gui.sh Load-Testing/push.py {slaves}"
+        #        print(f"Browse to http://localhost:8089/ use {slaves} slaves and {users} users")
         cmd = f". Load-Testing/run_load_test.sh Load-Testing/push.py {slaves} {users} {ramp} {seconds}s"
         print(cmd)
         os.system(cmd)
 
     def push_notification_pabot_command(self, max):
-        txtFile = str(uuid.uuid1())    
-        f= open(f"{txtFile}.txt","w+")
+        txtFile = str(uuid.uuid1())
+        f = open(f"{txtFile}.txt", "w+")
         f.write("LOG OF RESPONSES\n\n")
         f.close()
         os.environ['LOCUSTTEXT'] = txtFile
         cmd = f"pabot --testlevelsplit --processes 10 --variable max:{max} --outputdir Load-Testing Load-Testing/push_notifications_pabot.robot"
-#       print(cmd)
+        #       print(cmd)
         os.system(cmd)
