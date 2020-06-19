@@ -61,8 +61,11 @@ Verify Changed Info Via API
 Verify In Local Users UI
     [Arguments]    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
-        Wait Until Element is Visible    //span[text()="Local+${user}"]
-        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}] 
+        Wait Until Elements Are Visible    
+        ...    //span[text()="Local+${user}"]
+        ...    //span[text()="Local+${user}"]//preceding-sibling::${LOCAL USER ICON}   
+        Element Should Contain    //span[text()="Local+${user}"]/following-sibling::span    ${role names}[${user}]
+        Element Should Not Be Visible     //span[text()="${email}"]//preceding-sibling::${LOCAL USER ICON}
         Click Element    //span[text()="Local+${user}"]
         Wait Until Elements Are Visible
 	    ...    ${LOCAL USER LOGIN}

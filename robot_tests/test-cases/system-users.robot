@@ -953,3 +953,27 @@ Local User email field can be left blank
     
     Log    Clean up
     Delete All Local Users    //span[contains(text(),"ocal+")]
+    
+User list is available for owner and administrator
+    [Tags]    C76233    local_user
+    @{local users} =    Local User Start   ${EMAIL OWNER}
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${EMAIL OWNER}
+    Log Out
+    Log    Step 2
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Go To Users List
+    Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
+    Log    Clean up
+    Delete All Local Users    //span[contains(text(),"ocal+")]
+    
+User list is not available for advanced viewer & lower
+    [Tags]    C76462
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL CUSTOM}
+    Element Should Not Be visible    ${USERS LIST LINK}
+    Log Out
+    Log    Step 2
+    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
+    Element Should Not Be visible    ${USERS LIST LINK} 
+    
