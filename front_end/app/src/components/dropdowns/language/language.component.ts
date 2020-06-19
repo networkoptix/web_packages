@@ -9,6 +9,7 @@ import { NxCloudApiService }         from '../../../services/nx-cloud-api';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxConfigService }           from '../../../services/nx-config';
 import { ILanguages }                from '../../../services/nx-cloud-api.types';
+import { environment }               from '../../../../environments/environment';
 class BaseLanguageDropdown extends BaseDropdown {
     @Input() instantReload;
     @Input() instantApply;
@@ -132,7 +133,7 @@ export class NxLanguageDropdown extends BaseLanguageDropdown {}
 @Component({
     selector      : 'nx-header-language-select',
     templateUrl   : 'language.component.html',
-    styleUrls     : [NxConfigService.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
+    styleUrls     : [environment.isLocal ? 'language-webadmin.component.scss' : 'language.component.scss'],
     encapsulation : ViewEncapsulation.None,
     providers     : [
         {

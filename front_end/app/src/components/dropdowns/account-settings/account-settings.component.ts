@@ -10,12 +10,13 @@ import { NxConfigService }           from '../../../services/nx-config';
 import { Account, NxAccountService } from '../../../services/account.service';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { takeUntil }                 from 'rxjs/operators';
+import { environment }               from '../../../../environments/environment';
 
 @AutoUnsubscribe()
 @Component({
     selector    : 'nx-account-settings-select',
     templateUrl : 'account-settings.component.html',
-    styleUrls   : [NxConfigService.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
+    styleUrls   : [environment.isLocal ? 'account-settings-webadmin.component.scss' : 'account-settings.component.scss']
 })
 
 export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy {

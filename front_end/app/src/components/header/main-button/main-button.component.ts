@@ -5,6 +5,7 @@ import { MenuNode } from '../../dropdowns/drop-menu/navigation-tile/navigation-t
 import { IConfig, NxConfigService } from '../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../services/nx-language-provider';
 import { NxHeaderService } from '../../../services/nx-header.service';
+import { environment } from '../../../../environments/environment';
 
 export enum mainButtonState {
     ALL='all',
@@ -16,7 +17,7 @@ export enum mainButtonState {
 @Component({
     selector    : 'nx-header-main-button',
     templateUrl : 'main-button.component.html',
-    styleUrls   : [NxConfigService.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
+    styleUrls   : [environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss']
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;

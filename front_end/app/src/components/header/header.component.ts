@@ -23,6 +23,7 @@ import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenusService }            from '../../services/menus.service';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { WINDOW }                    from '../../services/window-provider';
+import { environment }               from '../../../environments/environment';
 
 class CombinedWidths {
     constructor(
@@ -38,7 +39,7 @@ class CombinedWidths {
 @Component({
     selector    : 'nx-header',
     templateUrl : 'header.component.html',
-    styleUrls   : [NxConfigService.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
+    styleUrls   : [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss']
 })
 export class NxHeaderComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;

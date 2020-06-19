@@ -6,11 +6,12 @@ import { NxHeaderService } from '../../../services/nx-header.service';
 import { filter } from 'rxjs/operators';
 import { MenuNode } from '../../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector   : 'nx-nav-dropdown',
     templateUrl: 'nav-dropdown.component.html',
-    styleUrls  : [NxConfigService.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
+    styleUrls  : [environment.isLocal ? 'nav-dropdown-webadmin.component.scss' : 'nav-dropdown.component.scss']
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     name = new BehaviorSubject('');
