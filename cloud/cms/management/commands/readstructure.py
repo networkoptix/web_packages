@@ -21,81 +21,6 @@ logger = logging.getLogger(__name__)
 SOURCE_DIR = 'static/_source/{{skin}}/'
 
 
-def create_new_cloudportals_for_each_customization(logger):
-    logger.stdout.write(logger.style.SUCCESS("\nCreating cloud portal for each customization"))
-    customizations = Customization.objects.all()
-
-    for customization in customizations:
-        records_with_name = DataRecord.objects.filter(data_structure__name="%CLOUD_NAME%",
-                                                      customization=customization) \
-            .exclude(version=None).last()
-        if records_with_name:
-            asset_name = records_with_name.value
-            logger.stdout.write(logger.style.SUCCESS(
-                f"\tAsset name for {customization.name} is {asset_name}"))
-        else:
-            asset_name = "Cloud Portal"
-            logger.stdout.write(logger.style.SUCCESS(
-                f"\tCouldn't find asset name for {customization.name} using {asset_name}"))
-        cloud = structure.find_or_add_asset_with_single_customization(asset_name, customization, "cloud_portal", "")
-        cloud.customizations.add(customization)
-        cloud.save()
-    logger.stdout.write(logger.style.SUCCESS("Done creating new cloud portals"))
-
-
-def move_contexts_to_assettype(logger):
-    logger.stdout.write(
-        logger.style.SUCCESS("\nMoving contexts from original cloud portal to asset_type cloud_portal"))
-    cloud_portal = Asset.objects.get(name="cloud_portal")
-    cloud_portal_type = structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
-
-    for context in cloud_portal.context_set.all():
-        logger.stdout.write(logger.style.SUCCESS(f"\tMoving {context.name}"))
-        context.asset_type = cloud_portal_type
-        context.save()
-    logger.stdout.write(logger.style.SUCCESS("Done moving contexts to asset_type cloud_portal"))
-
-
-def move_revisions_to_new_cloud_portals(logger):
-    logger.stdout.write(logger.style.SUCCESS("Moving revisions to new cloud portals"))
-    original_cloud_portal = Asset.objects.get(id=1)
-
-    new_clouds = Asset.objects.filter(asset_type__type=AssetType.ASSET_TYPES.cloud_portal) \
-        .exclude(id=original_cloud_portal.id)
-
-    original_content_versions = ContentVersion.objects.filter(asset=original_cloud_portal)
-
-    for cloud in new_clouds:
-        logger.stdout.write(
-            logger.style.SUCCESS(
-                f"\tMoving {cloud.customizations.first()} revisions to {cloud.name}"))
-        customization_content_versions = original_content_versions.filter(
-            customization=cloud.customizations.first())
-        for content_version in customization_content_versions:
-            content_version.asset = cloud
-            content_version.save()
-            for datarecord in content_version.datarecord_set.all():
-                datarecord.asset = cloud
-                datarecord.save()
-    logger.stdout.write(logger.style.SUCCESS("Done moving revisions to new cloud portals"))
-
-
-def migrate_18_3_to_18_4(logger):
-    # If there are not assets create a AssetType of cloud_portal and we can skip migrating 18 -> 19
-    if not Asset.objects.all().exists():
-        structure.find_or_add_asset_type(AssetType.ASSET_TYPES.cloud_portal)
-
-    if AssetType.objects.all().exists():
-        logger.stdout.write(logger.style.SUCCESS("Migration has already been completed skipping this step"))
-        return
-
-    move_contexts_to_assettype(logger)
-    create_new_cloudportals_for_each_customization(logger)
-    move_revisions_to_new_cloud_portals(logger)
-
-    logger.stdout.write(logger.style.SUCCESS("Done moving records from 18.3 to 18.4"))
-
-
 def context_for_file(filename, skin_name):
     custom_dir = SOURCE_DIR.replace("{{skin}}", skin_name)
     context_name = filename.replace(custom_dir, '')
@@ -226,7 +151,6 @@ class Command(BaseCommand):
 
     @timer
     def handle(self, *args, **options):
-        migrate_18_3_to_18_4(self)
         asset_type = AssetType.get_type_by_name(options['asset_type'])
         read_languages(settings.DEFAULT_SKIN)
         if not Customization.objects.filter(name=settings.CUSTOMIZATION).exists():
