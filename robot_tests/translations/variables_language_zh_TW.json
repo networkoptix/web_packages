@@ -179,7 +179,7 @@
     "INTEGRATION SUPPORT TEXT": "支援",
     "INTEGRATION SUPPORT URL TEXT": "支援URL",
     "INTEGRATION SUPPORT EMAIL TEXT": "技術支援Email",
-    "INTEGRATION GET IN TOUCH LEGAL TEXT": "提交表單即表示您同意{{developer}} 或Network Optix與您聯繫。您可在此處瀏覽 {{developer}} 和Network Optix的隱私政策, 其中包含如何撤回您的同意的說明。",
+    "INTEGRATION GET IN TOUCH LEGAL TEXT": "提交表單即表示您同意{{developer}} 或Network Optix與您聯繫。您可在此處瀏覽 {{developer}} 和Network Optix的隱私政策, 其中包含如何撤回同意的說明。",
     "INTEGRATION GET IN TOUCH MESSAGE SENT": "訊息已發送",
     "REGISTER TITLE TEXT": "新增帳號",
     "DOWNLOAD TITLE TEXT": "下載 %VMS_NAME%",

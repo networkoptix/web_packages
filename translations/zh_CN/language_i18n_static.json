@@ -423,7 +423,7 @@
 		}
 	},
 	"privacyPolicy": {
-		"integration": "提交表单即表示您同意与{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%联系。\n您可在这里<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME%隐私政策<a href=\"%PRIVACY_LINK%\" target=\"_blank\">这里</a>可了解如何撤销您的同意。",
+		"integration": "提交表单即表示同意{{INTEGRATION_COMPANY}} 和/或 %COMPANY_NAME%与您联系。\n您可在这里<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">浏览{{INTEGRATION_COMPANY}} 隐私政策</a> 和%COMPANY_NAME%隐私政策<a href=\"%PRIVACY_LINK%\" target=\"_blank\">这里</a>可了解如何撤销您的同意。",
 		"ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
 	},
 	"common": {
