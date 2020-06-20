@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "斷線",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "您將無法再登入此系統。",
             "title": "是否中斷系統?"
         },
         "titles": {
@@ -433,9 +433,9 @@
         "wrongCode": "帳號已經啟用或確認碼不正確",
         "wrongCodeRestore": "確認代碼已使用或不正確",
         "wrongParameters": "表單上的一些參數不正確",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "無法啟用授權。請重試或聯繫客服人員。",
+        "licenseTimeout": "連接超時，啟用授權失敗。請確認伺服器在線並重試。",
+        "licenseServerError": "無法啟用授權。授權伺服器未回應。請重試或聯繫客服人員。",
         "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
     },
     "integration": {
@@ -564,8 +564,8 @@
     },
     "pleaseSelect": "請選擇...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "提交表單即同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意。"
+        "integration": "{{INTEGRATION_COMPANY}} 隱私政策可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">此處</a>找到。 您可以在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">此處</a>瀏覽%COMPANY_NAME%隱私政策, 包含有關撤回同意的說明。",
+        "ipvd": "提交表單即同意 %COMPANY_NAME%與您聯繫。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">瀏覽 %COMPANY_NAME% 隱私政策</a> ，其中包含如何撤回同意的說明。"
     },
     "registration": {
         "agreement": "我同意<a href=\"/content/eula\" target=\"_blank\">合約條款</a>和<a href=\"%PRIVACY_LINK%\" target=\"_blank\">隱私政策</a>"
