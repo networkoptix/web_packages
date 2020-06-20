@@ -152,7 +152,8 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
                 'cloud_name': asset.read_global_value("%CLOUD_NAME%"),
                 'vms_name': asset.read_global_value("%VMS_NAME%"),
                 'push_config': public_push_config,
-                'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%')
+                'google_tag_manager_id': asset.read_global_value('%GOOGLE_TAG_MANAGER_ID%'),
+                'trial_license_key': asset.read_global_value('%TRIAL_LICENSE_KEY%')
             },
             'cloud_capabilities': {
                 'integration_store_enabled': integration_store_enabled,
