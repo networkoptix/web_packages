@@ -14,7 +14,6 @@ ${url}         ${ENV}
 
 *** Keywords ***
 
-
 *** Test Cases ***
 Going to /admin as anonymous prompts to log in
     [Tags]    C56677    C56679
