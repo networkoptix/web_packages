@@ -187,3 +187,24 @@ Local User Start
     [Return]    ${local users}
 
 
+<<<<<<< HEAD
+=======
+Delete All Local Users via API
+    [Arguments]    ${auth}    ${server}    ${locals}
+    FOR    ${user}    IN    @{locals}    
+        Remove User    ${auth}    ${server}    ${user}[id]
+    END      
+    
+Reset Local Users API
+    [Arguments]    ${locals}    ${auth}    ${server} 
+    FOR    ${user}    IN    @{locals}
+        ${name} =    Remove String    ${user}[name]    _changed
+        ${variable} =    Get Substring    ${name}    6
+        ${variable} =    Set Variable If    '${variable}' == 'cloudadmin'    cloudAdmin
+        ...    '${variable}' == 'liveviewer'    liveViewer
+        ...    '${variable}' == 'advancedviewer'    advancedViewer
+        ...    ${variable}
+        Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    user id=${user}[id]    is cloud=${False}    
+    END
+    
+>>>>>>> CLOUD-5298: remove line hotfix
