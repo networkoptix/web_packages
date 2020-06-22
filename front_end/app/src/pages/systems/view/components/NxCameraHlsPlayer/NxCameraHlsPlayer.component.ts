@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, OnIni
 
 // import { NxSystem, NxCamera } from '../../../../../../../services/system.service'
 
-import * as Hls from 'hls.js'
+import Hls from 'hls.js'
 import { timeStampMs } from '../camera-timeline/timeline/numberTypeAliases'
 import { NxSystem, NxCamera } from '../../../../../services/system.service'
 import { PlaybackQuality } from '../../view.types'
