@@ -17,6 +17,7 @@ import { NxOverviewModule }          from './integration/details/overview/overvi
 import { NxSetupModule }             from './integration/details/setup/setup.module';
 import { NxSettingsModule }          from './systems/settings/settings.module';
 import { NxSystemsListModule }       from './systems/list/list.module';
+import { NxSystemViewModule }        from './systems/view/view.module';
 import { NxHealthModule }            from './health/health.module';
 import { NxAccountModule }           from './account/account.module';
 import { NxRestoreModule }           from './restore/restore.module';
@@ -50,6 +51,7 @@ import { Nx503Module }               from './503/503.module';
         NxSettingsModule,
         NxHealthModule,
         NxSystemsListModule,
+        NxSystemViewModule,
         NxAccountModule,
         NxDebugModule,
         NxGridLayoutModule,

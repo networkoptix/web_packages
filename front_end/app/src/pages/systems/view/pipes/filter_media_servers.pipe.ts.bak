@@ -1,0 +1,18 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'filter_media_servers'
+})
+export default class FilterMediaServersPipe implements PipeTransform {
+  public transform (media_servers, search_term: string) {
+    if (!search_term || !search_term.toLowerCase) return media_servers;
+    search_term = search_term.toLowerCase()
+    return (media_servers || []).map(server =>
+        ({
+            ...server,
+            cameras: server.cameras.filter(camera => camera.name.toLocaleLowerCase().search(search_term) >= 0)
+        })
+    ).filter(server => server.cameras && server.cameras.length);
+
+  }
+}

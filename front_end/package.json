@@ -46,6 +46,7 @@
     "angular2-csv": "0.2.9",
     "bootstrap": "4.5.0",
     "core-js": "3.6.5",
+    "dateformat": "^3.0.3",
     "firebase": "7.6.2",
     "hls.js": "0.13.2",
     "jquery": "3.4.1",

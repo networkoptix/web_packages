@@ -101,9 +101,44 @@ class SystemPermissions {
     editCameras = false;
 }
 
+// <added by @gbezyuk for watch component>
+import { trim_ids } from '../utils/api_response_cleaners'
+
+export interface ServerTimeInfo {
+    vmsTimeOffset: number,
+    osTimeOffset: number,
+    serverId: string, // supposed to be stripped of {} around the UUID
+    timeZoneOffset: number,
+}
+
+export interface NxCamera {
+    id: string;
+    preferredServerId: string;
+    name: string;
+    url: string;
+    status: string; // TODO: enum (@gbezyuk)
+}
+
+export interface NxMediaServer {
+    id: string;
+    name: string;
+    url: string;
+
+    timeInfo: ServerTimeInfo,
+
+    // considered obligatory for now, though may change later on (@gbezyuk)
+    cameras: NxCamera[];
+}
+// </added by @gbezyuk for watch component>
+
 class System extends SystemInterface {
     protected _isAvailable: boolean;
     cloudStorageSystemEnabled = false;
+
+    // <added by @gbezyuk for watch component>
+    mediaservers: NxMediaServer[] = null
+    resource_types: any[] = null
+    // </added by @gbezyuk for watch component>
 
     constructor() {
         super();
@@ -637,7 +672,7 @@ class ServerManager {
 
     restoreFactorySettings(serverId: string, currentPassword: string) {
         return this.mediaserverConnections[serverId].restoreFactorySettings(currentPassword);
-    }
+    }    
 }
 
 export class NxSystem extends System implements OnDestroy {
@@ -1186,6 +1221,171 @@ export class NxSystem extends System implements OnDestroy {
     activateLicense(serverId, key) {
         return this.serverManager.activateLicense(serverId, key);
     }
+
+    // <added by @gbezyuk to fix auth race condition>
+    auth_promise: Promise<any>
+    // </added by @gbezyuk to fix auth race condition>
+
+    // <changed by @gbezyuk to fix auth race condition>
+    ensureSystemAuth(force?) {
+        // console.log('ensureSystemAuth', this.id)
+        if (this.auth_promise) {
+            // console.log('in progress')
+            return this.auth_promise;
+        }
+
+        // NOTE@gbezyuk: bad direct dependency
+        if (!force && this.mediaserver.authGet) { // no need to update
+            // console.log('no need', this.mediaserver.authGet)
+            return Promise.resolve(true);
+        }
+
+        return this.auth_promise = this.cloudApi.getSystemAuth(this.id).toPromise().then((authKeys: any) => {
+            // console.log('got new', authKeys)
+            if (authKeys.authGet) {
+                this.mediaserver.setAuthKeys(authKeys.authGet, authKeys.authPost, authKeys.authPlay);
+                // console.log('new ones are good')
+                this.auth_promise = null;
+                return Promise.resolve(true);
+            } else {
+                // console.error('bad system auth response', authKeys)
+                this.auth_promise = null;
+                return Promise.reject(authKeys);
+            }
+        });
+    }
+    // </changed by @gbezyuk to fix auth race condition>
+    
+    // <added by @gbezyuk for watch component>
+
+    public getResourceTypes (force: boolean = false) {
+        // console.log('getting resource types')
+        if (this.resource_types && !force) {
+            // console.log('there are resource types in cache')
+            return Promise.resolve(this.resource_types);
+        }
+        // TODO: cache invalidation (@gbezyuk)
+        // console.log('resource type cache is empty, sending a query')
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.getResourceTypes().toPromise()
+        ).then(resource_types => {
+            return this.resource_types = resource_types;
+        });
+    }
+
+    public getMediaServersAndCameras (force:boolean = false) {
+        if (this.mediaservers && !force) {
+            console.log('using cached mediaservers')
+            return Promise.resolve(this.mediaservers)
+        }
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.getMediaServersAndCameras().toPromise()
+        ).then(
+            // @ts-ignore
+            response => {
+                // console.log('GMSAC', response)
+                // CURSING@gbezyuk: error code as a string in JSON, guys, really?
+                // @ts-ignore
+                if ((response.error && response.error !== '0') || !response.reply) {
+                    console.error('error getting mediaservers and cameras');
+                    return response;
+                }
+                // @ts-ignore
+                return this._setMediaServersAndCameras(response.reply)
+            }
+        ).catch(
+            response => {
+                console.error('getMediaServersAndCameras failure', response)
+            }
+        );
+        // TODO: better error handling
+    }
+
+    protected _setMediaServersAndCameras (api_reply) {
+        // `mss` stands for mediaservers, `cs` — for cameras
+        let mss = api_reply['ec2/getMediaServersEx'];
+        let cs = api_reply['ec2/getCamerasEx'];
+
+        return this.getResourceTypes().then(resource_types => {
+            // console.log('filtering, resource types that we got are', resource_types)
+            const desktop_camera_type =
+                resource_types.find(t => t.name === 'SERVER_DESKTOP_CAMERA');
+
+            console.log('desktop_camera_type', desktop_camera_type)
+
+            cs = cs.filter(
+                c =>
+                    c.typeId !== desktop_camera_type.id
+                    && !c.addParams.find(p => p.name === 'ioConfigCapability')
+            ).map(trim_ids);
+            // TODO: map camera data preprocessing here
+            // (strip IDs, parse JSON, provide (and maybe check) URLs, etc.)
+            console.log('cameras filtered', cs)
+
+            // TODO: preprocess servers, too
+            // (strip IDs, parse JSON, etc.)
+            this.mediaservers = mss.map(trim_ids).map(ms => ({
+                ...ms,
+                // keeping cameras inside/under the mediaserver they belong to
+                // cameras: cs.filter(c => c.preferredServerId === ms.id)
+                cameras: cs.filter(c => c.parentId === ms.id)
+            }))
+            console.log('mediaservers filtered', this.mediaservers)
+            return this.mediaservers;
+        });
+    }
+
+    public checkCameraThumbnail (cameraId) {
+        // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.checkCameraThumbnail(cameraId)
+        );
+    }
+
+    public getCameraThumbnailUrl (cameraId, width=68, height=38) {
+        return this.mediaserver.getCameraThumbnailUrl(cameraId, width, height)
+    }
+
+    public getCameraLiveHlsUrl (cameraId) {
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.getLiveHlsUrl(cameraId)
+        );
+    }
+
+    public getHlsUrl (cameraId, position?, resolution='lo') {
+        return this.ensureSystemAuth().then(
+            () => position === -1 ?
+            this.mediaserver.getLiveHlsUrl(cameraId, resolution) :
+            this.mediaserver.getHlsUrl(cameraId, position, resolution)
+        );
+    }
+
+    public getCameraRecords (cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
+        // TODO: maybe check if this camera_id belongs to us (@gbezyuk)
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.getRecords(
+                cameraId, startTime, endTime, detail, limit, label, periodsType
+            ).toPromise()
+        );
+    }
+
+    public getServerTimes (): Promise<Array<ServerTimeInfo>> {
+        return this.ensureSystemAuth().then(
+            () => this.mediaserver.getServerTimes().toPromise().then(                
+                r => {
+                    const now = Date.now()
+                    // @ts-ignore
+                    return r.reply.map(i => ({
+                        vmsTimeOffset: now - parseInt(i.vmsTime),
+                        osTimeOffset: now - parseInt(i.osTime),
+                        serverId: i.serverId.slice(1, i.serverId.length - 1),
+                        timeZoneOffset: parseInt(i.timeZoneOffset),
+                    }))
+                }
+            )
+        )
+    }
+    // </added by @gbezyuk for watch component>
 }
 
 @Injectable({

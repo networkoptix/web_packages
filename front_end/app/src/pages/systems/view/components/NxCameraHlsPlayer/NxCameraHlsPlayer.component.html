@@ -1,0 +1,13 @@
+<div class="nx-camera-hls-player">
+    <video
+        #videoOdd
+        class="video video-odd"
+        [ngClass]="{ 'video-active' : isOddVideoActive }"
+    ></video>
+    <video
+        #videoEven
+        class="video video-even"
+        [ngClass]="{ 'video-active' : isEvenVideoActive }"
+    ></video>
+    <div class="loading-indicator" *ngIf="isVideoLoading">Loading</div>
+</div>

@@ -1,0 +1,20 @@
+<div
+  *ngIf="display"
+  class="visible-range-archive-playback-indicator"
+  [ngStyle]="{ 'left.px': outerOffsetX }"
+  [ngClass]="edgeCaseClass"
+>
+  <span class="date-label">{{ playbackDate }}</span>
+  <span class="time-label">{{ playbackTime }}</span>
+
+  <span
+    class="indicating-arrow"
+    [ngStyle]="{ 'left.px': innerOffsetX }"
+  ></span>
+</div>
+
+<div
+  *ngIf="display"
+  class="global-archive-playback-indicator"
+  [ngStyle]="{ 'left.px': globalOffsetX }"
+></div>

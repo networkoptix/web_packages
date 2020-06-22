@@ -1,0 +1,35 @@
+:host {
+    width: 100%;
+    height: 100%;
+    .nx-camera-hls-player {
+        width: 100%;
+        height: 100%;
+        background: black;
+        position: relative;
+        .video {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: none;
+            width: 100%;
+            height: 100%;
+            &.video-active {
+                display: block;
+            }
+        }
+        .loading-indicator {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            background-color: #0003;
+            color: white;
+            font-size: 6em;
+            line-height: 100%;
+            text-align: center;
+        }
+    }
+}

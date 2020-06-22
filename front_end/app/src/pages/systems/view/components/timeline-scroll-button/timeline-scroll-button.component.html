@@ -1,0 +1,11 @@
+<div
+  class="timeline-scroll-button"
+  [ngClass]="{
+    left: direction === 'left',
+    right: direction === 'right',
+    active: isActive
+  }"
+  (mousedown)="onMouseDown($event)"
+  (mouseup)="onMouseUp($event)"
+>
+</div>

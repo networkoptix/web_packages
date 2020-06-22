@@ -496,7 +496,7 @@ export class NxSystemAPI {
     /* End of Authentication  */
 
     /* Server settings */
-    private getServerTimes() {
+    public getServerTimes() {
         return this.get<t.SystemTime>('/ec2/getTimeOfServers');
     }
 
@@ -810,6 +810,31 @@ export class NxSystemAPI {
         return this.get(endpoint, {}, headers);
     }
     // End of Health Monitor
+
+    // <added by @gbezyuk for watch component>
+    public checkCameraThumbnail (camera_id, width=70, height=40) {
+        // it expects JSON yet normally gets JPG, thus rejects,
+        // let's override to make it more meaningful (@gbezyuk)
+        const _checker = response => {
+            if (!response || response.status !== 200) {
+                return Promise.reject(response)
+            } else {
+                return Promise.resolve(response)
+            }
+        }
+        return this.get(`/ec2/cameraThumbnail?cameraId=${camera_id}&width=${width}&height=${height}`)
+            .toPromise().then(_checker).catch(_checker)
+    }    
+    public getCameraThumbnailUrl (cameraId, width=68, height=38) {
+        return `${this.urlBase}/ec2/cameraThumbnail?cameraId=${cameraId}&width=${width}&height=${height}&auth=${this.authGet}`
+    }
+    getLiveHlsUrl(cameraId, resolution='lo') {        
+        return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}`;
+    }
+    getHlsUrl(cameraId, position, resolution='lo') {        
+        return `${this.getUrlBase()}/hls/${this.cleanId(cameraId)}.m3u8?${resolution}&auth=${this.authGet}&pos=${Math.floor(position)}`;
+    }
+    // </added by @gbezyuk for watch component>
 
     /** Merge Systems */
     getPeerSystems(showAddresses = true) {

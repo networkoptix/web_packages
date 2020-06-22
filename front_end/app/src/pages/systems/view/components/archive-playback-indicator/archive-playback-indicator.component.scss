@@ -1,0 +1,97 @@
+.global-archive-playback-indicator {
+  position: absolute;
+  bottom: 0;
+  background: black;
+  width: 1px;
+  height: 20px;
+  z-index: 10;
+}
+
+.visible-range-archive-playback-indicator {
+  position: absolute;
+  height: 45px;
+  width: 160px;
+  top: 5px;
+  padding-left: 5px;
+  pointer-events: none;
+  background: #414b51aa;
+  color: #fff;
+
+  > span {
+    line-height: 22.5px;
+    text-align: center;
+    display: block;
+
+    &.time-label {
+      font-weight: bold;
+    }
+  }
+
+  > .indicating-arrow {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 90px; // to be overriden by the micro-state offset
+
+    // background: #414b51aa;
+    // height: 20px;
+    // width: 20px;
+
+    // downward arrow
+    background: transparent;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #414b51aa;
+
+    &:after {
+      content: '';
+      position: absolute;
+      left: 0px;
+      bottom: -20px;
+      width: 1px;
+      height: 20px;
+      background-color: black;
+    }
+  }
+
+  &.edge-case-left-beyond > .indicating-arrow {
+    left: -30px;
+    top: 12.5px;
+    bottom: auto;
+
+    border-left: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #414b51aa;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  &.edge-case-right-beyond > .indicating-arrow {
+    right: -10px;
+    top: 12.5px;
+    bottom: auto;
+    left: auto;
+
+    border-right: none;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #414b51aa;
+
+    &:after {
+      display: none;
+    }
+  }
+
+  &.edge-case-left-edge > .indicating-arrow {
+    //
+  }
+
+  &.edge-case-right-edge > .indicating-arrow {
+    //
+  }
+}

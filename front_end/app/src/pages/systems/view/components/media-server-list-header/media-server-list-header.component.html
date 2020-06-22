@@ -1,0 +1,15 @@
+<div class="search-box">
+  <div class="search-icon"></div>
+  <input placeholder="Search" (input)="onFilterTokenChange($event.target.value)">
+  <div
+    class="details-toggler"
+    (click)="onIpVisibilityStateChange(!ipVisibilityState)"
+    [ngClass]="{ active: ipVisibilityState }"
+  >
+    <svg viewBox="0 0 20 20">
+      <path class="st0" d="M10,4c3.3,0,6,2.7,6,6s-2.7,6-6,6s-6-2.7-6-6S6.7,4,10,4 M10,3c-3.9,0-7,3.1-7,7s3.1,7,7,7s7-3.1,7-7 S13.9,3,10,3L10,3z"/>
+      <path class="st0" d="M10,13.5c-0.3,0-0.5-0.2-0.5-0.5V9c0-0.3,0.2-0.5,0.5-0.5s0.5,0.2,0.5,0.5v4C10.5,13.3,10.3,13.5,10,13.5z"/>
+      <circle class="st1" cx="10" cy="7" r="0.5"/>      
+    </svg>
+  </div>
+</div>

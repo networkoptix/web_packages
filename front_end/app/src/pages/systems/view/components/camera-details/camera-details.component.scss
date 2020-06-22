@@ -1,0 +1,200 @@
+.nx-camera-page {
+  position: absolute;
+  right: 8px;
+  top: 48px;
+  left: 320px;
+  bottom: 0;
+
+  &.fullscreen {
+    .camera-view {
+      left: 0;
+    }
+    .controls {
+      left: 0;
+    }
+  }
+
+  .camera-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    background-color: black;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: center center;
+    background-attachment: fixed;
+
+    .player-header {
+      z-index: 1000;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      color: white;
+      background: #000a;
+      padding: 7px 0;
+
+      .camera-name {
+        padding-left: 32px;
+        font-size: 15.6px;
+        line-height: 26px;
+        position: relative;
+
+        &.Recording:after {
+          content: '';
+          position: absolute;
+          left: 12px;
+          top: 7px;
+          background: red;
+          border-radius: 10px;
+          height: 12px;
+          width: 12px;
+        }
+      }
+
+      .buttons {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 36px;
+
+        .settings-toggler {
+          display: inline-block;
+          width: 36px;
+          height: 36px;
+          padding: 8px;
+          margin-right: 5px;
+          cursor: pointer;
+          > svg {
+            width: 20px;
+            height: 20px;
+            > path {
+              transition: fill .2s ease-in-out;
+              fill: #eee;
+              // fill: #2b383f;
+            }
+          }
+          &:hover > svg > path {
+            fill: #fff;
+          }
+        }
+
+        .fullscreen-toggler {
+          display: inline-block;
+          width: 36px;
+          height: 36px;
+          padding: 5px;
+          cursor: pointer;
+          > svg {
+            width: 26px;
+            height: 26px;
+            > path {
+              transition: fill .2s ease-in-out;
+              fill: #eee;
+              // fill: #2b383f;
+            }
+          }
+          &:hover > svg > path {
+            fill: #fff;
+          }
+        }        
+      }
+    }      
+  }
+
+  .settings {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    height: 80px;
+    width: 160px;    
+    opacity: 0;
+    transition: opacity .2s ease-in-out;
+    pointer-events: none;
+    background-color: rgba(33, 42, 47, 0.9);
+    color: #698796;
+    z-index: 2000;
+    &.shown {
+      opacity: 1.0;
+      pointer-events: all;
+    }
+    > .section {
+      > .caption {
+        padding: 0 8px;
+        line-height: 36px;
+        font-size: 12px;
+        border-bottom: 1px solid #698796;
+      }
+      > .options {
+        > .option {
+          color: #fff;
+          background-color: transparent;
+          transition: background-color .2s ease-in-out;
+          line-height: 18px;
+          font-size: 12px;
+          &:hover,
+          &.selected {                
+            background-color: #39b2ef;
+          }
+        }
+        &.qualitySelection > .option {
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+
+  .controls {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100px;
+    .play-pause-button {
+      width: 60px;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 100px;
+      background-size: 30px auto;
+      background-repeat: no-repeat;
+      background-position: center center;
+      border-right: 1px solid #cdd7dc;
+      z-index: 10;
+
+      &.paused {
+        background-image: url('../../svg/play.svg');
+      }
+
+      &.playing {
+        background-image: url('../../svg/pause.svg');
+      }
+    }
+  }
+
+  .live-status-indicator {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 64px;
+    height: 100px;
+    background: #F0F3F4;
+    border-left: 1px solid #CDD7DC;    
+    background-size: 15px auto;
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    background-image: url('../../svg/live_on.svg');
+
+    &.live:after {
+      display: block;
+      content: 'live';
+      text-transform: uppercase;
+      padding-left: 20px;
+      font-size: 12px;
+      line-height: 100px;
+    }
+  }
+}
