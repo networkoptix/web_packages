@@ -49,6 +49,10 @@
     @include font-source($font-family-light, $h3-font-size, $font-color-light);
 }
 
+@mixin regular16 {
+    @include font-source($font-family-regular, rem(16px), $font-color-regular);
+}
+
 @mixin regular15 {
     @include font-source($font-family-regular, $h4-font-size, $font-color-regular);
 }
@@ -73,12 +77,12 @@
     @include font-source($font-family-light, $h6-font-size, $font-color-light);
 }
 
-@mixin medium13 {
-    @include font-source($font-family-medium, $font-size-base, $font-color-medium);
-}
-
 @mixin regular13 {
     @include font-source($font-family-regular, $font-size-base, $font-color-regular);
+}
+
+@mixin medium13 {
+    @include font-source($font-family-medium, $font-size-base, $font-color-medium);
 }
 
 @mixin light13 {

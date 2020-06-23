@@ -673,11 +673,14 @@ export interface Search {
 }
 
 export interface Servers {
+    autoRefresh:             any;
     beginDetach:             any;
     beginReset:              any;
     detachSystemFailed:      any;
     detachSystemSuccess:     any;
     portWarning:             any;
+    refresh:                 any;
+    refreshing:              any;
     removeMediaserverFailed: any;
     resetFailed:             any;
     resetSuccessful:         any;
@@ -1526,11 +1529,14 @@ const typeMap: any = {
         { json: "vendors", js: "vendors", typ: "any" },
     ], false),
     "Servers": o([
+        { json: "autoRefresh", js: "autoRefresh", typ: "any" },
         { json: "beginDetach", js: "beginDetach", typ: "any" },
         { json: "beginReset", js: "beginReset", typ: "any" },
         { json: "detachSystemFailed", js: "detachSystemFailed", typ: "any" },
         { json: "detachSystemSuccess", js: "detachSystemSuccess", typ: "any" },
         { json: "portWarning", js: "portWarning", typ: "any" },
+        { json: "refresh", js: "refresh", typ: "any" },
+        { json: "refreshing", js: "refreshing", typ: "any" },
         { json: "removeMediaserverFailed", js: "removeMediaserverFailed", typ: "any" },
         { json: "resetFailed", js: "resetFailed", typ: "any" },
         { json: "resetSuccessful", js: "resetSuccessful", typ: "any" },

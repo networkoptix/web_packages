@@ -626,11 +626,14 @@
         "vendors": "Manufacturers"
     },
     "servers": {
+        "autoRefresh": "auto refresh in {time}s...",
         "beginDetach": "Server is now detaching",
         "beginReset": "Server is now resetting.",
         "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
         "detachSystemSuccess": "Server was successfully detached from the system.",
         "portWarning": "Port numbers less than 1024 are restricted. Server may become inaccessible.",
+        "refresh": "Refresh",
+        "refreshing": "Refreshing...",
         "removeMediaserverFailed": "Failed to remove the server from system.",
         "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
         "resetSuccessful": "Server { serverName } has been reset to defaults.",

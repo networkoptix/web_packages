@@ -1,0 +1,32 @@
+<div class="modal-container d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center overlay-modal-header">
+        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirPagePlaceholder + 'ServerOffline.svg'"
+            class="ml-2" [svgStyle]="{ 'height.px': '200' }"></svg-icon>
+        <h2 translate>Server offline</h2>
+        <button class="btn">
+            <span [ngClass]="{ 'animate-rotation': checking }">
+                <svg-icon class="circular" nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
+                    [applyClass]="true"></svg-icon>
+            </span>
+            <span class="ml-1">{{refreshText}}</span>
+        </button>
+        <p
+            class="btn-helper mt-2 mb-0"
+            [translate]="'servers.autoRefresh'"
+            [translateParams]="{ time: '30' }"
+        ></p>
+    </div>
+    <div class="overlay-modal">
+        <div class="overlay-modal-body">
+            <p class="overlay-modal-title mb-3" translate>You can try to connect to other servers in this system:</p>
+            <div class="overlay-modal-servers">
+                <button *ngFor="let server of servers" [routerLink]="" (click)="checkOtherServer(server)">
+                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + CONFIG.menus.systemSettings.servers.icon + '.svg'"
+                        [svgStyle]="{ 'height.px': '20' }"></svg-icon>
+                    <span class="server-name pl-1">{{server.name}}</span>
+                    <span class="server-ip">{{server.ip}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

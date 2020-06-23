@@ -51,6 +51,7 @@ import { NxNavigiationTileComponent } from './dropdowns/drop-menu/navigation-til
 import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
 import { NxTabsComponent } from './header/tabs/tabs.component';
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
+import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
 
 @NgModule({
     imports: [
@@ -109,7 +110,8 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxTabsComponent,
-        NxNavDropdownComponent
+        NxNavDropdownComponent,
+        NxOverlayModalComponent
     ],
     entryComponents: [
         NxThreeDotDropdown,
@@ -156,7 +158,8 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,
         NxProcessButtonComponent,
-        NxProcessCancelButtonComponent
+        NxProcessCancelButtonComponent,
+        NxOverlayModalComponent
     ],
     providers: [
         NxProcessButtonComponent,
@@ -188,7 +191,8 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
-        NxRibbonService
+        NxRibbonService,
+        NxOverlayModalComponent
     ],
     exports: [
         NxThreeDotDropdown,
@@ -235,7 +239,8 @@ import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.compo
         NxSystemTileComponent,
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,
-        NxNavDropdownComponent
+        NxNavDropdownComponent,
+        NxOverlayModalComponent
     ]
 })
 export class ComponentsModule {
