@@ -129,7 +129,7 @@ export const toParams = (serverId) => ({ totalSpace, isBackup, reservedSpace, is
     addParams      : [{ name: 'space', value: `${totalSpace}` }],
     id             : storageId,
     isBackup       : isBackup,
-    parentId       : `{${serverId}}`,
+    parentId       : serverId,
     spaceLimit     : Math.round(Math.min(reservedSpace.bits, maxReserve.bits)),
     storageType    : storageType,
     // Static according saveStorages documentation /nx/vms/server/nx_vms_server_db/src/local_connection_factory.cpp
