@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Koble fra",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Du vil ikke kunne logge deg på dette systemet lenger.",
             "title": "Koble fra systemet?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Nåværende passord er feil.",
         "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
         "passwordMismatch": "Feil passord",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} er foreløpig utilgjengelig. Prøv igjen om noen minutter eller kontakt support.",
         "thisSystem": "systemet",
         "unknownError": "En ukjent feil oppstod",
         "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Kontoen er allerede aktivert eller bekreftelseskoden er feil",
         "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
         "wrongParameters": "Noen parametere på skjemaet er feil",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Kunne ikke aktivere lisensen. Vennligst prøv igjen eller kontakt kundestøtte.",
+        "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
+        "licenseServerError": "Kunne ikke aktivere lisensen. Lisensserveren svarte ikke. Vennligst prøv igjen eller kontakt kundestøtte.",
         "networkConnection": "Kan ikke koble til {{cloudName}}, sjekk nettverkstilkoblingen din."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Vennligst velg...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Du finner {{INTEGRATION_COMPANY}} personvernregler <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">her</a>. %COMPANY_NAME% personvernreglene, som inkluderer instruksjoner om hvordan du trekker tilbake ditt samtykke, er tilgjengelige <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a>.",
         "ipvd": "Ved å sende inn dette skjemaet samtykker du til å bli kontaktet av %COMPANY_NAME%.\nDu finner %COMPANY_NAME% personvernregler <a href=\"%PRIVACY_LINK%\" target=\"_blank\">her</a> som inkluderer instruksjoner om hvordan du kan trekke tilbake ditt samtykke."
     },
     "registration": {
