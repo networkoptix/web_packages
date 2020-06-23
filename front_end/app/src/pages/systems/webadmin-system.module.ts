@@ -20,7 +20,11 @@ import { NxCamerasModule } from './settings/cameras/cameras.module';
 import { MenuModule } from '../../menu';
 
 export const localSettingsRoutes: Routes = [
-    // root path is handles by AJS for now
+    {
+        path       : '',
+        redirectTo : 'settings',
+        pathMatch  : 'full'
+    },
     {
         path        : 'settings',
         component   : NxSystemSettingsComponent,
