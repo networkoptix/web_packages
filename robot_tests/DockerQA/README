@@ -1,0 +1,44 @@
+### What is it?
+This directory is created to easily run multiple servers in host network,<br>
+which point to different cloud hosts and run on different ports in host network.<br>
+a. Dockerfile - for building images for servers pointing to specific cloud host<br>
+b. entrypoint.sh - for running servers in containers on specific port<br>
+c. other files are the tools to make a-b possible<br>
+d. The files are not supposed to go public. Internal use only.
+
+### Installation
+All you need is:
+1. Mediaserver's .deb file downloaded in current folder.
+2. Docker installed:
+https://docs.docker.com/engine/install/ Make sure docker is runnable without sudo.
+3. <s>Love</s>
+
+### Building the image for specific cloud host
+Mediaserver .deb file and cloud host which the server will point to can be passed
+as parameters <b>mediaserver_deb</b> and <b>cloud_host</b> correspondingly:
+```bash
+docker build -t <image_name> --build-arg mediaserver_deb=<path_to_deb_file> --build-arg cloud_host=<cloud_host> . 
+```
+
+By default cloud_host is set to cloud-test.hdw.mx. To keep it just omit the cloud_host argument.
+Server will point to cloud-test no matter what vms build is used: 
+``` bash
+docker build -t 4.0_test --build-arg mediaserver_deb=4.0.0.29987-linux64.deb .
+```
+
+### Running the container on specific port
+Setting network to host is mandatory.
+Port can be passed as argument when running a container:
+```bash
+docker run -d --name <container_name> -e PORT=<port_num> --network=host -t <image_name>
+```
+
+If PORT argument is omitted, container and server will run on default port - 7001:
+```bash
+docker run -d --name 4.1_dev2_7001 --network=host -t 4.1_dev2
+```
+
+### Limitations
+<li>Host network only
+<li>4.0+ vms versions only 
+<li>Images built using .deb files in this folder work correctly, that is not guaranteed for other versions.
