@@ -66,11 +66,11 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
             this.modalActive = true;
             return this.dialogs
                 .confirm(
-                    this.LANG.errorCodes.cantOpenClient,
-                    this.LANG.dialogs.titles.noClientDetected,
-                    this.LANG.dialogs.buttons.download,
+                    this.LANG.errorCodes.cantOpenClient?.(),
+                    this.LANG.dialogs.titles.noClientDetected?.(),
+                    this.LANG.dialogs.buttons.download?.(),
                     'btn-primary',
-                    this.LANG.dialogs.buttons.cancel
+                    this.LANG.dialogs.buttons.cancel?.()
                 )
                 .then((result) => {
                     if (result) {
