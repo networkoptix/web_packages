@@ -15,7 +15,8 @@ export abstract class AbstractIntervalSetExpander {
 
   public abstract expand (
     intervals: Array<RegularLengthInterval> | Array<IrregularLengthInterval>,
-    skipIntervals?: Array<RegularLengthInterval> | Array<IrregularLengthInterval>
+    skipIntervals?: Array<RegularLengthInterval> | Array<IrregularLengthInterval>,
+    weights?
   ):
     Array<AnimatedWeightedSerif> |
     Array<AnimatedWeightedRegularIntervalSerif> |

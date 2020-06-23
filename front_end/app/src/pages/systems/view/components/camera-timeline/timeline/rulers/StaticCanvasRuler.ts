@@ -18,7 +18,7 @@ import CanvasPrimaryRulerRenderer from './renderers/canvas/CanvasPrimaryRulerRen
 import CanvasTopRulerRenderer from './renderers/canvas/CanvasTopRulerRenderer'
 
 
-export class CanvasRuler extends AbstractRuler {
+export class StaticCanvasRuler extends AbstractRuler {
 
   protected primaryRenderer: CanvasPrimaryRulerRenderer
   protected topRenderer: CanvasTopRulerRenderer
@@ -61,4 +61,4 @@ export class CanvasRuler extends AbstractRuler {
   }
 }
 
-export default CanvasRuler
+export default StaticCanvasRuler

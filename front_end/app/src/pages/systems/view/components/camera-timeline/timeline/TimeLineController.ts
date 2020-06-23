@@ -8,7 +8,8 @@ import AbstractRanger from './rangers/abstract/AbstractRanger'
 
 import RulerClass from "./rulers/RulerClass"
 import AbstractRuler from "./rulers/AbstractRuler"
-import CanvasRuler from "./rulers/CanvasRuler"
+// import StaticCanvasRuler from "./rulers/StaticCanvasRuler"
+import AnimatedCanvasRuler from "./rulers/AnimatedCanvasRuler"
 
 import AbstractScrollBar from './scrollBars/AbstractScrollBar'
 import CanvasEmbeddedScrollBar from './scrollBars/CanvasEmbeddedScrollBar'
@@ -41,7 +42,7 @@ export class TimeLineController {
     protected embed: boolean = true,
     protected animate: boolean = false,
     protected rangerClass: RangerClass = AbsoluteRanger,
-    protected rulerClass: RulerClass = CanvasRuler,
+    protected rulerClass: RulerClass = AnimatedCanvasRuler,  // StaticCanvasRuler,
     protected debug: boolean = false,
   ) {
 
