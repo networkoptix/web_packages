@@ -36,6 +36,8 @@
                         translate>Enter license key</span>
                     <span class="input-error" *ngIf="licenseKey.errors.mask"
                           translate>Invalid license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.starter"
+                          translate>Only one starter license is allowed per system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.compatibility"
                           translate>License type is incompatible with your system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.offline"
@@ -59,7 +61,7 @@
                                [items]="serverOptions"
                                [ngModel]="selectedServer"
                                (ngModelChange)="changeServer($event)"
-                               [selected]="serverOptions[0]">
+                               [selected]="selectedServer">
                     </nx-select>
                     <div class="hint mt-1" translate>This server must be available in the system to make the license key work</div>
                 </div>
