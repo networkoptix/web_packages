@@ -433,9 +433,9 @@
         "wrongCode": "Compte déjà activé ou le code de confirmation est incorrect",
         "wrongCodeRestore": "Code de confirmation est déjà utilisé ou incorrecte",
         "wrongParameters": "Certains paramètres dans le formulaire sont incorrects",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter le service client.",
+        "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
+        "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance clientèle.",
         "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Veuillez sélectionner...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Vous trouverez la politique de confidentialité {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ici</a>. La politique de confidentialité %COMPANY_NAME%, qui comprend des instructions sur la façon de retirer votre consentement, est disponible <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ici</a>.",
         "ipvd": "En soumettant ce formulaire, vous acceptez d'être contacté par %COMPANY_NAME%.\nVous trouverez la politique de confidentialité %COMPANY_NAME% <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ici</a> qui comprend des instructions sur la procédure à suivre pour retirer votre consentement."
     },
     "registration": {

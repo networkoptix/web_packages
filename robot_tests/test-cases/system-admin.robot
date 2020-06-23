@@ -626,6 +626,11 @@ Check Limit session duration
     
     Log    Step 8
     Input Text    ${TIME NUMBER INPUT}    5
+    Click Button    ${TIME DURATION INTERVAL BUTTON}
+    Wait Until Elements Are Visible
+    ...    ${TIME DURATION SELECTION HOURS} 
+    ...    ${TIME DURATION SELECTION MINUTES}
+    Click Element    ${TIME DURATION SELECTION MINUTES}
     Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button     ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}

@@ -433,9 +433,9 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Error al activar la licencia. Intente nuevamente o comuníquese con Atención al cliente.",
+        "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
+        "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Intente nuevamente o comuníquese con Atención al cliente.",
         "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Por favor, seleccione...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Encontrará la política de privacidad {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">aquí</a>. La política de privacidad %COMPANY_NAME%, que incluye instrucciones sobre cómo retirar su consentimiento, está disponible <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a>.",
         "ipvd": "Al enviar este formulario, usted acepta ser contactado por %COMPANY_NAME%.\nEncontrará la %COMPANY_NAME% política de privacidad <a href=\"%PRIVACY_LINK%\" target=\"_blank\">aquí</a> que incluye instrucciones sobre cómo retirar su consentimiento."
     },
     "registration": {

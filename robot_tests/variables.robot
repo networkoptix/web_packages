@@ -514,3 +514,10 @@ ${LOCAL USER PASSWORD INPUT}         //input[@id="newPassword"]
 ${LOCAL USER DELETE BUTTON}          //button[text()="${DELETE USER TEXT}"]
 ${LOCAL USER DELETE CONFIRM BUTTON}  //div[@class="process-button"]/button
 ${LOCAL USER DELETE CANCEL BUTTON}    //div[@class="modal-dialog"]//button[text()="Cancel"]
+
+#svg icons
+${USERS ICON}                      *[name()="svg-icon" and @data-src="/static/images/icons/standard/users.svg"]
+${LOCAL USER ICON}                 *[name()="svg-icon" and @data-src="/static/images/icons/standard/user.svg"]
+${CAMERAS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/cameras.svg"]
+${SERVERS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/servers.svg"]
+${SYSTEMS ICON}                    *[name()="svg-icon" and @data-src="/static/images/icons/standard/systems.svg"]

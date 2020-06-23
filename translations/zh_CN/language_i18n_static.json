@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "断开连接",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "您将无法再登录此系统。",
             "title": "断开系统吗？"
         },
         "titles": {
@@ -433,9 +433,9 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "无法激活授权。请重试或联系客戶支持。",
+        "licenseTimeout": "连接超时，激活授权失败。请确保服务器在线，然后重试。",
+        "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系客户支持。",
         "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。"
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "请选择...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "{{INTEGRATION_COMPANY}} 隐私政策可在<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">此处</a>找到。您可以在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">此处</a>浏览%COMPANY_NAME%隐私政策, 包含有关撤回同意的说明。",
         "ipvd": "提交表单即表示同意 %COMPANY_NAME%与您联系。\n您可在<a href=\"%PRIVACY_LINK%\" target=\"_blank\">浏览 %COMPANY_NAME% 隐私政策</a> ，其中包含如何撤回同意。"
     },
     "registration": {

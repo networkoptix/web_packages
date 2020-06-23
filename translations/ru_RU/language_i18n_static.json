@@ -433,9 +433,9 @@
         "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
         "wrongCodeRestore": "Код подтверждения уже используется или неверен",
         "wrongParameters": "Некоторые параметры в форме неверны",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Не удалось активировать лицензию. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
+        "licenseTimeout": "Не удалось активировать лицензию из-за таймаута соединения. Пожалуйста, убедитесь, что сервер онлайн, и повторите попытку.",
+        "licenseServerError": "Не удалось активировать лицензию. Сервер лицензий не ответил. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
         "networkConnection": "Невозможно подключиться к {{cloudName}}, проверьте подключение к сети."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Пожалуйста, выберите...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Вы найдете политику конфиденциальности {{INTEGRATION_COMPANY}} <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">здесь</a>. Политика конфиденциальности %COMPANY_NAME%, которая включает инструкцию о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>.",
         "ipvd": "Отправляя эту форму, вы соглашаетесь на получение информации от %COMPANY_NAME%.\nПолитика конфиденциальности %COMPANY_NAME% с инструкциями о том, как отозвать ваше согласие, доступна <a href=\"%PRIVACY_LINK%\" target=\"_blank\">здесь</a>."
     },
     "registration": {
@@ -810,8 +810,8 @@
         "primaryTimeServer": "Основной сервер синхронизации времени",
         "osTimeChangeCheckPeriodMs": "Период проверки изменения времени ОС",
         "syncTimeExchangePeriod": "Интервал синхронизации времени для сетевых запросов",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "syncTimeEpsilon": "Диапазон синхронизация времени. Новое время не применяется, если разница времени меньше, чем это значение",
+        "maxWearableArchiveSynchronizationThreads": "Максимальное количество потоков синхронизации архива для виртуальных камер",
         "updateNotificationsEnabled": "Уведомления об обновлениях включены",
         "upnpPortMappingEnabled": "Сопоставление портов UPNP включено",
         "useTextEmailFormat": "Отправка писем простым текстом",
