@@ -569,7 +569,6 @@ Cloud Owner Can Change Local User Login
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Change Local User Full Name
     [Tags]    local_user    C76244
@@ -590,7 +589,6 @@ Cloud Owner Can Change Local User Full Name
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Email
     [Tags]    local_user
@@ -610,7 +608,6 @@ Cloud Owner Can Change Local User Email
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Permissions
     [Tags]    local_user    C76243
@@ -634,7 +631,6 @@ Cloud Owner Can Change Local User Permissions
         Append To List    ${new locals}    ${new local}
     END
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud Owner Can Change Local User Password
     [Tags]    local_user    C76246
@@ -654,14 +650,12 @@ Cloud Owner Can Change Local User Password
         @{new auth} =    Create List    local+${user}     ${ALT PASSWORD}
         ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
     END
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud owner can change local users' information
     [Tags]    local_user    C76239
     @{local users} =    Local User Start   ${email}
     ${new locals} =    Modify Local Users via Cloud UI    ${local users}
     Verify Changed Info Via API    ${new locals}
-    Delete All Local Users    //span[contains(text(),"local+")]
 
 Cloud Owner Can Disable Enable Local User
     [Tags]    local_user    C76245
@@ -692,7 +686,6 @@ Cloud Owner Can Disable Enable Local User
         Exit For Loop If    ${state} == ${True}
     END
     Should Be True    ${state} == ${True}
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Cloud administrator cannot change local administrator's or owner's information
     [Tags]    local_user    C76240
@@ -716,10 +709,6 @@ Cloud administrator cannot change local administrator's or owner's information
     Click Element    //span[text()="admin"]
     Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${EMAIL ADMIN}}
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
-    Log Out
-    Log in to Auto Tests System    ${email}
-    Go To Users List
-    Delete All Local Users    //span[contains(text(),"ocal+")]
 
 Local User Removed on Server is Removed From UI
     [Tags]    local_user
@@ -735,7 +724,6 @@ Local User Removed on Server is Removed From UI
     Reload Page
     Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
     Page Should Not Contain    //span[text()="${user to delete}"]
-    Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Verify Local Users Deleted On Server
     [Tags]    local_user    C76242
@@ -752,10 +740,9 @@ Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
-    Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Cloud owner cannot change local owner's information
-    [Tags]    C76238    local user
+    [Tags]    C76238    local_user
     Log    Step 1
     Log in to Auto Tests System    ${email}
     Go To Users List
@@ -868,13 +855,7 @@ Cloud administrator can make changes to local viewers (negative)
     
     Log    Step 14
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Lists Should Be Equal     ${check info}    ${locals} 
-    
-    Log    Clean up
-    Log Out
-    Log in to Auto Tests System    ${email}
-    Go To Users List
-    Delete All Local Users    //span[contains(text(),"ocal+")]  
+    Lists Should Be Equal     ${check info}    ${locals}  
     
 Local User Login Field Cannot Be Left Blank
     [Tags]    C76248    local_user
@@ -900,9 +881,6 @@ Local User Login Field Cannot Be Left Blank
     Click Button     ${ACCOUNT CANCEL} 
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Lists Should Be Equal     ${check info}    ${locals} 
-        
-    Log    Clean up
-    Delete All Local Users    //span[contains(text(),"ocal+")]
     
 Local User name field can be left blank
     [Tags]    C76249    local_user
@@ -925,9 +903,6 @@ Local User name field can be left blank
         Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
     END 
     Should Be Equal    ${full name}    ${EMPTY}   
-    
-    Log    Clean up
-    Delete All Local Users    //span[contains(text(),"ocal+")]
      
 Local User email field can be left blank
     [Tags]    C76250    local_user
@@ -950,30 +925,3 @@ Local User email field can be left blank
         Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
     END 
     Should Be Equal    ${full name}    ${EMPTY}   
-    
-    Log    Clean up
-    Delete All Local Users    //span[contains(text(),"ocal+")]
-    
-User list is available for owner and administrator
-    [Tags]    C76233    local_user
-    @{local users} =    Local User Start   ${EMAIL OWNER}
-    Log    Step 1
-    Verify In Local Users UI    ${local users}    ${EMAIL OWNER}
-    Log Out
-    Log    Step 2
-    Log in to Auto Tests System    ${EMAIL ADMIN}
-    Go To Users List
-    Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
-    Log    Clean up
-    Delete All Local Users    //span[contains(text(),"ocal+")]
-    
-User list is not available for advanced viewer & lower
-    [Tags]    C76462
-    Log    Step 1
-    Log in to Auto Tests System    ${EMAIL CUSTOM}
-    Element Should Not Be visible    ${USERS LIST LINK}
-    Log Out
-    Log    Step 2
-    Log in to Auto Tests System    ${EMAIL ADV VIEWER}
-    Element Should Not Be visible    ${USERS LIST LINK} 
-    
