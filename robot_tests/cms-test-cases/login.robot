@@ -13,15 +13,14 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
-cms log out
-    Click link    //a[@href="/admin/logout/"]
+
 
 *** Test Cases ***
 Going to /admin as anonymous prompts to log in
     [Tags]    C56677    C56679
     Go to    ${url}/admin
     Log In    ${email}    ${password}    button=None    cms=${True}    validate=${False}
-    Wait Until Elements Are Visible    //ul[@id="navigation-menu"]    //div[@id="dashboard"]
+    Wait Until Elements Are Visible    ${NAVIGATION MENU}    ${DASHBOARD}
 
 Going to /admin and logging in as a user who is not staff redirects to landing page
     [Tags]    C56678
@@ -41,7 +40,7 @@ Clicking administration in account dropdown takes you to admin
     Click Link    //a[@href="/admin/"]
     ${tabs}=   Get Window Handles
     Select Window    ${tabs}[1]
-    Wait Until Elements Are Visible    //ul[@id="navigation-menu"]    //div[@id="dashboard"]
+    Wait Until Elements Are Visible    ${NAVIGATION MENU}    ${DASHBOARD}
 
 Non-staff user does not see administration link
     [Tags]    C56681
