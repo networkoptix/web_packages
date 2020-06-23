@@ -1,10 +1,5 @@
 *** Keywords ***
-Reset DB and Open New Browser On Failure
-    Close Browser
-    Open Browser and go to URL    ${url}
-    Log in to Auto Tests System    ${email}
-    Click Link    ${USERS LIST LINK}     
-    Run Keyword And Continue On Failure    Delete All Local Users    //span[contains(text(),"ocal+")]    
+Reset DB and Open New Browser On Failure 
     Close Browser
     Reset System Names
     Add user to cloud system if not there    ${AUTO_TESTS SYSTEM ID}    ${VIEWER TEXT}    ${EMAIL NOTOWNER}  
@@ -180,15 +175,33 @@ Modify All Local User Info
     
 Local User Start
     [Arguments]    ${email}
-    @{local users} =    Get Dictionary Keys    ${role names}
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
+    @{local users} =   Reset Local Users    ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Log in to Auto Tests System    ${email} 
     Go To Users List
     [Return]    ${local users}
 
+Reset Local Users
+    [Arguments]     ${auth}    ${server}
+    @{locals} =    Create List 
+    @{local users} =    Get Dictionary Keys    ${role names}
+    @{users} =    Get Users     ${auth}    ${server}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+    END
+    ${count} =    Get Length    ${locals}
+    ${status} =    Run Keyword And Return Status    Should Be Equal as Numbers    ${count}    4
+    Run Keyword If    ${status}==${true}    Reset Local Users API    ${locals}    ${auth}    ${server}
+    ...    ELSE    Create New Local Users    ${count}    ${auth}    ${server}    ${local users}    ${locals} 
+    [Return]    ${local users}
 
-<<<<<<< HEAD
-=======
+Create New Local Users
+    [Arguments]    ${count}    ${auth}    ${server}    ${local users}    ${locals}
+    Run Keyword If    ${count}==0     Create Local Users via API    ${auth}    ${server}    ${local users}
+    ...    ELSE    Run Keywords    
+    ...    Delete All Local Users via API    ${auth}    ${server}    ${locals}    AND
+    ...    Create Local Users via API    ${auth}    ${server}    ${local users}
+
 Delete All Local Users via API
     [Arguments]    ${auth}    ${server}    ${locals}
     FOR    ${user}    IN    @{locals}    
@@ -196,7 +209,7 @@ Delete All Local Users via API
     END      
     
 Reset Local Users API
-    [Arguments]    ${locals}    ${auth}    ${server} 
+    [Arguments]    ${locals}    ${auth}    ${server}
     FOR    ${user}    IN    @{locals}
         ${name} =    Remove String    ${user}[name]    _changed
         ${variable} =    Get Substring    ${name}    6
@@ -206,5 +219,3 @@ Reset Local Users API
         ...    ${variable}
         Save User    ${auth}    ${server}    Local+${variable}    ${permissions}[${variable}]    noptixautoqa+local_${variable}@gmail.com    Local User    ${BASE PASSWORD}    user id=${user}[id]    is cloud=${False}    
     END
-    
->>>>>>> CLOUD-5298: remove line hotfix
