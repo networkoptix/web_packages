@@ -20,6 +20,7 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
 import { NxUriService }              from '../../../../services/uri.service';
+import { NxRibbonService }           from '../../../../components/ribbon';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -91,7 +92,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private uriService: NxUriService,
         private router: Router,
         private route: ActivatedRoute,
-        private cloudApiService: NxCloudApiService
+        private cloudApiService: NxCloudApiService,
+        private ribbonService: NxRibbonService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -164,7 +166,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
-            this.systemsService.forceUpdateSystems().toPromise();
+            if (!this.CONFIG.isLocal) {
+                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
+            } else {
+                this.ribbonService.hide();
+            }
         }
 
         if (this.systemsSubscription) {

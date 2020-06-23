@@ -22,6 +22,7 @@ export interface NxSystemRole extends PredefinedRole {
 }
 
 export interface NxSystemUser {
+    isLocalOwner: boolean;
     accessRole: string;
     canBeDeleted: boolean;
     canBeEdited: boolean;
@@ -154,7 +155,7 @@ class UserManager {
 
     set ownerEmail(email: string) {
         this._ownerEmail = email;
-        this.isMine = this.currentUserEmail === email;
+        this.isMine = this.currentUserEmail === email || this.currentUser?.isLocalOwner;
     }
 
     isAdmin(user: NxSystemRole) {
@@ -168,11 +169,11 @@ class UserManager {
     }
 
     isOwner(user: NxSystemUser) {
-        return user.isCloud && user.email === this._ownerEmail;
+        return this.currentUser?.isLocalOwner || user?.isCloud && user?.email === this._ownerEmail;
     }
 
     checkPermissions() {
-        const isMine                         = this.isMine;
+        const isMine                         = this.isMine || this.currentUser?.isLocalOwner;
         const permissions: SystemPermissions = {
             editAdmins  : isMine,
             editUsers   : isMine,
@@ -900,6 +901,7 @@ export class NxSystem extends System implements OnDestroy {
                 } else {
                     this.info = parsedSettings;
                 }
+                this.id = res.localSystemId;
                 this.mergeInfo = this.info.mergeInfo;
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = true;
@@ -1231,8 +1233,12 @@ export class NxSystemService {
             this.pollService, this.systemsService,
             userEmail, '', '', userId);
         this.system.mediaserver = mediaServer;
+        this.system.canMerge = true;
         this.system.update();
         this.system.startPoll();
+        if (!this.systemsService.systems) {
+            this.systemsService.systems = [<any> this.system];
+        }
         return this.system;
     }
 }
