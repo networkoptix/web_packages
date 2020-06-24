@@ -146,14 +146,14 @@
         "searchCamPlaceholder": "ค้นหา",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "อัปเดตระบบของคุณ",
+        "systemNewVersionMessage": "เวอร์ชันปัจจุบันของคุณไม่สามารถใช้ร่วมกับคุณสมบัตินี้ได้ โปรดอัปเดตเซิร์ฟเวอร์ของคุณเป็นเวอร์ชันล่าสุดเพื่อใช้คุณสมบัตินี้",
+        "systemNoAlerts": "ไม่มีการแจ้งเตือน",
+        "systemNoAlertsMessage": "ระบบของคุณต้องทำงานได้ดี!",
         "systemOffline": "ระบบออฟไลน์",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemOfflineMessage": "ระบบนี้ออฟไลน์และไม่สามารถเข้าถึงได้ในขณะนี้",
+        "systemServerError": "ข้อผิดพลาดภายในเซิร์ฟเวอร์",
+        "systemServerErrorMessage": "มีข้อผิดพลาดเกิดขึ้นโปรดลองอีกครั้ง. หากปัญหายังคงมีอยู่โปรดติดต่อทีมสนับสนุนของคุณ",
         "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "ม่รู้จัก",
@@ -176,15 +176,15 @@
     "dialogs": {
         "buttons": {
             "cancel": "ยกเลิก",
-            "createAccount": "Create New Account",
+            "createAccount": "สร้างบัญชีผู้ใช้",
             "delete": "ลบ",
             "deleteAccount": "Delete Account",
             "download": "ดาวน์โหลด %VMS_NAME%",
             "logoutAuthorised": "ออกจากระบบ",
             "ok": "ตกลง",
             "remove": "เอาออก",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "คงสถานะเป็น {email} ",
+            "stayLoggedIn": "คงอยู่ในระบบ"
         },
         "cloudStorage": {
             "title": "Cloud Storage",
@@ -281,7 +281,7 @@
                 "ipvd_feedback_device": "ข้อเสนอแนะเกี่ยวกับ {{asset}}",
                 "ipvd_feedback_page": "ข้อเสนอแนะสำหรับหน้ากล้อง",
                 "sales_inquiry": "สอบถามรายละเอียดการขายสำหรับ {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "สอบถามรายละเอียดด้านเทคนิคสำหรับ {{asset}}"
             },
             "title": {
                 "integration": "ติดต่อกับ {{companyName}}",
@@ -297,11 +297,11 @@
         "titles": {
             "error": "ข้อผิดพลาด",
             "success": "สำเร็จ",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "คุณเข้าสู่ระบบเป็น {email}",
             "deleteUser": "ลบผู้ใช้หรือไม่?",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
-            "noClientDetected": "Install %VMS_NAME% to view your System",
-            "removeUser": "Remove user?",
+            "loggedFromOtherAccount": "คุณจะเข้าสู่ระบบด้วยบัญชีอื่น",
+            "noClientDetected": "ติดตั้ง {{VMS_NAME}} เพื่อดูระบบของคุณ",
+            "removeUser": "นำผู้ใช้ออกหรือไม่",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
             "serversRestart": "Restart server \"{{ title }}\"?"
@@ -315,7 +315,7 @@
             "bundle": "ไคลเอ็นต์และเซิร์ฟเวอร์",
             "camera_sdk": "SDK แหล่งวิดีโอ",
             "client": "ไคลเอ็นต์เท่านั้น",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "ข้อมูลเมตา SDK",
             "package": "แพคเกจ",
             "server": "เซิร์ฟเวอร์เท่านั้น",
             "servertool": "เครื่องมือกำหนดค่า",
@@ -373,12 +373,12 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
+            "beta": "เบต้า",
             "betas": "เบต้า",
             "patch": "Patch",
             "patches": "โปรแกรมปรับปรุง",
-            "rc": "Release Candidate",
-            "release": "Release",
+            "rc": "ปล่อย",
+            "release": "เผยแพร่เมื่อ",
             "releases": "การเผยแพร่"
         }
     },
@@ -408,7 +408,7 @@
         "cantGetSystemInfoPrefix": "ข้อมูลระบบไม่พร้อมใช้งาน",
         "cantGetSystemsListPrefix": "รายการระบบไม่พร้อมใช้งาน",
         "cantGetUsersListPrefix": "รายการผู้ใช้ไม่พร้อมใช้งาน",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "ไม่พบแอปพลิเคชัน %VMS_NAME%",
         "cantRegisterPrefix": "เกิดข้อผิดพลาด",
         "cantSendActivationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
         "cantSendConfirmationPrefix": "ไม่สามารถส่งอีเมลยืนยัน",
@@ -445,11 +445,11 @@
         "Drone": "Drone",
         "Health Monitor": "การตรวจสอบสุขภาพ",
         "Storage": "พื้นที่จัดเก็บ",
-        "myIntegrationsLabel": "Mine",
+        "myIntegrationsLabel": "เหมือง (Automatic Translation)",
         "phoneNumberWithLabel": "โทร: {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} ข้อกำหนด",
+        "testedVersionLabel": "ทดสอบกับรุ่น {{vmsName}}:",
+        "testedVersionsLabel": "ทดสอบกับรุ่น {{vmsName}}:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "กล้อง PTZ ขั้นสูง",
@@ -504,15 +504,15 @@
     },
     "pageTitles": {
         "about": "เกี่ยวกับ",
-        "account": "Account settings",
+        "account": "การตั้งค่าบัญชี",
         "activate": "เปิดใช้งานบัญชี",
         "activateCode": "เปิดใช้งานบัญชี",
-        "activateSuccess": "Account activated",
+        "activateSuccess": "บัญชีใช้งานอยู่",
         "changePassword": "เปลี่ยนรหัสผ่าน",
         "debug": "การ​แก้ไข​จุด​บกพร่อง",
         "default": "%CLOUD_NAME%",
         "download": "ดาวน์โหลด %VMS_NAME%",
-        "downloadPlatform": "Download %VMS_NAME% for ",
+        "downloadPlatform": "ดาวน์โหลด {{VMS_NAME}} สำหรับ ",
         "failedToAccessSystem": "Failed to access system",
         "integrations": "Integration",
         "login": "ลงชื่อเข้าสู่ระบบ",
@@ -524,7 +524,7 @@
         "supportedDevices": "อุปกรณ์ที่รองรับ",
         "system": "ระบบ",
         "systemName": "{{systemName}}",
-        "systemShare": "Share System",
+        "systemShare": "ระบบใช้ร่วมกัน-",
         "systems": "ระบบ",
         "template": "{{title}} - %CLOUD_NAME%",
         "view": "ดูกล้อง"
@@ -568,7 +568,7 @@
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "<span class=\"text\"> ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a></span>"
     },
     "ribbon": {
         "beingMerged": {
@@ -580,7 +580,7 @@
             "backToEditText": "กลับไปที่อินเทอร์เฟซการแก้ไข",
             "previewRibbon": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ"
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
+        "systemOffline": "ระบบออฟไลน์ การตั้งค่าบางอย่างอาจไม่สามารถใช้ได้",
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {

@@ -170,6 +170,7 @@
     "OK": "OK",
     "OS": "OS",
     "Only client-server video traffic can be encrypted.": "Only client-server video traffic can be encrypted.",
+    "Only one starter license is allowed per system": "Only one starter license is allowed per system",
     "Open %VMS_NAME%": "%VMS_NAME% Megnyitása",
     "Open in %VMS_NAME%": "%VMS_NAME% Megnyitása",
     "Other packages:": "Egyéb csomagok:",

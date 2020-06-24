@@ -433,9 +433,9 @@
         "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
         "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
         "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
+        "licenseTimeout": "הפעלת הרישיון נכשלה עקב חוסר תגובה לחיבור. אנא וודא שהשרת מקוון ונסה שוב.",
+        "licenseServerError": "הפעלת הרישיון נכשלה. שרת הרישיונות לא הגיב. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "נא לבחור...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "תוכל למצוא את מדיניות פרטיות של {{INTEGRATION_COMPANY}}  <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">כאן</a>. מדיניות הפרטיות %COMPANY_NAME% הכוללת הוראות כיצד לבטל את הסכמתך נמצאת<a href=\"%PRIVACY_LINK%\" target=\"_blank\">כאן</a>.",
         "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
     },
     "registration": {

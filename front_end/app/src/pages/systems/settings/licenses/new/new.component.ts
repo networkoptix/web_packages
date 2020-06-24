@@ -65,6 +65,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                         if (response.reply) {
                             this.system.licensesModified = this.license;
                             this.license = '';
+                            this.licenseForm.controls.licenseKey.markAsUntouched();
 
                             this.dialogsService
                                 .notify(this.LANG.license.messages.activated, 'success');
@@ -89,8 +90,11 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                                         .notify(this.LANG.errorCodes.licenseServerError, 'danger');
                                     break;
                                 }
-                                // Can't activate license:  License Key you have entered is invalid.
-                                if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
+                                // Can't activate license: Only one starter license is allowed per System.
+                                if (response.errorString.indexOf('Only one starter license is allowed') !== -1) {
+                                    this.licenseForm.controls.licenseKey.setErrors({ starter: true });
+                                } else if (response.errorString.indexOf('License Key you have entered is invalid') !== -1) {
+                                    // Can't activate license:  License Key you have entered is invalid.
                                     this.licenseForm.controls.licenseKey.setErrors({ mask: true });
                                 } else if (response.errorString.indexOf('requires higher software version') !== -1) {
                                     // Can't activate license: This license type requires higher software version
@@ -113,7 +117,7 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                             default:
                         }
                     }, (fail) => {
-                        if (fail.error && fail.error.type === 'error') {
+                        if (fail.name === 'HttpErrorResponse' || fail.error && fail.error.type === 'error') {
                             this.dialogsService
                                 .notify(this.LANG.errorCodes.licenseFail, 'danger');
                         } else {
@@ -153,8 +157,9 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
             if (changes.servers.currentValue.length) {
                 changes.servers.currentValue.forEach((server) => {
                     const option: any = {
-                        name  : server.name,
-                        value : server.id
+                        name   : server.name,
+                        value  : server.id,
+                        status : server.status
                     };
 
                     if (server.status !== 'Online') {
@@ -164,7 +169,16 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     this.serverOptions.push(option);
                 });
 
-                this.selectedServer = this.serverOptions[0] || {};
+                // prevent server change
+                const serverMatch = this.serverOptions.filter((server) => {
+                    return server.value === this.selectedServer.value;
+                });
+
+                if (!serverMatch.length) {
+                    this.selectedServer = this.serverOptions.filter((server) => {
+                        return server.status === 'Online';
+                    })[0] || {};
+                }
             }
         }
     }

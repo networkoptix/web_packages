@@ -146,14 +146,14 @@
         "searchCamPlaceholder": "検索",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemNewVersion": "システムを更新する",
+        "systemNewVersionMessage": "現在のバージョンはこの機能と互換性がありません。この機能を使用するにはサーバーを最新バージョンに更新してください。",
+        "systemNoAlerts": "アラートはありません",
+        "systemNoAlertsMessage": "あなたのシステムはうまくいっていなければなりません！",
         "systemOffline": "システムはオフラインです",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemOfflineMessage": "このシステムはオフラインのため現在アクセスできません。",
+        "systemServerError": "内部サーバーエラー",
+        "systemServerErrorMessage": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "systemUnreachable": "システムにアクセスできません",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "未知の値",
@@ -176,15 +176,15 @@
     "dialogs": {
         "buttons": {
             "cancel": "キャンセル",
-            "createAccount": "Create New Account",
+            "createAccount": "新規アカウントを作成",
             "delete": "削除",
             "deleteAccount": "Delete Account",
             "download": "%VMS_NAME% をダウンロード",
             "logoutAuthorised": "ログアウト",
             "ok": "OK",
             "remove": "削除",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "{email} としてログインしてください ",
+            "stayLoggedIn": "ログイン状態を維持"
         },
         "cloudStorage": {
             "title": "Cloud Storage",
@@ -281,7 +281,7 @@
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック",
                 "sales_inquiry": "{{asset}} 販売問い合わせ",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "{{asset}} に関する技術的なお問い合わせ"
             },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
@@ -297,10 +297,10 @@
         "titles": {
             "error": "エラー",
             "success": "成功",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "{email} としてログイン済みです",
             "deleteUser": "ユーザーを削除しますか？",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
-            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "loggedFromOtherAccount": "別のアカウントでログインします",
+            "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除しますか?",
             "serversDetach": "Detach server \"{{ title }}\" from current system?",
             "serversReset": "Reset server \"{{ title }}\" to defaults?",
@@ -315,7 +315,7 @@
             "bundle": "クライアントとサーバー",
             "camera_sdk": "ビデオソースSDK",
             "client": "クライアントのみ",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "メタデータ SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
             "servertool": "構成ツール",
@@ -408,7 +408,7 @@
         "cantGetSystemInfoPrefix": "システム情報はありません",
         "cantGetSystemsListPrefix": "システム リストは使用できません",
         "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません。",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
         "cantSendConfirmationPrefix": "確認メールを送信できません",
@@ -447,9 +447,9 @@
         "Storage": "ストレージ",
         "myIntegrationsLabel": "自分",
         "phoneNumberWithLabel": "電話： {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} 要件",
+        "testedVersionLabel": "{{vmsName}} バージョンでテスト済み:",
+        "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "高度なPTZカメラ",
@@ -491,7 +491,7 @@
         "primaryCodec": "コー​​デック",
         "resolutionArea": "領域",
         "sndResolution": "セカンダリストリーム",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "ボリューム別トップ {{value}}:",
         "vendor": "製造メーカー"
     },
     "menu": {
@@ -512,7 +512,7 @@
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% をダウンロード",
-        "downloadPlatform": "Download %VMS_NAME% for ",
+        "downloadPlatform": "%VMS_NAME% をダウンロード ",
         "failedToAccessSystem": "Failed to access system",
         "integrations": "統合",
         "login": "ログイン",
@@ -580,7 +580,7 @@
             "backToEditText": "編集インターフェースに戻る",
             "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
+        "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
         "systemsMerging": "This system is currently involved in a merge operation."
     },
     "search": {

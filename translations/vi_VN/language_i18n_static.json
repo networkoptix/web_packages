@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Ngắt kết nối",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Bạn sẽ không thể đăng nhập vào hệ thống này nữa.",
             "title": "Ngắt kết nối hệ thống?"
         },
         "titles": {
@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Mật khẩu hiện tại không đúng.",
         "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
         "passwordMismatch": "Sai mật khẩu",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ với bộ phận hỗ trợ.",
         "thisSystem": "hệ thống",
         "unknownError": "Đã xảy ra lỗi không mong muốn",
         "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
+        "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
+        "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn."
     },
     "integration": {
@@ -564,7 +564,7 @@
     },
     "pleaseSelect": "Vui lòng chọn...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Bạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách bảo mật <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">đây</a>. %COMPANY_NAME% chính sách bảo mật, bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn, có sẵn <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a>.",
         "ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách quyền riêng tư <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
     },
     "registration": {
@@ -626,7 +626,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Không thể tải cài đặt bảo mật.",
             "notAbleToLoadSystem": "Không thể tải cài đặt hệ thống.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Không thể tải thông tin lưu trữ.",
             "sessionLimitDuration": {
                 "hours": "giờ",
                 "minutes": "phút"

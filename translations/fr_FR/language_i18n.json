@@ -170,6 +170,7 @@
     "OK": "OK",
     "OS": "OS",
     "Only client-server video traffic can be encrypted.": "Seul le trafic vidéo client-serveur peut être chiffré.",
+    "Only one starter license is allowed per system": "Only one starter license is allowed per system",
     "Open %VMS_NAME%": "Ouvrir %VMS_NAME%",
     "Open in %VMS_NAME%": "Ouvrir dans %VMS_NAME%",
     "Other packages:": "Autre versions:",
