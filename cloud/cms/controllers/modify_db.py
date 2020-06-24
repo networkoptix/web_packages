@@ -564,6 +564,8 @@ def check_meta_settings(data_structure, new_file):
             image_dimensions = get_image_dimensions(new_file)
         except (IOError, TypeError):
             return [(data_structure.name, "Image is damaged please upload an valid version")]
+        except ValueError as valError:
+            return [(data_structure.name, str(valError))]
 
         return check_image_dimensions(data_structure.name, meta_settings, image_dimensions)
 
