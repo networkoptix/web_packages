@@ -8,12 +8,8 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
-Resource     Resources/health-monitor-resource.robot
-Resource     Resources/system-server-resource.robot
-Resource     Resources/system-camera-resource.robot
-Resource     Resources/ipvd-resource.robot
-Resource     Resources/system-user-resource.robot
-Resource     Resources/system-admin-resource.robot
+Resource     Resources/front-end-resources.robot
+Resource     Resources/cms-resources.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -112,7 +108,7 @@ Log In
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In
+    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}
     Run Keyword If    ${validate} == ${True} and ${cms}==${True}    Validate cms Log In
     Sleep    0.5
 
@@ -139,7 +135,7 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
-    [Arguments]    ${timeout}=${selenium_timeout}
+    [Arguments]    ${email}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
     Check Language Logged In    ${email}    ${password}
