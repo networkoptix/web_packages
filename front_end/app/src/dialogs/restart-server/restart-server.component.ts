@@ -32,7 +32,7 @@ export class RestartServerModalContent {
     constructor(
         configService: NxConfigService,
         languageService: NxLanguageProviderService,
-        private activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private processService: NxProcessService,
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,

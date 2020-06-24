@@ -31,7 +31,7 @@ export interface User {
     fullName: string;
 }
 
-export interface AddResponseTypeHere extends IParams {};
+export interface AddResponseTypeHere extends IParams {}
 
 export class NxSystemAPI {
     /*
@@ -349,7 +349,10 @@ export class NxSystemAPI {
     disconnectFromCloud(currentPassword: string, newAdminLogin: string = 'admin', newAdminPassword?: string) {
         const [login, password] = [newAdminLogin, newAdminPassword];
         const params = newAdminPassword ? { currentPassword, login, password } : { currentPassword };
-        return this.post('/api/detachFromCloud', params).toPromise();
+
+        return NxConfigService.isLocal
+         ? this.post('/web/api/detachFromCloud', params).toPromise()
+         : this.post('/api/detachFromCloud', params).toPromise();
     }
 
     setupCloudSystem(
@@ -421,7 +424,7 @@ export class NxSystemAPI {
         cloudAuthKey: string,
         cloudAccountName: string
     ) {
-        return this.post('/api/saveCloudSystemCredentials', {
+        return this.post('/web/api/saveCloudSystemCredentials', {
             cloudSystemID,
             cloudAuthKey,
             cloudAccountName

@@ -39,6 +39,14 @@ export class NxCloudApiService {
         });
     }
 
+    connect(systemName, email, password) {
+        return this.http.post<t.CloudResponse>(this.CONFIG.cloudHost + this.CONFIG.apiBase + '/systems/connect', {
+            name: systemName,
+            email: email,
+            password: password
+        }).toPromise();
+    }
+
     getStaticLanding() {
         const httpOptions = {
             headers      : new HttpHeaders({ 'Content-Type': 'application/text' }),

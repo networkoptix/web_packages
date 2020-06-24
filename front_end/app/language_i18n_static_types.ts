@@ -420,6 +420,7 @@ export interface ErrorCodes {
     accountAlreadyActivated:             any;
     accountBlocked:                      any;
     accountNotActivated:                 any;
+    accountNotActivatedAlternate:        any;
     alreadyExists:                       any;
     brokenAccount:                       any;
     cantActivatePrefix:                  any;
@@ -444,6 +445,7 @@ export interface ErrorCodes {
     lostConnection:                      any;
     mergedSystemIsOffline:               any;
     notAuthorized:                       any;
+    badUsername:                         any;
     notFound:                            any;
     ok:                                  any;
     oldPasswordMistmatch:                any;
@@ -700,6 +702,8 @@ export interface ServersStatus {
 }
 
 export interface LanguageI18NStaticTypesSystem {
+    connected:        any;
+    not_connected:    any;
     MERGE_FINISHES:   any;
     mergeUnknownName: any;
     mySystemSearch:   any;
@@ -767,16 +771,17 @@ export interface ToastMessage {
 export interface ToastMessageSystem {
     deleted:      Deleted;
     disconnected: Deleted;
-    merge:        SystemMerge;
+    cloudConnect: CloudConnect;
+    merge:        CloudConnect;
     rename:       Deleted;
 }
 
-export interface Deleted {
+export interface CloudConnect {
     success: any;
+    failed:  any;
 }
 
-export interface SystemMerge {
-    failed:  any;
+export interface Deleted {
     success: any;
 }
 
@@ -1296,6 +1301,7 @@ const typeMap: any = {
         { json: "accountAlreadyActivated", js: "accountAlreadyActivated", typ: "any" },
         { json: "accountBlocked", js: "accountBlocked", typ: "any" },
         { json: "accountNotActivated", js: "accountNotActivated", typ: "any" },
+        { json: "accountNotActivatedAlternate", js: "accountNotActivatedAlternate", typ: "any" },
         { json: "alreadyExists", js: "alreadyExists", typ: "any" },
         { json: "brokenAccount", js: "brokenAccount", typ: "any" },
         { json: "cantActivatePrefix", js: "cantActivatePrefix", typ: "any" },
@@ -1320,6 +1326,7 @@ const typeMap: any = {
         { json: "lostConnection", js: "lostConnection", typ: "any" },
         { json: "mergedSystemIsOffline", js: "mergedSystemIsOffline", typ: "any" },
         { json: "notAuthorized", js: "notAuthorized", typ: "any" },
+        { json: "badUsername", js: "badUsername", typ: "any" },
         { json: "notFound", js: "notFound", typ: "any" },
         { json: "ok", js: "ok", typ: "any" },
         { json: "oldPasswordMistmatch", js: "oldPasswordMistmatch", typ: "any" },
@@ -1554,6 +1561,8 @@ const typeMap: any = {
         { json: "restarting", js: "restarting", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesSystem": o([
+        { json: "connected", js: "connected", typ: "any" },
+        { json: "not_connected", js: "not_connected", typ: "any" },
         { json: "MERGE_FINISHES", js: "MERGE_FINISHES", typ: "any" },
         { json: "mergeUnknownName", js: "mergeUnknownName", typ: "any" },
         { json: "mySystemSearch", js: "mySystemSearch", typ: "any" },
@@ -1611,14 +1620,15 @@ const typeMap: any = {
     "ToastMessageSystem": o([
         { json: "deleted", js: "deleted", typ: r("Deleted") },
         { json: "disconnected", js: "disconnected", typ: r("Deleted") },
-        { json: "merge", js: "merge", typ: r("SystemMerge") },
+        { json: "cloudConnect", js: "cloudConnect", typ: r("CloudConnect") },
+        { json: "merge", js: "merge", typ: r("CloudConnect") },
         { json: "rename", js: "rename", typ: r("Deleted") },
     ], false),
-    "Deleted": o([
+    "CloudConnect": o([
         { json: "success", js: "success", typ: "any" },
-    ], false),
-    "SystemMerge": o([
         { json: "failed", js: "failed", typ: "any" },
+    ], false),
+    "Deleted": o([
         { json: "success", js: "success", typ: "any" },
     ], false),
 };

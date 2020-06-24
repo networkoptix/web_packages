@@ -10,19 +10,19 @@ export interface CloudResponse {
     errorDetail: number,
     errorText: string,
     resultCode: string
-};
+}
 
 export interface AuthKey {
     'auth_key': string
-};
+}
 
 export interface VisitedKey {
     visited: boolean
-};
+}
 
 export interface AuthCode {
     email: string
-};
+}
 
 export interface Integration {
     information: {
@@ -70,7 +70,7 @@ export interface SystemAuth {
     authGet: string,
     authPost: string,
     authPlay: string
-};
+}
 
 interface Firmwares {
     count: number,
@@ -123,11 +123,11 @@ export interface IPVDCameras {
     analytics: string[],
     'num_cameras': number,
     cached: boolean
-};
+}
 
 export interface RegisterUser {
     activated: boolean
-};
+}
 
 export interface System {
     accessRole: string,
@@ -149,7 +149,7 @@ export interface System {
     status: string,
     systemSequence: string,
     usageFrequency: number
-};
+}
 
 export interface CloudUser {
     accessRole: string,
@@ -163,9 +163,9 @@ export interface CloudUser {
     usageFrequency: number,
     userRoleId: string,
     vmsUserId: string
-};
+}
 
-export interface CloudUsers extends Array<CloudUser> {};
+export interface CloudUsers extends Array<CloudUser> {}
 
 export interface Downloads {
     version: string,
@@ -182,7 +182,7 @@ export interface Downloads {
     beta: boolean,
     dismissed: boolean,
     releaseUrl: string
-};
+}
 
 interface Installers {
     platform: string,
@@ -196,13 +196,13 @@ interface Installers {
 
 interface Platforms extends Installers {
     url: string
-};
+}
 
 export interface AccountEdit {
     'first_name': string,
     'last_name': string,
     language: string
-};
+}
 
 export interface CloudStorage {
     freeSpace: string,
@@ -215,7 +215,7 @@ export interface CloudStorage {
     owner: string,
     systems: string[],
     totalSpace: string,
-};
+}
 
 export interface CloudStorageUsage extends CloudResponse {
     enabled: boolean,
@@ -226,5 +226,5 @@ export interface CloudStorageUsage extends CloudResponse {
     archiveFrom: number,
     recordingBitrate: number,
     delayFromLive: number,
-    spaceUsed: number 
-};
+    spaceUsed: number
+}

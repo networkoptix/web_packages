@@ -760,7 +760,7 @@ export class MergeModalContent {
             systemName = system.systemName;
             status = ` (${system.name}, ${system.remoteAddresses[0]}:${system.port}) ${status}`;
         } else {
-            systemName = system.name || system.info.name;
+            systemName = system.name || system.info.systemName;
         }
 
         // HTML required for dropdown list
@@ -882,7 +882,7 @@ export class MergeModalContent {
         this.primarySystem = system;
         this.primarySystem.stateOfHealth = this.primarySystem.stateOfHealth ||
             this.primarySystem.info && this.primarySystem.info.stateOfHealth;
-        this.primaryName = this.primarySystem.name || this.primarySystem.info && this.primarySystem.info.name;
+        this.primaryName = this.primarySystem.name || this.primarySystem.info && this.primarySystem.info.systemName;
     }
 
     getSecondaryName() {

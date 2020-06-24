@@ -101,7 +101,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
             .pipe(filter(data => data !== undefined))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.pageTitle = this.system.info.name;
+                this.pageService.pageTitle = this.system.info.systemName;
                 // Route guard did not worked :( ... so doing it the old way
                 if (!this.system.permissions || !this.system.permissions.editUsers) {
                     this.uriService

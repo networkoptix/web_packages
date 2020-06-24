@@ -44,6 +44,9 @@ export interface BaseConfig {
     toast: Toast;
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
+    cloudHost: string;
+    cloudSystemId: string;
+    localSystemId: string;
     company: Company;
     dynamicMenus: MenuStructure;
     footerItems: FooterItem[];

@@ -64,6 +64,7 @@
 $nx-theme-colors :
     "brand" theme_variables.$brand_core theme_variables.$light1,
     "default" theme_variables.$light8 theme_variables.$light1,
+    "default-inverted" theme_variables.$light4 theme_variables.$light16,
     "success" theme_variables.$brand-success theme_variables.$light1,
     "success-bright" theme_variables.$brand-success-bright theme_variables.$light1,
     "info" theme_variables.$brand-info theme_variables.$light1,

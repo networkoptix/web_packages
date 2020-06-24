@@ -178,7 +178,7 @@ export class NxCloudStorageComponent implements OnInit {
                     return this.LANG.errorCodes.notAuthorized;
                 },
                 networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                    return this.LANG.errorCodes.networkConnection();
                 }
             },
             successMessage : this.LANG.dialogs.cloudStorage.enableCloudStorage.success,

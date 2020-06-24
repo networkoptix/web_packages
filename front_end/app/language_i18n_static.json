@@ -391,6 +391,7 @@
         "accountAlreadyActivated": "This account is already activated",
         "accountBlocked": "This account is temporarily blocked. Please try again in a few minutes.",
         "accountNotActivated": "This account is not activated yet. <a href=\"/activate\">Send activation link again</a>",
+        "accountNotActivatedAlternate": "Account isn't activated. Please log in to <a href=\"{cloudHost}\" target='_blank'>%CLOUD_NAME%</a> and follow provided instructions.",
         "alreadyExists": "This account already exists",
         "brokenAccount": "Unexpected problem with account. <a href=\"/restore_password\">Restore account</a>",
         "cantActivatePrefix": "Cannot activate your account",
@@ -415,6 +416,7 @@
         "lostConnection": "Connection to {systemName} lost",
         "mergedSystemIsOffline": "System <strong>{failedSystem}</strong> is offline.",
         "notAuthorized": "Wrong password",
+        "badUsername":"Account not found",
         "notFound": "Not found",
         "ok": "ok",
         "oldPasswordMistmatch": "Current password is incorrect.",
@@ -430,7 +432,7 @@
         "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
         "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {cloudName}, please check your network connection."
+        "networkConnection": "Unable to connect to %CLOUD_NAME%, please check your network connection."
     },
     "integration": {
         "Access Control": "Access Control",
@@ -650,6 +652,8 @@
         "successRename": "Server name saved."
     },
     "system": {
+        "connected": "Connected",
+        "not_connected": "Not connected",
         "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{targetSystemName}</strong> System, and this system will be deleted.",
         "mergeUnknownName": "Unknown Name for System (Caused by cloud merge)",
         "mySystemSearch": "IMeMyMine",
@@ -716,6 +720,10 @@
             },
             "disconnected": {
                 "success": "System is successfully disconnected from %CLOUD_NAME%"
+            },
+            "cloudConnect": {
+                "success": "System connected to %CLOUD_NAME%",
+                "failed": "Failed to connect system to %CLOUD_NAME%"
             },
             "merge": {
                 "failed": "System merge failed",

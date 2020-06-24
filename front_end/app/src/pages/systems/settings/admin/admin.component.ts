@@ -8,7 +8,7 @@ import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../services/process.service';
-import { NxSystem }                  from '../../../../services/system.service';
+import {NxSystem, NxSystemUser} from '../../../../services/system.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
@@ -38,6 +38,8 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
+
+    user: NxSystemUser;
     system: NxSystem;
     systems;
     params: Params;
@@ -104,6 +106,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
 
     ngOnInit(): void {
+        this.accountService.get()
+            .then((account) => {
+                this.user = account;
+            });
+
         this.settings = {
             disconnectDisabled : false,
             mergeDisabled      : true,
@@ -123,7 +130,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }))
             .subscribe((system) => {
                 this.system = system;
-                this.pageService.pageTitle = this.system.info.name;
+                this.pageService.pageTitle = this.system.info.systemName;
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
                 }
@@ -139,7 +146,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
                         this.settingsService.footerSubject.next(true);
                         this.updateSettings(this.currentlyMerging);
-                        this.synceMergeAlerts();
+                        this.syncMergeAlerts();
                         if (this.settingsSubscription) {
                             this.settingsSubscription.unsubscribe();
                         }
@@ -151,7 +158,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.deletingSystem = this.processService.createProcess(
                     () => this.system.deleteFromCurrentAccount(),
                     {
-                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.name }),
+                        successMessage : this.LANG.toastMessage.system.deleted.success({ systemName: this.system.info.systemName }),
                         errorPrefix    : this.LANG.errorCodes.cantUnshareWithMeSystemPrefix()
                     }
                 ).then(
@@ -161,7 +168,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    synceMergeAlerts() {
+    syncMergeAlerts() {
         if (this.system.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
@@ -185,7 +192,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             });
     }
 
-    disconnect() {
+    connectLocalToCloud() {
+        this.dialogs
+            .connectLocalToCloud(this.system)
+            .then((result) => {
+                if (result) {
+                    // give the user chance to read the toaster
+                    setTimeout(() => window.location.reload(), 2000);
+                }
+            });
+    }
+
+    disconnectFromCloud() {
         if (this.system.isMine) {
             this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
@@ -194,10 +212,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }).catch(() => {
                 // User is the owner. Deleting system means unbinding it and disconnecting all accounts
                 // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-                this.dialogs.disconnect(this.system.id)
+                this.dialogs
+                    .disconnect(this.system)
                     .then((result) => {
                         if (result) {
-                            this.updateAndGoToSystems();
+                            if (NxConfigService.isLocal && this.system.currentUser.isCloud) {
+                                this.accountService.logout();
+                            } else {
+                                if (NxConfigService.isLocal) {
+                                    // give the user chance to read the toaster
+                                    setTimeout(() => window.location.reload(), 2000);
+                                } else {
+                                    this.updateAndGoToSystems();
+                                }
+                            }
                         }
                     });
             });
@@ -238,13 +266,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
     rename() {
         return this.dialogs
-            .rename(this.system.id, this.system.info.name)
+            .rename(this.system.id, this.system.info.systemName)
             .then((finalName) => {
                 if (finalName) {
-                    this.system.info.name = finalName;
+                    this.system.info.systemName = finalName;
                 }
 
-                this.pageService.pageTitle = this.system.info.name;
+                this.pageService.pageTitle = this.system.info.systemName;
                 this.systemsService.forceUpdateSystems(this.accountService.email);
             });
     }
@@ -291,7 +319,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }).finally(() => {
                 this.currentlyMerging = false;
                 this.updateSettings(this.currentlyMerging);
-                this.synceMergeAlerts();
+                this.syncMergeAlerts();
                 this.settingsService.system = this.system;
             });
     }

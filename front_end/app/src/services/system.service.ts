@@ -14,6 +14,7 @@ import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { IParams }                         from '../components/search/search.component';
 import { SystemConfigSettings }            from './system-api.types';
+import {toPromise} from "rxjs-compat/operator/toPromise";
 
 export interface NxSystemRole extends PredefinedRole {
     id?: string;
@@ -37,6 +38,8 @@ export interface NxSystemUser {
     isEnabled: boolean;
     isLdap: boolean;
     isLocalAdmin: boolean;
+    isCloudOwner: boolean;
+    isLocalOwner: boolean
     isMe: boolean;
     name: string;
     parentId: string;
@@ -271,16 +274,9 @@ class UserManager {
             user.accessRole = user.role.name;
             // @ts-ignore: TODO Can't resolve accountID, NxSystemUser interface might be missing properties
             user.id = user.id || user.accountId;
-
-            const isAdmin      = this.isAdmin(user);
-            const isCloudOwner = this.isOwner(user);
-            const isMe         = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
-            if (isMe) {
-                this.currentUser = user;
-                this.accessRole = user.accessRole;
-            }
-            user.isMe = isMe;
-            user.isAdmin = isAdmin;
+            user.isCloudOwner = this.isOwner(user);
+            user.isMe = !this.CONFIG.isLocal ? user.isCloud && user.email === this.currentUserEmail : user.id === this._userId;
+            user.isAdmin = this.isAdmin(user);
             // @ts-ignore: TODO having trouble resolving type for isLocalOwner
             user.isLocalOwner = !user.isCloud && user.name === 'admin';
 
@@ -294,8 +290,13 @@ class UserManager {
              *   they also can not be edited
              */
             // @ts-ignore: TODO having trouble resolving type for isLocalOwner
-            const isNotMeOrOwner = !(isMe || user.isLocalOwner || isCloudOwner);
-            user.canBeEdited = isNotMeOrOwner && (this.isMine || !isAdmin);
+            const isNotMeOrOwner = !(user.isMe || user.isLocalOwner || user.isCloudOwner);
+            user.canBeEdited = isNotMeOrOwner && (this.isMine || !user.isAdmin);
+
+            if (user.isMe) {
+                this.currentUser = user;
+                this.accessRole = user.accessRole;
+            }
 
             return user;
         }).sort((userA, userB) => {
@@ -841,6 +842,7 @@ export class NxSystem extends System implements OnDestroy {
         // Handling promise to satisfy the linter.
         this.updateSystemAuth(true).then(() => {
         });
+
         this.userManager = new UserManager(this.CONFIG, this.LANG, this.mediaserver, currentUserEmail, userId);
         this.systemPoll = this.pollService.createPoll<any>(this.update, this.CONFIG.updateInterval);
         this.serverManager = new ServerManager(
@@ -879,13 +881,13 @@ export class NxSystem extends System implements OnDestroy {
     getInfoAndPermissions(useCache = true, suppressUpdate = false) {
         const parseSettings = ({
             cloudAccountName: ownerAccountEmail,
-            systemName: name,
+            systemName: systemName,
             specificFeatures,
             mergeInfo
         }: SystemConfigSettings) => {
             return {
                 ownerAccountEmail,
-                name,
+                systemName,
                 mergeInfo,
                 capabilities : JSON.parse(<any> specificFeatures),
                 isOnline     : true
@@ -903,11 +905,15 @@ export class NxSystem extends System implements OnDestroy {
                 }
                 this.id = res.localSystemId;
                 this.mergeInfo = this.info.mergeInfo;
-                this.userManager.ownerEmail = this.info.ownerAccountEmail;
                 this.isOnline = true;
                 this.cloudStorageCapable = false;
-                this.userManager.accessRole = this.info.accessRole;
-                this.userManager.checkPermissions();
+
+                this.getUsers(true)
+                    .then(() => {
+                        this.userManager.ownerEmail = this.info.ownerAccountEmail;
+                        this.userManager.accessRole = this.info.accessRole;
+                        this.userManager.checkPermissions();
+                    });
             }).catch(err => console.error(err))
                 .finally(() => {
                     return Promise.resolve(this as Partial<NxSystemWithUserInfo>);
@@ -936,6 +942,7 @@ export class NxSystem extends System implements OnDestroy {
                 this.canMerge = this.userManager.isMine && (this.info.capabilities && this.info.capabilities.cloudMerge);
                 this.cloudStorageCapable = this.info.capabilities && this.info.capabilities.cloudStorage;
                 this.mergeInfo = response.mergeInfo;
+
                 if (!suppressUpdate) {
                     this.systemInfo = this;
                 }

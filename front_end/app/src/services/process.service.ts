@@ -155,7 +155,10 @@ export class Process {
         const formatted = formatError(data, this.settings.errorCodes, this.LANG);
         if (formatted !== false && !this.settings.ignoreError) {
             this.settings.errorMessage = formatted;
-            const message = `${this.settings.errorPrefix} ${this.settings.errorMessage}`;
+            // @ts-ignore
+            let message = (typeof this.settings.errorMessage === 'function') ? this.settings.errorMessage() : this.settings.errorMessage;
+            message = (this.settings.errorPrefix !== '') ? `${this.settings.errorPrefix} ${message}` : message;
+
             const options = {
                 autohide  : !this.settings.holdAlerts,
                 classname : this.CONFIG.toast.danger,
@@ -224,7 +227,7 @@ export interface IErrorCodes {
 
 export interface ProcessSettings {
     errorCodes: IErrorCodes;
-    errorMessage?: string;
+    errorMessage: string;
     errorPrefix: string;
     holdAlerts: boolean;
     ignoreUnauthorized: boolean;
@@ -252,5 +255,5 @@ export const formatError = (error, errorCodes, lang: LanguageI18NStaticTypes): s
             return errorCodes[errorCode];
         }
     }
-    return lang.errorCodes[errorCode] || lang.errorCodes.unknownError;
+    return lang.errorCodes[errorCode] || lang.errorCodes.unknownError();
 };

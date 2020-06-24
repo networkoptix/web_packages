@@ -4,10 +4,10 @@ import { NxLanguageProviderService } from './nx-language-provider';
 import { NxSystemRole }              from './system.service';
 import { LanguageI18NStaticTypes }   from '../../language_i18n_static_types';
 import { NxPageService }             from './page.service';
-import { NxSystemAPI }               from './system-api.service';
-import * as t                        from './system-api.types';
-import { retryWhen }                 from 'rxjs/operators';
 import { HttpClient }                from '@angular/common/http';
+import { Location }                  from '@angular/common';
+
+import {DefaultUrlSerializer, Router, UrlTree} from "@angular/router";
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +23,8 @@ export class NxBootstrapProvider {
         private configService: NxConfigService,
         private languageService: NxLanguageProviderService,
         private pageService: NxPageService,
-        private http: HttpClient
+        private http: HttpClient,
+        private location: Location
     ) {
         this.CONFIG = this.configService.getConfig();
         this.isLoaded = false;
@@ -58,6 +59,7 @@ export class NxBootstrapProvider {
                 this.setLanguage(result[1]);
 
                 if (result[2].reply) {
+                    this.setLocalInfo(result[2].reply);
                     this.isNewSystem = result[2].reply.serverFlags.includes('SF_NewSystem');
                 }
 
@@ -69,6 +71,13 @@ export class NxBootstrapProvider {
                 resolve(true);
             });
         });
+    }
+
+    setLocalInfo(data) {
+        const hostProtocol = data.cloudHost.split('://')[0];
+        this.CONFIG.cloudHost = (hostProtocol === data.cloudHost) ? `https://${data.cloudHost}` : data.cloudHost;
+        this.CONFIG.cloudSystemId = data.cloudSystemId;
+        this.CONFIG.localSystemId = data.localSystemId;
     }
 
     setLanguage(data) {

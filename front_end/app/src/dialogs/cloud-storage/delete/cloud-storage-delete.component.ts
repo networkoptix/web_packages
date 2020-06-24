@@ -76,7 +76,7 @@ export class CloudStorageDeleteModalContent implements OnInit {
                     return this.LANG.errorCodes.notAuthorized;
                 },
                 networkConnection: () => {
-                    return this.LANG.errorCodes.networkConnection.replace('{{cloudName}}', this.CONFIG.cloudName);
+                    return this.LANG.errorCodes.networkConnection();
                 }
             },
             successMessage : this.LANG.dialogs.cloudStorage.remove.success,

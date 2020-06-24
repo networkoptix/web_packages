@@ -27,6 +27,6 @@
                            [form]="renameForm"
                            [actionType]="'primary'"
                            buttonText="{{ 'Save' | translate }}"></nx-process-button>
-        <nx-cancel-button [process]="rename" [discardFn]="close"></nx-cancel-button>
+        <nx-cancel-button [process]="rename" [discardFn]="activeModal.close"></nx-cancel-button>
     </div>
 </form>

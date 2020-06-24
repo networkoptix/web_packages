@@ -19,6 +19,7 @@ import { DetachServerModalContent }    from './detach-server/detach-server.compo
 import { ResetServerModalContent }     from './reset-server/reset-server.component';
 import { ChangePasswordModalContent }  from './change-password/change-password.component';
 import { WizardModalContent }          from './wizard/wizard.component';
+import { CloudConnectModalContent }    from './cloud-connect/cloud-connect.component';
 import { DeleteCloudUserModalContent } from './delete-cloud-user/delete-cloud-user.component';
 import { NxDialogsService }            from './dialogs.service';
 import { RouterModule }                from '@angular/router';
@@ -70,6 +71,7 @@ import { PipesModule }                    from '../pipes/pipes.module';
         ResetServerModalContent,
         ChangePasswordModalContent,
         WizardModalContent,
+        CloudConnectModalContent,
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,
@@ -95,6 +97,7 @@ import { PipesModule }                    from '../pipes/pipes.module';
         ResetServerModalContent,
         ChangePasswordModalContent,
         WizardModalContent,
+        CloudConnectModalContent,
         DeleteCloudUserModalContent,
         NxModalGenericComponent,
         CloudStorageDeleteModalContent,

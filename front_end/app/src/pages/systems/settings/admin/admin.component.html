@@ -2,9 +2,58 @@
 
 <div *ngIf="systemLoaded" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
+
+        <nx-block header-style="extended" type="mb-3">
+            <header>
+                <div class="system-cloud-tag float-right">
+                    <nx-tag static type="success" *ngIf="CONFIG.cloudSystemId">{{LANG.system.connected() | uppercase}}</nx-tag>
+                    <nx-tag static *ngIf="!CONFIG.cloudSystemId">{{LANG.system.not_connected() | uppercase}}</nx-tag>
+                </div>
+                <div class="float-left">
+                    <h2 class="system-name mb-2">%CLOUD_NAME%</h2>
+                    <span class="system-owner">
+                        <a [href]="CONFIG.cloudHost" target="_blank">{{CONFIG.cloudHost}}</a>
+                    </span>
+                </div>
+            </header>
+
+            <nx-section *ngIf="system.permissions.isAdmin">
+                <div class="row m-0">
+                    <div class="col-12 pl-0">
+                        <div class="" *ngIf="system.isMine && !CONFIG.cloudSystemId">
+                            <button [disabled]="settings.disconnectDisabled"
+                                    class="btn btn-default"
+                                    (click)="connectLocalToCloud()">
+                                <span class="ellipsis" translate>Connect to %CLOUD_NAME%</span>
+                            </button>
+                        </div>
+                        <div class="" *ngIf="CONFIG.cloudSystemId">
+
+                            <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
+                            <span>
+                                <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
+                                <span *ngIf="!system.isMine">
+                                    <span class="system-header-bold">{{system.info.ownerFullName}}</span>
+                                    <span>&nbsp;({{system.info.ownerAccountEmail}})</span>
+                                </span>
+                            </span>
+                            <button *ngIf="system.isMine"
+                                    [disabled]="settings.disconnectDisabled"
+                                    title="BOOM!"
+                                    class="btn btn-default mt-3"
+                                    (click)="disconnectFromCloud()">
+                                <span class="ellipsis" translate>Disconnect from %CLOUD_NAME%</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </nx-section>
+        </nx-block>
+
+
         <nx-block header-style="extended">
             <header>
-                <h2 class="system-name mb-2">{{system.info.name}}</h2>
+                <h2 class="system-name mb-2">{{system.info.systemName}}</h2>
                 <span class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
@@ -34,8 +83,8 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-xl-5 p-0 mt-2 mt-xl-0">
-                        <div class="float-xl-right" *ngIf="system.isMine">
+                    <div class="col-xl-5 p-0 mt-2 mt-xl-0" *ngIf="system.isMine && !CONFIG.isLocal && !CONFIG.cloudSystemId">
+                        <div class="float-xl-right">
                             <button [disabled]="settings.disconnectDisabled"
                                     class="btn btn-default"
                                     (click)="disconnect()">

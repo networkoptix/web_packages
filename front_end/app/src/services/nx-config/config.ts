@@ -355,6 +355,9 @@ export const nxConfig: IConfig = {
         healthMonitorCacheTimeout : 60
     },
     cloudName : '',
+    cloudHost : '',
+    cloudSystemId : '',
+    localSystemId : '',
     company   : {
         copyrightYear : '',
         links         : {

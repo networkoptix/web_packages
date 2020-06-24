@@ -39,6 +39,7 @@ import { Process }                             from '../services/process.service
 import { NxCloudApiService }                   from '../services/nx-cloud-api';
 import { LoginWebadminModalContent }           from './login-webadmin/login-webadmin.component';
 import { WizardModalContent }                  from './wizard/wizard.component';
+import {CloudConnectModalContent} from "./cloud-connect/cloud-connect.component";
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({ providedIn: 'root' })
@@ -244,14 +245,28 @@ export class NxDialogsService {
         return this.createModal(CloudStorageMoveModalContent, options, params);
     }
 
-    disconnect(systemId: string) {
+    connectLocalToCloud(system: NxSystem) {
+        const options: IParams = {
+            windowClass: 'modal-holder',
+            backdrop: 'static'
+        };
+
+        const params: IParams = {
+            system,
+            closable: true
+        };
+
+        return this.createModal(CloudConnectModalContent, options, params);
+    }
+
+    disconnect(system: NxSystem) {
         const options: IParams = {
             windowClass : 'modal-holder',
             backdrop    : 'static'
         };
 
         const params: IParams = {
-            systemId,
+            system,
             closable: true
         };
 

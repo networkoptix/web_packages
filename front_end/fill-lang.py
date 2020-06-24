@@ -3,8 +3,9 @@ import json
 
 
 def filter_extracted_static(json_elem):
-    keys = ["dialogs.merge", "WHEN_MERGE_FINISHES", "FAILED_SYSTEM_DESCR", "NO_SYSTEMS_",
-            "registration.agreement", "merge.warning", "common.account", "system.MERGE_FINISHES"]
+    keys = ["dialogs.merge", "WHEN_MERGE_FINISHES", "FAILED_SYSTEM_DESCR", "NO_SYSTEMS_", "errorCodes.",
+            "integration.", "registration.agreement", "merge.warning", "common.account", "system.MERGE_FINISHES",
+            "ipvdDisclaimer", "ipvdTopXByVolume"]
     return any((key in json_elem for key in keys))
 
 
