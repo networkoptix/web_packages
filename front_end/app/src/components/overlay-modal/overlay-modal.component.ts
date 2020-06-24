@@ -2,12 +2,10 @@ import {
     Component, OnInit, OnDestroy
 }                                   from '@angular/core';
 import { Subscription }             from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 
-@AutoUnsubscribe()
 @Component({
     selector    : 'nx-overlay-modal',
     templateUrl : 'overlay-modal.component.html',

@@ -1,5 +1,7 @@
 <nx-overlay-modal *ngIf="false"></nx-overlay-modal>
 <!-- Templates used for render and for size calculations -->
+<!-- Views used for both render and calculating element size off screen should use an ng-template-->
+<!-- This will keep off screen calculated sizes consisten with rendered sizes -->
 <ng-template #navIcon>
     <div class="navbar-header nav-icon" (resize)="iconWidth$.next($event.width)">
         <a class="inset navbar-brand asset-name add-version ml-sm-0 d-block" [routerLink]="mainUrl">
@@ -38,6 +40,8 @@
 </ng-template>
 
 <!-- Hidden menu for calculations -->
+<!-- This is used to calculate all possible component view states -->
+<!-- Most (resize) directives for updating adaptive views should be on these hidden elements -->
 <nav class="navbar navbar-default nav-override hidden-menu">
     <div class="container-fluid flex-no-wrap">
         <div class="app-header-left">

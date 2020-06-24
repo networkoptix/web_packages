@@ -57,13 +57,24 @@ export class NxDropMenu extends BaseDropdown {
         return item ? item.id : undefined;
     }
 
+    /**
+     * This is used to calculate the columns and column width based on clamping the size to the minimum and maximum tile
+     * sizes from the spec. Updates are triggered by a (resize) directive on the containing element.
+     * @param event$ - {width: number}
+     */
     handleResize({ width }) {
         if (!width) return;
         const minWidth = 160;
+
+        // Determines columns and columnWidths
         this.columns$.next(Math.min(width / minWidth | 0, 4));
         this.columnWidth = (width / this.columns$.value | 0);
+
+        // Max systems to display, use the number of columns as the index to determine which value to use
         const systemLimitByColumns = [0, 5, 8, 12, 16];
         const maxSystems = systemLimitByColumns[this.columns$.value];
+
+        // Limits systems to maxSystems or maxSystems - 1 if more than max systems available
         const systems = this.systems.slice(
             0,
             this.systems.length === maxSystems
@@ -73,6 +84,8 @@ export class NxDropMenu extends BaseDropdown {
                     : this.systems.length
         );
         this.systems$.next(systems);
+
+        // Updates additional systems tile
         const additionalSystems = this.systems.length - systems.length;
         this.additionalSystems$.next(additionalSystems);
     }

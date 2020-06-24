@@ -18,7 +18,6 @@ import { Subscription, timer }    from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -21,9 +21,9 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { NxHeaderService }           from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenusService }            from '../../services/menus.service';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith }            from 'rxjs/operators';
 import { WINDOW }                    from '../../services/window-provider';
-import { UntilDestroy }            from '@ngneat/until-destroy';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { environment }               from '../../../environments/environment';
 
 class CombinedWidths {
@@ -61,12 +61,15 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     systemCounter: number;
     loginState;
 
+    // Observables used to manage component view states for adaptive views
     showIcon$ = new BehaviorSubject(true);
     showSmallRightNav$ = new BehaviorSubject(false);
     showTabs$ = new BehaviorSubject(true);
     hideTabsAndDropdown$ = new BehaviorSubject(false);
-
     menuTabsCollapsed$ = new BehaviorSubject(0);
+
+    // Observables used for tracking element sizes
+    // If additional elements need to be tracked use (resize) directive on those elements to track sizes
     iconWidth$ = new BehaviorSubject(0);
     mainButtonWidth$ = new BehaviorSubject(0);
     rightNavWidth$ = new BehaviorSubject(0);
@@ -109,10 +112,13 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.menuSubscription = this.menusService.getMenu('Header', true).subscribe(header => {
             this.headerService.nodes = header;
         });
+        // Updates windowWidth$ behavior subject on window resize
         this.resizeSubscription = fromEvent(window, 'resize').pipe(
             map((event: any) => event.target.innerWidth as number),
             startWith(window.innerWidth)
         ).subscribe(width => this.windowWidth$.next(width));
+
+        // Combines all tracked element sizes into a flattened observable and updates combinedWidths$ with latest values
         this.widthSubscription = combineLatest(this.iconWidth$, this.mainButtonWidth$, this.tabsWidth$, this.rightNavWidth$, this.windowWidth$).pipe(
             map(([icon, mainButton, tabs, rightNav, windowWidth]) => ({
                 totalWidths: icon + mainButton + tabs + rightNav,
@@ -123,6 +129,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 windowWidth
             }))
         ).subscribe(combinedWidths => this.combinedWidths$.next(combinedWidths));
+
+        // This handles the adaptive behavior of the header, in most cases navWidth is used to toggle different component views
+        // For cases where the component view to use is determined by breakpoint, that logic should be implemented here instead of CSS
+        // It's non-standard but will make the code easier to reason about when all logic for determining component size/views are in one place
         this.combinedWidths$.subscribe(({
             totalWidths,
             icon,
@@ -133,12 +143,21 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }) => {
             const padding = 24;
             const nodes = !!headerService.currentLocation.parentNode?.nodes;
+
+            // Used to keep track of element total widths at different states of updating the view states
             let navWidth = totalWidths + padding;
+
+            // Used for keeping track of component view states
             let showIcon = true;
             let showSmallRightNav = false;
             let showTabs = true;
             let hideTabsAndDropdown = false;
 
+            // The code below is purposefully kept really imperative and with little abstraction to keep it easy to understand
+            // All component views start at largest state and gets toggled to smaller versions in the order that the if statements are ran
+            // The navWidth gets updated on each component view state change
+            // In cases where a smaller view needs to be used on a component most likely there will be one or more previously checked
+            // components where you'll want check if there is now room.
             if (!nodes) {
                 navWidth = navWidth - tabs;
             }
@@ -170,6 +189,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 showSmallRightNav = false;
             }
 
+            // Updates view states to be used by tempate
             this.showIcon$.next(showIcon);
             this.showSmallRightNav$.next(showSmallRightNav);
             this.showTabs$.next(showTabs);
