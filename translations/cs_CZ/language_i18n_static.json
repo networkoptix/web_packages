@@ -105,10 +105,10 @@
 			"video_source_sdk": "SDK zdroje videa"
 		},
 		"releasesTypes": {
-			"beta": "Beta",
+			"beta": "Beta verze",
 			"betas": "Beta verze",
-			"rc": "Release Candidate",
-			"release": "Release",
+			"rc": "Uvolněte kandidáta",
+			"release": "Uvolnění",
 			"releases": "Vydání",
 			"patch": "Patch",
 			"patches": "Opravy"
@@ -120,7 +120,7 @@
 		"vendor": "Výrobce",
 		"model": "Model",
 		"hardwareType": "Typ",
-		"maxResolution": "<span>Max</span><br><span>Resolution</span>",
+		"maxResolution": "<span>Max</span><br><span>Rozlišení</span>",
 		"maxFps": "<span>Max</span><br><span>FPS</span>",
 		"primaryCodec": "Kodek",
 		"isAudioSupported": "Zvuk",
@@ -158,7 +158,7 @@
 		"myIntegrationsLabel": "Těžit",
 		"previewRibbonText": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi.",
 		"backToEditText": "Zpět na editační rozhraní",
-		"requirements": "{{name}} Requirements",
+		"requirements": "{{name}} Požadavky",
 		"Access Control": "Kontrola Přístupu",
 		"Connector": "Konektor",
 		"Data Analytics": "Analýza dat",
@@ -200,17 +200,17 @@
 	"dialogs": {
 		"okButton": "OK",
 		"cancelButton": "Zrušit",
-		"createNewAccount": "Create New Account",
-		"changeAccountLogged": "You are already logged in as {email}",
-		"loggedFromOther": "You will be logged in with a different account",
+		"createNewAccount": "Vytvořit nový účet",
+		"changeAccountLogged": "Jste již přihlášeni jako {email}",
+		"loggedFromOther": "Budete přihlášeni pomocí jiného účtu",
 		"loginTitle": "Přihlaste se k %CLOUD_NAME%",
 		"loginButton": "Přihlásit se",
 		"logoutAuthorisedTitle": "Již jste přihlášen",
 		"logoutAuthorisedContinueButton": "Pokračovat",
 		"logoutAuthorisedLogoutButton": "Odhlásit",
 		"noClientDetectedTitle": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
-		"stayAs": "Stay logged as {email} ",
-		"stayLoggedIn": "Stay Logged In",
+		"stayAs": "Zůstaňte přihlášeni jako {email} ",
+		"stayLoggedIn": "Zůstat přihlášený",
 		"download": "Stáhnout %VMS_NAME%",
 		"merge": {
 			"commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.",
@@ -227,7 +227,7 @@
 				"b_support": "podpora",
 				"c_proceeding": "než budete pokračovat."
 			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+			"warning": "V sloučeném systému bude více než <strong>{{maxServers}}</strong> serverů."
 		},
 		"message": {
 			"failedToSend": "Zprávu se nepodařilo odeslat.",
@@ -239,7 +239,7 @@
 			},
 			"subject": {
 				"sales_inquiry": "Dotaz na prodejce o {{asset}}",
-				"technical_inquiry": "Technical inquiry for {{asset}}",
+				"technical_inquiry": "Technický dotaz pro {{asset}}",
 				"integration_feedback": "Zpětná vazba pro integraci {{asset}}",
 				"ipvd_feedback_page": "Zpětná vazba pro kameru",
 				"ipvd_feedback_device": "Zpětná vazba pro {{asset}}"
@@ -313,14 +313,14 @@
 		"missingMessage": "Heslo je vyžadováno"
 	},
 	"registration": {
-		"agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+		"agreement": "Souhlasím s <a href=\"/content/eula\" target=\"_blank\">obchodními podmínkami</a> a <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zásadami ochrany osobních údajů</a>"
 	},
 	"system": {
 		"yourSystem": "Váš systém",
 		"mySystemSearch": "IMeMyMine",
 		"unavailable": "Systém je nedostupný",
 		"offline": "Systém je offline",
-		"offlineAlertRibbon": "System is offline. Some settings may not be available.",
+		"offlineAlertRibbon": "Systém je offline. Některá nastavení nemusí být k dispozici.",
 		"openClient": "Otevřít v %VMS_NAME%",
 		"openClientNoSystem": "Otevřít %VMS_NAME%",
 		"confirmMergeAction": "Sloučit",
@@ -334,7 +334,7 @@
 		"confirmUnshareFromMeTitle": "Odpojit systém?",
 		"confirmUnshareFromMeAction": "Odpojit",
 		"confirmUnshare": "Tento uživatel nebude mít přístup k systému. Přejete si pokračovat?",
-		"confirmUnshareTitle": "Remove user?",
+		"confirmUnshareTitle": "Odstranit uživatele?",
 		"confirmUnshareAction": "Odstranit",
 		"successDisconnected": "Systém byl úspěšně odpojen od %CLOUD_NAME%",
 		"successDeleted": "Systém {{systemName}} byl úspěšně odstraněna z Vašeho účtu",
@@ -343,7 +343,7 @@
 		"mergeSuccess": "Sloučení systému bylo dokončeno",
 		"permissionsRemoved": "Oprávnění byla odstraněna z adresy {{email}}",
 		"unknownName": "Neznámý název systému (problém s cloudovým spojením)",
-		"shareOffline": "Cannot share system while it is offline",
+		"shareOffline": "Systém nelze sdílet, pokud je offline",
 		"shareUnauthorized": "Nemáte oprávnění ke sdílení tohoto systému",
 		"settings": {
 			"sessionLimitDuration": {
@@ -437,19 +437,19 @@
 			"copyActiveText": "zkopírováno do schránky"
 		},
 		"systemOffline": "Systém je offline",
-		"systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-		"systemNoAlerts": "No Alerts",
-		"systemNoAlertsMessage": "Your system must be doing well!",
+		"systemOfflineMessage": "Tento systém je offline a momentálně se nelze připojit.",
+		"systemNoAlerts": "Žádná upozornění",
+		"systemNoAlertsMessage": "Váš systém musí dobře fungovat!",
 		"systemServerError": "Interní chyba serveru",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
-		"systemNewVersion": "Update your system",
-		"systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
+		"systemServerErrorMessage": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
+		"systemNewVersion": "Aktualizovat systém",
+		"systemNewVersionMessage": "Vaše aktuální verze není kompatibilní s touto funkcí. Pro použití této funkce aktualizujte své servery na nejnovější verzi.",
 		"systemHasNoCameras": "ŽÁDNÉ KAMERY",
 		"systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
 		"cameraStates": {
 			"offline": "Offline",
 			"error": "Chyba",
-			"errorLoading": "An error occurred while loading this video.",
+			"errorLoading": "Při načítání videa došlo k chybě.",
 			"unauthorized": "Ověření je vyžadováno",
 			"noData": "Žádná data",
 			"iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
@@ -485,8 +485,8 @@
 	},
 	"systemAdministration": "Správce systému",
 	"users": "Uživatelé",
-	"testedVersionLabel": "Tested with {{vmsName}} version:",
-	"testedVersionsLabel": "Tested with {{vmsName}} versions:",
+	"testedVersionLabel": "Testováno s verzí {{vmsName}}:",
+	"testedVersionsLabel": "Testováno s {{vmsName}} verzemi:",
 	"About %CLOUD_NAME%": "O aplikaci %CLOUD_NAME%",
 	"Download %VMS_NAME%": "Stáhnout %VMS_NAME%",
 	"Integrations": "Integrace",
@@ -494,13 +494,13 @@
 	"Support": "Podpora",
 	"Supported Devices": "Podporovaná zařízení",
 	"Terms": "Podmínky",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+	"pleaseSelect": "Prosím vyberte...",
+	"WHEN_MERGE_FINISHES": "Po sloučení budou všichni uživatelé a kamery z tohoto systému k dispozici v systému <strong>{{targetSystemName}}</strong> a tento systém bude vymazán.",
 	"FAILED_SYSTEM_DESCR": "Tento odkaz je nefunkční,<br>Systém může být odpojen od %CLOUD_NAME%,<br>Přístup k tomuto systému může být zrušen, <br>nebo můžete být přihlášen k jinému účtu.",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "Nemáte žádné systémy připojené k %CLOUD_NAME%",
 	"NO_SYSTEMS_LOGIN": "Přihlaste se k Vašemu systému pomocí %VMS_NAME%",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "Přejděte na záložku \"Cloud\" v dialogovém okně \"Správa systému\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "Stiskněte tlačítko \"Připojit systém k %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} by volume:",
+	"topXByVolume": "Top {{value}} podle objemu:",
 	"phoneNumberWithLabel": "Tel: {{number}}"
 }
