@@ -175,6 +175,7 @@ def change_password(request):
 
     try:
         Account.change_password(request.user.email, old_password, new_password)
+        models.Account.objects.get(email=request.user.email).password_changed()
     except APINotAuthorisedException as error:
         raise APIRequestException('Wrong old password', ErrorCodes.wrong_old_password,
                                   error_data={'old_password': error.error_data})
@@ -234,6 +235,7 @@ def restore_password(request):
 
         email = Account.extract_temp_credentials(code)[1]
         Account.restore_password(code, new_password)
+        models.Account.objects.get(email=request.user.email).password_changed()
 
         account = models.Account.objects.get(email=email)
         if not account.activated_date:

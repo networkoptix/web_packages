@@ -236,6 +236,10 @@ class PushDevice(GCMDevice):
         except GCMError as gcm_error:
             return gcm_error.args[0]
 
+    @staticmethod
+    def delete_for_account(account):
+        PushDevice.objects.filter(user=account).delete()
+
 
 class PushNotification(models.Model):
     SIZE_LIMIT = 4000
