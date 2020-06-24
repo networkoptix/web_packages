@@ -170,6 +170,7 @@
     "OK": "OK",
     "OS": "OS",
     "Only client-server video traffic can be encrypted.": "Kun klient-server videotrafikk kan krypteres.",
+    "Only one starter license is allowed per system": "Only one starter license is allowed per system",
     "Open %VMS_NAME%": "Åpne %VMS_NAME%",
     "Open in %VMS_NAME%": "Åpent i %VMS_NAME%",
     "Other packages:": "Andre pakker:",
