@@ -12,10 +12,10 @@
         <span *ngIf="!small" class="user-email" [innerHTML]="settings.email"></span>
     </button>
     <div class="dropdown-menu"
-        [ngClass]="{'invisible': !dropdownWidth$.value}"
+        [ngClass]="{'invisible': !show}"
         (resize)="dropdownWidth$.next($event.width)"
         [nxArrowNav]="show"
-        [style.display]="show ? 'inline-block' : 'none'"
+        [style.display]="'inline-block'"
         [style.right.px]="rightOffset$.value"
         aria-labelledby="accountSettingsSelect">
 

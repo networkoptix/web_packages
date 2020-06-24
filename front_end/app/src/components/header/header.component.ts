@@ -37,6 +37,20 @@ class CombinedWidths {
     ) {}
 }
 
+enum sizes {
+    SM=24,
+    MD=48,
+    LG=72,
+    XL=96
+}
+
+enum breakpoints {
+    SM=576,
+    MD=768,
+    LG=992,
+    XL=1200
+}
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-header',
@@ -141,7 +155,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             rightNav,
             windowWidth
         }) => {
-            const padding = 24;
+            const padding: sizes = sizes.SM;
             const nodes = !!headerService.currentLocation.parentNode?.nodes;
 
             // Used to keep track of element total widths at different states of updating the view states
@@ -162,14 +176,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 navWidth = navWidth - tabs;
             }
 
-            if (navWidth > windowWidth) {
+            if (windowWidth < breakpoints.LG) {
                 showSmallRightNav = true;
-                const collapsedSize = this.CONFIG.isLocal ? 96 : 48;
+                const collapsedSize: sizes = this.CONFIG.isLocal ? sizes.XL : sizes.MD;
                 const widthDifference = rightNav - this.rightNavWidthCollapsed$.value;
                 navWidth = navWidth - widthDifference + collapsedSize;
             }
 
-            if (navWidth > windowWidth) {
+            if (windowWidth < breakpoints.MD) {
                 showIcon = false;
                 navWidth = navWidth - icon;
             }
@@ -185,9 +199,9 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 navWidth = navWidth - this.menuTabsCollapsed$.value;
             }
 
-            if ((navWidth + rightNav - this.rightNavWidthCollapsed$.value) < windowWidth) {
-                showSmallRightNav = false;
-            }
+            // if ((navWidth + rightNav - this.rightNavWidthCollapsed$.value) < windowWidth) {
+            //     showSmallRightNav = false;
+            // }
 
             // Updates view states to be used by tempate
             this.showIcon$.next(showIcon);

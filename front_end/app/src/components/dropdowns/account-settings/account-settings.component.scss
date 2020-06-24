@@ -45,7 +45,7 @@
                     border: 1px solid $light6;
                 }
             }
-        }
+    }
 }
 
 .popup {
@@ -67,16 +67,11 @@
     }
 }
 
-.dropdown-toggle {
+#accountSettingsSelect {
     padding-left: 0px !important;
     padding-right: 16px !important;
     min-width: 41px;
     flex-shrink: 0;
-
-    .glyphicon {
-        margin : 0 12px !important;
-        display: block;
-    }
 
     &.small-icon-overrides {
         padding-right: 0px !important;
