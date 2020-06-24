@@ -6,7 +6,7 @@ import {
 import { NxHealthService }         from '../../health.service';
 import { fromEvent, Subscription } from 'rxjs';
 import { debounceTime }            from 'rxjs/operators';
-import { AutoUnsubscribe }         from 'ngx-auto-unsubscribe';
+import { UntilDestroy }            from '@ngneat/until-destroy';
 
 interface ThumbNail {
     loaded: boolean;
@@ -14,7 +14,7 @@ interface ThumbNail {
     url: string;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-image-section',
     templateUrl : './image-section.component.html',

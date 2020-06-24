@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { filter } from 'rxjs/operators';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-system-merge',
     templateUrl: 'merge-status.component.html',

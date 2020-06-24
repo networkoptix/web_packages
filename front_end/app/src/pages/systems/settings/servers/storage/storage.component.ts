@@ -4,7 +4,7 @@ import {
     SimpleChanges
 }                                    from '@angular/core';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../../services/process.service';
@@ -13,7 +13,7 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-advanced-storage-component',
     templateUrl : 'storage.component.html',

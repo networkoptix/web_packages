@@ -4,7 +4,7 @@ import {
     SimpleChanges, ViewEncapsulation
 }                                    from '@angular/core';
 import { SubscriptionLike }          from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxProcessService, Process } from '../../../../../services/process.service';
@@ -12,7 +12,7 @@ import { NxDialogsService }          from '../../../../../dialogs/dialogs.servic
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxSystem }                  from '../../../../../services/system.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-server-logger-component',
     templateUrl   : 'logger.component.html',

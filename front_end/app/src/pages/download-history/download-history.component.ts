@@ -20,11 +20,11 @@ import { NxUriService }                 from '../../services/uri.service';
 import { LanguageI18NStaticTypes }      from '../../../language_i18n_static_types';
 import { Subscription }                 from 'rxjs';
 import { filter }                       from 'rxjs/operators';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
 
 import isArray = require('core-js/features/array/is-array');
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'download-history',
     templateUrl : 'download-history.component.html',

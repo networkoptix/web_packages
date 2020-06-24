@@ -20,7 +20,7 @@ import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
  </nx-vendor-list>
  */
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-vendor-list',
     templateUrl: 'vendor-list.component.html',

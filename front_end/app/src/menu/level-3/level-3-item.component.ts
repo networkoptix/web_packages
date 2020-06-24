@@ -5,12 +5,12 @@ import {
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxMenuService }            from '../menu.service';
 import { SubscriptionLike }         from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 
 /* Usage
  */
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-level-3-item',
     templateUrl : 'level-3-item.component.html',

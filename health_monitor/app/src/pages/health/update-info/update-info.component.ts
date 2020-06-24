@@ -5,7 +5,7 @@ import { NxConfigService } from '../../../services/nx-config';
 import { NxHealthService } from '../health.service';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-health-update',
     templateUrl: './update-info.component.html',

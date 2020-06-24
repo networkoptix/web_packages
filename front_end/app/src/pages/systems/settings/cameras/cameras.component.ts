@@ -21,15 +21,16 @@ import { NxMenuService }             from '../../../../menu';
 import { NxUriService, ChildRoutes } from '../../../../services/uri.service';
 import { NxHealthService }           from '../../../health/health.service';
 import {
-    Subscription, BehaviorSubject,
-    Subject
+    Subscription, BehaviorSubject
 }                                    from 'rxjs';
 import {
     filter, map, retryWhen, delay,
-    distinctUntilChanged, takeUntil
+    distinctUntilChanged
 }                                    from 'rxjs/operators';
 import { NxUtilsService }            from '../../../../services/utils.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
     selector    : 'nx-cameras-component',
     templateUrl : 'cameras.component.html',
@@ -63,7 +64,6 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     showUnauthorized = false;
     showOffline = false;
     showOverlay = false;
-    unsub$: Subject<boolean> = new Subject();
     alertsLoaded = false;
     showPreloader = true;
     availableLicenses = 0;
@@ -95,10 +95,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.routeParamsSubscription = this.route
             .params
-            .pipe(
-                takeUntil(this.unsub$),
-                distinctUntilChanged()
-            ).subscribe(params => {
+            .pipe(untilDestroyed(this), distinctUntilChanged())
+            .subscribe(params => {
                 if (params.cameraId) {
                     this.warnings = [];
                     this.errors = [];
@@ -112,10 +110,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
 
         this.settingsSubscription = this.settingsService.systemSubject
-            .pipe(
-                takeUntil(this.unsub$),
-                filter(data => data !== undefined)
-            ).subscribe(system => {
+            .pipe(untilDestroyed(this), filter(data => data !== undefined))
+            .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
                 if (system) {
                     this.system = system;
@@ -146,7 +142,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 }
                 this.cameraSubscription = this.system.infoSubject
                     .pipe(
-                        takeUntil(this.unsub$),
+                        untilDestroyed(this),
                         map(system => {
                             if (!system.cameras) {
                                 throw system;
@@ -631,9 +627,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     canSeeInfo = false;
 
-    ngOnDestroy() {
-        this.unsub$.next(true);
-    }
+    ngOnDestroy() {}
 
     setCamera = (forceUpdate = false) => {
         this.applyService.setVisible(false);
@@ -712,7 +706,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             if (!this.alertsLoaded) {
                 this.healthReportSubscription = this.system.mediaserver
                     .getAggregateHealthReport()
-                    .pipe(takeUntil(this.unsub$))
+                    .pipe(untilDestroyed(this))
                     .subscribe(
                         (result: any) => {
                             this.applyService.setVisible();

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }       from '@angular/router';
 import { DomSanitizer }                 from '@angular/platform-browser';
-import { AutoUnsubscribe }              from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                 from '@ngneat/until-destroy';
 import { combineLatest, Subscription }  from 'rxjs';
 import { map }                          from 'rxjs/operators';
 import { NxLanguageProviderService }    from '../../../services/nx-language-provider';
@@ -15,7 +15,7 @@ import { NxDialogsService }             from '../../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }      from '../../../../language_i18n_static_types';
 import { MessageParams }                from '../../../dialogs/message/message.component';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'integration-detail-component',
     templateUrl : 'details.component.html',

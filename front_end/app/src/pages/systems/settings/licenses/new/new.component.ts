@@ -3,7 +3,7 @@ import {
     OnDestroy, Input, OnChanges,
     SimpleChanges, ViewChild
 } from '@angular/core';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { IConfig, NxConfigService }  from '../../../../../services/nx-config';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
@@ -13,7 +13,7 @@ import { NxSystem }                  from '../../../../../services/system.servic
 import { SubscriptionLike }          from 'rxjs';
 import { NxScrollMechanicsService }  from '../../../../../services/scroll-mechanics.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-license-new-component',
     templateUrl : 'new.component.html',

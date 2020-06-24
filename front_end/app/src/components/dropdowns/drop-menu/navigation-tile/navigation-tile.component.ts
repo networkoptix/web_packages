@@ -4,10 +4,11 @@ import { Router } from '@angular/router';
 import { IConfig, NxConfigService } from '../../../../services/nx-config';
 import { NxSessionService } from '../../../../services/session.service';
 import { NxHeaderService } from '../../../../services/nx-header.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { SubscriptionLike } from 'rxjs';
 import { Auth } from '../../../../services/menus.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-navigation-tile',
     templateUrl : 'navigation-tile.component.html',
@@ -19,8 +20,7 @@ export class NxNavigiationTileComponent {
     CONFIG: IConfig;
     iconsDir: string;
     authState: Auth = Auth.LOGGED_OUT;
-    unsub$ = new Subject();
-    currentLocation: any;
+    loginStateSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
@@ -33,14 +33,12 @@ export class NxNavigiationTileComponent {
     }
 
     ngOnInit() {
-        this.sessionService.loginStateSubject.pipe(takeUntil(this.unsub$)).subscribe(_ => {
+        this.loginStateSubscription = this.sessionService.loginStateSubject.subscribe(_ => {
             this.authState = this.sessionService.email ? Auth.LOGGED_IN : Auth.LOGGED_OUT;
         });
     }
 
-    ngOnDestroy() {
-        this.unsub$.next('done');
-    }
+    ngOnDestroy() {}
 
     handleNav(node: MenuNode) {
         this.headerService.showSubject.next(false);

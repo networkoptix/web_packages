@@ -6,11 +6,11 @@ import { NgbActiveModal }            from '@ng-bootstrap/ng-bootstrap';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { IParams }                   from '../../components/search/search.component';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-modal-embed-content',
     templateUrl: 'embed.component.html',

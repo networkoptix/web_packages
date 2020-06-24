@@ -6,7 +6,7 @@ import {
 import { NG_VALUE_ACCESSOR }         from '@angular/forms';
 import { ActivatedRoute }            from '@angular/router';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxUriService }              from '../../services/uri.service';
@@ -21,7 +21,7 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
  </nx-vendor-list>
  */
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector     : 'nx-vendor-list',
     templateUrl  : 'vendor-list.component.html',

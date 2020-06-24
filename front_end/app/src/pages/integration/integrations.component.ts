@@ -3,7 +3,7 @@ import {
 }                                    from '@angular/core';
 import { Router }                    from '@angular/router';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { IntegrationService }        from './integration.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -13,7 +13,7 @@ import { NxUriService }              from '../../services/uri.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxUtilsService }            from '../../services/utils.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'integrations-component',
     templateUrl: 'integrations.component.html',

@@ -11,7 +11,9 @@ import { NxConfigService } from '../../../services/nx-config';
 import { NxUriService } from '../../../services/uri.service';
 import { NxHeaderService } from '../../../services/nx-header.service';
 import { NxMenusService, Auth } from '../../../services/menus.service';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-drop-menu',
     templateUrl : 'drop-menu.component.html',
@@ -36,7 +38,6 @@ export class NxDropMenu extends BaseDropdown {
     };
 
     params: any;
-    unsub$ = new Subject();
 
     constructor(
         languageService: NxLanguageProviderService,
@@ -48,7 +49,7 @@ export class NxDropMenu extends BaseDropdown {
         super(languageService, configService);
         this.menusService.currentSystemNode$.subscribe(_ => {
             this.menusService.getMenu('Header', this.systems$.value.length >= 1)
-                .pipe(takeUntil(this.unsub$)).subscribe(header => this.menuNodes$.next(header));
+                .subscribe(header => this.menuNodes$.next(header));
         });
     }
 
@@ -157,7 +158,5 @@ export class NxDropMenu extends BaseDropdown {
         this.systemCounter = this.systems && this.systems.length;
     }
 
-    ngOnDestroy(): void {
-        this.unsub$.next('done');
-    }
+    ngOnDestroy(): void {}
 }

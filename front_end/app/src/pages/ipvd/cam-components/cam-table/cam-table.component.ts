@@ -12,7 +12,7 @@ import { NxUriService }                   from '../../../../services/uri.service
 import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 import { Subscription, SubscriptionLike } from 'rxjs';
 import { delay }                          from 'rxjs/operators';
-import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                   from '@ngneat/until-destroy';
 import { NxUtilsService }                 from '../../../../services/utils.service';
 import { NxScrollMechanicsService }       from '../../../../services/scroll-mechanics.service';
 
@@ -20,7 +20,7 @@ interface Params {
     [key: string]: any;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector : 'nx-cam-table',
     templateUrl : './cam-table.component.html',

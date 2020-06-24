@@ -6,11 +6,11 @@ import { DomSanitizer }             from '@angular/platform-browser';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxAppStateService }        from '../../services/nx-app-state.service';
 import { Subscription }             from 'rxjs';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxMenusService }           from '../../services/menus.service';
 import { MenuNode }                 from '../dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector   : 'nx-footer',
     templateUrl: 'footer.component.html',

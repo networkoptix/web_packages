@@ -20,9 +20,9 @@ import { NxMenuService }             from '../../../menu';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { Subscription }              from 'rxjs';
 import { first }                     from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-account-settings-component',
     templateUrl : 'settings.component.html',

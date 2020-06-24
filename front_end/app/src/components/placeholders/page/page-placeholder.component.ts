@@ -4,7 +4,7 @@ import { IConfig, NxConfigService }                               from '../../..
 import { NxScrollMechanicsService }                               from '../../../services/scroll-mechanics.service';
 import { LanguageI18NStaticTypes }                                from '../../../../language_i18n_static_types';
 import { SubscriptionLike }                                       from 'rxjs';
-import { AutoUnsubscribe }                                        from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                                           from '@ngneat/until-destroy';
 
 /* Usage
  <nx-page-placeholder
@@ -18,7 +18,7 @@ import { AutoUnsubscribe }                                        from 'ngx-auto
  </nx-page-placeholder>
  */
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-page-placeholder',
     templateUrl   : 'page-placeholder.component.html',

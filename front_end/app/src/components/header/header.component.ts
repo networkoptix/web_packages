@@ -8,8 +8,8 @@ import {
 }                                    from '@angular/router';
 import { LocalStorageService }       from 'ngx-store';
 import {
-    Subscription, timer, BehaviorSubject, combineLatest, fromEvent, Subject
-}                                    from 'rxjs';
+    Subscription, timer, BehaviorSubject, combineLatest, fromEvent, Subject, SubscriptionLike
+} from 'rxjs';
 import { NxDialogsService }          from '../../dialogs/dialogs.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -21,8 +21,9 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { NxHeaderService }           from '../../services/nx-header.service';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxMenusService }            from '../../services/menus.service';
-import { map, startWith, takeUntil } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { WINDOW }                    from '../../services/window-provider';
+import { UntilDestroy }            from '@ngneat/until-destroy';
 import { environment }               from '../../../environments/environment';
 
 class CombinedWidths {
@@ -36,6 +37,7 @@ class CombinedWidths {
     ) {}
 }
 
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-header',
     templateUrl : 'header.component.html',
@@ -58,7 +60,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     viewHeader: boolean;
     systemCounter: number;
     loginState;
-    unsub$ = new Subject();
 
     showIcon$ = new BehaviorSubject(true);
     showSmallRightNav$ = new BehaviorSubject(false);
@@ -81,6 +82,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     private routerSubscription: Subscription;
     private systemSubscription: Subscription;
     private systemIdSubscription: Subscription;
+    private menuSubscription: SubscriptionLike;
+    private resizeSubscription: SubscriptionLike;
+    private widthSubscription: SubscriptionLike;
+    private queryParamSubscription: SubscriptionLike;
 
     constructor(
         configService: NxConfigService,
@@ -101,16 +106,14 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.menusService.getMenu('Header', true).pipe(takeUntil(this.unsub$)).subscribe(header => {
+        this.menuSubscription = this.menusService.getMenu('Header', true).subscribe(header => {
             this.headerService.nodes = header;
         });
-        fromEvent(window, 'resize').pipe(
-            takeUntil(this.unsub$),
+        this.resizeSubscription = fromEvent(window, 'resize').pipe(
             map((event: any) => event.target.innerWidth as number),
             startWith(window.innerWidth)
         ).subscribe(width => this.windowWidth$.next(width));
-        combineLatest(this.iconWidth$, this.mainButtonWidth$, this.tabsWidth$, this.rightNavWidth$, this.windowWidth$).pipe(
-            takeUntil(this.unsub$),
+        this.widthSubscription = combineLatest(this.iconWidth$, this.mainButtonWidth$, this.tabsWidth$, this.rightNavWidth$, this.windowWidth$).pipe(
             map(([icon, mainButton, tabs, rightNav, windowWidth]) => ({
                 totalWidths: icon + mainButton + tabs + rightNav,
                 icon,
@@ -197,7 +200,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     private startTimerSystemIdUpdate() {
         this.untilHaveID = timer(200, 200);
-        this.getUrlSystemId = this.untilHaveID.pipe(takeUntil(this.unsub$)).subscribe(() => {
+        this.getUrlSystemId = this.untilHaveID.subscribe(() => {
             if (this.router.url.indexOf('/systems/') === 0) {
                 const uriSystemId = this.router.url.split('/')[2];
 
@@ -218,12 +221,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this.unsub$.next('done');
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
-        this.route.queryParams.pipe(takeUntil(this.unsub$)).subscribe(params => {
+        this.queryParamSubscription = this.route.queryParams.subscribe(params => {
             this.inline = params.inline !== 'undefined';
         });
 
@@ -232,7 +233,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         this.startTimerSystemIdUpdate(); // ensure update on page reload
 
         // notification from view.js
-        this.systemIdSubscription = this.headerService.systemIdSubject.pipe(takeUntil(this.unsub$)).subscribe((systemId) => {
+        this.systemIdSubscription = this.headerService.systemIdSubject.subscribe((systemId) => {
             if (systemId) {
                 this.systemIdUpdate(systemId);
             }
@@ -256,7 +257,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
 
         this.routerSubscription = this.router.events
-            .pipe(takeUntil(this.unsub$))
             .subscribe((event: Event) => {
                 if (event instanceof RoutesRecognized) {
                     this.systemId = event.state.root.firstChild.params.systemId || '';
@@ -284,7 +284,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             });
 
         this.loginSubscription = this.sessionService.loginStateSubject
-            .pipe(takeUntil(this.unsub$)).subscribe((loginState: string) => {
+            .subscribe((loginState: string) => {
                 this.accountService
                     .get()
                     .then(account => {
@@ -325,7 +325,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 });
             });
         } else {
-            this.systemSubscription = this.systemsService.systemsSubject.pipe(takeUntil(this.unsub$)).subscribe((systems) => {
+            this.systemSubscription = this.systemsService.systemsSubject.subscribe((systems) => {
                 if (!systems) {
                     return;
                 }

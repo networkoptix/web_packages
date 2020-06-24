@@ -39,7 +39,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, OnDestroy, Cont
     ngOnInit() {
     }
 
-    // needed for @AutoUnsubscribe
+    // needed for @UntilDestroy
     ngOnDestroy(): void {
     }
 

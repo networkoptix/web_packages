@@ -3,7 +3,7 @@ import {
     ViewContainerRef, OnDestroy, Input, SimpleChanges, OnChanges
 }                                    from '@angular/core';
 import { ActivatedRoute }            from '@angular/router';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '../../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_static_types';
@@ -16,7 +16,7 @@ import { NxSystem }                  from '../../../../../services/system.servic
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-standard-server-component',
     templateUrl : 'server.component.html',

@@ -15,7 +15,7 @@ import { NxHealthLayoutService }     from '../health-layout.service';
 import { LanguageI18NStaticTypes }   from '../../../../language_i18n_static_types';
 import { of, SubscriptionLike }      from 'rxjs';
 import { delay, throttleTime }       from 'rxjs/operators';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxSystem, NxSystemService } from '../../../services/system.service';
 import { NxScrollMechanicsService }  from '../../../services/scroll-mechanics.service';
 
@@ -23,7 +23,7 @@ interface Params {
     [key: string]: string;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-system-metrics-component',
     templateUrl   : 'metrics.component.html',

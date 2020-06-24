@@ -10,7 +10,7 @@ import { NxSettingsService }                    from '../settings.service';
 import { NxMenuService }                        from '../../../../menu';
 import { LanguageI18NStaticTypes }              from '../../../../../language_i18n_static_types';
 import { Subscription }                         from 'rxjs';
-import { AutoUnsubscribe }                      from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                         from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }             from '../../../../services/nx-config';
 import { NxPageService }                        from '../../../../services/page.service';
 import { NxAccountService }                     from '../../../../services/account.service';
@@ -21,7 +21,7 @@ import { NxProcessService, Process }            from '../../../../services/proce
 import { NxUriService }                         from '../../../../services/uri.service';
 import { NxApplyService, Watcher }              from '../../../../services/apply.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-user-component',
     templateUrl : 'users.component.html',

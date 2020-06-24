@@ -6,7 +6,7 @@ import { NxSessionService }  from '../../../services/session.service';
 import { Subscription } from 'rxjs';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-account-settings-select',
     templateUrl: 'account-settings.component.html',

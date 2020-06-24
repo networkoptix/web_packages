@@ -8,7 +8,7 @@ import {
     retryWhen, take
 }                                    from 'rxjs/operators';
 import { Subscription }              from 'rxjs';
-import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
+import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxDialogsService }          from '../../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../../settings.service';
 import { NxMenuService }             from '../../../../../menu';
@@ -18,7 +18,7 @@ import { NxLanguageProviderService } from '../../../../../services/nx-language-p
 import { NxProcessService, Process } from '../../../../../services/process.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-system-advanced-admin-component',
     templateUrl : 'advanced.component.html',

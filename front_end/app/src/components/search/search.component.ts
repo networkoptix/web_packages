@@ -13,7 +13,7 @@ import { Subscription, SubscriptionLike }   from 'rxjs';
 import { debounceTime }                     from 'rxjs/operators';
 import { Subject }                          from 'rxjs/Subject';
 import { isArray }                          from 'rxjs/internal-compatibility';
-import { AutoUnsubscribe }                  from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                     from '@ngneat/until-destroy';
 import { NxLanguageProviderService }        from '../../services/nx-language-provider';
 import { NxConfigService, IConfig }         from '../../services/nx-config';
 import { NxScrollMechanicsService }         from '../../services/scroll-mechanics.service';
@@ -50,7 +50,7 @@ export interface IParams<Value = any> {
     [key: string]: Value;
 }
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-search',
     templateUrl   : './search.component.html',

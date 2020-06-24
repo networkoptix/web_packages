@@ -14,7 +14,7 @@ import { NxHealthLayoutService }    from '../../health-layout.service';
 import { NxRibbonService }          from '../../../../components/ribbon';
 import { SubscriptionLike }         from 'rxjs';
 import { delay }                    from 'rxjs/operators';
-import { AutoUnsubscribe }          from 'ngx-auto-unsubscribe';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxUtilsService }           from '../../../../services/utils.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 
@@ -33,7 +33,7 @@ const GROUP_ID = 0;
 const PARAM_ID = 1;
 const SORT_DIR = 2;
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector      : 'nx-dynamic-table',
     templateUrl   : './dynamic-table.component.html',

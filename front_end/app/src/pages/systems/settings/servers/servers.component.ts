@@ -10,13 +10,13 @@ import { NxSettingsService }             from '../settings.service';
 import { NxMenuService }                 from '../../../../menu';
 import { Subscription }                  from 'rxjs';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
-import { AutoUnsubscribe }               from 'ngx-auto-unsubscribe';
+import { UntilDestroy }                  from '@ngneat/until-destroy';
 import { NxSystem }                      from '../../../../services/system.service';
 import { NxUtilsService }                from '../../../../services/utils.service';
 import { NxUriService }                  from '../../../../services/uri.service';
 import { Location }                      from '@angular/common';
 
-@AutoUnsubscribe()
+@UntilDestroy({ checkProperties: true })
 @Component({
     selector    : 'nx-server-component',
     templateUrl : 'servers.component.html',
