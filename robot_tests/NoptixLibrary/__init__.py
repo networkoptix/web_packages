@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from shlex import shlex
 
 import docker
 import email.header
@@ -8,6 +9,7 @@ import os
 import re
 import time
 import uuid
+import subprocess
 from datetime import date
 from email.parser import HeaderParser
 from platform import system
@@ -427,26 +429,38 @@ class NoptixLibrary(object):
     #     cont = client.containers.run(image[0].id, detach=True, tmpfs=tmp, volumes=vol, ports=prt, network_mode=network, name=f"mergemediaserver{time.time()}")
     #     return cont
 
-    def run_container(self, image_name, port, network='bridge'):
-        tmp = {'/run': '', '/run/lock': ''}
-        vol = {'/sys/fs/cgroup': {'bind': '/sys/fs/cgroup', 'mode': 'rw'}}
-        rp = {'Name': 'always', "MaximumRetryCount": 5}
-        client = docker.from_env()
-        image = client.images.get(image_name)
-        container = client.containers.run(image.id, detach=True, tmpfs=tmp, volumes=vol, ports={7001: port},
-                                          network_mode=network, name=f'{image_name}_{port}')
-        return container
+    def run_container(self, image_name, port, network='host'):
+        if network == 'host':
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always -e PORT={port} --network={network} -t {image_name}'
+        elif network == 'bridge':
+            cmd = f'docker run -d --name {image_name}_{port} --restart=always -p {port}:7001 --network={network} -t {image_name}'
+        else:
+            return 'Not supported'
+        subprocess.run(cmd, shell=True)
 
-    def start_container(self, container):
-        client = docker.from_env()
-        container.start()
+        client = docker.client.from_env()
+        running_containers = client.containers.list()
+        for c in running_containers:
+            if c.name == f'{image_name}_{port}':
+                return c.name
+        else:
+            return 'Container is not running'
 
-    def stop_container(self, container, remove=False):
+    def start_container(self, name):
         client = docker.from_env()
+        container = client.containers.get(name)
+        running_containers = client.containers.list()
+        if container not in running_containers:
+            container.start()
+
+    def stop_container(self, name, remove=False):
+        client = docker.from_env()
+        container = client.containers.get(name)
         running_containers = client.containers.list()
         if container in running_containers:
             container.stop()
-        if remove:
+        all_containers = client.containers.list(all=True)
+        if remove and container in all_containers:
             container.remove()
 
     def stop_containers(self, allContainers=True):

@@ -126,25 +126,3 @@ Reset Systems State
     END
     Close Browser
     Open Browser and go to url    ${ENV}
-
-#Create system and attach to cloud
-#    [Arguments]
-#    ...    ${user}
-#    ...    ${image}
-#    ...    ${port}
-#    ...    ${system name}
-#    ...    ${network}=bridge
-#    ${cont}    Run Container    ${image}    ${port}    ${network}
-#    sleep    5
-#    ${auth}=    Create List    ${user}    ${password}
-#    ${default auth}=    Create List    admin    admin
-#    &{bind json}=    Bind System    ${auth}    ${ENV}    name=${system name}
-#    sleep    5
-#    &{Setup Cloud System json}=    Setup Cloud System
-#    ...    ${default auth}
-#    ...    https://localhost:${port}
-#    ...    ${bind json["authKey"]}
-#    ...    ${bind json["name"]}
-#    ...    ${bind json["id"]}
-#    ...    ${bind json["ownerAccountEmail"]}
-#    [Return]    ${bind json["id"]}
