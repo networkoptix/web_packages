@@ -227,7 +227,7 @@
 				"b_support": "תמיכה",
 				"c_proceeding": "לפני המשך עיבוד."
 			},
-			"warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged System."
+			"warning": "במערכת הממוזגת יהיו יותר מ- <strong>{{maxServers}}</strong> שרתים."
 		},
 		"message": {
 			"failedToSend": "שליחת ההודעה נכשלה.",
@@ -441,7 +441,7 @@
 		"systemNoAlerts": "אין התראות",
 		"systemNoAlertsMessage": "המערכת שלך עובדת טוב!",
 		"systemServerError": "שגיאת שרת פנימית",
-		"systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+		"systemServerErrorMessage": "אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
 		"systemNewVersion": "עדכן את המערכת שלך",
 		"systemNewVersionMessage": "הגרסה הנוכחית שלך אינה תואמת לתכונה זו. אנא עדכן את השרתים שלך לגירסה האחרונה כדי להשתמש בתכונה זו.",
 		"systemHasNoCameras": ". אין מצלמות",

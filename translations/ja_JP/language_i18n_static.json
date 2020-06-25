@@ -7,7 +7,7 @@
 		"newPasswordLabel": "新規パスワード",
 		"saveChanges": "保存",
 		"accountSettings": "アカウント設定",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "契約が承認されました"
 	},
 	"activeActions": {
 		"sendConfirm": "アクティベーションリンクを再送信",

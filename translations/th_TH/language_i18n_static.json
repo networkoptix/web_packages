@@ -7,7 +7,7 @@
 		"newPasswordLabel": "สร้างรหัสผ่านใหม่",
 		"saveChanges": "บันทึก",
 		"accountSettings": "การตั้งค่าบัญชี",
-		"agreementAccepted": "Agreement has been accepted"
+		"agreementAccepted": "ข้อตกลงได้รับการยอมรับ"
 	},
 	"activeActions": {
 		"sendConfirm": "ส่งการเชื่อมโยงการเปิดใช้งานอีกครั้ง",
@@ -494,13 +494,13 @@
 	"Support": "ทีมช่วยเหลือ",
 	"Supported Devices": "อุปกรณ์ที่รองรับ",
 	"Terms": "เงื่อนไข",
-	"pleaseSelect": "Please select...",
-	"WHEN_MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
-	"FAILED_SYSTEM_DESCR": "This link is broken,<br>System may be disconnected from %CLOUD_NAME%,<br>Access to this System may be revoked, <br>or you may be logged into a different account.",
+	"pleaseSelect": "โปรดเลือก",
+	"WHEN_MERGE_FINISHES": "เมื่อการผสานเสร็จสิ้นผู้ใช้และกล้องทั้งหมดจากระบบนี้จะพร้อมใช้งานในระบบ <strong>{{targetSystemName}}</strong> และระบบนี้จะถูกลบ",
+	"FAILED_SYSTEM_DESCR": "ลิงก์นี้ใช้งานไม่ได้<br>ระบบอาจถูกยกเลิกการเชื่อมต่อจาก %CLOUD_NAME%,<br>การเข้าถึงระบบนี้อาจถูกเพิกถอน <br>หรือคุณอาจลงชื่อเข้าใช้บัญชีอื่น",
 	"NO_SYSTEMS_NO_SYSTEMS_CONNECTED": "คุณไม่มีระบบเชื่อมต่อกับ %CLOUD_NAME%",
-	"NO_SYSTEMS_LOGIN": "Log in to your System using %VMS_NAME%",
+	"NO_SYSTEMS_LOGIN": "เข้าสู่ระบบโดยใช้ {{VMS_NAME}}",
 	"NO_SYSTEMS_GOTO_ADMINISTRATION": "ไปที่แท็บ \"Cloud\" ในกล่องโต้ตอบ \"การดูแลระบบ\"",
 	"NO_SYSTEMS_CONNECT_SYSTEM": "เชื่อมต่อระบบกับ %CLOUD_NAME%\"",
-	"topXByVolume": "Top {{value}} by volume:",
+	"topXByVolume": "{{value}} อันดับสูงสุดตามปริมาณ:",
 	"phoneNumberWithLabel": "โทร: {{number}}"
 }
