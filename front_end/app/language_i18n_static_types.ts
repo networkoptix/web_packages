@@ -22,7 +22,7 @@ export interface LanguageI18NStaticTypes {
     common:                Common;
     dialogs:               Dialogs;
     downloads:             Downloads;
-    errorCodes:            ErrorCodes;
+    errorCodes:            { [key: string]: any };
     integration:           LanguageI18NStaticTypesIntegration;
     ipvd:                  Ipvd;
     ipvdFeedback:          IpvdFeedback;
@@ -42,7 +42,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
-    settingsConfig:        { [key: string]: string };
+    settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
 }
@@ -411,59 +411,6 @@ export interface ReleasesTypes {
     releases: any;
 }
 
-export interface ErrorCodes {
-    CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS: any;
-    DUPLICATE_MEDIASERVER_FOUND:         any;
-    EmailAlreadyExists:                  any;
-    FAIL:                                any;
-    INCOMPATIBLE:                        any;
-    accountAlreadyActivated:             any;
-    accountBlocked:                      any;
-    accountNotActivated:                 any;
-    accountNotActivatedAlternate:        any;
-    alreadyExists:                       any;
-    brokenAccount:                       any;
-    cantActivatePrefix:                  any;
-    cantAddYourOwnEmail:                 any;
-    cantChangeAccountPrefix:             any;
-    cantChangePasswordPrefix:            any;
-    cantDisconnectSystemPrefix:          any;
-    cantEditAdmin:                       any;
-    cantEditYourself:                    any;
-    cantGetSystemInfoPrefix:             any;
-    cantGetSystemsListPrefix:            any;
-    cantGetUsersListPrefix:              any;
-    cantOpenClient:                      any;
-    cantRegisterPrefix:                  any;
-    cantSendActivationPrefix:            any;
-    cantSendConfirmationPrefix:          any;
-    cantSharePrefix:                     any;
-    cantUnshareWithMeSystemPrefix:       any;
-    emailNotFound:                       any;
-    failedToAccessSystem:                any;
-    forbidden:                           any;
-    lostConnection:                      any;
-    mergedSystemIsOffline:               any;
-    notAuthorized:                       any;
-    badUsername:                         any;
-    notFound:                            any;
-    ok:                                  any;
-    oldPasswordMistmatch:                any;
-    oldSafariNotSupported:               any;
-    passwordMismatch:                    any;
-    thisSystem:                          any;
-    unknownError:                        any;
-    unknownMergeError:                   any;
-    wrongAuthCode:                       any;
-    wrongCode:                           any;
-    wrongCodeRestore:                    any;
-    wrongParameters:                     any;
-    licenseFail:                         any;
-    licenseTimeout:                      any;
-    licenseServerError:                  any;
-    networkConnection:                   any;
-}
-
 export interface LanguageI18NStaticTypesIntegration {
     "Access Control":     any;
     Connector:            any;
@@ -792,7 +739,7 @@ export class Convert {
         return cast(JSON.parse(json), r("LanguageI18NStaticTypes"));
     }
 
-    public static languageI18NStaticTypesToJson(value: LanguageI18NStaticTypes): string {
+    public static languageI18NStaticTypesToJson(value: LanguageI18NStaticTypes): any {
         return JSON.stringify(uncast(value, r("LanguageI18NStaticTypes")), null, 2);
     }
 }
@@ -942,7 +889,7 @@ const typeMap: any = {
         { json: "common", js: "common", typ: r("Common") },
         { json: "dialogs", js: "dialogs", typ: r("Dialogs") },
         { json: "downloads", js: "downloads", typ: r("Downloads") },
-        { json: "errorCodes", js: "errorCodes", typ: r("ErrorCodes") },
+        { json: "errorCodes", js: "errorCodes", typ: m("") },
         { json: "integration", js: "integration", typ: r("LanguageI18NStaticTypesIntegration") },
         { json: "ipvd", js: "ipvd", typ: r("Ipvd") },
         { json: "ipvdFeedback", js: "ipvdFeedback", typ: r("IpvdFeedback") },
@@ -1291,58 +1238,6 @@ const typeMap: any = {
         { json: "rc", js: "rc", typ: "any" },
         { json: "release", js: "release", typ: "any" },
         { json: "releases", js: "releases", typ: "any" },
-    ], false),
-    "ErrorCodes": o([
-        { json: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", js: "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS", typ: "any" },
-        { json: "DUPLICATE_MEDIASERVER_FOUND", js: "DUPLICATE_MEDIASERVER_FOUND", typ: "any" },
-        { json: "EmailAlreadyExists", js: "EmailAlreadyExists", typ: "any" },
-        { json: "FAIL", js: "FAIL", typ: "any" },
-        { json: "INCOMPATIBLE", js: "INCOMPATIBLE", typ: "any" },
-        { json: "accountAlreadyActivated", js: "accountAlreadyActivated", typ: "any" },
-        { json: "accountBlocked", js: "accountBlocked", typ: "any" },
-        { json: "accountNotActivated", js: "accountNotActivated", typ: "any" },
-        { json: "accountNotActivatedAlternate", js: "accountNotActivatedAlternate", typ: "any" },
-        { json: "alreadyExists", js: "alreadyExists", typ: "any" },
-        { json: "brokenAccount", js: "brokenAccount", typ: "any" },
-        { json: "cantActivatePrefix", js: "cantActivatePrefix", typ: "any" },
-        { json: "cantAddYourOwnEmail", js: "cantAddYourOwnEmail", typ: "any" },
-        { json: "cantChangeAccountPrefix", js: "cantChangeAccountPrefix", typ: "any" },
-        { json: "cantChangePasswordPrefix", js: "cantChangePasswordPrefix", typ: "any" },
-        { json: "cantDisconnectSystemPrefix", js: "cantDisconnectSystemPrefix", typ: "any" },
-        { json: "cantEditAdmin", js: "cantEditAdmin", typ: "any" },
-        { json: "cantEditYourself", js: "cantEditYourself", typ: "any" },
-        { json: "cantGetSystemInfoPrefix", js: "cantGetSystemInfoPrefix", typ: "any" },
-        { json: "cantGetSystemsListPrefix", js: "cantGetSystemsListPrefix", typ: "any" },
-        { json: "cantGetUsersListPrefix", js: "cantGetUsersListPrefix", typ: "any" },
-        { json: "cantOpenClient", js: "cantOpenClient", typ: "any" },
-        { json: "cantRegisterPrefix", js: "cantRegisterPrefix", typ: "any" },
-        { json: "cantSendActivationPrefix", js: "cantSendActivationPrefix", typ: "any" },
-        { json: "cantSendConfirmationPrefix", js: "cantSendConfirmationPrefix", typ: "any" },
-        { json: "cantSharePrefix", js: "cantSharePrefix", typ: "any" },
-        { json: "cantUnshareWithMeSystemPrefix", js: "cantUnshareWithMeSystemPrefix", typ: "any" },
-        { json: "emailNotFound", js: "emailNotFound", typ: "any" },
-        { json: "failedToAccessSystem", js: "failedToAccessSystem", typ: "any" },
-        { json: "forbidden", js: "forbidden", typ: "any" },
-        { json: "lostConnection", js: "lostConnection", typ: "any" },
-        { json: "mergedSystemIsOffline", js: "mergedSystemIsOffline", typ: "any" },
-        { json: "notAuthorized", js: "notAuthorized", typ: "any" },
-        { json: "badUsername", js: "badUsername", typ: "any" },
-        { json: "notFound", js: "notFound", typ: "any" },
-        { json: "ok", js: "ok", typ: "any" },
-        { json: "oldPasswordMistmatch", js: "oldPasswordMistmatch", typ: "any" },
-        { json: "oldSafariNotSupported", js: "oldSafariNotSupported", typ: "any" },
-        { json: "passwordMismatch", js: "passwordMismatch", typ: "any" },
-        { json: "thisSystem", js: "thisSystem", typ: "any" },
-        { json: "unknownError", js: "unknownError", typ: "any" },
-        { json: "unknownMergeError", js: "unknownMergeError", typ: "any" },
-        { json: "wrongAuthCode", js: "wrongAuthCode", typ: "any" },
-        { json: "wrongCode", js: "wrongCode", typ: "any" },
-        { json: "wrongCodeRestore", js: "wrongCodeRestore", typ: "any" },
-        { json: "wrongParameters", js: "wrongParameters", typ: "any" },
-        { json: "licenseFail", js: "licenseFail", typ: "any" },
-        { json: "licenseTimeout", js: "licenseTimeout", typ: "any" },
-        { json: "licenseServerError", js: "licenseServerError", typ: "any" },
-        { json: "networkConnection", js: "networkConnection", typ: "any" },
     ], false),
     "LanguageI18NStaticTypesIntegration": o([
         { json: "Access Control", js: "Access Control", typ: "any" },

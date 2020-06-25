@@ -39,7 +39,6 @@ export interface NxSystemUser {
     isLdap: boolean;
     isLocalAdmin: boolean;
     isCloudOwner: boolean;
-    isLocalOwner: boolean
     isMe: boolean;
     name: string;
     parentId: string;
