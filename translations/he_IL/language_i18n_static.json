@@ -153,7 +153,7 @@
         "systemOffline": "השרת אינו זמין",
         "systemOfflineMessage": "מערכת זו אינה מקוונת ולא ניתן לגשת אליה כרגע.",
         "systemServerError": "שגיאת שרת פנימית",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "אירעה שגיאה, נסה שוב מאוחר יותר. אם הבעיה ממשיכה, אנא צור קשר עם צוות התמיכה שלך.",
         "systemUnreachable": "אי אפשר להגיע למערכת",
         "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
         "unknown": "לא ידוע",

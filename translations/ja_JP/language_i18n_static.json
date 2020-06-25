@@ -68,7 +68,7 @@
         "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
         "accountSettings": "アカウント設定",
         "activationLinkSent": "アクティベーションリンクが送信されました",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "契約が承認されました",
         "changePassword": "パスワードを変更",
         "newPasswordLabel": "新規パスワード",
         "passwordChangedSuccess": "パスワードを更新しました",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "アカウントが作成されました",
+                "message": "アクティベーションリンクを含む確認メッセージが{{email}} に送信されました"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "アカウントが有効になりました"
             }
         },
         "cameraLinks": {
@@ -128,14 +128,14 @@
             "unauthorized": "認証が必要です。"
         },
         "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "不足している録画設定を更新してください。",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "常時録画",
+            "motion": "モーション録画のみ",
+            "motionLowRes": "常時低 ＋ モーション高解像度"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "– 異なる値 –",
             "auto": "自動",
             "best": "最高",
             "high": "高い",
@@ -144,8 +144,8 @@
         },
         "general": "一般",
         "searchCamPlaceholder": "検索",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "カメラなし",
+        "systemHasNoCamerasMessage": "システムにアクセス可能なカメラがありません。 <br><br>カメラをサーバーのローカルネットワークに接続して検出可能にするか、システム管理者にアクセスレベルの変更を依頼してください。",
         "systemNewVersion": "システムを更新する",
         "systemNewVersionMessage": "現在のバージョンはこの機能と互換性がありません。この機能を使用するにはサーバーを最新バージョンに更新してください。",
         "systemNoAlerts": "アラートはありません",
@@ -155,7 +155,7 @@
         "systemServerError": "内部サーバーエラー",
         "systemServerErrorMessage": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "systemUnreachable": "システムにアクセスできません",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "システムがオフラインのため、情報にアクセスできません。",
         "unknown": "未知の値",
         "voiceCommands": {
             "clear search": "検索をクリア",
@@ -171,14 +171,14 @@
             "stop listening": "聞くのをやめる",
             "view": "表示 + [カメラ名]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "古いレポートを表示しています。"
     },
     "dialogs": {
         "buttons": {
             "cancel": "キャンセル",
             "createAccount": "新規アカウントを作成",
             "delete": "削除",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "アカウントを削除",
             "download": "%VMS_NAME% をダウンロード",
             "logoutAuthorised": "ログアウト",
             "ok": "OK",
@@ -187,90 +187,90 @@
             "stayLoggedIn": "ログイン状態を維持"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "クラウドストレージ",
+            "enableStorage": "クラウドストレージを有効にする",
+            "otherSystem": "その他のシステム...",
+            "initial": "私たちはあなたが始められるようにシステムごとに {{compCapacity}} の無料クラウドストレージを提供しています。",
+            "available": "クラウドストレージの場所は、このシステム内のすべてのサーバーで利用できます。デスクトップ {{vmsName}} クライアントを使用して管理できます。",
             "camera": "カメラ",
             "cameras": "カメラ",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "クラウドストレージをシステムから削除しました",
+                "errorPrefix": "クラウドストレージの削除エラー"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "クラウドストレージを有効にできません",
+                "message": "システムにすでに合計 <volume> クラウドストレージが追加されており、それ以上追加することはできません。 <br/><br/>別のシステムからストレージを削除するか、このシステムに移動できます。 "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "システムを %CLOUD_NAME%から切断できません",
+                "message": "このシステムには、いくつかのアーカイブを含むクラウドストレージがあります。 <br/><br/> %CLOUD_NAME% からシステムを切断する前に、クラウドストレージを手動で削除する必要があります。"
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "クラウドストレージを移動",
+                "success": "ストレージを移動しました",
+                "errorPrefix": "クラウドストレージの移動エラー",
+                "notFound": "ストレージが見つかりませんでした。ストレージは他のユーザーによって移動または削除された可能性があります。",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "クラウドストレージをオフラインシステムに移動することはできません。"
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "クラウドストレージが有効です",
+                "errorPrefix": "クラウドストレージの有効化エラー"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "クラウドストレージは、所有者のシステム間でのみ移動できます。 <br/><br/>クラウドアカウントを使用してシステムを %CLOUD_NAME% に接続して、クラウドストレージを移動できます。"
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
+            "adminPasswordTitle": "<strong>{{secondarySystem}}</strong>に所有者のアカウントのパスワードを入力してください",
+            "adminPasswordWrong": "ローカル管理者のパスワードが間違っています",
             "checking": "チェック中...",
             "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
             "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、所有者が異なります。 クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
+            "enterSystemAddressTitle": "システム内にある任意のサーバーのアドレスを入力します。",
+            "mergeConfirmation": "<p class=\"mb-0\"><strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>のシステムを統合しようとしています。</p><p>設定と名前は <strong>{{primarySystem}}</strong>から取得されます。</p>",
+            "mergeSystemsTitle": "現在のシステムと統合",
             "mergeFailedTitle": "システム統合が失敗しました",
-            "noServerFound": "No server found",
+            "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "otherSystem": "その他のシステム...",
+            "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
             "passwordRequired": "パスワードが必要",
             "passwordWrong": "パスワードが間違っています",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "システム {{primarySystem}} はオフラインであり、システム {{targetSystem}} と統合することはできません",
+            "primarySystemUnavailable": "システム {{primarySystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "私たちはあなたと相談することをお勧めします",
                 "b_support": "サポート",
                 "c_proceeding": "続行する前に"
             },
             "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "secondarySystemUnavailable": "システム {{targetSystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
+            "serverAtUrl": "{{url}} のサーバー",
+            "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} システムにアクセスできません。</p><p>指定されたサーバーがオンラインであることを確認して、もう一度やり直してください。</p>",
+            "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません",
+            "systemOfflineUrl": "{{targetSystem}} はアクセスできません。",
+            "systemsIncompatible": "このサーバーには互換性のないソフトウェアバージョンがあります。両方のシステムを同じビルドに更新して統合します。",
+            "systemVersionOld": "{{targetSystem}} は、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新して、現在のものと統合します。",
+            "systemVersionNew": "{{targetSystem}} は、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a> に更新して、 {{targetSystem}} と統合します。",
             "urlEmpty": "サーバーのアドレスを入力してください",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "有効な URL を入力してください",
+            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>問い合わせください。",
+            "warning": "統合されたシステムには <strong>{{maxServers}}</strong> 以上のサーバーがあります。"
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "storageSettingsSaved": "ストレージ設定を保存しました。",
+            "storageSettingsNotSaved": "ストレージの設定を保存できませんでした。",
             "settingsSaved": "設定が保存されました.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "settingsNotSaved": "設定を保存できませんでした。",
+            "logLevelsSaved": "ログのレベルを保存しました。",
+            "logLevelsNotSaved": "ログレベルを保存できませんでした。",
             "failedToSend": "メッセージを送信できませんでした。",
             "placeholders": {
                 "feedback": "カメラのモデルと製造元を必ず含めてください。"
@@ -302,12 +302,12 @@
             "loggedFromOtherAccount": "別のアカウントでログインします",
             "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除しますか?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "現在のシステムからサーバー \"{{ title }}\" を切断しますか？",
+            "serversReset": "サーバー \"{{ title }}\"をデフォルトにリセットしますか？",
+            "serversRestart": "サーバー \"{{ title }}\" を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
         }
     },
     "downloads": {
