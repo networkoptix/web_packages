@@ -7,9 +7,9 @@ import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
 import {
-    Subscription, from, of, Observable, Subject, BehaviorSubject
+    Subscription, from, of, Observable, Subject, BehaviorSubject, interval, empty
 }                                    from 'rxjs';
-import { delay, concatMap, tap, distinctUntilChanged }     from 'rxjs/operators';
+import { delay, concatMap, tap, distinctUntilChanged, switchMap }     from 'rxjs/operators';
 
 interface Server {
     name: string,
@@ -128,10 +128,15 @@ export class NxOverlayModalComponent implements OnInit {
     setupObservers() {
         this.refresh$.subscribe(this.checkIfOnline);
         this.appState.systemAvailable$.pipe(
-            distinctUntilChanged()
-            // Here you can either have it switch between two different observable streams or have it trigger
-            // a different observable that starts the refreshing interval
-        );
+            distinctUntilChanged(),
+            switchMap((systemAvailable) => systemAvailable ? empty() : interval(5000))
+        ).subscribe(timesTriggered => {
+            // Here's kind of a really basic implementation
+            // I'm not sure how the spec expects manual refresh to work but if it's ok
+            // for the interval to not be affected by a manual refresh you could
+            // probaby use a simple implementation like this.
+            console.log(timesTriggered);
+        });
     }
 
     getServers() {
