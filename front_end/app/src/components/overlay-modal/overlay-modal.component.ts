@@ -55,8 +55,8 @@ export class NxOverlayModalComponent implements OnInit {
         }
     ];
 
-    intervals: number[] = [];
-    interval: number;
+    // intervals: number[] = [];
+    // interval: number;
     serverId: string;
     nextInterval = 10;
     // can remove once we can stop multiple logins upon system coming back online
