@@ -258,6 +258,9 @@ class PushNotification(models.Model):
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
     count = models.IntegerField(default=0)
 
+    created_date = models.DateTimeField(auto_now_add=True)
+    send_date = models.DateTimeField(null=True, blank=True)
+
     def clean(self):
         if len(self.title + self.body + self.payload) > self.SIZE_LIMIT:
             raise ValidationError(f'Title, body, and payload cannot total more than {self.SIZE_LIMIT}')
