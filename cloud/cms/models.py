@@ -425,8 +425,7 @@ class Asset(models.Model):
                 rename_group = True
 
         super(Asset, self).save(*args, **kwargs)
-        if need_update and self.is_cloud_portal \
-                and len(self.customizations.all()) == 1:
+        if need_update and self.is_cloud_portal and len(self.customizations.all()) == 1 and self.can_preview_on_portal:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
         if create_group or update_group:
