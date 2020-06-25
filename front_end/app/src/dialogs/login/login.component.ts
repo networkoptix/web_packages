@@ -114,7 +114,7 @@ export class LoginModalContent implements OnInit {
 
     ngOnInit() {
         // Check the url queryParams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        const nextUrl = /\?next=(.*)/.exec(decodeURIComponent(this.document.location.search));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }
@@ -192,13 +192,14 @@ export class LoginModalContent implements OnInit {
             } else if (this.next) {
                 // sanitize this.next
                 this.next = NxUtilsService.getRelativeLocation(this.next);
-                this.router
-                    .navigate([this.next])
-                    .then(() => {
-                        // *** window.location.reload(); // ensure language reload as translations are loaded on page load
-                        // *** admin section is not a part of Angular project
-                        window.location.href = this.next;
-                    });
+                if (this.next.indexOf('/admin/') !== -1) {
+                    // *** admin section is not a part of Angular project
+                    window.location.href = this.next;
+                } else {
+                    this.router
+                        .navigate([this.next])
+                        .catch((error) => console.error(error));
+                }
             } else {
                 setTimeout(() => {
                     this.router
