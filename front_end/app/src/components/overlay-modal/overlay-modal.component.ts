@@ -1,6 +1,4 @@
-import {
-    Component, OnInit
-}                                    from '@angular/core';
+import { Component, OnInit }         from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
@@ -8,7 +6,10 @@ import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
-import { Subscription }              from 'rxjs';
+import {
+    Subscription, from, of, Observable
+}                                    from 'rxjs';
+import { delay, concatMap, tap }     from 'rxjs/operators';
 
 interface Server {
     name: string,
@@ -54,11 +55,16 @@ export class NxOverlayModalComponent implements OnInit {
         }
     ];
 
+    intervals: number[] = [];
+    interval: number;
     serverId: string;
     refreshText: string;
     checking = false;
     systemAvailable = false;
+
     systemAvailableSubscription: Subscription;
+    refreshTrackerSubscription: Subscription;
+    refreshTracker: Observable<any>;
 
     constructor(
         configService: NxConfigService,
@@ -73,6 +79,22 @@ export class NxOverlayModalComponent implements OnInit {
     }
 
     ngOnInit() {
+        let seconds = 5;
+        while (seconds <= 60) {
+            this.intervals.push(seconds);
+            seconds += 5;
+        }
+
+        this.refreshTracker = from(this.intervals).pipe(
+            concatMap(interval => {
+                this.interval = interval;
+                return of('').pipe(
+                    delay(interval * 1000),
+                    tap(() => this.checkIfOnline())
+                );
+            })
+        );
+
         this.accountService.get().then(account => {
             const system = this.systemService.createLocalSystem(this.accountService.mediaServerApi, account.id, account.email);
             system.update().then(() => {
@@ -80,6 +102,7 @@ export class NxOverlayModalComponent implements OnInit {
                     this.system = system;
                     this.getServers();
                     this.serverId = this.system.moduleInfo.id;
+                    this.refreshTrackerSubscription = this.refreshTracker.subscribe();
                 });
             });
         });
@@ -99,7 +122,10 @@ export class NxOverlayModalComponent implements OnInit {
             .catch(err => console.error(err));
     }
 
-    checkIfOnline() {
+    checkIfOnline(reset = false) {
+        if (reset) {
+            this.refreshTrackerSubscription.unsubscribe();
+        }
         this.checking = true;
         this.refreshText = this.LANG.servers.refreshing();
         return this.getServers()
@@ -116,8 +142,13 @@ export class NxOverlayModalComponent implements OnInit {
                 this.appState.systemAvailable$.next(false);
             })
             .finally(() => {
-                this.checking = false;
-                this.refreshText = this.LANG.servers.refresh();
+                setTimeout(() => {
+                    this.checking = false;
+                    this.refreshText = this.LANG.servers.refresh();
+                    if (reset) {
+                        this.refreshTrackerSubscription = this.refreshTracker.subscribe();
+                    }
+                }, this.CONFIG.servers.checkStatusTimeout);
             });
     }
 }
