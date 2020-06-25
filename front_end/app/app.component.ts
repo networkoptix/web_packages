@@ -14,6 +14,7 @@ import { NxUriService }                            from './src/services/uri.serv
 import { NxPageService }                           from './src/services/page.service';
 import { NxBootstrapProvider }                     from './src/services/nx-bootstrap-provider';
 import { NxDialogsService }                        from './src/dialogs/dialogs.service';
+import { NxConfigService, IConfig }                from './src/services/nx-config';
 
 require('what-input');
 
@@ -30,6 +31,7 @@ require('what-input');
                 <router-outlet></router-outlet>
             </div>
         </div>
+        <nx-overlay-modal *ngIf="CONFIG.isLocal"></nx-overlay-modal>
         <nx-pre-loader type="page" *ngIf="!appStateService.ready && !newSystem"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
     styleUrls     : ['./app.component.scss'],
@@ -42,8 +44,11 @@ export class AppComponent {
     isInIframe: boolean;
     newSystem: boolean;
 
+    CONFIG: IConfig;
+
     constructor(
         bootstrapProvider: NxBootstrapProvider,
+        configService: NxConfigService,
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
@@ -72,6 +77,7 @@ export class AppComponent {
             this.dialogsService.wizard();
             return;
         }
+        this.CONFIG = configService.getConfig();
 
         // Allows 3 seconds for auth query param to be detected and set appState.ready to false.
         // This makes sure only the preloader is shown before the page is refreshed to a logged in state.

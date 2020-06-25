@@ -37,6 +37,7 @@ import { PagesModule }                        from './src/pages/pages.module';
 import { NxUriCacheService }                  from './src/services/uri-cache.service';
 import { NxUriCachingInterceptor }            from './src/services/uri-cache-interceptor.service';
 import { NgxMaskModule, IConfig }             from 'ngx-mask';
+import { LocalSystemStatusInterceptor }                  from './src/services/local-system-status-interceptor.service';
 
 // AoT requires an exported function for factories
 export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
@@ -96,6 +97,11 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>);
         {
             provide : HTTP_INTERCEPTORS,
             useClass : NxUriCachingInterceptor,
+            multi : true
+        },
+        {
+            provide : HTTP_INTERCEPTORS,
+            useClass : LocalSystemStatusInterceptor,
             multi : true
         },
         NxConfigService,

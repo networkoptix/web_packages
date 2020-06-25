@@ -106,7 +106,7 @@
     "Encrypt video traffic": "Encrypt video traffic",
     "Enhance your data storage experience": "Enhance your data storage experience",
     "Enter \"Public User\" credentials:": "Enter \"Public User\" credentials:",
-    "Enter Nx Cloud account you want this system to be connected to.<br/>\n            This account will get full permissions within this system.": "Enter Nx Cloud account you want this system to be connected to.<br/>\n            This account will get full permissions within this system.",
+    "Enter %CLOUD_NAME% account you want this system to be connected to.<br/>\n            This account will get full permissions within this system.": "Enter %CLOUD_NAME% account you want this system to be connected to.<br/>\n            This account will get full permissions within this system.",
     "Enter license key": "Enter license key",
     "Enter password for your account to continue": "Enter password for your account to continue",
     "Enter password to continue.": "Enter password to continue.",
