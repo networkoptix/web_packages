@@ -13,11 +13,7 @@ ${password}    ${BASE PASSWORD}
 ${url}         ${ENV}
 
 *** Keywords ***
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 39d024b1ac110f57bea465876cbd2eae3f6ad280
+ 
 *** Test Cases ***
 Going to /admin as anonymous prompts to log in
     [Tags]    C56677    C56679
