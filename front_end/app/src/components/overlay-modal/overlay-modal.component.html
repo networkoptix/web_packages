@@ -4,7 +4,7 @@
             class="ml-2" [svgStyle]="{ 'height.px': '200' }"></svg-icon>
         <h2 translate>Server offline</h2>
         <button class="btn" (click)="checkIfOnline(true)">
-            <span [ngClass]="{ 'animate-rotation': checking }">
+            <span [ngClass]="{ 'animate-rotation': (checking$ | async) }">
                 <svg-icon class="circular" nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                     [applyClass]="true"></svg-icon>
             </span>
@@ -12,9 +12,9 @@
         </button>
         <p
             class="btn-helper mt-2 mb-0"
-            [ngClass]="{ 'invisible': !interval }"
+            [ngClass]="{ 'invisible': !(timeoutUntilRefresh$ | async) || (checking$ | async) }"
             [translate]="'servers.autoRefresh'"
-            [translateParams]="{ time: interval }"
+            [translateParams]="{ time: (timeoutUntilRefresh$ | async) }"
         ></p>
     </div>
     <div class="overlay-modal">
