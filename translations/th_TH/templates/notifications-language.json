@@ -9,27 +9,27 @@
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "สอบถามรายละเอียดการขายสำหรับ {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "สอบถามทางเทคนิคสำหรับ {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "ข้อเสนอแนะสำหรับ {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "คำติชมหน้ากล้อง{{#message.asset}} สำหรับ {{{message.asset}}}{{/message.asset}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} มีเวอร์ชันใหม่ให้ตรวจสอบ"
   },
   "restore_password": {
     "emailSubject": "รีเซ็ตรหัสผ่านของคุณ"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} เชิญคุณไปที่ %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}ระบบวิดีโอ {{message.system_name}} ถูกแชร์กับคุณ{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "ระบบ {{message.system_name}} ถูกแชร์กับคุณ"
   }
 }
