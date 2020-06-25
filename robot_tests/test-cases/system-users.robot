@@ -611,6 +611,7 @@ Cloud Owner Can Change Local User Email
 
 Cloud Owner Can Change Local User Permissions
     [Tags]    local_user    C76243
+    Log    Same test as testrail "Cloud owner can change local user's access level (positive)."
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     @{new locals} =    Create List
@@ -634,6 +635,7 @@ Cloud Owner Can Change Local User Permissions
 
 Cloud Owner Can Change Local User Password
     [Tags]    local_user    C76246
+    Log    Same test as testrail "Cloud owner can change local user password (positive)"
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     FOR    ${user}    IN    @{local users}
@@ -659,6 +661,7 @@ Cloud owner can change local users' information
 
 Cloud Owner Can Disable Enable Local User
     [Tags]    local_user    C76245
+    Log    Performs same test as testrail "Cloud owner can enable/disable local user (positive)."
     @{local users} =    Local User Start   ${email}
     Wait Until Element is Visible    //span[contains(text(),"Local+")]
     Click Element    //span[contains(text(),"Local+")]
@@ -727,6 +730,7 @@ Local User Removed on Server is Removed From UI
     
 Verify Local Users Deleted On Server
     [Tags]    local_user    C76242
+    Log    This case performs the same test known in testrail as "Cloud owner can delete any local user (positive)."
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     Delete All Local Users    //span[contains(text(),"ocal+")]
@@ -738,6 +742,15 @@ Verify Local Users Deleted On Server
     
 Adding New Local User Appears on Cloud Portal
     [Tags]    C76237    local_user
+    Log    Preconditions
+    @{locals} =    Create List 
+    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    FOR    ${node}    IN    @{users}
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
+    END
+    Delete All Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${locals}
+    Log    Step 1
     @{local users} =    Local User Start   ${email}
     Verify In Local Users UI    ${local users}    ${email}
     
@@ -746,19 +759,20 @@ Cloud owner cannot change local owner's information
     Log    Step 1
     Log in to Auto Tests System    ${email}
     Go To Users List
+    Log    Step 2
     Wait Until Element is Visible    //span[text()="admin"]
     Click Element    //span[text()="admin"]
-    Log    Step 2
     Run Keyword and Expect Error    *    Modify All Local User Info    admin    ${email}
     Elements Should Not Be Visible      ${DISABLE USER SWITCH}     ${LOCAL USER DELETE BUTTON}
 
-Cloud administrator can make changes to local viewers (negative)
+Unsaved changes are not sent to the server
     [Tags]    C76241    local_user
-    @{local users} =    Local User Start    ${EMAIL ADMIN} 
+    Log    Preconditions
+    @{local users} =    Local User Start   ${email}
     @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Verify In Local Users UI    ${local users}    ${email}
     
     Log    Step 1
-    Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
     Click Element    //span[text()="Local+advancedViewer"]
     
     Log    Step 2
@@ -767,95 +781,135 @@ Cloud administrator can make changes to local viewers (negative)
     Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="Viewer"] 
     Click Element    //*[@id="permissionsSelect"]//a/span[text()="Viewer"]
     Sleep    .1
+    Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    Input Text    ${LOCAL USER LOGIN}    C76241
+    Input Text    ${LOCAL USER NAME}    C76241
+    Input Text    ${LOCAL USER EMAIL}    C76241
     Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
     
-    Log   Step 3
+    Log    Step 3
+    @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Lists Should Be Equal     ${check info}    ${locals}  
+    
+    Log    Step 4
     Click Button    ${ACCOUNT CANCEL}
     Sleep    .1
     Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
-    Log    The following keywords will verify no changes were saved
-    @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Lists Should Be Equal     ${check info}    ${locals} 
-    
-    Log    Step 4
-    Set Checkbox Value   ${DISABLE USER SWITCH}    false
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    
-    Log    Step 5
-    Click Button    ${ACCOUNT CANCEL}
-    Sleep    .1
-    Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
     Page Should Not Contain Element   ${USER DISABLED MSG}
-    Log    The following keywords will verify no changes were saved
-    ${name} =    Get Text    //h2[@class="user-email"]
-    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    FOR     ${user}    IN    @{users}
-        ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
-        Exit For Loop If    ${state} == ${True}
-    END
-    Should Be True    ${state} == ${True}
-    
-    Log    Step 6
-    Set Checkbox Value   ${DISABLE USER SWITCH}    false
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    
-    Log    Step 7
-    Set Checkbox Value   ${DISABLE USER SWITCH}    true
-    Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
-    Page Should Not Contain Element   ${USER DISABLED MSG}
-    
-    Log    Step 8
-    Input Text    ${LOCAL USER LOGIN}    ${EMPTY}
-    Input Text    ${LOCAL USER NAME}    ${EMPTY}
-    Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
-    Page Should Contain    ${LOGIN IS REQUIRED TEXT}
-    Element Style Should Be    ${LOCAL USER LOGIN}    border-color    ${ERROR COLOR} 
-    Page Should Not Contain Element    //h2[text()="Local+advancedViewer"]
-    
-    Log    Step 9
-    Click Button    ${ACCOUNT CANCEL}
-    Sleep    .1
     Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
     Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
-    Wait Until Element Is Visible   //h2[text()="Local+advancedViewer"]
-    Log    The following keywords will verify no changes were saved
-    @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Lists Should Be Equal     ${check info}    ${locals} 
+	
+	Log    Step 5
+	@{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Lists Should Be Equal     ${check info}    ${locals}
     
-    Log    Step 10
-    Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
-    Wait Until Elements Are Visible    ${LOCAL USER CHANGE PASSWORD SAVE}    ${LOCAL USER CHANGE PASSWORD CANCEL}
+# Cloud administrator can make changes to local viewers (negative)
+    # [Tags]    C76241    local_user
+    # @{local users} =    Local User Start    ${EMAIL ADMIN} 
+    # @{locals} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     
-    Log    Step 11
-    Click Button    ${LOCAL USER CHANGE PASSWORD CANCEL}
-    Log    The following keywords will verify no changes were saved     
-    @{new auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
-    ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
+    # Log    Step 1
+    # Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
+    # Click Element    //span[text()="Local+advancedViewer"]
     
-    Log    Step 12
-    Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
-    Click Button    ${LOCAL USER DELETE BUTTON}
-    Wait Until Elements Are Visible     ${LOCAL USER DELETE CONFIRM BUTTON}    ${LOCAL USER DELETE CANCEL BUTTON} 
+    # Log    Step 2
+    # Wait Until Element is Visible     ${ACCESS LEVEL DROPDOWN}
+    # Click Button    ${ACCESS LEVEL DROPDOWN}
+    # Wait Until Element is Visible    //*[@id="permissionsSelect"]//a/span[text()="Viewer"] 
+    # Click Element    //*[@id="permissionsSelect"]//a/span[text()="Viewer"]
+    # Sleep    .1
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL} 
     
-    Log    Step 13
-    Click Button    ${LOCAL USER DELETE CANCEL BUTTON}
-    Page Should Contain Element    //span[text()="Local+advancedViewer"]
-    Log    The following keywords will verify no changes were saved
-    @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    ${deleted user} =    Set Variable    Local+advancedViewer
-    FOR    ${user}    IN    @{users}
-        ${status} =    Set Variable If   '${deleted user}' in '${user}[name]'   ${True}
-        Exit For Loop If    ${status} == ${True}
-    END
-    Should Be True    ${status} == ${True}
+    # Log   Step 3
+    # Click Button    ${ACCOUNT CANCEL}
+    # Sleep    .1
+    # Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[advancedViewer]
+    # Log    The following keywords will verify no changes were saved
+    # @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    # Lists Should Be Equal     ${check info}    ${locals} 
     
-    Log    Step 14
-    @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
-    Lists Should Be Equal     ${check info}    ${locals}  
+    # Log    Step 4
+    # Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    
+    # Log    Step 5
+    # Click Button    ${ACCOUNT CANCEL}
+    # Sleep    .1
+    # Elements Should Not Be Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Page Should Not Contain Element   ${USER DISABLED MSG}
+    # Log    The following keywords will verify no changes were saved
+    # ${name} =    Get Text    //h2[@class="user-email"]
+    # @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    # FOR     ${user}    IN    @{users}
+        # ${state} =    Set Variable If    '${user}[name]' == '${name}'    ${user}[isEnabled]
+        # Exit For Loop If    ${state} == ${True}
+    # END
+    # Should Be True    ${state} == ${True}
+    
+    # Log    Step 6
+    # Set Checkbox Value   ${DISABLE USER SWITCH}    false
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
+    
+    # Log    Step 7
+    # Set Checkbox Value   ${DISABLE USER SWITCH}    true
+    # Wait Until Elements Are Visible    ${ACCOUNT SAVE}    ${ACCOUNT CANCEL}
+    # Page Should Not Contain Element   ${USER DISABLED MSG}
+    
+    # Log    Step 8
+    # Input Text    ${LOCAL USER LOGIN}    ${EMPTY}
+    # Input Text    ${LOCAL USER NAME}    ${EMPTY}
+    # Input Text    ${LOCAL USER EMAIL}    ${EMPTY}
+    # Page Should Contain    ${LOGIN IS REQUIRED TEXT}
+    # Element Style Should Be    ${LOCAL USER LOGIN}    border-color    ${ERROR COLOR} 
+    # Page Should Not Contain Element    //h2[text()="Local+advancedViewer"]
+    
+    # Log    Step 9
+    # Click Button    ${ACCOUNT CANCEL}
+    # Sleep    .1
+    # Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
+    # Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
+	# Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_advancedViewer@gmail.com
+    # Wait Until Element Is Visible   //h2[text()="Local+advancedViewer"]
+    # Log    The following keywords will verify no changes were saved
+    # @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    # Lists Should Be Equal     ${check info}    ${locals} 
+    
+    # Log    Step 10
+    # Click Button    ${LOCAL USER CHANGE PASSWORD BUTTON}
+    # Wait Until Elements Are Visible    ${LOCAL USER CHANGE PASSWORD SAVE}    ${LOCAL USER CHANGE PASSWORD CANCEL}
+    
+    # Log    Step 11
+    # Click Button    ${LOCAL USER CHANGE PASSWORD CANCEL}
+    # Log    The following keywords will verify no changes were saved     
+    # @{new auth} =    Create List    local+advancedviewer     ${BASE PASSWORD}
+    # ${response} =    Get Cameras    ${new auth}    ${AUTO SYS IP}
+    
+    # Log    Step 12
+    # Wait Until Element is Visible    ${LOCAL USER DELETE BUTTON}
+    # Click Button    ${LOCAL USER DELETE BUTTON}
+    # Wait Until Elements Are Visible     ${LOCAL USER DELETE CONFIRM BUTTON}    ${LOCAL USER DELETE CANCEL BUTTON} 
+    
+    # Log    Step 13
+    # Click Button    ${LOCAL USER DELETE CANCEL BUTTON}
+    # Page Should Contain Element    //span[text()="Local+advancedViewer"]
+    # Log    The following keywords will verify no changes were saved
+    # @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    # ${deleted user} =    Set Variable    Local+advancedViewer
+    # FOR    ${user}    IN    @{users}
+        # ${status} =    Set Variable If   '${deleted user}' in '${user}[name]'   ${True}
+        # Exit For Loop If    ${status} == ${True}
+    # END
+    # Should Be True    ${status} == ${True}
+    
+    # Log    Step 14
+    # @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    # Lists Should Be Equal     ${check info}    ${locals}  
     
 Local User Login Field Cannot Be Left Blank
     [Tags]    C76248    local_user
@@ -875,10 +929,16 @@ Local User Login Field Cannot Be Left Blank
     Page Should Contain Element   ${ACCOUNT SAVE} 
     Page Should Contain Element   ${ACCOUNT CANCEL}
     Element Style Should Be    ${LOCAL USER LOGIN}    border-color    ${ERROR COLOR} 
-    Page Should Not Contain Element    //h2[text()="Local+advancedViewer"]
     
     Log    Step 3
+    @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
+    Lists Should Be Equal     ${check info}    ${locals}
+
+    Log    Step 4
     Click Button     ${ACCOUNT CANCEL} 
+    Wait Until Textfield Contains    ${LOCAL USER LOGIN}    Local+advancedViewer
+    
+    Log    Step 5
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     Lists Should Be Equal     ${check info}    ${locals} 
     
@@ -921,12 +981,12 @@ Local User email field can be left blank
     Log    Step 3
     @{check info} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${user}    IN    @{check info}
-        ${full name} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[email]
-        Run Keyword Unless    '${full name}' == 'None'    Exit For Loop
+        ${email field} =    Set Variable If    'local+advancedviewer' in '${user}[name]'    ${user}[email]
+        Run Keyword Unless    '${email field}' == 'None'    Exit For Loop
     END 
-    Should Be Equal    ${full name}    ${EMPTY}
+    Should Be Equal    ${email field}    ${EMPTY}
     
- User list is available for owner and administrator
+User list is available for owner and administrator
     [Tags]    C76233    local_user
     @{local users} =    Local User Start   ${EMAIL OWNER}
     Log    Step 1
@@ -936,8 +996,6 @@ Local User email field can be left blank
     Log in to Auto Tests System    ${EMAIL ADMIN}
     Go To Users List
     Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
-    Log    Clean up
-    Delete All Local Users    //span[contains(text(),"ocal+")]
     
 User list is not available for advanced viewer & lower
     [Tags]    C76462
@@ -947,4 +1005,11 @@ User list is not available for advanced viewer & lower
     Log Out
     Log    Step 2
     Log in to Auto Tests System    ${EMAIL ADV VIEWER}
-    Element Should Not Be visible    ${USERS LIST LINK}   
+    Element Should Not Be visible    ${USERS LIST LINK} 
+    
+Cloud Administrator Can Delete Local User(positive)
+    [Tags]    C76524    local_user
+    @{local users} =    Local User Start   ${EMAIL ADMIN}
+    Log    Step 1
+    Verify In Local Users UI    ${local users}    ${EMAIL ADMIN}
+     
