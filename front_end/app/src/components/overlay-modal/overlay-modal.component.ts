@@ -105,7 +105,7 @@ export class NxOverlayModalComponent implements OnInit {
             // Whenever refresh emits this switches to a new interval observable.
             switchMap(res => {
                 return !res ? empty()
-                    : this.appState.systemAvailable$.value ? empty() : interval(1000)
+                    : this.appState.systemAvailable$.value ? empty() : interval(1000);
             })
         ).subscribe(() => {
             const untilRefresh = this.timeoutUntilRefresh$.value;
