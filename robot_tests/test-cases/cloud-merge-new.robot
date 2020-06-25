@@ -12,7 +12,7 @@ Merge button availability
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${port}=   Set Variable    7021
     ${system}=   Set Variable    ${IMAGE 4.0}_${port}
-    ${cont}=   Run Container    ${IMAGE 4.0}    ${port}    network=host
+    ${cont}=   Run Container    ${IMAGE 4.0}    ${port}
     Append To List    ${test containers}    ${cont}
     ${sys id}=   Create system and attach to cloud    ${LOCALHOST}    ${port}    ${system}    ${owner email}
     @{auth}=   Create List    ${owner email}    ${BASE PASSWORD}
@@ -48,7 +48,7 @@ Merge button availability
     Log    Test teardown
     Log Out
     Stop Container    ${cont}    remove=True
-    Remove From List    ${test containers}    ${cont}
+    Remove Values From List    ${test containers}    ${cont}
 
 # Positive scenarios
 Positive scenario with selected cloud system (selected system is secondary)
@@ -61,8 +61,8 @@ Positive scenario with selected cloud system (selected system is secondary)
     ${system 2}=   Set Variable    ${IMAGE 4.0}_${port 2}
     ${cont 1}=   Run Container    ${IMAGE 4.0}    ${port 1}
     ${cont 2}=   Run Container    ${IMAGE 4.0}    ${port 2}
-    Append To List    ${test containers}    ${cont 1}
-    Append To List    ${test containers}    ${cont 2}
+#    Append To List    ${test containers}    ${cont 1}
+#    Append To List    ${test containers}    ${cont 2}
     ${sys 1 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 1}    ${system 1}    ${owner email}
     ${sys 2 id}=   Create system and attach to cloud    ${LOCALHOST}    ${port 2}    ${system 2}    ${owner email}
 
@@ -78,7 +78,7 @@ Positive scenario with selected cloud system (selected system is secondary)
 #    Log    Step 2: Press merge button and check the dialog state
 #
 #    Log    Step 3: Select System 2
-    Stop Container    ${cont 1}    remove=True
-    Stop Container    ${cont 2}    remove=True
-    Remove From List    ${test containers}    ${cont 1}
-    Remove From List    ${test containers}    ${cont 2}
+#    Stop Container    ${cont 1}    remove=True
+#    Stop Container    ${cont 2}    remove=True
+#    Remove Values From List    ${test containers}    ${cont 1}
+#    Remove Values From List    ${test containers}    ${cont 2}

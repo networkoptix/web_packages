@@ -24,7 +24,7 @@ RUN apt-get update \
 RUN rm /opt/networkoptix/mediaserver/bin/root-tool-bin
 
 # Copy files for container's and server's configs
-COPY entrypoint.sh /opt/networkoptix/mediaserver/bin/
+COPY entrypoint.sh config_helper.sh /opt/networkoptix/mediaserver/bin/
 COPY patch-cloud-host.sh utils.sh /usr/local/bin/
 
 # Patch the cloud host
