@@ -82,6 +82,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     cameraGetSubscription: SubscriptionLike;
     windowSizeSubscription: SubscriptionLike;
     offsetSubscription: SubscriptionLike;
+    getIPVDSubscription: SubscriptionLike;
 
     @ViewChild('viewContainer', { static: false }) viewContainer: ElementRef;
     @ViewChild('tableContainer', { static: false }) tableContainer: ElementRef;
@@ -418,7 +419,7 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     activate() {
-        this.cloudApi
+        this.getIPVDSubscription = this.cloudApi
             .getIPVD()
             .subscribe(data => {
                 this.cameras = data.cameras;
