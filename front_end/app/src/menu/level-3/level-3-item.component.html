@@ -11,7 +11,7 @@
                 nx-add-svg-src  
                 [src]="CONFIG.icons.dir + item.svgIcon + '.svg'"
                 [applyClass]="true"
-                class=" ml-n1 menu-level-3-svg-icon"></svg-icon>
+                class="menu-level-3-svg-icon"></svg-icon>
         <span [innerHTML]="item.label" class="user" [ngClass]="{'indent': item.indent && !item.icon && !item.svgIcon}"></span>
         <span class="menu-level-3-additional"
               *ngIf="item.additionalText"
