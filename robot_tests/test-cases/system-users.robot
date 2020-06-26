@@ -1013,26 +1013,80 @@ Changes made in thick client appear on cloud portal
     Verify In Local Users UI    ${local users}    ${email}
     Click Element    //span[text()="Local+advancedViewer"]
     Log    Step 4
-    Save User    ${auth}    ${AUTO SYS IP}    Local+advancedViewer   ${permissions}[advancedViewer]    noptixautoqa+local_advancedViewer@gmail.com    Api Changed    ${BASE PASSWORD}    user id=${id}    is cloud=${False}    
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_advancedViewer@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
     Wait Until Textfield Contains    ${LOCAL USER NAME}    Api Changed    timeout=45
     Log    Step 5
-    Save User    ${auth}    ${AUTO SYS IP}    Local+advancedViewer   ${permissions}[advancedViewer]    noptixautoqa+local_apichanged@gmail.com    Api Changed    ${BASE PASSWORD}    user id=${id}    is cloud=${False}    
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
     Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_apichanged@gmail.com    timeout=45
     Log    Step 6
-    Save User    ${auth}    ${AUTO SYS IP}    Local+advancedViewer   ${permissions}[viewer]    noptixautoqa+local_apichanged@gmail.com    Api Changed    ${BASE PASSWORD}    user id=${id}    is cloud=${False}    
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
     Wait Until Element is Visible    //span[text()="Local+advancedViewer"]/following-sibling::span[text()="Viewer"]    timeout=45
     Log    Step 7
-    Save User    ${auth}    ${AUTO SYS IP}    Local+advancedViewer   ${permissions}[viewer]    noptixautoqa+local_apichanged@gmail.com    Api Changed    ${BASE PASSWORD}    user id=${id}    is cloud=${False}    is enabled=${False}
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}    
+    ...    is enabled=${False}
     Wait Until Element is Visible    ${USER DISABLED MSG}    timeout=45
     Log    Step 8
-    Save User    ${auth}    ${AUTO SYS IP}    Local+advancedViewer   ${permissions}[viewer]    noptixautoqa+local_apichanged@gmail.com    Api Changed    ${BASE PASSWORD}    user id=${id}    is cloud=${False}
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+advancedViewer   
+    ...    ${permissions}[viewer]    
+    ...    noptixautoqa+local_apichanged@gmail.com    
+    ...    Api Changed    
+    ...    ${BASE PASSWORD}    
+    ...    user id=${id}    
+    ...    is cloud=${False}
     Wait Until Element is Not Visible    ${USER DISABLED MSG}    timeout=45
     Log    Step 9
     Remove User    ${auth}    ${AUTO SYS IP}    ${id}
     Wait Until Element is Not Visible    //span[text()="Local+advancedViewer"]    timeout=45
     
     Log    Step 10
-    Save User    ${auth}    ${AUTO SYS IP}    Local+newApiUser   ${permissions}[advancedViewer]    noptixautoqa+local_advancedViewer@gmail.com    New Api   ${BASE PASSWORD}    is cloud=${False}      
+    Save User    
+    ...    ${auth}    
+    ...    ${AUTO SYS IP}    
+    ...    Local+newApiUser   
+    ...    ${permissions}[advancedViewer]    
+    ...    noptixautoqa+local_advancedViewer@gmail.com    
+    ...    New Api   
+    ...    ${BASE PASSWORD}    
+    ...    is cloud=${False}      
     Wait Until Elements Are Visible    
     ...    //span[text()="Local+newApiUser"]    
     ...    //span[text()="Local+newApiUser"]//preceding-sibling::${LOCAL USER ICON}
