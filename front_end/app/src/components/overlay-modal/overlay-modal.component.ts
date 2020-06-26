@@ -1,14 +1,15 @@
-import {
-    Component, OnInit
-}                                    from '@angular/core';
+import { Component, OnInit }         from '@angular/core';
 import { UntilDestroy }              from '@ngneat/until-destroy';
+
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
-import { Subscription }              from 'rxjs';
+
+import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
+import { distinctUntilChanged, switchMap }           from 'rxjs/operators';
 
 interface Server {
     name: string,
@@ -55,10 +56,21 @@ export class NxOverlayModalComponent implements OnInit {
     ];
 
     serverId: string;
-    refreshText: string;
-    checking = false;
-    systemAvailable = false;
-    systemAvailableSubscription: Subscription;
+    nextInterval = 10;
+    // can remove once we can stop multiple logins upon system coming back online
+    oneCheckAtATime = false
+
+    timeoutUntilRefresh$ = new BehaviorSubject(5);
+    checking$ = new BehaviorSubject(false);
+    private refresh$ = new Subject();
+
+    get systemAvailable() {
+        return this.appState.systemAvailable$.value;
+    }
+
+    get refreshText() {
+        return this.LANG.servers[this.checking$.value ? 'refreshing' : 'refresh']();
+    }
 
     constructor(
         configService: NxConfigService,
@@ -69,7 +81,6 @@ export class NxOverlayModalComponent implements OnInit {
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
-        this.refreshText = this.LANG.servers.refresh();
     }
 
     ngOnInit() {
@@ -84,9 +95,43 @@ export class NxOverlayModalComponent implements OnInit {
             });
         });
 
-        this.systemAvailableSubscription = this.appState.systemAvailable$
-            .subscribe((status: boolean) => {
-                this.systemAvailable = status;
+        this.setupObservers();
+    }
+
+    setupObservers() {
+        this.refresh$.pipe(
+            // Whenever refresh emits this switches to a new interval observable.
+            switchMap(res => {
+                return !res ? empty()
+                    : this.appState.systemAvailable$.value ? empty() : interval(1000);
+            })
+        ).subscribe(() => {
+            const untilRefresh = this.timeoutUntilRefresh$.value;
+
+            if (!this.oneCheckAtATime && untilRefresh < 1) {
+                this.checkIfOnline().then(res => {
+                    this.oneCheckAtATime = false;
+                    // restarts the interval after checkIfOnline
+                    if (!res && this.nextInterval <= 60) {
+                        this.timeoutUntilRefresh$.next(this.nextInterval);
+                        this.nextInterval += 5;
+                        this.refresh$.next('refresh');
+                    } else {
+                        this.refresh$.next(false);
+                    }
+                });
+            } else {
+                this.timeoutUntilRefresh$.next(untilRefresh - 1);
+                if (untilRefresh === 1) {
+                    this.checking$.next(true);
+                }
+            }
+        });
+
+        this.appState.systemAvailable$
+            .pipe(distinctUntilChanged())
+            .subscribe(() => {
+                this.refresh$.next('refresh');
             });
     }
 
@@ -99,25 +144,19 @@ export class NxOverlayModalComponent implements OnInit {
             .catch(err => console.error(err));
     }
 
+    manualRefresh() {
+        this.checking$.next(false);
+        this.timeoutUntilRefresh$.next(5);
+        this.nextInterval = 10;
+        this.refresh$.next('refresh');
+    }
+
     checkIfOnline() {
-        this.checking = true;
-        this.refreshText = this.LANG.servers.refreshing();
+        this.oneCheckAtATime = true;
         return this.getServers()
-            .then((servers: Partial<Server>[]) => {
-                let available = false;
-                if (servers.length) {
-                    const server = servers.find(server => server.id === this.serverId);
-                    available = server && server.status !== 'Online';
-                }
-                this.appState.systemAvailable$.next(available);
-            })
-            .catch(err => {
-                console.error(err);
-                this.appState.systemAvailable$.next(false);
-            })
+            .then(res => res)
             .finally(() => {
-                this.checking = false;
-                this.refreshText = this.LANG.servers.refresh();
+                this.checking$.next(false);
             });
     }
 }
