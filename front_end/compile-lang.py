@@ -1,10 +1,17 @@
 # Make sure any changes here do not break build_scripts/generate_language_compiled_json.py
 import json
-
+import sys
 
 def merge_json(*args):
     merged = {}
     for dict_to_merge in args:
+        for key in dict_to_merge:
+            if '{{' in key or '{{' in dict_to_merge[key]:
+                err = '***************************************************************\n'
+                err += 'Found double braces in "{key}"\n'
+                err += '**************************************************************\n\n'
+                sys.exit(err.format(key=key))
+
         merged.update(dict_to_merge)
     return merged
 
