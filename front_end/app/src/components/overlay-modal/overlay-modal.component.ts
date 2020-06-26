@@ -98,13 +98,6 @@ export class NxOverlayModalComponent implements OnInit {
         this.setupObservers();
     }
 
-    /**
-     * This is a pretty basic implementation but it should be a good starting point. Needs to be updated
-     * to handle triggering first refresh and is pretty verbose right now for readability but could probably
-     * be refactored or left verbose. Sometimes observables that get really abstracted out can do some really
-     * complex behavior in just a couple lines of code but it's easy to abstract it so much that it's hard to
-     * understand what's going on so it's kind of a balance.
-     */
     setupObservers() {
         this.refresh$.pipe(
             // Whenever refresh emits this switches to a new interval observable.
