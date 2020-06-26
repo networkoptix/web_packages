@@ -1,4 +1,4 @@
 <h1>Helló, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>has the following sales question about the {{ message.asset }}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_email }} {{ message.sender_name }} a következő értékesítési kérdést tette fel {{ message.asset }}:
 <div>{{ message.message }}</div>

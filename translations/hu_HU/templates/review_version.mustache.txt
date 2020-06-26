@@ -1,8 +1,8 @@
-There is a new version for {{ message.asset }}({{message.asset_type}}) to review.
+Új verzió elérhető a {{ message.asset }} ({{message.asset_type}}).
 
 Kattintson a linkre {{ message.asset }} {{ message.id }} vázlatának megtekintéséhez
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link az áttekintéshez: {{ config.portal_url }}/ admin / Cm / eszköz-testreszabási áttekintés /{{ message.id }}/ változás /
 
 Ezen az oldalon
 1) Készíthet egy előnézetet a legutóbbi változtatások megtekintéséhez.
