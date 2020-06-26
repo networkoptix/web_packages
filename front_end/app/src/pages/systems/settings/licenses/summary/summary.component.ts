@@ -17,7 +17,7 @@ export class NxLicenseSummaryComponent {
 
     constructor(
         configService: NxConfigService,
-        language: NxLanguageProviderService,
+        language: NxLanguageProviderService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = language.translations;

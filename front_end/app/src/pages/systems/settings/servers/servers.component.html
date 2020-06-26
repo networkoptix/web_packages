@@ -4,26 +4,24 @@
         [selectedServer]="this.selectedServer">
 </nx-standard-server-component>
 
-<nx-alert-block
+<ng-container *ngIf="!isOffline && system && advanced">
+        <nx-alert-block
         class="d-block mt-3"
-        *ngIf="system && advanced"
         [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
         [line1]="'Settings displayed below are advanced.' | translate"
         [line2]="'Changing them may cause server to work incorrectly.' | translate"
         [btnIconSrc]="CONFIG.icons.dir + 'eye_closed.svg'"
         [btnCaption]="'Hide Advanced Settings' | translate"
-        (onAction)="hideAdvancedSettings()">
-</nx-alert-block>
-
-<nx-server-advanced-storage-component
-        *ngIf="system && advanced"
-        [system]="system"
-        [serverId]="this.selectedServer?.id">
-</nx-server-advanced-storage-component>
-
-
-<nx-server-logger-component
-        *ngIf="system && advanced"
-        [system]="system"
-        [serverId]="this.selectedServer?.id">
-</nx-server-logger-component>
+        (onAction)="hideAdvancedSettings()"></nx-alert-block>
+        
+        <nx-server-advanced-storage-component
+                [system]="system"
+                [serverId]="this.selectedServer?.id">
+        </nx-server-advanced-storage-component>
+        
+        
+        <nx-server-logger-component
+                [system]="system"
+                [serverId]="this.selectedServer?.id">
+        </nx-server-logger-component>
+</ng-container>
