@@ -8,6 +8,22 @@ https://docs.djangoproject.com/en/1.8/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
+
+The settings are organized into four sections as follows:
+
+Base Settings:
+These are settings used/referenced by other settings. These settings
+can come from either the config, as an commandline argument, env variable,
+or can be static values.
+
+Default Settings:
+This is where the standard Django settings should go.
+
+Package Settings:
+This is where settings used by other modules or introduced by another package.
+
+In House Settings:
+This is where settings that don't belong to any of the previous categories should go.
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -19,40 +35,42 @@ import sys
 from util.config import get_config
 from cloud.logger import downgrade_unauthorized_requests
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+
+# Base Settings
+
+
 conf = get_config()
+LOCAL_ENVIRONMENT = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+
+# Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
+CELERY_WORKER = 'celery' in sys.argv[0]
+PUSH_WORKER = 'push-notification' in sys.argv
+
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__)))  # /app/app
+# this is used for email_engine to find templates
+STATIC_LOCATION = os.path.join(BASE_DIR, "static")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/common/static")
 
 CUSTOMIZATION = os.getenv('CUSTOMIZATION')
 if not CUSTOMIZATION:
     CUSTOMIZATION = conf['customization']
 
-assert ('trafficRelay' in conf), 'Ivan, please add traffic relay to config for this instance'
-assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instance'
+if LOCAL_ENVIRONMENT:
+    STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
+    STATICFILES_DIRS = (
+        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
+        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
+    )
+    PREVIEW_URL = '/preview/'
+    PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
 
-TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']  # {systemId}.relay-bur.vmsproxy.hdw.mx
-TRAFFIC_RELAY_PROTOCOL = 'https://'
+cloud_db = conf['cloud_database']
 
-CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+# Default Settings
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
-
-# Celery worker should never run in debug mode. If it is running with debug then it will hang after sometime.
-CELERY_WORKER = 'celery' in sys.argv[0]
-PUSH_WORKER = 'push-notification' in sys.argv
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ('debug' in conf and conf['debug'] or LOCAL_ENVIRONMENT) and not CELERY_WORKER
-
-ALLOWED_HOSTS = ['*']
-
-SKINS = ['blue', 'green', 'orange']
-DEFAULT_SKIN = 'blue'
-
-# Application definition
 
 INSTALLED_APPS = (
     'dal',
@@ -103,50 +121,21 @@ MIDDLEWARE = (
 
 ROOT_URLCONF = 'cloud.urls'
 
+ALLOWED_HOSTS = ['*']
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # /app/app
-STATIC_LOCATION = os.path.join(BASE_DIR, "static")  # this is used for email_engine to find templates
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/common/static")
-if LOCAL_ENVIRONMENT:
-    STATIC_ROOT = os.path.join(BASE_DIR, "static/common")
-    STATICFILES_DIRS = (
-        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static"),
-        os.path.join(STATIC_LOCATION, CUSTOMIZATION, "static/lang_en_US"),
-    )
-    PREVIEW_URL = '/preview/'
-    PREVIEW_LOCATION = os.path.join(STATIC_LOCATION, CUSTOMIZATION, "preview")
-
-ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
-ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
-ADMIN_DASHBOARD = ('cms.models.ContentVersion',
-                   'cms.models.Context',
-                   'cms.models.ContextProxy',
-                   'cms.models.ContextTemplate',
-                   'cms.models.Customization',
-                   'cms.models.DataRecord',
-                   'cms.models.DataStructure',
-                   'cms.models.ExternalFile',
-                   'cms.models.Language',
-                   'cms.models.AssetType',
-                   'cms.models.UserGroupsToAssetPermissions',
-                   'cms.models.UserGroupsToAssetType',
-                   'cms.models.ContributorAgreement',
-                   '*.auth.models.Permission',
-                   'django_celery_beat.*',
-                   'django_celery_results.*',
-                   'notifications.models.*',
-                   'push_notifications.models.*',
-                   'rest_hooks.*',
-                   'zapier.models.*'
-                   )
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = '03-b9bxxpjxsga(qln0@3szw3+xnu%6ph_l*sz-xr_4^xxrj!_'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': (
             STATIC_ROOT,
-            os.path.join(STATIC_LOCATION, CUSTOMIZATION),  # get rid of app/app hardcode
+            # get rid of app/app hardcode
+            os.path.join(STATIC_LOCATION, CUSTOMIZATION),
             os.path.join(STATIC_LOCATION, CUSTOMIZATION, 'templates'),
             os.path.join(BASE_DIR, 'django_templates'),
         ),
@@ -169,11 +158,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cloud.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-cloud_db = conf['cloud_database']
 
 if cloud_db and cloud_db['host'] != '$DB_HOST':
     DATABASES = {
@@ -236,19 +223,8 @@ CACHES = {
     }
 }
 
-DEPLOYMENT_READY = 'ready'
-
-if LOCAL_ENVIRONMENT:
-    _HOST = 'https://dev2.cloud.hdw.mx'
-    conf["cloud_db"]["url"] = f"{_HOST}/cdb"
-    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
-    conf["cloud_storages"]["url"] = f"{_HOST}/storages"
-
-    # CELERY_BROKER_URL = 'sqs://...'
-    # This setting is removed because every developer needs personal AWS credentials
-    # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
-    # Or go through file history in source control to find the last time it was here
-    # (changeset 49115a0427b3 or 4923e6b2575d)
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = conf.get('debug', LOCAL_ENVIRONMENT) and not CELERY_WORKER
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -350,14 +326,94 @@ LOGGING = {
 STATIC_URL = '/static/'
 MEDIA_ROOT = BASE_DIR + '/static/integrations/'
 MEDIA_URL = '/integrations/'
-# #End of s3 config
+LOGOUT_REDIRECT_URL = "/logout"
 
+# whitelist for unauthorized IP addresses. Supports addresses with masks
+# read more: https://docs.python.org/3/library/ipaddress.html
+IP_WHITELISTS = {
+    'local': (
+        '127.0.0.1',        # localhost
+        '74.7.76.98',       # LA office
+        '95.31.136.2',      # Moscow office
+        '172.17.0.0/16',    # Docker
+        '192.168.0.0/16',   # local network
+        '10.0.0.0/16'       # Aws VPC
+    )
+}
+
+AUTH_USER_MODEL = 'api.Account'
+AUTHENTICATION_BACKENDS = ('api.account_backend.AccountBackend', )
+
+SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
+CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
+SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
+AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
+
+ADMINS = conf['admins']
+
+EMAIL_SUBJECT_PREFIX = ''
+EMAIL_HOST = conf['smtp']['host']
+EMAIL_HOST_USER = conf['smtp']['user']
+EMAIL_HOST_PASSWORD = conf['smtp']['password']
+EMAIL_PORT = conf['smtp']['port']
+EMAIL_USE_TLS = conf['smtp']['tls']
+
+
+# Package Settings
+
+
+# Use if you want to check user level permissions only users with the can_csv_<model_label>
+# will be able to download csv files.
+DJANGO_EXPORTS_REQUIRE_PERM = False
+# Use if you want to disable the global django admin action. This setting is set to True by default.
+DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+"""
+A regex which restricts the URL's for which the CORS headers will be sent.
+Defaults to r'^.*$', i.e. match all URL's. Useful when you only need CORS
+on a part of your site, e.g. an API at /api/.
+
+Regex allows cors for the following api calls:
+1) /api/ping
+2) /api/login
+3) /api/systems/connect
+4) /api/systems/disconnect
+These urls need to be whitelisted because mediaserver use them.
+"""
+CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'  # Comment out for swagger-ui local.
+
+ADMIN_TOOLS_INDEX_DASHBOARD = 'cloud.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_MENU = 'cms.menu.CustomMenu'
+ADMIN_DASHBOARD = ('cms.models.ContentVersion',
+                   'cms.models.Context',
+                   'cms.models.ContextProxy',
+                   'cms.models.ContextTemplate',
+                   'cms.models.Customization',
+                   'cms.models.DataRecord',
+                   'cms.models.DataStructure',
+                   'cms.models.ExternalFile',
+                   'cms.models.Language',
+                   'cms.models.AssetType',
+                   'cms.models.UserGroupsToAssetPermissions',
+                   'cms.models.UserGroupsToAssetType',
+                   'cms.models.ContributorAgreement',
+                   '*.auth.models.Permission',
+                   'django_celery_beat.*',
+                   'django_celery_results.*',
+                   'notifications.models.*',
+                   'push_notifications.models.*',
+                   'rest_hooks.*',
+                   'zapier.models.*'
+                   )
 
 # START s3 config
 AWS_STORAGE_BUCKET_NAME = conf['bucket']
 AWS_DEFAULT_ACL = 'public-read'
 
-S3_DOMAIN = conf.get('s3_domain', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
+S3_DOMAIN = conf.get(
+    's3_domain', f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com')
 AWS_S3_CUSTOM_DOMAIN = S3_DOMAIN
 AWS_S3_OBJECT_PARAMETERS = {
     'ContentDisposition': 'attachment',
@@ -375,7 +431,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-       'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
@@ -383,7 +439,8 @@ REST_FRAMEWORK = {
 }
 
 if DEBUG:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += ('rest_framework.renderers.BrowsableAPIRenderer',)
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] += (
+        'rest_framework.renderers.BrowsableAPIRenderer',)
 
 # Used for Zapier
 HOOK_EVENTS = {
@@ -412,7 +469,8 @@ CELERY_BROKER_TRANSPORT_OPTIONS = {
 CELERY_RESULT_PERSISTENT = True
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_WORKER_SEND_TASK_EVENTS = False
-CELERY_WORKER_PREFETCH_MULTIPLIER = 0  # Allows worker to consume as many messages as it wants
+# Allows worker to consume as many messages as it wants
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0
 CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 if PUSH_WORKER:
     CELERY_WORKER_CONCURRENCY = 2
@@ -424,6 +482,45 @@ DJANGO_CELERY_BEAT_TZ_AWARE = False
 
 # / End of Celery settings section
 
+
+# Push Notifications
+# Ask Roman Barsegian for config if you need push to work locally
+PUSH_NOTIFICATIONS_SETTINGS = {
+    'CONFIG': 'notifications.conf.PushConfig',
+    'MAX_RETRIES': 3,
+    'RETRY_INTERVAL': 20
+}
+
+
+# In House Settings
+
+
+DEPLOYMENT_READY = 'ready'
+
+assert ('trafficRelay' in conf), 'Ivan, please add traffic relay to config for this instance'
+assert ('bucket' in conf), 'Ivan, please add s3 bucket to config for this instance'
+
+# {systemId}.relay-bur.vmsproxy.hdw.mx
+TRAFFIC_RELAY_HOST = '{systemId}.' + conf['trafficRelay']['host']
+TRAFFIC_RELAY_PROTOCOL = 'https://'
+
+CLOUD_PORTAL_URL = conf['cloud_portal']['url'].replace('http:', 'https:')
+
+SKINS = ['blue', 'green', 'orange']
+DEFAULT_SKIN = 'blue'
+
+if LOCAL_ENVIRONMENT:
+    _HOST = 'https://dev2.cloud.hdw.mx'
+    conf["cloud_db"]["url"] = f"{_HOST}/cdb"
+    conf["cloud_storage"]["url"] = f"{_HOST}/storage"
+    conf["cloud_storages"]["url"] = f"{_HOST}/storages"
+
+    # CELERY_BROKER_URL = 'sqs://...'
+    # This setting is removed because every developer needs personal AWS credentials
+    # Ask Ivan V to provide you with config and credentials files for AWS and save them to ~/.aws/ directory
+    # Or go through file history in source control to find the last time it was here
+    # (changeset 49115a0427b3 or 4923e6b2575d)
+
 CLOUD_CONNECT = {
     'url': conf['cloud_db']['url'],
     # 'url': 'http://localhost:3346',
@@ -432,56 +529,11 @@ CLOUD_CONNECT = {
     'password_realm': 'VMS'
 }
 
-# whitelist for unauthorized IP addresses. Supports addresses with masks
-# read more: https://docs.python.org/3/library/ipaddress.html
-IP_WHITELISTS = {
-    'local': (
-        '127.0.0.1',        # localhost
-        '74.7.76.98',       # LA office
-        '95.31.136.2',      # Moscow office
-        '172.17.0.0/16',    # Docker
-        '192.168.0.0/16',   # local network
-        '10.0.0.0/16'       # Aws VPC
-        )
-}
-
-AUTH_USER_MODEL = 'api.Account'
-AUTHENTICATION_BACKENDS = ('api.account_backend.AccountBackend', )
-
-
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-"""
-A regex which restricts the URL's for which the CORS headers will be sent.
-Defaults to r'^.*$', i.e. match all URL's. Useful when you only need CORS
-on a part of your site, e.g. an API at /api/.
-
-Regex allows cors for the following api calls:
-1) /api/ping
-2) /api/login
-3) /api/systems/connect
-4) /api/systems/disconnect
-These urls need to be whitelisted because mediaserver use them.
-"""
-CORS_URLS_REGEX = r'^/api/(?:login|ping|systems/(?:dis)?connect)'  # Comment out for swagger-ui local.
-
-SESSION_COOKIE_SECURE = not LOCAL_ENVIRONMENT
-CSRF_COOKIE_SECURE = not LOCAL_ENVIRONMENT
-SESSION_COOKIE_AGE = 60 * 60 * 24  # 1 day
-AUTHENTICATED_SESSION_COOKIE_AGE = 60 * 60 * 24 * 14  # 2 weeks
+# Cloud storage settings
+CLOUD_STORAGE_URL = conf['cloud_storage']['url']
+CLOUD_STORAGES_URL = conf['cloud_storages']['url']
 
 USE_ASYNC_QUEUE = True
-
-ADMINS = conf['admins']
-LOGOUT_REDIRECT_URL = "/logout"
-
-EMAIL_SUBJECT_PREFIX = ''
-EMAIL_HOST = conf['smtp']['host']
-EMAIL_HOST_USER = conf['smtp']['user']
-EMAIL_HOST_PASSWORD = conf['smtp']['password']
-EMAIL_PORT = conf['smtp']['port']
-EMAIL_USE_TLS = conf['smtp']['tls']
-
 
 LINKS_LIVE_TIMEOUT = 300  # Five minutes
 
@@ -497,7 +549,6 @@ if os.path.isfile(common_list_file):
         PASSWORD_REQUIREMENTS['common_passwords'] = json.load(data_file)
 else:
     print(f"Warning: Can't read from {common_list_file}", file=sys.stderr)
-
 
 NOTIFICATIONS_CONFIG = {
     'activate_account': {
@@ -564,23 +615,5 @@ INTEGRATION_STORE_PAGE = '/integrations'
 FILLDATA_TRIES = 15
 FILLDATA_TIMEOUT = 60
 
-
-SUPERUSER_DOMAIN = '@networkoptix.com'  # Only user from this domain can have superuser permissions
-
-# Use if you want to check user level permissions only users with the can_csv_<model_label>
-# will be able to download csv files.
-DJANGO_EXPORTS_REQUIRE_PERM = False
-# Use if you want to disable the global django admin action. This setting is set to True by default.
-DJANGO_CSV_GLOBAL_EXPORTS_ENABLED = False
-
-# Push Notifications
-# Ask Roman Barsegian for config if you need push to work locally
-PUSH_NOTIFICATIONS_SETTINGS = {
-    'CONFIG': 'notifications.conf.PushConfig',
-    'MAX_RETRIES': 3,
-    'RETRY_INTERVAL': 20
-}
-
-# Cloud storage settings
-CLOUD_STORAGE_URL = conf['cloud_storage']['url']
-CLOUD_STORAGES_URL = conf['cloud_storages']['url']
+# Only user from this domain can have superuser permissions
+SUPERUSER_DOMAIN = '@networkoptix.com'
