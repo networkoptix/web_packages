@@ -260,7 +260,7 @@ ${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and cont
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}  //a
+${INTEGRATION TEST INTEGRATION LINK}  ${INTEGRATION TILE}//a
 ${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              //div[contains(@class, "card--body-name")]

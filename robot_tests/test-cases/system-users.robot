@@ -926,7 +926,7 @@ Local User email field can be left blank
     END 
     Should Be Equal    ${full name}    ${EMPTY}
     
- User list is available for owner and administrator
+User list is available for owner and administrator
     [Tags]    C76233    local_user
     @{local users} =    Local User Start   ${EMAIL OWNER}
     Log    Step 1

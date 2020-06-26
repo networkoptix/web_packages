@@ -124,7 +124,7 @@ Log In With Remember Me
     Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
-    Validate Log In
+    Validate Log In    ${email}
 
 Log in to Auto Tests System
     [Arguments]    ${email}
@@ -138,7 +138,7 @@ Validate Log In
     [Arguments]    ${email}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Check Language Logged In    ${email}    ${password}
+    Check Language Logged In    ${email}    ${BASE PASSWORD}
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}
