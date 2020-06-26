@@ -334,7 +334,7 @@ class Asset(models.Model):
 
     def __str__(self):
         if self.asset_type and self.is_cloud_portal:
-            return f"{self.name} - {self.customizations.first()}"
+            return f"{self.name} - {self.asset_type} - {self.customizations.first()}"
         return self.name
 
     @property
