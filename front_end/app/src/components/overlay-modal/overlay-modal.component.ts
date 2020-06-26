@@ -7,9 +7,16 @@ import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
+<<<<<<< HEAD
 
 import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
 import { distinctUntilChanged, switchMap }           from 'rxjs/operators';
+=======
+import {
+    Subscription, from, of, Observable, Subject, BehaviorSubject, interval, empty
+}                                    from 'rxjs';
+import { delay, concatMap, tap, distinctUntilChanged, switchMap, takeWhile }     from 'rxjs/operators';
+>>>>>>> Make refresh stop on system available
 
 interface Server {
     name: string,
@@ -99,8 +106,14 @@ export class NxOverlayModalComponent implements OnInit {
 
     setupObservers() {
         this.refresh$.pipe(
+<<<<<<< HEAD
             switchMap(res => res ? interval(1000) : empty())
         ).subscribe(() => {
+=======
+            // Whenever refresh emits this switches to a new interval observable.
+            switchMap(_ => this.appState.systemAvailable$.value ? empty() : interval(1000))
+        ).subscribe((timesIntervalCalled) => {
+>>>>>>> Make refresh stop on system available
             const untilRefresh = this.timeoutUntilRefresh$.value;
 
             if (!this.oneCheckAtATime && untilRefresh < 1) {
