@@ -227,7 +227,7 @@ export class NxDebugComponent {
         this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings)).then((data: any) => {
             const link = data.link;
             // @ts-ignore
-            this.window.protocolCheck(link, () => {
+            this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout, () => {
                 alert('Protocol not recognized');
             }, () => {
                 alert('Ok - protocol is working');

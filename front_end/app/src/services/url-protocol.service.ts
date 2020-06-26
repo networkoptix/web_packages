@@ -69,7 +69,7 @@ export class NxUrlProtocolService {
 
         settings = { ...settings, ...linkSettings };
 
-        const protocol = settings.native && this.LANG.clientProtocol ? this.LANG.clientProtocol : this.window.location.protocol;
+        const protocol = settings.native && this.LANG.clientProtocol?.() ||this.window.location.protocol;
         const host     = this.window.location.host;
 
         const getParams: linkSettings = { ...settings.actionParameters };
@@ -158,7 +158,7 @@ export class NxUrlProtocolService {
                 // Check on before unload
                 // @ts-ignore
                 // eslint-disable-next-line prefer-promise-reject-errors
-                this.window.protocolCheck(link, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
+                this.window.protocolCheck(link, this.CONFIG.openClientTimeout, this.CONFIG.openMobileClientTimeout, (_) => reject({ resultCode: this.CONFIG.openClientError }), () => {
                     setTimeout(() => {
                         this.accountService
                             .checkVisitedKey(authKey)

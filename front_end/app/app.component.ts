@@ -17,6 +17,7 @@ import { NxDialogsService }                        from './src/dialogs/dialogs.s
 import { NxConfigService, IConfig }                from './src/services/nx-config';
 
 require('what-input');
+require('./scripts/vendor/protocolcheck');
 
 @Component({
     selector : 'nx-app',
