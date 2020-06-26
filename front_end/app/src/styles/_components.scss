@@ -79,6 +79,7 @@
     .lead {
         @include typography.regular18;
         margin-bottom  : 48px;
+        min-height     : 28px;
         padding-bottom : 1px;
     }
 

@@ -261,7 +261,8 @@
             "name": "%SUBTITLE%",
             "value": "Welcome!",
             "description": "Text under asset name on landing page. One line (50-100 symbols)",
-            "type": "text"
+            "type": "text",
+            "optional": true
           },
           {
             "label": "Left block icon",
