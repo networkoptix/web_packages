@@ -9,7 +9,7 @@ import { NxAccountService }          from '../../services/account.service';
 import {
     Subscription, from, of, Observable, Subject, BehaviorSubject, interval, empty
 }                                    from 'rxjs';
-import { delay, concatMap, tap, distinctUntilChanged, switchMap }     from 'rxjs/operators';
+import { delay, concatMap, tap, distinctUntilChanged, switchMap, takeWhile }     from 'rxjs/operators';
 
 interface Server {
     name: string,
@@ -135,7 +135,7 @@ export class NxOverlayModalComponent implements OnInit {
     setupObservers() {
         this.refresh$.pipe(
             // Whenever refresh emits this switches to a new interval observable.
-            switchMap(_ => interval(1000))
+            switchMap(_ => this.appState.systemAvailable$.value ? empty() : interval(1000))
         ).subscribe((timesIntervalCalled) => {
             const untilRefresh = this.timeoutUntilRefresh$.value;
 
