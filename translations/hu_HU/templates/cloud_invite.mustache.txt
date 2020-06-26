@@ -1,6 +1,6 @@
 Üdvözöljük!
 
-Meghívást kapott a %CLOUD_NAME%.
+Meghívást kapott a %CLOUD_NAME%-hoz.
 {{#message.message}}
 
 {{ message.message }}
