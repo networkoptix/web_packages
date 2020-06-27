@@ -7,15 +7,17 @@ import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
+import { NxUtilsService }            from '../../services/utils.service';
 
 import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
 import { distinctUntilChanged, switchMap }           from 'rxjs/operators';
+import { Router, NavigationEnd } from '@angular/router';
 
 interface Server {
     name: string,
     ip: string,
     id: string,
-    status: string
+    url: string
 }
 
 @UntilDestroy({ checkProperties: true })
@@ -28,32 +30,7 @@ export class NxOverlayModalComponent implements OnInit {
     system: NxSystem
     CONFIG: IConfig;
     LANG: LanguageI18NStaticTypes;
-    servers: Partial<Server>[] = [
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        },
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        },
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        },
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        },
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        },
-        {
-            name : 'WIN_ULT',
-            ip   : '172.16.0.151'
-        }
-    ];
+    servers: Partial<Server>[] = [];
 
     serverId: string;
     nextInterval = 10;
@@ -77,7 +54,8 @@ export class NxOverlayModalComponent implements OnInit {
         languageService: NxLanguageProviderService,
         private appState: NxAppStateService,
         private systemService: NxSystemService,
-        private accountService: NxAccountService
+        private accountService: NxAccountService,
+        private router: Router
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -91,6 +69,13 @@ export class NxOverlayModalComponent implements OnInit {
                     this.system = system;
                     this.getServers();
                     this.serverId = this.system.moduleInfo.id;
+                    this.router.events.subscribe(route => {
+                        if (route instanceof NavigationEnd) {
+                            this.servers.forEach(server => {
+                                server.url = `${server.url}/#/${route.url}`;
+                            });
+                        }
+                    });
                 });
             });
         });
@@ -138,7 +123,11 @@ export class NxOverlayModalComponent implements OnInit {
     getServers() {
         return this.system.getServers().toPromise()
             .then(res => {
-                this.servers = res ? Object.entries(res).map(server => server[1]) : [];
+                this.servers = res
+                    ? Object.entries(res)
+                        .map(server => NxUtilsService.formatURL(server[1]))
+                        .filter(server => server.id !== this.serverId)
+                    : [];
                 return this.servers;
             })
             .catch(err => console.error(err));
