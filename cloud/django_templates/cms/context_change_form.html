@@ -54,7 +54,7 @@
                         {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
                     </label>
                     <div id="{{ field.name }}" class="ml-160">
-                        {% if field|is_ImageField and field.value %}
+                        {% if field.has_image_field and field.value %}
                             <div>
                                 {% if data_structure.optional and record_exists %}
                                     <label><input id="delete_{{ field.name }}" type="checkbox"
@@ -72,7 +72,7 @@
                                      src="data:image/png;base64,{{ field.value }}">
                             </div>
 
-                        {% elif field|is_FileField and field.value %}
+                        {% elif field.has_file_field and field.value %}
                             <div>
                                 {% if data_structure.optional and record_exists %}
                                     <label><input id="delete_{{ field.name }}" type="checkbox" name="delete_{{ field.name }}"

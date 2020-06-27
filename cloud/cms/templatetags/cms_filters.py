@@ -12,16 +12,6 @@ def portal_name(customization):
     return get_cloud_portal_asset(customization).name
 
 
-@register.filter
-def is_ImageField(field):
-    return type(field.field).__name__ == "ImageField"
-
-
-@register.filter
-def is_FileField(field):
-    return type(field.field).__name__ == "FileField"
-
-
 @register.simple_tag
 def is_protected(data_structure, asset):
     return data_structure.is_protected(asset) if data_structure else False

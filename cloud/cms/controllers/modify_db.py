@@ -587,7 +587,7 @@ def check_image_dimensions(data_structure_name,
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'width_le' in meta_dimensions and meta_dimensions['width_le'] < image_dimensions['width']:
-        error_msg = f"Image width must be equal to or less than {image_dimensions['width_le']}. Uploaded image's width is {image_dimensions['width']}."
+        error_msg = f"Image width must be equal to or less than {meta_dimensions['width_le']}. Uploaded image's width is {image_dimensions['width']}."
         size_error_msgs.append((data_structure_name, error_msg))
 
     if 'height_ge' in meta_dimensions and meta_dimensions['height_ge'] > image_dimensions['height']:

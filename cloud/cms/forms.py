@@ -140,7 +140,7 @@ class CustomContextForm(forms.Form):
                 widget_type = forms.Textarea(
                     attrs={'cols': 120, 'rows': 25, 'class': 'tinymce', 'placeholder': data_structure.placeholder})
 
-            elif data_structure.type == DataStructure.DATA_TYPES.image:
+            elif data_structure.has_image_field:
                 if not record_value:
                     record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.ImageField(label=ds_label,
@@ -153,9 +153,7 @@ class CustomContextForm(forms.Form):
                     self.fields[data_structure.name].widget.attrs['size'] = file_size
                 continue
 
-            elif data_structure.type in [DataStructure.DATA_TYPES.file,
-                                         DataStructure.DATA_TYPES.external_file,
-                                         DataStructure.DATA_TYPES.external_image]:
+            elif data_structure.has_file_field:
                 if not record_value:
                     record_value = data_structure.placeholder or data_structure.default
                 self.fields[data_structure.name] = forms.FileField(label=ds_label,

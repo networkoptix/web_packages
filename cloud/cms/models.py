@@ -764,6 +764,16 @@ class DataStructure(models.Model):
     def is_image(self):
         return self.type in [DataStructure.DATA_TYPES.image, DataStructure.DATA_TYPES.external_image]
 
+    @property
+    def has_image_field(self):
+        return self.type == DataStructure.DATA_TYPES.image
+
+    @property
+    def has_file_field(self):
+        return self.type in [DataStructure.DATA_TYPES.file,
+                             DataStructure.DATA_TYPES.external_file,
+                             DataStructure.DATA_TYPES.external_image]
+
 
 # CMS settings. Release engineer can change that
 class UserGroupsToAssetPermissions(models.Model):
