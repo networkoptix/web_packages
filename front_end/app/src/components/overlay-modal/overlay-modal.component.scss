@@ -8,6 +8,7 @@
     width: 100%;
     height: 100%;
     z-index: 1200;
+    overflow-y: scroll;
     background-color: rgba($dark16, 0.8);
     transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
     .overlay-modal-header {
@@ -74,34 +75,47 @@
     .overlay-modal {
         margin-top: 64px;
         background-color: $light1;
+        max-height: calc(100vh - 580px);
+        min-height: 160px;
+        overflow-y: auto;
         width: 340px;
         padding: 40px;
         border-radius: 8px;
+        &::-webkit-scrollbar {
+            visibility: hidden;
+        }
         &-body {
-            &-title {
+            .overlay-modal-title {
                 @include typography.regular13;
                 color: $dark9;
             }
-            button {
-                background-color: $light1;
-                color: $dark9;
-                height: 26px;
-                padding: 0 8px 0 0;
-                svg-icon {
-                    svg g, path {
-                        fill: $dark9;
+            .overlay-modal-servers {
+                list-style-type: none;
+                a {
+                    background-color: $light1;
+                    display: inline-flex;
+                    align-items: center;
+                    color: $dark9;
+                    height: 26px;
+                    padding: 0 8px 0 0;
+                    text-decoration: none;
+                    svg-icon {
+                        svg path.st0 {
+                            fill: $dark9 !important;
+                            fill-opacity: 1;
+                        }
                     }
-                }
-                span.server-name {
-                    @include typography.medium13;
-                }
-                span.server-ip {
-                    @include typography.regular13;
-                    color: $light16;
-                }
-                &:hover {
-                    background-color: $light3;
-                    border-radius: 2px;
+                    span.server-name {
+                        @include typography.medium13;
+                    }
+                    span.server-ip {
+                        @include typography.regular13;
+                        color: $light16;
+                    }
+                    &:hover {
+                        background-color: $light3;
+                        border-radius: 2px;
+                    }
                 }
             }
         }

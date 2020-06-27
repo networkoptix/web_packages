@@ -17,17 +17,19 @@
             [translateParams]="{ time: (timeoutUntilRefresh$ | async) }"
         ></p>
     </div>
-    <div class="overlay-modal">
+    <div class="overlay-modal" *ngIf="servers && servers.length">
         <div class="overlay-modal-body">
             <p class="overlay-modal-title mb-3" translate>You can try to connect to other servers in this system:</p>
-            <div class="overlay-modal-servers">
-                <button *ngFor="let server of servers" [routerLink]="" (click)="checkOtherServer(server)">
-                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + CONFIG.menus.systemSettings.servers.icon + '.svg'"
-                        [svgStyle]="{ 'height.px': '20' }"></svg-icon>
-                    <span class="server-name pl-1">{{server.name}}</span>
-                    <span class="server-ip">{{server.ip}}</span>
-                </button>
-            </div>
+            <ul class="overlay-modal-servers pl-0 mb-0">
+                <li *ngFor="let server of servers">
+                    <a target="_blank" [href]="server.url">
+                        <svg-icon nx-add-svg-src [src]="CONFIG.icons.dir + CONFIG.menus.systemSettings.servers.icon + '.svg'"
+                            [svgStyle]="{ 'height.px': '20' }"></svg-icon>
+                        <span class="server-name px-1">{{server.name}}</span>
+                        <span class="server-ip">{{server.ip}}</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
