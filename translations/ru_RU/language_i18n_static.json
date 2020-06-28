@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Текущий пароль указан неверно.",
         "oldSafariNotSupported": "Версии Safari старше 10 не поддерживаются",
         "passwordMismatch": "Неправильный пароль",
-        "systemUnavailable": "{{failedSystem}} в данный момент недоступна. Повторите попытку через несколько минут или обратитесь в службу поддержки.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "система",
         "unknownError": "Произошла непредвиденная ошибка",
         "unknownMergeError": "Неизвестная ошибка. Вы можете попробовать обновить страницу и повторить попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Учетная запись уже активирована или неверный код подтверждения",
         "wrongCodeRestore": "Код подтверждения уже используется или неверен",
         "wrongParameters": "Некоторые параметры в форме неверны",
-        "licenseFail": "Не удалось активировать лицензию. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Не удалось активировать лицензию из-за таймаута соединения. Пожалуйста, убедитесь, что сервер онлайн, и повторите попытку.",
-        "licenseServerError": "Не удалось активировать лицензию. Сервер лицензий не ответил. Пожалуйста, попробуйте еще раз или обратитесь в службу поддержки.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Невозможно подключиться к {{cloudName}}, проверьте подключение к сети."
     },
     "integration": {

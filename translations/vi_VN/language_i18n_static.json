@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Mật khẩu hiện tại không đúng.",
         "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
         "passwordMismatch": "Sai mật khẩu",
-        "systemUnavailable": "{{failedSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ với bộ phận hỗ trợ.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "hệ thống",
         "unknownError": "Đã xảy ra lỗi không mong muốn",
         "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
-        "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
-        "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận Hỗ trợ khách hàng.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn."
     },
     "integration": {

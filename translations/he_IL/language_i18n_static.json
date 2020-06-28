@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "הסיסמא הנוכחית אינה נכונה.",
         "oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",
         "passwordMismatch": "סיסמא שגויה",
-        "systemUnavailable": "{{failedSystem}} אינו ניתן להשגה כרגע. נסה שוב בעוד מספר דקות או צור קשר עם התמיכה.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "המערכת",
         "unknownError": "אירעה שגיאה לא צפויה",
         "unknownMergeError": "שגיאה לא ידועה, באפשרותך לנסות לרענן את הדף ולנסות שוב. אם הבעיה נמשכת, צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "החשבון כבר הופעל או שקוד האישור שגוי",
         "wrongCodeRestore": "קוד האישור כבר בשימוש או שגוי",
         "wrongParameters": "פרמטרים מסוימים בטופס אינם נכונים",
-        "licenseFail": "הפעלת הרישיון נכשלה. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "הפעלת הרישיון נכשלה עקב חוסר תגובה לחיבור. אנא וודא שהשרת מקוון ונסה שוב.",
-        "licenseServerError": "הפעלת הרישיון נכשלה. שרת הרישיונות לא הגיב. אנא נסה שוב או צור קשר עם שירות הלקוחות.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "אין אפשרות להתחבר ל- {{cloudName}}, אנא בדוק את חיבור הרשת שלך."
     },
     "integration": {

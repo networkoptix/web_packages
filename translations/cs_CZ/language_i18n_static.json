@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Aktuální heslo je nesprávné.",
         "oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
         "passwordMismatch": "Chybné heslo",
-        "systemUnavailable": "Systém {{failedSystem}} je v současné době nedostupný. Opakujte akci za několik minut nebo kontaktujte podporu.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systém",
         "unknownError": "Došlo k neočekávané chybě",
         "unknownMergeError": "Neznámá chyba. POkuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
         "wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
         "wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
-        "licenseFail": "Aktivace licence se nezdařila. Zkuste to prosím znovu nebo kontaktujte zákaznickou podporu.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Nepodařilo se aktivovat licenci z důvodu vypršení časového limitu připojení. Ujistěte se, že je server online a zkuste to znovu.",
-        "licenseServerError": "Aktivace licence se nezdařila. Licenční server neodpověděl. Zkuste to prosím znovu nebo kontaktujte zákaznickou podporu.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Nelze se připojit k {{cloudName}}, zkontrolujte připojení k síti."
     },
     "integration": {
