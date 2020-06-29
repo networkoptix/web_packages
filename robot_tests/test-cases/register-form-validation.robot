@@ -1,6 +1,5 @@
 *** Settings ***
 Resource          ../resource.robot
-Resource          ../resources/register-form-validation-resource.robot
 Suite Setup       Open Browser and go to URL    ${url}/register
 Test Template     Test Register Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
