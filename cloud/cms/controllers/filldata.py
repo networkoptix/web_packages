@@ -245,13 +245,16 @@ def generate_languages_json(save_location, language_codes, preview):
     save_content(target_file_name, json.dumps(languages_json, ensure_ascii=False))
 
 
-def init_skin(asset, preview=False, workers=2):
+def can_update_static(asset: Asset):
     if not asset.is_cloud_portal:
         raise APIForbiddenException("Can not run update static files on non cloud_portal assets")
 
     if not asset.can_preview_on_portal:
         raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
 
+
+def init_skin(asset, preview=False, workers=2):
+    can_update_static(asset)
     # 1. read skin for this customization
     customization_name = asset.customizations.first().name
     skin = asset.read_global_value('%SKIN%')
@@ -280,142 +283,156 @@ def fill_content(asset,
                  changed_context=None,
                  send_to_review=False,
                  workers=2):
-
-    # if preview=False
-    #   retrieve latest accepted version
-    #   if version_id is not None and version_id!=latest_id - raise exception
-    # else
-    #   if version_id is None - preview latest available datarecords
-    #   else - preview specific version
-    if not asset.is_cloud_portal:
-        raise APIForbiddenException("Can not run update static files on non cloud_portal assets.")
-
-    if not asset.can_preview_on_portal:
-        raise APIForbiddenException("Can not update static files for cloud portal on other customizations.")
-
-    if preview:  # Here we decide, if we need to change preview state
-        # if incremental was false initially - we keep it as false
-        if version_id:
-            if asset.preview_status != Asset.PREVIEW_STATUS.review:
-                # When previewing awaiting version and state is draft
-                # if we are just sending version to review - do incremental update
-                if not send_to_review:
-                    incremental = False  # otherwise - do full update and change state to review
-                asset.change_preview_status(Asset.PREVIEW_STATUS.review)
-            else:
-                if incremental:
-                    return  # When previewing awaiting version and state is review - do nothing
-                pass
-        else:  # draft
-            if asset.preview_status == Asset.PREVIEW_STATUS.review:
+    def calculate_preview_state():
+        # if preview=False
+        #   retrieve latest accepted version
+        #   if version_id is not None and version_id!=latest_id - raise exception
+        # else
+        #   if version_id is None - preview latest available datarecords
+        #   else - preview specific version
+        nonlocal version_id, incremental, changed_context
+        if preview:  # Here we decide, if we need to change preview state
+            # if incremental was false initially - we keep it as false
+            if version_id:
+                if asset.preview_status != Asset.PREVIEW_STATUS.review:
+                    # When previewing awaiting version and state is draft
+                    # if we are just sending version to review - do incremental update
+                    if not send_to_review:
+                        incremental = False  # otherwise - do full update and change state to review
+                    asset.change_preview_status(Asset.PREVIEW_STATUS.review)
+                elif incremental:
+                    return False  # When previewing awaiting version and state is review - do nothing
+            # draft
+            elif asset.preview_status == Asset.PREVIEW_STATUS.review:
                 # When saving draft and state is review - do incremental update
                 # applying all drafted changes and change state to draft
                 # incremental = True
                 asset.change_preview_status(Asset.PREVIEW_STATUS.draft)
                 changed_context = None  # remove changed context so that we do full incremental update
-            else:
+            # else:
                 # When saving draft for context and state is draft - do incremental update only for changed context
                 # update only changed context
                 # keep incremental value
-                pass
-
-    global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
-    global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
-
-    if not preview:
-        if version_id is not None:
-            raise Exception(
-                'Only latest accepted version can be published\
-                 without preview flag, version_id id forbidden')
-        version = ContentVersion.objects.filter(
-            asset_id=asset.id, accepted_date__isnull=False).order_by('accepted_date').last()
-        if version:
-            version_id = version.id
         else:
-            version_id = 0
-            incremental = False  # no version - do full update using default values
-        if asset.is_cloud_portal:
+            if version_id is not None:
+                raise Exception(
+                    'Only latest accepted version can be published\
+                     without preview flag, version_id id forbidden')
+            version = ContentVersion.objects.filter(
+                asset_id=asset.id, accepted_date__isnull=False).order_by('accepted_date').last()
+            if version:
+                version_id = version.id
+            else:
+                version_id = 0
+                incremental = False  # no version - do full update using default values
             cloud_portal_customization_cache(asset.asset_root, force=True)
+        return True
 
-    if incremental and not changed_context:
-        # filter records changed in this version
-        # get their datastructures
-        # detect their contexts
-
-        changed_records = DataRecord.objects.filter(version_id=version_id, asset=asset)
-        # in case version_id is none - we need to filter by asset as well
+    def get_changed_if_no_version():
+        nonlocal changed_records
         if not version_id:  # if version_id is None - check if records are actually latest
             changed_records_ids = [DataRecord.objects.
-                                   filter(language_id=record.language_id,
-                                          data_structure_id=record.data_structure_id,
-                                          asset=asset).
-                                   latest('created_date').id for record in changed_records]
-            changed_records = changed_records.filter(id__in=changed_records_ids)
-
-        changed_context_ids = list(changed_records.values_list('data_structure__context_id', flat=True).distinct())
-        changed_contexts = Context.objects.filter(id__in=changed_context_ids)
-
-        changed_global_contexts = changed_contexts.filter(is_global=True)
-        if changed_global_contexts.exists():  # global context was changed - force full rebuild
-            incremental = False
-        changed_contexts = changed_contexts.all()
-
-    if changed_context:  # if we want to update only fixed context
-        if changed_context.is_global:
-            incremental = False
-        else:
-            changed_contexts = [changed_context]
-            changed_records = DataRecord.objects.filter(data_structure__context=changed_context,
-                                                        version_id=version_id,
-                                                        asset=asset)
-            if not version_id:
-                changed_records_ids = [DataRecord.objects.
                                        filter(language_id=record.language_id,
-                                              data_structure_id=record.data_structure.id,
+                                              data_structure_id=record.data_structure_id,
                                               asset=asset).
                                        latest('created_date').id for record in changed_records]
-                changed_records = changed_records.filter(id__in=changed_records_ids)
+            changed_records = changed_records.filter(id__in=changed_records_ids)
 
-    if not incremental:  # If not incremental - iterate all contexts and all languages
-        changed_contexts = Context.objects.filter(asset_type=asset.asset_type)
-        changed_languages = asset.languages_list
+    def set_changed():
+        nonlocal incremental, changed_records, changed_contexts, changed_languages, default_language_code, \
+            languages_list
+        if incremental:
+            if not changed_context:
+                # filter records changed in this version
+                # get their datastructures
+                # detect their contexts
 
-    default_language_code = asset.default_language.code
-    languages_list = asset.languages_list
+                changed_records = DataRecord.objects.filter(version_id=version_id, asset=asset)
+                # in case version_id is none - we need to filter by asset as well
+                get_changed_if_no_version()
 
-    # Email templates are skipped here because when a email is sent, the celery worker retrieves
-    # the template from the database and fills the template with the correct values before sending the email.
-    # If we pass in a changed context its not a queryset object so we cannot use filter or exclude it.
-    if type(changed_contexts) is not list:
-        changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
+                changed_context_ids = list(
+                    changed_records.values_list('data_structure__context_id', flat=True).distinct())
+                changed_contexts = Context.objects.filter(id__in=changed_context_ids)
 
-    thread_error = False
-    # Creates a pool of thread works
-    skin = asset.read_global_value('%SKIN%')
-    with ThreadPoolExecutor(max_workers=workers) as executor:
-        # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
-        futures = []
-        for context in changed_contexts:
-            # logger.info("Process context: " + context.name + " file:" + context.file_path)
-            if incremental:
-                changed_languages = list(changed_records.filter(data_structure__context_id=context.id).
-                                         values_list('language__code', flat=True).distinct())
+                changed_global_contexts = changed_contexts.filter(is_global=True)
+                if changed_global_contexts.exists():  # global context was changed - force full rebuild
+                    incremental = False
+                changed_contexts = changed_contexts.all()
 
-                if default_language_code in changed_languages:
-                    # If default language changes - it can affect all languages in the context
-                    changed_languages = languages_list
-            languages = Language.objects.filter(code__in=changed_languages)
-            # Add the context to the list of tasks for the thread pool.
-            futures.append(executor.submit(thread_context, context, asset, languages, skin,
-                                           preview, version_id, global_contexts, global_contexts_dict))
+            elif changed_context.is_global:
+                incremental = False
 
-        # Catch any errors raise by thread workers.
-        for future in futures:
-            try:
-                future.result()
-            except Exception as e:
-                logger.warning(e)
-                thread_error = True
+            else:  # if we want to update only fixed context
+                changed_contexts = [changed_context]
+                changed_records = DataRecord.objects.filter(data_structure__context=changed_context,
+                                                            version_id=version_id,
+                                                            asset=asset)
+                get_changed_if_no_version()
+
+        if not incremental:  # If not incremental - iterate all contexts and all languages
+            changed_contexts = Context.objects.filter(asset_type=asset.asset_type)
+            changed_languages = asset.languages_list
+
+        default_language_code = asset.default_language.code
+        languages_list = asset.languages_list
+
+        # Email templates are skipped here because when a email is sent, the celery worker retrieves
+        # the template from the database and fills the template with the correct values before sending the email.
+        # If we pass in a changed context its not a queryset object so we cannot use filter or exclude it.
+        if type(changed_contexts) is not list:
+            changed_contexts = changed_contexts.exclude(name__startswith=EMAIL_TEMPLATES)
+
+    def run_workers():
+        nonlocal changed_languages
+        global_contexts = Context.objects.filter(is_global=True, hidden=False, asset_type=asset.asset_type)
+        global_contexts_dict = global_contexts_to_dict(global_contexts, asset)
+        error = False
+        skin = asset.read_global_value('%SKIN%')
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            # Stores the tasks that the thread pool runs. This is needed for checking for exceptions
+            futures = []
+            for context in changed_contexts:
+                # logger.info("Process context: " + context.name + " file:" + context.file_path)
+                if incremental:
+                    changed_languages = list(changed_records.filter(data_structure__context_id=context.id).
+                                             values_list('language__code', flat=True).distinct())
+
+                    if default_language_code in changed_languages:
+                        # If default language changes - it can affect all languages in the context
+                        changed_languages = languages_list
+                languages = Language.objects.filter(code__in=changed_languages)
+                # Add the context to the list of tasks for the thread pool.
+                futures.append(executor.submit(thread_context, context, asset, languages, skin,
+                                               preview, version_id, global_contexts, global_contexts_dict))
+
+            # Catch any errors raise by thread workers.
+            for future in futures:
+                try:
+                    future.result()
+                except Exception as e:
+                    logger.warning(e)
+                    error = True
+        return error
+
+    # Start fill_content
+    # Check if asset should be filled
+    can_update_static(asset)
+
+    # Set preview state
+    if not calculate_preview_state():
+        return
+
+    # Get changed
+    changed_contexts = None
+    changed_records = None
+    changed_languages = None
+    default_language_code = None
+    languages_list = None
+    set_changed()
+
+    # Run workers
+    thread_error = run_workers()
 
     generate_languages_json(asset.asset_root, languages_list,  preview)
     if thread_error:
