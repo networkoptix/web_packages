@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Salasana on virheellinen.",
         "oldSafariNotSupported": "Safari-selaimen versio 10 vanhempia ei tueta",
         "passwordMismatch": "Väärä salasana",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "järjestelmä",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Tuntematon virhe. Voit yrittää päivittää sivua ja toistaa yrityksen. Jos ongelma jatkuu - ota yhteyttä <a href=\"%SUPPORT_LINK%\" target=\"_blank\">tukeen</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Tili on jo aktivoitu tai vahvistuskoodi on virheellinen",
         "wrongCodeRestore": "Vahvistuskoodi on jo käytetty tai virheellinen",
         "wrongParameters": "Jotkin lomakkeen parametrit ovat virheellisiä",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

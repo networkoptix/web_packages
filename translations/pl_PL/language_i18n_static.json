@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Bieżące hasło jest nieprawidłowe.",
         "oldSafariNotSupported": "Wersje Safari starsze niż 10 nie są obsługiwane",
         "passwordMismatch": "Nieprawidłowe hasło",
-        "systemUnavailable": "{{failedSystem}} jest obecnie nieosiągalny. Spróbuj ponownie za kilka minut lub skontaktuj się z pomocą techniczną.",
+        "systemUnavailable": "System {{failedSystem}} jest obecnie niedostępny. Spróbuj ponownie za kilka minut lub skontaktuj się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
         "thisSystem": "system",
         "unknownError": "Wystąpił nieoczekiwany błąd",
         "unknownMergeError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
         "wrongCodeRestore": "Kod potwierdzenia został już użyty lub jest nieprawidłowy",
         "wrongParameters": "Niektóre parametry na formularzu są niepoprawne",
-        "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
+        "licenseFail": "Nie udało się aktywować licencji. Spróbuj ponownie lub skontaktuj się z pomocą techniczną.",
         "licenseTimeout": "Nie udało się aktywować licencji z powodu przekroczenia limitu czasu połączenia. Upewnij się, że serwer jest online i spróbuj ponownie.",
-        "licenseServerError": "Nie udało się aktywować licencji. Serwer licencji nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
+        "licenseServerError": "Nie udało się aktywować licencji. Serwer licencyjny nie odpowiedział. Spróbuj ponownie lub skontaktuj się z działem obsługi klienta.",
         "networkConnection": "Nie można połączyć się z {{cloudName}}, proszę sprawdzić połączenie sieciowe."
     },
     "integration": {

@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Aktuelles Passwort ist falsch.",
         "oldSafariNotSupported": "Versionen von Safari älter als 10 werden nicht unterstützt",
         "passwordMismatch": "Falsches Passwort",
-        "systemUnavailable": "{{failedSystem}} ist derzeit nicht erreichbar. Versuchen Sie es in wenigen Minuten erneut oder wenden Sie sich an den Support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "das System",
         "unknownError": "Es ist ein unerwarteter Fehler aufgetreten",
         "unknownMergeError": "Unbekannter Fehler. Sie können versuchen, die Seite zu aktualisieren und den Versuch zu wiederholen. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an den <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Account ist bereits aktiviert oder der Bestätigungscode ist falsch",
         "wrongCodeRestore": "Bestätigungscode wurde bereits verwendet oder ist falsch",
         "wrongParameters": "Einige Parameter in dem Formular sind falsch",
-        "licenseFail": "Lizenz konnte nicht aktiviert werden. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundensupport.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Lizenz konnte aufgrund eines Verbindungszeitlimits nicht aktiviert werden. Stellen Sie sicher, dass der Server online ist, und versuchen Sie es erneut.",
-        "licenseServerError": "Lizenz konnte nicht aktiviert werden. Der Lizenzserver hat nicht geantwortet. Bitte versuchen Sie es erneut oder wenden Sie sich an den Kundendienst.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Verbindung zu {{cloudName}} kann nicht hergestellt werden. Überprüfen Sie Ihre Netzwerkverbindung."
     },
     "integration": {
