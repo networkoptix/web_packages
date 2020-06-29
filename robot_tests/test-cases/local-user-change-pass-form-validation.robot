@@ -1,7 +1,7 @@
 *** Settings ***
 Resource          ../resource.robot
 Suite Setup       Setup
-Suite Teardown    Delete All Local Users
+Suite Teardown    
 Test Template     Test Passwords Invalid
 Test Teardown     Run Keyword If Test Failed    Restart
 Force Tags        form    Threaded File
@@ -9,7 +9,8 @@ Force Tags        form    Threaded File
 *** Variables ***
 ${url}    ${ENV}
 ${valid email}          noptixqa+valid@gmail.com
-
+${password}               ${BASE PASSWORD}
+${email}                  ${EMAIL OWNER}
 ${CURRENT PASSWORD IS REQUIRED}
 ...    //span[contains(@class, 'input-error') and contains(text(),"${CURRENT PASSWORD IS REQUIRED TEXT}")]
 
@@ -89,6 +90,7 @@ Test Passwords Invalid
     [Arguments]    ${new pw}
     ${user} =    Set Variable    cloudAdmin
     Log    Change password for ${user}
+    Wait Until Element is Visible    //span[text()="Local+${user}"]
     Click Element    //span[text()="Local+${user}"]
     Wait Until Elements Are Visible
     ...    ${LOCAL USER LOGIN}
@@ -100,15 +102,9 @@ Test Passwords Invalid
     
 Restart
     Click Button    //form[@name="changePasswordForm"]//button[text()="Cancel"]
-    Delete All Local Users
     Common Restart Logout    ${url}
     Setup
     
 Setup
     Open Browser and go to URL    ${url}
-    @{local users} =    Create List    cloudAdmin    viewer
-    @{local users} =    Create Local Users via API    ${AUTO SYS AUTH}    ${AUTO SYS IP}    ${local users}
-    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
-    Log In    ${EMAIL OWNER}    ${BASE PASSWORD}     button=None
-    Wait Until Element is Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}      
+    Local User Start    ${email}    
