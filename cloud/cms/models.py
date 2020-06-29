@@ -628,15 +628,17 @@ class DataStructure(models.Model):
 
         # try to get translated content
         if self.translatable:
-            content_record_default = content_record.filter(language=asset.customizations.first().default_language)
-            if language:
-                content_record_translated = content_record.filter(language=language)
-                if not content_record_translated.exists() and asset.is_cloud_portal:
-                    content_record = content_record_default
-                else:
-                    content_record = content_record_translated
-            elif asset.is_cloud_portal:
+            default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+            content_record_language = content_record.filter(language=language)
+            content_record_default = content_record.filter(language=default_lang)
+            content_record_english = content_record.filter(language__code='en_US')
+
+            if language and content_record_language.exists():
+                content_record = content_record_language
+            elif language != default_lang and content_record_default.exists():
                 content_record = content_record_default
+            else:
+                content_record = content_record_english
 
         if content_record.exists():
             if not version_id:
