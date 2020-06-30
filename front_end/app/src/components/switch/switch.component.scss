@@ -27,18 +27,20 @@
             .switch {
                 .switch-element {
                     .slider {
+                        background-color: $light7;
                         &.disable {
                             background-color: $light6 !important;
                         }
-                    
-                        background-color: $red_l2;
+                        &.show-warning {
+                            background-color: $red_l2 !important;
+                        }
                     }
                     input.selected + .slider {
-                        background-color: $green_l1;
+                        background-color: $green_l1 !important;
                     }
                     
                     input:focus + .slider {
-                        box-shadow: 0 0 1px $green_l1;
+                        box-shadow: 0 0 1px $green_l1 !important;
                     }
                 }
             }
@@ -63,16 +65,24 @@
     left: 0;
     right: 0;
     bottom: 0;
+    background-color: $light8;
+
     &.disable {
         background-color: $light8;
         &:hover {
             background-color: $light6 !important;
         }
     }
-    background-color: $red_l1;
+
+    &.show-warning {
+        background-color: $red_l1;
+        &:hover {
+            background-color: $red_l2 !important;
+        }
+    }
 
     &:hover {
-        background-color: $red_l2;
+        background-color: $light7;
     }
 
     &:before {
@@ -96,7 +106,7 @@ input.selected + .slider {
     }
     background-color: $green_main;
     &:hover {
-        background-color: $green_l1;
+        background-color: $green_l1 !important;
     }
 }
 
@@ -144,6 +154,7 @@ input.selected + .slider:before {
     &.disable {
         background: $light12;
     }
+
     background: $green_l2;
     width: 2px;
     left: 8px;
@@ -151,11 +162,16 @@ input.selected + .slider:before {
 
 .circle {
     @extend .slider-icon;
-    &.disable {
-        border: 2px solid $light12;
-    }
-    border: 2px solid $red_d1;
+    border: 2px solid $light12;
     border-radius: 50%;
     width: 9px;
     right: 4px;
+
+    &.disable {
+        border: 2px solid $light12;
+    }
+
+    &.show-warning {
+        border: 2px solid $red_d1;
+    }
 }
