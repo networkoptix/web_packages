@@ -1,4 +1,5 @@
 import { IConfig } from './config-types';
+import { environment } from '../../../environments/environment';
 
 export const nxConfig: IConfig = {
     alertTimeout : 3 * 1000, // Alerts are shown for 3 seconds
@@ -240,7 +241,7 @@ export const nxConfig: IConfig = {
             baseUrl: '/health/'
         },
         systemSettings: {
-            baseUrl : '/systems/',
+            baseUrl : environment.isLocal ? '/settings/' : '/systems/',
             admin   : {
                 id   : 'admin',
                 icon : 'systems',

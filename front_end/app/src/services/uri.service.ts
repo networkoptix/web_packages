@@ -125,32 +125,31 @@ export class NxUriService {
      *
      * To get childRoute:
      *
-     *      getSystemSettingsRoute({ childRoute: ChildRoutes.CAMERAS })
+     *      getSystemSettingsRoute({ systemId, childRoute: ChildRoutes.CAMERAS })
      *
      *
      * To get route based on param:
      *
-     *      getSystemSettingsRoute({ cameraId: 'id-string-here'})
+     *      getSystemSettingsRoute({ systemId, cameraId: 'id-string-here'})
      *
      *
      * @param params - Optionally accepts object with a systemId(for cloud) property and either a childRoute ex. { childRoute: cameras } or a param to target such as { cameraId: id-string-here }
      */
     getSystemSettingsRoute(params: RouteResolverParams = {}) {
-        const { systemId, ..._otherParams } = params;
+        const { systemId = '', ..._otherParams } = params;
         const otherParams = Object.entries(_otherParams);
         const routesConfig = NxConfigService.resolveLocalOrCloud(localSettingsRoutes, cloudSettingsRoutes);
-        let base = routesConfig[0].path;
+        let base = this.CONFIG.menus.systemSettings.baseUrl;
         let childRoute = '';
-
         if (!this.CONFIG.isLocal) {
-            base.replace(':systemId', params.systemId);
+            base += params.systemId;
         }
 
         if (otherParams.length) {
             const [[param, value]] = otherParams;
             const child = { ...routesConfig[0].children.find(({ path }) => path.includes(param)) };
             const isChildRoute = param === 'childRoute';
-            childRoute = '/' + (isChildRoute ? value : child.path.replace(':' + param, <string> value));
+            childRoute = '/' + (isChildRoute ? value : child.path.replace(':' + param, <string> value)) + '/';
 
             if (this.CONFIG.isLocal && isChildRoute && value === ChildRoutes.HEALTH || value === ChildRoutes.VIEW) {
                 base = '/';

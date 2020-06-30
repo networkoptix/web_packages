@@ -13,18 +13,16 @@ import { NxSystemServersModule }            from './settings/servers/servers.mod
 import { NxSystemAdminComponent }           from './settings/admin/admin.component';
 import { NxSystemUsersComponent }           from './settings/users/users.component';
 import { NxSystemServersComponent }         from './settings/servers/servers.component';
-import { NxNoSystemsComponent }             from './no-systems/no-systems.component';
-import { ApplyGuard, AuthGuard, SystemGuard } from '../../routeGuards';
-import { NxCamerasComponent } from './settings/cameras/cameras.component';
-import { NxCamerasModule } from './settings/cameras/cameras.module';
-import { MenuModule } from '../../menu';
+import {
+    ApplyGuard, AuthGuard, SystemGuard
+}                                           from '../../routeGuards';
+import { NxCamerasComponent }               from './settings/cameras/cameras.component';
+import { NxCamerasModule }                  from './settings/cameras/cameras.module';
+import { MenuModule }                       from '../../menu';
+import { NxSystemLicensesComponent }        from './settings/licenses/licenses.component';
+import { NxSystemLicensesModule }           from './settings/licenses/licenses.module';
 
 export const localSettingsRoutes: Routes = [
-    {
-        path       : '',
-        redirectTo : 'settings',
-        pathMatch  : 'full'
-    },
     {
         path        : 'settings',
         component   : NxSystemSettingsComponent,
@@ -66,8 +64,18 @@ export const localSettingsRoutes: Routes = [
                 path          : 'cameras/:cameraId',
                 component     : NxCamerasComponent,
                 canDeactivate : [ApplyGuard]
+            },
+            {
+                path        : 'licenses',
+                component   : NxSystemLicensesComponent,
+                canActivate : [SystemGuard]
             }
         ]
+    },
+    {
+        path       : '',
+        redirectTo : 'settings',
+        pathMatch  : 'full'
     }
 ];
 
@@ -84,6 +92,7 @@ export const localSettingsRoutes: Routes = [
         NxSystemUsersModule,
         NxSystemServersModule,
         NxCamerasModule,
+        NxSystemLicensesModule,
         RouterModule.forChild(localSettingsRoutes),
         MenuModule
     ],

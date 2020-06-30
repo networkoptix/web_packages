@@ -103,7 +103,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
                 changes.system.currentValue.canViewInfo();
 
             if (this.canSeeInfo) {
-                this.fullInfoPath = this.uriService.getSystemSettingsRoute({ childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
+                this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.servers.path;
             }
         }
 

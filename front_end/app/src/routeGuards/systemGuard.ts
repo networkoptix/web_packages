@@ -33,6 +33,9 @@ export class SystemGuard implements CanActivate {
             return snapshot.params.systemId;
         }).params.systemId;
 
+        // TODO Update SystemGuard for webadmin on CLOUD-5381
+        if (this.CONFIG.isLocal) return true;
+
         return systemId && currentRoute && this.accountService
             .get()
             .then(account => {

@@ -130,7 +130,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                     });
                     this.canSeeInfo = true;
                     if (this.canSeeInfo) {
-                        this.fullInfoPath = this.uriService.getSystemSettingsRoute({ childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;
+                        this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;
                     }
                 } else {
                     this.showPreloader = false;
@@ -655,12 +655,12 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 const urlSystem = systemId ? `/${systemId}` : '';
                 this.parsedCameraId = this.system.cameras[cameraIndex].id.replace(/\s|\{|\}/g, '');
                 this.uriService
-                    .updateURI(`${this.CONFIG.menus.systemSettings.baseUrl}${urlSystem}/cameras/${this.parsedCameraId}`)
+                    .updateURI(this.uriService.getSystemSettingsRoute({ systemId: this.system.id, cameraId: this.parsedCameraId }))
                     .catch(error => {
                         console.error(error);
                     });
             }
-            this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
+            this.cameraViewPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.VIEW }) + this.parsedCameraId;
             this.menuService.detail = this.parsedCameraId;
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;

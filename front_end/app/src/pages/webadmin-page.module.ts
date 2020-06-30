@@ -14,6 +14,7 @@ import { NxGridLayoutModule }        from './layout/layout.module';
 import { Nx500Module }               from './500/500.module';
 import { Nx503Module }               from './503/503.module';
 import { NxSystemModule }            from './systems/webadmin-system.module';
+import { NxSystemViewModule }        from './systems/view/view.module';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { NxSystemModule }            from './systems/webadmin-system.module';
         NxSetupModule,
         NxHealthModule,
         NxSystemModule,
+        NxSystemViewModule,
         NxAccountModule,
         NxDebugModule,
         NxGridLayoutModule,
