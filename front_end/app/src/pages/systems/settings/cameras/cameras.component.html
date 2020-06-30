@@ -199,7 +199,7 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)">
+                <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)" (click)="lockGrid(true)">
                     <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
                         <nx-health-image [isPrimary]="true" 
                             [motionPreview]="true" 
