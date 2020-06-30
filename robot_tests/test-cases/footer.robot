@@ -54,7 +54,7 @@ Support leads to the proper support site
     Click Link    ${FOOTER SUPPORT LINK}
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Contains    ${SUPPORT URL}
 
 Terms leads to the proper EULA site
@@ -64,7 +64,7 @@ Terms leads to the proper EULA site
     Click Link    ${FOOTER TERMS LINK}
     Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Is    ${ENV}${TERMS URL}
 
 Privacy leads to the proper page
@@ -74,7 +74,7 @@ Privacy leads to the proper page
     Click Link    ${FOOTER PRIVACY LINK}
     Wait Until Number Of Tabs Are Open    2
     @{tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Is    ${ENV}${PRIVACY POLICY URL HREF}
 
 Copyright leads to the proper site
@@ -84,5 +84,5 @@ Copyright leads to the proper site
     Click Link    ${FOOTER COPYRIGHT LINK}
     Wait Until Number Of Tabs Are Open    2
     ${tabs}=   Get Window Handles
-    Select Window    @{tabs}[1]
+    Select Window    ${tabs}[1]
     Wait Until Location Is    ${COPYRIGHT URL}
