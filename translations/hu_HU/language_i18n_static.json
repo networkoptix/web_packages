@@ -255,22 +255,22 @@
             "serverNotAvailable": "<p class=\"mb-2\">Nem érhető el az {{targetSystem}} rendszer.</p><p>Ellenőrizze, hogy a megadott kiszolgáló online-e, és próbálkozzon újra.</p>",
             "serverNotYours": "Ez a rendszer %CLOUD_NAME%csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemOfflineUrl": "{{targetSystem}} elérhetetlen.",
+            "systemsIncompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Frissítse mindkét rendszert ugyanarra a verzióra, hogy egyesíthető legyen.",
+            "systemVersionOld": "A {{targetSystem}} rendszernek van egy régebbi szoftververziója, amely nem kompatibilis az aktuális rendszerrel. Frissítse az {{targetSystem}} et a <a href=\"/download\" target=\"_blank\" translate>legfrissebbre,</a> hogy egyesítse az aktuálissal.",
+            "systemVersionNew": "A {{targetSystem}} rendszernek van egy újabb szoftver verziója, amely nem kompatibilis az aktuális rendszerrel. Frissítse az aktuális rendszert a <a href=\"/download\" target=\"_blank\" translate>legutóbbi</a> verzióra, hogy összekapcsolja azt a {{targetSystem}} rendszerrel.",
             "urlEmpty": "Adja meg a szerver címét",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "Adjon meg érvényes URL-t",
+            "unknownError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
+            "warning": "Az egyesített rendszerben több mint <strong>{{maxServers}}</strong> szerver lesz."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "storageSettingsSaved": "A tárolási beállítások mentve.",
+            "storageSettingsNotSaved": "Nem sikerült menteni a tárolási beállításokat.",
             "settingsSaved": "Beállítások mentve.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "settingsNotSaved": "Nem sikerült menteni a beállításokat.",
+            "logLevelsSaved": "Naplószint (ek) mentve.",
+            "logLevelsNotSaved": "A naplózási szinteket nem sikerült menteni.",
             "failedToSend": "Nem sikerült az üzenet küldése.",
             "placeholders": {
                 "feedback": "Ne felejtse el megadni a kamera modelljét és gyártóját..."
@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "Szétkapcsolás",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Többé nem lesz képes bejelentkezni ebbe a rendszerbe.",
             "title": "Leválasztja a rendszert?"
         },
         "titles": {
@@ -302,12 +302,12 @@
             "loggedFromOtherAccount": "Egy másik fiókkal lesz bejelentkezve",
             "noClientDetected": "Telepítse a {{VMS_NAME}} alkalmazást a rendszer megtekintéshez",
             "removeUser": "Eltávolítja a felhasználót?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "Leválasztja a \"{{ title }}\" szervert az aktuális rendszertől?",
+            "serversReset": "Alaphelyzetbe állítja a \"{{ title }}\" szervert?",
+            "serversRestart": "Indítsa újra a \"{{ title }}\" szervert?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Válassza le az összes rendszert, amelyben a tulajdonosa a %CLOUD_NAME% portálról, hogy törölje a fiókját."
         }
     },
     "downloads": {
@@ -383,23 +383,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
         "DUPLICATE_MEDIASERVER_FOUND": "Egyes szerverlisták mindkét rendszerben léteznek - a kiválasztott és az aktuális rendszerben.<br>Távolítsa el az offline és inkompatibilis kiszolgálókat minden egyes rendszerből, és próbálja újra.",
         "EmailAlreadyExists": "Ez az e-mail már regisztrálva van",
         "FAIL": "A <strong>{{failedSystem}}</strong> rendszer jelenleg nem érhető el.<br>Próbálkozzon újra néhány perc múlva, vagy lépjen kapcsolatba a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\">legutóbbi verzióra</a>.",
+        "cloud_systems_have_different_owners": "Ez a rendszer %CLOUD_NAME% csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Úgy tűnik, hogy egy szerver felsorolja magát mind a kiválasztott, mind az aktuális rendszerben.</p><p>Távolítsa el az offline és a nem kompatibilis kiszolgálókat az egyes rendszerekről, és próbálja újra.</p>",
+        "fail": "{{failedSystem}} elérhetetlen.",
+        "incompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Frissítse mindkét rendszert ugyanarra a verzióra, hogy egyesíthető legyen.",
+        "unknown_error": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
         "accountAlreadyActivated": "Ez a fiók már aktiválva van",
         "accountBlocked": "A fiók zárolva van. Próbálja újra pár perc múlva.",
         "accountNotActivated": "Ez a fiók még nincs aktiválva. <a href=\"/activate\">Küldje újra az aktiváló linket</a>",
         "alreadyExists": "Ez a fiük már létezik",
         "brokenAccount": "Váratlan probléma a fiókkal. <a href=\"/restore_password\">Fiók visszaállítása</a>",
         "cantActivatePrefix": "A fiók aktiválása nem lehetséges",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "Saját e-mail hozzáadása nem megengedett",
         "cantChangeAccountPrefix": "A módosítások nem menthetők el",
         "cantChangePasswordPrefix": "Jelszó mentése nem lehetséges",
         "cantDisconnectSystemPrefix": "A rendszer törlése nem lehetséges",
@@ -415,7 +415,7 @@
         "cantSharePrefix": "A rendszer megosztása nem lehetséges",
         "cantUnshareWithMeSystemPrefix": "A rendszer törlése nem lehetséges",
         "emailNotFound": "A fiók nem létezik.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Ez a link nem érhető el rendszerrel. Ez akkor fordulhat elő, ha a rendszert lekapcsolják a %CLOUD_NAME%, visszavonják a rendszerhez való hozzáférést, vagy ha helytelen fiókba jelentkezett be.",
         "forbidden": "Nincs engedélye erre a műveletre",
         "lostConnection": "{{systemName}} kapcsolat megszakadt",
         "mergedSystemIsOffline": "A rendszer <strong>{{failedSystem}}</strong> offline állapotban van.",
@@ -425,18 +425,18 @@
         "oldPasswordMistmatch": "A jelenlegi jelszó helytelen.",
         "oldSafariNotSupported": "A 10-es verziónál régebbi Safari böngésző nem támogatott",
         "passwordMismatch": "Hibás jelszó",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "A {{failedSystem}} rendszer jelenleg nem érhető el. Próbálkozzon néhány perc múlva, vagy lépjen kapcsolatba az <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatással</a>.",
         "thisSystem": "a rendszer",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Váratlan hiba történt",
         "unknownMergeError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",
         "wrongAuthCode": "A kód lejárt vagy helytelen",
         "wrongCode": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
         "wrongCodeRestore": "Megerősítési kód már használt, vagy hibás",
         "wrongParameters": "Néhány paraméter hibás",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "A licenc aktiválása nem sikerült. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
+        "licenseTimeout": "A licenc aktiválása a kapcsolat időtúllépése miatt nem sikerült. Kérjük, ellenőrizze, hogy a kiszolgáló online-e, és próbálkozzon újra.",
+        "licenseServerError": "A licenc aktiválása nem sikerült. A licencszerver nem válaszolt. Kérjük, próbálja újra, vagy vegye fel a kapcsolatot az ügyfélszolgálattal.",
+        "networkConnection": "Nem lehet kapcsolódni a {{cloudName}}-hoz. Ellenőrizze az internet kapcsolatát."
     },
     "integration": {
         "Access Control": "Hozzáférés vezérlés",
@@ -475,16 +475,16 @@
         "isAptzSupported": "Speciális PTZ",
         "isAptzSupportedShort": "Spec. PTZ",
         "isAudioSupported": "Audio",
-        "isDualStreamingSupported": "Dual Streaming",
+        "isDualStreamingSupported": "Kettős streaming",
         "isFisheye": "Halszem",
         "isH265": "H.265",
         "isIoSupported": "I/O",
         "isMdSupported": "Mozgásérzékelés",
         "isMultiSensor": "Több érzékelő",
         "isPtzSupported": "PTZ",
-        "isTwAudioSupported": "2-Way Audio",
-        "maxFps": "FPS(max)",
-        "maxResolution": "Resolution(max)",
+        "isTwAudioSupported": "Kétirányú audio",
+        "maxFps": "FPS (max)",
+        "maxResolution": "Felbontás (max)",
         "model": "Modell",
         "multiSensorCamera": "Többérzékelős kamerák",
         "other": "Egyéb",
@@ -513,7 +513,7 @@
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% letöltése",
         "downloadPlatform": "{{VMS_NAME}} letöltése ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Belépés sikertelen",
         "integrations": "Integrációk",
         "login": "Bejelentkezés",
         "pageNotFound": "Az oldal nem található",
@@ -546,34 +546,34 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Az oldal nem található",
+            "message": "Győződjön meg arról, hogy szerverek online-ak, és próbálkozzon újra."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Ezt a rendszert egyesítik ezzel {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "Az adatbázis méretétől függően ez akár több óráig is eltarthat.",
+                "untilFinished": "Amíg az egyesítés befejeződik, be tud jelentkezni a rendszerbe és megtekinthet videókat, de közben nem módosíthatja a beállításokat.",
+                "whenFinished": "A rendszeregyesítések befejezésével, ezen rendszer összes felhasználója és kamerája elérhető lesz {{systemName}} rendszeren, és ez a rendszer törölve lesz."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "A szerver nem érhető el",
+            "message": "A rendszer offline állapotban van, tehát az információk nem érhetők el."
         }
     },
     "pleaseSelect": "Kérem válasszon...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "A {{INTEGRATION_COMPANY}} adatvédelmi irányelvet <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">itt találja</a>. A %COMPANY_NAME% adatvédelmi politikáka, amely magában foglalja utasítást, hogy hogyan visszavonja a beleegyezését, elérhető <a href=\"%PRIVACY_LINK%\" target=\"_blank\">itt</a>.",
+        "ipvd": "Az űrlap elküldésével vállalja, hogy %COMPANY_NAME%zal kapcsolatba lép.\nItt található %COMPANY_NAME% adatvédelmi politika <a href=\"%PRIVACY_LINK%\" target=\"_blank\">,</a> amely tartalmazza az Ön hozzájárulásának visszavonására vonatkozó utasításokat."
     },
     "registration": {
         "agreement": "<span class=\"text\"> Elfogadom az <a href=\"/content/eula\" target=\"_blank\"> Általános Szerződési Feltételeket </a> és <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> Adatvédelmi irányelveket </a></span>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "egyesítik ezt a rendszert",
+            "mayTake": "Az adatbázis méretétől függően ez akár több óráig is eltarthat."
         },
         "finishingMerge": "Rendszeregyesítés befejezése",
         "integration": {
@@ -581,7 +581,7 @@
             "previewRibbon": "Ez az oldal a legfrissebb változások előnézete, és nem egyezik meg a nyilvánosan elérhető verzióval."
         },
         "systemOffline": "A rendszer offline állapotban van. Előfordulhat, hogy egyes beállítások nem érhetők el.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "Ez a rendszer jelenleg részt vesz egy egyesítési műveletben."
     },
     "search": {
         "Any": "Bármely",
