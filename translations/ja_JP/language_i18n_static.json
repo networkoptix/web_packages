@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
         "passwordMismatch": "間違ったパスワード",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{{failedSystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
         "thisSystem": "システム",
         "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
@@ -433,9 +433,9 @@
         "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "ライセンスのアクティベートに失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスのアクティベートに失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
+        "licenseServerError": "ライセンスのアクティベートに失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
         "networkConnection": "{{cloudName}} に接続できません。ネットワーク接続を確認してください。"
     },
     "integration": {
