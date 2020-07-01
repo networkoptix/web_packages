@@ -23,44 +23,44 @@ logger = logging.getLogger(__name__)
 def get_cloud_capabilities_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'cloud_capabilities')
     return {
-        'integrationStoreEnabled': customization_cache['integration_store_enabled']
+        'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False)
     }
 
 
 def get_settings_from_cache():
     customization_cache = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')
     return {
-        'appTypesForPlatform': customization_cache['app_types_for_platform'],
-        'availableDownloadsPlatform': customization_cache['available_downloads_platform'],
-        'cloudName': customization_cache['cloud_name'],
-        'vmsName': customization_cache['vms_name'],
-        'cloudStorageEnabled': customization_cache['cloud_storage_enabled'],
-        'cloudStorageSize': customization_cache['cloud_storage_size'],
-        'copyrightYear': customization_cache['copyright_year'],
-        'companyName': customization_cache['company_name'],
-        'companyLink': customization_cache['company_link'],
-        'feedbackEnabled': customization_cache['feedback_enabled'],
-        'footerItems': customization_cache['footer_items'],
-        'integrationFilterItems': customization_cache['integration_filter_items'],
-        'integrationFilterLimitation': customization_cache['integration_filter_limitation'],
-        'integrationStoreEnabled': customization_cache['integration_store_enabled'],
-        'healthMonitoringEnabled': customization_cache['health_monitoring_enabled'],
-        'healthMonitorCacheTimeout': customization_cache['health_monitor_cache_timeout'],
+        'appTypesForPlatform': customization_cache.get('app_types_for_platform', {}),
+        'availableDownloadsPlatform': customization_cache.get('available_downloads_platform', []),
+        'cloudName': customization_cache.get('cloud_name', ''),
+        'vmsName': customization_cache.get('vms_name', ''),
+        'cloudStorageEnabled': customization_cache.get('cloud_storage_enabled', False),
+        'cloudStorageSize': customization_cache.get('cloud_storage_size', '53687091200'),
+        'copyrightYear': customization_cache.get('copyright_year', ''),
+        'companyName': customization_cache.get('company_name', ''),
+        'companyLink': customization_cache.get('company_link', ''),
+        'feedbackEnabled': customization_cache.get('feedback_enabled', False),
+        'footerItems': customization_cache.get('footer_items', []),
+        'integrationFilterItems': customization_cache.get('integration_filter_items', []),
+        'integrationFilterLimitation': customization_cache.get('integration_filter_limitation', '12'),
+        'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False),
+        'healthMonitoringEnabled': customization_cache.get('health_monitoring_enabled', False),
+        'healthMonitorCacheTimeout': customization_cache.get('health_monitor_cache_timeout', 60),
         'trafficRelayHost': settings.TRAFFIC_RELAY_HOST,
-        'publicDownloads': customization_cache['public_downloads'],
-        'publicReleases': customization_cache['public_releases'],
-        'showAnalyticsEvents': customization_cache['show_analytics_events'],
-        'sortSupportedDevicesByPopularity': customization_cache['sort_supported_devices_by_popularity'],
-        'testedOperatingSystems': customization_cache['tested_operating_systems'],
-        'supportLink': customization_cache['support_link'],
-        'privacyLink': customization_cache['privacy_link'],
-        'supportedResolutions': customization_cache['supported_resolutions'],
-        'supportedHardwareTypes': customization_cache['supported_hardware_types'],
-        'searchTags': customization_cache['search_tags'],
-        'vendorsShown': customization_cache['vendors_shown'],
-        'pushConfig': customization_cache['push_config'],
-        'googleTagManagerId': customization_cache['google_tag_manager_id'],
-        'trialLicenseKey': customization_cache['trial_license_key']
+        'publicDownloads': customization_cache.get('public_downloads', False),
+        'publicReleases': customization_cache.get('public_releases', False),
+        'showAnalyticsEvents': customization_cache.get('show_analytics_events', False),
+        'sortSupportedDevicesByPopularity': customization_cache.get('sort_supported_devices_by_popularity', False),
+        'testedOperatingSystems': customization_cache.get('tested_operating_systems', {}),
+        'supportLink': customization_cache.get('support_link', ''),
+        'privacyLink': customization_cache.get('privacy_link', ''),
+        'supportedResolutions': customization_cache.get('supported_resolutions', []),
+        'supportedHardwareTypes': customization_cache.get('supported_hardware_types', []),
+        'searchTags': customization_cache.get('search_tags', []),
+        'vendorsShown': customization_cache.get('vendors_shown', '30'),
+        'pushConfig': customization_cache.get('push_config', {}),
+        'googleTagManagerId': customization_cache.get('google_tag_manager_id', ''),
+        'trialLicenseKey': customization_cache.get('trial_license_key', '')
     }
 
 
