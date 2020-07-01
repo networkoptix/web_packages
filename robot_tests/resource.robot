@@ -79,7 +79,7 @@ Check Language Anonymous
     Run Keyword Unless    "${lang}"=="${LANGUAGE}"   Set Language Anonymous
 
 Check Language Logged In
-    [Arguments]    ${email}    ${password}
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}
     ${curr lang}=   Get Account Language   ${ENV}    ${email}    ${password}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Set Account Language    ${ENV}    ${email}    ${password}    ${LANGUAGE}
     Run Keyword Unless    '${curr lang}' == '${LANGUAGE}'    Reload Page
@@ -108,7 +108,7 @@ Log In
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}
+    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}    password=${password}
     Run Keyword If    ${validate} == ${True} and ${cms}==${True}    Validate cms Log In
     Sleep    0.5
 
@@ -135,10 +135,10 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
-    [Arguments]    ${email}    ${timeout}=${selenium_timeout}
+    [Arguments]    ${email}    ${password}=${BASE PASSWORD}    ${timeout}=${selenium_timeout}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
     Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Check Language Logged In    ${email}    ${BASE PASSWORD}
+    Check Language Logged In    ${email}    ${password}
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}

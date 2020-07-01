@@ -46,7 +46,6 @@ Systems dropdown should allow you to go back to the systems page
 Should confirm, if not owner deletes system (You will lose access to this system)
     [Tags]    Threaded
     Log In To Auto Tests System    ${EMAIL NOT OWNER}
-    Validate Log In
     Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
     Click Button    ${DISCONNECT FROM MY ACCOUNT}
     Wait Until Element Is Visible    ${DISCONNECT MODAL WARNING}

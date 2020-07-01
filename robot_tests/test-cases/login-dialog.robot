@@ -180,7 +180,7 @@ Should respond to Enter key and log in
     Input Text    ${PASSWORD INPUT}    ${password}
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Press Keys    ${PASSWORD INPUT}    ENTER
-    Validate Log In
+    Validate Log In    ${email}
 
 Should respond to Tab key
     [tags]    Threaded
@@ -230,7 +230,7 @@ Handles two tabs, updates second tab state if logout is done on first
     Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
     Sleep    2
     Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
-    Validate Log In
+    Validate Log In    ${email}
     Log Out
     ${tabs}    Get Window Handles
     Select Window    ${tabs}[1]
@@ -266,14 +266,15 @@ Log in more than 5 times
     Input Text    ${PASSWORD INPUT}    ${BASE PASSWORD}
     Wait Until Element is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Validate Log In
+    Validate Log In    ${email}
 
 User is logged out of browser after a password change in another browser
     [tags]    C41837
     Log In    ${email}    ${password}
     Open Browser and go to URL    ${url}
-    Log In    ${email}    ${password}
     Switch Browser    1
+    #Log In    ${email}    ${password}
+    #Switch Browser    1
     Go To    ${url}/account/password
     Sleep    1
     Wait Until Elements are Visible
@@ -289,7 +290,9 @@ User is logged out of browser after a password change in another browser
     Validate Log Out
     Sleep    1
 
-    Log In    ${email}    ${ALT PASSWORD}
+    Log In    ${email}    ${ALT PASSWORD}    validate=${False}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
+    Sleep    2
     Go To    ${url}/account/password
     Sleep    1
     Wait Until Elements are Visible
@@ -305,13 +308,13 @@ Remember Me Checkbox
     Log In With Remember Me    ${email}    ${password}
     Log    Step 2
     Persist Current Login State    ${url}
-    Validate Log In
+    Validate Log In    ${email}
     Log    Step 3
     Log Out
     Persist Current Login State    ${url}
     Validate Log Out
     Log In With Remember Me    ${email}    ${password}     remember me=False
     Log    Step 4
-    Validate Log In
+    Validate Log In    ${email}
     Persist Current Login State    ${url}
 

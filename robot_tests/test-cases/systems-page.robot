@@ -56,7 +56,7 @@ Should show system name in header dropdown with "Open in Nx Witness" button if u
 User have several systems linked to his account
     [Tags]    C41570    Threaded
     Log    Step 1
-    Log In    ${EMAIL OWNER}    ${password}    validate=False
+    Log In    ${EMAIL OWNER}    ${password}
     # Expected Result
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     ${count1}=   Get Text    ${SYSTEMS DROPDOWN}
