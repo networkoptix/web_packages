@@ -699,7 +699,8 @@ export class MergeModalContent {
     insertErrorMessages() {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
-            errorText[error] = this.LANG.dialogs.merge[error]
+            const parsedError = ['systemVersionOld', 'systemVersionNew'].includes(error) ? 'systemsIncompatible' : error;
+            errorText[error] = this.LANG.dialogs.merge[parsedError]
                 .replace(/{{primarySystem}}|{{targetSystem}}/g, (found: string) => {
                     return found === '{{primarySystem}}' ? this.primaryName : this.secondaryName;
                 });
@@ -756,7 +757,6 @@ export class MergeModalContent {
         let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.status || '';
         if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
             stateOfHealth = 'Incompatible';
-            system.olderProtocol = system.protoVersion < this.system.moduleInfo.protoVersion;
         }
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
@@ -770,7 +770,7 @@ export class MergeModalContent {
         }
 
         if (stateOfHealth === 'Incompatible') {
-            return system.olderProtocol ? 'systemVersionOld' : 'systemVersionNew';
+            return 'systemsIncompatible';
         }
 
         if (!this.system.canMerge) {
