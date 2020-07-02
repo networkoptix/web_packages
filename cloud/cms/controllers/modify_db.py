@@ -124,6 +124,169 @@ def is_datarecord_unique(asset, data_structure, value, customizations=None):
 
 def save_unrevisioned_records(asset, context, language, data_structures,
                               request_data, request_files, user, version_id=None):
+
+    def process_file_or_image():
+        nonlocal new_record_value, delete_file
+        # If a file has been uploaded try to save it
+        if data_structure_name in request_files:
+            new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
+            if file_errors:
+                upload_errors.extend(file_errors)
+                return False
+
+        elif 'delete_' + data_structure_name in request_data:
+            delete_file = request_data['delete_' + data_structure_name]
+
+        elif data_structure.optional:
+            return False
+        return True
+
+    def process_guid():
+        nonlocal new_record_value
+        # if the guid is valid it will go to the next set of checks
+        new_record_value = request_data.get(data_structure_name, "")
+
+        # if its option and not a valid guid set error message and go to next DataStructure
+        if new_record_value and not re.match(GUID_REGEXP, new_record_value):
+            guid_format = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
+            upload_errors.append(
+                (data_structure_name, f'Invalid GUID {new_record_value} it should formatted like {guid_format}'))
+            return False
+
+        # no guid submitted or default value and is not optional generate a guid
+        elif not new_record_value and not data_structure.optional:
+            new_record_value = '{' + str(uuid.uuid4()) + '}'
+            upload_errors.append(
+                (data_structure_name,
+                 f'No submitted GUID or default value. GUID has been generated as {new_record_value}'))
+        return True
+
+    def process_select():
+        nonlocal new_record_value
+        getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
+        if hasattr(request_data, 'getlist'):
+            new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
+        else:
+            new_record_value = request_data[data_structure_name] or getlist_default_value
+        if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
+            new_record_value = new_record_value[0]
+        return True
+
+    def process_external():
+        nonlocal external_file, new_record_value, delete_file
+        # If the user uploads a new file create a new ExternalFile record
+        if data_structure_name in request_files:
+            request_file = request_files[data_structure_name]
+
+            file_errors = check_meta_settings(data_structure, request_file)
+            if file_errors:
+                upload_errors.extend(file_errors)
+                return False
+
+            md5 = hashlib.md5()
+            for chunk in request_file.chunks():
+                md5.update(chunk)
+
+            external_file = ExternalFile(data_structure=data_structure, asset=asset)
+            external_file.save()
+
+            external_file.file = request_file
+            external_file.md5 = md5.hexdigest()
+            external_file.size = request_file.size
+            external_file.save()
+
+            new_record_value = external_file.file.url
+
+        elif 'delete_' + data_structure_name in request_data:
+            delete_file = request_data['delete_' + data_structure_name]
+
+        elif request_data.get(data_structure_name):
+            new_record_value = request_data.get(data_structure_name)
+
+        elif data_structure.optional:
+            return False
+        return True
+
+    def process_checkbox():
+        nonlocal new_record_value
+        new_record_value = data_structure_name in request_data
+        if data_structure.advanced and not can_edit_advanced:
+            return False
+        return True
+
+    def process_integer():
+        nonlocal new_record_value, has_error
+        try:
+            new_record_value = int(request_data.get(data_structure_name, ""))
+        except ValueError:
+            upload_errors.append((data_structure_name, "This field has can only be integers."))
+            return False
+
+        if 'min' in data_structure.meta_settings and new_record_value < int(data_structure.meta_settings['min']):
+            error_text = f"Value: {new_record_value} is less than the minimum: " \
+                         f"{int(data_structure.meta_settings['min'])}"
+            upload_errors.append((data_structure_name, error_text))
+            has_error = True
+        if 'max' in data_structure.meta_settings and new_record_value > int(data_structure.meta_settings['max']):
+            error_text = f"Value: {new_record_value} is more than the maximum: " \
+                         f"{int(data_structure.meta_settings['max'])}"
+            upload_errors.append((data_structure_name, error_text))
+            has_error = True
+        return True
+
+    def process_object_or_array():
+        nonlocal new_record_value
+        try:
+            new_record_value = DataStructure.cast_value(data_structure, request_data.get(data_structure_name, ""))
+            if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
+                raise ValueError
+            elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
+                raise ValueError
+
+        except ValueError:
+            upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
+            return False
+        return True
+
+    def process_other():
+        nonlocal new_record_value, has_error
+        new_record_value = request_data.get(data_structure_name, "")
+        if 'regex' in data_structure.meta_settings:
+            pattern = data_structure.meta_settings['regex']
+            if pattern == '':
+                pattern = '.*$'
+            if not pattern.endswith('$'):
+                pattern = f'{pattern}$'
+            if new_record_value and not re.match(pattern, new_record_value):
+                upload_errors.append((data_structure_name, 'Invalid input'))
+                has_error = True
+
+        if 'char_limit' in data_structure.meta_settings:
+            char_limit = int(data_structure.meta_settings['char_limit'])
+            if len(new_record_value) > char_limit:
+                upload_errors.append(
+                    (data_structure_name,
+                     f'Character limit exceeded. Text was {len(new_record_value)} characters but should not be more than {char_limit} characters'))
+                has_error = True
+        return True
+
+    def check_optional():
+        nonlocal new_record_value
+        # If the data structure is not optional and has no value use the default.
+        if new_record_value in ["", {}, []] and not data_structure.optional:
+            if data_structure.advanced and not can_edit_advanced:
+                return False
+            # If there is a default value use it. Otherwise don't fill it prevent it.
+            if data_structure.default != "" and not records_exist:
+                # Gets the default value and will cast the default value
+                new_record_value = data_structure.find_actual_value(asset=asset)
+                upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
+            else:
+                upload_errors.append((data_structure_name, "This field cannot be blank"))
+                return False
+        return True
+
+    # Start save_unrevisioned_records
     can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
     upload_errors = []
     for data_structure in data_structures:
@@ -157,150 +320,36 @@ def save_unrevisioned_records(asset, context, language, data_structures,
         if is_file:
             new_record_value = latest_value
         if is_file_or_image:
-            # If a file has been uploaded try to save it
-            if data_structure_name in request_files:
-                new_record_value, file_errors = upload_file(data_structure, request_files[data_structure_name])
-                if file_errors:
-                    upload_errors.extend(file_errors)
-                    continue
-
-            elif 'delete_' + data_structure_name in request_data:
-                delete_file = request_data['delete_' + data_structure_name]
-
-            elif data_structure.optional:
+            if not process_file_or_image():
                 continue
-
         elif data_structure.type == DataStructure.DATA_TYPES.guid:
-            # if the guid is valid it will go to the next set of checks
-            new_record_value = request_data.get(data_structure_name, "")
-
-            # if its option and not a valid guid set error message and go to next DataStructure
-            if new_record_value and not re.match(GUID_REGEXP, new_record_value):
-                guid_format = "{XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX}"
-                upload_errors.append(
-                    (data_structure_name, f'Invalid GUID {new_record_value} it should formatted like {guid_format}'))
+            if not process_guid():
                 continue
-
-            # no guid submitted or default value and is not optional generate a guid
-            elif not new_record_value and not data_structure.optional:
-                new_record_value = '{' + str(uuid.uuid4()) + '}'
-                upload_errors.append(
-                    (data_structure_name, f'No submitted GUID or default value. GUID has been generated as {new_record_value}'))
-
         elif data_structure.type in [DataStructure.DATA_TYPES.select, DataStructure.DATA_TYPES.multiselect]:
-            getlist_default_value = [] if data_structure.type == DataStructure.DATA_TYPES.multiselect else ""
-            if hasattr(request_data, 'getlist'):
-                new_record_value = request_data.getlist(data_structure_name, getlist_default_value)
-            else:
-                new_record_value = request_data[data_structure_name] or getlist_default_value
-            if new_record_value != "" and data_structure.type == DataStructure.DATA_TYPES.select:
-                new_record_value = new_record_value[0]
-
+            if not process_select():
+                continue
         elif data_structure.type in [DataStructure.DATA_TYPES.external_file, DataStructure.DATA_TYPES.external_image]:
-
-            # If the user uploads a new file create a new ExternalFile record
-            if data_structure_name in request_files:
-                request_file = request_files[data_structure_name]
-
-                file_errors = check_meta_settings(data_structure, request_file)
-                if file_errors:
-                    upload_errors.extend(file_errors)
-                    continue
-
-                md5 = hashlib.md5()
-                for chunk in request_file.chunks():
-                    md5.update(chunk)
-
-                external_file = ExternalFile(data_structure=data_structure, asset=asset)
-                external_file.save()
-
-                external_file.file = request_file
-                external_file.md5 = md5.hexdigest()
-                external_file.size = request_file.size
-                external_file.save()
-
-                new_record_value = external_file.file.url
-
-            elif 'delete_' + data_structure_name in request_data:
-                delete_file = request_data['delete_' + data_structure_name]
-
-            elif request_data.get(data_structure_name):
-                new_record_value = request_data.get(data_structure_name)
-
-            elif data_structure.optional:
+            if not process_external():
                 continue
-
         elif data_structure.type == DataStructure.DATA_TYPES.check_box:
-            new_record_value = data_structure_name in request_data
-            if data_structure.advanced and not can_edit_advanced:
+            if not process_checkbox():
                 continue
-
         elif data_structure.type == DataStructure.DATA_TYPES.integer:
-            try:
-                new_record_value = int(request_data.get(data_structure_name, ""))
-            except ValueError:
-                upload_errors.append((data_structure_name, "This field has can only be integers."))
+            if not process_integer():
                 continue
-
-            if 'min' in data_structure.meta_settings and new_record_value < int(data_structure.meta_settings['min']):
-                error_text = f"Value: {new_record_value} is less than the minimum: " \
-                             f"{int(data_structure.meta_settings['min'])}"
-                upload_errors.append((data_structure_name, error_text))
-                has_error = True
-            if 'max' in data_structure.meta_settings and new_record_value > int(data_structure.meta_settings['max']):
-                error_text = f"Value: {new_record_value} is more than the maximum: " \
-                             f"{int(data_structure.meta_settings['max'])}"
-                upload_errors.append((data_structure_name, error_text))
-                has_error = True
-
         elif data_structure.type in [DataStructure.DATA_TYPES.object, DataStructure.DATA_TYPES.array]:
-            try:
-                new_record_value = DataStructure.cast_value(data_structure, request_data.get(data_structure_name, ""))
-                if data_structure.type == DataStructure.DATA_TYPES.array and type(new_record_value) != list:
-                    raise ValueError
-                elif data_structure.type == DataStructure.DATA_TYPES.object and type(new_record_value) != dict:
-                    raise ValueError
-
-            except ValueError:
-                upload_errors.append((data_structure_name, "Json was incorrectly formatted."))
+            if not process_object_or_array():
                 continue
-
-        else:
-            new_record_value = request_data.get(data_structure_name, "")
-            if 'regex' in data_structure.meta_settings:
-                pattern = data_structure.meta_settings['regex']
-                if pattern == '':
-                    pattern = '.*$'
-                if not pattern.endswith('$'):
-                    pattern = f'{pattern}$'
-                if new_record_value and not re.match(pattern, new_record_value):
-                    upload_errors.append((data_structure_name, 'Invalid input'))
-                    has_error = True
-
-            if 'char_limit' in data_structure.meta_settings:
-                char_limit = int(data_structure.meta_settings['char_limit'])
-                if len(new_record_value) > char_limit:
-                    upload_errors.append(
-                        (data_structure_name,
-                         f'Character limit exceeded. Text was {len(new_record_value)} characters but should not be more than {char_limit} characters'))
-                    has_error = True
+        elif not process_other():
+            continue
 
         if has_error:
             continue
 
-        # If the data structure is not optional and has no value use the default.
-        if new_record_value in ["", {}, []] and not data_structure.optional:
-            if data_structure.advanced and not can_edit_advanced:
-                continue
-            # If there is a default value use it. Otherwise don't fill it prevent it.
-            if data_structure.default != "" and not records_exist:
-                # Gets the default value and will cast the default value
-                new_record_value = data_structure.find_actual_value(asset=asset)
-                upload_errors.append((data_structure_name, "This field cannot be blank. Using default value"))
-            else:
-                upload_errors.append((data_structure_name, "This field cannot be blank"))
-                continue
+        if not check_optional():
+            continue
 
+        # Check if value has changed
         if new_record_value == latest_value and not delete_file:
             continue
 
@@ -309,10 +358,12 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                 latest_value == DataStructure.cast_value(data_structure, json.dumps(new_record_value)):
             continue
 
+        # Check permisison if advanced
         if data_structure.advanced and not can_edit_advanced:
             upload_errors.append((data_structure_name, "You do not have permission to edit this field"))
             continue
 
+        # Check uniqueness if unique
         if data_structure.unique and not is_datarecord_unique(asset, data_structure, new_record_value):
             upload_errors.append((data_structure_name, "This field must be unique"))
             continue
@@ -328,6 +379,7 @@ def save_unrevisioned_records(asset, context, language, data_structures,
                             created_by=user)
         record.save()
 
+        # If external, foreign key to file is used
         if external_file:
             record.external_file = external_file
             record.save()
