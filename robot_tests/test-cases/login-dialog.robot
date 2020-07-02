@@ -317,4 +317,5 @@ Remember Me Checkbox
     Log    Step 4
     Validate Log In    ${email}
     Persist Current Login State    ${url}
+    Validate Log Out
 
