@@ -12,8 +12,6 @@
                 [licenses]="licenses">
         </nx-license-new-component>
 
-        <nx-pre-loader *ngIf="!licenses"></nx-pre-loader>
-
         <nx-license-summary-component
                 [licenses]="licenseSummaries">
         </nx-license-summary-component>
@@ -22,5 +20,7 @@
                 [system]="system"
                 [licenses]="licenses">
         </nx-license-detail-component>
+
+        <nx-pre-loader *ngIf="!licenses"></nx-pre-loader>
     </div>
 

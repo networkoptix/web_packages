@@ -49,15 +49,16 @@ export class NxLicenseNewComponent implements OnChanges, OnDestroy {
                     this.licenseForm.controls.licenseKey.markAsTouched();
 
                     // eslint-disable-next-line prefer-promise-reject-errors
-                    return reject('offline');
-                });
+                    reject('offline');
+                }).catch(() => {});
             } else if (this.isActivated(this.license)) {
                 return new Promise((resolve, reject) => {
                     this.licenseForm.controls.licenseKey.setErrors({ alreadyRegistered: true });
                     this.licenseForm.controls.licenseKey.markAsTouched();
+
                     // eslint-disable-next-line prefer-promise-reject-errors
-                    return reject('alreadyRegistered');
-                });
+                    reject('alreadyRegistered');
+                }).catch(() => {});
             } else {
                 return this.system
                     .activateLicense(this.selectedServer.value, this.formatLicenseKey(this.license))

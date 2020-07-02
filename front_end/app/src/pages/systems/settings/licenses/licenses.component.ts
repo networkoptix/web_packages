@@ -61,26 +61,6 @@ export class NxSystemLicensesComponent implements OnInit {
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
                 }
-                this.serverSubscription = this.system.infoSubject
-                    .pipe(
-                        map(system => {
-                            if (!system.servers || system.servers.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .subscribe(() => {
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system
-                                    .initSystemMediaServers()
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                            }
-                        }
-                    });
             });
     }
 
@@ -169,22 +149,27 @@ export class NxSystemLicensesComponent implements OnInit {
     private getLicenses() {
         this.system.getLicenses()
             .then((result) => {
-                if (result.length) {
-                    if (this.serverSubscription) {
-                        this.serverSubscription.unsubscribe();
-                    }
-                    this.serverSubscription = this.system.infoSubject
-                        .pipe(
-                            map(system => {
-                                if (!system.servers || system.servers.length === 0) {
-                                    throw system;
-                                }
-                            }),
-                            retryWhen(err => err.pipe(delay(1000)))
-                        )
-                        .subscribe(() => {
-                            if (this.system.currentServerNotBusy) {
-                                if (this.system && this.system.servers && this.system.servers.length) {
+                if (this.serverSubscription) {
+                    this.serverSubscription.unsubscribe();
+                }
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system
+                                    .initSystemMediaServers()
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                                if (result.length) {
                                     this.system
                                         .getHardwareIdsOfServers()
                                         .then((data) => {
@@ -213,12 +198,12 @@ export class NxSystemLicensesComponent implements OnInit {
                                                 this.licenses = result;
                                             }
                                         });
+                                } else {
+                                    this.licenses = [];
                                 }
                             }
-                        });
-                } else {
-                    this.licenses = [];
-                }
+                        }
+                    });
             })
             .catch(() => {
                 this.licenses = [];
