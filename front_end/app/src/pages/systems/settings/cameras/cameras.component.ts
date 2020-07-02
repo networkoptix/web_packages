@@ -64,6 +64,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     noCameras = false;
     sensitivityColors = new Array(10);
     shakeHint = false;
+    motionGridChangeWatcher = new Watcher<boolean>();
 
     constructor(
         configService: NxConfigService,
@@ -170,15 +171,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
-                this.recordingModesWatcher, // these are getting updated somewhere
-                this.recordingWatcher, // these are getting updated somewhere
+                this.recordingModesWatcher,
+                this.recordingWatcher,
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
                 this.selectedRotationWatcher,
                 this.motionEnabledWatcher,
-                this.motionMaskWatcher
+                this.motionMaskWatcher,
+                this.motionGridChangeWatcher
             ]);
+
+        this.motionGridChangeWatcher.originalValue = false;
     }
 
     // Update menu options after language is loaded
@@ -655,6 +659,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.selectedCamera = this.system.cameras[cameraIndex];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
+            this.motionGridChangeWatcher.originalValue = false;
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedAspect = aspect;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];
@@ -729,6 +734,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     toggle(property: string, disabled = false) {
         if (disabled) return;
         this.selectedCamera[property] = !this.selectedCamera[property];
+    }
+
+    lockGrid(lock: boolean) {
+        this.motionGridChangeWatcher.value = lock;
     }
 }
 
