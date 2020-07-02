@@ -7,11 +7,11 @@
     }
 
     table {
-        grid-template-columns : 120px 140px 85px auto;
+        grid-template-columns : 120px 100px 100px 85px auto;
         min-width             : 450px !important;
 
         .table-row-spacer {
-            grid-column-end : span 4;
+            grid-column-end : span 5;
         }
     }
 }

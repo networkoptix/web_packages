@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "La contraseña actual es incorrecta.",
         "oldSafariNotSupported": "Las versiones de Safari anteriores a 10 no son compatibles",
         "passwordMismatch": "Contraseña incorrecta",
-        "systemUnavailable": "{{failedSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o ponte en contacto con el servicio de asistencia.",
+        "systemUnavailable": "{{failedSystem}} es actualmente inalcanzable. Inténtalo de nuevo en unos minutos o contacta a <a href=\"%SUPPORT_LINK%\" target=\"_blank\">soporte</a>.",
         "thisSystem": "el sistema",
         "unknownError": "Error inesperado",
         "unknownMergeError": "Error desconocido. Puede intentar actualizar la página y repetir el intento. Si el problema persiste, por favor contacte con el soporte <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Ya está activada la cuenta o código de confirmación es incorrecto",
         "wrongCodeRestore": "Código de confirmación ya sea usado o está incorrecta",
         "wrongParameters": "Algunos parámetros en el formulario son incorrectos",
-        "licenseFail": "Error al activar la licencia. Intente nuevamente o comuníquese con Atención al cliente.",
+        "licenseFail": "Error al activar la licencia. Por favor intente nuevamente o contacte a soporte.",
         "licenseTimeout": "No se pudo activar la licencia debido a un tiempo de espera de conexión. Asegúrese de que el servidor esté en línea e intente nuevamente.",
-        "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Intente nuevamente o comuníquese con Atención al cliente.",
+        "licenseServerError": "Error al activar la licencia. El servidor de licencias no respondió. Por favor intente nuevamente o contacte a soporte.",
         "networkConnection": "No se puede conectar a {{cloudName}}. Por favor, compruebe su conexión de red."
     },
     "integration": {

@@ -14,6 +14,7 @@ ${sales inquiry}        ${SALES INQUIRY TEXT}
 ${technical inquiry}    ${TECHNICAL INQUIRY TEXT}
 ${feedback}             ${FEEDBACK TEXT}
 ${valid name}           mark hamil
+${password}             ${BASE PASSWORD}
 
 *** Test Cases ***                    EXPECTED    NAME             EMAIL                     SUBJECT             BUTTON                                      MESSAGE
 Invalid Email 1 noptixqagmail.com     failure     ${valid name}    noptixqagmail.com    ${sales inquiry}        ${INTEGRATION GET IN TOUCH SEND BUTTON}     Sample message
@@ -46,8 +47,8 @@ Restart
 Form Validation
     Open Browser and go to URL    ${url}/integrations
     Log In    ${existing email}    ${BASE PASSWORD}
-    Wait Until Elements are Visible    ${INTEGRATION TEST INTEGRATION LINK}
-    Click Link    ${INTEGRATION TEST INTEGRATION LINK}
+    Wait Until Element is Visible    ${INTEGRATION TEST INTEGRATION LINK}/..
+    Click Element    ${INTEGRATION TEST INTEGRATION LINK}/..
     Wait Until Elements are Visible    ${INTEGRATION GET IN TOUCH BUTTON}    ${INTEGRATION TITLE}
     ${name}=   Get Text    ${INTEGRATION TITLE}
     ${subbed subject}=    Replace String    ${sales inquiry}    {{integration}}    ${name}

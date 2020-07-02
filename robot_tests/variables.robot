@@ -1,13 +1,7 @@
 *** Settings ***
 Variables    getvars.py
-Resource     variables/system-server-variables.robot
-Resource     variables/health-monitor-variables.robot
-Resource     variables/restore-pass-variables.robot
-Resource     variables/change-pass-variables.robot
-Resource     variables/register-variables.robot
-Resource     variables/system-camera-variables.robot
-Resource     variables/system-admin-variables.robot
-Resource     variables/systems-page-variables.robot
+Resource     variables/front-end-variables.robot
+Resource     variables/cms-variables.robot
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
@@ -266,7 +260,7 @@ ${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and cont
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}  //a
+${INTEGRATION TEST INTEGRATION LINK}  ${INTEGRATION TILE}//a
 ${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              //div[contains(@class, "card--body-name")]

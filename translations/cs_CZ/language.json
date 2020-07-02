@@ -61,7 +61,7 @@
     "cameraStates": {
       "offline": "Offline",
       "error": "Chyba",
-      "errorLoading": "An error occurred while loading this video.",
+      "errorLoading": "Při načítání tohoto videa došlo k chybě.",
       "unauthorized": "Ověření je vyžadováno",
       "noData": "Žádná data",
       "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",

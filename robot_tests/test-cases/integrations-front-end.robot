@@ -155,13 +155,13 @@ Fill in "Get in Touch" Form and Submit
     Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    ${message}
     Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
 
- Number of Integrations Should be Lower
+Number of Integrations Should be Lower
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
     Evaluate    ${current}<${previous}
     [Return]    ${current}
 
- Number of Integrations Should be Higher
+Number of Integrations Should be Higher
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
     Evaluate    ${current}>${previous}

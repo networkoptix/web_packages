@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Password corrente non è corretta.",
         "oldSafariNotSupported": "Le versioni di Safari precedenti alla 10 non sono supportate",
         "passwordMismatch": "Password errata",
-        "systemUnavailable": "{{failedSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta l'assistenza.",
+        "systemUnavailable": "{{failedSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">supporto</a>.",
         "thisSystem": "il sistema",
         "unknownError": "Si è verificato un errore imprevisto",
         "unknownMergeError": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -435,7 +435,7 @@
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
         "licenseFail": "Impossibile attivare la licenza. Riprova o contatta l'assistenza clienti.",
         "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
-        "licenseServerError": "Impossibile attivare la licenza. Il server licenza non ha risposto. Riprova o contatta il Servizio clienti.",
+        "licenseServerError": "Impossibile attivare la licenza. Il server delle licenze non risponde. Riprova o contatta l'assistenza.",
         "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {

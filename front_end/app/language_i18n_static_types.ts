@@ -42,6 +42,7 @@ export interface LanguageI18NStaticTypes {
     system:                LanguageI18NStaticTypesSystem;
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
+    license:               License;
     settingsConfig:        { [key: string]: any };
     result:                any;
     additionalSystems:     any;
@@ -909,6 +910,7 @@ const typeMap: any = {
         { json: "system", js: "system", typ: r("LanguageI18NStaticTypesSystem") },
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
+        { json: "license", js: "license", typ: r("License") },
         { json: "settingsConfig", js: "settingsConfig", typ: m("") },
         { json: "result", js: "result", typ: "any" },
         { json: "additionalSystems", js: "additionalSystems", typ: "any" },

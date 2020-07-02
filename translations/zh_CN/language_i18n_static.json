@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "当前密码不正确.",
         "oldSafariNotSupported": "不支持10岁以上的Safari版本",
         "passwordMismatch": "错误的密码。",
-        "systemUnavailable": "当前无法访问{{failedSystem}} 。请在几分钟后重试或与支持人员联系。",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "系统",
         "unknownError": "发生意外错误",
         "unknownMergeError": "不明错误。您可以尝试刷新页面并重复尝试。如果问题仍然存在 - 请联系 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支持</a>。",
@@ -433,9 +433,9 @@
         "wrongCode": "已经激活帐户或确认码不正确",
         "wrongCodeRestore": "确认代码已使用或不正确",
         "wrongParameters": "窗体上的一些参数不正确",
-        "licenseFail": "无法激活授权。请重试或联系客戶支持。",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "连接超时，激活授权失败。请确保服务器在线，然后重试。",
-        "licenseServerError": "无法激活授权。授权服务器未响应。请重试或联系客户支持。",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "无法连接至{{cloudName}}，请检查您的网络连接。"
     },
     "integration": {

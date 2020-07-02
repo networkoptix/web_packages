@@ -58,6 +58,10 @@ export class NxSystemAdvancedStorageComponent implements OnDestroy, OnChanges {
         }
     }
 
+    clamp(input, max, min = 0) {
+        return Math.min(Math.max(input, min), max);
+    }
+
     resetWatchers() {
         this.watchers.forEach(watcher => watcher.reset());
     }

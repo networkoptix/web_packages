@@ -38,11 +38,11 @@ Check Special Hint
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
 
 Verify Changed Info Via API
-    [Arguments]    ${new locals}
+    [Arguments]    ${new locals}    ${local user}=ocal+
     @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     FOR    ${user}    IN    @{locals}
@@ -181,12 +181,12 @@ Local User Start
     [Return]    ${local users}
 
 Reset Local Users
-    [Arguments]     ${auth}    ${server}
+    [Arguments]     ${auth}    ${server}    ${local user}=ocal+
     @{locals} =    Create List 
     @{local users} =    Get Dictionary Keys    ${role names}
     @{users} =    Get Users     ${auth}    ${server}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     ${count} =    Get Length    ${locals}

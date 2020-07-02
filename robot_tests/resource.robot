@@ -8,12 +8,8 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
-Resource     Resources/health-monitor-resource.robot
-Resource     Resources/system-server-resource.robot
-Resource     Resources/system-camera-resource.robot
-Resource     Resources/ipvd-resource.robot
-Resource     Resources/system-user-resource.robot
-Resource     Resources/system-admin-resource.robot
+Resource     Resources/front-end-resources.robot
+Resource     Resources/cms-resources.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
 
@@ -100,7 +96,7 @@ Set Language Anonymous
     Sleep    5    #to wait for language to fully change before continuing.  This caused issues with login.
 
 Log In
-    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}
+    [arguments]    ${email}    ${password}    ${validate}=${True}    ${button}=${LOG IN NAV BAR}    ${cms}=${False}
     Sleep    2
     Run Keyword Unless    '''${button}''' == "None"    Wait Until Element Is Visible    ${button}
     Run Keyword Unless    '''${button}''' == "None"    Click Link    ${button}
@@ -112,9 +108,8 @@ Log In
     Sleep    1
     Wait Until Element Is Visible    ${LOG IN BUTTON}
     Click Button    ${LOG IN BUTTON}
-    Run Keyword If    ${validate} == ${True}    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
-    Run Keyword If    ${validate} == ${True}    Check Language Logged In    ${email}    ${password}
+    Run Keyword If    ${validate} == ${True} and ${cms}==${False}    Validate Log In    ${email}
+    Run Keyword If    ${validate} == ${True} and ${cms}==${True}    Validate cms Log In
     Sleep    0.5
 
 Log In With Remember Me
@@ -129,7 +124,7 @@ Log In With Remember Me
     Run Keyword If    ${remember me}==True     Select Checkbox    ${REMEMBER ME CHECKBOX REAL}
     ...    ELSE    Unselect Checkbox    ${REMEMBER ME CHECKBOX REAL}
     Click Button    ${LOG IN BUTTON}
-    Validate Log In
+    Validate Log In    ${email}
 
 Log in to Auto Tests System
     [Arguments]    ${email}
@@ -140,9 +135,10 @@ Log in to Auto Tests System
     Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
 
 Validate Log In
-    [Arguments]    ${timeout}=${selenium_timeout}
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${timeout}
-    Sleep    0.5    #this is a test to see if it eliminates a problem with the login dialog popping up on logout
+    [Arguments]    ${email}    ${timeout}=${selenium_timeout}
+    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}    ${selenium_timeout}
+    Wait Until Element is Not Visible    //div[@class="placeholder"]    ${selenium_timeout}
+    Check Language Logged In    ${email}    ${BASE PASSWORD}
 
 Check Log In
     [Arguments]    ${button}=${LOG IN NAV BAR}

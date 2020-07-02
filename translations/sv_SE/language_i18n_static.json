@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
-        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta support.",
+        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

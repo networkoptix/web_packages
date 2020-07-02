@@ -1,5 +1,6 @@
 from cms.models import get_cloud_portal_asset, Asset
 from django.conf import settings
+from util.config import get_config
 
 
 class SpecialStructures:
@@ -41,4 +42,8 @@ class SpecialStructures:
 
     @staticmethod
     def calc_cloud_link(asset: Asset):
-        return settings.CLOUD_PORTAL_URL
+        customization = asset.customizations.first()
+        if not customization:
+            return ''
+        conf = get_config(customization.name)
+        return conf['cloud_portal']['url'].replace('http:', 'https:')

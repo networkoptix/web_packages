@@ -116,7 +116,7 @@ def update_or_create_notification(data, customizations=None):
 @permission_classes((AllowAny, ))
 @handle_exceptions
 def send_event(request):
-    feedback_enabled = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config')['feedback_enabled']
+    feedback_enabled = cloud_portal_customization_cache(settings.CUSTOMIZATION, 'config').get('feedback_enabled', False)
     if not feedback_enabled:
         raise APIServiceException('Feedback is currently unavailable', ErrorCodes.service_unavailable)
 

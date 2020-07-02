@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Current password is incorrect.",
         "oldSafariNotSupported": "Versions of Safari older than 10 are not supported",
         "passwordMismatch": "كلمة مرور خاطئة",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "the system",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "الحساب مفعل بالفعل أو رمز التأكيد غير صحيح",
         "wrongCodeRestore": "Confirmation code is already used or incorrect",
         "wrongParameters": "Some parameters on the form are incorrect",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

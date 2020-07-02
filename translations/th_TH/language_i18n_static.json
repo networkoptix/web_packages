@@ -68,7 +68,7 @@
         "accountSavedSuccess": "บันทึกบัญชีของคุณเรียบร้อยแล้ว",
         "accountSettings": "การตั้งค่าบัญชี",
         "activationLinkSent": "ส่งการเปิดใช้งานแล้ว",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "ข้อตกลงได้รับการยอมรับ",
         "changePassword": "เปลี่ยนรหัสผ่าน",
         "newPasswordLabel": "สร้างรหัสผ่านใหม่",
         "passwordChangedSuccess": "บันทึกรหัสผ่านเรียบร้อยแล้ว",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "สร้างบัญชีแล้ว",
+                "message": "ข้อความยืนยันพร้อมลิงค์เปิดใช้งานถูกส่งไปที่ {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "เปิดใช้งานบัญชีของคุณเรียบร้อยแล้ว"
             }
         },
         "cameraLinks": {
@@ -128,14 +128,14 @@
             "unauthorized": "จำเป็นต้องระบุตัวตนผู้ใช้"
         },
         "chromeCastWarning": "Chromecast เป็นทรัพยากรที่เข้มข้นและอาจทำให้เกิดปัญหาบนเซิร์ฟเวอร์ของคุณ",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "โปรดอัปเดตการตั้งค่าการบันทึกที่หายไป",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "บันทึกตลาดเวลา",
+            "motion": "บันทึกการเคลื่อนไหวเท่านั้น",
+            "motionLowRes": "เคลื่อนไหว + ความละเอียดต่ำ"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- ค่าที่แตกต่าง -",
             "auto": "อัตโนมัติ",
             "best": "ดีสุด",
             "high": "สูง",
@@ -144,8 +144,8 @@
         },
         "general": "ทั่วไป",
         "searchCamPlaceholder": "ค้นหา",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
+        "systemHasNoCameras": "ไม่มีกล้อง",
+        "systemHasNoCamerasMessage": "ไม่มีกล้องที่สามารถเข้าถึงได้สำหรับคุณในระบบ <br><br>เชื่อมต่อกล้องสองสามตัวกับเครือข่ายท้องถิ่นของเซิร์ฟเวอร์เพื่อให้ค้นพบได้หรือขอให้ผู้ดูแลระบบเปลี่ยนระดับการเข้าถึงของคุณ",
         "systemNewVersion": "อัปเดตระบบของคุณ",
         "systemNewVersionMessage": "เวอร์ชันปัจจุบันของคุณไม่สามารถใช้ร่วมกับคุณสมบัตินี้ได้ โปรดอัปเดตเซิร์ฟเวอร์ของคุณเป็นเวอร์ชันล่าสุดเพื่อใช้คุณสมบัตินี้",
         "systemNoAlerts": "ไม่มีการแจ้งเตือน",
@@ -155,7 +155,7 @@
         "systemServerError": "ข้อผิดพลาดภายในเซิร์ฟเวอร์",
         "systemServerErrorMessage": "มีข้อผิดพลาดเกิดขึ้นโปรดลองอีกครั้ง. หากปัญหายังคงมีอยู่โปรดติดต่อทีมสนับสนุนของคุณ",
         "systemUnreachable": "ระบบไม่สามารถเข้าถึงได้",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "ระบบออฟไลน์และทำให้ข้อมูลไม่สามารถเข้าถึงได้",
         "unknown": "ม่รู้จัก",
         "voiceCommands": {
             "clear search": "ล้างการค้นหา",
@@ -171,14 +171,14 @@
             "stop listening": "หยุดฟัง",
             "view": "view + [camera name]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "คุณกำลังดูรายงานเก่า"
     },
     "dialogs": {
         "buttons": {
             "cancel": "ยกเลิก",
             "createAccount": "สร้างบัญชีผู้ใช้",
             "delete": "ลบ",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "ลบบัญชี",
             "download": "ดาวน์โหลด %VMS_NAME%",
             "logoutAuthorised": "ออกจากระบบ",
             "ok": "ตกลง",
@@ -187,90 +187,90 @@
             "stayLoggedIn": "คงอยู่ในระบบ"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "พื้นที่คลาวน์",
+            "enableStorage": "เปิดใช้งาน Cloud Storage",
+            "otherSystem": "ระบบอื่น",
+            "initial": "เรานำเสนอที่เก็บข้อมูลบนคลาวด์ {{compCapacity}} ฟรีต่อระบบเพื่อให้คุณเริ่มต้นได้",
+            "available": "ที่เก็บข้อมูลบนคลาวด์พร้อมใช้งานสำหรับเซิร์ฟเวอร์ทั้งหมดในระบบนี้ คุณสามารถจัดการได้โดยใช้เดสก์ท็อปไคลเอ็นต์ {{vmsName}}",
             "camera": "กล้อง",
             "cameras": "กล้อง",
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "ลบที่เก็บข้อมูลบนคลาวด์ได้สำเร็จจากระบบ",
+                "errorPrefix": "เกิดข้อผิดพลาดในการลบที่เก็บข้อมูลบนคลาวด์"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "เปิดใช้งาน Cloud Storage",
+                "message": "คุณได้เพิ่มที่เก็บข้อมูลบนคลาวด์ทั้งหมด <volume> ในระบบของคุณและไม่สามารถเพิ่มได้อีก <br/><br/>คุณสามารถลบที่เก็บข้อมูลจากระบบอื่นแทนหรือย้ายไปยังที่เก็บนี้ได้ "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "ไม่สามารถเชื่อมต่อระบบกับ %CLOUD_NAME%",
+                "message": "ระบบนี้มีที่เก็บข้อมูลบนคลาวด์พร้อมกับที่เก็บถาวรบางส่วน <br/><br/>ต้องลบที่เก็บข้อมูลบนคลาวด์ด้วยตนเองก่อนที่จะตัดการเชื่อมต่อระบบจาก %CLOUD_NAME%"
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "ย้ายที่เก็บข้อมูลบนคลาวด์",
+                "success": "ย้ายที่เก็บสำเร็จแล้ว",
+                "errorPrefix": "เกิดข้อผิดพลาดในการย้ายที่จัดเก็บข้อมูลบนคลาวด์",
+                "notFound": "ไม่พบที่เก็บข้อมูล ที่เก็บข้อมูลอาจถูกย้ายหรือลบโดยผู้ใช้งานอื่น",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "ที่เก็บข้อมูลบนคลาวด์ไม่สามารถย้ายไปยังระบบออฟไลน์ได้"
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "เปิดใช้งาน Cloud Storage แล้ว",
+                "errorPrefix": "เกิดข้อผิดพลาดในการเปิดใช้งาน Cloud Storage"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "คุณสามารถย้ายที่เก็บข้อมูลบนคลาวด์ระหว่างระบบที่คุณเป็นเจ้าของ <br/><br/>เชื่อมต่อระบบกับ %CLOUD_NAME% โดยใช้บัญชีคลาวด์ของคุณเพื่อให้สามารถย้ายที่เก็บข้อมูลบนคลาวด์"
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "ป้อนรหัสผ่านไปยังบัญชีของเจ้าของใน <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "รหัสผ่านไม่ถูกต้องสำหรับผู้ดูแล",
+            "checking": "กำลังตรวจสอบ",
             "commonText": "ไม่สามารถรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong>",
             "connectToCloud": "เชื่อมต่อระบบที่คุณต้องการผสานกับระบบนี้กับ <strong>{{cloudName}}</strong> หรือผสานภายในเครื่องโดยใช้ไคลเอ็นต์ <strong>{{vmsName}}</strong>",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "ทั้งที่เลือกและระบบปัจจุบันเชื่อมต่อกับ %CLOUD_NAME% และมีเจ้าของที่แตกต่างกัน ระบบคลาวด์สามารถรวมกันได้หากบัญชีของเจ้าของเหมือนกัน",
+            "duplicateServers": "<p class=\"mb-2\">เซิร์ฟเวอร์ดูเหมือนว่าจะแสดงรายการตัวเองภายใต้ระบบที่เลือกและระบบปัจจุบัน</p><p>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองอีกครั้ง</p>",
+            "enterSystemAddressTitle": "ป้อนที่อยู่ของเซิร์ฟเวอร์ใด ๆ ที่อยู่ในระบบที่คุณต้องการรวมเข้ากับเซิร์ฟเวอร์นี้",
+            "mergeConfirmation": "<p class=\"mb-0\">คุณกำลังจะรวมระบบ <strong>{{primarySystem}}</strong> และ <strong>{{secondarySystem}}</strong></p><p>การตั้งค่าและชื่อจะถูกนำมาจาก <strong>{{primarySystem}}</strong></p>",
+            "mergeSystemsTitle": "ผสานระบบปัจจุบันเข้ากับ",
             "mergeFailedTitle": "การผสานระบบล้มเหลว",
-            "noServerFound": "No server found",
+            "noServerFound": "ไม่พบเซิร์ฟเวอร์",
             "newSystemDisplayName": "ระบบใหม่",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "otherSystem": "ระบบอื่น",
+            "ownerCanMergeText": "คุณสามารถผสานระบบคลาวด์ที่คุณเป็นเจ้าของได้",
             "passwordRequired": "จำเป็นต้องใช้รหัสผ่าน",
             "passwordWrong": "รหัสผ่านผิด",
             "primaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "ระบบ {{primarySystem}} เป็นออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้ {{targetSystem}}",
+            "primarySystemUnavailable": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "เราขอแนะนำให้คุณปรึกษากับ",
                 "b_support": "ทีมช่วยเหลือ",
                 "c_proceeding": "ก่อนดำเนินการต่อ"
             },
             "secondaryCannotMerge": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "secondarySystemUnavailable": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
+            "serverAtUrl": "เซิร์ฟเวอร์ที่ {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">ไม่สามารถเข้าถึงระบบ {{targetSystem}}</p><p>ตรวจสอบให้แน่ใจว่าเซิร์ฟเวอร์ที่ระบุนั้นออนไลน์แล้วลองอีกครั้ง</p>",
+            "serverNotYours": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของคนอื่น ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
+            "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
+            "systemOfflineUrl": "{{targetSystem}} ไม่สามารถเข้าถึงได้",
+            "systemsIncompatible": "เซิร์ฟเวอร์นี้มีเวอร์ชันซอฟต์แวร์ที่เข้ากันไม่ได้ อัพเดตทั้งสองระบบให้เหมือนกันเพื่อรวมเข้าด้วยกัน",
+            "systemVersionOld": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
+            "systemVersionNew": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
             "urlEmpty": "ที่อยู่เซิร์ฟเวอร์",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "ป้อน URL ที่ถูกต้อง",
+            "unknownError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
+            "warning": "จะมีเซิร์ฟเวอร์มากกว่า <strong>{{maxServers}}</strong> ในระบบที่ถูกผสาน"
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "storageSettingsSaved": "บันทึกการตั้งค่าที่เก็บข้อมูลแล้ว",
+            "storageSettingsNotSaved": "ไม่สามารถบันทึกการตั้งค่าที่เก็บข้อมูล",
+            "settingsSaved": "บันทึกการตั้งค่าแล้ว",
+            "settingsNotSaved": "ไม่สามารถบันทึกการตั้งค่า",
+            "logLevelsSaved": "บันทึก log แล้ว",
+            "logLevelsNotSaved": "ไม่สามารถบันทึก log ได้",
             "failedToSend": "ไม่สามารถส่งข้อความได้",
             "placeholders": {
                 "feedback": "ตรวจสอบให้แน่ใจว่าคุณได้รวมรุ่นกล้องและผู้ผลิตของคุณ..."
@@ -291,7 +291,7 @@
         },
         "removeSystem": {
             "action": "ตัดการเชื่อมต่อ",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "คุณจะไม่สามารถเข้าสู่ระบบนี้ได้อีกต่อไป",
             "title": "ยกเลิกการเชื่อมต่อระบบหรือไม่?"
         },
         "titles": {
@@ -302,12 +302,12 @@
             "loggedFromOtherAccount": "คุณจะเข้าสู่ระบบด้วยบัญชีอื่น",
             "noClientDetected": "ติดตั้ง {{VMS_NAME}} เพื่อดูระบบของคุณ",
             "removeUser": "นำผู้ใช้ออกหรือไม่",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "แยกเซิร์ฟเวอร์ \"{{ title }}\" ออกจากระบบปัจจุบันหรือไม่",
+            "serversReset": "รีเซ็ตเซิร์ฟเวอร์ \"{{ title }}\" เป็นค่าเริ่มต้นหรือไม่",
+            "serversRestart": "รีสตาร์ทเซิร์ฟเวอร์ \"{{ title }}\" หรือไม่"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "ยกเลิกการเชื่อมต่อระบบทั้งหมดที่คุณเป็นเจ้าของจากพอร์ทัล %CLOUD_NAME% เพื่อลบบัญชีของคุณ"
         }
     },
     "downloads": {
@@ -383,23 +383,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของแล้ว ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
         "DUPLICATE_MEDIASERVER_FOUND": "เซิร์ฟเวอร์บางรายการมีอยู่ในทั้งสองระบบ - ในรายการที่เลือกและในปัจจุบัน<br>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองใหม่อีกครั้ง",
         "EmailAlreadyExists": "ลงทะเบียนอีเมล์นี้แล้ว",
         "FAIL": "ระบบ <strong>{{failedSystem}}</strong> ไม่สามารถเข้าถึงได้ในขณะนี้<br>ลองอีกครั้งในภายหลังหรือติดต่อฝ่ายสนับสนุน <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "ระบบมีเวอร์ชั่นซอฟต์แวร์ที่ต่างกัน โปรดอัปเดตไปที่ <a href=\"/download\">รุ่นล่าสุด</a>",
+        "cloud_systems_have_different_owners": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของแล้ว ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">เซิร์ฟเวอร์ดูเหมือนว่าจะแสดงรายการตัวเองภายใต้ระบบที่เลือกและระบบปัจจุบัน</p><p>ลบเซิร์ฟเวอร์ออฟไลน์และที่เข้ากันไม่ได้ออกจากแต่ละระบบแล้วลองอีกครั้ง</p>",
+        "fail": "{{failedSystem}} ไม่สามารถเข้าถึงได้",
+        "incompatible": "เซิร์ฟเวอร์นี้มีเวอร์ชันซอฟต์แวร์ที่เข้ากันไม่ได้ อัพเดตทั้งสองระบบให้เหมือนกันเพื่อรวมเข้าด้วยกัน",
+        "unknown_error": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
         "accountAlreadyActivated": "บัญชีนี้เปิดใช้งานแล้ว",
         "accountBlocked": "บัญชีนี้ถูกปิดแล้ว โปรดลองอีกครั้งในไม่กี่นาที.",
         "accountNotActivated": "บัญชีนี้ยังไม่เปิดใช้งาน <a href=\"/activate\"> ส่งลิงก์การเปิดใช้งานอีกครั้ง </a>",
         "alreadyExists": "มีบัญชีอยู่แล้ว",
         "brokenAccount": "ปัญหาที่ไม่คาดคิดกับบัญชี <a href=\"/restore_password\">เรียกคืนบัญชี</a>",
         "cantActivatePrefix": "ไม่สามารถเปิดใช้งานบัญชีของคุณได้",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "ไม่อนุญาตให้เพิ่มอีเมลของคุณเอง",
         "cantChangeAccountPrefix": "ไม่สามารถบันทึกการเปลี่ยนแปลงได้",
         "cantChangePasswordPrefix": "ไม่สามารถบันทึกรหัสผ่านได้",
         "cantDisconnectSystemPrefix": "ไม่สามารถลบระบบได้",
@@ -415,7 +415,7 @@
         "cantSharePrefix": "ไม่สามารถแชร์ระบบ",
         "cantUnshareWithMeSystemPrefix": "ไม่สามารถลบระบบได้",
         "emailNotFound": "ไม่มีบัญชีนี้อยู่",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "ลิงค์นี้ไม่สามารถเข้าถึงระบบได้ สิ่งนี้อาจเกิดขึ้นเมื่อระบบถูกตัดการเชื่อมต่อจาก %CLOUD_NAME%การเข้าถึงระบบนี้ถูกเพิกถอนหรือหากคุณเข้าสู่บัญชีที่ไม่ถูกต้อง",
         "forbidden": "การเข้าถึงถูกปฏิเสธ คุณไม่มีสิทธิ์ดำเนินการนี้.",
         "lostConnection": "การเชื่อมต่อกับ {{systemName}} สูญหาย",
         "mergedSystemIsOffline": "ระบบ <strong>{{failedSystem}}</strong> ออฟไลน์",
@@ -425,18 +425,18 @@
         "oldPasswordMistmatch": "ต้องระบุรหัสผ่านปัจจุบัน.",
         "oldSafariNotSupported": "ไม่สนับสนุน Safari ที่เก่ากว่าเวอร์ชั่น 10",
         "passwordMismatch": "รหัสผ่านผิด",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "ระบบ",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "เกิดข้อผิดพลาดที่ไม่คาดคิด",
         "unknownMergeError": "ข้อผิดพลาดที่ไม่รู้จัก. คุณสามารถลองรีเฟรชหน้าและพยายามซ้ำ หากปัญหายังคงมีอยู่ - กรุณาติดต่อ <a href=\"%SUPPORT_LINK%\" target=\"_blank\">สนับสนุน</a>",
         "wrongAuthCode": "รหัสหมดอายุหรือไม่ถูกต้อง",
         "wrongCode": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
         "wrongCodeRestore": "ใช้รหัสยืนยันแล้วหรือไม่ถูกต้อง",
         "wrongParameters": "พารามิเตอร์บางอย่างในแบบฟอร์มไม่ถูกต้อง",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseTimeout": "ไม่สามารถเปิดใช้งานใบอนุญาตเนื่องจากการหมดเวลาการเชื่อมต่อ โปรดตรวจสอบว่าเซิร์ฟเวอร์ออนไลน์และลองอีกครั้ง",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
+        "networkConnection": "ไม่สามารถดาวน์โหลดได้ โปรดตรวจสอบการเชื่อมต่อเครือข่ายของคุณ"
     },
     "integration": {
         "Access Control": "การควบคุมการเข้าถึง",
@@ -491,7 +491,7 @@
         "primaryCodec": "ตัวแปลงสัญญาณ",
         "resolutionArea": "พื้นที่",
         "sndResolution": "สตรีมรอง",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "{{value}} อันดับสูงสุดตามปริมาณ:",
         "vendor": "ผู้ผลิต"
     },
     "menu": {
@@ -513,7 +513,7 @@
         "default": "%CLOUD_NAME%",
         "download": "ดาวน์โหลด %VMS_NAME%",
         "downloadPlatform": "ดาวน์โหลด {{VMS_NAME}} สำหรับ ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "ไม่สามารถเข้าถึงระบบ",
         "integrations": "Integration",
         "login": "ลงชื่อเข้าสู่ระบบ",
         "pageNotFound": "ไม่พบหน้านี้",
@@ -546,34 +546,34 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "ไม่สามารถโหลดหน้านี้ได้",
+            "message": "โปรดตรวจสอบให้แน่ใจว่าเซิร์ฟเวอร์ของคุณออนไลน์แล้วลองอีกครั้ง"
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "ระบบนี้กำลังถูกรวมเป็น {{systemName}}",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "อาจใช้เวลาหลายชั่วโมงทั้งนี้ขึ้นอยู่กับขนาดของฐานข้อมูล",
+                "untilFinished": "จนกว่าการผสานจะเสร็จสิ้นคุณสามารถเข้าสู่ระบบนี้และชมวิดีโอ แต่ไม่สามารถเปลี่ยนการตั้งค่าใด ๆ ได้",
+                "whenFinished": "เมื่อการผสานเสร็จสิ้นผู้ใช้และกล้องทั้งหมดจากระบบนี้จะพร้อมใช้งานในระบบ {{systemName}} และระบบนี้จะถูกลบ"
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "เซิร์ฟเวอร์ไม่สามารถเข้าถึงได้",
+            "message": "ระบบออฟไลน์และทำให้ข้อมูลไม่สามารถเข้าถึงได้"
         }
     },
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "โปรดเลือก",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "คุณจะพบ {{INTEGRATION_COMPANY}} นโยบายความเป็นส่วนตัว <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">ที่นี่</a>นโยบายความเป็นส่วนตัว %COMPANY_NAME% ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณนั้นมีให้ที่ <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a>",
+        "ipvd": "โดยการส่งแบบฟอร์มนี้คุณตกลงที่จะได้รับการติดต่อจาก %COMPANY_NAME%\nคุณจะได้พบกับ %COMPANY_NAME% นโยบายความเป็นส่วนตัว <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ที่นี่</a> ซึ่งรวมถึงคำแนะนำเกี่ยวกับวิธีการถอนความยินยอมของคุณ"
     },
     "registration": {
         "agreement": "<span class=\"text\"> ฉันยอมรับ <a href=\"/content/eula\" target=\"_blank\"> ข้อตกลงและเงื่อนไข </a> และ <a href=\"%PRIVACY_LINK%\" target=\"_blank\"> นโยบายความเป็นส่วนตัว </a></span>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "กำลังถูกรวมเข้ากับระบบนี้",
+            "mayTake": "อาจใช้เวลาหลายชั่วโมงทั้งนี้ขึ้นอยู่กับขนาดของฐานข้อมูล"
         },
         "finishingMerge": "การรวมระบบเสร็จสิ้น",
         "integration": {
@@ -581,7 +581,7 @@
             "previewRibbon": "หน้านี้เป็นหน้าตัวอย่างของการเปลี่ยนแปลงล่าสุดและไม่ตรงกับรุ่นที่เผยแพร่สู่สาธารณะ"
         },
         "systemOffline": "ระบบออฟไลน์ การตั้งค่าบางอย่างอาจไม่สามารถใช้ได้",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "ขณะนี้ระบบนี้มีส่วนร่วมในการดำเนินการผสาน"
     },
     "search": {
         "Any": "รายการใดก็ได้",
@@ -599,34 +599,34 @@
         "vendors": "ผู้ผลิต"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
-        "serverOffline": "Server is offline.",
+        "beginDetach": "เซิร์ฟเวอร์กำลังแยกออก",
+        "beginReset": "เซิร์ฟเวอร์กำลังรีเซ็ต",
+        "detachSystemFailed": "ไม่สามารถแยกเซิร์ฟเวอร์ออกจากระบบ โปรดตรวจสอบว่ารหัสผ่านที่คุณป้อนนั้นถูกต้องและเซิร์ฟเวอร์ออนไลน์แล้วลองอีกครั้ง",
+        "detachSystemSuccess": "เซิร์ฟเวอร์แยกออกจากระบบเรียบร้อยแล้ว",
+        "portWarning": "หมายเลขพอร์ตน้อยกว่า 1024 ถูก จำกัด เซิร์ฟเวอร์อาจไม่สามารถเข้าถึงได้",
+        "removeMediaserverFailed": "ไม่สามารถลบเซิร์ฟเวอร์ออกจากระบบ",
+        "resetFailed": "ไม่สามารถแยกเซิร์ฟเวอร์ออกจากระบบ โปรดตรวจสอบว่ารหัสผ่านที่คุณป้อนนั้นถูกต้องและเซิร์ฟเวอร์ออนไลน์แล้วลองอีกครั้ง",
+        "resetSuccessful": "เซิร์ฟเวอร์ {{ serverName }} ถูกรีเซ็ตเป็นค่าเริ่มต้น",
+        "restartFailed": "มีปัญหาในการรีสตาร์ทเซิร์ฟเวอร์",
+        "restartSuccessful": "เซิร์ฟเวอร์รีสตาร์ทสำเร็จแล้ว",
+        "serverOffline": "เซิร์ฟเวอร์ออฟไลน์",
         "servers": "เซิร์ฟเวอร์",
         "status": {
-            "checking": "checking...",
+            "checking": "กำลังตรวจสอบ",
             "offline": "ออฟไลน์",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "กำลังรีเซ็ต",
+            "restarting": "กำลังรีสตาร์ท"
         },
-        "successRename": "Server name saved."
+        "successRename": "บันทึกชื่อเซิร์ฟเวอร์แล้ว"
     },
     "system": {
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+        "MERGE_FINISHES": "เมื่อการผสานเสร็จสิ้นผู้ใช้และกล้องทั้งหมดจากระบบนี้จะพร้อมใช้งานในระบบ <strong>{{targetSystemName}}</strong> และระบบนี้จะถูกลบ",
         "mergeUnknownName": "ชื่อที่ไม่รู้จักสำหรับระบบ (เกิดจากการผสานคลาวด์)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "ไม่สามารถโหลดการตั้งค่าความปลอดภัย",
+            "notAbleToLoadSystem": "ไม่สามารถโหลดการตั้งค่าระบบ",
+            "notAbleToLoadStorageInfo": "ไม่สามารถโหลดข้อมูลหน่วยเก็บข้อมูล",
             "sessionLimitDuration": {
                 "hours": "ชั่วโมง",
                 "minutes": "นาที"
@@ -640,34 +640,34 @@
             "unavailable": "ระบบไม่สามารถเข้าถึงได้"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "ลบผู้ใช้",
+            "localDelete": "ลบผู้ใช้"
         },
         "yourSystem": "ระบบของคุณ",
         "loggers": {
             "none": {
                 "text": "ไม่มี",
-                "help": "(log disabled)"
+                "help": "(log ถูกปิดใช้งาน)"
             },
             "error": {
                 "text": "ข้อผิดพลาด",
-                "help": "(log errors only)"
+                "help": "(log ข้อผิดพลาดเท่านั้น)"
             },
             "warning": {
                 "text": "คำเตือน",
-                "help": "(log warnings and errors)"
+                "help": "(log คำเตือนและข้อผิดพลาด)"
             },
             "info": {
                 "text": "ข้อมูล",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(log คำเตือนข้อผิดพลาดและข้อความทั้งหมด)"
             },
             "debug": {
                 "text": "การ​แก้ไข​จุด​บกพร่อง",
-                "help": "(log every System message and debug information)"
+                "help": "(log ข้อความระบบและข้อมูลการดีบัก)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "ละเอียด",
+                "help": "( log ข้อมูลทั้งหมดที่มี)"
             }
         }
     },
@@ -690,7 +690,7 @@
             },
             "merge": {
                 "failed": "การผสานระบบล้มเหลว",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "การรวมระบบ {{primaryName}} และ {{secondaryName}} เสร็จสมบูรณ์"
             },
             "rename": {
                 "success": "ระบบเปลี่ยนชื่อ"
@@ -706,9 +706,9 @@
             "status": "สถานะ",
             "expires": "หมดอายุแล้ว",
             "time": "เวลา",
-            "deactivations": "Deactivation left",
+            "deactivations": "เหลือการปิดใช้งาน",
             "trial": "ทดลอง",
-            "online": "Online",
+            "online": "ออนไลน์",
             "error": "ข้อผิดพลาด",
             "expired": "หมดอายุ",
             "ok": "ตกลง",
@@ -718,38 +718,38 @@
             "vmax": "VMAX",
             "videowall": "วีดีโอ กำแพง",
             "analogencoder": "เข้ารหัสอนาล็อก",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "starter": "เริ่มต้น",
+            "iomodule": "I/O โมดูล",
             "bridge": "การเชื่อมต่อ"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "ต้องการอีก {{number}}",
+            "activated": "เปิดใช้งานใบอนุญาตแล้ว",
+            "inuse": "รหัสใบอนุญาตถูกเปิดใช้งานและเชื่อมโยงกับเซิร์ฟเวอร์ที่มี ID ฮาร์ดแวร์ {{hwid}} ในระบบอื่นแล้ว",
+            "trialActivated": "เปิดใช้งานใบอนุญาตทดลองใช้แล้ว วันนี้คุณสามารถบันทึกได้สูงสุด 4 กล้องเป็นเวลา 30 วัน"
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "ประเภท FS ในท้องถิ่นเพิ่มเติม",
+        "autoDiscoveryResponseEnabled": "ตอบสนองการค้นพบอัตโนมัติ",
+        "crossdomainEnabled": "ข้ามโดเมน",
+        "defaultExportVideoCodec": "ค่าเริ่มต้นการส่งออกวีดีโอ",
+        "defaultVideoCodec": "วิดีโอเริ่มต้น",
+        "downloaderPeers": "เพื่อนดาวน์โหลด",
+        "lastMergeMasterId": "ผสาน masterId ครั้งสุดท้าย",
+        "lastMergeSlaveId": "ผสาน masterId ครั้งสุดท้าย",
+        "ldapSearchTimeoutS": "หมดเวลาค้นหา LDAP (วินาที)",
+        "licenseServer": "ใบอนุญาตของเซิร์ฟเวอร์",
+        "lowQualityScreenVideoCodec": "วิดีโอหน้าจอคุณภาพต่ำ",
+        "maxP2pAllClientsSizeBytes": "Max P2P ทั้งหมดลูกค้าขนาดไบต์",
+        "maxRtpRetryCount": "จำนวนการลองใหม่ RTP สูงสุด",
+        "metadataStorageChangePolicy": "นโยบายการเปลี่ยนแปลงการจัดเก็บข้อมูล Meta data",
+        "pushNotificationsLanguage": "ภาษาการแจ้งเตือนแบบพุช",
+        "resourceFileUri": "ไฟล์ทรัพยากร URI",
+        "sessionLimitMinutes": "ขีด จำกัด เซสชัน (นาที)",
+        "specificFeatures": "คุณสมบัติเฉพาะ",
         "systemName": "ชื่อระบบ",
-        "webSocketEnabled": "Web sockets",
+        "webSocketEnabled": "ซ็อกเก็ตเว็บ",
         "arecontRtspEnabled": "เปิดใช้ Arecont RTSP",
         "auditTrailEnabled": "ตรวจสอบเปิดใช้งาน",
         "auditTrailPeriodDays": "วันตรวจสอบเส้นทาง",
@@ -780,7 +780,7 @@
         "localSystemId": "ระบบภายใน",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "ความแตกต่างสูงสุดระหว่างเวลาที่ซิงโครไนซ์กับอินเทอร์เน็ต (มิลลิวินาที)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "ความแตกต่างระหว่างเวลาซิงโครไนซ์กับเวลาท้องถิ่น (มิลลิวินาที)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "ขนาดคิว P2P สูงสุด (ไบต์)",
         "maxRecordQueueSizeBytes": "ขนาดคิวการบันทึกสูงสุด (ไบต์)",
         "maxRecordQueueSizeElements": "ขนาดคิวการบันทึกสูงสุด (ไบต์)",
         "maxRemoteArchiveSynchronizationThreads": "การซิงโครไนซ์ที่เก็บข้อมูลระยะไกล",
@@ -807,19 +807,19 @@
         "SystemName": "ชื่อระบบ",
         "takeCameraOwnershipWithoutLock": "ถ่ายรูปเป็นเจ้าของกล้องโดยไม่ต้องล็อค",
         "timeSynchronizationEnabled": "เปิดใช้งานการซิงโครไนส์เวลา",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "primaryTimeServer": "เซิร์ฟเวอร์การซิงโครไนซ์เวลาหลัก",
+        "osTimeChangeCheckPeriodMs": "ระยะเวลาการตรวจสอบการเปลี่ยนแปลงเวลาระบบปฏิบัติการ",
+        "syncTimeExchangePeriod": "ซิงค์ช่วงเวลาการซิงโครไนซ์สำหรับคำขอเครือข่าย",
+        "syncTimeEpsilon": "epsilon ซิงค์เวลา ค่าใหม่จะไม่ถูกใช้หากเวลา detla น้อยกว่า epsilon",
+        "maxWearableArchiveSynchronizationThreads": "หัวข้อการซิงค์ไฟล์เก็บถาวรสูงสุดของกล้องที่สวมใส่ได้",
         "updateNotificationsEnabled": "เปิดใช้งานการแจ้งเตือนการปรับปรุง",
         "upnpPortMappingEnabled": "เปิดใช้การแมปพอร์ต UPnP",
         "useTextEmailFormat": "ส่งอีเมลแบบธรรมดา",
         "useWindowsEmailLineFeed": "ใช้ฟีดบรรทัดของ Windows ในอีเมล",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
+        "trafficEncryptionForced": "บังคับใช้ Encription การเข้าชมวิดีโอ",
+        "videoTrafficEncryptionForced": "บังคับใช้ Encription การเข้าชมวิดีโอ",
+        "updateStatus": "สถานะการอัพเดท",
+        "watermarkSettings": "การตั้งค่าลายน้ำ",
         "maxWebMTranscoders": "จำนวนการเชื่อมต่อ WEBM สูงสุดสำหรับเซิร์ฟเวอร์ Chrome เปิดการเชื่อมต่อ 2 ครั้งพร้อมกันจากนั้นปิดการเชื่อมต่อแรก ดังนั้นจึงขอแนะนำให้ตั้งค่า> = 2 เป็นพารามิเตอร์นี้",
         "maxEventLogRecords": "บันทึกเหตุการณ์สูงสุดที่จะเก็บไว้ในฐานข้อมูล จำนวนเรคคอร์ดที่ไม่ถูกลบจริงอาจสูงกว่าค่าที่ระบุได้ถึง 20%",
         "forceLiveCacheForPrimaryStream": "กำหนดว่าจะแคชบางเฟรมสำหรับสตรีมหลักหรือไม่ ค่า: \"ใช่\" - เปิดใช้งานเสมอ (อาจใช้ RAM จำนวนมาก), \"ไม่\" - ปิดใช้งานเสมอยกเว้นเมื่อต้องการโดยการเล่น (เช่น HLS), \"อัตโนมัติ\" - คล้ายกับ \"ไม่\" แต่เปิดเมื่อปรับปรุง ประสบการณ์ผู้ใช้ (เช่นเมื่อปลั๊กอิน Analytics บางตัวทำงานบนกล้อง)"

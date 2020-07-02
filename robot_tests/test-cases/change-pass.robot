@@ -41,7 +41,7 @@ Restart
 
 Clean up
     Register Keyword To Run On Failure    NONE
-    ${status}    Run Keyword And Return Status    Validate Log In
+    ${status}    Run Keyword And Return Status    Validate Log In    ${email}
     Register Keyword To Run On Failure    Failure Tasks
     Run Keyword If    ${status}    Log Out
     Restore Password using API    ${email}    ${password}
@@ -56,7 +56,7 @@ Can be accessed via dropdown or direct link
     [tags]    C41576
     Go To    ${url}/account/password
     Log In    ${email}    ${password}    ${False}    button=None
-    Validate Log In
+    Validate Log In    ${email}
     Wait Until Elements Are Visible    ${CURRENT PASSWORD INPUT}    ${NEW PASSWORD INPUT}
     Location Should Be    ${url}/account/password
     Title Should Be    ${CHANGE PASSWORD TITLE TEXT} - ${PRODUCT_NAME}

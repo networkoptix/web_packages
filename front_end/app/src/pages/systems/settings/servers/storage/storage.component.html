@@ -36,6 +36,7 @@
                                         [max]="storage.maxReserve[storage.reservedSpace.uom]"
                                         [step]="storage.reservedSpace.uom === 'GB' ? 1 : 0.001"
                                         [(ngModel)]="storage.reservedSpace.unitsInCurrentUom"
+                                        (change)="storage.reservedSpace.unitsInCurrentUom = clamp(storage.reservedSpace.unitsInCurrentUom, storage.maxReserve[storage.reservedSpace.uom])"
                                         class="w-50 p-1 form-control input-sm ng-valid ng-not-empty ng-valid-min ng-valid-max ng-valid-required ng-touched ng-dirty ng-valid-number text-right"/>
                                 <select id="reservedSpaceUnit{{ i }}" name="reservedSpaceUnit{{ i }}"
                                         [(ngModel)]="storage.reservedSpace.uom"

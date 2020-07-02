@@ -425,7 +425,7 @@
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
-        "systemUnavailable": "{{failedSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met ondersteuning.",
+        "systemUnavailable": "Systeem {{failedSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "het systeem",
         "unknownError": "Onverwachte fout opgetreden",
         "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,9 +433,9 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale verdeler.",
+        "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
         "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
-        "licenseServerError": "Kan licentie niet activeren. De licentieserver reageerde niet. Probeer het opnieuw of neem contact op met de klantenservice.",
+        "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {

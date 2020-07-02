@@ -1,7 +1,7 @@
-Hello {{message.userFullName}}
+Üdvözlöm, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) megosztotta hozzáférését Önnel "{{message.system_name}}" rendszeréhez.
+{{message.sharer_name}} ({{message.sharer_email}}) hozzáférést adott Önnek az alábbi videomenedzsment rendszerhez: "{{message.system_name}}".
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
