@@ -139,13 +139,15 @@ export class MotionMaskRenderer {
                 takeUntil(this.unsub$)
             )
             .subscribe(shiftCtrlSubject$);
-        const mouseState$ = mouseMove$.pipe(
+        const mouseState$ = new BehaviorSubject({ x: 0, y: 0 });
+        mouseMove$.pipe(
             throttleTime(0, animationFrame),
             map(findEventCoords),
             distinctUntilChanged(
                 ({ x: prevX, y: prevY }, { x, y }) => prevX === x && prevY === y
-            )
-        ); // For testing, will either remove or move into full UI observable later
+            ),
+            takeUntil(this.unsub$)
+        ).subscribe(mouseState$);
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
         const clickBuffer$ = clickAction$.pipe(delay(0));
 
@@ -241,6 +243,7 @@ export class MotionMaskRenderer {
                         }
                     }
                     return mouseState$.pipe(
+                        startWith(mouseState$.value),
                         tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
                         takeUntil(this.unsub$)
                     );
