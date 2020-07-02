@@ -48,12 +48,16 @@ export class MotionMaskRenderer {
 
     // Init methods
     public initCanvas = (canvas: ElementRef<HTMLCanvasElement>, selectionCanvas: ElementRef<HTMLCanvasElement>) => {
-        this.cellWidth = canvas.nativeElement.width / this.columns;
-        this.cellHeight = canvas.nativeElement.height / this.rows;
-        this.width = canvas.nativeElement.width;
-        this.height = canvas.nativeElement.height;
+        const canvasWidth = canvas.nativeElement.width / 2;
+        const canvasHeight = canvas.nativeElement.height / 2;
+        this.cellWidth = canvasWidth / this.columns;
+        this.cellHeight = canvasHeight / this.rows;
+        this.width = canvasWidth;
+        this.height = canvasWidth;
         this.ctx = canvas.nativeElement.getContext('2d');
         this.selectionCtx = selectionCanvas.nativeElement.getContext('2d');
+        this.ctx.scale(2, 2);
+        this.selectionCtx.scale(2, 2);
         this.ctx.imageSmoothingEnabled = false;
         this.ctx.translate(-0.5, -0.5);
         this.selectionCtx.imageSmoothingEnabled = false;
@@ -333,19 +337,25 @@ export class MotionMaskRenderer {
             if (onlySelection && !solid) {
                 return;
             }
+
+            const horizontal = fromY === toY;
+            const white10Percent = '#FFFFFF1A';
+            const selected = sensitivity >= 100;
+            const color = shadow ? 'black' : solid
+                ? selected
+                    ? this.brandColor
+                    : 'black'
+                : white10Percent;
+
             const instruction = () => {
-                const selected = sensitivity >= 100;
-                ctx.strokeStyle = shadow ? 'black' : solid
-                    ? selected
-                        ? this.brandColor
-                        : 'black'
-                    : '#FFFFFF1A';
-                // ctx.shadowColor = 'black';
-                // ctx.shadowBlur = selected ? 1 : 0;
+                ctx.strokeStyle = color;
                 ctx.lineWidth = shadow ? 3.5 : selected ? 2 : 1;
                 ctx.beginPath();
                 ctx.moveTo(fromX, fromY);
-                ctx.lineTo(toX, toY);
+                ctx.lineTo(
+                    horizontal && ctx.strokeStyle === white10Percent ? toX - 1 : toX,
+                    !horizontal && ctx.strokeStyle === white10Percent ? toY - 1 : toY
+                );
                 ctx.stroke();
             };
             renderInstructions.push(instruction);
