@@ -256,7 +256,7 @@
             "serverNotYours": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
             "systemOfflineUrl": "{{targetSystem}} недоступний.",
-            "systemsIncompatible": "Цей сервер має несумісну версію Пз. Оновіть обидві системи до однакової збірки, щоб об'єднати їх.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "{{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
             "systemVersionNew": "{{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}}.",
             "urlEmpty": "Введіть адресу сервера",

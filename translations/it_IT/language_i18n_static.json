@@ -256,7 +256,7 @@
             "serverNotYours": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
             "systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito al corrente",
             "systemOfflineUrl": "{{targetSystem}} è inaccessibile.",
-            "systemsIncompatible": "Questo server ha una versione software incompatibile. Aggiorna entrambi i sistemi alla stessa versione per unirli.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "Il sistema {{targetSystem}} ha una versione precedente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
             "systemVersionNew": "Il sistema {{targetSystem}} ha una versione più recente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
             "urlEmpty": "Inserire l'indirizzo del server",

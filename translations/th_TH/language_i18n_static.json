@@ -256,7 +256,7 @@
             "serverNotYours": "ระบบนี้เชื่อมต่อกับ %CLOUD_NAME%แต่มีเจ้าของคนอื่น ระบบคลาวด์สามารถรวมกันได้หากบัญชีเจ้าของเหมือนกัน",
             "systemOffline": "ระบบ {{targetSystem}} เป็นแบบออฟไลน์และไม่สามารถผสานกับระบบปัจจุบันได้",
             "systemOfflineUrl": "{{targetSystem}} ไม่สามารถเข้าถึงได้",
-            "systemsIncompatible": "เซิร์ฟเวอร์นี้มีเวอร์ชันซอฟต์แวร์ที่เข้ากันไม่ได้ อัพเดตทั้งสองระบบให้เหมือนกันเพื่อรวมเข้าด้วยกัน",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "ระบบ {{targetSystem}} มีซอฟต์แวร์รุ่นเก่าที่เข้ากันไม่ได้กับระบบปัจจุบัน อัปเดต {{targetSystem}} เป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับบิลด์ปัจจุบัน",
             "systemVersionNew": "ระบบ {{targetSystem}} มีซอฟต์แวร์เวอร์ชันใหม่กว่าที่ไม่สามารถใช้กับระบบปัจจุบันได้ อัพเดตระบบปัจจุบันเป็น <a href=\"/download\" target=\"_blank\" translate>บิลด์ล่าสุด</a> เพื่อรวมเข้ากับ {{targetSystem}} ระบบ",
             "urlEmpty": "ที่อยู่เซิร์ฟเวอร์",

@@ -256,7 +256,7 @@
             "serverNotYours": "Эта система подключена к %CLOUD_NAME%, но имеет другого владельца. Облачные системы могут быть объединены, только если учетные записи владельцев совпадает.",
             "systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей",
             "systemOfflineUrl": "{{targetSystem}} недоступна.",
-            "systemsIncompatible": "Этот сервер имеет несовместимую версию программного обеспечения. Обновите обе системы до одной сборки, чтобы объединить их.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
             "systemVersionNew": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
             "urlEmpty": "Адрес сервера",

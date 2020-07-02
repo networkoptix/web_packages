@@ -256,7 +256,7 @@
             "serverNotYours": "Este sistema está conectado ao %CLOUD_NAME%, mas tem um proprietário diferente. Sistemas de nuvem só podem ser mesclados se a conta do proprietário for a mesma.",
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual",
             "systemOfflineUrl": "{{targetSystem}} está inacessível.",
-            "systemsIncompatible": "Este servidor tem uma versão de software incompatível. Atualize ambos os sistemas para a mesma compilação para mesclá-los.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "{{targetSystem}} tem uma versão de software antiga que é incompatível com o sistema atual. Atualize {{targetSystem}} para a <a href=\"/download\" target=\"_blank\" translate>última compilação</a> para mesclá-la com a atual.",
             "systemVersionNew": "{{targetSystem}} tem uma versão de software mais recente que é incompatível com o sistema atual. Atualize o sistema atual para a <a href=\"/download\" target=\"_blank\" translate>última compilação</a> para mesclá-lo com {{targetSystem}}.",
             "urlEmpty": "Introduza o endereço do servidor",
