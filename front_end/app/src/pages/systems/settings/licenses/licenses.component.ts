@@ -6,9 +6,9 @@ import { NxConfigService, IConfig }      from '../../../../services/nx-config';
 import { NxLanguageProviderService }     from '../../../../services/nx-language-provider';
 import { SubscriptionLike }              from 'rxjs';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
-import { NxSettingsService }             from '../settings.service';
-import { NxSystem }                      from '../../../../services/system.service';
-import { NxMenuService }                 from '../../../../components/menu/menu.service';
+import { NxSettingsService }        from '../settings.service';
+import { NxSystem, NxSystemServer } from '../../../../services/system.service';
+import { NxMenuService }            from '../../../../components/menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
 @Component({
@@ -196,11 +196,16 @@ export class NxSystemLicensesComponent implements OnInit {
                                                     const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {
                                                         return server.hardwareIds.find((id: string) => id === item.info.hwid);
                                                     });
-                                                    const server = this.system.servers.find((server) => server.id === boundServer.serverId);
+
+                                                    const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
                                                     if (Object.keys(server).length) {
                                                         item.info.serverName = server.name;
                                                         item.info.serverStatus = server.status;
                                                         item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                    } else {
+                                                        item.info.serverName = 'Server not found';
+                                                        item.info.serverStatus = server.status;
+                                                        item.info.status = this.LANG.license.info.error;
                                                     }
 
                                                     this.addLicenseSummary(item);

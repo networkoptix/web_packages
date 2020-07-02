@@ -87,14 +87,15 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                 value : info.count
             }, {
                 name  : this.LANG.license.info.server,
-                value : info.serverName || this.LANG.common.unknown
+                value : info.serverName || this.LANG.common.unknown,
+                error : !info.serverStatus
             }, {
                 name  : this.LANG.license.info.hwid,
                 value : info.hwid
             }, {
                 name  : this.LANG.license.info.status,
                 value : info.status,
-                error : info.expired
+                error : info.expired || !info.serverStatus
             }, {
                 name  : this.LANG.license.info.expires,
                 value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '&ndash;',

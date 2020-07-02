@@ -410,7 +410,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     preventContext = event => event.preventDefault();
 
-    selectedRotationWatcher: Watcher<any> = new Watcher()
+    selectedRotationWatcher: Watcher<any> = new Watcher();
     get selectedRotation() {
         return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
     }
@@ -419,7 +419,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.selectedRotationWatcher.value = value.value;
     }
 
-    audioEnabledWatcher = new Watcher()
+    audioEnabledWatcher = new Watcher();
     get audioEnabled() {
         return this.audioEnabledWatcher.value;
     }
@@ -457,7 +457,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
     }
 
-    recordingWatcher = new Watcher()
+    recordingWatcher = new Watcher();
     get recording() {
         return this.recordingWatcher.value;
     }
@@ -489,7 +489,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.recordingWatcher.value = value;
     }
 
-    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher()
+    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
     get recordingModes(): IRecordingModes[] {
         return this.recordingModesWatcher.value;
     }
@@ -523,7 +523,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }));
     }
 
-    selectedFpsWatcher = new Watcher()
+    selectedFpsWatcher = new Watcher();
     get selectedFps() {
         return this.selectedFpsWatcher.value;
     }
@@ -536,7 +536,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.selectedFps === 'various' || !this.selectedFps;
     }
 
-    selectedQualityWatcher = new Watcher()
+    selectedQualityWatcher = new Watcher();
     get selectedQuality() {
         return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
     }
@@ -552,7 +552,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     recordingSettings: IRecordingSettings;
 
     // Motion Detection
-    motionEnabledWatcher: Watcher<string> = new Watcher()
+    motionEnabledWatcher: Watcher<string> = new Watcher();
     get motionEnabled() {
         return this.motionEnabledWatcher.value !== MotionType.noMotion;
     }
@@ -673,6 +673,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
+            this.applyService.setVisible();
             this.system.getLicenseChannels().then(({ available }) => {
                 this.availableLicenses = available;
             }).catch(_ => {
