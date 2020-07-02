@@ -1,4 +1,5 @@
 import { Component, OnInit }         from '@angular/core';
+import { Router, NavigationEnd }     from '@angular/router';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 
 import { NxConfigService, IConfig }  from '../../services/nx-config';
@@ -7,11 +8,11 @@ import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
 import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxAccountService }          from '../../services/account.service';
-import { NxUtilsService }            from '../../services/utils.service';
 
-import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
-import { distinctUntilChanged, switchMap }           from 'rxjs/operators';
-import { Router, NavigationEnd } from '@angular/router';
+import {
+    Subject, BehaviorSubject, interval, empty, Subscription
+}                                          from 'rxjs';
+import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 interface Server {
     name: string,
@@ -41,6 +42,8 @@ export class NxOverlayModalComponent implements OnInit {
     checking$ = new BehaviorSubject(false);
     private refresh$ = new Subject();
 
+    routeSubscription: Subscription;
+
     get systemAvailable() {
         return this.appState.systemAvailable$.value;
     }
@@ -69,7 +72,7 @@ export class NxOverlayModalComponent implements OnInit {
                     this.system = system;
                     this.getServers();
                     this.serverId = this.system.moduleInfo.id;
-                    this.router.events.subscribe(route => {
+                    this.routeSubscription = this.router.events.subscribe(route => {
                         if (route instanceof NavigationEnd) {
                             this.servers.forEach(server => {
                                 server.url = `${server.url}/#/${route.url}`;
@@ -125,7 +128,11 @@ export class NxOverlayModalComponent implements OnInit {
             .then(res => {
                 this.servers = res
                     ? Object.entries(res)
-                        .map(server => NxUtilsService.formatURL(server[1]))
+                        .map(server => {
+                            const updatedServer = server[1];
+                            updatedServer.url = `${updatedServer.url}/#/${this.router.url}`;
+                            return updatedServer;
+                        })
                         .filter(server => server.id !== this.serverId)
                     : [];
                 return this.servers;
