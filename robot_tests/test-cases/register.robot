@@ -122,42 +122,43 @@ Should respond to Tab key
     Click Link    ${CREATE ACCOUNT HEADER}
     Wait Until Elements Are Visible    ${REGISTER FIRST NAME INPUT}    ${REGISTER LAST NAME INPUT}    ${REGISTER EMAIL INPUT}    ${REGISTER PASSWORD INPUT}
     Element Should Be Focused    ${REGISTER FIRST NAME INPUT}
-    Press Keys    ${REGISTER FIRST NAME INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER LAST NAME INPUT}
-    Press Keys    ${REGISTER LAST NAME INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER EMAIL INPUT}
     Sleep    1
-    Press Keys    ${REGISTER EMAIL INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${REGISTER PASSWORD INPUT}
-    Press Keys    ${REGISTER PASSWORD INPUT}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${TERMS AND CONDITIONS CHECKBOX REAL}
 
 # Press keys ${SPACE} doesn't really hit space -> replaced by ASCII code
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    0x20
+    Press Keys    None    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[@class="tick checked"]
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    0x20
+    Press Keys    None    SPACE
     Wait Until Page Contains Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}//span[contains(@class,"unchecked")]
 
-    Press Keys    ${TERMS AND CONDITIONS CHECKBOX REAL}    TAB
+    Press Keys    None    TAB
     get locations
-    Press Keys    ${TERMS AND CONDITIONS LINK}    ENTER
+    Press Keys    None    ENTER
     Element Should Be Focused    ${TERMS AND CONDITIONS LINK}
     ${tabs}    Get Window Handles
     Switch Window    ${tabs}[1]
     Location Should Be    ${url}${TERMS URL}
     Switch Window    ${tabs}[0]
-    Press Keys    ${TERMS AND CONDITIONS LINK}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${PRIVACY POLICY LINK}
-    Press Keys    ${PRIVACY POLICY LINK}    SPACEBAR
+    Press Keys    None    ENTER
+    Sleep    5
     ${tabs}    Get Window Handles
-    Switch Window    ${tabs}[3]
+    Switch Window    ${tabs}[2]
     Location Should Be    ${PRIVACY POLICY URL FULL}
     Switch Window    ${tabs}[0]
 
     Clear Register Fields
-    Press Keys    ${PRIVACY POLICY LINK}    TAB
+    Press Keys    None    TAB
     Element Should Be Focused    ${CREATE ACCOUNT BUTTON}
-    Press Keys    ${CREATE ACCOUNT BUTTON}    ENTER
+    Press Keys    None    ENTER
     Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}    //span[@ng-if="registerForm.registerEmail.$touched && registerForm.registerEmail.$error.required" and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
     Wait Until Elements Are Visible    ${FIRST NAME IS REQUIRED}    ${LAST NAME IS REQUIRED}    ${EMAIL IS REQUIRED}    ${PASSWORD IS REQUIRED}
 

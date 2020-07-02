@@ -256,7 +256,7 @@
             "serverNotYours": "Ez a rendszer %CLOUD_NAME%csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel",
             "systemOfflineUrl": "{{targetSystem}} elérhetetlen.",
-            "systemsIncompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Frissítse mindkét rendszert ugyanarra a verzióra, hogy egyesíthető legyen.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "A {{targetSystem}} rendszernek van egy régebbi szoftververziója, amely nem kompatibilis az aktuális rendszerrel. Frissítse az {{targetSystem}} et a <a href=\"/download\" target=\"_blank\" translate>legfrissebbre,</a> hogy egyesítse az aktuálissal.",
             "systemVersionNew": "A {{targetSystem}} rendszernek van egy újabb szoftver verziója, amely nem kompatibilis az aktuális rendszerrel. Frissítse az aktuális rendszert a <a href=\"/download\" target=\"_blank\" translate>legutóbbi</a> verzióra, hogy összekapcsolja azt a {{targetSystem}} rendszerrel.",
             "urlEmpty": "Adja meg a szerver címét",

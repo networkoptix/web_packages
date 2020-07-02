@@ -256,7 +256,7 @@
             "serverNotYours": "Bu sistem %CLOUD_NAME%, bağlı ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
             "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez",
             "systemOfflineUrl": "{{targetSystem}} erişilemez.",
-            "systemsIncompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
             "systemVersionOld": "{{targetSystem}} geçerli sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahiptir. Güncelleme {{targetSystem}} ile <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> akım biri ile birleştirmeye.",
             "systemVersionNew": "{{targetSystem}}, geçerli sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahiptir. İçin mevcut sistemi güncelleyin <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> ile birleştirmeye {{targetSystem}}.",
             "urlEmpty": "Sunucu adresini girin",
