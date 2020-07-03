@@ -1,6 +1,6 @@
-<nx-pre-loader *ngIf="!systemLoaded"></nx-pre-loader>
+<nx-pre-loader *ngIf="!system || !systemLoaded || !system.currentUser"></nx-pre-loader>
 
-<div *ngIf="systemLoaded" class="row d-flex align-items-start">
+<div *ngIf="system && systemLoaded && system.currentUser" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
         <nx-block header-style="extended">
             <header>
@@ -17,7 +17,7 @@
                 </span>
             </header>
 
-            <nx-section *ngIf="system.permissions.isAdmin">
+            <nx-section *ngIf="system.currentUser.isAdmin">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2">
@@ -60,14 +60,14 @@
         </nx-block>
 
         <nx-system-standard-admin-component
-                *ngIf="system && system.permissions.isAdmin"
+                *ngIf="system && system.currentUser && system.currentUser.isAdmin"
                 [system]="system"
                 [settings]="settingsForSystem">
         </nx-system-standard-admin-component>
 
         <nx-alert-block
                 class="d-block mt-3"
-                *ngIf="system.currentUser.isAdmin && advanced"
+                *ngIf="system && system.currentUser && system.currentUser.isAdmin && advanced"
                 [iconSrc]="CONFIG.icons.dirNonStandard + 'error.svg'"
                 [line1]="'Settings displayed below are advanced.' | translate"
                 [line2]="'Changing them may cause server to work incorrectly.' | translate"
@@ -77,7 +77,7 @@
         </nx-alert-block>
 
         <nx-system-advanced-admin-component
-                *ngIf="system.currentUser.isAdmin && advanced"
+                *ngIf="system && system.currentUser && system.currentUser.isAdmin && advanced"
                 [system]="system">
         </nx-system-advanced-admin-component>
     </div>
