@@ -20,7 +20,7 @@
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Reset to Defaults",
     "DETAILED INFO TEXT": "Detailed Info",
-    "DISCONNECT MODAL WARNING TEXT": "You are about to disconnect this System from your account. You will not be able to access this System anymore. Are you sure?",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "System is successfully disconnected from %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "الحساب مفعل بالفعل أو رمز التأكيد غير صحيح",
     "AUTOTESTS OFFLINE TEXT": "غير متصل",

@@ -20,7 +20,7 @@
     "RESTART": "再起動",
     "RESET TO DEFAULTS TEXT": "デフォルトにリセット",
     "DETAILED INFO TEXT": "詳細情報",
-    "DISCONNECT MODAL WARNING TEXT": "アカウントからこのシステムを切断しようとしています　もうこのシステムにアクセスすることはできません\n切断しますか？",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "システムは %PRODUCT_NAME%から正常に切断されました",
     "ALREADY ACTIVATED TEXT": "アカウントは既にアクティブ済か確認コードが正しくありません",
     "AUTOTESTS OFFLINE TEXT": "オフライン",

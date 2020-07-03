@@ -20,7 +20,7 @@
     "RESTART": "Restart",
     "RESET TO DEFAULTS TEXT": "Obnovit výchozí nastavení",
     "DETAILED INFO TEXT": "Podrobné informace",
-    "DISCONNECT MODAL WARNING TEXT": "Chystáte se odpojit systém od Vašeho účtu. K tomuto systému již nebudete mít přístup. Přejete si pokračovat?",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "Systém byl úspěšně odpojen od %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Účet je již aktivován, nebo je potvrzovací kód nesprávný",
     "AUTOTESTS OFFLINE TEXT": "offline",

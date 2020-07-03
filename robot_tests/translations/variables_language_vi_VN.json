@@ -20,7 +20,7 @@
     "RESTART": "Khởi động lại",
     "RESET TO DEFAULTS TEXT": "Đặt lại về Mặc định",
     "DETAILED INFO TEXT": "Thông tin chi tiết",
-    "DISCONNECT MODAL WARNING TEXT": "Bạn sẽ ngắt kết nối Hệ thống này khỏi tài khoản của bạn. Bạn sẽ không thể truy cập Hệ thống này nữa. Bạn có chắc không?",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "Hệ thống được ngắt kết nối thành công từ %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
     "AUTOTESTS OFFLINE TEXT": "ngoại tuyến",

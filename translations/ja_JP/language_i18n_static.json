@@ -256,7 +256,7 @@
             "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません",
             "systemOfflineUrl": "{{targetSystem}} はアクセスできません。",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
+            "systemsIncompatible": "このサーバーには互換性のないソフトウェアバージョンがあります。両方のシステムを最新のビルドに更新してください。",
             "systemVersionOld": "{{targetSystem}} は、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新して、現在のものと統合します。",
             "systemVersionNew": "{{targetSystem}} は、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a> に更新して、 {{targetSystem}} と統合します。",
             "urlEmpty": "サーバーのアドレスを入力してください",
