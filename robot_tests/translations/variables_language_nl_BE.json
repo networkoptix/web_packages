@@ -20,7 +20,7 @@
     "RESTART": "Herstarten",
     "RESET TO DEFAULTS TEXT": "Standaardinstellingen herstellen",
     "DETAILED INFO TEXT": "Gedetailleerde info",
-    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
+    "DISCONNECT MODAL WARNING TEXT": "U zal niet meer kunnen inloggen in dit systeem.",
     "SUCCESSFULLY DISCONNECTED": "Systeem is met succes ontkoppeld van %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Account is al geactiveerd of de bevestigingscode is onjuist",
     "AUTOTESTS OFFLINE TEXT": "offline",

@@ -20,7 +20,7 @@
     "RESTART": "Starta om",
     "RESET TO DEFAULTS TEXT": "Återställ till standardvärden",
     "DETAILED INFO TEXT": "Detaljerad information",
-    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
+    "DISCONNECT MODAL WARNING TEXT": "Du kommer inte att kunna logga in på det här systemet längre.",
     "SUCCESSFULLY DISCONNECTED": "Systemet har kopplats bort från %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Kontot är redan aktiverat eller bekräftelsekoden är felaktig",
     "AUTOTESTS OFFLINE TEXT": "frånkopplad",

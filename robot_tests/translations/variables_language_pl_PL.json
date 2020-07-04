@@ -20,7 +20,7 @@
     "RESTART": "Uruchom ponownie",
     "RESET TO DEFAULTS TEXT": "Przywróć ustawienia domyślne",
     "DETAILED INFO TEXT": "Informacje szczegółowe",
-    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
+    "DISCONNECT MODAL WARNING TEXT": "Nie będziesz już mógł zalogować się do tego systemu.",
     "SUCCESSFULLY DISCONNECTED": "System został pomyślnie odłączony od %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "Konto jest już aktywne lub kod potwierdzenia jest nieprawidłowy",
     "AUTOTESTS OFFLINE TEXT": "offline",

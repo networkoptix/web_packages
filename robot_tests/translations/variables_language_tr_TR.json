@@ -20,7 +20,7 @@
     "RESTART": "Yeniden Başlat",
     "RESET TO DEFAULTS TEXT": "Varsayılanlara sıfırla",
     "DETAILED INFO TEXT": "Detaylı bilgi",
-    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
+    "DISCONNECT MODAL WARNING TEXT": "Artık bu sisteme giriş yapamazsınız.",
     "SUCCESSFULLY DISCONNECTED": "Sistem %PRODUCT_NAME%'den başarıyla çıkarıldı",
     "ALREADY ACTIVATED TEXT": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
     "AUTOTESTS OFFLINE TEXT": "çevrimdışı",
