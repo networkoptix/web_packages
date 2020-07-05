@@ -256,7 +256,7 @@
             "serverNotYours": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
             "systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem",
             "systemOfflineUrl": "{{targetSystem}} jest niedostępny.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "Ten serwer ma niezgodną wersję oprogramowania. Proszę zaktualizować oba systemy do <a href=\"/download\" target=\"_blank\" translate>najnowszej wersji</a>.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
