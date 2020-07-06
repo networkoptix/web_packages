@@ -7,10 +7,10 @@
                 [attr.checked]="value ? '': null"
                 (click)="preventBubbling($event)"
                 [attr.disabled]="disabled ? '' : null">
-            <span class="slider round" [ngClass]="{'disable': disabled}"></span>
+            <span class="slider round" [ngClass]="{'disable': disabled, 'show-warning': showWarning}"></span>
         </label>
-        <div class="bar" [ngClass]="{'disable': disabled}"></div>
-        <div class="circle" [ngClass]="{'disable': disabled}"></div>
+        <div class="bar" [ngClass]="{'disable': disabled, 'show-warning': showWarning}"></div>
+        <div class="circle" [ngClass]="{'disable': disabled, 'show-warning': showWarning}"></div>
     </div>
     <h4 *ngIf="label" class="pl-3 switch-label">{{label}}</h4>
 </div>

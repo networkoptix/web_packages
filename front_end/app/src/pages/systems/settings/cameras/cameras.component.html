@@ -35,16 +35,14 @@
         <div class="col-12 camera-settings-info">
             <nx-block header-style="extended">
                 <header>
-                    <div class="header-top-bar" [ngClass]="{'mb-3': cameraName}">
+                    <div class="header-top-bar mb-3">
                         <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
                             #editTitle
                             [(content)]="cameraName"
                             (blur)="handleBlur()"
                             (focus)="handleFocus()"
-                            [hasError]="!cameraName"
                             id="editable-title"></h2>
-                            <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
                             <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>

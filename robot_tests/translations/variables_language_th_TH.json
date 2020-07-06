@@ -20,7 +20,7 @@
     "RESTART": "รีสตาร์ท",
     "RESET TO DEFAULTS TEXT": "รีเซ็ตเป็นค่าเริ่มต้น",
     "DETAILED INFO TEXT": "รายละเอียดข้อมูล",
-    "DISCONNECT MODAL WARNING TEXT": "คุณกำลังจะยกเลิกการเชื่อมต่อระบบนี้จากบัญชีของคุณ คุณจะไม่สามารถเข้าถึงระบบนี้ได้อีกต่อไป คุณแน่ใจไหม?",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "ระบบถูกตัดการเชื่อมต่อเรียบร้อยแล้วจาก %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "บัญชีถูกเปิดใช้งานหรือรหัสยืนยันไม่ถูกต้อง",
     "AUTOTESTS OFFLINE TEXT": "ออฟไลน์",

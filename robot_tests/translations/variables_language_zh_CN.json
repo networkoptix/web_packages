@@ -20,7 +20,7 @@
     "RESTART": "重启",
     "RESET TO DEFAULTS TEXT": "重置为默认值",
     "DETAILED INFO TEXT": "详细信息",
-    "DISCONNECT MODAL WARNING TEXT": "您将要断开此系统从您的帐户。你将无法再访问该系统。是否确定？",
+    "DISCONNECT MODAL WARNING TEXT": "您将无法再登录此系统。",
     "SUCCESSFULLY DISCONNECTED": "系统已成功从 %PRODUCT_NAME%断线",
     "ALREADY ACTIVATED TEXT": "已经激活帐户或确认码不正确",
     "AUTOTESTS OFFLINE TEXT": "离线",

@@ -20,7 +20,7 @@
     "RESTART": "איתחול",
     "RESET TO DEFAULTS TEXT": "איפוס לברירות מחדל",
     "DETAILED INFO TEXT": "מידע מפורט",
-    "DISCONNECT MODAL WARNING TEXT": "אתה עומד לנתק את המערכת מהחשבון שלך. לא תוכל עוד לגשת למערכת זו. האם להמשיך?",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "המערכת התנתקה בהצלחה מ- %PRODUCT_NAME%",
     "ALREADY ACTIVATED TEXT": "החשבון כבר הופעל או שקוד האישור שגוי",
     "AUTOTESTS OFFLINE TEXT": "לא מקוון",

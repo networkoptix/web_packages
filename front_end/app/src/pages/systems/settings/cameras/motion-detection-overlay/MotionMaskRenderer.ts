@@ -168,7 +168,7 @@ export class MotionMaskRenderer {
                         initialHover.unsubscribe();
                     }
                 }),
-                buffer(clickBuffer$),
+                buffer(clickBuffer$.pipe(startWith({ type: 'mouse-leave', x: 0, y: 0 }))),
                 withLatestFrom(mouseState$.pipe(startWith({ x: 0, y: 0 }))),
                 map(([buffer, { x, y }]) => ({
                     action: getAction(buffer),

@@ -12,6 +12,7 @@
                             [ngModel]="selectedUser.isEnabled"
                             (ngModelChange)="updateEnabled($event);"
                             componentId="user-active-status"
+                            [showWarning]="true"
                     ></nx-switch>
                 </div>
                 <h2 class="user-email" [ngClass]="{'mb-2': selectedUser.isCloud }">{{ selectedUser.isCloud ? email.originalValue : name.originalValue }}</h2>
