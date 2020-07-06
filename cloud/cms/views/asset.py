@@ -27,22 +27,20 @@ DRAFT = Asset.PREVIEW_STATUS[Asset.PREVIEW_STATUS.draft]
 # Used to get the context and language models
 def get_context_and_language(request, context_id, language_code, default_language):
     context = Context.objects.get(id=context_id) if context_id else None
-    language = Language.by_code(language_code)
 
     # Using info in the post request we set the context and language if they are not set already
     if request.method == "POST":
-        if not context and 'context' in request.POST and request.POST['context']:
+        if not context and request.POST.get('context'):
             context = Context.objects.get(id=request.POST['context'])
 
-        if not language and 'language' in request.POST and request.POST['language']:
-            language = Language.by_code(request.POST['language'])
+        if not language_code:
+            language_code = request.POST.get('language')
 
     # If we are using a GET request and no language is set then we much set it to the users session or the default one
-    if not language:
-        if 'admin_language' in request.session:
-            language = Language.by_code(request.session['admin_language'])
-        else:
-            language = default_language
+    if not language_code:
+        language_code = request.session.get('admin_language')
+
+    language = Language.by_code(language_code, default_language)
 
     request.session['admin_language'] = language.code
     return context, language
@@ -60,12 +58,11 @@ def advanced_touched_without_permission(request_data, data_structures, asset):
     for ds_name in request_data:
         data_structure = data_structures.filter(name=ds_name).first()
         if data_structure and data_structure.advanced:
+            db_record_value = data_structure.default
             data_record = data_structure.datarecord_set.filter(asset=asset).order_by('created_date').last()
 
             if data_record:
                 db_record_value = data_record.value
-            else:
-                db_record_value = data_structure.default
 
             if request_data[ds_name] != db_record_value:
                 return True
@@ -80,29 +77,35 @@ def context_editor_action(request, asset, context_id, language_code):
     request_data = request.POST
     request_files = request.FILES
 
+    if not (request.user.is_superuser or request.user.has_perm('cms.edit_advanced'))\
+            and advanced_touched_without_permission(request_data, context.datastructure_set.all(), asset):
+        raise PermissionDenied
+
     preview_link = ""
     saved_msg = "Changes have been saved."
     upload_errors = []
     asset_errors = []
 
-    if not (request.user.is_superuser or request.user.has_perm('cms.edit_advanced'))\
-            and advanced_touched_without_permission(request_data, context.datastructure_set.all(), asset):
-        raise PermissionDenied
+    language_changed = "languageChanged" in request_data
+    preview = "Preview" in request_data
+    save_draft = "SaveDraft" in request_data
+    send_review = "SendReview" in request_data
 
-    if any(action in request_data for action in ['languageChanged', 'Preview', 'SaveDraft', 'SendReview']):
+    if language_changed or preview or save_draft or send_review:
         current_lang = language
-        if 'languageChanged' in request_data and 'currentLanguage' in request_data and request_data['currentLanguage']:
-            current_lang = Language.by_code(request_data['currentLanguage'])
+        request_lang = request_data.get('currentLanguage')
+        if language_changed and request_lang:
+            current_lang = Language.by_code(request_lang)
 
         upload_errors = modify_db.save_unrevisioned_records(asset, context,
                                                             current_lang, context.datastructure_set.all(),
                                                             request_data, request_files, request.user)
 
-        if 'SendReview' in request_data:
+        if send_review:
             saved_msg = ""
             if upload_errors:
-                warning_no_error_msg = "Cannot have any errors when sending for review."
-                messages.warning(request, f"{asset.name} - {warning_no_error_msg}")
+                error_msg = "Cannot have any errors when sending for review."
+                messages.warning(request, f"{asset.name} - {error_msg}")
             elif not asset.is_dirty:
                 error_msg = "Cannot send for review no value was changed for this asset."
                 messages.warning(request, f"{asset.name} - {error_msg}")
@@ -115,7 +118,7 @@ def context_editor_action(request, asset, context_id, language_code):
             add_upload_error_messages(request, "Upload error for {}. {}", upload_errors)
             add_upload_error_messages(request, "Asset error for {}. {}", asset_errors)
         else:
-            if 'Preview' in request_data:
+            if preview:
                 if asset.can_preview_on_portal:
                     if asset.is_dirty:
                         saved_msg += " Preview has been created."
@@ -144,24 +147,24 @@ def page_editor(request):
     context_id = request.POST['context_id']
     language_code = request.POST.get('language')
 
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
+    if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
         raise PermissionDenied
 
     preview_link, context_errors, asset_errors = context_editor_action(request, asset, context_id, language_code)
     if asset_errors:
         return redirect(asset_errors[0][2]), context_errors
 
-    if 'SendReview' in request.POST and not context_errors and not asset_errors:
-        customization_review = AssetCustomizationReview.objects.\
+    if "SendReview" in request.POST and not context_errors and not asset_errors:
+        customization_reviews = AssetCustomizationReview.objects.\
             filter(state=AssetCustomizationReview.REVIEW_STATES.pending,
                    version_id=ContentVersion.objects.filter(asset=asset).latest('created_date'))
 
         # If the current customization is in the list of reviews go to that one.
         # Otherwise go to the first customization in the list of reviews.
-        if customization_review.filter(customization__name=settings.CUSTOMIZATION).exists():
-            customization_review = customization_review.get(customization__name=settings.CUSTOMIZATION)
-        else:
-            customization_review = customization_review.first()
+        try:
+            customization_review = customization_reviews.get(customization__name=settings.CUSTOMIZATION)
+        except AssetCustomizationReview.DoesNotExist:
+            customization_review = customization_reviews.first()
 
         if customization_review:
             redirect_url = reverse('admin:cms_assetcustomizationreview_change', args=(customization_review.id,))
@@ -180,8 +183,12 @@ def review(request):
         return HttpResponseBadRequest("Version does not exist")
 
     asset = asset_review.version.asset
+    ask_question = "ask_question" in request.POST
+    force_update = "force_update" in request.POST
+    publish = "publish" in request.POST
+    reject = "reject" in request.POST
 
-    if 'force_update' in request.POST and UserGroupsToAssetPermissions.\
+    if force_update and UserGroupsToAssetPermissions.\
             check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.force_update'):
         if asset.is_cloud_portal and asset.can_preview_on_portal:
             filldata.init_skin(asset, preview=False)
@@ -190,8 +197,7 @@ def review(request):
         else:
             messages.error(request, "You cannot force update this asset")
 
-    elif 'publish' in request.POST and UserGroupsToAssetPermissions.\
-            check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+    elif publish and UserGroupsToAssetPermissions.check_customization_publish(request.user):
         if asset.is_cloud_portal and asset.can_preview_on_portal:
             publishing_errors = modify_db.publish_latest_version(asset, review_id, request.user)
             if publishing_errors:
@@ -202,29 +208,27 @@ def review(request):
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.accepted, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been accepted")
 
-    elif any(action in request.POST for action in ['reject', 'ask_question']):
-        if 'reject' in request.POST and UserGroupsToAssetPermissions.\
-                check_customization_permission(request.user, settings.CUSTOMIZATION, 'cms.publish_version'):
+    elif ask_question or reject:
+        if reject:
+            if not UserGroupsToAssetPermissions.check_customization_publish(request.user):
+                raise PermissionDenied
             modify_db.update_draft_state(review_id, AssetCustomizationReview.REVIEW_STATES.rejected, request.user)
             messages.success(request, f"Version {asset_review.version.id} has been rejected")
             asset_review = AssetCustomizationReview.objects.get(id=review_id)
-        elif 'reject' in request.POST:
-            raise PermissionDenied
 
-        if 'access_customization' in request.POST:
+        if "access_customization" in request.POST:
             make_customization_visible_to_user(get_cloud_portal_asset(asset_review.customization),
                                                asset_review.version.created_by)
 
-        if not UserGroupsToAssetPermissions.check_customization_permission(
-                asset_review.version.created_by, asset_review.customization, 'cms.access_customization'
-        ):
-            message = f'\nMessage: {request.POST["addedNote"]}\n'
-        else:
-            message = f'\n{request.user.email}: {request.POST["addedNote"]}\n'
+        note = request.POST["addedNote"]
+        message = f'\n{request.user.email}: {note}\n'
+        if not UserGroupsToAssetPermissions.\
+                check_customization_access(asset_review.version.created_by, asset_review.customization):
+            message = f'\nMessage: {note}\n'
         asset_review.notes += message
         asset_review.save()
 
-    elif any(action in request.POST for action in ['publish', 'force_update']):
+    elif publish or force_update:
         raise PermissionDenied
     else:
         messages.error(request, "Invalid option selected")
@@ -238,10 +242,9 @@ def make_preview(request):
     version_id = request.POST.get('version_id')
     context = Context.objects.filter(id=request.POST['context_id']).first()
     asset = get_asset_by_revision(version_id)
-    cloud = get_cloud_portal_asset()
 
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content') and \
-            not UserGroupsToAssetPermissions.check_permission(request.user, cloud, 'cms.publish_version'):
+    if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset) and \
+            not UserGroupsToAssetPermissions.check_customization_publish(request.user):
         raise PermissionDenied
 
     if asset.can_preview_on_portal:
@@ -348,7 +351,7 @@ def download_current_structure(request, asset_id):
     output_format = request.GET.get("format", "json")
     asset = Asset.objects.filter(id=asset_id).last()
     if asset_id and asset:
-        if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
+        if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
             raise PermissionDenied
         data = generate_structure.from_database(asset, use_actual_values)
         file_name = "structure.json"
@@ -367,7 +370,7 @@ def download_current_structure(request, asset_id):
 def download_file(request, path):
     asset = Asset.objects.filter(id=request.GET.get("asset_id")).first()
 
-    if not UserGroupsToAssetPermissions.check_permission(request.user, asset, 'cms.edit_content'):
+    if not UserGroupsToAssetPermissions.check_asset_edit_content(request.user, asset):
         raise PermissionDenied
 
     language_code = request.GET.get('lang')
@@ -417,7 +420,7 @@ def download_package(request, asset_id):
 
     zipped_data = filldata.get_zip_package(asset, preview, version_id)
     file_name = f"{asset.name}.zip"
-    if asset.asset_type.type == AssetType.ASSET_TYPES.vms:
+    if asset.is_vms:
         file_name = f"{asset.customizations.first()}.zip"
     return response_attachment(zipped_data, file_name, "application/zip")
 

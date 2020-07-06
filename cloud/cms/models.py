@@ -61,8 +61,8 @@ def rename_permission_group(group, asset):
 
 def get_cloud_portal_asset(customization=settings.CUSTOMIZATION):
     return Asset.objects.filter(customizations__name__in=[customization],
-                             asset_type__name="",
-                             asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
+                                asset_type__name="",
+                                asset_type__type=AssetType.ASSET_TYPES.cloud_portal).first()
 
 
 def get_asset_by_revision(version_id):
@@ -365,12 +365,24 @@ class Asset(models.Model):
         return ""
 
     @property
+    def is_agreement(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.agreement)
+
+    @property
+    def is_article(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.article)
+
+    @property
     def is_cloud_portal(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.cloud_portal)
 
     @property
     def is_integration(self):
         return self.is_asset_type(AssetType.ASSET_TYPES.integration)
+
+    @property
+    def is_vms(self):
+        return self.is_asset_type(AssetType.ASSET_TYPES.vms)
 
     @property
     def is_dirty(self):
@@ -425,7 +437,7 @@ class Asset(models.Model):
         return content
 
     def clean(self):
-        if self.asset_type.type != AssetType.ASSET_TYPES.cloud_portal and \
+        if not self.is_cloud_portal and \
                 Asset.objects.filter(name=self.name, asset_type=self.asset_type).exclude(pk=self.pk).exists():
             raise ValidationError({'name': 'Name already exists'})
 
@@ -804,23 +816,32 @@ class UserGroupsToAssetPermissions(models.Model):
         return groups.exists()
 
     @staticmethod
-    def check_customization_permission(user, customization, permission=None):
+    def check_asset_edit_content(user, asset):
+        return UserGroupsToAssetPermissions.check_permission(user, asset, 'cms.edit_content')
+
+    @staticmethod
+    def check_customization_permission(user, customization=None, permission=None):
         return UserGroupsToAssetPermissions.\
             check_permission(user, get_cloud_portal_asset(customization), permission)
 
     @staticmethod
-    def check_customization_change_account(user, customization):
-        return UserGroupsToAssetPermissions.\
-            check_customization_permission(user, customization, 'api.change_account')
-
-    @staticmethod
-    def check_customization_access(user, customization):
+    def check_customization_access(user, customization=None):
         return UserGroupsToAssetPermissions.\
             check_customization_permission(user, customization, 'cms.access_customization')
 
     @staticmethod
+    def check_customization_change_account(user, customization=None):
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(user, customization, 'api.change_account')
+
+    @staticmethod
+    def check_customization_publish(user, customization=None):
+        return UserGroupsToAssetPermissions.\
+            check_customization_permission(user, customization, "cms.publish_version")
+
+    @staticmethod
     def user_has_beta_access(user):
-        return UserGroupsToAssetPermissions. \
+        return UserGroupsToAssetPermissions.\
             check_customization_permission(user, settings.CUSTOMIZATION, "cms.access_integration_store")
 
     @staticmethod
@@ -1063,7 +1084,7 @@ class ContributorAgreement(models.Model):
 
     def clean(self):
         if self.accepted_agreement and \
-                self.accepted_agreement.version.asset.asset_type.type != AssetType.ASSET_TYPES.agreement:
+                not self.accepted_agreement.version.asset.is_agreement:
             raise ValidationError({
                 'accepted_agreement': 'Accepted agreement must be a review of an agreement-type asset'
             })

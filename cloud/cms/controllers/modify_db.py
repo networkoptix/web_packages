@@ -438,11 +438,11 @@ def generate_preview_link(context=None, asset=None, state=""):
     if asset:
         if asset.is_integration:
             return f"{settings.INTEGRATION_STORE_PAGE}/{asset.id}?state={state}"
-        elif asset.is_asset_type(AssetType.ASSET_TYPES.article):
+        elif asset.is_article:
             article_url = DataRecord.objects.filter(asset=asset, data_structure__name='url').last()
             article_url = article_url.value if article_url else "tmp_url"
             return f'/content/{article_url}?' + urlencode({'state': state, 'id': asset.id})
-        elif asset.is_asset_type(AssetType.ASSET_TYPES.agreement):
+        elif asset.is_agreement:
             return '/agreement?' + urlencode({'state': state, 'id': asset.id})
 
     return f"{context.url}?preview=true" if context else "/content/about?preview=true"
@@ -504,7 +504,7 @@ def send_version_for_review(asset, user):
         old_version.delete()
 
     # We only check for integrations because its the only asset type that non staff have access to.
-    if asset.is_integration or asset.is_asset_type(AssetType.ASSET_TYPES.vms):
+    if asset.is_integration or asset.is_vms:
         errors = asset_has_required_data(asset)
         if len(errors) > 0:
             return errors

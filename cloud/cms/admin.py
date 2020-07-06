@@ -27,7 +27,7 @@ def clone_asset(request, asset_id):
         messages.error(request, "Copy already exists")
         return None
 
-    if asset.asset_type.type == AssetType.ASSET_TYPES.cloud_portal:
+    if asset.is_cloud_portal:
         messages.error(request, "Cannot clone cloud portal assets")
         return None
 
@@ -372,7 +372,7 @@ class AssetAdmin(CMSAdmin):
             usergroupstoassetpermissions__asset=asset
         ).prefetch_related('permissions')
 
-        if asset.asset_type.type != AssetType.ASSET_TYPES.cloud_portal:
+        if not asset.is_cloud_portal:
             extra_context['show_clone_asset'] = True
 
         return super(AssetAdmin, self).change_view(
@@ -653,7 +653,7 @@ class AssetCustomizationReviewAdmin(CMSAdmin):
 
         extra_context['allowed'] = self.template_allowed(request, customization_review)
         is_integration = version.asset.is_integration
-        is_article = version.asset.is_asset_type(AssetType.ASSET_TYPES.article)
+        is_article = version.asset.is_article
         extra_context['partial_preview'] = customization_review.can_preview_customization and not (
                     is_integration or is_article)
         extra_context['whole_preview'] = is_integration or is_article
