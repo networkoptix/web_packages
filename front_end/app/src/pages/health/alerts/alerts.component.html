@@ -49,7 +49,7 @@
             </div>
 
             <div class="gridMetricContentPanelComponent"
-                 *ngIf="healthLayoutService.activeEntity"
+                 *ngIf="layoutReady"
                  [style.visibility]="healthService.tableReady && layoutReady ? undefined : 'hidden'">
 
                 <div class="gridMetricContentPanelComponentWrapper pb-3">
