@@ -3,9 +3,9 @@ import {
     OnInit, Renderer2
 }                                    from '@angular/core';
 import {
-    ActivatedRoute, NavigationEnd,
-    Event, Router, RoutesRecognized
-}                                    from '@angular/router';
+    NavigationEnd,
+    Event, Router, RoutesRecognized, ActivatedRoute
+} from '@angular/router';
 import { NxConfigService, IConfig }  from '../../services/nx-config';
 import { NxAppStateService }         from '../../services/nx-app-state.service';
 import { NxAccountService }          from '../../services/account.service';
@@ -185,7 +185,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (account) {
                         this.dropdownsVisible = true;
-                        this.systemsService.getSystem(account.email);
+                        // this.systemsService.getSystem(account.email);
 
                         this.loginState = true;
                         this.renderer.removeClass(document.body, 'anonymous');
@@ -208,10 +208,10 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
             }
 
             this.systemId = this.localStorage.get('systemId');
-
-            if (!this.systemId && this.route.firstChild && this.route.firstChild.snapshot.params.systemId) {
-                this.systemId = this.route.firstChild.snapshot.params.systemId;
+            if (this.router.url.indexOf('/systems/') === 0) {
+                this.systemId = this.router.url.split('/')[2];
             }
+
             this.systems = systems;
             this.singleSystem = (this.systems.length === 1);
             this.systemCounter = this.systems.length;
