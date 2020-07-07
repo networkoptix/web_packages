@@ -293,11 +293,166 @@ Changing Several Random Checkboxes Works
     Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Changing Several Settings at Random    ${SYSTEM SAVE}
     Changing Several Settings at Random    ${SYSTEM CANCEL}
+    
+Systems Settings Block is Available for Administrator or Owner
+    [Tags]    C69736    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Log    Step 2
+    Log Out
+    Log in to Auto Tests System    ${EMAIL ADMIN}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    
+System Settings block is not available for other users
+    [Tags]    C69737    checkbox settings testing
+    @{users} =    Create List    ${EMAIL VIEWER}    ${EMAIL ADV VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL CUSTOM} 
+    Log    The following loop will go thru all users tested in testrail one at a time   
+    FOR    ${user}    IN    @{users}
+        Log in to Auto Tests System    ${user}
+        Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
+        Elements Should Not Be Visible
+        ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+        ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+        ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+        Log Out
+    END
+    
+Cancel changes in System Settings block
+    [Tags]    C69738    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Log    Step 1
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Just Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Log    Step 2
+    Click Button    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
+    Log    Step 3
+    Just Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Log    Step 4
+    Click Button    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    
+Moving to a different page after making changes in System Settings without saving them first
+    [Tags]    C69739    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Log    Step 1    
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Just Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+    Just Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
+    Just Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Log    Step 2
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+    Log    Step 3
+    Click Button    ${DISCARD CHANGES BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Location is    ${url}/systems/${AUTO TESTS SYSTEM ID}/health/alerts
+    Log    Step 4
+    Go To    ${url}/systems/${AUTO TESTS SYSTEM ID}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Just Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+    Just Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
+    Just Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+    Log    Step 5
+    Click Button    ${CANCEL CHANGES BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Log    Step 6
+    Click Link    ${HM INFORMATION TAB LINK}
+    Wait Until Elements Are Visible
+    ...    ${APPLY CHANGES QUESTION}
+    ...    ${APPLY CHANGES BUTTON}  
+    ...    ${DISCARD CHANGES BUTTON}
+    ...    ${CANCEL CHANGES BUTTON}
+    ...    ${APPLY CHANGES CLOSE BUTTON} 
+    Log    Step 7
+    Click Button    ${APPLY CHANGES CLOSE BUTTON}
+    Wait Until Element is Not Visible    ${APPLY CHANGES QUESTION}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Log    Step 8
+    Reload Page
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
 
 Changing All Checkboxes Works
-    [Tags]    checkbox settings testing    C65722
+    [Tags]    checkbox settings testing    C65722    C69740
     Log    Testrail: Changes in the security block are displayed in the thick client
+    Log    Testrail: Changes in the System Settings block are displayed in the thick client
     Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
     Set Auto System Settings via API    auditTrailEnabled    true
     Set Auto System Settings via API    trafficEncryptionForced    false
     Set Auto System Settings via API    videoTrafficEncryptionForced    false
@@ -307,6 +462,9 @@ Changing All Checkboxes Works
     Wait Until Elements Are Visible
     ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
     ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}//span    class    tick checked
     Element Attribute Value Should Be     ${ALLOW ONLY SECURE CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
@@ -315,6 +473,104 @@ Changing All Checkboxes Works
     Changing All Settings    ${SYSTEM SAVE}
     Changing All Settings    ${SYSTEM CANCEL}
     Changing All Settings    ${SYSTEM SAVE}
+    
+Changes made in the thick client are displayed in System Settings block in Cloud Portal
+    [Tags]    C69741    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    
+    Log    Step 1
+    Set Auto System Settings via API    autoDiscoveryEnabled    false
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    
+    Log    Step 2
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    
+    Log    Step 3
+    Set Auto System Settings via API    statisticsAllowed    false
+    Sleep    30
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
+    
+    Log    Step 4
+    Set Auto System Settings via API    statisticsAllowed    true
+    Sleep    30
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    
+    Log    Step 5
+    Set Auto System Settings via API    cameraSettingsOptimization    false
+    Sleep    30
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked 
+    
+    Log    Step 6
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked   
+    
+    Log    Step 7
+    Set Auto System Settings via API    autoDiscoveryEnabled    false
+    Set Auto System Settings via API    statisticsAllowed    false
+    Set Auto System Settings via API    cameraSettingsOptimization    false
+    Sleep    30
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+
+    Log    Step 8
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Sleep    30
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+
+Checking the dependency of system settings checkboxes
+    [Tags]    C69742    checkbox settings testing
+    Log    Preconditions
+    Set Auto System Settings via API    autoDiscoveryEnabled    true
+    Set Auto System Settings via API    statisticsAllowed    true
+    Set Auto System Settings via API    cameraSettingsOptimization    true
+    Log    Step 1    
+    Log in to Auto Tests System    ${EMAIL OWNER}
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
+    Log    Step 2
+    Just Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Log    Step 3
+    Just Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX REAL}
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Log    Step 4
+    Just Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX REAL} 
+    Wait Until Elements Are Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick unchecked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick unchecked 
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick unchecked
+    Log    Step 5
+    Reload Page
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    Elements Should Not Be Visible    ${SYSTEM SAVE}    ${SYSTEM CANCEL}
+    Element Attribute Value Should Be     ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}//span    class    tick checked
+    Element Attribute Value Should Be     ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}//span    class    tick checked
     
 Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723    checkbox settings testing
@@ -402,6 +658,30 @@ Security block is available for administrator or owner
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     
+System Settings block is not available when the system is offline
+    [Tags]    C69744    checkbox settings testing
+    Go To    ${url}/systems/${AUTOTESTS OFFLINE SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Element Should Not Be Visible    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    Element Should Not Be Visible      ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    Element Should Not Be Visible      ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+    
+System settings block view for different System versions
+    [Tags]    C69743    checkbox settings testing
+    Go To    ${url}/systems/${AUTO TESTS 4.0 SYSTEM ID}
+    Log In    ${email}    ${password}    button=None
+    Run Keyword If    '${email}'=='${EMAIL OWNER}'    Wait Until Elements Are Visible    ${DISCONNECT FROM NX}    ${RENAME SYSTEM}    ${MERGE BUTTON SYSTEM}
+    Run Keyword If    '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    ${RENAME SYSTEM}
+    Run Keyword Unless    '${email}'=='${EMAIL OWNER}' or '${email}'=='${EMAIL ADMIN}'    Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}
+    Wait Until Elements Are Visible    
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+
+
 Security block is not available for other users
     [Tags]    C65698    checkbox settings testing
     @{users} =    Create List    ${EMAIL ADV VIEWER}    ${EMAIL VIEWER}    ${EMAIL LIVE VIEWER}    ${EMAIL CUSTOM}
@@ -457,7 +737,7 @@ Cancel changes in Security block
     Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}//span    class    tick unchecked
     Element Attribute Value Should Be     ${LIMIT SESSION DURATION CHECKBOX VISIBLE}//span    class    tick unchecked 
     
-Checking the dependency of checkboxes
+Checking the dependency of security settings checkboxes
     [Tags]    C65700    checkbox settings testing
     Log    Preconditions
     Set Auto System Settings via API    auditTrailEnabled    true
