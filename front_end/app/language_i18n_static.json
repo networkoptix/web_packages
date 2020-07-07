@@ -271,6 +271,7 @@
             "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Enter server address",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
