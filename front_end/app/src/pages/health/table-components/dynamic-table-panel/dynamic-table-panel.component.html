@@ -12,8 +12,9 @@
         <ng-container *ngIf="panelParams.id === 'cameras' && !healthService.importedData">
             <nx-image-section [cameraInfo]="healthLayoutService.activeEntity"></nx-image-section>
         </ng-container>
-        <nx-section>
-            <ng-container *ngFor="let paramGroup of panelParams.values">
+        <nx-section *ngIf="sections && sections.length">
+            <nx-info-block [sectionsOrColumns]="sections" [removeTopMargin]="true"></nx-info-block>
+            <!-- <ng-container *ngFor="let paramGroup of panelParams.values">
                 <div *ngIf="paramGroup.id !== '_'" class="pb-3">
                     <h4 *ngIf="paramGroup.values.length">{{paramGroup.name}}</h4>
                     <div class="row nx-panel-row align-items-end" *ngFor="let param of paramGroup.values">
@@ -44,7 +45,7 @@
                         </ng-template>
                     </div>
                 </div>
-            </ng-container>
+            </ng-container> -->
         </nx-section>
     </nx-block>
 </div>

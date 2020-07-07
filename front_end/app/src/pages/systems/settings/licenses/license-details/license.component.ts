@@ -8,6 +8,7 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { DatePipe }                  from '@angular/common';
+import { InfoBlockSection, InfoDetailClass } from '../../../../../components/info-block/info-block.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -77,32 +78,35 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
         const next30days = new Date();
         next30days.setDate(next30days.getDate() + 30);
         const warning = info.expiration ? new Date(info.expiration).getTime() < next30days.getTime() : false;
+        const block = new InfoBlockSection(
+            [
+                {
+                    name  : this.LANG.license.info.type,
+                    value : info.type
+                }, {
+                    name  : this.LANG.license.info.channels,
+                    value : info.count
+                }, {
+                    name        : this.LANG.license.info.server,
+                    value       : info.serverName || this.LANG.common.unknown,
+                    customClass : !info.serverStatus ? InfoDetailClass.ERROR : undefined
+                }, {
+                    name  : this.LANG.license.info.hwid,
+                    value : info.hwid
+                }, {
+                    name        : this.LANG.license.info.status,
+                    value       : info.status,
+                    customClass : info.expired || !info.serverStatus ? InfoDetailClass.ERROR : undefined
+                }, {
+                    name        : this.LANG.license.info.expires,
+                    value       : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '-',
+                    customClass : warning ? InfoDetailClass.ERROR : undefined
+                }, {
+                    name  : this.LANG.license.info.deactivations,
+                    value : info.deactivations
+                }]
+        )
 
-        this.orderedLicense[info.serial] = [
-            {
-                name  : this.LANG.license.info.type,
-                value : info.type
-            }, {
-                name  : this.LANG.license.info.channels,
-                value : info.count
-            }, {
-                name  : this.LANG.license.info.server,
-                value : info.serverName || this.LANG.common.unknown,
-                error : !info.serverStatus
-            }, {
-                name  : this.LANG.license.info.hwid,
-                value : info.hwid
-            }, {
-                name  : this.LANG.license.info.status,
-                value : info.status,
-                error : info.expired || !info.serverStatus
-            }, {
-                name  : this.LANG.license.info.expires,
-                value : info.expiration ? this.datePipe.transform(info.expiration, 'dd MMM yyyy, hh:mm a') : '&ndash;',
-                error : warning
-            }, {
-                name  : this.LANG.license.info.deactivations,
-                value : info.deactivations
-            }];
+        this.orderedLicense[info.serial] = [block];
     }
 }

@@ -93,7 +93,7 @@ export class NxSystemLicensesComponent implements OnInit {
             expired       : false,
             status        : '',
             expiration    : '',
-            deactivations : '&ndash;'
+            deactivations : '-'
         };
 
         item.licenseBlock

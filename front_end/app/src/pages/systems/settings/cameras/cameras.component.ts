@@ -23,6 +23,9 @@ import { WINDOW }                    from '../../../../services/window-provider'
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import {
+    InfoBlockLine, InfoBlockSection, InfoBlockColumns
+}                                    from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector    : 'nx-cameras-component',
@@ -65,6 +68,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     sensitivityColors = new Array(10);
     shakeHint = false;
     motionGridChangeWatcher = new Watcher<boolean>();
+    cameraDetailColumns: InfoBlockColumns;
 
     constructor(
         configService: NxConfigService,
@@ -657,6 +661,21 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
+            const { vendor, model, url, parentName } = this.selectedCamera;
+            this.cameraDetailColumns = [
+                [
+                    new InfoBlockSection([
+                        new InfoBlockLine(this.LANG.common.vendor, vendor),
+                        new InfoBlockLine(this.LANG.common.model, model)
+                    ])
+                ],
+                [
+                    new InfoBlockSection([
+                        new InfoBlockLine(this.LANG.common.ip, url),
+                        new InfoBlockLine(this.LANG.common.server, parentName)
+                    ])
+                ]
+            ];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
             this.motionGridChangeWatcher.originalValue = false;

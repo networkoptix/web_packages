@@ -1,0 +1,45 @@
+<ng-template #detailsBlock let-block="block">
+    <div class="block">
+        <h6 *ngIf="block.heading">{{block.heading}}</h6>
+        <div class="block-section mw-100 w-100">
+            <div class="block-section-keys">
+                <p *ngFor="let line of block.lines" 
+                    [ngClass]="infoBlockStyle === 'dark' && 'dark'"
+                    [title]="line.name"
+                >{{line.name}}</p>
+            </div>
+            <div class="block-section-values">
+                    <p *ngFor="let line of block.lines" 
+                        class="ellipsis"
+                        [ngClass]="line.customClass"
+                        [title]="line.value">
+                    {{line.value}}
+                    <svg-icon *ngIf="line.icon"
+                        nx-add-svg-src
+                        [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
+                        [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
+                        style="height: 16px"
+                        class="pl-1 mt-1 mb-1"></svg-icon>
+                    </p>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #infoColumn let-column="column">
+    <div class="d-flex flex-column mw-100" [ngClass]="infoBlockSize === 'full' && 'flex-grow-1'">
+        <ng-container 
+            *ngFor="let block of column"
+            [ngTemplateOutlet]="detailsBlock"
+            [ngTemplateOutletContext]="{block: block}"
+        ></ng-container>
+    </div>
+</ng-template>
+
+<div class="d-flex flex-wrap mw-100" [ngClass]="removeTopMargin && 'remove-top-margin'">
+    <ng-container
+        *ngFor="let column of singleColumn ? [sectionsOrColumns] : sectionsOrColumns"
+        [ngTemplateOutlet]="infoColumn"
+        [ngTemplateOutletContext]="{column: column}"
+    ></ng-container>
+</div>
