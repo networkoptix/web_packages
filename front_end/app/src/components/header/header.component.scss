@@ -1,9 +1,6 @@
 @use '../../styles/typography';
 @use '../../../styles/theme_variables' as *;
 @use '../../styles/mixins';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
 
 $logo-height               : 32px;
 $line-height               : 44px;

@@ -7,6 +7,7 @@
     "serve-webadmin": "npm run lang && npm run update-lang-types && ng serve -c webadmin --open --proxy-config proxy.conf.json",
     "build": "npm run lang && ng build --prod",
     "build-webadmin": "npm run lang && ng build -c webadmin-prod",
+    "bundle-report": "npm run lang && ng build --stats-json && webpack-bundle-analyzer dist/stats.json",
     "postbuild": "./cloud-portal-postbuild.sh",
     "test": "ng test",
     "test:watch": "ng test --watch",

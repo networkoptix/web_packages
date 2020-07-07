@@ -1,6 +1,5 @@
 @use '../../../../styles/typography';
-@import '../../../../../styles/theme_palette';
-@import '../../../../styles/mixins';
+@use '../../../../styles/mixins' as *;
 
 .active {
     background: $light5 !important;

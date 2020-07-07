@@ -1,9 +1,6 @@
 @use '../../../styles/typography';
 @use '../../../../styles/theme_variables' as *;
 @use '../../../styles/buttons';
-@import '~bootstrap/scss/functions';
-@import '~bootstrap/scss/variables';
-@import '~bootstrap/scss/mixins/breakpoints';
 
 $preloader_circle_color          : $light;
 $preloader_circle_size           : 16px;

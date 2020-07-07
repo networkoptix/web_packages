@@ -9,7 +9,7 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "removeComments": false,
+    "removeComments": true,
     "noImplicitAny": false,
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
@@ -20,6 +20,10 @@
       "node"
     ]
   },
+  "include": [
+    "app/main.ts",
+    "app/polyfills.ts"
+],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",

@@ -13,7 +13,7 @@ import { NxContentBlockComponent }            from './content-block/content-bloc
 import { NxContentBlockSectionComponent }     from './content-block/section/section.component';
 import { NxMultiLineEllipsisComponent }       from './multi-line-ellipsis/mle.component';
 import { NxExternalVideoComponent }           from './external-video/external-video.component';
-import { NxLayoutRightComponent }             from './layout-right/layout.component';
+// import { NxLayoutRightComponent }             from './layout-right/layout.component';
 import { NxTagComponent }                     from './tag/tag.component';
 import { NxCarouselComponent }                from './carousel/carousel.component';
 import { NxRibbonComponent, NxRibbonService } from './ribbon';
@@ -86,7 +86,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
         NxExternalVideoComponent,
-        NxLayoutRightComponent,
+        // NxLayoutRightComponent,
         NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
@@ -134,7 +134,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
         NxExternalVideoComponent,
-        NxLayoutRightComponent,
+        // NxLayoutRightComponent,
         NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
@@ -171,7 +171,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
-        NxLayoutRightComponent,
+        // NxLayoutRightComponent,
         NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,
@@ -216,7 +216,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxContentBlockSectionComponent,
         NxMultiLineEllipsisComponent,
         NxExternalVideoComponent,
-        NxLayoutRightComponent,
+        // NxLayoutRightComponent,
         NxTagComponent,
         NxCarouselComponent,
         NxRibbonComponent,

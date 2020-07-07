@@ -8,8 +8,8 @@ import { DownloadHistoryModule }     from './download-history/download-history.m
 import { NonSupportedBrowserModule } from './non-supported-browser/non-supported-browser.module';
 import { NxRegisterModule }          from './register/register.module';
 import { NxActivateModule }          from './activate/activate.module';
-import { RightMenuModule }           from './right-menu/right-menu.module';
-import { ContentModule }             from './content/content.module';
+// import { RightMenuModule }           from './right-menu/right-menu.module';
+// import { ContentModule }             from './content/content.module';
 import { IntegrationsModule }        from './integration/integrations.module';
 import { IntegrationsListModule }    from './integration/list/list.module';
 import { LandingModule }             from './landing/landing.module';
@@ -40,8 +40,8 @@ import { Nx503Module }               from './503/503.module';
         NxRestoreModule,
         IntegrationsModule,
         IntegrationsListModule,
-        ContentModule, // TODO: Remove it after test
-        RightMenuModule, // TODO: Remove it after test
+        // ContentModule, // TODO: Remove it after test
+        // RightMenuModule, // TODO: Remove it after test
         PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,
@@ -74,8 +74,8 @@ import { Nx503Module }               from './503/503.module';
         IntegrationsListModule,
         NxSettingsModule,
         NxHealthModule,
-        ContentModule, // TODO: Remove it after test
-        RightMenuModule, // TODO: Remove it after test
+        // ContentModule, // TODO: Remove it after test
+        // RightMenuModule, // TODO: Remove it after test
         PushNotificationsModule,
         IpvdModule,
         Angular2CsvModule,

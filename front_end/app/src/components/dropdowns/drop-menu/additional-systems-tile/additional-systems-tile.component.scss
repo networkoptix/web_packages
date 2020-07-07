@@ -1,9 +1,5 @@
 @use '../../../../styles/typography';
-@import '../../../../../styles/theme_palette';
-@import '../../../../styles/mixins';
-@import "~bootstrap/scss/mixins/breakpoints";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
+@use '../../../../../styles/theme_variables' as *;
 
 .active {
     background: $additional_light4 !important;

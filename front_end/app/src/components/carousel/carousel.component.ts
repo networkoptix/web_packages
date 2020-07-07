@@ -3,7 +3,6 @@ import { trigger, style, animate, transition } from '@angular/animations';
 
 import { NxConfigService } from '../../services/nx-config';
 import { NxUtilsService }  from '../../services/utils.service';
-import { HttpClient }      from '@angular/common/http';
 
 const config = new NxConfigService(null).config;
 

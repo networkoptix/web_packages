@@ -1,6 +1,4 @@
-@import '../../../styles/theme_palette';
-@import '../../../styles/theme_variables';
-@import '../../styles/typography';
+@use '../../../styles/theme_variables' as *;
 
 .logo-header {
     background: $additional_light1;
