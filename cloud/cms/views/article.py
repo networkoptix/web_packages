@@ -3,10 +3,9 @@ from cms.controllers.filldata import global_contexts_to_dict, process_global_con
 from cms.models import Context, Asset, AssetType, get_cloud_portal_asset, Language, AssetCustomizationReview, \
     DataStructure
 from django.conf import settings
-from django.db.models import Count
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
-from util.helpers import detect_language_by_request
+from util.helpers import get_language_object_from_request
 
 
 @api_view(("GET", ))
@@ -16,6 +15,7 @@ def get_article(request, url_param, **kwargs):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'pending'
     article_id = request.query_params.get('id')
+    language = get_language_object_from_request(request)
     article = None
 
     if article_id:
@@ -56,7 +56,6 @@ def get_article(request, url_param, **kwargs):
 
         # If version is 0, then article has no acceptable version and the request isn't for a draft
         if version != 0:
-            language = Language.by_code(detect_language_by_request(request))
             article_structures = DataStructure.objects.filter(context__asset_type__type=AssetType.ASSET_TYPES.article)
 
             # Get values for title and body of article for this version
@@ -76,7 +75,7 @@ def get_article(request, url_param, **kwargs):
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, article_dict, article.version_id(), False,
-                                    global_contexts, global_contexts_dict)
+                                    global_contexts, global_contexts_dict, language=language)
 
             return api_success(article_dict)
 

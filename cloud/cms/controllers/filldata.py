@@ -55,15 +55,22 @@ def global_contexts_to_dict(contexts, asset):
         for data_structure in context.datastructure_set.all():
             data_structure_dict[data_structure.name] = asset.read_global_value(data_structure.name)
 
+            # For translatable global contexts add keys like 'dsname__langcode', example '%EULA_TEXT%__en_US'
+            if context.translatable:
+                for lang in asset.customizations.first().languages.all():
+                    data_structure_dict[f'{data_structure.name}__{lang.code}'] = asset.read_global_value(
+                        data_structure.name, language=lang
+                    )
+
     for tag in SPECIAL_STRUCTURES.function_dict:
         data_structure_dict[tag] = SPECIAL_STRUCTURES.calc(tag, asset)
 
     return data_structure_dict
 
 
-def process_global_contexts(asset, content, version_id, preview, global_contexts, global_contexts_dict):
+def process_global_contexts(asset, content, version_id, preview, global_contexts, global_contexts_dict, language=None):
     for global_context in global_contexts.all():
-        content = process_context_structure(asset, global_context, content, None,
+        content = process_context_structure(asset, global_context, content, language,
                                             version_id, preview, False, global_contexts_dict)
 
     for tag in SPECIAL_STRUCTURES.function_dict:
@@ -121,7 +128,12 @@ def process_context_structure(asset, context, content, language,
         # noinspection PyBroadException
         try:
             if context_dict and datastructure.name in context_dict:
-                content_value = context_dict[datastructure.name]
+                if language:
+                    content_value = context_dict.get(
+                        f'{datastructure.name}__{language.code}', context_dict[datastructure.name]
+                    )
+                else:
+                    content_value = context_dict[datastructure.name]
             else:
                 content_value = datastructure.find_actual_value(asset, language, version_id, draft=preview)
             # replace marker with value
@@ -181,7 +193,7 @@ def process_context(asset, context, language, skin,
                                         language, version_id, preview, context.is_global)
     if not context.is_global:  # if current context is global - do not apply other contexts
         content = process_global_contexts(asset, content, version_id, preview,
-                                          global_contexts, global_contexts_dict)
+                                          global_contexts, global_contexts_dict, language=language)
 
     # If json -> dump it to string
     if type(content) == dict:
