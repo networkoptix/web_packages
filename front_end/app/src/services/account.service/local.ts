@@ -84,6 +84,7 @@ export class LocalAccount extends BaseAccount implements Exactly<BaseAccount, Lo
                 }),
                 tap(res => {
                     this.sessionService.loginState = login;
+                    window.location.reload();
                 })
             );
     }

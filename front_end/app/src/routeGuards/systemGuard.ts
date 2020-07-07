@@ -33,8 +33,17 @@ export class SystemGuard implements CanActivate {
             return snapshot.params.systemId;
         }).params.systemId;
 
-        // TODO Update SystemGuard for webadmin on CLOUD-5381
-        if (this.CONFIG.isLocal) return true;
+        const checkPermissions = (system = this.system) => {
+            const canViewChecks = {
+                users           : system.permissions.editUsers,
+                'cloud-storage' : system.canUserViewCloudStorage(),
+                health          : system.canViewInfo(),
+                licenses        : system.isAdmin || system.isOwner
+            };
+            return canViewChecks[currentRoute] || this.router.navigate(
+                [NxConfigService.resolveLocalOrCloud('/settings/', `/systems/${systemId}`)]
+            );
+        };
 
         return systemId && currentRoute && this.accountService
             .get()
@@ -44,22 +53,14 @@ export class SystemGuard implements CanActivate {
                         this.system = this.systemService.createLocalSystem(
                             this.accountService.mediaServerApi, account.id, account.email
                         );
+
+                        return checkPermissions();
                     } else {
                         this.system = this.systemService.createSystem(account.email, systemId);
+                        return this.system.getInfoAndPermissions()
+                            .then(checkPermissions)
+                            .catch(() => this.router.navigate([`/systems/${systemId}`]));
                     }
-                    return this.system.getInfoAndPermissions()
-                        .then((system) => {
-                            const canViewChecks = {
-                                users           : system.permissions.editUsers,
-                                'cloud-storage' : system.canUserViewCloudStorage(),
-                                health          : system.canViewInfo(),
-                                licenses        : system.isAdmin || system.isOwner
-                            };
-                            return canViewChecks[currentRoute] || this.router.navigate(
-                                [NxConfigService.resolveLocalOrCloud('/settings/', `/systems/${systemId}`)]
-                            );
-                        })
-                        .catch(() => this.router.navigate([`/systems/${systemId}`]));
                 }
             });
     }
