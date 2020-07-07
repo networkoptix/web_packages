@@ -113,9 +113,14 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             .pipe(untilDestroyed(this), filter(data => data !== undefined))
             .subscribe(system => {
                 this.settingsService.footerSubject.next(true);
-                if (system) {
+                if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
-                    this.system.getInfoAndPermissions(false).catch(() => {}).then(() => {
+
+                    (
+                        this.CONFIG.isLocal
+                            ? this.system.update()
+                            : Promise.resolve()
+                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {})).then(() => {
                         if (!this.system.isOnline) {
                             this.showPreloader = false;
                             this.alertsLoaded = true;
@@ -128,6 +133,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                             this.system.canViewInfo();
                         this.initUpdateProcess();
                     });
+
                     this.canSeeInfo = true;
                     if (this.canSeeInfo) {
                         this.fullInfoPath = this.uriService.getSystemSettingsRoute({ systemId: this.system.id, childRoute: ChildRoutes.HEALTH }) + this.CONFIG.menus.systemSettings.cameras.path;

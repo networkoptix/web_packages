@@ -99,10 +99,13 @@ export class NxSystemServersComponent implements OnInit, OnDestroy {
 
                     return;
                 }
-                if (system) {
+                if (system && (!this.system || !this.CONFIG.isLocal)) {
                     this.system = system;
-                    this.system.getInfoAndPermissions(false)
-                        .catch(() => {});
+                    (
+                        this.CONFIG.isLocal
+                            ? this.system.update()
+                            : Promise.resolve()
+                    ).then(() => this.system.getInfoAndPermissions(false).catch(() => {}));
                 }
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
