@@ -150,7 +150,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
         if (!this.applyService.locked) {
             this.applyService.hardReset();
-            this.ipPortWatcher.value = port;
+            this.ipPortWatcher.value = +port;
             this.applyService.reset();
             this.applyService.setVisible(true);
         }
