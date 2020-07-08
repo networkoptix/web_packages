@@ -3,7 +3,7 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { NxConfigService, IConfig }            from './nx-config';
 import { from, of, throwError, Observable }    from 'rxjs';
 import {
-    flatMap, map, mergeMap, retryWhen, timeout, tap
+    flatMap, map, mergeMap, retryWhen, timeout, tap, catchError
 }                                              from 'rxjs/operators';
 import { Location }                            from '@angular/common';
 import { ICamera, NxSystemUser }               from './system.service';
@@ -176,13 +176,13 @@ export class NxSystemAPI {
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
             retryWhen((request) => this.retryHandler(request)),
             timeout(8000),
-            tap(() => {},
-                err => {
-                    if (this.CONFIG.isLocal && err.name === 'TimeoutError') {
-                        this.appState.systemAvailable$.next(false);
-                    }
+            catchError(error => {
+                if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
+                    this.appState.systemAvailable$.next(false);
+                    return of('');
                 }
-            )
+                return error;
+            })
         );
     }
 
