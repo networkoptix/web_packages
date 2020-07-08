@@ -71,7 +71,7 @@ Change Setting and Save
     Click Button    ${SYSTEM SAVE}
     Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
 
-Just Change Setting
+Change Setting Without Saving
     [Arguments]    ${setting}
     ${status} =    Run Keyword and Return Status    Checkbox Should Be Selected     ${setting}
     ${selected} =    Set Variable If    ${status}==True    false
@@ -105,7 +105,7 @@ Changing Several Settings at Random
     FOR    ${idx}    IN RANGE   ${random}
         ${checkbox}=   Evaluate    random.choice(@{checkboxes})    modules=random
         Log    ${checkbox}
-        Just Change Setting    ${checkbox}
+        Change Setting Without Saving    ${checkbox}
     END
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
@@ -117,7 +117,7 @@ Changing All Settings
     [Arguments]    ${action}
     FOR    ${checkbox}    IN   @{checkboxes}
         Log    ${checkbox}
-        Just Change Setting    ${checkbox}
+        Change Setting Without Saving    ${checkbox}
     END
     Wait Until Elements Are Visible     ${SYSTEM SAVE}    ${SYSTEM CANCEL}
     Click Button    ${action}
@@ -161,3 +161,17 @@ Validate Disconnect Form
     ...    ${DISCONNECT PASSWORD INPUT}
     ...    ${DISCONNECT FORM CANCEL BUTTON}
     ...    ${DISCONNECT FORM DISCONNECT BUTTON}
+
+Wait Until System Settings Are Visible
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUTO DISCOVERY CHECKBOX VISIBLE}
+    ...    ${SEND ANONYMOUS USAGE CHECKBOX VISIBLE}
+    ...    ${ALLOW SYSTEM OPTIMIZE CHECKBOX VISIBLE}
+
+Wait Until Security Settings Are Visible
+    Wait Until Elements Are Visible
+    ...    ${ENABLE AUDIT TRAIL CHECKBOX VISIBLE}
+    ...    ${ALLOW ONLY SECURE CHECKBOX VISIBLE}
+    ...    ${ENCRYPT VIDEO TRAFFIC CHECKBOX VISIBLE}
+    ...    ${LIMIT SESSION DURATION CHECKBOX VISIBLE}
+    
