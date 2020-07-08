@@ -157,6 +157,12 @@
         "systemUnreachable": "SISTEMA ILOCALIZABLE",
         "inaccessibleFeatureMessage": "El sistema está fuera de línea y, por lo tanto, la información no es accesible.",
         "unknown": "Uesconocido",
+        "vendor": "Vendor",
+        "model": "Modelo",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "borrar búsqueda",
             "collapse all servers": "colapsar todos los servidores",
@@ -194,6 +200,14 @@
             "available": "La ubicación de almacenamiento en la nube está disponible para todos los servidores de este sistema. Puedes gestionarla utilizando el cliente {{vmsName}} del escritorio.",
             "camera": "cámara",
             "cameras": "cámaras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Almacenamiento en la nube eliminado del sistema",
                 "errorPrefix": "Error al eliminar el almacenamiento en la nube"
@@ -257,6 +271,7 @@
             "systemOffline": "El sistema {{targetSystem}} está fuera de línea y no se puede combinar con el actual",
             "systemOfflineUrl": "{{targetSystem}} es inaccesible.",
             "systemsIncompatible": "Este servidor tiene una versión de software incompatible. Actualice ambos sistemas a la <a href=\"/download\" target=\"_blank\" translate>última compilación</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Introduzca la dirección del servidor",
             "urlNotValid": "Introduzca una URL válida",
             "unknownError": "Se ha producido un error desconocido. Actualice la página y vuelva a intentarlo. Si el problema persiste, póngase en contacto con el servicio de asistencia <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",

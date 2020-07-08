@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
         "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
         "unknown": "Unbekannt",
+        "vendor": "Vendor",
+        "model": "Modell",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "suche zurücksetzen",
             "collapse all servers": "alle server zusammenklappen",
@@ -194,6 +200,14 @@
             "available": "Der Cloudspeicherort ist für alle Server in diesem System verfügbar. Sie können es mit dem {{vmsName}}-Client verwalten.",
             "camera": "Kamera",
             "cameras": "Kameras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Cloudspeicher erfolgreich vom System entfernt",
                 "errorPrefix": "Fehler beim Entfernen des Cloudspeichers"
@@ -257,6 +271,7 @@
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
             "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar.",
             "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Bitte aktualisieren Sie beide Systeme auf die <a href=\"/download\" target=\"_blank\" translate>neueste Version</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",

@@ -157,6 +157,12 @@
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
         "inaccessibleFeatureMessage": "Hệ thống là ngoại tuyến và do đó, thông tin không thể truy cập.",
         "unknown": "Không xác định",
+        "vendor": "Vendor",
+        "model": "Kiểu mẫu",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "xóa tìm kiếm",
             "collapse all servers": "tất cả máy chủ mất ổn định",
@@ -194,6 +200,14 @@
             "available": "Vị trí lưu trữ đám mây có sẵn cho tất cả các máy chủ trong hệ thống này. Bạn có thể quản lý nó bằng cách sử dụng máy khách {{vmsName}} máy tính để bàn.",
             "camera": "máy ảnh",
             "cameras": "máy ảnh",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Lưu trữ đám mây đã xóa thành công khỏi hệ thống",
                 "errorPrefix": "Lỗi xóa bộ nhớ đám mây"
@@ -257,6 +271,7 @@
             "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại",
             "systemOfflineUrl": "{{targetSystem}} là không thể truy cập.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",

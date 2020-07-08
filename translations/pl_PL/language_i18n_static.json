@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
         "inaccessibleFeatureMessage": "System jest offline i dlatego informacje nie są dostępne.",
         "unknown": "Nieznany",
+        "vendor": "Vendor",
+        "model": "Model",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "wyczyść wyszukiwanie",
             "collapse all servers": "zwiń wszystkie serwery",
@@ -194,6 +200,14 @@
             "available": "Magazyn w chmurze jest dostępny dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą desktopowego klienta {{vmsName}}.",
             "camera": "kamera",
             "cameras": "kamery",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Magazyn danych w chmurze został pomyślnie usunięty z systemu",
                 "errorPrefix": "Błąd usuwania magazynu w chmurze"
@@ -257,6 +271,7 @@
             "systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem",
             "systemOfflineUrl": "{{targetSystem}} jest niedostępny.",
             "systemsIncompatible": "Ten serwer ma niezgodną wersję oprogramowania. Proszę zaktualizować oba systemy do <a href=\"/download\" target=\"_blank\" translate>najnowszej wersji</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",

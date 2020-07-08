@@ -157,6 +157,12 @@
         "systemUnreachable": "A rendszer nem elérhető",
         "inaccessibleFeatureMessage": "A rendszer offline állapotban van, tehát az információk nem érhetők el.",
         "unknown": "Ismeretlen",
+        "vendor": "Vendor",
+        "model": "Modell",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "keresés törlése",
             "collapse all servers": "összes szerver összecsukása",
@@ -194,6 +200,14 @@
             "available": "A felhőtároló hely a rendszer összes szerverén elérhető. Kezelheti az asztali {{vmsName}} kliens használatával.",
             "camera": "kamera",
             "cameras": "kamerák",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "A felhőalapú tárolást sikeresen eltávolítottuk a rendszerből",
                 "errorPrefix": "Hiba a felhőtároló eltávolításakor"
@@ -257,6 +271,7 @@
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel",
             "systemOfflineUrl": "{{targetSystem}} elérhetetlen.",
             "systemsIncompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Kérjük, frissítse mindkét rendszer a <a href=\"/download\" target=\"_blank\" translate>legújabb verzióra</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Adja meg a szerver címét",
             "urlNotValid": "Adjon meg érvényes URL-t",
             "unknownError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",

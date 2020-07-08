@@ -157,6 +157,12 @@
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "inaccessibleFeatureMessage": "Система офлайн, інформація недоступна.",
         "unknown": "Невідомо",
+        "vendor": "Vendor",
+        "model": "Модель",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "очистити вікно пошуку",
             "collapse all servers": "згорнути всі сервери",
@@ -194,6 +200,14 @@
             "available": "Розташування хмарного сховища доступне для всіх серверів в системі. Ви можете керувати ним за допомогою настільного {{vmsName}} клієнта.",
             "camera": "камера",
             "cameras": "камери",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Хмарне сховище успішно видалено із системи",
                 "errorPrefix": "Помилка при видаленні хмарного сховища"
@@ -257,6 +271,7 @@
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
             "systemOfflineUrl": "{{targetSystem}} недоступний.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Введіть адресу сервера",
             "urlNotValid": "Введіть дійсний URL",
             "unknownError": "Сталася невідома помилка. Оновіть сторінку та спробуйте ще раз. Якщо проблема не зникне, будь ласка, <a href=\"%SUPPORT_LINK%\" target=\"_blank\">зв'яжіться з підтримкою</a>.",

@@ -157,6 +157,12 @@
         "systemUnreachable": "אי אפשר להגיע למערכת",
         "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
         "unknown": "לא ידוע",
+        "vendor": "Vendor",
+        "model": "מודל",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "נקה את החיפוש",
             "collapse all servers": "כווץ את כל השרתים",
@@ -194,6 +200,14 @@
             "available": "מיקום אחסון בענן זמין לכל השרתים במערכת זו. אתה יכול לנהל אותו באמצעות תוכנת {{vmsName}}.",
             "camera": "מצלמה",
             "cameras": "מצלמות",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "אחסון בענן הוסר בהצלחה מהמערכת",
                 "errorPrefix": "שגיאה בהסרת אחסון בענן"
@@ -257,6 +271,7 @@
             "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית",
             "systemOfflineUrl": "{{targetSystem}} אינו נגיש.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "הזן כתובת שרת",
             "urlNotValid": "הזן כתובת URL חוקית",
             "unknownError": "אירעה שגיאה לא ידועה. רענן את הדף ונסה שוב. אם נמשכת הבעיה, אנא צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",

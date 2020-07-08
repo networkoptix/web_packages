@@ -157,6 +157,12 @@
         "systemUnreachable": "SISTEMA INACESSÍVEL",
         "inaccessibleFeatureMessage": "O sistema está offline e, portanto, a informação não está acessível.",
         "unknown": "Desconhecido",
+        "vendor": "Vendor",
+        "model": "Modelo",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "limpar pesquisa",
             "collapse all servers": "recolher todos os servidores",
@@ -194,6 +200,14 @@
             "available": "O local de armazenamento da nuvem está disponível para todos os servidores neste sistema. Você pode gerenciá-lo usando o cliente desktop {{vmsName}}.",
             "camera": "câmara",
             "cameras": "câmeras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Armazenamento em nuvem removido com sucesso do sistema",
                 "errorPrefix": "Erro ao remover armazenamento na nuvem"
@@ -257,6 +271,7 @@
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser mesclado com o atual",
             "systemOfflineUrl": "{{targetSystem}} está inacessível.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Introduza o endereço do servidor",
             "urlNotValid": "Digite uma URL válida",
             "unknownError": "Ocorreu um erro desconhecido. Atualize a página e tente novamente. Se o problema persistir, contacte o <a href=\"%SUPPORT_LINK%\" target=\"_blank\">suporte</a>.",

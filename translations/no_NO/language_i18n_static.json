@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
         "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
         "unknown": "Ukjent",
+        "vendor": "Vendor",
+        "model": "Modell",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "nullstill søk",
             "collapse all servers": "kollapse alle servere",
@@ -194,6 +200,14 @@
             "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {{vmsName}} klienten.",
             "camera": "kamera",
             "cameras": "kameraer",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Skylagring ble fjernet fra systemet",
                 "errorPrefix": "Feil ved fjerning av skylagring"
@@ -257,6 +271,7 @@
             "systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med den gjeldende",
             "systemOfflineUrl": "{{targetSystem}} er utilgjengelig.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
