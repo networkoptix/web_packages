@@ -17,14 +17,14 @@ def get_variables(cloud_url, test_email):
     systemIds["AUTOTESTS OFFLINE SYSTEM ID"] = u["systems"][0]["id"]
 
     #get the system id for the system with the 2serveranchor email and add it to the dictionary
-    t = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
-    u = t.json()
-    systemIds["AUTOTESTS 2 SERVER SYSTEM ID"] = u["systems"][0]["id"]
+    a = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+2serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    b = a.json()
+    systemIds["AUTOTESTS 2 SERVER SYSTEM ID"] = b["systems"][0]["id"]
     
      #get the system id for the system running 4.0 and add it to the dictionary
-    t = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+4.0serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
-    u = t.json()
-    systemIds["AUTO TESTS 4.0 SYSTEM ID"] = u["systems"][0]["id"]
+    d = requests.post(f"{cloud_url}/cdb/system/get", auth=requests.auth.HTTPDigestAuth(f"{test_email}+4.0serveranchor@gmail.com", "qweasd 123"), json={"name":"Auto Tests"})
+    e = d.json()
+    systemIds["AUTO TESTS 4.0 SYSTEM ID"] = e["systems"][0]["id"]
 
     #return the dictionary as variables into robot
     return systemIds
