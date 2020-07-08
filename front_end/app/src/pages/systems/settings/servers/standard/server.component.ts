@@ -98,6 +98,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);
+        this.applyService.setVisible(true);
     }
 
     ngOnChanges(changes: SimpleChanges) {
