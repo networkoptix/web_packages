@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
     CONFIG: IConfig;
+    lastErrorStatus: number;
 
     constructor(
         configService: NxConfigService,
@@ -37,10 +38,15 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
     // appState.systemAvailable for webadmin, overlay-modal.component
     checkIfSystemAvailable(res: any) {
         if (this.CONFIG.isLocal) {
-            if (res instanceof HttpErrorResponse && [502, 504].includes(res.status)) {
+            if (res instanceof HttpErrorResponse && [504, 502, 0].includes(res.status)) {
+                this.lastErrorStatus = res.status;
                 this.appState.systemAvailable$.next(false);
             } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false) {
                 this.appState.systemAvailable$.next(true);
+                // 502 and 0 seem to correlate with no response from user end (i.e. wifi out)
+                if (![502, 0, undefined].includes(this.lastErrorStatus)) {
+                    window.location.reload();
+                }
             }
         }
     }
