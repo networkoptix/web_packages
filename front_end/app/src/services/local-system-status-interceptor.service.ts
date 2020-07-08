@@ -43,7 +43,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
                 this.appState.systemAvailable$.next(false);
             } else if (res instanceof HttpResponse && this.appState.systemAvailable$.value === false) {
                 this.appState.systemAvailable$.next(true);
-                // 502 and 0 seem to correlate with no response from user end (i.e. wifi out)
+                // 502 and 0 for no response from user end (i.e. wifi out); undefined case from timeout
                 if (![502, 0, undefined].includes(this.lastErrorStatus)) {
                     window.location.reload();
                 }

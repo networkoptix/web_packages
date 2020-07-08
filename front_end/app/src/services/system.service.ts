@@ -10,6 +10,7 @@ import { BehaviorSubject, from, of, Subscription, Observable }       from 'rxjs'
 import { flatMap, tap }                    from 'rxjs/operators';
 import { NxPollService }                   from './poll.service';
 import { NxUtilsService }                  from './utils.service';
+import { NxAppStateService }               from './nx-app-state.service';
 import { PredefinedRole }                  from './nx-config/base-config';
 import { LanguageI18NStaticTypes }         from '../../language_i18n_static_types';
 import { IParams }                         from '../components/search/search.component';
@@ -818,7 +819,8 @@ export class NxSystem extends System implements OnDestroy {
         currentUserEmail: string,
         systemId?: string,
         serverId?: string,
-        userId?: string
+        userId?: string,
+        private appState?: NxAppStateService
     ) {
         super();
 
@@ -1403,7 +1405,8 @@ export class NxSystemService {
         private cloudApi: NxCloudApiService,
         private systemApiService: NxSystemAPIService,
         private pollService: NxPollService,
-        private systemsService: NxSystemsService
+        private systemsService: NxSystemsService,
+        private appState: NxAppStateService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = this.languageService.translations;
@@ -1437,7 +1440,7 @@ export class NxSystemService {
             this.CONFIG, this.LANG,
             this.cloudApi, this.systemApiService,
             this.pollService, this.systemsService,
-            userEmail, '', '', userId);
+            userEmail, '', '', userId, this.appState);
         this.system.mediaserver = mediaServer;
         this.system.canMerge = true;
         this.system.update();

@@ -108,7 +108,7 @@ export class NxOverlayModalComponent implements OnInit {
                         this.refresh$.next(false);
                     }
                 });
-            } else {
+            } else if (!this.oneCheckAtATime) {
                 this.timeoutUntilRefresh$.next(untilRefresh - 1);
                 if (untilRefresh === 1) {
                     this.checking$.next(true);

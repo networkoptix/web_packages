@@ -13,6 +13,7 @@ import * as t                                  from './system-api.types';
 import md5                                     from 'md5';
 import { Account }                             from './account.service';
 import { NxUriCacheService }                   from './uri-cache.service';
+import { NxAppStateService }                   from './nx-app-state.service';
 import { CookieService }                       from 'ngx-cookie-service';
 import { NxHealthService }                     from '../pages/health/health.service';
 
@@ -82,6 +83,7 @@ export class NxSystemAPI {
     cacheService: NxUriCacheService;
     cookieService: CookieService
     healthService: NxHealthService;
+    appState: NxAppStateService;
 
     constructor(
         http: HttpClient,
@@ -93,7 +95,8 @@ export class NxSystemAPI {
         unauthorizedCallback: (params: IParams) => any,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
-        healthService: NxHealthService
+        healthService: NxHealthService,
+        appState: NxAppStateService
     ) {
         this.http = http;
         this.CONFIG = configService;
@@ -101,6 +104,7 @@ export class NxSystemAPI {
         this.cacheService = cacheService;
         this.cookieService = cookieService;
         this.healthService = healthService;
+        this.appState = appState;
         this.init(userEmail, systemId, serverId, unauthorizedCallback);
 
         // @ts-ignore TODO: This is to make it easy to access the systemService from the console for testing ,uncomment to add systemService to global context.
@@ -170,7 +174,15 @@ export class NxSystemAPI {
         });
         const fullUrl = `${this.urlBase}${url}`;
         return this.http.get<ResponseType>(fullUrl, { headers, params }).pipe(
-            retryWhen((request) => this.retryHandler(request))
+            retryWhen((request) => this.retryHandler(request)),
+            timeout(8000),
+            tap(() => {},
+                err => {
+                    if (this.CONFIG.isLocal && err.name === 'TimeoutError') {
+                        this.appState.systemAvailable$.next(false);
+                    }
+                }
+            )
         );
     }
 
@@ -894,7 +906,8 @@ export class NxSystemAPIService {
         private http: HttpClient,
         private cacheService: NxUriCacheService,
         private cookieService: CookieService,
-        private healthService: NxHealthService
+        private healthService: NxHealthService,
+        private appState: NxAppStateService
     ) {
         this.CONFIG = configService.getConfig();
         this.systemConnections = {};
@@ -916,7 +929,7 @@ export class NxSystemAPIService {
         //     const mediaserverConnection = new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback);
         //     this.systemConnections[sysServe]
         // }
-        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService);
+        return new NxSystemAPI(this.http, this.CONFIG, this.location, user, systemId, serverId, unauthorizedCallback, this.cacheService, this.cookieService, this.healthService, this.appState);
     }
 }
 
