@@ -1,7 +1,7 @@
 import { NxSystem } from "../../../../../../../services/system.service"
-import TimeRange from '../../timeline/timeRanges/TimeRange'
-import Event from '../../timeline/archive/events/Event'
-import IEventBirdView from '../../timeline/archive/birdViews/IEventBirdView'
+import TimeRange from '../time_range/TimeRange'
+import DuratedEvent from '../archive/events/DuratedEvent'
+import IEventBirdView from '../archive/birdViews/IEventBirdView'
 
 
 export function requestEventsBirdView (
@@ -19,17 +19,17 @@ export function requestEventsBirdView (
         range.startTime,
         range.endTime,
         roughness
-    ).then(response => Promise.resolve({
-        range,
-        roughness,
+    ).then(response => ({
+            range,
+            roughness,
 
-        // @ts-ignore
-        events: response.reply.map(r => {
-            const startTime = parseInt(r.startTimeMs)
-            const duration = parseInt(r.durationMs)
-            return new Event(startTime, duration === -1 ? Date.now() : startTime + duration)
+            events: response['reply'].map(r => {
+                const startTime = parseInt(r.startTimeMs)
+                const duration = parseInt(r.durationMs)
+                return new DuratedEvent(startTime, duration === -1 ? Date.now() : startTime + duration)
+            })
         })
-    }))
+    )
 }
 
 export default requestEventsBirdView

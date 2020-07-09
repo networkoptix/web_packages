@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
-import { timeStampMs, int } from '../camera-timeline/timeline/numberTypeAliases'
-import IDuratedTimeRange from '../camera-timeline/timeline/timeRanges/IDuratedTimeRange'
+import { int } from '../camera-timeline/timeline/basic_types/numbers'
+import { timeStampMs } from '../camera-timeline/timeline/basic_types/time'
+import ITimeRange from '../camera-timeline/timeline/time_range/ITimeRange'
 import * as df from 'dateformat'
 const dateformat = df.default || df
 
@@ -28,8 +29,8 @@ export class NxArchivePlaybackIndicatorComponent implements OnChanges {
 
     @Input() display: boolean
     @Input() playbackPositionAbsolute: timeStampMs
-    @Input() visibleRange: IDuratedTimeRange
-    @Input() fullRange: IDuratedTimeRange
+    @Input() visibleRange: ITimeRange
+    @Input() fullRange: ITimeRange
     @Input() canvas: HTMLCanvasElement
 
     protected MIN_MARGIN_X: domPixels = 20

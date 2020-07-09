@@ -1,4 +1,4 @@
-import { timeStampMs } from '../../numberTypeAliases'
+import { timeStampMs } from '../../basic_types/time'
 
 export interface Serif {
   when: timeStampMs,

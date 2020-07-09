@@ -1,13 +1,8 @@
-import IDuratedTimeRange from '../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../time_range/ITimeRange'
 import AbstractIntervalSetProvider from './interval_set_providers/AbstractIntervalSetProvider'
 
-// import DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtSingleWeightIntervalSetProvider'
-// import CanvasRegularLenghtMultipleWeighstIntervalSetProvider from './interval_set_providers/CanvasRegularLenghtMultipleWeighstIntervalSetProvider'
-// import CanvasIrregularLenghtSingleWeightIntervalSetProvider from './interval_set_providers/CanvasIrregularLenghtSingleWeightIntervalSetProvider'
 import CanvasIrregularLenghtMultipleWeightsIntervalSetProvider from './interval_set_providers/canvas/CanvasIrregularLenghtMultipleWeightsIntervalSetProvider'
 
-// import RegularLengthIntervalSetExpander from './interval_set_expanders/RegularLengthIntervalSetExpander'
 import IrregularLengthIntervalSetExpander from './interval_set_expanders/IrregularLengthIntervalSetExpander'
 
 import AbstractRuler from './AbstractRuler'
@@ -24,20 +19,15 @@ export class StaticCanvasRuler extends AbstractRuler {
   protected topRenderer: CanvasTopRulerRenderer
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected intervalSetProvider: AbstractIntervalSetProvider =
-      // new DegenerateCanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtSingleWeightIntervalSetProvider(
-      // new CanvasRegularLenghtMultipleWeighstIntervalSetProvider(
-      // new CanvasIrregularLenghtSingleWeightIntervalSetProvider(
       new CanvasIrregularLenghtMultipleWeightsIntervalSetProvider(
         visibleRange,
         ctx.canvas,
       ),
 
     protected intervalSetExpander: AbstractIntervalSetExpander =
-    // new RegularLengthIntervalSetExpander(
     new IrregularLengthIntervalSetExpander(
         visibleRange,
       ),

@@ -1,13 +1,15 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core'
 
-import TimeRange from './timeline/timeRanges/TimeRange'
+import TimeRange from './timeline/time_range/TimeRange'
 import TimeLineController from './timeline/TimeLineController'
 import installFpsMeter from './timeline/utils/installFpsMeter'
-import { int, timeStampMs, timeStampS } from './timeline/numberTypeAliases'
+import { int } from './timeline/basic_types/numbers'
+import { timeStampMs, timeStampS } from './timeline/basic_types/time'
 import requestEventsBirdView from './timeline/utils/requestEventsBirdView'
 import { NxSystem, NxCamera } from '../../../../../services/system.service'
 import IEventBirdView from './timeline/archive/birdViews/IEventBirdView'
 import ProxyEventBirdViewProvider from './timeline/archive/birdViews/providers/ProxyEventBirdViewProvider'
+import ITimeRange from './timeline/time_range/ITimeRange'
 
 
 const now = Date.now()
@@ -106,20 +108,25 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
     }
     this.requestEventsBirdView().then(ebv => {
       if (!ebv || !ebv.events || !ebv.events.length) {
+        // console.debug('A')
         console.error('faulty bird view', ebv)
         return Promise.reject()
         // this.archiveRange = new TimeRange(0, Date.now()) // allows some limited debug even without recording cameras
-      } else {
-        this.archiveRange = TimeRange.fromRange(ebv.events[0])
+      } else {        
+        this.archiveRange = TimeRange.fromRange(ebv.events[0] as ITimeRange)
+        // console.debug('B', this.archiveRange)
       }
+      // console.debug('C')
       return this.requestEventsBirdView(this.archiveRange, 1).then(ebv => {
+        // console.debug('D', ebv)
         this.archiveDetailiedBirdView = ebv
       })
     }).then(() => {
-      // setTimeout(() => {
+      setTimeout(() => {
         this.eventBirdViewProvider = new ProxyEventBirdViewProvider(this.archiveDetailiedBirdView)
-        this.initTimeline()
-      // }, 500)
+        // console.debug('E', this.eventBirdViewProvider)
+        this.initTimeline()        
+      }, 500)
     }, () => {
       console.error('failed archive range request')
       this.archiveRequestFailed = true
@@ -137,6 +144,7 @@ export class NxCameraTimelineComponent implements OnInit, OnChanges {
   }
 
   protected initTimeline () {
+    console.debug('initTimeLine', this.timelineController)
     this.timelineController && this.timelineController.dispose()
     this.timelineController = new TimeLineController(
       'timeline-canvas',

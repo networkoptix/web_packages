@@ -1,27 +1,34 @@
-import IRangerStatus from '../rangers/abstract/IRangerStatus'
-import IRangerControls from '../rangers/abstract/IRangerControls'
+import IRangerStatus from '../ranger/IRangerStatus'
+import IRangerControls from '../ranger/IRangerControls'
 import AbstractScrollBar from './AbstractScrollBar'
 
 
 export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
 
+  static DEFAULT_MIN_SCROLL_WIDTH = 50 * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)
+  static DEFAULT_SCROLL_BAR_RELATIVE_Y = 0.82
+  static DEFAULT_SCROLL_BAR_RELATIVE_H = 0.18
+  static DEFAULT_SCROLL_BAR_AS_FINE_STEPS = 3
+
   constructor (
     protected status: IRangerStatus,
     protected controls: IRangerControls,
     protected canvas: HTMLCanvasElement,
-    protected MIN_SCROLL_WIDTH = 50 * devicePixelRatio,
-    protected SCROLL_BAR_RELATIVE_Y = 0.82,
-    protected SCROLL_BAR_RELATIVE_H = 0.18,
-    protected SCROLL_BAR_AS_FINE_STEPS = 3,
+    protected MIN_SCROLL_WIDTH = CanvasEmbeddedScrollBar.DEFAULT_MIN_SCROLL_WIDTH,
+    protected SCROLL_BAR_RELATIVE_Y = CanvasEmbeddedScrollBar.DEFAULT_SCROLL_BAR_RELATIVE_Y,
+    protected SCROLL_BAR_RELATIVE_H = CanvasEmbeddedScrollBar.DEFAULT_SCROLL_BAR_RELATIVE_H,
+    protected SCROLL_BAR_AS_FINE_STEPS = CanvasEmbeddedScrollBar.DEFAULT_SCROLL_BAR_AS_FINE_STEPS,
   ) {
     super(status, controls)
     this.bindEventHandlers()
 
-    const handleScroll = () => {
+    if (typeof(requestAnimationFrame) !== 'undefined') {
+      const handleScroll = () => {
+        requestAnimationFrame(handleScroll)
+        this.eventHandlers.scrolling.progress()
+      }
       requestAnimationFrame(handleScroll)
-      this.eventHandlers.scrolling.progress()
     }
-    requestAnimationFrame(handleScroll)
   }
 
   public render (debug: boolean = false) {
@@ -60,8 +67,8 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
     ctx.strokeStyle = '#698796'
 
     const scrollbarCenterX = Math.round(x + vSW / 2)
-    const textureStepPx = 4 * devicePixelRatio
-    const textureMarginPx = 1 * devicePixelRatio
+    const textureStepPx = 4 * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)
+    const textureMarginPx = 1 * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)
     ctx.beginPath()
     ctx.moveTo(scrollbarCenterX - textureStepPx, y + textureMarginPx)
     ctx.lineTo(scrollbarCenterX - textureStepPx, y + h - 2 * textureMarginPx)
@@ -83,17 +90,21 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
   protected bindEventHandlers () {
     this.canvas.addEventListener('mousedown', this.eventHandlers.mouse.down)
     this.canvas.addEventListener('dblclick', this.eventHandlers.mouse.dblclick)
-    document.body.addEventListener('mousemove', this.eventHandlers.mouse.move)
-    document.body.addEventListener('mouseup', this.eventHandlers.mouse.up)
-    document.body.addEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    if (typeof(document) !== 'undefined') {
+      document.body.addEventListener('mousemove', this.eventHandlers.mouse.move)
+      document.body.addEventListener('mouseup', this.eventHandlers.mouse.up)
+      document.body.addEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    }
   }
 
   protected unbindEventHandlers () {
     this.canvas.removeEventListener('mousedown', this.eventHandlers.mouse.down)
     this.canvas.removeEventListener('dblclick', this.eventHandlers.mouse.dblclick)
-    document.body.removeEventListener('mousemove', this.eventHandlers.mouse.move)
-    document.body.removeEventListener('mouseup', this.eventHandlers.mouse.up)
-    document.body.removeEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    if (typeof(document) !== 'undefined') {
+      document.body.removeEventListener('mousemove', this.eventHandlers.mouse.move)
+      document.body.removeEventListener('mouseup', this.eventHandlers.mouse.up)
+      document.body.removeEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    }
   }
 
   protected get scrollWidth () {
@@ -111,7 +122,7 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
 
   protected isMouseEventInScrollbarSliderHorizontally (e) {
     const displayScrollOffset = this.displayScrollOffset
-    const x = e.offsetX * devicePixelRatio
+    const x = e.offsetX * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)
     return x > displayScrollOffset && x < displayScrollOffset + this.scrollWidth
   }
 
@@ -158,7 +169,7 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
     drag: {
       init: (e: MouseEvent) => {
         this.dragState.isDragging = true
-        this.dragState.dragAnchor = (e.offsetX * devicePixelRatio - this.status.scroll.offset.relative * this.canvas.width) / this.scrollWidth
+        this.dragState.dragAnchor = (e.offsetX * (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1) - this.status.scroll.offset.relative * this.canvas.width) / this.scrollWidth
       },
       finish: (e: MouseEvent) => {
         this.dragState.isDragging = false
@@ -176,7 +187,7 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
       start: (e: MouseEvent) => {
         this.scrollingState.targetRelativeOffset = Math.max(
           0,
-          (e.offsetX - this.scrollWidth / devicePixelRatio * 0.5) / this.canvas.offsetWidth
+          (e.offsetX - this.scrollWidth / (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1) * 0.5) / this.canvas.offsetWidth
         )
         this.scrollingState.direction = this.scrollingState.targetRelativeOffset > this.status.scroll.offset.relative ? +1 : -1
       },
@@ -195,7 +206,7 @@ export class CanvasEmbeddedScrollBar extends AbstractScrollBar {
         const scrollWidth = this.canvas.width / this.status.zoom.factor
         const targetRelativeOffset = Math.max(
           0,
-          (e.offsetX - (scrollWidth / devicePixelRatio) * 0.5) / this.canvas.offsetWidth
+          (e.offsetX - (scrollWidth / (typeof(window) === 'object' ? window.devicePixelRatio || 1 : 1)) * 0.5) / this.canvas.offsetWidth
         )
         this.controls.scroll.jump.relative(targetRelativeOffset, false)
       }

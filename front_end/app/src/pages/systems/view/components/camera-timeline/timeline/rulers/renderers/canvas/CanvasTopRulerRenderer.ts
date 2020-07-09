@@ -1,5 +1,6 @@
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
-import { int, percentage, timeStampMs } from '../../../numberTypeAliases'
+import ITimeRange from '../../../time_range/ITimeRange'
+import { percentage, int } from '../../../basic_types/numbers';
+import { timeStampMs } from '../../../basic_types/time';
 import WeightedRegularIntervalSerif from '../../serifs/WeightedRegularIntervalSerif'
 import topRulerDateFormats from '../../dateformats/top_ruler_date_formats'
 import WeightedIrregularIntervalSerif from '../../serifs/WeightedIrregularIntervalSerif'
@@ -12,7 +13,7 @@ const dateformat = df.default || df
 export class CanvasTopRulerRenderer {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected ctx: CanvasRenderingContext2D,
     protected Y_0_RELATIVE: percentage = 0,
     protected H_BASE_RELATIVE: percentage = 0.2,

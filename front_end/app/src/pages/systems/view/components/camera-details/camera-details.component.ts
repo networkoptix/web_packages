@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { timeStampMs } from '../camera-timeline/timeline/numberTypeAliases'
+import { timeStampMs } from '../camera-timeline/timeline/basic_types/time'
 import * as screenfull from 'screenfull'
 import { NxCamera, NxSystem } from '../../../../../services/system.service'
 import { PlaybackQuality } from '../../view.types'

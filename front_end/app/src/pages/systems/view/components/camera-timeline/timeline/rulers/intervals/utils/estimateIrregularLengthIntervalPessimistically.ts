@@ -3,8 +3,8 @@ import { ROUGH_YEAR, ROUGH_MONTH } from '../regularLengthIntervals'
 
 export const estimateIrregularLengthIntervalPessimistically = (i: IrregularLengthInterval) => {
   switch (i) {
-    // case 'millenia':
-    //   return 1000 * ROUGH_YEAR
+    case 'millenia':
+      return 1000 * ROUGH_YEAR
     case 'century':
       return 100 * ROUGH_YEAR
     case 'decade':

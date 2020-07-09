@@ -1,10 +1,10 @@
-import ITimeRange from "../../../timeRanges/ITimeRange"
-import TimeRange from "../../../timeRanges/TimeRange"
-import IEvent from '../../events/IEvent'
-import Event from "../../events/Event"
-import AbstractEventBirdViewProvider from "./AbstractEventBirdViewProvider"
+import ITimeRange from "../../../time_range/ITimeRange"
+import TimeRange from "../../../time_range/TimeRange"
+import IDuratedEvent from "../../events/IDuratedEvent"
 import IEventBirdView from "../IEventBirdView"
-import { timeStampMs } from "../../../numberTypeAliases"
+import { timeStampMs } from "../../../basic_types/time"
+import AbstractEventBirdViewProvider from './AbstractEventBirdViewProvider'
+import DuratedEvent from "../../events/DuratedEvent"
 
 
 export class ProxyEventBirdViewProvider extends AbstractEventBirdViewProvider {
@@ -40,7 +40,7 @@ export class ProxyEventBirdViewProvider extends AbstractEventBirdViewProvider {
     if (this._events.length && this._events[this._events.length - 1].endTime === this._fullRange.endTime) {
       this._events[this._events.length - 1].endTime += t
     } else {
-      this._events.push(new Event(this._fullRange.endTime, this._fullRange.endTime + t))
+      this._events.push(new DuratedEvent(this._fullRange.endTime, this._fullRange.endTime + t))
     }
   }
 
@@ -59,8 +59,8 @@ export class ProxyEventBirdViewProvider extends AbstractEventBirdViewProvider {
     return e ? e.startTime : Infinity
   }
 
-  protected limitEventsByRange (range: ITimeRange): Array<IEvent> {
-    const result = this._events.filter(e => e.endTime >= range.startTime && e.startTime <= range.endTime).map(e => ({ ...e }))
+  protected limitEventsByRange (range: ITimeRange): Array<IDuratedEvent> {
+    const result = this._events.filter(e => e.endTime >= range.startTime && e.startTime <= range.endTime).map(e => DuratedEvent.fromEvent(e as DuratedEvent))
     if (result.length) {
       const firstEvent = result[0]
       const lastEvent = result[result.length - 1]

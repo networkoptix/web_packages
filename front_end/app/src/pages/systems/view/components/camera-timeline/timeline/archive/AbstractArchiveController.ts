@@ -1,12 +1,12 @@
-import IDuratedTimeRange from '../timeRanges/IDuratedTimeRange';
-import { timeStampMs } from '../numberTypeAliases';
+import ITimeRange from '../time_range/ITimeRange';
+import { timeStampMs } from '../basic_types/time';
 
 
 export abstract class AbstractArchiveController {
 
   constructor (
-    protected archiveRange: IDuratedTimeRange,
-    protected visibleRange: IDuratedTimeRange,
+    protected archiveRange: ITimeRange,
+    protected visibleRange: ITimeRange,
   ) {
   }
 
