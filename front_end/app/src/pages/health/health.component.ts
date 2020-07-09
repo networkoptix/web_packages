@@ -66,7 +66,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private router: Router,
         private uriService: NxUriService,
         private menuService: NxMenuService,
-        private healthService: NxHealthService,
+        public healthService: NxHealthService,
         private utilsService: NxUtilsService,
         private ribbonService: NxRibbonService,
         private scrollMechanicsService: NxScrollMechanicsService,

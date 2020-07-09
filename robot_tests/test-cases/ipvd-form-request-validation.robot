@@ -1,5 +1,5 @@
 *** Settings ***
-Resource          ../ipvd_resource.robot
+Resource          ../resource.robot
 Suite Setup       Open IPVD Page
 Test Template     Test Submit Request Message
 Test Teardown     NONE

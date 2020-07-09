@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Desconhecido",
+        "vendor": "Vendor",
+        "model": "Modelo",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "limpar pesquisa",
             "collapse all servers": "recolher todos os servidores",
@@ -194,6 +200,14 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
             "camera": "câmara",
             "cameras": "câmaras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Cloud storage successfully removed from system",
                 "errorPrefix": "Error removing cloud storage"
@@ -256,9 +270,8 @@
             "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Introduza o endereço do servidor",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "A senha actual está incorreta.",
         "oldSafariNotSupported": "Versões do Safari anteriores à 10 não são suportadas",
         "passwordMismatch": "Senha incorrecta",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "o sistema",
         "unknownError": "Unexpected error occurred",
         "unknownMergeError": "Unknown error. You can try to refresh the page and repeat attempt. If the problem persists – please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "A conta já está activada ou o código de confirmação está incorreto",
         "wrongCodeRestore": "O código de confirmação já foi usado ou está incorreto",
         "wrongParameters": "Alguns parâmetros no formulário estão incorretos",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
     },
     "integration": {

@@ -157,6 +157,12 @@
         "systemUnreachable": "Il sistema è inaccessibile",
         "inaccessibleFeatureMessage": "Il sistema è offline e quindi le informazioni non sono accessibili.",
         "unknown": "Sconosciuto",
+        "vendor": "Vendor",
+        "model": "Modello",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "cancella ricerca",
             "collapse all servers": "comprimi tutti i server",
@@ -194,6 +200,14 @@
             "available": "La posizione dell' archiviazione cloud è disponibile per tutti i server in questo sistema. Puoi gestirlo usando il client desktop {{vmsName}}.",
             "camera": "telecamera",
             "cameras": "telecamere",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Archiviazione cloud rimossa correttamente dal sistema",
                 "errorPrefix": "Errore durante la rimozione dell'archiviazione cloud"
@@ -256,9 +270,8 @@
             "serverNotYours": "Questo sistema è collegato a %CLOUD_NAME%, ma ha un proprietario diverso. I sistemi cloud possono essere uniti solo se l'account del proprietario è lo stesso.",
             "systemOffline": "Il sistema {{targetSystem}} è offline e non può essere unito al corrente",
             "systemOfflineUrl": "{{targetSystem}} è inaccessibile.",
-            "systemsIncompatible": "Questo server ha una versione software incompatibile. Aggiorna entrambi i sistemi alla stessa versione per unirli.",
-            "systemVersionOld": "Il sistema {{targetSystem}} ha una versione precedente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema corrente.",
-            "systemVersionNew": "Il sistema {{targetSystem}} ha una versione più recente del software ed è incompatibile con il sistema corrente. Aggiornare il sistema attuale alla <a href=\"/download\" target=\"_blank\" translate>versione più recente</a> per unirsi con il {{targetSystem}} sistema.",
+            "systemsIncompatible": "Questo server ha una versione software incompatibile. Si prega di aggiornare entrambi i sistemi al <a href=\"/download\" target=\"_blank\" translate>ultima build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Inserire l'indirizzo del server",
             "urlNotValid": "Inserisci un URL valido",
             "unknownError": "Si è verificato un errore sconosciuto. Aggiorna la pagina e riprova. Se il problema persiste, contattare <a href=\"%SUPPORT_LINK%\" target=\"_blank\">il supporto</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Password corrente non è corretta.",
         "oldSafariNotSupported": "Le versioni di Safari precedenti alla 10 non sono supportate",
         "passwordMismatch": "Password errata",
-        "systemUnavailable": "{{failedSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta l'assistenza.",
+        "systemUnavailable": "{{failedSystem}} è attualmente irraggiungibile. Riprova tra qualche minuto o contatta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">supporto</a>.",
         "thisSystem": "il sistema",
         "unknownError": "Si è verificato un errore imprevisto",
         "unknownMergeError": "Errore sconosciuto. Puoi provare ad aggiornare la pagina e ripetere il tentativo. Se il problema persiste, contatta l'assistenza <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
@@ -435,7 +448,7 @@
         "wrongParameters": "Alcuni parametri nel modulo non sono corretti",
         "licenseFail": "Impossibile attivare la licenza. Riprova o contatta l'assistenza clienti.",
         "licenseTimeout": "Impossibile attivare la licenza a causa di un timeout della connessione. Assicurati che il server sia online e riprova.",
-        "licenseServerError": "Impossibile attivare la licenza. Il server licenza non ha risposto. Riprova o contatta il Servizio clienti.",
+        "licenseServerError": "Impossibile attivare la licenza. Il server delle licenze non risponde. Riprova o contatta l'assistenza.",
         "networkConnection": "Impossibile connettersi a {{cloudName}}, controlla la connessione di rete."
     },
     "integration": {

@@ -11,7 +11,7 @@ import { NxAccountService }               from '../../../../services/account.ser
 import { NxProcessService }               from '../../../../services/process.service';
 import { NxSystem }                       from '../../../../services/system.service';
 import { Subscription }                   from 'rxjs';
-import { filter, auditTime }              from 'rxjs/operators';
+import { auditTime }                      from 'rxjs/operators';
 import { AutoUnsubscribe }                from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }        from '../../../../../language_i18n_static_types';
 import { NxCloudApiService }              from '../../../../services/nx-cloud-api';
@@ -111,11 +111,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
-            .pipe(filter((system) => {
-                this.systemLoaded = system !== undefined;
-                return this.systemLoaded;
-            }))
             .subscribe((system) => {
+                if (!system) {
+                    this.system = undefined;
+                    this.systemLoaded = false;
+                    return;
+                }
                 this.system = system;
                 this.pageService.pageTitle = this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name);
                 if (this.systemSubscription) {
@@ -124,11 +125,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemSubscription = system.infoSubject
                     .pipe(auditTime(this.CONFIG.system.auditTime))
                     .subscribe(system => {
-                        if (!this.system.isAvailable && system && system.isAvailable) {
+                        if (!system) return;
+                        if (this.system && !this.system.isAvailable && system && system.isAvailable) {
                             this.system = system;
-                        }
-                        if (!this.system.isAvailable) {
-                            return;
                         }
 
                         this.settingsService.footerSubject.next(true);
@@ -140,6 +139,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsSubscription = this.system.updateOrGetSystemSettings()
                             .subscribe((res: any) => {
                                 this.settingsForSystem = res.reply.settings;
+                                this.systemLoaded = true;
+                            }, (err) => {
+                                this.settingsForSystem = false;
+                                console.error(err);
+                                this.systemLoaded = true;
                             });
                     });
                 this.deletingSystem = this.processService.createProcess(
@@ -156,11 +160,13 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     synceMergeAlerts() {
-        if (this.system.mergeInfo) {
+        if (this.system && this.system.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
         } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
-            this.systemsService.forceUpdateSystems().toPromise();
+            this.systemsService.forceUpdateSystems().toPromise().finally(() => {
+                this.systemLoaded = true;
+            });
         }
 
         if (this.systemsSubscription) {
@@ -170,7 +176,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 if (this.systemsService.finishedMerged) {
                     this.systemsService.finishedMerged = false;
-                    this.system.getInfo(true, false);
+                    this.system.getInfo(true, false).finally(() => {
+                        this.systemLoaded = true;
+                    });
+                } else {
+                    this.systemLoaded = true;
                 }
             });
     }

@@ -1,3 +1,3 @@
-Helló, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following support question for the {{ message.asset }}:
+Üdvözlöm! {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) a következő támogatási kérdést tette fel {{ message.asset }}:
 <pre>{{ message.message }}</pre>

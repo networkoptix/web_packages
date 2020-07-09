@@ -40,7 +40,7 @@ export interface LanguageI18NStaticTypes {
     systemStatuses:        SystemStatuses;
     toastMessage:          ToastMessage;
     license:               License;
-    settingsConfig:        SettingsConfig;
+    settingsConfig:        { [key: string]: string };
 }
 
 export interface AccessRole {
@@ -102,6 +102,12 @@ export interface Common {
     systemUnreachable:          string;
     inaccessibleFeatureMessage: string;
     unknown:                    string;
+    vendor:                     string;
+    model:                      string;
+    ip:                         string;
+    server:                     string;
+    os:                         string;
+    version:                    string;
     voiceCommands:              VoiceCommands;
     viewingOutdatedReport:      string;
 }
@@ -207,6 +213,7 @@ export interface CloudStorage {
     available:             string;
     camera:                string;
     cameras:               string;
+    usageLabels:           UsageLabels;
     remove:                EnableCloudStorage;
     activationError:       NoSettings;
     systemDisconnectError: NoSettings;
@@ -234,6 +241,15 @@ export interface MoveCloudStorageStatus {
 
 export interface NoOtherSystemsError {
     message: string;
+}
+
+export interface UsageLabels {
+    currentRecordings: string;
+    whenFullyUsed:     string;
+    amountUsed:        string;
+    archiveFrom:       string;
+    recordingBitrate:  string;
+    delayFromLive:     string;
 }
 
 export interface DialogsMerge {
@@ -266,8 +282,7 @@ export interface DialogsMerge {
     systemOffline:              string;
     systemOfflineUrl:           string;
     systemsIncompatible:        string;
-    systemVersionOld:           string;
-    systemVersionNew:           string;
+    systemVersionsNotMatch:     string;
     urlEmpty:                   string;
     urlNotValid:                string;
     unknownError:               string;
@@ -642,103 +657,6 @@ export interface ServersStatus {
     restarting: string;
 }
 
-export interface SettingsConfig {
-    additionalLocalFsTypes:                          string;
-    autoDiscoveryResponseEnabled:                    string;
-    crossdomainEnabled:                              string;
-    defaultExportVideoCodec:                         string;
-    defaultVideoCodec:                               string;
-    downloaderPeers:                                 string;
-    lastMergeMasterId:                               string;
-    lastMergeSlaveId:                                string;
-    ldapSearchTimeoutS:                              string;
-    licenseServer:                                   string;
-    lowQualityScreenVideoCodec:                      string;
-    maxP2pAllClientsSizeBytes:                       string;
-    maxRtpRetryCount:                                string;
-    metadataStorageChangePolicy:                     string;
-    pushNotificationsLanguage:                       string;
-    resourceFileUri:                                 string;
-    sessionLimitMinutes:                             string;
-    specificFeatures:                                string;
-    systemName:                                      string;
-    webSocketEnabled:                                string;
-    arecontRtspEnabled:                              string;
-    auditTrailEnabled:                               string;
-    auditTrailPeriodDays:                            string;
-    autoDiscoveryEnabled:                            string;
-    autoUpdateThumbnails:                            string;
-    backupNewCamerasByDefault:                       string;
-    backupQualities:                                 string;
-    cameraSettingsOptimization:                      string;
-    clientStatisticsSettingsUrl:                     string;
-    cloudAccountName:                                string;
-    cloudConnectRelayingEnabled:                     string;
-    cloudConnectUdpHolePunchingEnabled:              string;
-    cloudHost:                                       string;
-    cloudSystemID:                                   string;
-    disabledVendors:                                 string;
-    ec2AliveUpdateIntervalSec:                       string;
-    ec2ConnectionKeepAliveTimeoutSec:                string;
-    ec2KeepAliveProbeCount:                          string;
-    emailFrom:                                       string;
-    emailSignature:                                  string;
-    emailSupportEmail:                               string;
-    enableEdgeRecording:                             string;
-    eventLogPeriodDays:                              string;
-    ldapAdminDn:                                     string;
-    ldapSearchBase:                                  string;
-    ldapSearchFilter:                                string;
-    ldapUri:                                         string;
-    localSystemId:                                   string;
-    maxDifferenceBetweenSynchronizedAndInternetTime: string;
-    maxDifferenceBetweenSynchronizedAndLocalTimeMs:  string;
-    maxP2pQueueSizeBytes:                            string;
-    maxRecordQueueSizeBytes:                         string;
-    maxRecordQueueSizeElements:                      string;
-    maxRemoteArchiveSynchronizationThreads:          string;
-    maxRtspConnectDurationSeconds:                   string;
-    maxSceneItems:                                   string;
-    proxyConnectTimeoutSec:                          string;
-    rtpTimeoutMs:                                    string;
-    sequentialFlirOnvifSearcherEnabled:              string;
-    serverDiscoveryPingTimeoutSec:                   string;
-    smtpConnectionType:                              string;
-    smtpHost:                                        string;
-    smtpPort:                                        string;
-    smtpSimple:                                      string;
-    smtpTimeout:                                     string;
-    smtpUser:                                        string;
-    statisticsAllowed:                               string;
-    statisticsReportLastNumber:                      string;
-    statisticsReportLastTime:                        string;
-    statisticsReportLastVersion:                     string;
-    statisticsReportServerApi:                       string;
-    statisticsReportTimeCycle:                       string;
-    statisticsReportUpdateDelay:                     string;
-    synchronizeTimeWithInternet:                     string;
-    SystemName:                                      string;
-    takeCameraOwnershipWithoutLock:                  string;
-    timeSynchronizationEnabled:                      string;
-    primaryTimeServer:                               string;
-    osTimeChangeCheckPeriodMs:                       string;
-    syncTimeExchangePeriod:                          string;
-    syncTimeEpsilon:                                 string;
-    maxWearableArchiveSynchronizationThreads:        string;
-    updateNotificationsEnabled:                      string;
-    upnpPortMappingEnabled:                          string;
-    useTextEmailFormat:                              string;
-    useWindowsEmailLineFeed:                         string;
-    trafficEncryptionForced:                         string;
-    videoTrafficEncryptionForced:                    string;
-    updateStatus:                                    string;
-    watermarkSettings:                               string;
-    maxWebMTranscoders:                              string;
-    maxEventLogRecords:                              string;
-    forceLiveCacheForPrimaryStream:                  string;
-    DO_NOT_USE_FORCES_INTERFACE_GENERATION:          number;
-}
-
 export interface LanguageI18NStaticTypesSystem {
     MERGE_FINISHES:   string;
     mergeUnknownName: string;
@@ -996,7 +914,7 @@ const typeMap: any = {
         { json: "systemStatuses", js: "systemStatuses", typ: r("SystemStatuses") },
         { json: "toastMessage", js: "toastMessage", typ: r("ToastMessage") },
         { json: "license", js: "license", typ: r("License") },
-        { json: "settingsConfig", js: "settingsConfig", typ: r("SettingsConfig") },
+        { json: "settingsConfig", js: "settingsConfig", typ: m("") },
     ], false),
     "AccessRole": o([
         { json: "description", js: "description", typ: "" },
@@ -1053,6 +971,12 @@ const typeMap: any = {
         { json: "systemUnreachable", js: "systemUnreachable", typ: "" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "" },
         { json: "unknown", js: "unknown", typ: "" },
+        { json: "vendor", js: "vendor", typ: "" },
+        { json: "model", js: "model", typ: "" },
+        { json: "ip", js: "ip", typ: "" },
+        { json: "server", js: "server", typ: "" },
+        { json: "os", js: "os", typ: "" },
+        { json: "version", js: "version", typ: "" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
     ], false),
@@ -1147,6 +1071,7 @@ const typeMap: any = {
         { json: "available", js: "available", typ: "" },
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
+        { json: "usageLabels", js: "usageLabels", typ: r("UsageLabels") },
         { json: "remove", js: "remove", typ: r("EnableCloudStorage") },
         { json: "activationError", js: "activationError", typ: r("NoSettings") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
@@ -1170,6 +1095,14 @@ const typeMap: any = {
     ], false),
     "NoOtherSystemsError": o([
         { json: "message", js: "message", typ: "" },
+    ], false),
+    "UsageLabels": o([
+        { json: "currentRecordings", js: "currentRecordings", typ: "" },
+        { json: "whenFullyUsed", js: "whenFullyUsed", typ: "" },
+        { json: "amountUsed", js: "amountUsed", typ: "" },
+        { json: "archiveFrom", js: "archiveFrom", typ: "" },
+        { json: "recordingBitrate", js: "recordingBitrate", typ: "" },
+        { json: "delayFromLive", js: "delayFromLive", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
@@ -1201,8 +1134,7 @@ const typeMap: any = {
         { json: "systemOffline", js: "systemOffline", typ: "" },
         { json: "systemOfflineUrl", js: "systemOfflineUrl", typ: "" },
         { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },
-        { json: "systemVersionOld", js: "systemVersionOld", typ: "" },
-        { json: "systemVersionNew", js: "systemVersionNew", typ: "" },
+        { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "" },
         { json: "urlEmpty", js: "urlEmpty", typ: "" },
         { json: "urlNotValid", js: "urlNotValid", typ: "" },
         { json: "unknownError", js: "unknownError", typ: "" },
@@ -1537,102 +1469,6 @@ const typeMap: any = {
         { json: "offline", js: "offline", typ: "" },
         { json: "reseting", js: "reseting", typ: "" },
         { json: "restarting", js: "restarting", typ: "" },
-    ], false),
-    "SettingsConfig": o([
-        { json: "additionalLocalFsTypes", js: "additionalLocalFsTypes", typ: "" },
-        { json: "autoDiscoveryResponseEnabled", js: "autoDiscoveryResponseEnabled", typ: "" },
-        { json: "crossdomainEnabled", js: "crossdomainEnabled", typ: "" },
-        { json: "defaultExportVideoCodec", js: "defaultExportVideoCodec", typ: "" },
-        { json: "defaultVideoCodec", js: "defaultVideoCodec", typ: "" },
-        { json: "downloaderPeers", js: "downloaderPeers", typ: "" },
-        { json: "lastMergeMasterId", js: "lastMergeMasterId", typ: "" },
-        { json: "lastMergeSlaveId", js: "lastMergeSlaveId", typ: "" },
-        { json: "ldapSearchTimeoutS", js: "ldapSearchTimeoutS", typ: "" },
-        { json: "licenseServer", js: "licenseServer", typ: "" },
-        { json: "lowQualityScreenVideoCodec", js: "lowQualityScreenVideoCodec", typ: "" },
-        { json: "maxP2pAllClientsSizeBytes", js: "maxP2pAllClientsSizeBytes", typ: "" },
-        { json: "maxRtpRetryCount", js: "maxRtpRetryCount", typ: "" },
-        { json: "metadataStorageChangePolicy", js: "metadataStorageChangePolicy", typ: "" },
-        { json: "pushNotificationsLanguage", js: "pushNotificationsLanguage", typ: "" },
-        { json: "resourceFileUri", js: "resourceFileUri", typ: "" },
-        { json: "sessionLimitMinutes", js: "sessionLimitMinutes", typ: "" },
-        { json: "specificFeatures", js: "specificFeatures", typ: "" },
-        { json: "systemName", js: "systemName", typ: "" },
-        { json: "webSocketEnabled", js: "webSocketEnabled", typ: "" },
-        { json: "arecontRtspEnabled", js: "arecontRtspEnabled", typ: "" },
-        { json: "auditTrailEnabled", js: "auditTrailEnabled", typ: "" },
-        { json: "auditTrailPeriodDays", js: "auditTrailPeriodDays", typ: "" },
-        { json: "autoDiscoveryEnabled", js: "autoDiscoveryEnabled", typ: "" },
-        { json: "autoUpdateThumbnails", js: "autoUpdateThumbnails", typ: "" },
-        { json: "backupNewCamerasByDefault", js: "backupNewCamerasByDefault", typ: "" },
-        { json: "backupQualities", js: "backupQualities", typ: "" },
-        { json: "cameraSettingsOptimization", js: "cameraSettingsOptimization", typ: "" },
-        { json: "clientStatisticsSettingsUrl", js: "clientStatisticsSettingsUrl", typ: "" },
-        { json: "cloudAccountName", js: "cloudAccountName", typ: "" },
-        { json: "cloudConnectRelayingEnabled", js: "cloudConnectRelayingEnabled", typ: "" },
-        { json: "cloudConnectUdpHolePunchingEnabled", js: "cloudConnectUdpHolePunchingEnabled", typ: "" },
-        { json: "cloudHost", js: "cloudHost", typ: "" },
-        { json: "cloudSystemID", js: "cloudSystemID", typ: "" },
-        { json: "disabledVendors", js: "disabledVendors", typ: "" },
-        { json: "ec2AliveUpdateIntervalSec", js: "ec2AliveUpdateIntervalSec", typ: "" },
-        { json: "ec2ConnectionKeepAliveTimeoutSec", js: "ec2ConnectionKeepAliveTimeoutSec", typ: "" },
-        { json: "ec2KeepAliveProbeCount", js: "ec2KeepAliveProbeCount", typ: "" },
-        { json: "emailFrom", js: "emailFrom", typ: "" },
-        { json: "emailSignature", js: "emailSignature", typ: "" },
-        { json: "emailSupportEmail", js: "emailSupportEmail", typ: "" },
-        { json: "enableEdgeRecording", js: "enableEdgeRecording", typ: "" },
-        { json: "eventLogPeriodDays", js: "eventLogPeriodDays", typ: "" },
-        { json: "ldapAdminDn", js: "ldapAdminDn", typ: "" },
-        { json: "ldapSearchBase", js: "ldapSearchBase", typ: "" },
-        { json: "ldapSearchFilter", js: "ldapSearchFilter", typ: "" },
-        { json: "ldapUri", js: "ldapUri", typ: "" },
-        { json: "localSystemId", js: "localSystemId", typ: "" },
-        { json: "maxDifferenceBetweenSynchronizedAndInternetTime", js: "maxDifferenceBetweenSynchronizedAndInternetTime", typ: "" },
-        { json: "maxDifferenceBetweenSynchronizedAndLocalTimeMs", js: "maxDifferenceBetweenSynchronizedAndLocalTimeMs", typ: "" },
-        { json: "maxP2pQueueSizeBytes", js: "maxP2pQueueSizeBytes", typ: "" },
-        { json: "maxRecordQueueSizeBytes", js: "maxRecordQueueSizeBytes", typ: "" },
-        { json: "maxRecordQueueSizeElements", js: "maxRecordQueueSizeElements", typ: "" },
-        { json: "maxRemoteArchiveSynchronizationThreads", js: "maxRemoteArchiveSynchronizationThreads", typ: "" },
-        { json: "maxRtspConnectDurationSeconds", js: "maxRtspConnectDurationSeconds", typ: "" },
-        { json: "maxSceneItems", js: "maxSceneItems", typ: "" },
-        { json: "proxyConnectTimeoutSec", js: "proxyConnectTimeoutSec", typ: "" },
-        { json: "rtpTimeoutMs", js: "rtpTimeoutMs", typ: "" },
-        { json: "sequentialFlirOnvifSearcherEnabled", js: "sequentialFlirOnvifSearcherEnabled", typ: "" },
-        { json: "serverDiscoveryPingTimeoutSec", js: "serverDiscoveryPingTimeoutSec", typ: "" },
-        { json: "smtpConnectionType", js: "smtpConnectionType", typ: "" },
-        { json: "smtpHost", js: "smtpHost", typ: "" },
-        { json: "smtpPort", js: "smtpPort", typ: "" },
-        { json: "smtpSimple", js: "smtpSimple", typ: "" },
-        { json: "smtpTimeout", js: "smtpTimeout", typ: "" },
-        { json: "smtpUser", js: "smtpUser", typ: "" },
-        { json: "statisticsAllowed", js: "statisticsAllowed", typ: "" },
-        { json: "statisticsReportLastNumber", js: "statisticsReportLastNumber", typ: "" },
-        { json: "statisticsReportLastTime", js: "statisticsReportLastTime", typ: "" },
-        { json: "statisticsReportLastVersion", js: "statisticsReportLastVersion", typ: "" },
-        { json: "statisticsReportServerApi", js: "statisticsReportServerApi", typ: "" },
-        { json: "statisticsReportTimeCycle", js: "statisticsReportTimeCycle", typ: "" },
-        { json: "statisticsReportUpdateDelay", js: "statisticsReportUpdateDelay", typ: "" },
-        { json: "synchronizeTimeWithInternet", js: "synchronizeTimeWithInternet", typ: "" },
-        { json: "SystemName", js: "SystemName", typ: "" },
-        { json: "takeCameraOwnershipWithoutLock", js: "takeCameraOwnershipWithoutLock", typ: "" },
-        { json: "timeSynchronizationEnabled", js: "timeSynchronizationEnabled", typ: "" },
-        { json: "primaryTimeServer", js: "primaryTimeServer", typ: "" },
-        { json: "osTimeChangeCheckPeriodMs", js: "osTimeChangeCheckPeriodMs", typ: "" },
-        { json: "syncTimeExchangePeriod", js: "syncTimeExchangePeriod", typ: "" },
-        { json: "syncTimeEpsilon", js: "syncTimeEpsilon", typ: "" },
-        { json: "maxWearableArchiveSynchronizationThreads", js: "maxWearableArchiveSynchronizationThreads", typ: "" },
-        { json: "updateNotificationsEnabled", js: "updateNotificationsEnabled", typ: "" },
-        { json: "upnpPortMappingEnabled", js: "upnpPortMappingEnabled", typ: "" },
-        { json: "useTextEmailFormat", js: "useTextEmailFormat", typ: "" },
-        { json: "useWindowsEmailLineFeed", js: "useWindowsEmailLineFeed", typ: "" },
-        { json: "trafficEncryptionForced", js: "trafficEncryptionForced", typ: "" },
-        { json: "videoTrafficEncryptionForced", js: "videoTrafficEncryptionForced", typ: "" },
-        { json: "updateStatus", js: "updateStatus", typ: "" },
-        { json: "watermarkSettings", js: "watermarkSettings", typ: "" },
-        { json: "maxWebMTranscoders", js: "maxWebMTranscoders", typ: "" },
-        { json: "maxEventLogRecords", js: "maxEventLogRecords", typ: "" },
-        { json: "forceLiveCacheForPrimaryStream", js: "forceLiveCacheForPrimaryStream", typ: "" },
-        { json: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", js: "DO_NOT_USE_FORCES_INTERFACE_GENERATION", typ: 0 },
     ], false),
     "LanguageI18NStaticTypesSystem": o([
         { json: "MERGE_FINISHES", js: "MERGE_FINISHES", typ: "" },

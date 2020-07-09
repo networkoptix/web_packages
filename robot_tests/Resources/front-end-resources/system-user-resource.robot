@@ -38,11 +38,11 @@ Check Special Hint
     ...    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT CUSTOM}
 
 Verify Changed Info Via API
-    [Arguments]    ${new locals}
+    [Arguments]    ${new locals}    ${local user}=ocal+
     @{locals} =    Create List 
     @{users} =    Get Users     ${AUTO SYS AUTH}    ${AUTO SYS IP}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     FOR    ${user}    IN    @{locals}
@@ -66,7 +66,7 @@ Verify In Local Users UI
 	    ...    ${LOCAL USER LOGIN}
 	    ...    ${LOCAL USER NAME}
 	    ...    ${LOCAL USER EMAIL}
-	    Run Keyword Unless    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
+	    Run Keyword Unless    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' == '${ADMIN TEXT}'     Wait Until Elements Are Visible    
 	    ...    ${DISABLE USER SWITCH}
 	    ...    ${LOCAL USER DELETE BUTTON}
 	    ...    ${LOCAL USER CHANGE PASSWORD BUTTON}
@@ -74,9 +74,9 @@ Verify In Local Users UI
 	    Wait Until Textfield Contains    ${LOCAL USER NAME}    Local User
 	    Wait Until Textfield Contains    ${LOCAL USER EMAIL}    noptixautoqa+local_${user}@gmail.com
 	    Run Keyword If    '${email}' == '${EMAIL OWNER}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]
-	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '&{role names}[${user}]' != '${ADMIN TEXT}'
-	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    &{role names}[${user}]   
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]
+	    ...    ELSE IF    '${email}' == '${EMAIL ADMIN}' and '${role names}[${user}]' != '${ADMIN TEXT}'
+	    ...    Element Text Should Be    //*[@id="permissionsSelect"]/span    ${role names}[${user}]   
 		...    ELSE    Elements Should Not Be Visible    //*[@id="permissionsSelect"]    ${LOCAL USER CHANGE PASSWORD BUTTON}    ${LOCAL USER DELETE BUTTON}    ${DISABLE USER SWITCH}
     END
     
@@ -181,12 +181,12 @@ Local User Start
     [Return]    ${local users}
 
 Reset Local Users
-    [Arguments]     ${auth}    ${server}
+    [Arguments]     ${auth}    ${server}    ${local user}=ocal+
     @{locals} =    Create List 
     @{local users} =    Get Dictionary Keys    ${role names}
     @{users} =    Get Users     ${auth}    ${server}
     FOR    ${node}    IN    @{users}
-        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ocal+
+        ${name state} =    Run Keyword And Return Status    Should Contain    ${node}[name]    ${local user}
         Run Keyword If    ${node}[isCloud] == ${False} and ${name state} == ${True}    Append To List    ${locals}    ${node}             
     END
     ${count} =    Get Length    ${locals}

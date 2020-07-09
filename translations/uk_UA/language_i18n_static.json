@@ -157,6 +157,12 @@
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "inaccessibleFeatureMessage": "Система офлайн, інформація недоступна.",
         "unknown": "Невідомо",
+        "vendor": "Vendor",
+        "model": "Модель",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "очистити вікно пошуку",
             "collapse all servers": "згорнути всі сервери",
@@ -194,6 +200,14 @@
             "available": "Розташування хмарного сховища доступне для всіх серверів в системі. Ви можете керувати ним за допомогою настільного {{vmsName}} клієнта.",
             "camera": "камера",
             "cameras": "камери",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Хмарне сховище успішно видалено із системи",
                 "errorPrefix": "Помилка при видаленні хмарного сховища"
@@ -256,9 +270,8 @@
             "serverNotYours": "Ця система підключена до %CLOUD_NAME%, але має іншого власника. Об’єднати хмарні системи можна лише за умови, що обліковий запис власника однаковий.",
             "systemOffline": "Система {{targetSystem}} офлайн і не може бути об'єднана",
             "systemOfflineUrl": "{{targetSystem}} недоступний.",
-            "systemsIncompatible": "Цей сервер має несумісну версію Пз. Оновіть обидві системи до однакової збірки, щоб об'єднати їх.",
-            "systemVersionOld": "{{targetSystem}} має стару версію Пз, несумісну з поточною системою. Оновіть {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з поточною системою.",
-            "systemVersionNew": "{{targetSystem}} має нову версію Пз, несумісну з поточною системою. Оновіть поточну Систему до <a href=\"/download\" target=\"_blank\" translate>останньої збірки</a> для об’єднання з {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Введіть адресу сервера",
             "urlNotValid": "Введіть дійсний URL",
             "unknownError": "Сталася невідома помилка. Оновіть сторінку та спробуйте ще раз. Якщо проблема не зникне, будь ласка, <a href=\"%SUPPORT_LINK%\" target=\"_blank\">зв'яжіться з підтримкою</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Введений пароль невірний.",
         "oldSafariNotSupported": "Версії Safari старше 10 не підтримуються",
         "passwordMismatch": "Невірний пароль",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "система",
         "unknownError": "Сталася неочікувана помилка",
         "unknownMergeError": "Невідома помилка. Спробуйте оновити сторінку та повторити спробу. Якщо проблема не вирішена - зверніть в службу <a href=\"%SUPPORT_LINK%\" target=\"_blank\">підтримка</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "Обліковий запис вже активовано або код підтвердження невірний",
         "wrongCodeRestore": "Код підтвердження вже використовується або невірний",
         "wrongParameters": "Деякі параметри у формі невірні",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Не вдається підключитися до {{cloudName}}, перевірте підключення до мережі."
     },
     "integration": {

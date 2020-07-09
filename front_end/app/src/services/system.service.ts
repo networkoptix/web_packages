@@ -453,7 +453,7 @@ class ServerManager {
             }: any = addParamsRaw.filter(({ name }) => [
                 'rotation',
                 'overrideAr',
-                'mediaCapbilities',
+                'mediaCapabilities',
                 'isAudioSupported',
                 'supportedMotion',
                 'motionStream',
@@ -464,7 +464,7 @@ class ServerManager {
             }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
-            const streamCapabilities = mediaCapabilities && mediaCapabilities.streamCapabilities;
+            const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
             const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
             const _maxFps = primary && primary.value && primary.value.maxFps;
             const maxFps = _maxFps || 30;
@@ -476,7 +476,7 @@ class ServerManager {
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
-                fps       : this.parseFps(camera.scheduleTasks),
+                fps       : this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
                 modes     : [
                     { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
@@ -525,11 +525,11 @@ class ServerManager {
         return this.mediaserver.updateRecordingSettings(updateParams).toPromise();
     }
 
-    private parseFps(schedule: ITask[]): number | 'various' {
-        const schedulesWithFps = schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps);
+    private parseFps(schedule: ITask[], max: number): number | 'various' {
+        const schedulesWithFps = schedule.filter(({ fps, bitrateKbps }) => fps !== 0 && bitrateKbps).map(({ fps }) => fps);
         const uniqueFps = new Set(schedulesWithFps);
         const currentFps = Array.from(uniqueFps);
-        return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
+        return schedulesWithFps.length === 0 ? max : currentFps.length === 1 ? currentFps[0] : 'various';
     }
 
     private parseRecordingQuality(schedule: ITask[]): StreamQuality {

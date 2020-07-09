@@ -39,8 +39,4 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
             this.itemPath += (this.item.path !== '') ? '/' + this.item.path : '';
         }
     }
-
-    menuClick(sectionId) {
-        this.menuService.setSection(sectionId);
-    }
 }

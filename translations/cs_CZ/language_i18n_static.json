@@ -68,7 +68,7 @@
         "accountSavedSuccess": "Váš účet byl úspěšně uložen",
         "accountSettings": "Nastavení účtu",
         "activationLinkSent": "Aktivní odkaz byl odeslán",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "Dohoda byla přijata",
         "changePassword": "Změna hesla",
         "newPasswordLabel": "Nové heslo",
         "passwordChangedSuccess": "Heslo bylo úspěšně uloženo",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "Účet vytvořen",
+                "message": "Potvrzovací zpráva s aktivačním odkazem je odeslána na {{email}}"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "Účet byl úspěšně aktivován"
             }
         },
         "cameraLinks": {
@@ -114,7 +114,7 @@
         },
         "cameraStates": {
             "error": "Chyba",
-            "errorLoading": "An error occurred while loading this video.",
+            "errorLoading": "Při načítání videa došlo k chybě.",
             "flashOrWebmRequired": "Pro přehrávání videa v aplikaci Internet Explorer si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a> nebo<a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM kodek</a>.",
             "flashRequired": "Pro přehrání videa si prosím <a href='https://get.adobe.com/flashplayer/' target='_blank'>nainstalujte Adobe Flash</a>.",
             "iOSVideoTooLarge": "iOS nepodporuje video větší než fullHD (2MP: 1920 × 1080).",
@@ -128,14 +128,14 @@
             "unauthorized": "Ověření je vyžadováno"
         },
         "chromeCastWarning": "Chromecast je náročný na systémové zdroje a může způsobit problémy na vašem serveru.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "Aktualizujte chybějící nastavení nahrávání.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "Zaznamenat vždy",
+            "motion": "Zaznamenat pouze pohyb",
+            "motionLowRes": "Pohyb + nízké rozlišení"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "- Různé hodnoty -",
             "auto": "Auto",
             "best": "Nejlepší",
             "high": "Vysoká",
@@ -144,19 +144,25 @@
         },
         "general": "Obecné",
         "searchCamPlaceholder": "Hledat",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemHasNoCameras": "Žádné kamery",
+        "systemHasNoCamerasMessage": "V systému nejsou žádné dostupné kamery. <br><br>Připojte několik kamer k místní síti serveru, aby byly zjistitelné, nebo požádejte správce systému o změnu úrovně přístupu.",
+        "systemNewVersion": "Aktualizovat systém",
+        "systemNewVersionMessage": "Vaše aktuální verze není kompatibilní s touto funkcí. Pro použití této funkce aktualizujte své servery na nejnovější verzi.",
+        "systemNoAlerts": "Žádná upozornění",
+        "systemNoAlertsMessage": "Váš systém musí dobře fungovat!",
         "systemOffline": "Systém je offline",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "Tento systém je offline a momentálně se nelze připojit.",
         "systemServerError": "Interní chyba serveru",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "Došlo k chybě, opakujte akci později. Pokud problém přetrvává, kontaktujte prosím tým podpory.",
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "Systém je offline a informace proto nejsou dostupné.",
         "unknown": "Neznámý",
+        "vendor": "Vendor",
+        "model": "Model",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "smazat hledání",
             "collapse all servers": "sbalit všechny servery",
@@ -171,106 +177,113 @@
             "stop listening": "zastavení poslech",
             "view": "view + [camera name]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "Zobrazujete zastaralou zprávu."
     },
     "dialogs": {
         "buttons": {
             "cancel": "Zrušit",
-            "createAccount": "Create New Account",
+            "createAccount": "Vytvořit nový účet",
             "delete": "Smazat",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "Odstranit účet",
             "download": "Stáhnout %VMS_NAME%",
             "logoutAuthorised": "Odhlásit",
             "ok": "OK",
             "remove": "Odstranit",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "Zůstaňte přihlášeni jako {email} ",
+            "stayLoggedIn": "Zůstat přihlášený"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "Cloudové úložiště",
+            "enableStorage": "Povolit cloudové úložiště",
+            "otherSystem": "Jiný systém...",
+            "initial": "Nabízíme {{compCapacity}} bezplatné cloudové úložiště pro každý systém, abyste mohli začít.",
+            "available": "Umístění cloudového úložiště je dostupné pro všechny servery v tomto systému. Můžete jej spravovat pomocí klienta na ploše {{vmsName}}.",
             "camera": "kamera",
             "cameras": "kamery",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "Cloudové úložiště bylo úspěšně odebráno ze systému",
+                "errorPrefix": "Chyba při odstraňování cloudového úložiště"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "Cloudové úložiště nelze aktivovat",
+                "message": "Již máte celkem <volume> cloudových úložišť přidáných do vašich systémů a nelze přidat další. <br/><br/>Místo toho můžete úložiště odstranit z jiného systému nebo jej přesunout do tohoto systému. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "Systém nelze odpojit od %CLOUD_NAME%",
+                "message": "Tento systém obsahuje cloudové úložiště s několika archivy. <br/><br/>Cloudové úložiště musí být ručně odstraněno před odpojením systému od %CLOUD_NAME%."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "Přesunout cloudové úložiště",
+                "success": "Úložiště úspěšně přesunuto",
+                "errorPrefix": "Chyba při přesunu cloudového úložiště",
+                "notFound": "Úložiště nebylo nalezeno. Úložiště mohlo být přesunuto nebo odstraněno jiným uživatelem",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "Cloudové úložiště nelze přesunout do offline systému."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "Cloudové úložiště aktivováno",
+                "errorPrefix": "Chyba při aktivaci cloudového úložiště"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "Cloudové úložiště můžete přesouvat pouze mezi systémy, které vlastníte. <br/><br/>Připojte systém k %CLOUD_NAME% pomocí cloudového účtu, abyste k němu mohli přesunout cloudové úložiště."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "Zadejte heslo k účtu vlastníka v <strong>{{secondarySystem}}</strong>",
+            "adminPasswordWrong": "Nesprávné heslo pro místního administrátora",
+            "checking": "Ověřování...",
             "commonText": "Nelze sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.",
             "connectToCloud": "Připojit systém, který chcete sloučit s tímto na <strong>{{cloudName}}</strong> nebo sloučit lokálně pomocí <strong>{{vmsName}}</strong> Klienta.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "Vybraný i aktuální systém jsou připojeny k %CLOUD_NAME% a mají různé vlastníky. Cloudové systémy mohou být sloučeny pouze v případě, že vlastnický účet je stejný.",
+            "duplicateServers": "<p class=\"mb-2\">Zdá se, že server je zařazen jak do vybraného, tak do aktuálního systému.</p><p>Odstraňte offline a nekompatibilní servery ze všech systému a zkuste to znovu.</p>",
+            "enterSystemAddressTitle": "Zadejte adresu libovolného serveru umístěného v systému, který chcete sloučit s tímto serverem.",
+            "mergeConfirmation": "<p class=\"mb-0\">Chystáte se sloučit systémy <strong>{{primarySystem}}</strong> a <strong>{{secondarySystem}}</strong>.</p><p>Nastavení a název budou převzaty z <strong>{{primarySystem}}</strong>.</p>",
+            "mergeSystemsTitle": "Sloučit aktuální systém s",
             "mergeFailedTitle": "Spojení systémů selhalo",
-            "noServerFound": "No server found",
+            "noServerFound": "Nebyl nalezen žádný server",
             "newSystemDisplayName": "Nový systém",
-            "otherSystem": "Other System...",
+            "otherSystem": "Ostatní systémy...",
             "ownerCanMergeText": "Systémy můžete sloučit pouze tam, kde jste vlastníkem",
             "passwordRequired": "Heslo je vyžadováno",
             "passwordWrong": "Chybné heslo",
             "primaryCannotMerge": "Systém {{targetSystem}} má novější verzi softwaru, která je nekompatibilní s aktuálním systémem. Aktualizujte aktuální systém na <a href=\"/download\" target=\"_blank\" translate>nejnovější verzi </a> pro sloučení se systémem {{targetSystem}}.",
             "primarySystemOffline": "Systém {{primarySystem}} je offline a nelze jej sloučit se systémem {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemUnavailable": "Systém {{primarySystem}} je v současné době nedostupný. Zkuste to znovu za několik minut nebo kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "Doporučujeme vám konzultovat s",
                 "b_support": "podpora",
                 "c_proceeding": "než budete pokračovat."
             },
             "secondaryCannotMerge": "Systém {{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} <a href=\"/download\" target=\"_blank\" translate> na nejnovější verzi </a> pro sloučení se systémem.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "secondarySystemUnavailable": "Systém {{targetSystem}} je momentálně nedostupný. Zkuste to znovu za pár minut nebo kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
+            "serverAtUrl": "server na {{url}}",
+            "serverNotAvailable": "<p class=\"mb-2\">Nelze získat přístup k {{targetSystem}} systému.</p><p>Zkontrolujte, zda je zadaný server online a akci opakujte.</p>",
+            "serverNotYours": "Tento systém je připojen k %CLOUD_NAME%, ale má jiného vlastníka. Cloudové systémy lze sloučit, pouze pokud je účet vlastníka stejný.",
             "systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "systemOfflineUrl": "{{targetSystem}} je nepřístupný.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Zadejte adresu serveru",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "Zadejte platnou URL",
+            "unknownError": "Došlo k neznámé chybě. Aktualizujte stránku a zkuste to znovu. Pokud problém přetrvává, kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
+            "warning": "V sloučeném systému bude více než <strong>{{maxServers}}</strong> serverů."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "storageSettingsSaved": "Nastavení úložiště bylo uloženo.",
+            "storageSettingsNotSaved": "Nastavení úložiště nelze uložit.",
             "settingsSaved": "Nastavení bylo uloženo.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "settingsNotSaved": "Nastavení nelze uložit.",
+            "logLevelsSaved": "Úrovně protokolů uloženy.",
+            "logLevelsNotSaved": "Úrovně protokolu nelze uložit.",
             "failedToSend": "Zprávu se nepodařilo odeslat.",
             "placeholders": {
                 "feedback": "Nezapomeňte uvést model kamery a výrobce..."
@@ -281,7 +294,7 @@
                 "ipvd_feedback_device": "Zpětná vazba pro {{asset}}",
                 "ipvd_feedback_page": "Zpětná vazba pro kameru",
                 "sales_inquiry": "Dotaz na prodejce o {{asset}}",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "Technický dotaz pro {{asset}}"
             },
             "title": {
                 "integration": "Spojte se s {{companyName}}",
@@ -291,23 +304,23 @@
         },
         "removeSystem": {
             "action": "Odpojit",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "K tomuto systému se již nebudete moci přihlásit.",
             "title": "Odpojit systém?"
         },
         "titles": {
             "error": "Chyba",
             "success": "Úspěšně ddokončeno",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "Jste již přihlášeni jako {email}",
             "deleteUser": "Smazat uživatele?",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
+            "loggedFromOtherAccount": "Budete přihlášeni pomocí jiného účtu",
             "noClientDetected": "Pro zobrazení Vašeho systému nainstalujte %VMS_NAME%",
-            "removeUser": "Remove user?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "removeUser": "Odstranit uživatele?",
+            "serversDetach": "Odpojit server \"{{ title }}\" od aktuálního systému?",
+            "serversReset": "Obnovit server \"{{ title }} na výchozí hodnoty?",
+            "serversRestart": "Restartovat server \"{{ title }}\"?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "Chcete-li smazat svůj účet, odpojte od systému %CLOUD_NAME% všechny systémy, které vlastníte."
         }
     },
     "downloads": {
@@ -373,33 +386,33 @@
             "win64": "x64"
         },
         "releasesTypes": {
-            "beta": "Beta",
+            "beta": "Beta verze",
             "betas": "Beta verze",
             "patch": "Patch",
             "patches": "Opravy",
-            "rc": "Release Candidate",
-            "release": "Release",
+            "rc": "Uvolněte kandidáta",
+            "release": "Uvolnění",
             "releases": "Vydání"
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "Tento systém je připojen k %CLOUD_NAME%, ale má jiného vlastníka. Cloudové systémy lze sloučit, pouze pokud je účet vlastníka stejný.",
         "DUPLICATE_MEDIASERVER_FOUND": "Některé serverové seznamy se mohou zobrazovat jako existující v obou systémech - ve vybraném i v aktuálním.<br>Ze systému odeberte offline a nekompatibilní servery a opakujte akci.",
         "EmailAlreadyExists": "Tento email je již registrován",
         "FAIL": "Systém <strong>{{failedSystem}}</strong> je momentálně nedostupný.<br>zkuste to znovu za okamžik nebo se obraťte na podporu <a href=\"%SUPPORT_LINK%\" target=\"_blank\"></a>.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "Systémy mají různé verze softwaru. Prosím aktualizujte oba na <a href=\"/download\">nejnovější verzi</a>.",
+        "cloud_systems_have_different_owners": "Tento systém je připojen k %CLOUD_NAME%, ale má jiného vlastníka. Cloudové systémy lze sloučit, pouze pokud je účet vlastníka stejný.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">Zdá se, že server je sám zařazen jak do vybraného, tak do aktuálního systému.</p><p>Odstraňte offline a nekompatibilní servery ze všech systému a zkuste to znovu.</p>",
+        "fail": "{{failedSystem}} je nepřístupný.",
+        "incompatible": "Tento server má nekompatibilní verzi softwaru. Aktualizujte oba systémy na stejné verze a sloučte je.",
+        "unknown_error": "Neznámá chyba. Pokuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
         "accountAlreadyActivated": "Tento účet byl již aktivován",
         "accountBlocked": "Tento účet je dočasně zablokován. Zkuste to prosím znovu za pár minut.",
         "accountNotActivated": "Tento účet není ještě aktivován. <a href=\"/activate\">Odeslat znovu aktivační odkaz</a>",
         "alreadyExists": "Tento účet již existuje",
         "brokenAccount": "Neočekávaný problém s účtem. <a href=\"/restore_password\">Obnovení účtu</a>",
         "cantActivatePrefix": "Váš účet nelze aktivovat",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "Přidání vlastního e-mailu není povoleno",
         "cantChangeAccountPrefix": "Změny nelze uložit",
         "cantChangePasswordPrefix": "Heslo nelze uložit",
         "cantDisconnectSystemPrefix": "Systém nelze smazat",
@@ -415,7 +428,7 @@
         "cantSharePrefix": "Systém nelze sdílet",
         "cantUnshareWithMeSystemPrefix": "Systém nelze smazat",
         "emailNotFound": "Účet neexistuje.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "Tento odkaz nemá přístup k žádnému systému. K tomu může dojít, když byl systém odpojen od %CLOUD_NAME%, přístup k tomuto systému byl zrušen nebo pokud jste přihlášeni k nesprávnému účtu.",
         "forbidden": "K provedení této akce nemáte oprávnění",
         "lostConnection": "Připojení k {{systemName}} se ztratilo",
         "mergedSystemIsOffline": "Systém <strong>{{failedSystem}}</strong> je offline.",
@@ -425,18 +438,18 @@
         "oldPasswordMistmatch": "Aktuální heslo je nesprávné.",
         "oldSafariNotSupported": "Verze Safari starší než 10 není podporována",
         "passwordMismatch": "Chybné heslo",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} je momentálně nedostupný. Zkuste to znovu za několik minut nebo kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
         "thisSystem": "systém",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "Došlo k neočekávané chybě",
         "unknownMergeError": "Neznámá chyba. POkuste se stránku obnovit a zopakovat pokus. Pokud problém přetrvává - kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
         "wrongAuthCode": "Kód je nesprávný nebo vypršela jeho platnost",
         "wrongCode": "Účet je již aktivován, nebo potvrzovací kód je nesprávný",
         "wrongCodeRestore": "Potvrzovací kód je již použit nebo nesprávný",
         "wrongParameters": "Některé parametry ve formuláři jsou nesprávné",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "Aktivace licence se nezdařila. Zkuste to prosím znovu nebo kontaktujte podporu.",
+        "licenseTimeout": "Nepodařilo se aktivovat licenci z důvodu vypršení časového limitu připojení. Ujistěte se, že je server online a zkuste to znovu.",
+        "licenseServerError": "Aktivace licence se nezdařila. Licenční server neodpověděl. Zkuste to prosím znovu nebo kontaktujte podporu.",
+        "networkConnection": "Nelze se připojit k {{cloudName}}, zkontrolujte připojení k síti."
     },
     "integration": {
         "Access Control": "Kontrola Přístupu",
@@ -447,9 +460,9 @@
         "Storage": "Úložiště",
         "myIntegrationsLabel": "Těžit",
         "phoneNumberWithLabel": "Tel: {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} Požadavky",
+        "testedVersionLabel": "Testováno s verzí {{vmsName}}:",
+        "testedVersionsLabel": "Testováno s {{vmsName}} verzemi:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "Pokročilé kamery PTZ",
@@ -491,7 +504,7 @@
         "primaryCodec": "Kodek",
         "resolutionArea": "Oblast",
         "sndResolution": "Sekundární stream",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "Top {{value}} podle objemu:",
         "vendor": "Výrobce"
     },
     "menu": {
@@ -513,7 +526,7 @@
         "default": "%CLOUD_NAME%",
         "download": "Stáhnout %VMS_NAME%",
         "downloadPlatform": "Stáhnout %VMS_NAME% pro ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "Přístup k systému se nezdařil",
         "integrations": "Integrace",
         "login": "Přihlásit se",
         "pageNotFound": "Stránka nenalezna",
@@ -546,42 +559,42 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "Tuto stránku nelze načíst",
+            "message": "Zkontrolujte, zda jsou vaše servery online, a zkuste to znovu."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "Tento systém se slučuje s {{systemName}}.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "V závislosti na velikosti databáze může operace trvat až několik hodin.",
+                "untilFinished": "Dokud nebude sloučení dokončeno, můžete se k tomuto systému přihlásit a sledovat živé video, ale nemůžete měnit žádné nastavení.",
+                "whenFinished": "Po sloučení budou všichni uživatelé a kamery z tohoto systému k dispozici v systému {{systemName}} a tento systém bude vymazán."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "Server není přístupný",
+            "message": "Systém je offline, a proto nejsou servery přístupné."
         }
     },
-    "pleaseSelect": "Please select...",
+    "pleaseSelect": "Prosím vyberte...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "{{INTEGRATION_COMPANY}} Pravidla ochrany osobních údajů <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">najdete zde</a>. %COMPANY_NAME% zásady ochrany osobních údajů, které obsahují pokyny, jak svůj souhlas odvolat, jsou k dispozici <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>.",
+        "ipvd": "Odesláním tohoto formuláře souhlasíte, že budete kontaktováni %COMPANY_NAME%.\nZde najdete %COMPANY_NAME% zásady ochrany <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zde</a>, které zahrnují instrukce o tom, jak se odvolat svůj souhlas."
     },
     "registration": {
-        "agreement": "I agree to the <a href=\"/content/eula\" target=\"_blank\">Terms &\nConditions</a> and <a href=\"%PRIVACY_LINK%\" target=\"_blank\">Privacy policy</a>"
+        "agreement": "Souhlasím s <a href=\"/content/eula\" target=\"_blank\">obchodními podmínkami</a> a <a href=\"%PRIVACY_LINK%\" target=\"_blank\">zásadami ochrany osobních údajů</a>"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "se slučuje s tímto systémem",
+            "mayTake": "V závislosti na velikosti databáze může operace trvat až několik hodin."
         },
         "finishingMerge": "Dokončování sloučení systémů",
         "integration": {
             "backToEditText": "Zpět na editační rozhraní",
             "previewRibbon": "Tato stránka je náhled nejnovějších změn a neodpovídá veřejně dostupné verzi."
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemOffline": "Systém je offline. Některá nastavení nemusí být k dispozici.",
+        "systemsMerging": "Tento systém se v současné době slučuje."
     },
     "search": {
         "Any": "Libovolný",
@@ -599,34 +612,34 @@
         "vendors": "Výrobci"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginDetach": "Server se nyní odpojuje",
+        "beginReset": "Server se nyní resetuje.",
+        "detachSystemFailed": "Nepodařilo se odpojit server od systému. Zkontrolujte, zda je zadané heslo správné a server je online a zkuste to znovu.",
+        "detachSystemSuccess": "Server byl úspěšně odpojen od systému.",
+        "portWarning": "Čísla portů menší než 1024 jsou omezena. Server se může stát nedostupným.",
+        "removeMediaserverFailed": "Server se nepodařilo odebrat ze systému.",
+        "resetFailed": "Obnovení serveru se nezdařilo. Zkontrolujte, zda je zadané heslo správné a zda je server online, a zkuste to znovu.",
+        "resetSuccessful": "Server {{ serverName }} byl resetován na výchozí hodnoty.",
+        "restartFailed": "Při restartování serveru došlo k chybě.",
+        "restartSuccessful": "Server byl úspěšně restartován.",
         "serverOffline": "Server je offline.",
         "servers": "Servery",
         "status": {
-            "checking": "checking...",
+            "checking": "ověřování...",
             "offline": "offline",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "resetování...",
+            "restarting": "restartování..."
         },
-        "successRename": "Server name saved."
+        "successRename": "Název serveru byl uložen."
     },
     "system": {
-        "MERGE_FINISHES": "When merge is finished, all users and cameras from this system will become available in <strong>{{targetSystemName}}</strong> System, and this system will be deleted.",
+        "MERGE_FINISHES": "Po sloučení budou všichni uživatelé a kamery z tohoto systému k dispozici v systému <strong>{{targetSystemName}}</strong> a tento systém bude vymazán.",
         "mergeUnknownName": "Neznámý název systému (problém s cloudovým spojením)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "Nelze načíst nastavení zabezpečení.",
+            "notAbleToLoadSystem": "Nelze načíst nastavení systému.",
+            "notAbleToLoadStorageInfo": "Nelze načíst informace o úložišti.",
             "sessionLimitDuration": {
                 "hours": "hodin",
                 "minutes": "minuty"
@@ -641,33 +654,33 @@
         },
         "users": {
             "cloudDelete": "Odebrat uživatele",
-            "localDelete": "Delete User"
+            "localDelete": "Smazat uživatele"
         },
         "yourSystem": "Váš systém",
         "loggers": {
             "none": {
                 "text": "Žádný",
-                "help": "(log disabled)"
+                "help": "(protokol zakázán)"
             },
             "error": {
                 "text": "Chyba",
-                "help": "(log errors only)"
+                "help": "(pouze chyby protokolu)"
             },
             "warning": {
                 "text": "Varování",
-                "help": "(log warnings and errors)"
+                "help": "(varování a chyby v protokolu)"
             },
             "info": {
                 "text": "Informace",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(varování protokolu, chyby a všechny zprávy)"
             },
             "debug": {
                 "text": "Ladění",
-                "help": "(log every System message and debug information)"
+                "help": "(zaznamenávat všechny systémové zprávy a informace o ladění)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "Podrobnosti",
+                "help": "(zaznamenat všechny dostupné informace)"
             }
         }
     },
@@ -690,7 +703,7 @@
             },
             "merge": {
                 "failed": "Spojení systémů selhalo",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "Sloučení systémů {{primaryName}} a {{secondaryName}} dokončeno"
             },
             "rename": {
                 "success": "Název systému byl uložen"
@@ -700,15 +713,15 @@
     "license": {
         "info": {
             "type": "Typ",
-            "channels": "Channels",
+            "channels": "Kanály",
             "server": "Server",
             "hwid": "ID hardwaru",
             "status": "Stav",
             "expires": "Platnost vyprší",
             "time": "Čas",
-            "deactivations": "Deactivation left",
-            "trial": "Trial",
-            "online": "Online",
+            "deactivations": "Deaktivace zbývá",
+            "trial": "Zkušební verze",
+            "online": "Připojený",
             "error": "Chyba",
             "expired": "Platnost vypršela",
             "ok": "OK",
@@ -718,38 +731,38 @@
             "vmax": "VMAX",
             "videowall": "Videostěna",
             "analogencoder": "Analogový enkodér",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "starter": "Základní",
+            "iomodule": "I/O Modul",
             "bridge": "Most"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} je vyžadováno",
+            "activated": "Licenční klíč aktivován",
+            "inuse": "Licenční klíč byl již aktivován a vázán na server s hardwarovým ID {{hwid}} v jiném systému",
+            "trialActivated": "Zkušební licence byla aktivována. Počínaje dnem, můžete zaznamenávat až 4 kamery po dobu 30 dní."
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "Další místní typy FS",
+        "autoDiscoveryResponseEnabled": "Odpověď na automatické zjišťování",
+        "crossdomainEnabled": "Přes doménu",
+        "defaultExportVideoCodec": "Výchozí kodek pro export videa",
+        "defaultVideoCodec": "Výchozí kodek videa",
+        "downloaderPeers": "Klienti ke stažení",
+        "lastMergeMasterId": "Poslední sloučení masterId",
+        "lastMergeSlaveId": "Poslední sloučení slaveId",
+        "ldapSearchTimeoutS": "Časový limit vyhledávání LDAP (s)",
+        "licenseServer": "Licenční server",
+        "lowQualityScreenVideoCodec": "Video kodek s nízkou kvalitou",
+        "maxP2pAllClientsSizeBytes": "Max. velikost P2P pro všechny klienty",
+        "maxRtpRetryCount": "Max počet opakování RTP",
+        "metadataStorageChangePolicy": "Pravidla pro změnu úložiště Meta dat",
+        "pushNotificationsLanguage": "Jazyk oznámení",
+        "resourceFileUri": "URI souboru zdroje",
+        "sessionLimitMinutes": "Limit relace (minuty)",
+        "specificFeatures": "Specifické vlastnosti",
         "systemName": "Název systému",
-        "webSocketEnabled": "Web sockets",
+        "webSocketEnabled": "Webové zásuvky",
         "arecontRtspEnabled": "Arecont RTSP byl povolen",
         "auditTrailEnabled": "Kontrola akcí byla povolena",
         "auditTrailPeriodDays": "Období kontroly akcí",
@@ -780,7 +793,7 @@
         "localSystemId": "ID místního systému",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "Maximální rozdíl mezi synchronizovaným a internetovým časem (milisekundy)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "Maximální rozdíl mezi synchronizovaným a místním časem (milisekundy)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "Maximální velikost fronty P2P (bajty)",
         "maxRecordQueueSizeBytes": "Maximální velikost fronty záznamů (bajty)",
         "maxRecordQueueSizeElements": "Maximální velikost fronty záznamů (elementy)",
         "maxRemoteArchiveSynchronizationThreads": "Maximální počet synchronizačních procesů vzdálené archivace",
@@ -807,21 +820,21 @@
         "SystemName": "Název systému",
         "takeCameraOwnershipWithoutLock": "Přivlastnit si kamery bez uzamčení",
         "timeSynchronizationEnabled": "Synchronizace času byla povolena",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "primaryTimeServer": "Primární synchronizační server",
+        "osTimeChangeCheckPeriodMs": "Období kontroly časových změn OS",
+        "syncTimeExchangePeriod": "Synchronizovat interval synchronizace času pro síťové požadavky",
+        "syncTimeEpsilon": "Synchronizovat čas epsilon. Nová hodnota není použita, pokud je čas delta menší než epsilon",
+        "maxWearableArchiveSynchronizationThreads": "Maximální počet uživatelských synchronizačních vláken v archivu kamery",
         "updateNotificationsEnabled": "Aktualizace oznámení byla povolena",
         "upnpPortMappingEnabled": "Mapování portů UPNP bylo povoleno",
         "useTextEmailFormat": "Odeslat prostý text emailem",
         "useWindowsEmailLineFeed": "V e-mailech použijte linkový zdroj Windows",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
+        "trafficEncryptionForced": "Vynutit šifrovaný přenos",
+        "videoTrafficEncryptionForced": "Vynutit šifrovaný video přenos",
+        "updateStatus": "Aktualizovat stav",
+        "watermarkSettings": "Nastavení vodoznaku",
         "maxWebMTranscoders": "Maximální počet připojení WEBM pro server. Chrome otevře 2 připojení najednou a uzavře první. Proto se doporučuje nastavit hodnotu > = 2 na tento parametr.",
         "maxEventLogRecords": "Maximální záznamy protokolu událostí, které lze uložit do databáze. Skutečné množství nevymazaných záznamů může být až o 20% vyšší než zadaná hodnota.",
-        "forceLiveCacheForPrimaryStream": "Whether to cache some frames for the primary stream. Values: \"yes\" - always enabled (may use a lot of RAM), \"no\" - always disabled except when required by the playback (e.g. HLS), \"auto\" - similar to \"no\", but turned on when improves the user experience (e.g. when some Analytics plugin is working on the camera)."
+        "forceLiveCacheForPrimaryStream": "Určuje, zda ukládat některé snímky pro primární stream. Hodnoty: \"ano\" - vždy povoleno (může využít hodně RAM), \"ne\" - vždy vypnuto, kromě případů, kdy to vyžaduje přehrávání (např.. HLS), \"auto\" - podobné \"ne\", ale pokud je zapnuto, zlepšuje uživatelský zážitek (např. když nějaký plugin Analytický pracuje na kamerě)."
     }
 }

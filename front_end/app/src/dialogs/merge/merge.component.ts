@@ -311,11 +311,12 @@ export class MergeModalContent {
                         const isNew = peer.serverFlags.includes(this.CONFIG.system.flags.newSystem);
                         const system: any = {
                             ...peer,
-                            id         : peer.id.replace(/[{}]/g, ''),
-                            url        : `${peer.remoteAddresses[0]}:${peer.port}`,
-                            systemName : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
-                            ip         : peer.remoteAddresses[0],
-                            name       : peer.name,
+                            id             : peer.id.replace(/[{}]/g, ''),
+                            url            : `${peer.remoteAddresses[0]}:${peer.port}`,
+                            systemName     : isNew ? this.LANG.dialogs.merge.newSystemDisplayName : peer.systemName,
+                            ip             : peer.remoteAddresses[0],
+                            name           : peer.name,
+                            discoveredPeer : true,
                             isNew
                         };
                         if (this.system && this.system.moduleInfo && peer.status === 'Incompatible') {
@@ -699,7 +700,10 @@ export class MergeModalContent {
     insertErrorMessages() {
         const { errorText } = this.machine.state;
         for (const error in errorText) {
-            errorText[error] = this.LANG.dialogs.merge[error]
+            const parsedError = ['systemVersionOld', 'systemVersionNew', 'systemsIncompatible'].includes(error)
+                ? this.targetSystem.discoveredPeer ? 'systemsIncompatible' : 'systemVersionsNotMatch'
+                : error;
+            errorText[error] = this.LANG.dialogs.merge[parsedError]
                 .replace(/{{primarySystem}}|{{targetSystem}}/g, (found: string) => {
                     return found === '{{primarySystem}}' ? this.primaryName : this.secondaryName;
                 });
@@ -756,7 +760,6 @@ export class MergeModalContent {
         let stateOfHealth = (system.info && system.info.stateOfHealth) || system.stateOfHealth || system.status || '';
         if (system.protoVersion && system.protoVersion !== this.system.moduleInfo.protoVersion) {
             stateOfHealth = 'Incompatible';
-            system.olderProtocol = system.protoVersion < this.system.moduleInfo.protoVersion;
         }
 
         if ((Object.prototype.hasOwnProperty.call(system, 'isOnline') && !system.isOnline) || stateOfHealth.indexOf('offline') > -1) {
@@ -770,7 +773,7 @@ export class MergeModalContent {
         }
 
         if (stateOfHealth === 'Incompatible') {
-            return system.olderProtocol ? 'systemVersionOld' : 'systemVersionNew';
+            return 'systemsIncompatible';
         }
 
         if (!this.system.canMerge) {

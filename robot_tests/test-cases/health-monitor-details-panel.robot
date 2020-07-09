@@ -90,3 +90,4 @@ Check Details Panel Alerts
     ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..${svg}
     Wait Until Element has Style    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../following-sibling::div/span    color    ${color}
     Sleep    1
+    Click Link    ${HM ALERTS PAGE LINK}

@@ -157,6 +157,12 @@
         "systemUnreachable": "SİSTEM KULLANILAMAZ",
         "inaccessibleFeatureMessage": "Sistem çevrimdışı ve bu nedenle bilgiye erişilemiyor.",
         "unknown": "Belirtilmemiş",
+        "vendor": "Üretici",
+        "model": "Model",
+        "ip": "IP Adresi",
+        "server": "Sunucu",
+        "os": "OS",
+        "version": "Sürüm",
         "voiceCommands": {
             "clear search": "aramayı temizle",
             "collapse all servers": "tüm sunucuları daralt",
@@ -194,6 +200,14 @@
             "available": "Bulut depolama konumu, bu sistemdeki tüm sunucular için kullanılabilir. Masaüstü {{vmsName}} istemcisini kullanarak yönetebilirsiniz.",
             "camera": "kamera",
             "cameras": "kameralar",
+            "usageLabels": {
+                "currentRecordings": "Geçerli kayıt",
+                "whenFullyUsed": "Tamamen kullanıldığında",
+                "amountUsed": "Kullanılan miktar",
+                "archiveFrom": "Arşivden",
+                "recordingBitrate": "Kayıt Bit Hızı",
+                "delayFromLive": "Canlı gecikme"
+            },
             "remove": {
                 "success": "Bulut depolama sistemi başarıyla kaldırıldı",
                 "errorPrefix": "Bulut depolama alanı kaldırılırken hata oluştu"
@@ -256,9 +270,8 @@
             "serverNotYours": "Bu sistem %CLOUD_NAME%, bağlı ancak farklı bir sahibi var. Bulut sistemleri, yalnızca sahip hesabı aynı ise birleştirilebilir.",
             "systemOffline": "Sistem {{targetSystem}} çevrimdışı ve güncel sistemle birleştirilemez",
             "systemOfflineUrl": "{{targetSystem}} erişilemez.",
-            "systemsIncompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Her iki sistemi de birleştirmek için aynı yapıya güncelleyin.",
-            "systemVersionOld": "{{targetSystem}} geçerli sistemle uyumlu olmayan daha eski bir yazılım sürümüne sahiptir. Güncelleme {{targetSystem}} ile <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> akım biri ile birleştirmeye.",
-            "systemVersionNew": "{{targetSystem}}, geçerli sistemle uyumlu olmayan daha yeni bir yazılım sürümüne sahiptir. İçin mevcut sistemi güncelleyin <a href=\"/download\" target=\"_blank\" translate>son sürüme</a> ile birleştirmeye {{targetSystem}}.",
+            "systemsIncompatible": "Bu sunucunun uyumsuz bir yazılım sürümü var. Lütfen her iki sistemi de en son <a href=\"/download\" target=\"_blank\" translate>sürüm</a>.",
+            "systemVersionsNotMatch": "Sistemler, uyumsuz yazılım sürümlerine sahiptir. Lütfen her ikisini de en son <a href=\"/download\" target=\"_blank\" translate>sürüm</a>.",
             "urlEmpty": "Sunucu adresini girin",
             "urlNotValid": "Geçerli bir URL girin",
             "unknownError": "Bilinmeyen bir hata oluştu. Sayfayı yenileyin ve tekrar deneyin. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Mevcut şifre hatalı.",
         "oldSafariNotSupported": "Safari 10'dan büyük sürümleri desteklenmez",
         "passwordMismatch": "Hatalı parola",
-        "systemUnavailable": "{{failedSystem}} şu anda ulaşılamıyor. Birkaç dakika içinde tekrar deneyin veya desteğe başvurun.",
+        "systemUnavailable": "{{failedSystem}} şu anda ulaşılamıyor. Birkaç dakika sonra tekrar deneyin veya <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişime geçin.",
         "thisSystem": "sistem",
         "unknownError": "Beklenmedik bir hata oluştu",
         "unknownMergeError": "Bilinmeyen hata. Sayfayı yenilemeyi deneyebilir ve denemeyi tekrarlayabilirsiniz. Sorun devam ederse, lütfen <a href=\"%SUPPORT_LINK%\" target=\"_blank\">destek</a>iletişim kurun.",
@@ -433,7 +446,7 @@
         "wrongCode": "Hesap zaten etkinleştirildi veya onay kodu yanlış",
         "wrongCodeRestore": "Onay kodu zaten kullanılmış veya yanlış",
         "wrongParameters": "Formdaki bazı parametreler yanlış",
-        "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
+        "licenseFail": "Lisans etkinleştirilemedi. Lütfen tekrar deneyin veya desteğe başvurun.",
         "licenseTimeout": "Bağlantı zaman aşımı nedeniyle lisans etkinleştirilemedi. Lütfen sunucunun çevrimiçi olduğundan emin olun ve tekrar deneyin.",
         "licenseServerError": "Lisans etkinleştirilemedi. Lisans sunucusu yanıt vermedi. Lütfen tekrar deneyin veya Müşteri Desteği ile iletişim kurun.",
         "networkConnection": "{{cloudName}} bağlanılamıyor, lütfen ağ bağlantınızı kontrol edin."

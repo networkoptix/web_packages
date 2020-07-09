@@ -25,7 +25,6 @@ Open New Browser On Failure
 Log in to downloads/history
     Go To    ${url}/downloads/releases
     Log In    ${email}    ${password}    button=None
-    Validate Log In
 
 loop expanders
     #get the first release number for targeting purposes
@@ -59,7 +58,6 @@ loop links
 History link is not in the downloads page for user without access
     [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     Register Keyword To Run On Failure    NONE
@@ -69,7 +67,6 @@ History link is not in the downloads page for user without access
 History link is in the downloads page for user with access and takes you to /downloads/releases
     [tags]    Passing_19.2
     Log In    ${email}    ${password}
-    Validate Log In
     Wait Until Element Is Visible    ${DOWNLOAD LINK}
     Click Link    ${DOWNLOAD LINK}
     Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
@@ -89,7 +86,6 @@ Going to the history page anonymous asks for login and closing takes you to 404
 Going to the history page anonymous asks for login and login shows history page
     Go To    ${url}/downloads/releases
     Log In    ${email}   ${password}    button=None
-    Validate Log In
     Wait Until Element Is Visible    ${RELEASES TAB}
     Wait Until Location is    ${url}/downloads/releases
 
@@ -103,7 +99,6 @@ Going to the history page anonymous and logging in with someone who doesn't have
 Going to the history page while logged in as someone who doesn't have access takes you to 404
     [tags]    Passing_19.2
     Log In    ${EMAIL VIEWER}    ${password}
-    Validate Log In
     Go To    ${url}/downloads/releases
     Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}    ${404 ICON}
     Wait Until Location is    ${url}/404

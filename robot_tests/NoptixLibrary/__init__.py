@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-<<<<<<< Updated upstream
 from shlex import shlex
-=======
 import subprocess
->>>>>>> Stashed changes
 
 import docker
 import email.header
@@ -73,16 +70,11 @@ class NoptixLibrary(object):
 
     def delete_all_text(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        locator = seleniumlib.find_element(locator)
-        # locator = self.convert_locator_to_webelement(locator)
-        if self.get_os() == "MacOS":
-            locator.send_keys(Keys.SHIFT, Keys.UP)
-            locator.send_keys(Keys.BACKSPACE)
-        else:
-            logger.info("windows")
-            timeout = time.time() + 5
-            while time.time() < timeout:
-                locator.send_keys(Keys.BACKSPACE)
+        element = seleniumlib.find_element(locator)
+        text = seleniumlib.get_value(locator)
+        logger.debug(text)
+        for x in range(len(text)):
+            element.send_keys(Keys.BACKSPACE)
 
     def input_content_editable_text(self, locator, text):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')

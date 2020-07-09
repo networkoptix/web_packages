@@ -35,7 +35,7 @@
     "passwordMismatch": "סיסמא שגויה",
     "cantEditYourself": "שינוי הרשאות של המשתמש אינו מאופשר",
     "cantEditAdmin": "למשתמש זה יש הרשאות מנהל",
-    "cantOpenClient": "%VMS_NAME% application is not detected. <a href=\"/download\">Download</a>",
+    "cantOpenClient": "יישום %VMS_NAME% לא מזוהה. <a href=\"/download\">הורד</a>",
     "lostConnection": "החיבור ל- {{systemName}} אבד",
     "thisSystem": "המערכת",
     "oldSafariNotSupported": "גרסאות של Safari מתחת ל 10 אינן נתמכות",

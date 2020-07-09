@@ -68,7 +68,7 @@
         "accountSavedSuccess": "あなたのアカウントは正常に保存されました",
         "accountSettings": "アカウント設定",
         "activationLinkSent": "アクティベーションリンクが送信されました",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "契約が承認されました",
         "changePassword": "パスワードを変更",
         "newPasswordLabel": "新規パスワード",
         "passwordChangedSuccess": "パスワードを更新しました",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "アカウントが作成されました",
+                "message": "アクティベーションリンクを含む確認メッセージが{{email}} に送信されました"
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "アカウントが有効になりました"
             }
         },
         "cameraLinks": {
@@ -128,14 +128,14 @@
             "unauthorized": "認証が必要です。"
         },
         "chromeCastWarning": "Chromecastはリソースを大量に消費するため、サーバーに問題を引き起こす可能性があります。",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "不足している録画設定を更新してください。",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "常時録画",
+            "motion": "モーション録画のみ",
+            "motionLowRes": "常時低 ＋ モーション高解像度"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "– 異なる値 –",
             "auto": "自動",
             "best": "最高",
             "high": "高い",
@@ -144,19 +144,25 @@
         },
         "general": "一般",
         "searchCamPlaceholder": "検索",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemHasNoCameras": "カメラなし",
+        "systemHasNoCamerasMessage": "システムにアクセス可能なカメラがありません。 <br><br>カメラをサーバーのローカルネットワークに接続して検出可能にするか、システム管理者にアクセスレベルの変更を依頼してください。",
+        "systemNewVersion": "システムを更新する",
+        "systemNewVersionMessage": "現在のバージョンはこの機能と互換性がありません。この機能を使用するにはサーバーを最新バージョンに更新してください。",
+        "systemNoAlerts": "アラートはありません",
+        "systemNoAlertsMessage": "あなたのシステムはうまくいっていなければなりません！",
         "systemOffline": "システムはオフラインです",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
-        "systemServerError": "Internal server error",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemOfflineMessage": "このシステムはオフラインのため現在アクセスできません。",
+        "systemServerError": "内部サーバーエラー",
+        "systemServerErrorMessage": "エラーが発生しました。しばらくしてからもう一度お試しください。問題が解決しない場合は、サポートチームにお問い合わせください。",
         "systemUnreachable": "システムにアクセスできません",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "システムがオフラインのため、情報にアクセスできません。",
         "unknown": "未知の値",
+        "vendor": "ベンダー",
+        "model": "モデル",
+        "ip": "IPアドレス",
+        "server": "サーバー",
+        "os": "OS",
+        "version": "バージョン",
         "voiceCommands": {
             "clear search": "検索をクリア",
             "collapse all servers": "すべてのサーバーを折りたたむ",
@@ -171,106 +177,113 @@
             "stop listening": "聞くのをやめる",
             "view": "表示 + [カメラ名]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "古いレポートを表示しています。"
     },
     "dialogs": {
         "buttons": {
             "cancel": "キャンセル",
-            "createAccount": "Create New Account",
+            "createAccount": "新規アカウントを作成",
             "delete": "削除",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "アカウントを削除",
             "download": "%VMS_NAME% をダウンロード",
             "logoutAuthorised": "ログアウト",
             "ok": "OK",
             "remove": "削除",
-            "stayAs": "Stay logged as {email} ",
-            "stayLoggedIn": "Stay Logged In"
+            "stayAs": "{email} としてログインしてください ",
+            "stayLoggedIn": "ログイン状態を維持"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "クラウドストレージ",
+            "enableStorage": "クラウドストレージを有効にする",
+            "otherSystem": "その他のシステム...",
+            "initial": "私たちはあなたが始められるようにシステムごとに {{compCapacity}} の無料クラウドストレージを提供しています。",
+            "available": "クラウドストレージの場所は、このシステム内のすべてのサーバーで利用できます。デスクトップ {{vmsName}} クライアントを使用して管理できます。",
             "camera": "カメラ",
             "cameras": "カメラ",
+            "usageLabels": {
+                "currentRecordings": "現在の録画",
+                "whenFullyUsed": "使い切った場合",
+                "amountUsed": "使用量",
+                "archiveFrom": "アーカイブ元",
+                "recordingBitrate": "録画ビットレート",
+                "delayFromLive": "ライブからの遅延"
+            },
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "クラウドストレージをシステムから削除しました",
+                "errorPrefix": "クラウドストレージの削除エラー"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "クラウドストレージを有効にできません",
+                "message": "システムにすでに合計 <volume> クラウドストレージが追加されており、それ以上追加することはできません。 <br/><br/>別のシステムからストレージを削除するか、このシステムに移動できます。 "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "システムを %CLOUD_NAME%から切断できません",
+                "message": "このシステムには、いくつかのアーカイブを含むクラウドストレージがあります。 <br/><br/> %CLOUD_NAME% からシステムを切断する前に、クラウドストレージを手動で削除する必要があります。"
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "クラウドストレージを移動",
+                "success": "ストレージを移動しました",
+                "errorPrefix": "クラウドストレージの移動エラー",
+                "notFound": "ストレージが見つかりませんでした。ストレージは他のユーザーによって移動または削除された可能性があります。",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "クラウドストレージをオフラインシステムに移動することはできません。"
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "クラウドストレージが有効です",
+                "errorPrefix": "クラウドストレージの有効化エラー"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "クラウドストレージは、所有者のシステム間でのみ移動できます。 <br/><br/>クラウドアカウントを使用してシステムを %CLOUD_NAME% に接続して、クラウドストレージを移動できます。"
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
+            "adminPasswordTitle": "<strong>{{secondarySystem}}</strong>に所有者のアカウントのパスワードを入力してください",
+            "adminPasswordWrong": "ローカル管理者のパスワードが間違っています",
             "checking": "チェック中...",
             "commonText": "システム <strong>{{primarySystem}}</strong> および <strong>{{secondarySystem}}</strong>を統合できませんでした。",
             "connectToCloud": "これと統合したいシステムを <strong>{{cloudName}}</strong> に接続するか、 <strong>{{vmsName}}</strong> クライアントを使用してローカルに統合します。",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "選択したシステムと現在のシステムの両方が %CLOUD_NAME% に接続されており、所有者が異なります。 クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "duplicateServers": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方で自分自身をリストしているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
+            "enterSystemAddressTitle": "システム内にある任意のサーバーのアドレスを入力します。",
+            "mergeConfirmation": "<p class=\"mb-0\"><strong>{{primarySystem}}</strong> と <strong>{{secondarySystem}}</strong>のシステムを統合しようとしています。</p><p>設定と名前は <strong>{{primarySystem}}</strong>から取得されます。</p>",
+            "mergeSystemsTitle": "現在のシステムと統合",
             "mergeFailedTitle": "システム統合が失敗しました",
-            "noServerFound": "No server found",
+            "noServerFound": "サーバーが見つかりません",
             "newSystemDisplayName": "新規システム",
-            "otherSystem": "Other System...",
-            "ownerCanMergeText": "You can only merge Systems where you are the owner",
+            "otherSystem": "その他のシステム...",
+            "ownerCanMergeText": "あなたが所有者であるシステムのみを統合できます",
             "passwordRequired": "パスワードが必要",
             "passwordWrong": "パスワードが間違っています",
             "primaryCannotMerge": "システム{{targetSystem}} には、現在のシステムと互換性のない新しいソフトウェアバージョンがあります。現在のシステムを<a href=\"/download\" target=\"_blank\" translate>最新のビルド</a>に更新し、{{targetSystem}} システムと統合します。",
-            "primarySystemOffline": "System {{primarySystem}} is offline and cannot be merged with System {{targetSystem}}",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemOffline": "システム {{primarySystem}} はオフラインであり、システム {{targetSystem}} と統合することはできません",
+            "primarySystemUnavailable": "システム {{primarySystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "私たちはあなたと相談することをお勧めします",
                 "b_support": "サポート",
                 "c_proceeding": "続行する前に"
             },
             "secondaryCannotMerge": "システム {{targetSystem}} には、現在のシステムと互換性のない古いソフトウェアバージョンがあります。{{targetSystem}} を <a href=\"/download\" target=\"_blank\" translate>最新のビルド</a> に更新して、現在のものと統合します。",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-            "systemOffline": "System {{targetSystem}} is offline and cannot be merged with the current one",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-            "systemVersionOld": "{{targetSystem}} has an older software version that is incompatible with the current system. Update {{targetSystem}} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
-            "systemVersionNew": "{{targetSystem}} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with {{targetSystem}}.",
+            "secondarySystemUnavailable": "システム {{targetSystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
+            "serverAtUrl": "{{url}} のサーバー",
+            "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} システムにアクセスできません。</p><p>指定されたサーバーがオンラインであることを確認して、もう一度やり直してください。</p>",
+            "serverNotYours": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+            "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません",
+            "systemOfflineUrl": "{{targetSystem}} はアクセスできません。",
+            "systemsIncompatible": "このサーバーは互換性のないソフトウェアバージョンです。両方のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a>に更新してください。",
+            "systemVersionsNotMatch": "システムのソフトウェアバージョンが一致していません。両方のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a>に更新してください。",
             "urlEmpty": "サーバーのアドレスを入力してください",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "有効な URL を入力してください",
+            "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>問い合わせください。",
+            "warning": "統合されたシステムには <strong>{{maxServers}}</strong> 以上のサーバーがあります。"
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
+            "storageSettingsSaved": "ストレージ設定を保存しました。",
+            "storageSettingsNotSaved": "ストレージの設定を保存できませんでした。",
             "settingsSaved": "設定が保存されました.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "settingsNotSaved": "設定を保存できませんでした。",
+            "logLevelsSaved": "ログのレベルを保存しました。",
+            "logLevelsNotSaved": "ログレベルを保存できませんでした。",
             "failedToSend": "メッセージを送信できませんでした。",
             "placeholders": {
                 "feedback": "カメラのモデルと製造元を必ず含めてください。"
@@ -281,7 +294,7 @@
                 "ipvd_feedback_device": "{{asset}} についてのフィードバック",
                 "ipvd_feedback_page": "カメラページへのフィードバック",
                 "sales_inquiry": "{{asset}} 販売問い合わせ",
-                "technical_inquiry": "Technical inquiry for {{asset}}"
+                "technical_inquiry": "{{asset}} に関する技術的なお問い合わせ"
             },
             "title": {
                 "integration": "{{companyName}} と連絡を取る",
@@ -297,17 +310,17 @@
         "titles": {
             "error": "エラー",
             "success": "成功",
-            "changeAccount": "You are already logged in as {email}",
+            "changeAccount": "{email} としてログイン済みです",
             "deleteUser": "ユーザーを削除しますか？",
-            "loggedFromOtherAccount": "You will be logged in with a different account",
-            "noClientDetected": "Install %VMS_NAME% to view your System",
+            "loggedFromOtherAccount": "別のアカウントでログインします",
+            "noClientDetected": "システムを表示するには %VMS_NAME% をインストールしてください",
             "removeUser": "ユーザーを削除しますか?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "現在のシステムからサーバー \"{{ title }}\" を切断しますか？",
+            "serversReset": "サーバー \"{{ title }}\"をデフォルトにリセットしますか？",
+            "serversRestart": "サーバー \"{{ title }}\" を再起動しますか？"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "アカウントを削除するには、所有しているすべてのシステムを %CLOUD_NAME% ポータルから切断します。"
         }
     },
     "downloads": {
@@ -315,7 +328,7 @@
             "bundle": "クライアントとサーバー",
             "camera_sdk": "ビデオソースSDK",
             "client": "クライアントのみ",
-            "metadata_sdk": "Metadata SDK",
+            "metadata_sdk": "メタデータ SDK",
             "package": "パッケージ",
             "server": "サーバーのみ",
             "servertool": "構成ツール",
@@ -383,23 +396,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
         "DUPLICATE_MEDIASERVER_FOUND": "選択したものと現在のもの両方のシステムに存在するサーバーリストがあります。<br>各システムからオフラインで互換性のないサーバーを削除してやり直してください。",
         "EmailAlreadyExists": "このEmailは既に登録されています",
         "FAIL": "システム <strong>{{failedSystem}}</strong> は現在到達不能です。<br>しばらくしてからもう一度試すか、<a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "システムのソフトウェアバージョンが一致していません。両方とも <a href=\"/download\">最新ビルド</a>にアップデートしてください。",
+        "cloud_systems_have_different_owners": "このシステムは %CLOUD_NAME%に接続されていますが、所有者が異なります。クラウドシステムは、所有者アカウントが同じ場合にのみ統合できます。",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">サーバは、選択されたシステムと現在のシステムの両方の下にリストされているようです。</p><p>各システムからオフラインで互換性のないサーバーを削除し、もう一度やり直してください。</p>",
+        "fail": "{{failedSystem}} はアクセスできません。",
+        "incompatible": "このサーバーには互換性のないソフトウェアバージョンがあります。両方のシステムを同じビルドに更新して統合します。",
+        "unknown_error": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に問い合わせください。",
         "accountAlreadyActivated": "このアカウントは既にアクティベートされています",
         "accountBlocked": "このアカウントは一時的にブロックされています。数分後にもう一度お試しください。",
         "accountNotActivated": "このアカウントはまだアクティベートされていません <a href=\"/activate\"> 再度アクティベートリンクを送信</a>",
         "alreadyExists": "このアカウントは既に存在します",
         "brokenAccount": "次のアカウントで予期しない問題 <a href=\"/restore_password\"> アカウントの復元</a>",
         "cantActivatePrefix": "アカウントをアクティベートできません",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "自分のメールアドレスを追加することはできません",
         "cantChangeAccountPrefix": "変更を保存できません",
         "cantChangePasswordPrefix": "パスワードを保存できません",
         "cantDisconnectSystemPrefix": "システムを削除できません",
@@ -408,14 +421,14 @@
         "cantGetSystemInfoPrefix": "システム情報はありません",
         "cantGetSystemsListPrefix": "システム リストは使用できません",
         "cantGetUsersListPrefix": "ユーザーのリストは使用できません",
-        "cantOpenClient": "%VMS_NAME% application is not detected.",
+        "cantOpenClient": "%VMS_NAME% アプリケーションが検出されません。",
         "cantRegisterPrefix": "エラーが発生しました",
         "cantSendActivationPrefix": "確認メールを送信できません",
         "cantSendConfirmationPrefix": "確認メールを送信できません",
         "cantSharePrefix": "システムを共有できません",
         "cantUnshareWithMeSystemPrefix": "システムを削除できません",
         "emailNotFound": "アカウントが存在しません",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "このリンクからシステムにアクセスすることはできません。これは、システムが %CLOUD_NAME%から切断されている場合、このシステムへのアクセスが取り消されている場合、または誤ったアカウントにログインしている場合に発生する可能性があります。",
         "forbidden": "この操作を実行するアクセス権限がありません",
         "lostConnection": "{{systemName}} への接続が失われました",
         "mergedSystemIsOffline": "システム <strong>{{failedSystem}}</strong> はオフラインです。",
@@ -425,18 +438,18 @@
         "oldPasswordMistmatch": "パスワードが違います。",
         "oldSafariNotSupported": "バージョン10以前のSafariはサポートされません",
         "passwordMismatch": "間違ったパスワード",
-        "systemUnavailable": "{{failedSystem}} には現在到達できません。数分後にもう一度お試しいただくか、サポートにお問い合わせください。",
+        "systemUnavailable": "{{failedSystem}} は現在到達できません。数分後にもう一度お試しいただくか、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a> までお問い合わせください。",
         "thisSystem": "システム",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "予期しないエラーが発生しました",
         "unknownMergeError": "不明なエラー。ページを更新して試行を繰り返すことができます。問題が解決しない場合は <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>に連絡してください。",
         "wrongAuthCode": "期限切れまたは不正なコードです",
         "wrongCode": "アカウントは既にアクティブ済か確認コードが正しくありません",
         "wrongCodeRestore": "確認コードは既に使用されているかまたは不正です",
         "wrongParameters": "フォーム上のいくつかのパラメーターが正しくありません",
-        "licenseFail": "ライセンスのアクティベートに失敗しました。再試行するか、サポートにお問い合わせください。",
+        "licenseFail": "ライセンスのアクティベートに失敗しました。もう一度やり直すか、サポートにお問い合わせください。",
         "licenseTimeout": "接続がタイムアウトしたため、ライセンスのアクティベートに失敗しました。サーバーがオンラインであることを確認して、もう一度お試しください。",
-        "licenseServerError": "ライセンスのアクティベートに失敗しました。ライセンスサーバーが応答しませんでした。再試行するか、カスタマーサポートにお問い合わせください。",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseServerError": "ライセンスのアクティベートに失敗しました。ライセンスサーバーが応答しませんでした。もう一度やり直すか、サポートにお問い合わせください。",
+        "networkConnection": "{{cloudName}} に接続できません。ネットワーク接続を確認してください。"
     },
     "integration": {
         "Access Control": "アクセスコントロール",
@@ -447,9 +460,9 @@
         "Storage": "ストレージ",
         "myIntegrationsLabel": "自分",
         "phoneNumberWithLabel": "電話： {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} 要件",
+        "testedVersionLabel": "{{vmsName}} バージョンでテスト済み:",
+        "testedVersionsLabel": "{{vmsName}} バージョンでテスト済み:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "高度なPTZカメラ",
@@ -491,7 +504,7 @@
         "primaryCodec": "コー​​デック",
         "resolutionArea": "領域",
         "sndResolution": "セカンダリストリーム",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "ボリューム別トップ {{value}}:",
         "vendor": "製造メーカー"
     },
     "menu": {
@@ -512,8 +525,8 @@
         "debug": "デバッグ",
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% をダウンロード",
-        "downloadPlatform": "Download %VMS_NAME% for ",
-        "failedToAccessSystem": "Failed to access system",
+        "downloadPlatform": "%VMS_NAME% をダウンロード ",
+        "failedToAccessSystem": "システムにアクセスできませんでした",
         "integrations": "統合",
         "login": "ログイン",
         "pageNotFound": "ページが見つかりません",
@@ -546,42 +559,42 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "このページを読み込めません",
+            "message": "サーバーがオンラインであることを確認して、もう一度やり直してください。"
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "このシステムは {{systemName}} に統合されています。",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "データベースのサイズによっては、数時間かかることがあります。",
+                "untilFinished": "統合が完了するまで、このシステムにログインしてビデオを見ることはできますが、設定は変更できません。",
+                "whenFinished": "統合が完了すると、このシステムのすべてのユーザーとカメラが {{systemName}} システムで利用可能になり、このシステムは削除されます。"
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "サーバーにアクセスできません",
+            "message": "システムがオフラインのため、サーバーにアクセスできません。"
         }
     },
     "pleaseSelect": "選択してください",
     "privacyPolicy": {
         "integration": "{{INTEGRATION_COMPANY}} プライバシーポリシーは<a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">こちら</a>にあります。同意を撤回する方法についての説明を含む％COMPANY_NAME％プライバシーポリシーは、<a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a>から入手できます。",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "ipvd": "このフォームを送信すると、 %COMPANY_NAME%から連絡を受けることにに同意したことになります。\n %COMPANY_NAME% プライバシーポリシー <a href=\"%PRIVACY_LINK%\" target=\"_blank\">こちら</a> には、同意を取り消す方法の説明が含まれています。"
     },
     "registration": {
         "agreement": "<a href=\"/content/eula\" target=\"_blank\">利用規約、条件</a>および<a href=\"%PRIVACY_LINK%\" target=\"_blank\">プライバシーポリシー</a>に同意します"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "このシステムと統合されています",
+            "mayTake": "データベースのサイズによっては、数時間かかる場合があります。"
         },
         "finishingMerge": "システム統合が完了しました",
         "integration": {
             "backToEditText": "編集インターフェースに戻る",
             "previewRibbon": "このページは最新の変更のプレビューです、一般的に利用可能なバージョンと一致しません。"
         },
-        "systemOffline": "System is offline. Some settings may not be available.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemOffline": "システムがオフラインです。一部の設定が利用できない可能性があります。",
+        "systemsMerging": "このシステムは現在マージ操作に関与しています。"
     },
     "search": {
         "Any": "全て",
@@ -599,34 +612,34 @@
         "vendors": "製造メーカー"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginDetach": "サーバーを切り離しています",
+        "beginReset": "サーバーをリセットしています。",
+        "detachSystemFailed": "サーバーをシステムから切り離すことができませんでした。入力したパスワードが正しいかどうか、サーバーがオンラインかどうかを確認して、もう一度お試しください。",
+        "detachSystemSuccess": "サーバーはシステムから正常に切り離されました。",
+        "portWarning": "1024未満のポート番号が制限されています。サーバーにアクセスできなくなる可能性があります。",
+        "removeMediaserverFailed": "サーバーをシステムから削除できませんでした。",
+        "resetFailed": "サーバーのリセットに失敗しました。入力したパスワードが正しいかどうか、サーバーがオンラインかどうかを確認して、もう一度お試しください。",
+        "resetSuccessful": "サーバー {{ serverName }} がデフォルトにリセットされました。",
+        "restartFailed": "サーバーの再起動中に問題が発生しました。",
+        "restartSuccessful": "サーバーは正常に再起動しました。",
         "serverOffline": "サーバーオフライン.",
         "servers": "サーバー",
         "status": {
             "checking": "チェック中...",
             "offline": "オフライン",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "リセットしています...",
+            "restarting": "再起動しています..."
         },
-        "successRename": "Server name saved."
+        "successRename": "サーバー名を保存しました。"
     },
     "system": {
         "MERGE_FINISHES": "統合が完了すると、このシステムのすべてのユーザーとカメラが <strong>{{targetSystemName}}</strong> システムで使用可能になり、このシステムが削除されます。",
         "mergeUnknownName": "システムの名前が不明です（クラウド統合が原因）",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "セキュリティ設定を読み込めません。",
+            "notAbleToLoadSystem": "システム設定を読み込めません。",
+            "notAbleToLoadStorageInfo": "ストレージ情報を読み込めません。",
             "sessionLimitDuration": {
                 "hours": "時",
                 "minutes": "分"
@@ -640,34 +653,34 @@
             "unavailable": "システムに到達できません"
         },
         "users": {
-            "cloudDelete": "Remove User",
-            "localDelete": "Delete User"
+            "cloudDelete": "ユーザーを削除",
+            "localDelete": "ユーザーを削除"
         },
         "yourSystem": "ご利用のシステム",
         "loggers": {
             "none": {
                 "text": "なし",
-                "help": "(log disabled)"
+                "help": "(ログは無効)"
             },
             "error": {
                 "text": "エラー",
-                "help": "(log errors only)"
+                "help": "(エラーのみログに記録する)"
             },
             "warning": {
                 "text": "警告",
-                "help": "(log warnings and errors)"
+                "help": "(警告とエラーをログに記録する)"
             },
             "info": {
                 "text": "情報",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(警告、エラー、およびすべてのメッセージをログに記録する)"
             },
             "debug": {
                 "text": "デバッグ",
-                "help": "(log every System message and debug information)"
+                "help": "(すべてのシステムメッセージとデバッグ情報をログに記録します)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "詳細",
+                "help": "(利用可能なすべての情報をログに記録)"
             }
         }
     },
@@ -690,7 +703,7 @@
             },
             "merge": {
                 "failed": "システム統合が失敗しました",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "システム {{primaryName}} と {{secondaryName}} の統合が完了しました"
             },
             "rename": {
                 "success": "システム名は保存されました"
@@ -706,9 +719,9 @@
             "status": "ステータス",
             "expires": "期限切れ",
             "time": "時間",
-            "deactivations": "Deactivation left",
+            "deactivations": "アクティベーションを解除しました。",
             "trial": "試用",
-            "online": "Online",
+            "online": "オンライン",
             "error": "エラー",
             "expired": "期限切れ",
             "ok": "OK",
@@ -718,38 +731,38 @@
             "vmax": "VMAX",
             "videowall": "ビデオウォール",
             "analogencoder": "アナログエンコーダー",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "starter": "スターター",
+            "iomodule": "IOモジュール",
             "bridge": "ブリッジ"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} 以上必要",
+            "activated": "ライセンスキーがアクティベートされました",
+            "inuse": "ライセンスキーは既にアクティベートされ、別のシステムでハードウェアID {{hwid}} を持つサーバーに結び付けられています",
+            "trialActivated": "トライアルライセンスが有効になりました。今日から30日間、最大4台のカメラを録画できます。"
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "追加のローカルFSタイプ",
+        "autoDiscoveryResponseEnabled": "自動検出応答",
+        "crossdomainEnabled": "クロスドメイン",
+        "defaultExportVideoCodec": "デフォルトのエクスポートビデオコーデック",
+        "defaultVideoCodec": "デフォルトのビデオコーデック",
+        "downloaderPeers": "ダウンローダーピア",
+        "lastMergeMasterId": "最終マージマスターID",
+        "lastMergeSlaveId": "最終マージスレーブID",
+        "ldapSearchTimeoutS": "LDAP 検索タイムアウト(秒)",
+        "licenseServer": "ライセンスサーバー",
+        "lowQualityScreenVideoCodec": "低画質スクリーンビデオコーデック",
+        "maxP2pAllClientsSizeBytes": "最大P2Pすべてのクライアントサイズバイト",
+        "maxRtpRetryCount": "最大RTP再試行回数",
+        "metadataStorageChangePolicy": "メタデータストレージ変更ポリシー",
+        "pushNotificationsLanguage": "プッシュ通知の言語",
+        "resourceFileUri": "リソースファイルURI",
+        "sessionLimitMinutes": "セッション制限(分)",
+        "specificFeatures": "特定の機能",
         "systemName": "システム名",
-        "webSocketEnabled": "Web sockets",
+        "webSocketEnabled": "Webソケット",
         "arecontRtspEnabled": "Arecont RTSP有効",
         "auditTrailEnabled": "操作履歴有効",
         "auditTrailPeriodDays": "操作履歴の期間日数",
@@ -780,7 +793,7 @@
         "localSystemId": "ローカルシステムID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "同期時間とインターネット時間の最大差（ミリ秒）",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "同期時刻とローカル時刻の最大差（ミリ秒）",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "最大P2Pキューサイズ(バイト)",
         "maxRecordQueueSizeBytes": "レコードキューの最大サイズ（バイト）",
         "maxRecordQueueSizeElements": "レコードキューの最大サイズ（要素）",
         "maxRemoteArchiveSynchronizationThreads": "最大リモートアーカイブ同期スレッド",
@@ -809,8 +822,8 @@
         "timeSynchronizationEnabled": "時刻同期有効",
         "primaryTimeServer": "プライマリ時刻同期サーバ",
         "osTimeChangeCheckPeriodMs": "OSの時刻変更チェック期間",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
+        "syncTimeExchangePeriod": "ネットワーク要求の時刻同期間隔",
+        "syncTimeEpsilon": "同期時間イプシロン。時間デルタがイプシロンより小さい場合、新しい値は適用されません",
         "maxWearableArchiveSynchronizationThreads": "ウェアラブルカメラアーカイブの最大同期スレッド",
         "updateNotificationsEnabled": "更新の通知有効",
         "upnpPortMappingEnabled": "UPNPポートマッピング有効",

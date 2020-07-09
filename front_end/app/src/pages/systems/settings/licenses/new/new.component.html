@@ -8,7 +8,7 @@
               novalidate autocomplete="off">
 
             <div class="row p-0">
-                <label class="speciality-label col-12 col-md-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
+                <label class="speciality-label col-12 col-md-3 col-xl-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
                        translate>License key</label>
 
                 <div class="position-relative pl-2">
@@ -29,13 +29,15 @@
             </div>
 
             <div class="row p-0">
-                <div class="d-none d-md-block col-md-2 m-0"></div>
-                <div class="col-8 col-md-10 pl-2 mt-1" style="padding-left: 12px" *ngIf="licenseKey.invalid && licenseKey.touched">
+                <div class="d-none d-md-block col-md-3 col-xl-2 m-0"></div>
+                <div class="col-8 col-md-9 col-xl-10 pl-2 mt-1" style="padding-left: 12px" *ngIf="licenseKey.invalid && licenseKey.touched">
 
                     <span class="input-error" *ngIf="licenseKey.errors.required"
                         translate>Enter license key</span>
                     <span class="input-error" *ngIf="licenseKey.errors.mask"
                           translate>Invalid license key</span>
+                    <span class="input-error" *ngIf="licenseKey.errors.starter"
+                          translate>Only one starter license is allowed per system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.compatibility"
                           translate>License type is incompatible with your system</span>
                     <span class="input-error" *ngIf="licenseKey.errors.offline"
@@ -49,17 +51,16 @@
             </div>
 
             <div class="row p-0 mt-2 mb-0 form-group" *ngIf="serverOptions.length > 1">
-                <label class="speciality-label col-12 col-md-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
+                <label class="speciality-label col-12 col-md-3 col-xl-2 pr-0 m-0 mb-1 mb-md-0 d-flex align-items-center justify-content-start justify-content-md-end"
                        translate>Bind to server</label>
 
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-9 col-xl-6">
                     <nx-select id="bindToServer"
                                name="bindToServer"
-                               class="dd-servers"
                                [items]="serverOptions"
                                [ngModel]="selectedServer"
                                (ngModelChange)="changeServer($event)"
-                               [selected]="serverOptions[0]">
+                               [selected]="selectedServer">
                     </nx-select>
                     <div class="hint mt-1" translate>This server must be available in the system to make the license key work</div>
                 </div>

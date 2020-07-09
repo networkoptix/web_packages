@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEEM NIET BEREIKBAAR",
         "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
         "unknown": "Onbekend",
+        "vendor": "Fabrikant",
+        "model": "Model",
+        "ip": "IP Adres",
+        "server": "Server",
+        "os": "OS",
+        "version": "Versie",
         "voiceCommands": {
             "clear search": "zoekopdracht wissen",
             "collapse all servers": "vouw alle servers samen",
@@ -194,6 +200,14 @@
             "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {{vmsName}} cliënt.",
             "camera": "camera",
             "cameras": "camera's",
+            "usageLabels": {
+                "currentRecordings": "Huidige opnamen",
+                "whenFullyUsed": "Wanneer volledig gebruikt",
+                "amountUsed": "Gebruikte hoeveelheid",
+                "archiveFrom": "Archief van",
+                "recordingBitrate": "Bitrate van de opnames",
+                "delayFromLive": "Vertraging vanaf live"
+            },
             "remove": {
                 "success": "Cloudopslag is succesvol verwijderd uit het systeem",
                 "errorPrefix": "Fout bij verwijderen cloudopslag"
@@ -256,9 +270,8 @@
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige systeem",
             "systemOfflineUrl": "{{targetSystem}} is niet toegankelijk.",
-            "systemsIncompatible": "Deze server heeft een incompatibele software-versie. Werk beide systemen bij naar dezelfde build om ze samen te voegen.",
-            "systemVersionOld": "{{targetSystem}} heeft een oudere softwareversie die niet compatibel is met het huidige systeem. Werk {{targetSystem}} bij naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a> om deze samen te voegen met de huidige versie.",
-            "systemVersionNew": "{{targetSystem}} heeft een nieuwere softwareversie die niet compatibel is met het huidige systeem. Werk het huidige systeem bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a> om het samen te voegen met {{targetSystem}}.",
+            "systemsIncompatible": "Deze server heeft een incompatibele softwareversie. Werk beide systemen bij naar de <a href=\"/download\" target=\"_blank\" translate>laatste build</a>.",
+            "systemVersionsNotMatch": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a>.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Dit wachtwoord is onjuist.",
         "oldSafariNotSupported": "Versies van Safari ouder dan versie 10 worden niet ondersteund",
         "passwordMismatch": "Wachtwoord onjuist",
-        "systemUnavailable": "{{failedSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met ondersteuning.",
+        "systemUnavailable": "Systeem {{failedSystem}} is momenteel niet bereikbaar. Probeer het over een paar minuten opnieuw of neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "het systeem",
         "unknownError": "Onverwachte fout opgetreden",
         "unknownMergeError": "Onbekende fout. U kunt proberen de pagina te vernieuwen en de poging herhalen. Als het probleem zich blijft voordoen, neem dan contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "Account is al geactiveerd of de bevestigingscode is onjuist",
         "wrongCodeRestore": "Bevestigingscode is al gebruikt of niet correct",
         "wrongParameters": "Sommige parameters op het formulier zijn onjuist",
-        "licenseFail": "Kan licentie niet activeren. Probeer het opnieuw of neem contact op met uw lokale verdeler.",
+        "licenseFail": "Kan de licentie niet activeren. Probeer het opnieuw of neem contact op met support.",
         "licenseTimeout": "Kan licentie niet activeren vanwege een time-out voor verbinding. Zorg ervoor dat de server online is en probeer het opnieuw.",
-        "licenseServerError": "Kan licentie niet activeren. De licentieserver reageerde niet. Probeer het opnieuw of neem contact op met de klantenservice.",
+        "licenseServerError": "Het activeren van de licentie is mislukt. De licentieserver reageert niet. Probeer het opnieuw of neem contact op met support.",
         "networkConnection": "Kan geen verbinding maken met {{cloudName}}, controleer je netwerkverbinding."
     },
     "integration": {

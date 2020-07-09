@@ -1,5 +1,6 @@
 *** Settings ***
 Variables    getvars.py
+<<<<<<< HEAD
 Resource     variables/system-server-variables.robot
 Resource     variables/health-monitor-variables.robot
 Resource     variables/restore-pass-variables.robot
@@ -11,6 +12,10 @@ Resource     variables/systems-page-variables.robot
 Resource     variables/front-end-variables.robot
 Resource     variables/cms-variables.robot
 Resource     variables/cloud-merge-variables.robot
+=======
+Resource     variables/front-end-variables.robot
+Resource     variables/cms-variables.robot
+>>>>>>> cloud_20.1
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
@@ -22,9 +27,9 @@ ${LANGUAGE DROPDOWN}                  //nx-language-select//button[@id='dropdown
 ${LANGUAGE TO SELECT}                 //nx-language-select//span[@lang='${LANGUAGE}']/..
 ${DOWNLOAD LINK}                      //footer//a[@href="/download" and @class="ng-star-inserted"]
 
-@{LANGUAGES LIST}                             en_US                  en_GB                  ru_RU                           fr_FR                  de_DE                 es_ES                       hu_HU                  zh_CN      zh_TW      ja_JP          ko_KR       tr_TR              th_TH                  nl_NL                he_IL                  pl_PL                  vi_VN
-@{LANGUAGES ACCOUNT TEXT LIST}                Account                Account                Учетная запись                  Compte                 Account               Cuenta                      Fiók                   帐户        帳號       アカウント        계정         Hesap             บัญชีผู้ใช้                 Account             חשבון                   Konto                  Tài khoản
-@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Compte Information     Kontoinformationen    Información de la Cuenta    Account Information    帐户信息    帳號資訊    アカウント情報    계정 정보    Hesap Bilgileri    Account Information    Accountinformatie    פרטי חשבון             Informacje o koncie    Thông tin tài khoản
+@{LANGUAGES LIST}                             en_US                  en_GB                  ru_RU                           fr_FR                  de_DE                 es_ES                       hu_HU                           zh_CN      zh_TW      ja_JP            ko_KR       tr_TR              th_TH                  nl_NL                he_IL                  pl_PL                  vi_VN
+@{LANGUAGES ACCOUNT TEXT LIST}                Account                Account                Учетная запись                  Compte                 Account               Cuenta                      Fiók                            帐户        帳號       アカウント        계정         Hesap             บัญชีผู้ใช้                 Account             חשבון                   Konto                  Tài khoản
+@{LANGUAGES ACCOUNT INFORMATION TEXT LIST}    Account Information    Account Information    Информация об учетной записи    Compte Information     Kontoinformationen    Información de la Cuenta    Felhasználói fiók információ    帐户信息    帳號資訊    アカウント情報    계정 정보    Hesap Bilgileri    ข้อมูลบัญชีสมาชิก    Accountinformatie    פרטי חשבון             Informacje o koncie    Thông tin tài khoản
 
 @{LANGUAGES CREATE ACCOUNT TEXT LIST}    Create Account  Create Account  Зарегистрироваться  Créer compte  Account erstellen  Crear Cuenta  Fiók létrehozása  创建帐户  新建帳號  アカウント作成  계정 만들기  Hesap oluştur  สร้างบัญชี   Account aanmaken  צור חשבון   Utwórz konto  Tạo tài khoản
 @{USER TYPE LIST}    ${OWNER TEXT}    ${ADMIN TEXT}    ${ADV VIEWER TEXT}    ${VIEWER TEXT}    ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}
@@ -63,6 +68,7 @@ ${LOG IN NAV BAR}                     //nav//a/span[contains(text(),'${LOG IN BU
 ${ACCOUNT DROPDOWN}                   //header//nx-account-settings-select//button[@id='accountSettingsSelect' and @data-toggle="dropdown"]
 ${LOG OUT BUTTON}                     //li[contains(@class, 'collapse-first')]//a/span[contains(text(),"${LOG OUT BUTTON TEXT}")]/..
 ${LOGO LINK}                          //header//a[@href='/']
+${WELCOME CAPTION}                    //h1[@class='welcome-caption']/span
 ${ACCOUNT SETTINGS BUTTON}            //li//a[@href = '/account']
 ${CHANGE PASSWORD BUTTON DROPDOWN}    //li//a[@href = '/account/password']
 ${RELEASE HISTORY BUTTON}             //a[@href="/downloads/history" and contains(text(),"${RELEASE HISTORY BUTTON TEXT}")]
@@ -166,8 +172,8 @@ ${ACCOUNT EMAIL}                      //account//a[@id='settings']
 ${ACCOUNT FIRST NAME}                 //form[@name='accountForm']//input[@id='firstName']
 ${ACCOUNT LAST NAME}                  //form[@name='accountForm']//input[@id='lastName']
 ${ACCOUNT LANGUAGE DROPDOWN}          //nx-language-select//button[@id='dropdownMenuButton']
-${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[contains(text(), "${SAVE BUTTON TEXT}")]
-${ACCOUNT CANCEL}                     //nx-apply//button[contains(text(), "${CANCEL BUTTON TEXT}")]
+${ACCOUNT SAVE}                       //nx-apply//nx-process-button//button[@type="submit"]
+${ACCOUNT CANCEL}                     //nx-apply//nx-process-button/following-sibling::button[@type="button"]
 
 ${DELETE ACCOUNT BUTTON}              //nx-account-settings-component//nx-block//button[@id="accountSettingsDeleteButton"]
 ${DELETE ACCOUNT DISABLED BUTTON}     //nx-account-settings-component//nx-block//button[@disabled and contains(text(), "${DELETE ACCOUNT TEXT}")]
@@ -184,7 +190,10 @@ ${DELETE ACCOUNT PASSWORD ERROR}      ${DELTE ACCOUNT DIALOG}//form[@name="delet
 
 ${APPLY CHANGES BUTTON}               ${MODAL DIALOG}//button[contains(text(), '${APPLY CHANGES BUTTON TEXT}')]
 ${DISCARD CHANGES BUTTON}             ${MODAL DIALOG}//button[contains(text(), '${DISCARD CHANGES BUTTON TEXT}')]
+${CANCEL CHANGES BUTTON}              ${MODAL DIALOG}//button[contains(text(), '${CANCEL CHANGES BUTTON TEXT}')]
+${APPLY CHANGES QUESTION}             //h1[contains(text(), '${APPLY CHANGES QUESTION TEXT}')]
 ${NO UNSAVED CHANGES}                 //nx-apply//div[contains(text(), '${NO UNSAVED CHANGES TEXT}')]
+${APPLY CHANGES CLOSE BUTTON}                //button[@class="close"]
 
 #Downloads
 ${DOWNLOADS HEADER}                   //h1[contains(text(),"${DOWNLOADS HEADER TEXT}")]
@@ -194,6 +203,9 @@ ${DOWNLOAD MAC OS VMS LINK}           //div[contains(text(),"Mac OS - Client")]/
 ${DOWNLOAD ARM VMS LINK}              //div[contains(text(),"ARM") and contains(text(),"Client")]/../..
 ${ITUNES STORE DOWNLOAD BUTTON}       //a[contains(@class,"mobile-link iOS")]
 ${PLAY STORE DOWNLOAD BUTTON}         //a[contains(@class,"mobile-link Android")]
+${DOWNLOAD VMS NAME}                  //h3[contains(text(),"Download ${VMS_NAME}")]
+${DOWNLOAD VERSION NUMBER}            //h2[@class="version-number d-flex"]/b
+${WHATS NEW LINK}                     //a[contains(text(),"What's New?")]
 
 ${WINDOWS TAB}                        //a[@id="windows"]
 ${LINUX TAB}                         //a[@id="linux"]
@@ -219,7 +231,7 @@ ${INTEGRATION PREVIEW BANNER}         //nx-ribbon//div[@class="message" and cont
 
 #Integration Tile
 ${INTEGRATION TILE}                   ${INTEGRATIONS COMPONENT}//integrations-list-component//nx-block/div[contains(@class, "card")]/../../..
-${INTEGRATION TEST INTEGRATION LINK}  //a
+${INTEGRATION TEST INTEGRATION LINK}  ${INTEGRATION TILE}//a
 ${INTEGRATION TILE LOGO}              //div[contains(@class, "card--header-logo")]
 ${INTEGRATION TILE INFO}              //div[contains(@class, "card--header-info")]
 ${INTEGRATION TILE NAME}              //div[contains(@class, "card--body-name")]

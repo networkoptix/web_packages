@@ -113,7 +113,7 @@ def cloud_portal_customization_cache(customization_name, value=None, force=False
             'email': {
                 'mail_from_name': asset.read_global_value('%MAIL_FROM_NAME%'),
                 'mail_from_email': asset.read_global_value('%MAIL_FROM_EMAIL%'),
-                'portal_url': SpecialStructures.calc_cloud_portal(asset),
+                'portal_url': SpecialStructures.calc_cloud_link(asset),
                 'smtp_host': asset.read_global_value('%SMTP_HOST%'),
                 'smtp_port': asset.read_global_value('%SMTP_PORT%'),
                 'smtp_user': asset.read_global_value('%SMTP_USER%'),
@@ -398,11 +398,13 @@ class Asset(models.Model):
         self.preview_status = new_status
         self.save()
 
-    def read_global_value(self, record_name):
+    def read_global_value(self, record_name, language=None):
         global_contexts = self.asset_type.context_set.filter(is_global=True)
         data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
 
-        return data_structure.find_actual_value(asset=self, version_id=self.version_id()) if data_structure else None
+        return data_structure.find_actual_value(
+            asset=self, language=language, version_id=self.version_id()
+        ) if data_structure else None
 
     def clean(self):
         if self.asset_type.type != AssetType.ASSET_TYPES.cloud_portal and \
@@ -428,8 +430,7 @@ class Asset(models.Model):
                 rename_group = True
 
         super(Asset, self).save(*args, **kwargs)
-        if need_update and self.is_cloud_portal \
-                and len(self.customizations.all()) == 1:
+        if need_update and self.is_cloud_portal and len(self.customizations.all()) == 1 and self.can_preview_on_portal:
             cloud_portal_customization_cache(self.customizations.first().name, force=True)  # invalidate cache
             # TODO: need to update all static right here
         if create_group or update_group:
@@ -631,10 +632,17 @@ class DataStructure(models.Model):
 
         # try to get translated content
         if self.translatable:
-            if language:
-                content_record = content_record.filter(language=language)
-            elif asset.is_cloud_portal:
-                content_record = content_record.filter(language=asset.customizations.first().default_language)
+            default_lang = Customization.objects.get(name=settings.CUSTOMIZATION).default_language
+            content_record_language = content_record.filter(language=language)
+            content_record_default = content_record.filter(language=default_lang)
+            content_record_english = content_record.filter(language__code='en_US')
+
+            if language and content_record_language.exists():
+                content_record = content_record_language
+            elif language != default_lang and content_record_default.exists():
+                content_record = content_record_default
+            else:
+                content_record = content_record_english
 
         if content_record.exists():
             if not version_id:

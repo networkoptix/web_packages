@@ -816,8 +816,8 @@ admin.site.register(ExternalFile, ExternalFileAdmin)
 
 
 @admin.register(ContributorAgreement)
-class ContributerAgreementAdmin(CMSAdmin):
-    form = ContributerAgreementForm
+class ContributorAgreementAdmin(CMSAdmin):
+    form = ContributorAgreementForm
     search_fields = ('user__email',)
     list_filter = ('accepted_agreement__customization',)
     list_display = ('user', 'customization', 'version', 'valid', 'accepted_review')

@@ -2,7 +2,7 @@
 
 คลิกที่ลิงก์เพื่อดูร่าง {{ message.id }} สำหรับ {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+ลิงก์ไปยังบทความ: {{ config.portal_url }}/ admin / cms / productcustomizationreviewreview /{{ message.id }}/ change /
 
 ในหน้านี้คุณสามารถทำได้
 1) สร้างตัวอย่างเพื่อดูการเปลี่ยนแปลงล่าสุด

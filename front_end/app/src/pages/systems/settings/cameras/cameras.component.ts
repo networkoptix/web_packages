@@ -23,6 +23,9 @@ import { WINDOW }                    from '../../../../services/window-provider'
 import { Watcher, NxApplyService }   from '../../../../services/apply.service';
 import { Process, NxProcessService } from '../../../../services/process.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
+import {
+    InfoBlockLine, InfoBlockSection, InfoBlockColumns
+}                                    from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector    : 'nx-cameras-component',
@@ -64,6 +67,8 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     noCameras = false;
     sensitivityColors = new Array(10);
     shakeHint = false;
+    motionGridChangeWatcher = new Watcher<boolean>();
+    cameraDetailColumns: InfoBlockColumns;
 
     constructor(
         configService: NxConfigService,
@@ -170,15 +175,18 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             [
                 this.audioEnabledWatcher,
                 this.cameraNameWatcher,
-                this.recordingModesWatcher, // these are getting updated somewhere
-                this.recordingWatcher, // these are getting updated somewhere
+                this.recordingModesWatcher,
+                this.recordingWatcher,
                 this.selectedAspectWatcher,
                 this.selectedFpsWatcher,
                 this.selectedQualityWatcher,
                 this.selectedRotationWatcher,
                 this.motionEnabledWatcher,
-                this.motionMaskWatcher
+                this.motionMaskWatcher,
+                this.motionGridChangeWatcher
             ]);
+
+        this.motionGridChangeWatcher.originalValue = false;
     }
 
     // Update menu options after language is loaded
@@ -406,7 +414,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
 
     preventContext = event => event.preventDefault();
 
-    selectedRotationWatcher: Watcher<any> = new Watcher()
+    selectedRotationWatcher: Watcher<any> = new Watcher();
     get selectedRotation() {
         return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
     }
@@ -415,7 +423,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.selectedRotationWatcher.value = value.value;
     }
 
-    audioEnabledWatcher = new Watcher()
+    audioEnabledWatcher = new Watcher();
     get audioEnabled() {
         return this.audioEnabledWatcher.value;
     }
@@ -453,7 +461,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             });
     }
 
-    recordingWatcher = new Watcher()
+    recordingWatcher = new Watcher();
     get recording() {
         return this.recordingWatcher.value;
     }
@@ -485,7 +493,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         this.recordingWatcher.value = value;
     }
 
-    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher()
+    recordingModesWatcher: Watcher<IRecordingModes[]> = new Watcher();
     get recordingModes(): IRecordingModes[] {
         return this.recordingModesWatcher.value;
     }
@@ -519,7 +527,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         }));
     }
 
-    selectedFpsWatcher = new Watcher()
+    selectedFpsWatcher = new Watcher();
     get selectedFps() {
         return this.selectedFpsWatcher.value;
     }
@@ -532,7 +540,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
         return this.selectedFps === 'various' || !this.selectedFps;
     }
 
-    selectedQualityWatcher = new Watcher()
+    selectedQualityWatcher = new Watcher();
     get selectedQuality() {
         return [...this.streamQualities, this.various].find(({ value: id }) => this.selectedQualityWatcher.value === id);
     }
@@ -548,7 +556,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     recordingSettings: IRecordingSettings;
 
     // Motion Detection
-    motionEnabledWatcher: Watcher<string> = new Watcher()
+    motionEnabledWatcher: Watcher<string> = new Watcher();
     get motionEnabled() {
         return this.motionEnabledWatcher.value !== MotionType.noMotion;
     }
@@ -653,8 +661,24 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.cameraViewPath = this.CONFIG.menus.systemSettings.baseUrl + this.system.id + '/view/' + this.parsedCameraId;
             this.menuService.setDetailsSection(this.parsedCameraId);
             this.selectedCamera = this.system.cameras[cameraIndex];
+            const { vendor, model, url, parentName } = this.selectedCamera;
+            this.cameraDetailColumns = [
+                [
+                    new InfoBlockSection([
+                        new InfoBlockLine(this.LANG.common.vendor, vendor),
+                        new InfoBlockLine(this.LANG.common.model, model)
+                    ])
+                ],
+                [
+                    new InfoBlockSection([
+                        new InfoBlockLine(this.LANG.common.ip, url),
+                        new InfoBlockLine(this.LANG.common.server, parentName)
+                    ])
+                ]
+            ];
             this.showPreloader = false;
             this.cameraName = this.selectedCamera.name;
+            this.motionGridChangeWatcher.originalValue = false;
             const aspect = this.aspectRatios.find(({ value: id }) => id === parseFloat(<string> this.selectedCamera.overrideAr)) || this.aspectRatios[0];
             this.selectedAspect = aspect;
             this.selectedRotation = this.rotations.find(({ value: id }) => id === parseInt(<string> this.selectedCamera.rotation)) || this.rotations[0];
@@ -668,6 +692,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
             this.motionMaskWatcher.originalValue = this.selectedCamera.motionMask || this.CONFIG.settingsConfig.defaultMotionMask;
             this.updateValues();
             this.applyService.reset();
+            this.applyService.setVisible();
             this.system.getLicenseChannels().then(({ available }) => {
                 this.availableLicenses = available;
             }).catch(_ => {
@@ -729,6 +754,10 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     toggle(property: string, disabled = false) {
         if (disabled) return;
         this.selectedCamera[property] = !this.selectedCamera[property];
+    }
+
+    lockGrid(lock: boolean) {
+        this.motionGridChangeWatcher.value = lock;
     }
 }
 

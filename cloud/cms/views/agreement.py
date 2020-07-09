@@ -6,6 +6,7 @@ from django.conf import settings
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from util.helpers import get_language_object_from_request
 
 
 @api_view(("GET", ))
@@ -15,6 +16,7 @@ def get_agreement(request):
     draft = request.query_params.get('state') == 'draft'
     review = request.query_params.get('state') == 'pending'
     agreement_id = request.query_params.get('id')
+    language = get_language_object_from_request(request)
     agreement = None
     agreement_review = None
 
@@ -75,7 +77,7 @@ def get_agreement(request):
             global_contexts = Context.objects.filter(asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
             global_contexts_dict = global_contexts_to_dict(global_contexts, cloud_portal)
             process_global_contexts(cloud_portal, agreement_dict, agreement.version_id(), False,
-                                    global_contexts, global_contexts_dict)
+                                    global_contexts, global_contexts_dict, language=language)
 
             return api_success(agreement_dict)
 

@@ -402,8 +402,9 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
     setActiveEntity(alarm, updateURI = true) {
         if (alarm && alarm.entity) {
-            this.layoutReady = !!this.healthLayoutService.activeEntity;
             this.healthLayoutService.activeEntity = this.values[alarm.metric][alarm.entity];
+            this.healthLayoutService.metricsValuesCount = alarm.metric in this.healthService.values ? Object.values(this.healthService.values[alarm.metric]).length : 0;
+
             this.activePanelParams = this.healthService.panelParams[alarm.metric];
 
             if (updateURI) {
@@ -421,6 +422,8 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
             if (this.scrollMechanicsService.mediaQueryMax(NxScrollMechanicsService.MEDIA.lg)) {
                 this.healthLayoutService.mobileDetailMode = true;
             }
+
+            this.layoutReady = (Object.keys(this.healthLayoutService.activeEntity).length > 0);
         } else {
             this.resetActiveEntity();
         }

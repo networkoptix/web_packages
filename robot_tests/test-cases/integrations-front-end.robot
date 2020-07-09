@@ -155,13 +155,13 @@ Fill in "Get in Touch" Form and Submit
     Input Text    ${INTEGRATION GET IN TOUCH MESSAGE INPUT}    ${message}
     Click Button    ${INTEGRATION GET IN TOUCH SEND BUTTON}
 
- Number of Integrations Should be Lower
+Number of Integrations Should be Lower
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
     Evaluate    ${current}<${previous}
     [Return]    ${current}
 
- Number of Integrations Should be Higher
+Number of Integrations Should be Higher
     [Arguments]    ${previous}
     ${current}=   Get Number of Integration Tiles
     Evaluate    ${current}>${previous}
@@ -293,7 +293,7 @@ Integration Store Integration Details All Fields
 Send messages using Integration Contact "Get in touch" form
     [Tags]    C54681
     Go To Integrations Page
-    Click Element    ${INTEGRATION TILE}${INTEGRATION TEST INTEGRATION LINK}/..
+    Click Element    ${INTEGRATION TEST INTEGRATION LINK}/..
     Wait Until Element is Visible    ${INTEGRATION GET IN TOUCH BUTTON}
     Click Element    ${INTEGRATION GET IN TOUCH BUTTON}
     Validate "Get in Touch" Form

@@ -157,6 +157,12 @@
         "systemUnreachable": "HỆ THỐNG KHÔNG GIỚI HẠN",
         "inaccessibleFeatureMessage": "Hệ thống là ngoại tuyến và do đó, thông tin không thể truy cập.",
         "unknown": "Không xác định",
+        "vendor": "Nhà cung cấp",
+        "model": "Kiểu mẫu",
+        "ip": "Địa chỉ IP",
+        "server": "May chủ",
+        "os": "HĐH",
+        "version": "Phiên bản",
         "voiceCommands": {
             "clear search": "xóa tìm kiếm",
             "collapse all servers": "tất cả máy chủ mất ổn định",
@@ -194,6 +200,14 @@
             "available": "Vị trí lưu trữ đám mây có sẵn cho tất cả các máy chủ trong hệ thống này. Bạn có thể quản lý nó bằng cách sử dụng máy khách {{vmsName}} máy tính để bàn.",
             "camera": "máy ảnh",
             "cameras": "máy ảnh",
+            "usageLabels": {
+                "currentRecordings": "Bản ghi hiện tại",
+                "whenFullyUsed": "Khi sử dụng đầy đủ",
+                "amountUsed": "Số lượng sử dụng",
+                "archiveFrom": "Lưu trữ từ",
+                "recordingBitrate": "Ghi bitrate",
+                "delayFromLive": "Sự khác biệt từ hình ảnh thời gian thực"
+            },
             "remove": {
                 "success": "Lưu trữ đám mây đã xóa thành công khỏi hệ thống",
                 "errorPrefix": "Lỗi xóa bộ nhớ đám mây"
@@ -256,9 +270,8 @@
             "serverNotYours": "Hệ thống này được kết nối với %CLOUD_NAME%, nhưng có chủ sở hữu khác. Hệ thống đám mây chỉ có thể được hợp nhất nếu tài khoản chủ sở hữu giống nhau.",
             "systemOffline": "Hệ thống {{targetSystem}} đang ngoại tuyến và không thể hợp nhất với hệ thống hiện tại",
             "systemOfflineUrl": "{{targetSystem}} là không thể truy cập.",
-            "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Cập nhật cả hai hệ thống vào cùng một bản dựng để hợp nhất chúng.",
-            "systemVersionOld": "{{targetSystem}} có phiên bản phần mềm cũ không tương thích với hệ thống hiện tại. Cập nhật {{targetSystem}} lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất với bản dựng hiện tại.",
-            "systemVersionNew": "{{targetSystem}} có phiên bản phần mềm mới hơn không tương thích với hệ thống hiện tại. Cập nhật hệ thống hiện tại lên <a href=\"/download\" target=\"_blank\" translate>bản dựng</a> mới nhất để hợp nhất nó với {{targetSystem}}.",
+            "systemsIncompatible": "Máy chủ này có phiên bản phần mềm không tương thích. Vui lòng cập nhật cả hai hệ thống với <a href=\"/download\" target=\"_blank\" translate>build mới nhất</a>.",
+            "systemVersionsNotMatch": "Các hệ thống có phiên bản phần mềm không khớp. Vui lòng cập nhật cả hai hệ thống với <a href=\"/download\" target=\"_blank\" translate>build mới nhất</a>.",
             "urlEmpty": "Nhập địa chỉ máy chủ",
             "urlNotValid": "Nhập URL hợp lệ",
             "unknownError": "Một lỗi không xác định đã xảy ra. Làm mới trang và thử lại. Nếu vấn đề vẫn còn, vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -291,7 +304,7 @@
         },
         "removeSystem": {
             "action": "Ngắt kết nối",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "Bạn sẽ không thể đăng nhập vào hệ thống này nữa.",
             "title": "Ngắt kết nối hệ thống?"
         },
         "titles": {
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Mật khẩu hiện tại không đúng.",
         "oldSafariNotSupported": "Không hỗ trợ các phiên bản cũ hơn Safari 10",
         "passwordMismatch": "Sai mật khẩu",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact support.",
+        "systemUnavailable": "{{failedSystem}} hiện không thể truy cập được. Hãy thử lại sau vài phút hoặc liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
         "thisSystem": "hệ thống",
         "unknownError": "Đã xảy ra lỗi không mong muốn",
         "unknownMergeError": "Lỗi không rõ. Bạn có thể thử làm mới trang và lặp lại thử. Nếu vấn đề vẫn còn - vui lòng liên hệ với <a href=\"%SUPPORT_LINK%\" target=\"_blank\">hỗ trợ</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "Tài khoản đã được kích hoạt hoặc mã xác nhận không chính xác",
         "wrongCodeRestore": "Mã xác nhận đã được sử dụng hoặc không chính xác",
         "wrongParameters": "Một số thông số trên biểu mẫu không chính xác",
-        "licenseFail": "Failed to activate license. Please try again or contact Customer Support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact Customer Support.",
+        "licenseFail": "Không thể kích hoạt giấy phép. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
+        "licenseTimeout": "Không thể kích hoạt giấy phép do hết thời gian kết nối. Vui lòng đảm bảo rằng máy chủ đang trực tuyến và thử lại.",
+        "licenseServerError": "Không thể kích hoạt giấy phép. Giấy phép máy chủ đã không trả lời. Vui lòng thử lại hoặc liên hệ với bộ phận hỗ trợ.",
         "networkConnection": "Không thể kết nối với {{cloudName}}, vui lòng kiểm tra kết nối mạng của bạn."
     },
     "integration": {
@@ -564,7 +577,7 @@
     },
     "pleaseSelect": "Vui lòng chọn...",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
+        "integration": "Bạn sẽ tìm thấy {{INTEGRATION_COMPANY}} chính sách bảo mật <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">đây</a>. %COMPANY_NAME% chính sách bảo mật, bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn, có sẵn <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a>.",
         "ipvd": "Bằng cách gửi biểu mẫu này, bạn đồng ý liên hệ bằng %COMPANY_NAME%.\nBạn sẽ tìm thấy %COMPANY_NAME% chính sách quyền riêng tư <a href=\"%PRIVACY_LINK%\" target=\"_blank\">ở đây</a> bao gồm hướng dẫn về cách rút lại sự đồng ý của bạn."
     },
     "registration": {
@@ -626,7 +639,7 @@
         "settings": {
             "notAbleToLoadSecurity": "Không thể tải cài đặt bảo mật.",
             "notAbleToLoadSystem": "Không thể tải cài đặt hệ thống.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadStorageInfo": "Không thể tải thông tin lưu trữ.",
             "sessionLimitDuration": {
                 "hours": "giờ",
                 "minutes": "phút"

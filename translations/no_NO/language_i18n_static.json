@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEMET ER UTILGJENGELIG",
         "inaccessibleFeatureMessage": "Systemet er frakoblet, og derfor er informasjon ikke tilgjengelig.",
         "unknown": "Ukjent",
+        "vendor": "Vendor",
+        "model": "Modell",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "nullstill søk",
             "collapse all servers": "kollapse alle servere",
@@ -194,6 +200,14 @@
             "available": "Cloud lagringssted er tilgjengelig for alle servere i dette systemet. Du kan administrere det ved å bruke desktop {{vmsName}} klienten.",
             "camera": "kamera",
             "cameras": "kameraer",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Skylagring ble fjernet fra systemet",
                 "errorPrefix": "Feil ved fjerning av skylagring"
@@ -256,9 +270,8 @@
             "serverNotYours": "Dette systemet er koblet til %CLOUD_NAME%, men har en annen eier. Sky-systemer kan bare slås sammen hvis eierkontoen er det samme.",
             "systemOffline": "System {{targetSystem}} er frakoblet og kan ikke slås sammen med den gjeldende",
             "systemOfflineUrl": "{{targetSystem}} er utilgjengelig.",
-            "systemsIncompatible": "Denne serveren har en inkompatibel programvareversjon. Oppdater begge systemene til samme versjon for å slå dem sammen.",
-            "systemVersionOld": "{{targetSystem}} har en eldre programvareversjon som ikke er kompatibel med gjeldende system. Oppdater {{targetSystem}} til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> for å slå det sammen med det nåværende.",
-            "systemVersionNew": "{{targetSystem}} har en nyere programvareversjon som ikke er kompatibel med gjeldende system. Oppdater det nåværende systemet til <a href=\"/download\" target=\"_blank\" translate>siste versjon</a> for å slå det sammen med {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Skriv inn serveradressen",
             "urlNotValid": "Angi gyldig URL",
             "unknownError": "En ukjent feil oppstod. Oppdater siden og prøv igjen. Hvis problemet vedvarer, kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Nåværende passord er feil.",
         "oldSafariNotSupported": "Versjoner av Safari eldre enn 10 støttes ikke",
         "passwordMismatch": "Feil passord",
-        "systemUnavailable": "{{failedSystem}} er foreløpig utilgjengelig. Prøv igjen om noen minutter eller kontakt support.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "En ukjent feil oppstod",
         "unknownMergeError": "Ukjent feil. Du kan prøve å oppdatere siden og gjenta forsøk. Hvis problemet vedvarer, vennligst kontakt <a href=\"%SUPPORT_LINK%\" target=\"_blank\">brukerstøtte</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "Kontoen er allerede aktivert eller bekreftelseskoden er feil",
         "wrongCodeRestore": "Bekreftelseskoden er allerede brukt eller feil",
         "wrongParameters": "Noen parametere på skjemaet er feil",
-        "licenseFail": "Kunne ikke aktivere lisensen. Vennligst prøv igjen eller kontakt kundestøtte.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Kunne ikke aktivere lisensen på grunn av en tidsavbrudd på tilkoblingen. Forsikre deg om at serveren er online og prøv igjen.",
-        "licenseServerError": "Kunne ikke aktivere lisensen. Lisensserveren svarte ikke. Vennligst prøv igjen eller kontakt kundestøtte.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Kan ikke koble til {{cloudName}}, sjekk nettverkstilkoblingen din."
     },
     "integration": {

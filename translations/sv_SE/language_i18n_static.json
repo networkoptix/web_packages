@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
         "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
         "unknown": "Okänd",
+        "vendor": "Leverantör",
+        "model": "Modell",
+        "ip": "IP-adress",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "rensa sökningen",
             "collapse all servers": "kollapsa alla servrar",
@@ -194,6 +200,14 @@
             "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbord {{vmsName}} klienten.",
             "camera": "kamera",
             "cameras": "kameror",
+            "usageLabels": {
+                "currentRecordings": "Aktuella inspelningar",
+                "whenFullyUsed": "När fullt använd",
+                "amountUsed": "Använd mängd",
+                "archiveFrom": "Arkiv från",
+                "recordingBitrate": "Bitrate inspelning",
+                "delayFromLive": "Fördröjning från live"
+            },
             "remove": {
                 "success": "Molnlagring har tagits bort från systemet",
                 "errorPrefix": "Fel vid borttagning av molnlagring"
@@ -256,9 +270,8 @@
             "serverNotYours": "Detta system är anslutet till %CLOUD_NAME% men har en annan ägare. Molnsystem kan endast slås samman om ägarkontot är detsamma.",
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
             "systemOfflineUrl": "{{targetSystem}} är otillgänglig.",
-            "systemsIncompatible": "Denna server har en inkompatibel programversion. Uppdatera båda systemen till samma bygga för att slå ihop dem.",
-            "systemVersionOld": "{{targetSystem}} har en äldre programvaruversion som inte är kompatibel med det nuvarande systemet. Uppdatera {{targetSystem}} till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman den med den nuvarande.",
-            "systemVersionNew": "{{targetSystem}} har en nyare programversion som inte är kompatibel med det nuvarande systemet. Uppdatera det nuvarande systemet till <a href=\"/download\" target=\"_blank\" translate>senaste build</a> att slå samman det med {{targetSystem}}.",
+            "systemsIncompatible": "Denna server har en inkompatibel mjukvaruversion. Vänligen uppdatera båda systemen till den <a href=\"/download\" target=\"_blank\" translate>senaste versionen</a>.",
+            "systemVersionsNotMatch": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\" target=\"_blank\" translate>senaste version</a>.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Nuvarande lösenord är inkorrekt.",
         "oldSafariNotSupported": "Versioner av Safari äldre än 10 stöds inte",
         "passwordMismatch": "Fel lösenord",
-        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta support.",
+        "systemUnavailable": "{{failedSystem}} kan inte nås just nu. Försök igen om några minuter eller kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "systemet",
         "unknownError": "Ett oväntat fel uppstod",
         "unknownMergeError": "Okänt fel. Du kan försöka uppdatera sidan och upprepa försöket. Om problemet kvarstår - kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

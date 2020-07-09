@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
         "inaccessibleFeatureMessage": "Le système est hors ligne et, par conséquent, les informations ne sont pas accessibles.",
         "unknown": "Inconnu",
+        "vendor": "Vendor",
+        "model": "Modèle",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "effacer la recherche",
             "collapse all servers": "réduire tous les serveurs",
@@ -194,6 +200,14 @@
             "available": "L'emplacement de stockage cloud est disponible pour tous les serveurs de ce système. Vous pouvez le gérer à l'aide du client de bureau {{vmsName}}.",
             "camera": "caméra",
             "cameras": "caméras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Stockage cloud a bien été supprimé du système",
                 "errorPrefix": "Erreur de suppression du stockage cloud"
@@ -256,9 +270,8 @@
             "serverNotYours": "Ce système est connecté à %CLOUD_NAME%, mais a un propriétaire différent. Les systèmes cloud ne peuvent être fusionnés que si le compte propriétaire est le même.",
             "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel",
             "systemOfflineUrl": "{{targetSystem}} est inaccessible.",
-            "systemsIncompatible": "Ce serveur a une version logiciel incompatible. Mettez à jour les deux systèmes à la même version pour les fusionner.",
-            "systemVersionOld": "{{targetSystem}} a une version de logiciel plus ancienne incompatible avec le système actuel. Mettre à jour {{targetSystem}} à la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour fusionner avec l'actuel.",
-            "systemVersionNew": "{{targetSystem}} a une version logiciel plus récente qui n'est pas compatible avec le système actuel. Mettez à jour le système actuel vers la <a href=\"/download\" target=\"_blank\" translate>dernière version</a> pour le fusionner avec {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Entrez l’adresse serveur",
             "urlNotValid": "Entrer un URL valide",
             "unknownError": "Une erreur inconnue est survenue. Actualisez la page et réessayez. Si le problème persiste, veuillez contacter le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "Mot de passe actuel incorrect.",
         "oldSafariNotSupported": "Les versions de Safari antérieures à 10 ne sont pas supportées",
         "passwordMismatch": "Mot de passe incorrect",
-        "systemUnavailable": "{{failedSystem}} est actuellement inaccessible. Réessayez dans quelques minutes ou contactez l'assistance.",
+        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
         "thisSystem": "le système",
         "unknownError": "Une erreur inattendue s'est produite",
         "unknownMergeError": "Erreur inconnue. Vous pouvez essayer de rafraîchir la page et répéter la tentative. Si le problème persiste – veuillez contacter <a href=\"%SUPPORT_LINK%\" target=\"_blank\">le support</a>.",
@@ -433,9 +446,9 @@
         "wrongCode": "Compte déjà activé ou le code de confirmation est incorrect",
         "wrongCodeRestore": "Code de confirmation est déjà utilisé ou incorrecte",
         "wrongParameters": "Certains paramètres dans le formulaire sont incorrects",
-        "licenseFail": "Échec de l'activation de la licence. Veuillez réessayer ou contacter le service client.",
+        "licenseFail": "Failed to activate license. Please try again or contact support.",
         "licenseTimeout": "Échec de l'activation de la licence en raison d'un délai de connexion. Veuillez vous assurer que le serveur est en ligne et réessayer.",
-        "licenseServerError": "Échec de l'activation de la licence. Le serveur de licences n'a pas répondu. Veuillez réessayer ou contacter l'assistance clientèle.",
+        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
         "networkConnection": "Impossible de se connecter à {{cloudName}}, veuillez vérifier votre connexion réseau."
     },
     "integration": {

@@ -20,6 +20,28 @@ export class NxImageComponent implements OnChanges, OnDestroy {
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean
 
+    get imageClass() {
+        return this.motionPreview
+            ? {
+                'motion-preview' : true,
+                'd-none'         : !this.show
+            } : {
+                mini                       : !this.isPrimary,
+                'd-none'                   : !this.show,
+                'light-thumbnail-preview'  : this.lightBackground,
+                'thumbnail-preview'        : !this.lightBackground,
+                'image-unavailable-border' : this.state !== 'Online' &&
+                                        this.state !== 'Recording' &&
+                                        this.state !== 'Scheduled' &&
+                                        !this.url,
+                wide: this.aspect === '16:9' ||
+                    this.aspect === 'Auto',
+                normal : this.aspect === '4:3',
+                square : this.aspect === '1:1',
+                fill   : this.aspect === 'override'
+            };
+    }
+
     constructor() {
         this.show = false;
         this.loaded.asObservable().subscribe(value => { this.show = value || !this.preloader; });

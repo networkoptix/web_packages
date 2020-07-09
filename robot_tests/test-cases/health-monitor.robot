@@ -35,7 +35,7 @@ Count All Alerts and Validate Totals Shown
         ${last page} =    Run Keyword And Return Status    Page Should Contain Element    ${HM LAST TABLE PAGE ELEMENT}
         Exit For Loop If    ${last page}
         Click Link    ${HM NEXT PAGE LINK}
-        Wait Until Element Is Visible     ${HM CAMERA TABLE ERRORS}
+        Wait Until Element Is Visible     ${HM TABLE}//*[name() = 'svg']/*[name() = 'title' and contains(text(), "Alert") or contains(text(),"Warning")]/parent::*/parent::*/parent::td/following-sibling::td
         ${camera alerts x} =    Get Element Count    ${HM CAMERA TABLE ERRORS}
         ${camera warnings x} =    Get Element Count    ${HM CAMERA TABLE WARNINGS}
         ${server alerts x} =    Get Element Count    ${HM SERVER TABLE OFFLINE}

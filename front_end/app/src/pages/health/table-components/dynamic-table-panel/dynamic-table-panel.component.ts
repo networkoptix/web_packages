@@ -7,6 +7,7 @@ import { NxConfigService, IConfig }          from '../../../../services/nx-confi
 import { NxHealthService }          from '../../health.service';
 import { NxScrollMechanicsService } from '../../../../services/scroll-mechanics.service';
 import { NxHealthLayoutService } from '../../health-layout.service';
+import { InfoBlockSection, InfoBlockSections, InfoBlockLine } from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector   : 'nx-dynamic-table-panel-component',
@@ -25,6 +26,7 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
     clientHeight: number;
     offsetHeight: number;
     scrollHeight: number;
+    sections: InfoBlockSections = [];
 
     @ViewChild('nxPanelView', { static: false }) nxPanelView: ElementRef;
 
@@ -35,13 +37,28 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
         public healthLayoutService: NxHealthLayoutService
     ) {
         this.CONFIG = configService.getConfig();
-        this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
-            this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
-        });
     }
 
     ngAfterViewInit() {
         this.scrollMechanicsService.panelVisible = true;
+        this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
+            this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
+            const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
+            this.sections = paramGroups.map(({
+                description, name, id: paramGroupId, values
+            }) => {
+                const lines = values.map(({ id, name }) => {
+                    return new InfoBlockLine(
+                        name || id,
+                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
+                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
+                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
+                    );
+                });
+
+                return new InfoBlockSection(lines, description || name || paramGroupId);
+            });
+        });
     }
 
     closeView() {

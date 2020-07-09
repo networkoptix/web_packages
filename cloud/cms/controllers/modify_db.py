@@ -46,8 +46,8 @@ def notify_version_ready(asset, version, exclude_user):
     for customization in asset.customizations.values_list('name', flat=True):
         cloud_capabilities = cloud_portal_customization_cache(customization, 'cloud_capabilities')
         # Ignore integrations if the integration store is disabled.
-        if cloud_capabilities['reviews_enabled'] and \
-                (not asset.is_integration or cloud_capabilities['integration_store_enabled']):
+        if cloud_capabilities.get('reviews_enabled', False) and \
+                (not asset.is_integration or cloud_capabilities.get('integration_store_enabled', False)):
             asset_customizations_set.add(customization)
 
     if len(asset_customizations_set) == 0:
@@ -564,6 +564,8 @@ def check_meta_settings(data_structure, new_file):
             image_dimensions = get_image_dimensions(new_file)
         except (IOError, TypeError):
             return [(data_structure.name, "Image is damaged please upload an valid version")]
+        except ValueError as valError:
+            return [(data_structure.name, str(valError))]
 
         return check_image_dimensions(data_structure.name, meta_settings, image_dimensions)
 
