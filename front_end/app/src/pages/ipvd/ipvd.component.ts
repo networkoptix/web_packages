@@ -387,7 +387,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
     }
 
     modelChanged(model) {
-        this.filterModel = NxUtilsService.deepCopy(model);
+        // Avoid unnecessary model update
+        if (!NxUtilsService.isEqual(this.filterModel, model)) {
+            this.filterModel = NxUtilsService.deepCopy(model);
+        }
         this.searchVendor();
     }
 
@@ -557,8 +560,10 @@ export class NxIpvdComponent implements OnInit, AfterViewInit {
 
         this.toggleCamview = true;
         setTimeout(() => {
-            this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
-            this.scrollMechanicsService.elementTableWidth = this.tableContainer.nativeElement.clientWidth - 8/* -gutter */;
+            if (this.viewContainer) {
+                this.scrollMechanicsService.elementViewWidth = this.viewContainer.nativeElement.clientWidth;
+                this.scrollMechanicsService.elementTableWidth = this.tableContainer.nativeElement.clientWidth - 8/* -gutter */;
+            }
         }, 500);
     }
 
