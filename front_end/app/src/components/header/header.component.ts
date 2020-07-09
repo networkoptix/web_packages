@@ -16,7 +16,6 @@ import { WINDOW }                 from '../../services/window-provider';
 import { LocalStorageService }    from 'ngx-store';
 import { Subscription, timer }    from 'rxjs';
 import { NxHeaderService }        from '../../services/nx-header.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 
@@ -33,7 +32,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     user: any = {};
     canSeeInfo: boolean;
-    system: NxSystem;
     systems: any;
     systemId: any;
     active: any = {};
@@ -49,7 +47,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     getUrlSystemId: any;
     untilHaveID: any;
     private headerSubscription: Subscription;
-    private infoSubscription: Subscription;
     private loginSubscription: Subscription;
     private routerSubscription: Subscription;
     private systemSubscription: Subscription;
@@ -61,7 +58,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 private appState: NxAppStateService,
                 private route: ActivatedRoute,
                 private systemsService: NxSystemsService,
-                private systemService: NxSystemService,
                 private dialogs: NxDialogsService,
                 private languageService: NxLanguageProviderService,
                 private accountService: NxAccountService,
@@ -105,14 +101,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 this.systemIdUpdate(uriSystemId);
             }
         });
-    }
-
-    private stopActiveSubscription() {
-        if (this.infoSubscription && !this.infoSubscription.closed) {
-            this.infoSubscription.unsubscribe();
-            this.system.stopPoll();
-            this.system = undefined;
-        }
     }
 
     ngOnDestroy() {}
@@ -185,7 +173,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (account) {
                         this.dropdownsVisible = true;
-                        this.systemsService.getSystem(account.email);
 
                         this.loginState = true;
                         this.renderer.removeClass(document.body, 'anonymous');
@@ -279,16 +266,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (account) {
                     this.user = account;
                     if (this.activeSystem) {
-                        if (!this.system || this.system.id !== this.systemId) {
-                            this.stopActiveSubscription();
-                            this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
-
-                            this.system.getInfoAndPermissions(false).catch(_ => {}).then(system => {
-                                this.canSeeInfo = (this.CONFIG.healthMonitoringEnabled || system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                            });
-                        }
+                        const vmsMetrics = this.activeSystem.capabilities.vms_metrics;
+                        const userCanSeeInfo = this.systemsService.canViewInfo(this.activeSystem.accessRole);
+                        this.canSeeInfo = (this.CONFIG.healthMonitoringEnabled || vmsMetrics) && userCanSeeInfo;
                     } else {
-                        this.stopActiveSubscription();
+                        this.canSeeInfo = false;
                     }
                 }
             });

@@ -75,6 +75,18 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         this.CONFIG = this.configService.getConfig();
     }
 
+    private cleanUp() {
+        this.stopSystemPoll();
+        this.ribbonService.hide();
+    }
+
+    private stopSystemPoll() {
+        if (this.system && this.system.stopPoll !== undefined) {
+            this.system.stopPoll();
+            this.healthService.system = undefined;
+        }
+    }
+
     ngOnInit(): void {
         this.window.addEventListener('dragenter', event => {
             let types = event.dataTransfer.types;
@@ -115,7 +127,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         }
 
         this.route.params.subscribe((params: any) => {
-            this.ribbonService.hide();
+            this.cleanUp();
             this.importedData = {};
             const systemId = params.systemId;
             // Promise holder so that if hm is in standalone mode its skips a systems getInfo call.
@@ -153,14 +165,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                         this.outdatedVersion = !this.system.info.capabilities.vms_metrics;
                     }
                     if (!this.outdatedVersion) {
-                        this.system.mediaserver.getAggregateHealthReport().pipe(
-                            flatMap((result: any) => this.setupReport(result))
-                        ).subscribe(() => {}, () => {
-                            if (!this.system.id) {
-                                !this.window.parent ? this.window.location.reload() : this.window.parent.location.reload();
-                            }
-                            this.hasServerError = this.system.isOnline;
-                        });
+                        this.updateValues();
                     }
                 });
             });
@@ -187,7 +192,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.ribbonService.hide();
+        this.cleanUp();
     }
 
     setupReport(data) {

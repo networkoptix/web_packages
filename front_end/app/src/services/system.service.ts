@@ -531,7 +531,11 @@ export class NxSystem extends System implements OnDestroy {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    return this.getUsersCachedInCloud();
+                    if (this.isAdmin) {
+                        return this.getUsersCachedInCloud().then((users) => this.userManager.processUsers(users));
+                    } else {
+                        return Promise.resolve();
+                    }
                 });
             } else if (this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
@@ -637,7 +641,7 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    createSystem(currentUserEmail, systemId, serverId?) {
+    createSystem(currentUserEmail, systemId, serverId?, skipPoll?) {
         let system;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
@@ -652,7 +656,9 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
-        system.startPoll();
+        if (!skipPoll) {
+            system.startPoll();
+        }
         return system;
     }
 }

@@ -64,6 +64,10 @@ export class NxSystemsService implements OnDestroy {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
+    canViewInfo(userRole) {
+        return this.CONFIG.accessRoles.adminAccess.includes(userRole.toLowerCase());
+    }
+
     getSystemOwnerName (system, currentUserEmail, forOrder?) {
         if (system.ownerAccountEmail === currentUserEmail) {
             if (forOrder) {
