@@ -16,7 +16,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class LocalSystemStatusInterceptor implements HttpInterceptor {
     CONFIG: IConfig;
-    lastErrorStatus: number;
 
     constructor(
         configService: NxConfigService,
