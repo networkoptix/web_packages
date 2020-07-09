@@ -1,26 +1,32 @@
-import IRangerStatus from '../rangers/abstract/IRangerStatus'
-import IRangerControls from '../rangers/abstract/IRangerControls'
+import IRangerStatus from '../ranger/IRangerStatus'
+import IRangerControls from '../ranger/IRangerControls'
 import AbstractScrollButtons from './AbstractScrollButtons'
 
 
 export class EmbeddedScrollButtons extends AbstractScrollButtons {
 
+  static DEFAULT_SCROLL_BUTTONS_RELATIVE_HEIGHT = 0.9
+  static DEFAULT_SCROLL_BUTTONS_WIDTH = 50
+  static DEFAULT_SCROLL_BUTTON_AS_FINE_STEPS = 5
+
   constructor (
     protected status: IRangerStatus,
     protected controls: IRangerControls,
     protected canvas: HTMLCanvasElement,
-    protected SCROLL_BUTTONS_RELATIVE_HEIGHT = 0.9,
-    protected SCROLL_BUTTONS_WIDTH = 50,
-    protected SCROLL_BUTTON_AS_FINE_STEPS = 5
+    protected SCROLL_BUTTONS_RELATIVE_HEIGHT = EmbeddedScrollButtons.DEFAULT_SCROLL_BUTTONS_RELATIVE_HEIGHT,
+    protected SCROLL_BUTTONS_WIDTH = EmbeddedScrollButtons.DEFAULT_SCROLL_BUTTONS_WIDTH,
+    protected SCROLL_BUTTON_AS_FINE_STEPS = EmbeddedScrollButtons.DEFAULT_SCROLL_BUTTON_AS_FINE_STEPS
   ) {
     super(status, controls)
     this.bindEventHandlers()
 
-    const handleScroll = () => {
+    if (typeof(requestAnimationFrame) !== 'undefined') {
+      const handleScroll = () => {
+        requestAnimationFrame(handleScroll)
+        this.eventHandlers.scrollButtons.progress()
+      }
       requestAnimationFrame(handleScroll)
-      this.eventHandlers.scrollButtons.progress()
     }
-    requestAnimationFrame(handleScroll)
   }
 
   public render (debug: boolean = false) {
@@ -47,14 +53,18 @@ export class EmbeddedScrollButtons extends AbstractScrollButtons {
 
   protected bindEventHandlers () {
     this.canvas.addEventListener('mousedown', this.eventHandlers.mouse.down)
-    document.body.addEventListener('mouseup', this.eventHandlers.mouse.up)
-    document.body.addEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    if (typeof(document) !== 'undefined') {
+      document.body.addEventListener('mouseup', this.eventHandlers.mouse.up)
+      document.body.addEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    }
   }
 
   protected unbindEventHandlers () {
     this.canvas.removeEventListener('mousedown', this.eventHandlers.mouse.down)
-    document.body.removeEventListener('mouseup', this.eventHandlers.mouse.up)
-    document.body.removeEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    if (typeof(document) !== 'undefined') {
+      document.body.removeEventListener('mouseup', this.eventHandlers.mouse.up)
+      document.body.removeEventListener('mouseleave', this.eventHandlers.mouse.leave)
+    }
   }
 
   protected isMouseEventInsideScrollButton (e: MouseEvent) {

@@ -1,7 +1,7 @@
 import RegularLengthInterval from '../intervals/RegularLengthInterval'
 import WeightedRegularIntervalSerif from '../serifs/WeightedRegularIntervalSerif'
 import AbstractIntervalSetExpander from './AbstractIntervalSetExpander'
-import { timeStampMs } from '../../numberTypeAliases'
+import { timeStampMs } from '../../basic_types/time'
 
 
 export class RegularLengthIntervalSetExpander extends AbstractIntervalSetExpander {

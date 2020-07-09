@@ -12,7 +12,19 @@
     "changeOrigin": true
   },
   "/api/*": {
-    "target": "https://cloud-test.hdw.mx",
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/web/api/*": {
+    "target": "https://dev2.cloud.hdw.mx",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  },
+  "/ec2/*": {
+    "target": "https://dev2.cloud.hdw.mx",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true

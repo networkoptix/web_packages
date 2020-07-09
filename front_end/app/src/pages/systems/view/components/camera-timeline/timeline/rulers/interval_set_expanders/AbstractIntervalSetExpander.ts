@@ -3,13 +3,19 @@ import AnimatedWeightedRegularIntervalSerif from '../serifs/AnimatedWeightedRegu
 import AnimatedWeightedIrregularIntervalSerif from '../serifs/AnimatedWeightedIrregularIntervalSerif';
 import RegularLengthInterval from '../intervals/RegularLengthInterval';
 import IrregularLengthInterval from '../intervals/IrregularLengthInterval';
-import IDuratedTimeRange from '../../timeRanges/IDuratedTimeRange';
+import ITimeRange from '../../time_range/ITimeRange';
 
 
+/**
+ * what enters is a list of intervals
+ * ("[per 1s, per 5s, per 10s, per 30s]")
+ * what comes out is a list of timestamps and serif weights
+ * ("[(0, small tick), (1, ditto), ..., (5, medium tick), ...")
+ */
 export abstract class AbstractIntervalSetExpander {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange
+    protected visibleRange: ITimeRange
   ) {
   }
 

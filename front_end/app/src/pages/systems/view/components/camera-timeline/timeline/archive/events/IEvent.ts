@@ -1,4 +1,7 @@
-import ITimeRange from '../../timeRanges/ITimeRange'
+import { timeStampMs } from '../../basic_types/time'
 
-export type IEvent = ITimeRange
+export interface IEvent {
+    startTime: timeStampMs
+    endTime: timeStampMs
+}
 export default IEvent

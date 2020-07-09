@@ -1,5 +1,5 @@
-import IRangerStatus from '../rangers/abstract/IRangerStatus'
-import IRangerControls from '../rangers/abstract/IRangerControls'
+import IRangerStatus from '../ranger/IRangerStatus'
+import IRangerControls from '../ranger/IRangerControls'
 
 
 export abstract class AbstractScrollBar {

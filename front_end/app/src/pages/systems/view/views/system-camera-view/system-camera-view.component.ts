@@ -3,7 +3,7 @@ import { INxViewCamera  } from '../../view.types'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NxSystemService, NxSystem } from '../../../../../services/system.service'
 import { NxAccountService } from '../../../../../services/account.service'
-import { int } from '../../components/camera-timeline/timeline/numberTypeAliases'
+import { int } from '../../components/camera-timeline/timeline/basic_types/numbers'
 import { CookieService } from 'ngx-cookie-service'
 
 @Component({

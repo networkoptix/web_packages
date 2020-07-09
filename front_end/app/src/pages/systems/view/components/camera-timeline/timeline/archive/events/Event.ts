@@ -1,4 +1,4 @@
-import { timeStampMs, durationMs } from '../../numberTypeAliases'
+import { timeStampMs, durationMs } from '../../basic_types/time'
 import IEvent from './IEvent'
 
 

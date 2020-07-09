@@ -1,14 +1,14 @@
 import AbstractCanvasIntervalSetProvider from './AbstractCanvasIntervalSetProvider'
 import RegularLengthInterval from '../../intervals/RegularLengthInterval'
 import regularLengthIntervals from '../../intervals/regularLengthIntervals'
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../../time_range/ITimeRange';
 import { SECOND, MINUTE, HOUR, DAY, ROUGH_MONTH, ROUGH_YEAR } from '../../intervals/regularLengthIntervals'
 
 
 export class CanvasRegularLenghtMultipleWeighstIntervalSetProvider extends AbstractCanvasIntervalSetProvider {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
     protected WEIGHT_COUNT_TO_RETURN = 4,
   ) {

@@ -1,7 +1,7 @@
 import AbstractCanvasIntervalSetProvider from './AbstractCanvasIntervalSetProvider'
 import IrregularLengthInterval from '../../intervals/IrregularLengthInterval'
 import irregularLengthIntervals from '../../intervals/irregularLengthIntervals'
-import IDuratedTimeRange from '../../../timeRanges/IDuratedTimeRange'
+import ITimeRange from '../../../time_range/ITimeRange';
 import { SECOND, MINUTE, HOUR } from '../../intervals/regularLengthIntervals'
 import estimateIrregularLengthIntervalPessimistically from '../../intervals/utils/estimateIrregularLengthIntervalPessimistically'
 
@@ -9,7 +9,7 @@ import estimateIrregularLengthIntervalPessimistically from '../../intervals/util
 export class CanvasIrregularLenghtMultipleWeightsIntervalSetProvider extends AbstractCanvasIntervalSetProvider {
 
   constructor (
-    protected visibleRange: IDuratedTimeRange,
+    protected visibleRange: ITimeRange,
     protected canvas: HTMLCanvasElement,
     protected WEIGHT_COUNT_TO_RETURN = 4,
   ) {
