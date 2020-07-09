@@ -1,6 +1,5 @@
 *** Settings ***
 Variables    getvars.py
-<<<<<<< Updated upstream
 Resource     variables/system-server-variables.robot
 Resource     variables/health-monitor-variables.robot
 Resource     variables/restore-pass-variables.robot
