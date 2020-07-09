@@ -20,7 +20,7 @@
     "RESTART": "Újraindítás",
     "RESET TO DEFAULTS TEXT": "Visszaállítás alapértelmezésekre",
     "DETAILED INFO TEXT": "Részletes információ",
-    "DISCONNECT MODAL WARNING TEXT": "Többé nem lesz képes bejelentkezni ebbe a rendszerbe.",
+    "DISCONNECT MODAL WARNING TEXT": "You will not be able to log into this system anymore.",
     "SUCCESSFULLY DISCONNECTED": "Rendszer sikeresen bontotta %PRODUCT_NAME% kapcsolatát",
     "ALREADY ACTIVATED TEXT": "A fiók van már aktiválva van, vagy a megerősítési kód hibás",
     "AUTOTESTS OFFLINE TEXT": "offline",

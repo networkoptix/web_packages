@@ -61,6 +61,26 @@ export class NxSystemLicensesComponent implements OnInit {
                 if (this.serverSubscription) {
                     this.serverSubscription.unsubscribe();
                 }
+                this.serverSubscription = this.system.infoSubject
+                    .pipe(
+                        map(system => {
+                            if (!system.servers || system.servers.length === 0) {
+                                throw system;
+                            }
+                        }),
+                        retryWhen(err => err.pipe(delay(1000)))
+                    )
+                    .subscribe(() => {
+                        if (this.system.currentServerNotBusy) {
+                            if (this.system && this.system.servers && this.system.servers.length) {
+                                this.system
+                                    .initSystemMediaServers()
+                                    .catch(error => {
+                                        console.error(error);
+                                    });
+                            }
+                        }
+                    });
             });
     }
 
@@ -105,14 +125,19 @@ export class NxSystemLicensesComponent implements OnInit {
 
         item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
         item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
-
-        // Set license type
+        // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
             item.info.type = this.LANG.license.info.trial;
-        } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
-            item.info.type = this.classMap[item.info.class];
         } else {
-            item.info.type = this.LANG.license.info.time;
+            if (item.info.ordertype && item.info.ordertype === 'saas') {
+                item.info.type = this.classMap[item.info.class];
+            } else {
+                if (item.info.expiration) {
+                    item.info.type = this.LANG.license.info.time;
+                } else {
+                    item.info.type = this.classMap[item.info.class];
+                }
+            }
         }
 
         // Set license usage /Pending VMS-18155/
@@ -147,27 +172,22 @@ export class NxSystemLicensesComponent implements OnInit {
     private getLicenses() {
         this.system.getLicenses()
             .then((result) => {
-                if (this.serverSubscription) {
-                    this.serverSubscription.unsubscribe();
-                }
-                this.serverSubscription = this.system.infoSubject
-                    .pipe(
-                        map(system => {
-                            if (!system.servers || system.servers.length === 0) {
-                                throw system;
-                            }
-                        }),
-                        retryWhen(err => err.pipe(delay(1000)))
-                    )
-                    .subscribe(() => {
-                        if (this.system.currentServerNotBusy) {
-                            if (this.system && this.system.servers && this.system.servers.length) {
-                                this.system
-                                    .initSystemMediaServers()
-                                    .catch(error => {
-                                        console.error(error);
-                                    });
-                                if (result.length) {
+                if (result.length) {
+                    if (this.serverSubscription) {
+                        this.serverSubscription.unsubscribe();
+                    }
+                    this.serverSubscription = this.system.infoSubject
+                        .pipe(
+                            map(system => {
+                                if (!system.servers || system.servers.length === 0) {
+                                    throw system;
+                                }
+                            }),
+                            retryWhen(err => err.pipe(delay(1000)))
+                        )
+                        .subscribe(() => {
+                            if (this.system.currentServerNotBusy) {
+                                if (this.system && this.system.servers && this.system.servers.length) {
                                     this.system
                                         .getHardwareIdsOfServers()
                                         .then((data) => {
@@ -196,12 +216,12 @@ export class NxSystemLicensesComponent implements OnInit {
                                                 this.licenses = result;
                                             }
                                         });
-                                } else {
-                                    this.licenses = [];
                                 }
                             }
-                        }
-                    });
+                        });
+                } else {
+                    this.licenses = [];
+                }
             })
             .catch(() => {
                 this.licenses = [];

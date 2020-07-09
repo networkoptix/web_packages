@@ -193,7 +193,6 @@ export class Process {
     }
 
     private handleError(data) {
-        debugger;
         this.error = true;
         this.errorData = data;
         if (!this.settings.ignoreUnauthorized && data &&

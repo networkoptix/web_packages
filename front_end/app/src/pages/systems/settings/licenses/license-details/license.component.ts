@@ -8,7 +8,11 @@ import { LanguageI18NStaticTypes }   from '../../../../../../language_i18n_stati
 import { NxLanguageProviderService } from '../../../../../services/nx-language-provider';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { DatePipe }                  from '@angular/common';
-import { InfoBlockSection, InfoDetailClass } from '../../../../../components/info-block/info-block.component';
+import {
+    InfoBlockSection, InfoBlockStyle,
+    InfoDetailClass,
+    InfoLineStyle
+} from '../../../../../components/info-block/info-block.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -26,6 +30,9 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
 
     @Input() licenses: any = [];
     @Input() system: NxSystem;
+
+    infoLineStyle = InfoLineStyle.CONDENSED;
+    infoBlockStyle = InfoBlockStyle.DARK;
 
     private setupDefaults() {
         this.orderedLicense = [];
@@ -103,9 +110,10 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                     customClass : warning ? InfoDetailClass.ERROR : undefined
                 }, {
                     name  : this.LANG.license.info.deactivations,
+                    show  : !info.expiration && !info.expired && info.status !== this.LANG.license.info.error
                     value : this.CONFIG.licenseDeactivations - info.deactivations
                 }]
-        )
+        );
 
         this.orderedLicense[info.serial] = [block];
     }

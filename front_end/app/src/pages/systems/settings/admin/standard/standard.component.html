@@ -1,7 +1,7 @@
 <nx-block type="mt-3">
     <header><h4 translate>System Settings</h4></header>
     <nx-section-placeholder
-            *ngIf="system && !system.isOnline; else systemSettings"
+            *ngIf="system && settings === false || !system.isOnline; else systemSettings"
             svgFileName="system_settings_placeholder"
             width="64"
             [translatedMessage]="LANG.system.settings.notAbleToLoadSystem">
@@ -72,7 +72,7 @@
 <nx-block type="mt-3">
     <header><h4 translate>Security</h4></header>
     <nx-section-placeholder
-            *ngIf="system && !system.isOnline; else securitySettings"
+            *ngIf="system && settings === false || !system.isOnline; else securitySettings"
             svgFileName="system_settings_placeholder"
             width="64"
             [translatedMessage]="LANG.system.settings.notAbleToLoadSecurity">
