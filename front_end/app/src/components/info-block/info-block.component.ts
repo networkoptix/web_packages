@@ -43,6 +43,15 @@ export class NxInfoBlockComponent implements OnInit {
     ngOnInit() {
         this.singleColumn = this.sectionsOrColumns[0] && !this.sectionsOrColumns[0][0];
     }
+
+    updateHeight = (columnIndex: number, blockIndex: number, lineIndex: number, { height }: { height: number }) => {
+        const line = (this.singleColumn
+            ? this.sectionsOrColumns
+            : this.sectionsOrColumns[columnIndex]
+        )[blockIndex].lines[lineIndex];
+
+        line.overrideHeightPx = Math.max(line.overrideHeightPx || 0, height, 16);
+    }
 }
 
 export class InfoBlockLine <Name = string, Value = string, Visibility = boolean> {
@@ -51,12 +60,13 @@ export class InfoBlockLine <Name = string, Value = string, Visibility = boolean>
         public value: Value,
         public show?: Visibility,
         public customClass?: InfoDetailClass,
-        public icon?: string
+        public icon?: string,
+        public overrideParamWidth?: number
     ) {}
 }
 
 export class InfoBlockSection<Heading = string> {
-    constructor(public lines: InfoBlockLine[], public heading?: Heading) {}
+    constructor(public lines: InfoBlockLine[], public heading?: Heading, public maxParamWidth?: number) {}
 }
 
 export type InfoBlockSections = InfoBlockSection[];
