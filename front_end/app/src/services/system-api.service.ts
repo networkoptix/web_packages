@@ -179,9 +179,8 @@ export class NxSystemAPI {
             catchError(error => {
                 if (this.CONFIG.isLocal && error.name === 'TimeoutError') {
                     this.appState.systemAvailable$.next(false);
-                    return of('');
                 }
-                return error;
+                return of(error);
             })
         );
     }

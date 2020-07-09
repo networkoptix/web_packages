@@ -32,7 +32,7 @@ require('./scripts/vendor/protocolcheck');
                 <router-outlet></router-outlet>
             </div>
         </div>
-        <nx-overlay-modal *ngIf="CONFIG.isLocal"></nx-overlay-modal>
+        <nx-overlay-modal *ngIf="CONFIG?.isLocal"></nx-overlay-modal>
         <nx-pre-loader type="page" *ngIf="!appStateService.ready && !newSystem"></nx-pre-loader>
         <app-toasts aria-live="polite" aria-atomic="true"></app-toasts>`,
     styleUrls     : ['./app.component.scss'],

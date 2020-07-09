@@ -12,6 +12,7 @@ export class NxAppStateService {
     headerVisibleSubject = new BehaviorSubject(true);
     private readySubject = new BehaviorSubject(false);
     systemAvailable$ = new BehaviorSubject(true);
+    lastErrorStatus$ = new BehaviorSubject(undefined);
 
     constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();

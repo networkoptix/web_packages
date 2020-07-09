@@ -100,7 +100,7 @@ export class NxOverlayModalComponent implements OnInit {
                 this.checkIfOnline().then(res => {
                     this.oneCheckAtATime = false;
                     // restarts the interval after checkIfOnline
-                    if (!res && this.nextInterval <= 60) {
+                    if (!res.ok && this.nextInterval <= 60) {
                         this.timeoutUntilRefresh$.next(this.nextInterval);
                         this.nextInterval += 5;
                         this.refresh$.next('refresh');
@@ -118,7 +118,10 @@ export class NxOverlayModalComponent implements OnInit {
 
         this.appState.systemAvailable$
             .pipe(distinctUntilChanged())
-            .subscribe(() => {
+            .subscribe(systemAvailable => {
+                if (!systemAvailable && this.appState.lastErrorStatus$.value === 504) {
+                    this.system.stopPoll();
+                }
                 this.refresh$.next('refresh');
             });
     }
@@ -149,7 +152,7 @@ export class NxOverlayModalComponent implements OnInit {
 
     checkIfOnline() {
         this.oneCheckAtATime = true;
-        return this.getServers()
+        return this.system.mediaserver.getModuleInfo().toPromise()
             .then(res => res)
             .finally(() => {
                 this.checking$.next(false);
