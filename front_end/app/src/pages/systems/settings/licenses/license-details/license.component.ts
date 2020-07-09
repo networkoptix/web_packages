@@ -103,7 +103,7 @@ export class NxLicenseDetailComponent implements OnChanges, OnDestroy {
                     customClass : warning ? InfoDetailClass.ERROR : undefined
                 }, {
                     name  : this.LANG.license.info.deactivations,
-                    value : info.deactivations
+                    value : this.CONFIG.licenseDeactivations - info.deactivations
                 }]
         )
 
