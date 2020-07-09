@@ -38,7 +38,7 @@ Validate Confirm Merge Dialog
     ...    ${MERGE PASSWORD INPUT}
     ...    ${MERGE X BUTTON}
     ...    ${MERGE GO BACK BUTTON}
-    ...    ${MERGE NEXT BUTTON}
+    ...    ${MERGE SYSTEMS BUTTON}
 
 Validate System Page
     Wait Until Elements Are Visible
@@ -48,9 +48,13 @@ Validate System Page
     Wait Until Element Is Enabled    ${MERGE BUTTON SYSTEM}    180
 
 Validate Merge
+    [Arguments]    ${primary}    ${secondary}
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
+    Wait Until Element Is Visible    //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
     #TODO: add checking the merge text appears and Merge and Disconnect buttons are disabled during the merge.
-    Run keyword and continue on failure    Check For Alert    ${SYSTEM MERGE COMPLETED TEXT}
+    ${s}=   Replace String    ${SYSTEM MERGE COMPLETED TEXT}    %PRIMARY%    ${primary}
+    ${s}=   Replace String    ${s}    %SECONDARY%    ${secondary}
+    Run keyword and continue on failure    Check For Alert    ${s}
 
 Choose System From Dropdown
     [Arguments]
@@ -68,7 +72,7 @@ Choose System From Dropdown
     ${url placeholder}=   Run Keyword And Return If    ${check url}==${True}    Get Element Attribute    ${MERGE FORM SERVER URL INPUT}    placeholder
     Run Keyword If    ${check url}==${True}    Should Be Equal As Strings    ${url placeholder}    host: port
     # TODO: add auto-populated url verification(there is no text in DOM now) if check url==${True}
-    Run Keyword Unless     '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${target system ip}${target system port}
+    Run Keyword Unless     '${input url}'=='${EMPTY}'    Input Text    ${MERGE FORM SERVER URL INPUT}    ${target system ip}:${target system port}
 
 Choose Primary System
     [Arguments]    ${from target}=${False}
@@ -107,6 +111,13 @@ Disconnect all systems from the account
 Merge Suite Setup
     Open Browser and go to url    ${ENV}
     Set Suite Variable    @{test containers}    @{EMPTY}
+
+Merge Test Restart
+    Reload Page
+    Sleep    5
+    ${logged in}=   Run Keyword and return Status    Element Should Be Visible    ${ACCOUNT DROPDOWN}
+    Run Keyword If    ${logged in}    Log Out
+    Go To    ${ENV}
 
 Merge Suite Teardown
     Close All Browsers

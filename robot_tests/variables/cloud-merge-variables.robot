@@ -46,3 +46,5 @@ ${CONFIRM MERGE FORM}                 ${MERGE DIALOG}//form[@name="confirmMergeF
 ${MERGE YOU ARE ABOUT TO MERGE}       ${CONFIRM MERGE FORM}//p[contains(text(), "${YOU ARE ABOUT TO MERGE TEXT}") and contains(text(), "${SETTINGS WILL BE TAKEN TEXT}")]
 ${MERGE ENTER YOUR PASSWORD}          ${CONFIRM MERGE FORM}//label[contains(text(),"${ENTER PASSWORD TO CONTINUE TEXT}")]
 ${MERGE PASSWORD INPUT}               ${CONFIRM MERGE FORM}//input[@name="cloudOwnerPassword"]
+${MERGE SYSTEMS BUTTON}               ${CONFIRM MERGE FORM}//button[@type="submit" and text()="${MERGE SYSTEMS TEXT}"]
+${SYSTEM IS BEING MERGED}             //div[contains(text(), "${SYSTEM IS BEING MERGED TEXT}")]
