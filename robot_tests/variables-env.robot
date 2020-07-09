@@ -1,7 +1,6 @@
 *** Variables ***
-# Image names will not he hardcoded once we have an option to download recent builds automatically
-${LOCALHOST}    https://localhost
 
+${LOCALHOST}                          https://localhost
 ${LOCAL}                              https://localhost:9000/
 ${CLOUD TEST}                         https://cloud-test.hdw.mx
 ${CLOUD DEV}                          https://dev2.cloud.hdw.mx

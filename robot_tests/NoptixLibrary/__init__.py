@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+<<<<<<< Updated upstream
 from shlex import shlex
+=======
+import subprocess
+>>>>>>> Stashed changes
 
 import docker
 import email.header
@@ -418,6 +422,11 @@ class NoptixLibrary(object):
         image = client.images.get(image_name)
         return image.id
 
+    def get_image_id(self, image_name):
+        client = docker.from_env()
+        image = client.images.get(image_name)
+        return image.id
+
     # def run_container(self, image, port, network):
     #     tmp = {'/run':'', '/run/lock':''}
     #     vol = {'/sys/fs/cgroup': {
@@ -447,7 +456,7 @@ class NoptixLibrary(object):
             return 'Container is not running'
 
     def start_container(self, name):
-        client = docker.from_env()
+        client = docker.client.from_env()
         container = client.containers.get(name)
         running_containers = client.containers.list()
         if container not in running_containers:

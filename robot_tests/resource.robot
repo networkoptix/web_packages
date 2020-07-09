@@ -8,12 +8,15 @@ Library      NoptixLibrary/CloudPortalAPI.py
 Resource     variables.robot
 Resource     APIresource.robot
 Resource     ${variables_file}
+<<<<<<< Updated upstream
 Resource     Resources/health-monitor-resource.robot
 Resource     Resources/system-server-resource.robot
 Resource     Resources/system-camera-resource.robot
 Resource     Resources/ipvd-resource.robot
 Resource     Resources/system-user-resource.robot
 Resource     Resources/system-admin-resource.robot
+Resource     Resources/front-end-resources.robot
+Resource     Resources/cms-resources.robot
 Resource     Resources/cloud-merge-resource.robot
 Variables    getIds.py    ${ENV}    ${TEST EMAIL}
 
