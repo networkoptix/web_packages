@@ -47,7 +47,7 @@ export class NxAccountSettingsDropdown extends BaseDropdown implements OnDestroy
             .subscribe((account) => {
                 if (account) {
                     this.settings = {
-                        email        : account.email,
+                        email        : account.email || account.first_name,
                         is_staff     : account.is_staff,
                         is_superuser : account.is_superuser
                     };

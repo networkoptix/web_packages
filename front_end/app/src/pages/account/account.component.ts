@@ -86,7 +86,7 @@ export class NxAccountComponent implements OnInit, OnDestroy {
                 {
                     id     : accountMenu.settings.id,
                     icon   : accountMenu.icon,
-                    label  : this.account.email,
+                    label  : this.account.email || this.account.first_name,
                     path   : accountMenu.settings.path,
                     level3 : [
                         {
