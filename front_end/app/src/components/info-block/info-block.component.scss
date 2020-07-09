@@ -26,6 +26,7 @@
         }
         &-keys {
             flex: 2 0 auto;
+
             p {
                 @include typography.regular13;
                 position: relative;
@@ -49,8 +50,13 @@
                 }
 
                 &.dark:after {
-                    border-bottom: 1px dotted $light8; 
+                    border-bottom: 1px dotted $light8;
                 }
+            }
+
+            &.clear-flex {
+                flex      : none;
+                min-width : 150px;
             }
         }
         &-values {
