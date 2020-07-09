@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTÈME INACCESSIBLE",
         "inaccessibleFeatureMessage": "Le système est hors ligne et, par conséquent, les informations ne sont pas accessibles.",
         "unknown": "Inconnu",
+        "vendor": "Vendor",
+        "model": "Modèle",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "effacer la recherche",
             "collapse all servers": "réduire tous les serveurs",
@@ -194,6 +200,14 @@
             "available": "L'emplacement de stockage cloud est disponible pour tous les serveurs de ce système. Vous pouvez le gérer à l'aide du client de bureau {{vmsName}}.",
             "camera": "caméra",
             "cameras": "caméras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Stockage cloud a bien été supprimé du système",
                 "errorPrefix": "Erreur de suppression du stockage cloud"
@@ -257,6 +271,7 @@
             "systemOffline": "Système {{targetSystem}} est hors ligne et ne peut pas être fusionné avec le système actuel",
             "systemOfflineUrl": "{{targetSystem}} est inaccessible.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Entrez l’adresse serveur",
             "urlNotValid": "Entrer un URL valide",
             "unknownError": "Une erreur inconnue est survenue. Actualisez la page et réessayez. Si le problème persiste, veuillez contacter le <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

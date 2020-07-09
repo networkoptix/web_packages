@@ -157,6 +157,12 @@
         "systemUnreachable": "A rendszer nem elérhető",
         "inaccessibleFeatureMessage": "A rendszer offline állapotban van, tehát az információk nem érhetők el.",
         "unknown": "Ismeretlen",
+        "vendor": "Gyártó",
+        "model": "Modell",
+        "ip": "IP cím",
+        "server": "Szerver",
+        "os": "OS",
+        "version": "Verzió",
         "voiceCommands": {
             "clear search": "keresés törlése",
             "collapse all servers": "összes szerver összecsukása",
@@ -194,6 +200,14 @@
             "available": "A felhőtároló hely a rendszer összes szerverén elérhető. Kezelheti az asztali {{vmsName}} kliens használatával.",
             "camera": "kamera",
             "cameras": "kamerák",
+            "usageLabels": {
+                "currentRecordings": "Jelenlegi felvételek",
+                "whenFullyUsed": "Teljes felhasználás esetén",
+                "amountUsed": "Használt mennyiség",
+                "archiveFrom": "Archívum innen",
+                "recordingBitrate": "Felvételi bitráta",
+                "delayFromLive": "Késés az élőhöz képest"
+            },
             "remove": {
                 "success": "A felhőalapú tárolást sikeresen eltávolítottuk a rendszerből",
                 "errorPrefix": "Hiba a felhőtároló eltávolításakor"
@@ -256,7 +270,8 @@
             "serverNotYours": "Ez a rendszer %CLOUD_NAME%csatlakozik, de más tulajdonossal rendelkezik. A felhőrendszereket csak akkor lehet egyesíteni, ha a tulajdonosfiók azonos.",
             "systemOffline": "A {{targetSystem}} rendszer offline állapotban van, emiatt nem lehet egyesíteni a meglévővel",
             "systemOfflineUrl": "{{targetSystem}} elérhetetlen.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "Ez a szerver nem kompatibilis szoftververzióval rendelkezik. Kérjük, frissítse mindkét rendszer a <a href=\"/download\" target=\"_blank\" translate>legújabb verzióra</a>.",
+            "systemVersionsNotMatch": "A rendszerek különböző szoftververziókkal rendelkeznek. Kérjük, frissítse mindkettőt a <a href=\"/download\" target=\"_blank\" translate>legutóbbi verzióra</a>.",
             "urlEmpty": "Adja meg a szerver címét",
             "urlNotValid": "Adjon meg érvényes URL-t",
             "unknownError": "Ismeretlen hiba. Megpróbálhatja frissíteni az oldalt, és megismételni a kísérletet. Ha a probléma továbbra is fennáll - kérjük, forduljon <a href=\"%SUPPORT_LINK%\" target=\"_blank\">támogatási osztályunkhoz</a>.",

@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "unknown": "Desconhecido",
+        "vendor": "Vendor",
+        "model": "Modelo",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "limpar pesquisa",
             "collapse all servers": "recolher todos os servidores",
@@ -194,6 +200,14 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
             "camera": "câmara",
             "cameras": "câmaras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Cloud storage successfully removed from system",
                 "errorPrefix": "Error removing cloud storage"
@@ -257,6 +271,7 @@
             "systemOffline": "O sistema {{targetSystem}} está offline e não pode ser fundido com o atual",
             "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
             "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Introduza o endereço do servidor",
             "urlNotValid": "Enter valid URL",
             "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

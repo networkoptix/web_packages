@@ -17,6 +17,7 @@ import { NxUriService }                from '../../../../../services/uri.service
 import { LanguageI18NStaticTypes }     from '../../../../../../language_i18n_static_types';
 import { NxSettingsService }           from '../../settings.service';
 import { NxUtilsService }              from '../../../../../services/utils.service';
+import { InfoBlockSection, InfoBlockLine }            from '../../../../../components/info-block/info-block.component';
 
 @AutoUnsubscribe()
 @Component({
@@ -53,6 +54,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     canSeeInfo: boolean;
     fullInfoPath: string;
     parsedServerId: string;
+    serverDetails: InfoBlockSection;
 
     private setupDefaults() {
         this.checking = false;
@@ -138,6 +140,12 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.detachDisabled = !this.system.permissions.editAdmins;
         this.resetDisabled = !this.system.permissions.editAdmins;
         this.portChangeDisabled = !this.system.permissions.editAdmins;
+
+        this.serverDetails = new InfoBlockSection([
+            new InfoBlockLine(this.LANG.common.ip, this.selectedServer.ip || '-'),
+            new InfoBlockLine(this.LANG.common.os, this.selectedServer.osName || '-'),
+            new InfoBlockLine(this.LANG.common.version, this.selectedServer.version || '-')
+        ]);
 
         if (!this.applyService.locked) {
             this.applyService.hardReset();

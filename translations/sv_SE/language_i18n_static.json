@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEMET är inte tillgängligt",
         "inaccessibleFeatureMessage": "Systemet är offline och därför är servrar inte tillgängliga.",
         "unknown": "Okänd",
+        "vendor": "Leverantör",
+        "model": "Modell",
+        "ip": "IP-adress",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "rensa sökningen",
             "collapse all servers": "kollapsa alla servrar",
@@ -194,6 +200,14 @@
             "available": "Molnlagringsplats är tillgänglig för alla servrar i detta system. Du kan hantera det med skrivbord {{vmsName}} klienten.",
             "camera": "kamera",
             "cameras": "kameror",
+            "usageLabels": {
+                "currentRecordings": "Aktuella inspelningar",
+                "whenFullyUsed": "När fullt använd",
+                "amountUsed": "Använd mängd",
+                "archiveFrom": "Arkiv från",
+                "recordingBitrate": "Bitrate inspelning",
+                "delayFromLive": "Fördröjning från live"
+            },
             "remove": {
                 "success": "Molnlagring har tagits bort från systemet",
                 "errorPrefix": "Fel vid borttagning av molnlagring"
@@ -257,6 +271,7 @@
             "systemOffline": "System {{targetSystem}} är offline och kan inte slås samman med det nuvarande",
             "systemOfflineUrl": "{{targetSystem}} är otillgänglig.",
             "systemsIncompatible": "Denna server har en inkompatibel mjukvaruversion. Vänligen uppdatera båda systemen till den <a href=\"/download\" target=\"_blank\" translate>senaste versionen</a>.",
+            "systemVersionsNotMatch": "Systemen har olika mjukvaruversioner. Vänligen uppdatera dem båda till <a href=\"/download\" target=\"_blank\" translate>senaste version</a>.",
             "urlEmpty": "Ange serveradress",
             "urlNotValid": "Ange en giltig URL",
             "unknownError": "Ett okänt fel uppstod. Uppdatera sidan och försök igen. Om problemet kvarstår, kontakta <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

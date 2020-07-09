@@ -157,6 +157,12 @@
         "systemUnreachable": "系統無法連接",
         "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",
         "unknown": "未知",
+        "vendor": "Vendor",
+        "model": "型號",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "清除搜尋",
             "collapse all servers": "隱藏所有伺服器",
@@ -194,6 +200,14 @@
             "available": "此系統中的所有伺服器皆可使用雲端儲存位置。您可用桌面 {{vmsName}} 客戶端對其進行管理。",
             "camera": "攝影機",
             "cameras": "攝影機",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "雲端儲存已成功從系統中刪除",
                 "errorPrefix": "刪除雲端儲存時發生錯誤"
@@ -257,6 +271,7 @@
             "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
             "systemOfflineUrl": "無法連接{{targetSystem}}",
             "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統都更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",

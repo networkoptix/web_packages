@@ -10,7 +10,6 @@
                         <th translate>Type</th>
                         <th translate>Channels</th>
                         <th translate>Available</th>
-                        <th translate>In use</th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -20,7 +19,6 @@
                         <td>{{ license.type }}</td>
                         <td>{{ license.count }}</td>
                         <td>{{ license.countAvail }}</td>
-                        <td>{{ license.inUse }}</td>
                         <td>
                             <span *ngIf="license.required < 0"
                                 [translate]="'license.messages.required'"

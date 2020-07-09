@@ -68,7 +68,7 @@
         "accountSavedSuccess": "계정이 성공적으로 저장되었습니다.",
         "accountSettings": "계정 설정",
         "activationLinkSent": "활성화 링크 전송",
-        "agreementAccepted": "Agreement has been accepted",
+        "agreementAccepted": "결제가 완료되었습니다.",
         "changePassword": "패스워드 변경",
         "newPasswordLabel": "새 패스워드",
         "passwordChangedSuccess": "암호가 정상적으로 저장되었습니다",
@@ -96,11 +96,11 @@
     "common": {
         "account": {
             "created": {
-                "title": "Account Created",
-                "message": "Confirmation message with the activation link is sent to {{email}}"
+                "title": "계정 생성됨",
+                "message": "활성화 링크가 포함 된 확인 메시지가 {{email}} 으로 전송됩니다."
             },
             "activated": {
-                "title": "Account successfully activated"
+                "title": "계정이 성공적으로 활성화되었습니다"
             }
         },
         "cameraLinks": {
@@ -128,14 +128,14 @@
             "unauthorized": "인증이 필요합니다"
         },
         "chromeCastWarning": "크롬캐스트는 많은 리소스가 요구되어 서버에 문제가 발생할 수 있습니다.",
-        "recordingSettingsWarning": "Please update missing recording settings.",
+        "recordingSettingsWarning": "누락 된 녹화 설정을 업데이트하십시오.",
         "recordingModes": {
-            "always": "Record always",
-            "motion": "Record only motion",
-            "motionLowRes": "Motion + low-res"
+            "always": "상시 녹화",
+            "motion": "움직임 만 기록",
+            "motionLowRes": "움직임 + 저해상도"
         },
         "resolution": {
-            "various": "– Different Values –",
+            "various": "– 다른 가치 –",
             "auto": "자동",
             "best": "최고",
             "high": "높은",
@@ -144,19 +144,25 @@
         },
         "general": "일반",
         "searchCamPlaceholder": "검색",
-        "systemHasNoCameras": "No Cameras",
-        "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
-        "systemNewVersion": "Update your system",
-        "systemNewVersionMessage": "Your current version is incompatible with this feature. Please update your servers to the latest version to use this feature.",
-        "systemNoAlerts": "No Alerts",
-        "systemNoAlertsMessage": "Your system must be doing well!",
+        "systemHasNoCameras": "카메라가 없습니다.",
+        "systemHasNoCamerasMessage": "시스템에 액세스 가능한 카메라가 없습니다. <br><br>몇 대의 카메라를 서버의 로컬 네트워크에 연결하여 검색 가능하게하거나 시스템 관리자에게 문의하여 액세스 수준을 변경하십시오.",
+        "systemNewVersion": "시스템 업데이트",
+        "systemNewVersionMessage": "현재 버전이이 기능과 호환되지 않습니다. 이 기능을 사용하려면 서버를 최신 버전으로 업데이트하십시오.",
+        "systemNoAlerts": "알림 없음",
+        "systemNoAlertsMessage": "시스템이 잘 작동하고 있어야합니다!",
         "systemOffline": "시스템 오프라인",
-        "systemOfflineMessage": "This system is offline and cannot be accessed right now.",
+        "systemOfflineMessage": "이 시스템은 오프라인 상태이므로 지금 액세스 할 수 없습니다.",
         "systemServerError": "인터넷 서버 오류",
-        "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
+        "systemServerErrorMessage": "오류가 발생했습니다. 잠시 후 다시 시도 해주세요. 문제가 계속되면 지원 팀에 문의하십시오.",
         "systemUnreachable": "시스템이 연결이 않됩니다",
-        "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
+        "inaccessibleFeatureMessage": "시스템이 오프라인 상태이므로 정보에 액세스 할 수 없습니다.",
         "unknown": "알 수 없음",
+        "vendor": "제조사:",
+        "model": "모델",
+        "ip": "IP 주소:",
+        "server": "서버:",
+        "os": "OS",
+        "version": "버전 정보",
         "voiceCommands": {
             "clear search": "검색기록 지우기",
             "collapse all servers": "모든 서버 축소",
@@ -171,14 +177,14 @@
             "stop listening": "듣기 중지",
             "view": "view + [카메라 명]"
         },
-        "viewingOutdatedReport": "You are viewing an outdated report."
+        "viewingOutdatedReport": "사용하고 계신 브라우저는 최신이 아닙니다"
     },
     "dialogs": {
         "buttons": {
             "cancel": "취소",
             "createAccount": "새 계정 만들기",
             "delete": "삭제",
-            "deleteAccount": "Delete Account",
+            "deleteAccount": "계정 삭제",
             "download": "%VMS_NAME% 다운로드",
             "logoutAuthorised": "로그 아웃",
             "ok": "확인",
@@ -187,88 +193,97 @@
             "stayLoggedIn": "로그인 상태 유지"
         },
         "cloudStorage": {
-            "title": "Cloud Storage",
-            "enableStorage": "Enable Cloud Storage",
-            "otherSystem": "Other System...",
-            "initial": "We are offering {{compCapacity}} of complimentary cloud storage per system to get you started.",
-            "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {{vmsName}} client.",
+            "title": "클라우드 저장소",
+            "enableStorage": "클라우드 스토리지 이동",
+            "otherSystem": "다른 시스템...",
+            "initial": "시작하기 위해 시스템 당 {{compCapacity}} 개의 무료 클라우드 스토리지를 제공합니다.",
+            "available": "클라우드 스토리지 위치는이 시스템의 모든 서버에서 사용 가능합니다. desktop {{vmsName}} 클라이언트를 사용하여 관리 할 수 있습니다.",
             "camera": "카메라",
             "cameras": "카메라",
+            "usageLabels": {
+                "currentRecordings": "현재 녹화들",
+                "whenFullyUsed": "완전히 사용될 때",
+                "amountUsed": "사용한 양",
+                "archiveFrom": "에서 아카이브",
+                "recordingBitrate": "녹화 비트레이트",
+                "delayFromLive": "라이브 지연"
+            },
             "remove": {
-                "success": "Cloud storage successfully removed from system",
-                "errorPrefix": "Error removing cloud storage"
+                "success": "클라우드 스토리지가 시스템에서 성공적으로 제거되었습니다",
+                "errorPrefix": "클라우드 스토리지 제거 오류"
             },
             "activationError": {
-                "title": "Cannot Enable Cloud Storage",
-                "message": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. "
+                "title": "클라우드 스토리지 이동",
+                "message": "이미 시스템에 추가 된 총 <volume> 클라우드 스토리지가 있으며 더 이상 추가 할 수 없습니다. <br/><br/>다른 시스템에서 스토리지를 삭제하거나이 시스템으로 이동할 수 있습니다. "
             },
             "systemDisconnectError": {
-                "title": "Can't disconnect system from %CLOUD_NAME%",
-                "message": "This system has cloud storage with some archives on it. <br/><br/>The cloud storage has to be manually deleted prior to disconnecting the system from %CLOUD_NAME%."
+                "title": "%CLOUD_NAME%에서 시스템을 분리 하지 못했습니다.",
+                "message": "이 시스템에는 일부 아카이브가있는 클라우드 스토리지가 있습니다. <br/><br/>시스템을 %CLOUD_NAME%에서 분리하기 전에 클라우드 스토리지를 수동으로 삭제해야합니다."
             },
             "moveCloudStorage": {
-                "title": "Move Cloud Storage",
-                "success": "Storage succesfully moved",
-                "errorPrefix": "Error moving cloud storage",
-                "notFound": "Storage was not found. Storage might have been moved or deleted by another user",
+                "title": "클라우드 스토리지 이동",
+                "success": "스토리지가 성공적으로 이동",
+                "errorPrefix": "클라우드 스토리지 제거 오류",
+                "notFound": "저장 공간을 찾을 수 없습니다. 다른 사용자가 저장소를 이동하거나 삭제했을 수 있습니다",
                 "status": {
-                    "offline": "Cloud storage cannot be moved to offline systems."
+                    "offline": "클라우드 스토리지를 오프라인 시스템으로 이동할 수 없습니다."
                 }
             },
             "enableCloudStorage": {
-                "success": "Cloud Storage Enabled",
-                "errorPrefix": "Error Enabling Cloud Storage"
+                "success": "클라우드 스토리지 사용",
+                "errorPrefix": "클라우드 스토리지 제거 오류"
             },
             "noOtherSystemsError": {
-                "message": "You can only move cloud storage between systems you are the owner of. <br/><br/>Connect a system to %CLOUD_NAME% using your cloud account to be able to move cloud storage to it."
+                "message": "소유 한 시스템간에 만 클라우드 스토리지를 이동할 수 있습니다. <br/><br/>클라우드 계정을 사용하여 시스템을 %CLOUD_NAME% 연결하여 클라우드 스토리지를 시스템으로 옮길 수 있습니다."
             }
         },
         "merge": {
-            "adminPasswordTitle": "Enter password to owner's account in <strong>{{secondarySystem}}</strong>",
-            "adminPasswordWrong": "Wrong password for local admin user",
-            "checking": "Checking...",
+            "adminPasswordTitle": "<strong>{{secondarySystem}}</strong>로 소유자의 계정에 비밀번호를 입력하십시오",
+            "adminPasswordWrong": "로컬 관리자의 비밀번호가 잘못되었습니다",
+            "checking": "확인...",
             "commonText": "시스템 <strong>{{primarySystem}}</strong> 및 <strong>{{secondarySystem}}</strong>를 머지 하는데 실패 했습니다.",
             "connectToCloud": "이 시스템과 머지하려는 시스템을 <strong>{{cloudName}}</strong> 에 연결하거나 <strong>{{vmsName}}</strong> 클라이언트를 사용하여 로컬로 머지하십시오.",
-            "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
-            "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-            "enterSystemAddressTitle": "Enter the address of any server located in the system that you want to merge with this one.",
-            "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{{primarySystem}}</strong> and <strong>{{secondarySystem}}</strong>.</p><p>Settings and the name will be taken from <strong>{{primarySystem}}</strong>.</p>",
-            "mergeSystemsTitle": "Merge current system with",
+            "differentOwners": "선택한 시스템과 현재 시스템이 모두 %CLOUD_NAME% 연결되어 있고 다른 소유자가 있습니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
+            "duplicateServers": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
+            "enterSystemAddressTitle": "이 서버와 병합하려는 시스템에있는 서버의 주소를 입력하십시오.",
+            "mergeConfirmation": "시스템 <strong>{{primarySystem}}</strong> 과 <strong>{{secondarySystem}}</strong>를 머지하려고합니다. 설정과 이름은 <strong>{{primarySystem}}</strong>에서 가져옵니다.",
+            "mergeSystemsTitle": "와 현재 시스템을 병합",
             "mergeFailedTitle": "시스템 머지에 실패했습니다.",
-            "noServerFound": "No server found",
+            "noServerFound": "미디어 서버 없음",
             "newSystemDisplayName": "새로운 시스템",
-            "otherSystem": "Other System...",
+            "otherSystem": "다른 시스템...",
             "ownerCanMergeText": "소유자 인 시스템 만 머지 할 수 있습니다",
             "passwordRequired": "암호가 필요 합니다",
             "passwordWrong": "잘못된 암호",
             "primaryCannotMerge": "시스템 {{targetSystem}} 은 현재 시스템과 호환 되지 않는 최근 소프트웨어 버전이 있습니다. 현재 시스템을 {{targetSystem}} 시스템으로 머지하려면 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "primarySystemOffline": "{{primarySystem}} 시스템이 오프라인 상태이며 {{targetSystem}} 시스템과 병합 할 수 없습니다",
-            "primarySystemUnavailable": "System {{primarySystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+            "primarySystemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
             "recommendSupport": {
-                "a_recommend": "We recommend that you consult with",
+                "a_recommend": "우리는 당신과 상담하는 것이 좋습니다",
                 "b_support": "지원",
                 "c_proceeding": "계속하기 전에."
             },
             "secondaryCannotMerge": "시스템 {{targetSystem}} 에 현재 시스템과 호환되지 않는 이전 소프트웨어 버전이 있습니다. 병합하기 위해 {{targetSystem}} 를 받는 사람 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
-            "secondarySystemUnavailable": "System {{targetSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "serverAtUrl": "server at {{url}}",
-            "serverNotAvailable": "<p class=\"mb-2\">Can't access the {{targetSystem}} system.</p><p>Make sure the specified server is online and try again.</p>",
-            "serverNotYours": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+            "secondarySystemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
+            "serverAtUrl": "{{url}} 서버",
+            "serverNotAvailable": "<p class=\"mb-2\"> {{targetSystem}} 시스템에 액세스 할 수 없습니다.</p><p>지정된 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.</p>",
+            "serverNotYours": "이 시스템은 %CLOUD_NAME%연결되어 있지만 소유자가 다릅니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
             "systemOffline": "시스템 {{targetSystem}} 은 오프라인이며 현재 시스템과 머지 할 수 없습니다",
-            "systemOfflineUrl": "{{targetSystem}} is inaccessible.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemOfflineUrl": "{{targetSystem}} 에 액세스 할 수 없습니다.",
+            "systemsIncompatible": "이 서버에는 호환되지 않는 소프트웨어 버전이 있습니다. 두 시스템 모두 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a>로 업데이트하십시오.",
+            "systemVersionsNotMatch": "시스템들는 다른 소프트웨어 버전이 입니다. 둘다 <a href=\"/download\" target=\"_blank\" translate>최신 빌드</a> 로 업데이트 하십시요.",
             "urlEmpty": "서버 주소 입력",
-            "urlNotValid": "Enter valid URL",
-            "unknownError": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
-            "warning": "There will be more than <strong>{{maxServers}}</strong> servers in the merged system."
+            "urlNotValid": "유효한 URL을 입력",
+            "unknownError": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오.",
+            "warning": "병합 된 시스템에 <strong>{{maxServers}}</strong> 개 이상의 서버가 있습니다."
         },
         "message": {
-            "storageSettingsSaved": "Storage settings saved.",
-            "storageSettingsNotSaved": "Couldn't save storage settings.",
-            "settingsSaved": "Settings saved.",
-            "settingsNotSaved": "Couldn't save settings.",
-            "logLevelsSaved": "Log level(s) saved.",
-            "logLevelsNotSaved": "Couldn't save log level(s).",
+            "storageSettingsSaved": "저장 공간 설정이 저장되었습니다.",
+            "storageSettingsNotSaved": "저장 용량 설정을 저장하지 못했습니다.",
+            "settingsSaved": "설정이 저장되었습니다.",
+            "settingsNotSaved": "저장 용량 설정을 저장하지 못했습니다.",
+            "logLevelsSaved": "로그 수준이 저장되었습니다.",
+            "logLevelsNotSaved": "로그 수준을 저장할 수 없습니다.",
             "failedToSend": "메시지 전송 실패",
             "placeholders": {
                 "feedback": "카메라 모델과 제조업체를 포함시켜야합니다."
@@ -289,7 +304,7 @@
         },
         "removeSystem": {
             "action": "연결 끊기",
-            "message": "You will not be able to log into this system anymore.",
+            "message": "더이상 이 시스템에 접속 할 수 없습니다.",
             "title": "시스템 연결을 끊으시겠습니까?"
         },
         "titles": {
@@ -300,12 +315,12 @@
             "loggedFromOtherAccount": "다른 계정으로 로그인 하게 될것입니다",
             "noClientDetected": "시스템을 보려면 %VMS_NAME% 을 설치하십시오.",
             "removeUser": "사용자를 삭제 하시겠습니까?",
-            "serversDetach": "Detach server \"{{ title }}\" from current system?",
-            "serversReset": "Reset server \"{{ title }}\" to defaults?",
-            "serversRestart": "Restart server \"{{ title }}\"?"
+            "serversDetach": "현재 시스템에서 서버 분리?",
+            "serversReset": "서버 \"{{ title }}\"을 (를) 기본값으로 재설정 하시겠습니까?",
+            "serversRestart": "\"{{ title }}\"서버를 다시 시작 하시겠습니까?"
         },
         "tooltips": {
-            "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal to delete your account."
+            "deleteAccount": "%CLOUD_NAME% 포털에서 귀하가 소유 한 모든 시스템을 연결 해제하여 계정을 삭제하십시오."
         }
     },
     "downloads": {
@@ -381,23 +396,23 @@
         }
     },
     "errorCodes": {
-        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
+        "CLOUD_SYSTEMS_HAVE_DIFFERENT_OWNERS": "이 시스템은 %CLOUD_NAME%연결되어 있지만 소유자가 다릅니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
         "DUPLICATE_MEDIASERVER_FOUND": "일부 서버 목록은 두 시스템 모두에 존재하는 것으로 - 선택된 서버와 현재 서버의 목록에 있습니다.<br>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거하고 다시 시도하십시오.",
         "EmailAlreadyExists": "이 전자 메일은 이미 등록되었습니다.",
         "FAIL": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
-        "INCOMPATIBLE": "The systems have mismatching software versions. Please update both of them to the <a href=\"/download\">latest build</a>.",
-        "cloud_systems_have_different_owners": "This system is connected to %CLOUD_NAME%, but has a different owner. Cloud systems can only be merged if the owner account is the same.",
-        "duplicate_mediaserver_found": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
-        "fail": "{{failedSystem}} is inaccessible.",
-        "incompatible": "This server has an incompatible software version. Update both systems to the same build to merge them.",
-        "unknown_error": "An unknown error occurred. Refresh the page and try again. If the problem persists, please contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "INCOMPATIBLE": "시스템들는 다른 소프트웨어 버전이 입니다. 둘다 <a href=\"/download\">최신 빌드</a> 로 업데이트 하십시요.",
+        "cloud_systems_have_different_owners": "이 시스템은 %CLOUD_NAME%연결되어 있지만 소유자가 다릅니다. 소유자 계정이 동일한 경우에만 클라우드 시스템을 병합 할 수 있습니다.",
+        "duplicate_mediaserver_found": "<p class=\"mb-2\">서버가 선택한 시스템과 현재 시스템 모두에 표시되는 것 같습니다.</p><p>각 시스템에서 오프라인 및 호환되지 않는 서버를 제거한 후 다시 시도하십시오.</p>",
+        "fail": "{{failedSystem}} 에 액세스 할 수 없습니다.",
+        "incompatible": "이 서버에는 호환되지 않는 소프트웨어 버전이 있습니다. 두 시스템 모두 최신 빌드로 업데이트하십시오.",
+        "unknown_error": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오.",
         "accountAlreadyActivated": "이 계정은 이미 활성화되었습니다.",
         "accountBlocked": "계정은 차단되었습니다. 몇 분 후에 다시 시도하십시오.",
         "accountNotActivated": "이 계정은 아직 활성화되지 않았습니다. <a href=\"/activate\"> 활성화 링크 다시 보내기 </a>",
         "alreadyExists": "이 계정이 이미 존재합니다.",
         "brokenAccount": "계정에 예기치 않은 문제가 있습니다. <a href=\"/restore_password\">계정 복원</a>",
         "cantActivatePrefix": "계정을 활성화 할 수 없습니다.",
-        "cantAddYourOwnEmail": "Adding your own email is not allowed",
+        "cantAddYourOwnEmail": "자신의 이메일을 추가 할 수 없습니다",
         "cantChangeAccountPrefix": "변경 사항을 저장할 수 없습니다.",
         "cantChangePasswordPrefix": "패스워드를 저장할 수 없습니다.",
         "cantDisconnectSystemPrefix": "시스템을 삭제할 수 없습니다.",
@@ -413,7 +428,7 @@
         "cantSharePrefix": "시스템을 공유 할 수 없습니다.",
         "cantUnshareWithMeSystemPrefix": "시스템을 삭제할 수 없습니다.",
         "emailNotFound": "계정이 존재하지 않습니다.",
-        "failedToAccessSystem": "No system can be accessed by this link. This may happen when a system has been disconnected from %CLOUD_NAME%, access to this system has been revoked, or if you are logged into the incorrect account.",
+        "failedToAccessSystem": "이 링크로 시스템에 액세스 할 수 없습니다. 시스템이 %CLOUD_NAME%에서 연결이 끊어 졌거나이 시스템에 대한 액세스가 취소되었거나 잘못된 계정으로 로그인 한 경우에 발생할 수 있습니다.",
         "forbidden": "이 작업을 수행 할 수있는 권한이 없습니다.",
         "lostConnection": "{{systemName}} 연결이 끊어졌습니다.",
         "mergedSystemIsOffline": "시스템 <strong>{{failedSystem}}</strong> 가 오프라인입니다.",
@@ -423,18 +438,18 @@
         "oldPasswordMistmatch": "현재 패스워드가 잘못되었습니다.",
         "oldSafariNotSupported": "10 이전의 Safari 버전은 지원되지 않습니다.",
         "passwordMismatch": "패스워드가 틀립니다.",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "시스템 <strong>{{failedSystem}}</strong>에 현재 연결할 수 없습니다.<br> 조금 있다 다시 시도 하거나 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a> 에 문의하십시요.",
         "thisSystem": "시스템",
-        "unknownError": "Unexpected error occurred",
+        "unknownError": "예기치 않은 오류가 발생했습니다.",
         "unknownMergeError": "알수없는 오류. 페이지를 새로 고치고 시도를 반복 할 수 있습니다. 문제가 지속되면 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">지원</a>문의하십시오.",
         "wrongAuthCode": "코드가 만료되었거나 잘못되었습니다",
         "wrongCode": "계정이 이미 활성화되었거나 확인 코드가 잘못되었습니다.",
         "wrongCodeRestore": "확인 코드가 이미 사용되었거나 잘못되었습니다.",
         "wrongParameters": "양식의 일부 매개 변수가 잘못되었습니다.",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
-        "licenseTimeout": "Failed to activate license due to a connection timeout. Please make sure the server is online and try again.",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
-        "networkConnection": "Unable to connect to {{cloudName}}, please check your network connection."
+        "licenseFail": "라이센스를 활성화하지 못했습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
+        "licenseTimeout": "연결 시간이 초과되어 라이센스를 활성화하지 못했습니다. 서버가 온라인 상태인지 확인한 후 다시 시도하십시오.",
+        "licenseServerError": "라이센스를 활성화하지 못했습니다. 라이센스 서버가 응답하지 않았습니다. 다시 시도하거나 지원 부서에 문의하십시오.",
+        "networkConnection": "다운로드 할 수 없습니다. 네트워크 연결을 확인하세요."
     },
     "integration": {
         "Access Control": "접근 제어",
@@ -445,9 +460,9 @@
         "Storage": "저장공간",
         "myIntegrationsLabel": "나의",
         "phoneNumberWithLabel": "전화: {{number}}",
-        "requirements": "{{name}} Requirements",
-        "testedVersionLabel": "Tested with {{vmsName}} version:",
-        "testedVersionsLabel": "Tested with {{vmsName}} versions:"
+        "requirements": "{{name}} 요구 사항",
+        "testedVersionLabel": "{{vmsName}} 버전에서 테스트되었습니다.",
+        "testedVersionsLabel": "테스트된 {{vmsName}} 버전:"
     },
     "ipvd": {
         "Advanced PTZ cameras": "고급 PTZ 카메라",
@@ -489,7 +504,7 @@
         "primaryCodec": "코덱",
         "resolutionArea": "영역",
         "sndResolution": "2 차 스트림",
-        "topXByVolume": "Top {{value}} by volume:",
+        "topXByVolume": "볼륨 별 상위 {{value}}:",
         "vendor": "제조사"
     },
     "menu": {
@@ -511,14 +526,14 @@
         "default": "%CLOUD_NAME%",
         "download": "%VMS_NAME% 다운로드",
         "downloadPlatform": "에 대한 %VMS_NAME% 다운로드 ",
-        "failedToAccessSystem": "Failed to access system",
+        "failedToAccessSystem": "시스템에 액세스 실패",
         "integrations": "연동",
         "login": "로그인",
         "pageNotFound": "페이지를 찾을 수 없음",
         "register": "에 계정 만들기",
         "registerSuccess": "에 오신 것을 환영합니다",
         "restorePassword": "패스워드 재설정",
-        "restorePasswordSuccess": "Password saved",
+        "restorePasswordSuccess": "비밀번호 저장됨",
         "supportedDevices": "지원되는 기기들",
         "system": "시스템",
         "systemName": "{{systemName}}",
@@ -544,34 +559,34 @@
     },
     "placeholderTexts": {
         "noSettings": {
-            "title": "This page cannot be loaded",
-            "message": "Please make sure that your servers are online and try again."
+            "title": "이 페이지를 찾을 수 없습니다.",
+            "message": "서버가 온라인 상태인지 확인한 후 다시 시도하십시오."
         },
         "merge": {
-            "title": "This system is being merged to {{systemName}}.",
+            "title": "이 시스템은 {{systemName}} 에 병합되고 있습니다.",
             "message": {
-                "dependingOnSize": "Depending on the size of the database, this may take up to several hours.",
-                "untilFinished": "Until merge is finished, you can log in to this system and watch video, but cannot change any settings.",
-                "whenFinished": "When merge is finished, all users and cameras from this system will become available in {{systemName}} system, and this system will be deleted."
+                "dependingOnSize": "데이터베이스 크기에 따라 최대 몇 시간이 소요될 수 있습니다.",
+                "untilFinished": "병합이 완료 될 때까지 현재 시스템에 접속하여 비디오를 볼 수는 있지만 설정을 변경할 수는 없습니다.",
+                "whenFinished": "병합이 완료되면이 시스템의 모든 사용자와 카메라가 {{systemName}} 시스템에서 사용 가능해지며이 시스템이 삭제됩니다."
             }
         },
         "server": {
-            "title": "Server not accessible",
-            "message": "System is offline and hence, servers are not accessible."
+            "title": "서버 접근 불가",
+            "message": "시스템이 오프라인 상태이므로 정보에 액세스 할 수 없습니다."
         }
     },
     "pleaseSelect": "선택하십시오",
     "privacyPolicy": {
-        "integration": "You will find the {{INTEGRATION_COMPANY}} privacy policy <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">here</a>. The %COMPANY_NAME% privacy policy, which includes instruction on how to withdraw your consent, is available <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a>.",
-        "ipvd": "By submitting this form you agree to be contacted by %COMPANY_NAME%.\nYou will find the %COMPANY_NAME% privacy policy <a href=\"%PRIVACY_LINK%\" target=\"_blank\">here</a> which include instruction on how to withdraw your consent."
+        "integration": "여기에 {{INTEGRATION_COMPANY}} 개인 정보 보호 정책 <a href=\"{{INTEGRATION_PRIVACY_POLICY}}\" target=\"_blank\">있습니다.</a>. %COMPANY_NAME% 동의를 철회하는 방법에 대한 지침을 포함 개인 정보 보호 정책은 사용할 수 있습니다 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기</a>.",
+        "ipvd": "이 양식을 제출하면 %COMPANY_NAME%으로 연락하는 데 동의하는 것입니다.\n%COMPANY_NAME% 개인 정보 보호 정책 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">여기에</a> 에서 동의를 철회하는 방법에 대한 지침을 찾을 수 있습니다."
     },
     "registration": {
         "agreement": "나는 <a href=\"/content/eula\" target=\"_blank\">약관 &\n조건</a> 및 <a href=\"%PRIVACY_LINK%\" target=\"_blank\">개인 정보 취급 방침</a> 에 동의합니다"
     },
     "ribbon": {
         "beingMerged": {
-            "to": "is being merged to this system",
-            "mayTake": "Depending on the size of the database, it may take up to several hours."
+            "to": "이 시스템에 병합되고 있습니다",
+            "mayTake": "데이터베이스 크기에 따라 최대 몇 시간이 소요될 수 있습니다."
         },
         "finishingMerge": "시스템 병합을 마무리중입니다",
         "integration": {
@@ -579,7 +594,7 @@
             "previewRibbon": "이 페이지는 최신 변경 사항의 미리보기이며 공개적으로 사용 가능한 버전과 일치하지 않습니다."
         },
         "systemOffline": "시스템이 오프라인 상태입니다. 일부 설정을 사용하지 못할 수 있습니다.",
-        "systemsMerging": "This system is currently involved in a merge operation."
+        "systemsMerging": "이 시스템은 현재 병합 작업에 관여하고 있습니다."
     },
     "search": {
         "Any": "아무거나",
@@ -597,34 +612,34 @@
         "vendors": "제조사들"
     },
     "servers": {
-        "beginDetach": "Server is now detaching",
-        "beginReset": "Server is now reseting.",
-        "detachSystemFailed": "Failed to detach server from system. Please check if password you entered is correct and server is online and try again.",
-        "detachSystemSuccess": "Server was successfully detached from the system.",
-        "portWarning": "Port numbers less than 1024 are restricted. Server may become unaccesssible.",
-        "removeMediaserverFailed": "Failed to remove the server from system.",
-        "resetFailed": "Failed to reset server. Please check if password you entered is correct and server is online and try again.",
-        "resetSuccessful": "Server {{ serverName }} has been reset to defaults.",
-        "restartFailed": "There was a problem restarting the server.",
-        "restartSuccessful": "Server has successfully restarted.",
+        "beginDetach": "서버가 분리 중",
+        "beginReset": "서버가 분리 중.",
+        "detachSystemFailed": "시스템에서 서버를 분리하지 못했습니다. 입력 한 비밀번호가 올 바르고 서버가 온라인인지 확인한 후 다시 시도하십시오.",
+        "detachSystemSuccess": "서버에서 사용자가 제거되었습니다.",
+        "portWarning": "1024보다 작은 포트 번호는 제한되어 있습니다. 서버에 액세스 할 수 없게 될 수 있습니다.",
+        "removeMediaserverFailed": "시스템에서 서버를 제거하지 못했습니다.",
+        "resetFailed": "시스템에서 서버를 분리하지 못했습니다. 입력 한 비밀번호가 올 바르고 서버가 온라인인지 확인한 후 다시 시도하십시오.",
+        "resetSuccessful": "서버 {{ serverName }} 이 기본값으로 재설정되었습니다.",
+        "restartFailed": "서버에 연결하는 중에 문제가 발생했습니다.",
+        "restartSuccessful": "서비스가 재시작됩니다.",
         "serverOffline": "서버는 오프 라인 입니다.",
         "servers": "서버",
         "status": {
-            "checking": "checking...",
+            "checking": "확인...",
             "offline": "오프라인",
-            "reseting": "reseting...",
-            "restarting": "restarting..."
+            "reseting": "재설정 중...",
+            "restarting": "서버 재시작중..."
         },
-        "successRename": "Server name saved."
+        "successRename": "서버 이름이 저장됨"
     },
     "system": {
         "MERGE_FINISHES": "병합이 완료되면이 시스템의 모든 사용자와 카메라가 <strong>{{targetSystemName}}</strong> 시스템에서 사용 가능해지며이 시스템이 삭제됩니다.",
         "mergeUnknownName": "시스템의 알 수없는 이름 (클라우드 머지로 인해 발생)",
         "mySystemSearch": "IMeMyMine",
         "settings": {
-            "notAbleToLoadSecurity": "Not able to load security settings.",
-            "notAbleToLoadSystem": "Not able to load system settings.",
-            "notAbleToLoadStorageInfo": "Not able to load storage information.",
+            "notAbleToLoadSecurity": "보안 설정을 불러올 수 없습니다.",
+            "notAbleToLoadSystem": "보안 설정을 불러올 수 없습니다.",
+            "notAbleToLoadStorageInfo": "스폰정보를 가져올 수 없습니다.",
             "sessionLimitDuration": {
                 "hours": "시간",
                 "minutes": "분"
@@ -639,33 +654,33 @@
         },
         "users": {
             "cloudDelete": "사용자 삭제",
-            "localDelete": "Delete User"
+            "localDelete": "사용자 삭제"
         },
         "yourSystem": "귀하의 시스템",
         "loggers": {
             "none": {
                 "text": "없음",
-                "help": "(log disabled)"
+                "help": "기록 중단됨"
             },
             "error": {
                 "text": "오류",
-                "help": "(log errors only)"
+                "help": "(로그 오류 만)"
             },
             "warning": {
                 "text": "주의",
-                "help": "(log warnings and errors)"
+                "help": "(경고: 경고 및 오류 로그)"
             },
             "info": {
                 "text": "안내",
-                "help": "(log warnings, errors and all messages)"
+                "help": "(경고, 오류 및 모든 메시지 기록)"
             },
             "debug": {
                 "text": "디버그",
-                "help": "(log every System message and debug information)"
+                "help": "(디버그: 모든 시스템 메시지와 디버그 정보를 기록)"
             },
             "verbose": {
-                "text": "Verbose",
-                "help": "(log all information available)"
+                "text": "세부내용",
+                "help": "(자세한 정보: 모든 정보를 기록)"
             }
         }
     },
@@ -688,7 +703,7 @@
             },
             "merge": {
                 "failed": "시스템 머지에 실패했습니다.",
-                "success": "Merge of systems {{primaryName}} and {{secondaryName}} completed"
+                "success": "시스템 {{primaryName}} 과 {{secondaryName}} 병합 완료"
             },
             "rename": {
                 "success": "시스템 이름 저장"
@@ -698,15 +713,15 @@
     "license": {
         "info": {
             "type": "형식",
-            "channels": "Channels",
+            "channels": "개의 채널",
             "server": "서버:",
             "hwid": "하드웨어 ID:",
             "status": "상태",
             "expires": "만료",
             "time": "시간",
-            "deactivations": "Deactivation left",
+            "deactivations": "비활성화 왼쪽",
             "trial": "기간한정",
-            "online": "Online",
+            "online": "온라인",
             "error": "오류",
             "expired": "만료됨",
             "ok": "확인",
@@ -716,38 +731,38 @@
             "vmax": "VMAX",
             "videowall": "Video Wall",
             "analogencoder": "아날로그 인코더",
-            "starter": "Starter",
-            "iomodule": "IO Module",
+            "starter": "스타터",
+            "iomodule": "IO장치",
             "bridge": "연결"
         },
         "messages": {
-            "required": "{{number}} more required",
-            "activated": "License key activated",
-            "inuse": "License key has already been activated and bound to server with hardware ID {{hwid}} in another system",
-            "trialActivated": "Trial license activated. Starting today, you can record up to 4 cameras for 30 days."
+            "required": "{{number}} 더 필요",
+            "activated": "라이센스 비활성화 됨",
+            "inuse": "라이센스 키가 이미 활성화되어 다른 시스템에서 하드웨어 ID가 {{hwid}} 서버에 바인딩되었습니다.",
+            "trialActivated": "평가판 라이센스가 활성화되었습니다. 오늘부터 30 일 동안 최대 4 대의 카메라를 녹화 할 수 있습니다."
         }
     },
     "settingsConfig": {
-        "additionalLocalFsTypes": "Additional local FS types",
-        "autoDiscoveryResponseEnabled": "Auto discovery response",
-        "crossdomainEnabled": "Cross domain",
-        "defaultExportVideoCodec": "Default export video codec",
-        "defaultVideoCodec": "Default video codec",
-        "downloaderPeers": "Downloader peers",
-        "lastMergeMasterId": "Last merge masterId",
-        "lastMergeSlaveId": "Last merge slaveId",
-        "ldapSearchTimeoutS": "LDAP search timeout(sec)",
-        "licenseServer": "License server",
-        "lowQualityScreenVideoCodec": "Low quality screen video codec",
-        "maxP2pAllClientsSizeBytes": "Max P2P all clients size bytes",
-        "maxRtpRetryCount": "Max RTP retry count",
-        "metadataStorageChangePolicy": "Meta data storage change policy",
-        "pushNotificationsLanguage": "Push notification language",
-        "resourceFileUri": "Resource file URI",
-        "sessionLimitMinutes": "Session limit (minutes)",
-        "specificFeatures": "Specific features",
+        "additionalLocalFsTypes": "추가 로컬 FS 유형",
+        "autoDiscoveryResponseEnabled": "자동 검색 응답",
+        "crossdomainEnabled": "크로스 도메인",
+        "defaultExportVideoCodec": "기본 내보내기 비디오 코덱",
+        "defaultVideoCodec": "기본 내보내기 비디오 코덱",
+        "downloaderPeers": "다운로더",
+        "lastMergeMasterId": "마지막 병합 마스터",
+        "lastMergeSlaveId": "마지막 병합 마스터",
+        "ldapSearchTimeoutS": "LDAP 검색 시간 초과 (초)",
+        "licenseServer": "라이센스 서버",
+        "lowQualityScreenVideoCodec": "저품질 스크린 비디오 코덱",
+        "maxP2pAllClientsSizeBytes": "최대 P2P 모든 클라이언트 크기 바이트",
+        "maxRtpRetryCount": "최대 RTP 재시도 횟수",
+        "metadataStorageChangePolicy": "메타 데이터 스토리지 변경 정책",
+        "pushNotificationsLanguage": "푸시 알림 언어",
+        "resourceFileUri": "리소스 파일",
+        "sessionLimitMinutes": "세션 제한 (분)",
+        "specificFeatures": "특정 기능",
         "systemName": "시스템 이름",
-        "webSocketEnabled": "Web sockets",
+        "webSocketEnabled": "웹 소켓",
         "arecontRtspEnabled": "Arecont RTSP 활성화",
         "auditTrailEnabled": "감사 추적 사용",
         "auditTrailPeriodDays": "감사 추적 일정",
@@ -778,7 +793,7 @@
         "localSystemId": "내부 시스템 ID",
         "maxDifferenceBetweenSynchronizedAndInternetTime": "최대 인터넷시간과의 동기화 차이 (1/1000초)",
         "maxDifferenceBetweenSynchronizedAndLocalTimeMs": "최대 내부시간 과의 동기화 차이 (1/1000초)",
-        "maxP2pQueueSizeBytes": "Max P2P queue size (bytes)",
+        "maxP2pQueueSizeBytes": "최대 P2P 대기열 크기 (bytes)",
         "maxRecordQueueSizeBytes": "최대 기록 용량 (byte)",
         "maxRecordQueueSizeElements": "최대 기록 용량 (elements)",
         "maxRemoteArchiveSynchronizationThreads": "최대 원격 보관 동기화 스레드",
@@ -805,19 +820,19 @@
         "SystemName": "시스템 이름",
         "takeCameraOwnershipWithoutLock": "잠금 없이 카메라 소유권 취득",
         "timeSynchronizationEnabled": "시간 동기화 활성화",
-        "primaryTimeServer": "Primary time synchronization server",
-        "osTimeChangeCheckPeriodMs": "OS time change check period",
-        "syncTimeExchangePeriod": "Sync time synchronization interval for network requests",
-        "syncTimeEpsilon": "Sync time epsilon. New value is not applied if time delta less than epsilon",
-        "maxWearableArchiveSynchronizationThreads": "Max wearable camera archive sync threads",
+        "primaryTimeServer": "기본 시간 동기화 서버",
+        "osTimeChangeCheckPeriodMs": "OS 시간 변경 확인 기간",
+        "syncTimeExchangePeriod": "네트워크 요청에 대한 시간 동기화 간격 동기화",
+        "syncTimeEpsilon": "엡실론 시간 동기화. 시간 델타가 엡실론보다 작 으면 새로운 값이 적용되지 않습니다",
+        "maxWearableArchiveSynchronizationThreads": "최대 웨어러블 카메라 아카이브 동기화 스레드",
         "updateNotificationsEnabled": "업데이트 알림 활성화",
         "upnpPortMappingEnabled": "UPNP 포트 매핑 사용",
         "useTextEmailFormat": "일반 텍스트로 이메일 보내기",
         "useWindowsEmailLineFeed": "이메일에 Windows 줄넘김 사용",
-        "trafficEncryptionForced": "Force traffic encryption",
-        "videoTrafficEncryptionForced": "Force video traffic encryption",
-        "updateStatus": "Update status",
-        "watermarkSettings": "Watermark settings",
+        "trafficEncryptionForced": "강제 전송 암호화",
+        "videoTrafficEncryptionForced": "강제 영상전송 암호화",
+        "updateStatus": "갱신 상태",
+        "watermarkSettings": "카메라 설정",
         "maxWebMTranscoders": "서버에 대한 최대 WEBM 연결 수. Chrome은 한 번에 2 개의 연결을 연 다음 첫 번째 연결을 닫습니다. 따라서 매개 변수의 값을 >=2로 설정하는 것이 좋습니다.",
         "maxEventLogRecords": "데이터베이스에 보관할 최대 이벤트 로그 레코드. 삭제되지 않은 실제 레코드 양은 지정된 값보다 최대 20 % 더 높을 수 있습니다.",
         "forceLiveCacheForPrimaryStream": "기본 스트림의 일부 프레임을 캐시할지 여부입니다. 값: \"yes\"-항상 활성화 (많은 RAM을 사용할 수 있음), \"no\"-재생에 필요한 경우를 제외하고 항상 비활성화 (예: HLS), \"auto\"- \"no\"와 비슷하지만 사용자 경험치를 향상하기 위해 활성화 (예: 일부 웹 로그 분석 플러그인이 카메라에서 작동하는 경우)"

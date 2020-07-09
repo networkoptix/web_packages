@@ -68,26 +68,7 @@
                             [url]="preview + '&reload=' + (reload$ | async)"
                             [lightBackground]="true"></nx-health-image>
                     </div>
-                    <div class="details">
-                        <div class="details-section">
-                            <div class="details-section-keys">
-                                <p translate>Vendor</p>
-                                <p translate>Model</p>
-                            </div>
-                            <div class="details-section-values">
-                                <p>{{ selectedCamera.vendor }}</p>
-                                <p>{{ selectedCamera.model}}</p>
-                            </div>
-                            <div class="details-section-keys">
-                                <p translate>IP Address</p>
-                                <p translate>Server</p>
-                            </div>
-                            <div class="details-section-values">
-                                <p>{{ selectedCamera.url }}</p>
-                                <p>{{ selectedCamera.parentName }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="'compact'"></nx-info-block>
                 </header>
                 <nx-section>
                         <h4 class="mb-3" translate>Image</h4>

@@ -22,7 +22,8 @@
     </header>
     <div class="normal-state">
         <h2>{{ cloudCapacity }}</h2>
-        <div class="details">
+        <nx-info-block [sectionsOrColumns]="parsedUsage"></nx-info-block>
+        <!-- <div class="details">
             <div class="details-section">
                 <div class="details-section-keys">
                     <p translate>Current recordings</p>
@@ -47,7 +48,7 @@
                     <p>{{ msFriendlyTime(usageStats.delayFromLive, true) }}</p>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
     <div *ngIf="isOwner" class="normal-state-footer">
         <p [translate]="'dialogs.cloudStorage.available'"

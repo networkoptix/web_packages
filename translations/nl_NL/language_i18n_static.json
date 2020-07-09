@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEEM IS ONBEREIKBAAR",
         "inaccessibleFeatureMessage": "Het systeem is offline en daarom is informatie niet toegankelijk.",
         "unknown": "Unknown",
+        "vendor": "Fabrikant",
+        "model": "Model",
+        "ip": "IP Adres",
+        "server": "Server",
+        "os": "OS",
+        "version": "Versie",
         "voiceCommands": {
             "clear search": "wis zoekopdracht",
             "collapse all servers": "vouw alle servers samen",
@@ -194,6 +200,14 @@
             "available": "De cloudopslaglocatie is beschikbaar voor alle servers in dit systeem. U kunt het beheren met behulp van de desktop {{vmsName}} cliënt.",
             "camera": "camera",
             "cameras": "camera's",
+            "usageLabels": {
+                "currentRecordings": "Huidige opnamen",
+                "whenFullyUsed": "Wanneer volledig gebruikt",
+                "amountUsed": "Gebruikte hoeveelheid",
+                "archiveFrom": "Archief van",
+                "recordingBitrate": "Bitrate van de opnames",
+                "delayFromLive": "Vertraging vanaf live"
+            },
             "remove": {
                 "success": "Cloudopslag is succesvol verwijderd uit het systeem",
                 "errorPrefix": "Fout bij verwijderen cloudopslag"
@@ -256,7 +270,8 @@
             "serverNotYours": "Dit systeem is verbonden met %CLOUD_NAME%, maar heeft een andere eigenaar. Cloud systemen kunnen alleen worden samengevoegd als het eigenaar account hetzelfde is.",
             "systemOffline": "Systeem {{targetSystem}} is offline en kan niet worden samengevoegd met het huidige systeem",
             "systemOfflineUrl": "{{targetSystem}} is niet toegankelijk.",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemsIncompatible": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a>.",
+            "systemVersionsNotMatch": "Systemen hebben verschillende softwareversies. Werk ze alstublieft bij naar de laatste <a href=\"/download\" target=\"_blank\" translate>build</a>.",
             "urlEmpty": "Voer het serveradres in",
             "urlNotValid": "Voer een geldige URL in",
             "unknownError": "Er is een onbekende fout opgetreden. Vernieuw de pagina en probeer het opnieuw. Als het probleem aanhoudt, neem contact op met <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",

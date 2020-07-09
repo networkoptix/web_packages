@@ -26,7 +26,7 @@ export class NxSystemLicensesComponent implements OnInit {
     licensesSubscription: SubscriptionLike;
 
     licenses: any;
-    licenseSummaries: { type: string, count: number, countAvail: number, inUse: number, required: number }[];
+    licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
     classMap: any = {};
 
     // Constructor and class initialization methods
@@ -113,7 +113,7 @@ export class NxSystemLicensesComponent implements OnInit {
             expired       : false,
             status        : '',
             expiration    : '',
-            deactivations : '&ndash;'
+            deactivations : '-'
         };
 
         item.licenseBlock
@@ -153,14 +153,12 @@ export class NxSystemLicensesComponent implements OnInit {
         if (license) {
             license.count += parseInt(item.info.count) || 0;
             license.countAvail += avail;
-            license.inUse += parseInt(item.info.inuse) || 0;
             license.required += item.info.required;
         } else {
             this.licenseSummaries.push({
                 type       : item.info.type,
                 count      : parseInt(item.info.count) || 0,
                 countAvail : avail,
-                inUse      : parseInt(item.info.inuse) || 0,
                 required   : item.info.required
             });
         }

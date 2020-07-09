@@ -102,6 +102,12 @@ export interface Common {
     systemUnreachable:          string;
     inaccessibleFeatureMessage: string;
     unknown:                    string;
+    vendor:                     string;
+    model:                      string;
+    ip:                         string;
+    server:                     string;
+    os:                         string;
+    version:                    string;
     voiceCommands:              VoiceCommands;
     viewingOutdatedReport:      string;
 }
@@ -207,6 +213,7 @@ export interface CloudStorage {
     available:             string;
     camera:                string;
     cameras:               string;
+    usageLabels:           UsageLabels;
     remove:                EnableCloudStorage;
     activationError:       NoSettings;
     systemDisconnectError: NoSettings;
@@ -234,6 +241,15 @@ export interface MoveCloudStorageStatus {
 
 export interface NoOtherSystemsError {
     message: string;
+}
+
+export interface UsageLabels {
+    currentRecordings: string;
+    whenFullyUsed:     string;
+    amountUsed:        string;
+    archiveFrom:       string;
+    recordingBitrate:  string;
+    delayFromLive:     string;
 }
 
 export interface DialogsMerge {
@@ -266,6 +282,7 @@ export interface DialogsMerge {
     systemOffline:              string;
     systemOfflineUrl:           string;
     systemsIncompatible:        string;
+    systemVersionsNotMatch:     string;
     urlEmpty:                   string;
     urlNotValid:                string;
     unknownError:               string;
@@ -954,6 +971,12 @@ const typeMap: any = {
         { json: "systemUnreachable", js: "systemUnreachable", typ: "" },
         { json: "inaccessibleFeatureMessage", js: "inaccessibleFeatureMessage", typ: "" },
         { json: "unknown", js: "unknown", typ: "" },
+        { json: "vendor", js: "vendor", typ: "" },
+        { json: "model", js: "model", typ: "" },
+        { json: "ip", js: "ip", typ: "" },
+        { json: "server", js: "server", typ: "" },
+        { json: "os", js: "os", typ: "" },
+        { json: "version", js: "version", typ: "" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "" },
     ], false),
@@ -1048,6 +1071,7 @@ const typeMap: any = {
         { json: "available", js: "available", typ: "" },
         { json: "camera", js: "camera", typ: "" },
         { json: "cameras", js: "cameras", typ: "" },
+        { json: "usageLabels", js: "usageLabels", typ: r("UsageLabels") },
         { json: "remove", js: "remove", typ: r("EnableCloudStorage") },
         { json: "activationError", js: "activationError", typ: r("NoSettings") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
@@ -1071,6 +1095,14 @@ const typeMap: any = {
     ], false),
     "NoOtherSystemsError": o([
         { json: "message", js: "message", typ: "" },
+    ], false),
+    "UsageLabels": o([
+        { json: "currentRecordings", js: "currentRecordings", typ: "" },
+        { json: "whenFullyUsed", js: "whenFullyUsed", typ: "" },
+        { json: "amountUsed", js: "amountUsed", typ: "" },
+        { json: "archiveFrom", js: "archiveFrom", typ: "" },
+        { json: "recordingBitrate", js: "recordingBitrate", typ: "" },
+        { json: "delayFromLive", js: "delayFromLive", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "" },
@@ -1102,6 +1134,7 @@ const typeMap: any = {
         { json: "systemOffline", js: "systemOffline", typ: "" },
         { json: "systemOfflineUrl", js: "systemOfflineUrl", typ: "" },
         { json: "systemsIncompatible", js: "systemsIncompatible", typ: "" },
+        { json: "systemVersionsNotMatch", js: "systemVersionsNotMatch", typ: "" },
         { json: "urlEmpty", js: "urlEmpty", typ: "" },
         { json: "urlNotValid", js: "urlNotValid", typ: "" },
         { json: "unknownError", js: "unknownError", typ: "" },

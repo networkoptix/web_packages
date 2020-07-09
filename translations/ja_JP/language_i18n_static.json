@@ -157,6 +157,12 @@
         "systemUnreachable": "システムにアクセスできません",
         "inaccessibleFeatureMessage": "システムがオフラインのため、情報にアクセスできません。",
         "unknown": "未知の値",
+        "vendor": "ベンダー",
+        "model": "モデル",
+        "ip": "IPアドレス",
+        "server": "サーバー",
+        "os": "OS",
+        "version": "バージョン",
         "voiceCommands": {
             "clear search": "検索をクリア",
             "collapse all servers": "すべてのサーバーを折りたたむ",
@@ -194,6 +200,14 @@
             "available": "クラウドストレージの場所は、このシステム内のすべてのサーバーで利用できます。デスクトップ {{vmsName}} クライアントを使用して管理できます。",
             "camera": "カメラ",
             "cameras": "カメラ",
+            "usageLabels": {
+                "currentRecordings": "現在の録画",
+                "whenFullyUsed": "使い切った場合",
+                "amountUsed": "使用量",
+                "archiveFrom": "アーカイブ元",
+                "recordingBitrate": "録画ビットレート",
+                "delayFromLive": "ライブからの遅延"
+            },
             "remove": {
                 "success": "クラウドストレージをシステムから削除しました",
                 "errorPrefix": "クラウドストレージの削除エラー"
@@ -257,6 +271,7 @@
             "systemOffline": "システム {{targetSystem}} はオフラインのため、現在のシステムと統合することはできません",
             "systemOfflineUrl": "{{targetSystem}} はアクセスできません。",
             "systemsIncompatible": "このサーバーは互換性のないソフトウェアバージョンです。両方のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a>に更新してください。",
+            "systemVersionsNotMatch": "システムのソフトウェアバージョンが一致していません。両方のシステムを <a href=\"/download\" target=\"_blank\" translate>最新ビルド</a>に更新してください。",
             "urlEmpty": "サーバーのアドレスを入力してください",
             "urlNotValid": "有効な URL を入力してください",
             "unknownError": "不明なエラーが発生しました。ページを更新してもう一度お試しください。問題が解決しない場合は、 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">サポート</a>問い合わせください。",

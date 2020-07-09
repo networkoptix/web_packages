@@ -13,6 +13,7 @@ import { NxCloudApiService }            from '../../../../services/nx-cloud-api'
 import { NxProcessService, Process }    from '../../../../services/process.service';
 import { NxMenuService }                from '../../../../components/menu/menu.service';
 import { ActivatedRoute } from '@angular/router';
+import { InfoBlockColumns, InfoBlockSection, InfoBlockLine } from '../../../../components/info-block/info-block.component';
 
 @Component({
     selector    : 'nx-cloud-storage',
@@ -30,6 +31,7 @@ export class NxCloudStorageComponent implements OnInit {
     systems$: BehaviorSubject<NxSystem[]>;
     enableCloudStorage: Process;
     updateEnabledUsageAndStats: Process;
+    parsedUsage: InfoBlockColumns;
 
     // Constructor and class initialization methods
 
@@ -146,6 +148,17 @@ export class NxCloudStorageComponent implements OnInit {
     }
 
     set cloudStorageSystemEnabled(value: boolean | string) {
+        const section1 = new InfoBlockSection([
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.currentRecordings, this.msFriendlyTime(this.usageStats.currentRecordings)),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.whenFullyUsed, this.msFriendlyTime(this.usageStats.whenFullyUsed)),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.amountUsed, this.cloudStorageUsed)
+        ]);
+        const section2 = new InfoBlockSection([
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.archiveFrom, this.numberOfCameras),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.recordingBitrate, this.bitrate),
+            new InfoBlockLine(this.LANG.dialogs.cloudStorage.usageLabels.delayFromLive, this.msFriendlyTime(this.usageStats.delayFromLive, true))
+        ]);
+        this.parsedUsage = [[section1], [section2]];
         this.cloudStorageSystemEnabled$.next(value);
     }
 

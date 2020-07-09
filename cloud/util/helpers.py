@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from api.models import Account
-from cms.models import cloud_portal_customization_cache
+from cms.models import cloud_portal_customization_cache, Language
 
 
 def get_languages(customization=None):
@@ -41,6 +41,10 @@ def detect_language_by_request(request):
     if not lang or lang not in languages:  # not supported language
         lang = default_language  # return default
     return lang.replace('-', '_')
+
+
+def get_language_object_from_request(request):
+    return Language.objects.get(code=detect_language_by_request(request))
 
 
 def get_language_for_email(email, customization):
