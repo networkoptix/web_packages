@@ -1,21 +1,8 @@
 *** Settings ***
 Variables    getvars.py
-<<<<<<< HEAD
-Resource     variables/system-server-variables.robot
-Resource     variables/health-monitor-variables.robot
-Resource     variables/restore-pass-variables.robot
-Resource     variables/change-pass-variables.robot
-Resource     variables/register-variables.robot
-Resource     variables/system-camera-variables.robot
-Resource     variables/system-admin-variables.robot
-Resource     variables/systems-page-variables.robot
 Resource     variables/front-end-variables.robot
 Resource     variables/cms-variables.robot
 Resource     variables/cloud-merge-variables.robot
-=======
-Resource     variables/front-end-variables.robot
-Resource     variables/cms-variables.robot
->>>>>>> cloud_20.1
 
 *** Variables ***
 ${ALERT}                              //div[contains(@class,'toast-body')]//span[contains(@class,'toast-content')]
