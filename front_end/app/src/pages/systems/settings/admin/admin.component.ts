@@ -14,8 +14,10 @@ import { NxSystemsService }          from '../../../../services/systems.service'
 import { NxAccountService }          from '../../../../services/account.service';
 import { NxProcessService }          from '../../../../services/process.service';
 import { NxSystem }                  from '../../../../services/system.service';
-import { Subscription }              from 'rxjs';
-import { filter, throttleTime }      from 'rxjs/operators';
+import { Subscription, timer }       from 'rxjs';
+import {
+    filter, throttleTime, retryWhen, delayWhen, tap
+}                                    from 'rxjs/operators';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { NxApplyService, Watcher }   from '../../../../services/apply.service';
 
@@ -245,8 +247,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.updateSettings();
                 this.applyService.setVisible(false);
                 this.pageService.setPageTitle(this.LANG.pageTitles.systemName.replace('{{systemName}}', this.system.info.name));
-                if (this.system.isAvailable) {
-                    this.system.updateOrGetSystemSettings().subscribe((res: any) => {
+                this.system.updateOrGetSystemSettings()
+                    .pipe(
+                        tap(() => { this.system.isAvailable = true; }),
+                        retryWhen(errors => errors.pipe(delayWhen(() => timer(this.CONFIG.updateInterval))))
+                    )
+                    .subscribe((res: any) => {
                         this.cleanUpWatchers(res.reply.settings);
                         this.initApplyService();
 
@@ -269,7 +275,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                                 }
                             });
                     });
-                }
                 this.deletingSystem = this.processService.createProcess(() => {
                         return this.system.deleteFromCurrentAccount();
                     }, {
