@@ -71,6 +71,11 @@
                                     context-preview {% if not record_exists %} placeholder-image {% endif %}"
                                      src="data:image/png;base64,{{ field.value }}">
                             </div>
+                            <div>
+                                <a href="{% url 'download_file' field.name %}?asset_id={{ asset.id }}" download>
+                                    Download Original
+                                </a>
+                            </div>
 
                         {% elif field.has_file_field and field.value %}
                             <div>
