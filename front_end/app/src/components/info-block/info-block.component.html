@@ -2,18 +2,23 @@
     <div class="block">
         <h6 *ngIf="block.heading">{{block.heading}}</h6>
         <div class="block-section mw-100 w-100">
-            <div class="block-section-keys" [style.max-width.%]="block.maxParamWidth || 100">
-                <p *ngFor="let line of block.lines; let lineIndex=index" 
+            <div class="block-section-keys"
+                 [style.max-width.%]="block.maxParamWidth || 100"
+                [ngClass]="{'clear-flex' : infoLineStyle == 'condensed'}">
+
+                <p *ngFor="let line of block.lines; let lineIndex=index"
                     [ngClass]="infoBlockStyle === 'dark' && 'dark'"
                     [style.height.px]="line.overrideHeightPx"
+                   [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                     [title]="line.name"
                     (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)"
                 >{{line.name}}</p>
             </div>
             <div class="block-section-values">
-                    <p *ngFor="let line of block.lines; let lineIndex=index" 
+                    <p *ngFor="let line of block.lines; let lineIndex=index"
                         [ngClass]="line.customClass"
                         [style.height.px]="line.overrideHeightPx"
+                       [ngStyle]="{'display' : line.show == false ? 'none' : 'flex'}"
                         [title]="line.value"
                         (resize)="updateHeight(columnIndex, blockIndex, lineIndex, $event)">
                     {{line.value}}
@@ -21,8 +26,9 @@
                         nx-add-svg-src
                         [src]="CONFIG.icons.dirNonStandard + line.icon + '.svg'"
                         [svgStyle]="{'width.px': '20', 'margin-top': '-4px'}"
-                        style="height: 16px; margin-top: 0 !important; margin-bottom: 0 !important"
-                        class="pl-1 mt-1 mb-1"></svg-icon>
+                              style="height: 16px"
+                              class="pl-1 mt-1 mb-1">
+                    </svg-icon>
                     </p>
             </div>
         </div>
@@ -31,7 +37,7 @@
 
 <ng-template #infoColumn let-column="column" let-columnIndex="columnIndex">
     <div class="d-flex flex-column mw-100" [ngClass]="infoBlockSize === 'full' && 'flex-grow-1'">
-        <ng-container 
+        <ng-container
             *ngFor="let block of column; let blockIndex=index"
             [ngTemplateOutlet]="detailsBlock"
             [ngTemplateOutletContext]="{block: block, columnIndex: columnIndex, blockIndex: blockIndex}"
