@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Koble fra",
             "message": "Du vil ikke kunne logge deg på dette systemet lenger.",
-            "title": "Koble fra systemet?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Feil",

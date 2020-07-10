@@ -117,7 +117,6 @@
     "If selected system already has cloud storage, it will be merged with this one.": "選択したシステムに既にクラウドストレージがある場合、このストレージと統合されます。",
     "Image": "イメージ:",
     "In Review": "審査中",
-    "In use": "使用中",
     "In-Client Upgrade:": "クライアント内アップグレード：",
     "Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.": "カメラモジュール、ファームウェアバージョン、サーバー数など、システムに関する情報が含まれます。個人情報は含まれず、完全に匿名です。",
     "Information": "情報",

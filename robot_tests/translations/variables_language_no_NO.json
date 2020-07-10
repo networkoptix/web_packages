@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Forkast",
     "APPLY CHANGES BUTTON TEXT": "Bruk",
     "CANCEL CHANGES BUTTON TEXT": "Avbryt",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Ingen koblinger kan nås via denne lenken. Dette kan skje når et system er koblet fra %PRODUCT_NAME%, tilgang til dette systemet er opphevet, eller du er logget inn på feil konto.",
     "PAGE NOT FOUND TEXT": "Siden ble ikke funnet",
     "GO TO MAIN PAGE TEXT": "Gå til hovedsiden",

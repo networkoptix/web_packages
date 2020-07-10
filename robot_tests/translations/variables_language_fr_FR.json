@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Ne pas tenir compte",
     "APPLY CHANGES BUTTON TEXT": "Appliquer",
     "CANCEL CHANGES BUTTON TEXT": "Annuler",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Aucun système n'est accessible par ce lien. Cela peut se produire lorsqu'un système a été déconnecté de %PRODUCT_NAME%, l'accès à ce système a été révoqué ou si vous êtes connecté au compte incorrect.",
     "PAGE NOT FOUND TEXT": "Page non trouvée",
     "GO TO MAIN PAGE TEXT": "Aller à la page principale",
