@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "切断",
             "message": "このシステムにログインできなくなります。",
-            "title": "システムを切断しますか？"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "エラー",

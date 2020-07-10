@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "ตัดการเชื่อมต่อ",
             "message": "คุณจะไม่สามารถเข้าสู่ระบบนี้ได้อีกต่อไป",
-            "title": "ยกเลิกการเชื่อมต่อระบบหรือไม่?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "ข้อผิดพลาด",

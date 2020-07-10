@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Отклонить",
     "APPLY CHANGES BUTTON TEXT": "Применить",
     "CANCEL CHANGES BUTTON TEXT": "Отмена",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Ни одна система не может быть доступна по этой ссылке. Это может произойти, когда система была отключена от %PRODUCT_NAME%, доступ к этой системе был отозван, или если вы вошли с некорректнуой учетной записью.",
     "PAGE NOT FOUND TEXT": "Страница не найдена",
     "GO TO MAIN PAGE TEXT": "Перейти на главную страницу",

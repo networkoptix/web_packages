@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "斷線",
             "message": "您將無法再登入此系統。",
-            "title": "是否中斷系統?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "錯誤",

@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Bağlantıyı kes",
             "message": "Artık bu sisteme giriş yapamazsınız.",
-            "title": "Sistemle bağlantıyı kes?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Hata",

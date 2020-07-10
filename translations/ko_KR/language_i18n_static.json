@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "연결 끊기",
             "message": "더이상 이 시스템에 접속 할 수 없습니다.",
-            "title": "시스템 연결을 끊으시겠습니까?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "오류",

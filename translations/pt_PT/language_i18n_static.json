@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Desconectar",
             "message": "You will not be able to log into this system anymore.",
-            "title": "Desconectar o Sistema?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Erro",

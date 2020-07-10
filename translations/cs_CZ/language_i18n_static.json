@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Odpojit",
             "message": "K tomuto systému se již nebudete moci přihlásit.",
-            "title": "Odpojit systém?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Chyba",

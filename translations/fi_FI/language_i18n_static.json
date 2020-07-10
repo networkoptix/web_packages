@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Katkaise yhteys",
             "message": "You will not be able to log into this system anymore.",
-            "title": "Katkaise yhteys järjestelmään?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Virhe",

@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "抛弃",
     "APPLY CHANGES BUTTON TEXT": "应用",
     "CANCEL CHANGES BUTTON TEXT": "取消",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "此连结无法连接至任何系统。可能当系统断开 %PRODUCT_NAME%时，取消了对该系统的登入权限, 或您登入了错误的帐户。",
     "PAGE NOT FOUND TEXT": "找不到页面",
     "GO TO MAIN PAGE TEXT": "转到主页",
