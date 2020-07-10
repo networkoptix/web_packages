@@ -132,7 +132,7 @@ export class NxOverlayModalComponent implements OnInit {
                 this.servers = res
                     ? Object.entries(res)
                         .map(server => {
-                            const updatedServer = server[1];
+                            const updatedServer: Partial<Server> = server[1];
                             updatedServer.url = `${updatedServer.url}/#/${this.router.url}`;
                             return updatedServer;
                         })
