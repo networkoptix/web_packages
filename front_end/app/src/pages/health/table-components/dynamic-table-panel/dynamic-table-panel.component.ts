@@ -57,8 +57,9 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
                                 activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
                             );
                         });
+						const maxParamWidthPercentage = 58;
 
-                        return new InfoBlockSection(lines, description || name || paramGroupId);
+                        return new InfoBlockSection(lines, description || name || paramGroupId, maxParamWidthPercentage);
                     });
             }
         });
