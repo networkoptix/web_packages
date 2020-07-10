@@ -43,21 +43,24 @@ export class NxDynamicTablePanelComponent implements AfterViewInit {
         this.scrollMechanicsService.panelVisible = true;
         this.healthLayoutService.activeEntitySubject.subscribe((activeEntity: any) => {
             this.name = activeEntity ? this.healthService.findEntityName(activeEntity) : '';
-            const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
-            this.sections = paramGroups.map(({
-                description, name, id: paramGroupId, values
-            }) => {
-                const lines = values.map(({ id, name }) => {
-                    return new InfoBlockLine(
-                        name || id,
-                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
-                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
-                        activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
-                    );
-                });
+            if (this.panelParams) {
+                const paramGroups = this.panelParams.values.filter(({ id }) => id !== '_');
+                this.sections = paramGroups
+                    .map(({
+                        description, name, id: paramGroupId, values
+                    }) => {
+                        const lines = values.map(({ id, name }) => {
+                            return new InfoBlockLine(
+                                name || id,
+                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].text || '_',
+                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].class,
+                                activeEntity[paramGroupId] && activeEntity[paramGroupId][id] && activeEntity[paramGroupId][id].icon
+                            );
+                        });
 
-                return new InfoBlockSection(lines, description || name || paramGroupId);
-            });
+                        return new InfoBlockSection(lines, description || name || paramGroupId);
+                    });
+            }
         });
     }
 
