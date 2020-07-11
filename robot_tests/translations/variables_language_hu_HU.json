@@ -104,7 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Elvetés",
     "APPLY CHANGES BUTTON TEXT": "Alkalmaz",
     "CANCEL CHANGES BUTTON TEXT": "Mégse",
-    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
+    "APPLY CHANGES QUESTION TEXT": "Alkalmazza a módosításokat, mielőtt elhagyja ezt az oldalt?",
     "THIS LINK IS BROKEN TEXT": "Ez a link nem érhető el rendszerrel. Ez akkor fordulhat elő, ha a rendszert lekapcsolják a %PRODUCT_NAME%, visszavonják a rendszerhez való hozzáférést, vagy ha helytelen fiókba jelentkezett be.",
     "PAGE NOT FOUND TEXT": "Az oldal nem található",
     "GO TO MAIN PAGE TEXT": "Ugrás a főoldalra",

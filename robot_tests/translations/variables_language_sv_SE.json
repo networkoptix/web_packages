@@ -104,7 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Kasta",
     "APPLY CHANGES BUTTON TEXT": "Verkställ",
     "CANCEL CHANGES BUTTON TEXT": "Avbryt",
-    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
+    "APPLY CHANGES QUESTION TEXT": "Tillämpa ändringar innan du lämnar den här sidan?",
     "THIS LINK IS BROKEN TEXT": "Inget system kan nås via denna länk. Detta kan hända när ett system har kopplats från %PRODUCT_NAME%, åtkomst till detta system har återkallats eller om du är inloggad på det felaktiga kontot.",
     "PAGE NOT FOUND TEXT": "Det gick inte att hitta sidan",
     "GO TO MAIN PAGE TEXT": "Gå till huvudsidan",

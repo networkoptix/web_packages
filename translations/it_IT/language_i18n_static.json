@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Scollegamento",
             "message": "Non sarai più in grado di accedere a questo Sistema.",
-            "title": "Disconnect System from your Account?"
+            "title": "Scollegare il sistema dal tuo account?"
         },
         "titles": {
             "error": "Errore",

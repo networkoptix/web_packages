@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Szétkapcsolás",
             "message": "Többé nem lesz képes bejelentkezni ebbe a rendszerbe.",
-            "title": "Disconnect System from your Account?"
+            "title": "Lekapcsolja a rendszert a fiókjáról?"
         },
         "titles": {
             "error": "Hiba",
