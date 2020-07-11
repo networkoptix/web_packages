@@ -4,9 +4,16 @@ import {
 import { NxRibbonService }          from './ribbon.service';
 import { distinctUntilChanged }     from 'rxjs/operators';
 import { Subscription }             from 'rxjs';
-import { UntilDestroy }              from '@ngneat/until-destroy';
+import { UntilDestroy }             from '@ngneat/until-destroy';
 import { NxConfigService, IConfig } from '../../services/nx-config';
 import { NxUtilsService }           from '../../services/utils.service';
+import { Process }         from '../../services/process.service';
+
+export interface RibbonAction {
+    type: 'link' | 'process-button',
+    text: string,
+    value: string | Process;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -18,8 +25,7 @@ import { NxUtilsService }           from '../../services/utils.service';
 export class NxRibbonComponent implements OnInit, OnDestroy {
     CONFIG: IConfig;
     message: string;
-    action: string;
-    actionUrl: string;
+    actions: RibbonAction[];
     showRibbon: boolean;
     type: string;
     updateFunction;
@@ -28,8 +34,7 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     private setupDefaults() {
         this.showRibbon = false;
         this.message = '';
-        this.action = '';
-        this.actionUrl = '';
+        this.actions = [];
         this.type = '';
         this.updateFunction = '';
     }
@@ -46,13 +51,10 @@ export class NxRibbonComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.ribbonSubscription = this.ribbonService.contextSubject.pipe(
-            distinctUntilChanged((contextA, contextB) => NxUtilsService.isEqual(contextA, contextB))
-        ).subscribe(context => {
+        this.ribbonSubscription = this.ribbonService.contextSubject.subscribe(context => {
             this.showRibbon = context.visibility || false;
             this.message = context.message || '';
-            this.action = context.text || '';
-            this.actionUrl = context.url || '';
+            this.actions = context.actions || [];
             this.type = context.type || '';
             this.updateFunction = context.updateFunction || '';
         });

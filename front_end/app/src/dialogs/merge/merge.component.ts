@@ -518,7 +518,7 @@ export class MergeModalContent {
                             <div class="mt-2">${this.LANG.ribbon.beingMerged.mayTake?.()}</div>
                         </div>`;
                         this.ribbonService.hide();
-                        this.ribbonService.show(template, '', '', 'alert');
+                        this.ribbonService.show(template, [], 'alert');
                     } else {
                         this.systemsService.forceUpdateSystems();
                     }

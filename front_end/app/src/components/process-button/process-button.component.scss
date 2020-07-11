@@ -121,4 +121,13 @@ nx-process-button {
             }
         }
     }
+
+    .small-button {
+        height: 22px !important;
+
+        button {
+            height: 22px !important;
+            font-size: 0.8rem;
+        }
+    }
 }

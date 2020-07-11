@@ -623,6 +623,8 @@
         },
         "finishingMerge": "Finishing systems merge",
         "integration": {
+            "accept": "Accept",
+            "reject": "Reject",
             "backToEditText": "Back to the editing interfaces",
             "previewRibbon": "This page is a preview of the latest changes, and it doesn't match publicly available version."
         },

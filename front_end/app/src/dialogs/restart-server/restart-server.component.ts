@@ -89,7 +89,7 @@ export class RestartServerModalContent {
                                 return this.system.getInfo(true, false)
                                     .then(() => {
                                         if (!this.system.isOnline) {
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
                                             throw Error('system is offline still');
                                         }
                                     })
@@ -103,7 +103,7 @@ export class RestartServerModalContent {
                                     tap(val => {
                                         if (!systemOfflineShown && [502, 503].includes(val.status)) {
                                             systemOfflineShown = true;
-                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, '', '', 'alert');
+                                            this.ribbonService.show(this.LANG.ribbon.systemOffline, [], 'alert');
                                         }
                                     }),
                                     delayWhen(() => timer(4000))

@@ -289,6 +289,12 @@ export class NxCloudApiService {
         }).toPromise();
     }
 
+    acceptIntegration(reviewId: number) {
+        return this.http.post(this.CONFIG.apiBase + '/accept_review', {
+            review_id: reviewId
+        }).toPromise();
+    }
+
     // Cloud Storage
 
     enableCloudStorage(systemId: string) {
