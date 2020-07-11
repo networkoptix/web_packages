@@ -32,7 +32,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     user: any = {};
     canSeeInfo: boolean;
-    system: NxSystem;
     systems: any;
     systemId: any;
     active: any = {};
@@ -109,15 +108,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
     }
 
-    private stopActiveSubscription() {
-        if (this.system) {
-            this.system.stopPoll();
-            this.system = undefined;
-        }
-    }
-
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
@@ -185,7 +176,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (account) {
                         this.dropdownsVisible = true;
-                        // this.systemsService.getSystem(account.email);
 
                         this.loginState = true;
                         this.renderer.removeClass(document.body, 'anonymous');
@@ -280,22 +270,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (account) {
                     this.user = account;
                     if (this.activeSystem) {
-                        if (!this.system || this.system.id !== this.systemId) {
-                            this.stopActiveSubscription();
-                            this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
-
-                            this.system.getInfoAndPermissions(false).catch(_ => {
-                            }).then(system => {
-                                this.systems.find(sys => {
-                                    if (sys.id === this.activeSystem.id) {
-                                        sys.moduleInfo = system.moduleInfo;
-                                    }
-                                });
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                            });
-                        }
+                        const vmsMetrics = this.activeSystem.capabilities.vms_metrics;
+                        const userCanSeeInfo = this.systemsService.canViewInfo(this.activeSystem.accessRole);
+                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || vmsMetrics) && userCanSeeInfo;
                     } else {
-                        this.stopActiveSubscription();
+                        this.canSeeInfo = false;
                     }
                 }
             });
