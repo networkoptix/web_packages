@@ -15,7 +15,6 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { LocalStorageService }       from 'ngx-store';
 import { Subscription, timer }       from 'rxjs';
 import { NxHeaderService }           from '../../services/nx-header.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -59,7 +58,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private appState: NxAppStateService,
         private route: ActivatedRoute,
         private systemsService: NxSystemsService,
-        private systemService: NxSystemService,
         private dialogs: NxDialogsService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
