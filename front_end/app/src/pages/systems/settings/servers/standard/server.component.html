@@ -7,38 +7,59 @@
         <nx-block header-style="extended">
             <header>
                 <div class="header-top-bar d-flex justify-content-start">
-                    <div class="header-title">
+                    <div *ngIf="renameDisabled; else editableTitle" class="header-title">
                         <h2>{{ selectedServer.name }}</h2>
-                        <span
-                            *ngIf="selectedServer.internalStatus"
-                            [ngClass]="{
-                                tag: true,
-                                offline: serverOffline,
-                                online: selectedServer.internalStatus === CONFIG.servers.status.restarting
-                                    || selectedServer.internalStatus === CONFIG.servers.status.resetting,
-                                checking: checking
-                            }">
-                            {{ selectedServer.shownStatus }}
-                        </span>
                     </div>
-                    <button class="server-buttons pr-0"
-                        *ngIf="serverOffline"
-                        (click)="checkStatus()">
-                        <span [ngClass]="{ 'animate-rotation': checking }">
-                            <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
-                                [applyCss]="true"></svg-icon>
-                        </span>
-                        <span class="ml-1" translate>Check Status</span>
-                    </button>
-                    <button *ngIf="canSeeInfo" class="server-buttons pr-0"
-                        [routerLink]="fullInfoPath"
-                        [queryParams]="{id: parsedServerId}">
-                            <span>
-                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                    <ng-template #editableTitle >
+                        <div class="header-title" [ngClass]="{ 'w-100': editMode }">
+                            <h2 NxEditable
+                                #editTitle
+                                class="w-100"
+                                [(content)]="serverName"
+                                (contentChange)="handleNameChange($event)"
+                                (blur)="handleBlur()"
+                                (focus)="handleFocus()"
+                                [hasError]="!serverName || emptyName"
+                                id="editable-title"></h2>
+                            <span *ngIf="!serverName" class="input-error" translate>Server name is required</span>
+                            <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
+                        </div>
+                        <div class="edit-button" [ngClass]="{ 'd-none' : editMode }" (click)="editTitle.focus()">
+                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                        </div>
+                    </ng-template>
+                    <span
+                        *ngIf="selectedServer.internalStatus"
+                        [ngClass]="{
+                            tag: true,
+                            offline: serverOffline,
+                            online: selectedServer.internalStatus === CONFIG.servers.status.restarting
+                                || selectedServer.internalStatus === CONFIG.servers.status.resetting,
+                            checking: checking,
+                            'd-none' : editMode
+                        }">
+                        {{ selectedServer.shownStatus }}
+                    </span>
+                    <div class="buttons" [ngClass]="{ 'd-none' : editMode }">
+                        <button class="server-buttons pr-0"
+                            *ngIf="serverOffline"
+                            (click)="checkStatus()">
+                            <span [ngClass]="{ 'animate-rotation': checking }">
+                                <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'reload.svg'"
                                     [applyCss]="true"></svg-icon>
                             </span>
-                            <span class="ml-1" translate>Detailed Info</span>
-                    </button>
+                            <span class="ml-1" translate>Check Status</span>
+                        </button>
+                        <button *ngIf="canSeeInfo" class="server-buttons pr-0"
+                            [routerLink]="fullInfoPath"
+                            [queryParams]="{id: parsedServerId}">
+                                <span>
+                                    <svg-icon nx-add-svg-src [src]="CONFIG.icons.dirNonStandard + 'info.svg'"
+                                        [applyCss]="true"></svg-icon>
+                                </span>
+                                <span class="ml-1" translate>Detailed Info</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="header-table col-7">
                     <div class="header-table-cell">
@@ -61,13 +82,13 @@
             <nx-section>
                 <div class="server-setting-buttons">
                     <div class="left setting-buttons">
-                        <button
+                        <!-- <button
                             class="btn btn-default"
                             (click)="renameServer()"
                             [disabled]="renameDisabled || serverUnavailable"
                         >
                             <span class="ellipsis" translate>Rename</span>
-                        </button>
+                        </button> -->
                         <button
                             class="btn btn-default"
                             (click)="restartServer()"

@@ -15,6 +15,7 @@ import { NxSettingsService }         from '../../settings.service';
 import { NxSystem }                  from '../../../../../services/system.service';
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
+import { NxToastService }            from '../../../../../dialogs/toast.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -33,6 +34,10 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     viewContainerRef: ViewContainerRef;
     serverIdFromParams;
+
+    serverName: string;
+    editMode = false;
+    emptyName = false;
 
     saveSettings: Process;
     ipPortWatcher: any = new Watcher<number>();
@@ -77,7 +82,8 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         private dialogs: NxDialogsService,
         private settingsService: NxSettingsService,
         private menuService: NxMenuService,
-        private uriService: NxUriService
+        private uriService: NxUriService,
+        private toastService: NxToastService
     ) {
         this.viewContainerRef = viewContainerRef;
         this.CONFIG = configService.getConfig();
@@ -120,6 +126,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
 
     setServer(): void {
         this.betaMode = this.CONFIG.clientMode.beta || this.route.snapshot.queryParams.beta !== undefined;
+        this.serverName = this.selectedServer.name;
         const { ip, port } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = NxUtilsService.cleanId(this.selectedServer.id);
@@ -205,15 +212,44 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             });
     }
 
-    renameServer() {
-        const { id, name } = this.selectedServer;
-        return this.dialogs.renameServer(this.system, id, name)
-            .then(newName => {
-                if (newName) {
-                    this.selectedServer.name = newName;
-                }
-            });
+    handleBlur() {
+        const originalName = this.selectedServer.name;
+        this.editMode = false;
+
+        if (!this.serverName || this.emptyName) {
+            this.serverName = originalName;
+        } else if (this.serverName !== originalName) {
+            this.system.renameServer(this.selectedServer.id, this.serverName)
+                .then(() => { this.selectedServer.name = this.serverName; })
+                .catch(() => {
+                    const options = {
+                        classname : this.CONFIG.toast.warning,
+                        autohide  : true,
+                        delay     : this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'server'), options);
+                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'server'), options);
+                });
+        }
     }
+
+    handleFocus() {
+        this.editMode = true;
+    }
+
+    handleNameChange(newName) {
+        this.emptyName = /^\s+$/.test(newName);
+    }
+
+    // renameServer() {
+    //     const { id, name } = this.selectedServer;
+    //     return this.dialogs.renameServer(this.system, id, name)
+    //         .then(newName => {
+    //             if (newName) {
+    //                 this.selectedServer.name = newName;
+    //             }
+    //         });
+    // }
 
     restartServer() {
         const { id, name } = this.selectedServer;
