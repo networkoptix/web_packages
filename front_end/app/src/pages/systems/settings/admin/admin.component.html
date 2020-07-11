@@ -28,7 +28,6 @@
                             </button>
                         </div>
                         <div class="" *ngIf="CONFIG.cloudSystemId">
-
                             <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                             <span>
                                 <span *ngIf="system.isMine" class="system-header-bold" translate>you</span>
@@ -53,7 +52,26 @@
 
         <nx-block header-style="extended">
             <header>
-                <h2 class="system-name mb-2">{{system.info.systemName}}</h2>
+                <h2 *ngIf="settings.renameDisabled; else editableTitle" class="system-name mb-2">{{system.info.systemName || system.info.name}}</h2>
+                <ng-template #editableTitle >
+                    <div class="d-flex align-items-center mb-2">
+                        <div class="header-title" [ngClass]="{ 'w-100': editMode }">
+                            <h2 NxEditable
+                                #editTitle
+                                [(content)]="systemName"
+                                (contentChange)="handleNameChange($event)"
+                                (blur)="handleBlur()"
+                                (focus)="handleFocus()"
+                                [hasError]="!systemName || emptyName"
+                                id="editable-title"></h2>
+                            <span *ngIf="!systemName" class="input-error" translate>System name is required</span>
+                            <span *ngIf="emptyName" class="input-error" translate>Please enter a valid name</span>
+                        </div>
+                        <div class="edit-button" [ngClass]="{ 'd-none' : editMode }" (click)="editTitle.focus()">
+                            <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
+                        </div>
+                    </div>
+                </ng-template>
                 <span class="system-owner">
                     <span translate>Owner</span><span>&nbsp;–&nbsp;</span>
                     <span>
@@ -69,12 +87,12 @@
             <nx-section *ngIf="system.permissions.isAdmin">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
-                        <div class="float-left mr-2">
+                        <!-- <div class="float-left mr-2">
                             <button class="btn btn-default"
                                     [disabled]="settings.renameDisabled"
                                     (click)="rename()"><span class="ellipsis" translate>Rename</span>
                             </button>
-                        </div>
+                        </div> -->
                         <div class="float-left mr-2" *ngIf="settings.showMerge">
                             <button class="btn btn-default"
                                     [disabled]="settings.mergeDisabled"

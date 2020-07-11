@@ -8,7 +8,7 @@ import { NxConfigService, IConfig }  from '../../../../services/nx-config';
 import { NxLanguageProviderService } from '../../../../services/nx-language-provider';
 import { LanguageI18NStaticTypes }   from '../../../../../language_i18n_static_types';
 import { NxProcessService, Process } from '../../../../services/process.service';
-import {NxSystem, NxSystemUser} from '../../../../services/system.service';
+import { NxSystem, NxSystemUser }    from '../../../../services/system.service';
 import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
@@ -21,6 +21,7 @@ import { NxAccountService }          from '../../../../services/account.service'
 import { NxCloudApiService }         from '../../../../services/nx-cloud-api';
 import { NxUriService }              from '../../../../services/uri.service';
 import { NxRibbonService }           from '../../../../components/ribbon';
+import { NxToastService }            from '../../../../dialogs/toast.service';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -43,6 +44,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     system: NxSystem;
     systems;
     params: Params;
+
+    systemName: string;
+    editMode = false;
+    emptyName = false;
 
     advanced: boolean;
     userDisconnectSystem;
@@ -95,7 +100,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private cloudApiService: NxCloudApiService,
-        private ribbonService: NxRibbonService
+        private ribbonService: NxRibbonService,
+        private toastService: NxToastService
     ) {
         this.CONFIG = configService.getConfig();
         this.LANG = languageService.translations;
@@ -130,6 +136,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             }))
             .subscribe((system) => {
                 this.system = system;
+                this.systemName = this.system.info.name || this.system.info.systemName;
                 this.pageService.pageTitle = this.system.info.systemName;
                 if (this.systemSubscription) {
                     this.systemSubscription.unsubscribe();
@@ -190,6 +197,34 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                     this.system.getInfo(true, false);
                 }
             });
+    }
+
+    handleBlur() {
+        const originalName = this.system.info.name || this.system.info.systemName;
+        this.editMode = false;
+
+        if (!this.systemName || this.emptyName) {
+            this.systemName = originalName;
+        } else if (this.systemName !== originalName) {
+            this.cloudApiService.renameSystem(this.system.id, this.systemName)
+                .catch(() => {
+                    const options = {
+                        classname : this.CONFIG.toast.warning,
+                        autohide  : true,
+                        delay     : this.CONFIG.alertTimeout
+                    };
+                    this.toastService.show('Failed to change {type} name'.replace('{type}', 'system'), options);
+                    // this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'system'), options);
+                });
+        }
+    }
+
+    handleFocus() {
+        this.editMode = true;
+    }
+
+    handleNameChange(newName) {
+        this.emptyName = /^\s+$/.test(newName);
     }
 
     connectLocalToCloud() {
@@ -264,18 +299,18 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
         }
     }
 
-    rename() {
-        return this.dialogs
-            .rename(this.system.id, this.system.info.systemName)
-            .then((finalName) => {
-                if (finalName) {
-                    this.system.info.systemName = finalName;
-                }
+    // rename() {
+    //     return this.dialogs
+    //         .rename(this.system.id, this.system.info.systemName)
+    //         .then((finalName) => {
+    //             if (finalName) {
+    //                 this.system.info.systemName = finalName;
+    //             }
 
-                this.pageService.pageTitle = this.system.info.systemName;
-                this.systemsService.forceUpdateSystems(this.accountService.email);
-            });
-    }
+    //             this.pageService.pageTitle = this.system.info.systemName;
+    //             this.systemsService.forceUpdateSystems(this.accountService.email);
+    //         });
+    // }
 
     mergeSystems() {
         this.systems = this.systemsService.getMySystems(this.accountService.email, this.system.id);
