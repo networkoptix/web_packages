@@ -8,13 +8,13 @@
                     <span *ngIf="!selectedUser.isEnabled"
                           class="text-danger" [ngClass]="{'pr-2': selectedUser.canBeEdited}"
                           translate>User disabled</span>
-                    <nx-switch *ngIf="systemAvailable && selectedUser.canBeEdited"
+                    <nx-switch *ngIf="systemAvailable && selectedUser.canBeEdited && !editMode"
                             [ngModel]="selectedUser.isEnabled"
                             (ngModelChange)="updateEnabled($event);"
                             componentId="user-active-status"
                     ></nx-switch>
                 </div>
-                <div *ngIf="selectedUser.isCloud || selectedUser.canBeEdited; else editableTitle">
+                <div *ngIf="selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">
                     <h2 class="user-email" [ngClass]="{ 'mb-2': selectedUser.isCloud }"
                         >{{ selectedUser.isCloud ? email.originalValue : selectedUser.name }}</h2>
                     <span *ngIf="selectedUser.isCloud" class="user-name">{{selectedUser.fullName}}</span>
