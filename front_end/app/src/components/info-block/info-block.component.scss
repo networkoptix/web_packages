@@ -26,11 +26,13 @@
         }
         &-keys {
             flex: 2 0 auto;
+
             p {
                 @include typography.regular13;
                 position: relative;
                 display: flex;
                 justify-content: stretch;
+                align-items: flex-end;
                 line-height: 16px;
                 & > * {
                     flex-basis: 0;
@@ -41,31 +43,29 @@
                     position: relative;
                     display: inline-block;
                     margin: 0 8px 4px 4px;
-                    border-bottom: 1px dotted $light5;
+                    border-bottom: 1px dotted rgba($light16, .3);
                     z-index: 1;
-                    min-width: 16px;
                     flex-basis: 1;
                     flex-grow: 1;
                 }
+            }
 
-                &.dark:after {
-                    border-bottom: 1px dotted $light8; 
-                }
+            &.clear-flex {
+                flex      : none;
+                min-width : 150px;
             }
         }
         &-values {
             flex: 0 1 auto;
             overflow      : hidden;
-            text-overflow : ellipsis;
-            white-space   : nowrap;
             max-width     : 100%;
-            line-height   : initial;
+            line-height   : 16px;
             p {
                 @include typography.medium13;
+                display: flex;
+                align-items: flex-end;
                 line-height: 16px;
                 margin-right: 16px;
-                white-space: nowrap;
-
                 &.error {
                     color: $red_l2;
                 }

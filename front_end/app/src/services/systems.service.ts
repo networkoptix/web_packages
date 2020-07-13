@@ -93,6 +93,10 @@ export class NxSystemsService implements OnDestroy {
         return this.forceUpdateSystems(userEmail).toPromise();
     }
 
+    canViewInfo(userRole) {
+        return this.CONFIG.accessRoles.adminAccess.includes(userRole.toLowerCase());
+    }
+
     getSystemOwnerName(system: NxSystem, currentUserEmail: string, forOrder?: boolean) {
         // @ts-ignore: TODO either using wrong type for system or NxSystem missing properties. Can't find any class with property ownerAccountEmail
         if (system.ownerAccountEmail === currentUserEmail) {

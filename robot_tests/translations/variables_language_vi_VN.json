@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "loại bỏ",
     "APPLY CHANGES BUTTON TEXT": "ứng dụng",
     "CANCEL CHANGES BUTTON TEXT": "Hủy bỏ",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Không có hệ thống có thể được truy cập bởi liên kết này. Điều này có thể xảy ra khi một hệ thống bị ngắt kết nối từ %PRODUCT_NAME%, quyền truy cập vào hệ thống này đã bị thu hồi hoặc nếu bạn đăng nhập vào tài khoản không chính xác.",
     "PAGE NOT FOUND TEXT": "Không tìm thấy trang",
     "GO TO MAIN PAGE TEXT": "Chuyển đến trang chính",

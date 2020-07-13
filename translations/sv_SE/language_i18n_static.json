@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Koppla från",
             "message": "Du kommer inte att kunna logga in i det här systemet längre.",
-            "title": "Koppla ifrån systemet?"
+            "title": "Koppla bort systemet från ditt konto?"
         },
         "titles": {
             "error": "Fel",

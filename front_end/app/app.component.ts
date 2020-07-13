@@ -161,7 +161,7 @@ export class AppComponent {
             const { feedbackEnabled, integrationStoreEnabled, healthMonitor, publicDownloads, publicReleases, cloudStorageEnabled, cloudStorageSize, healthMonitorCacheTimeout } = window.SETTINGS;
             this.CONFIG.cloudCapabilities = {
                 feedbackEnabled,
-                healthMonitor,
+                healthMonitoring          : healthMonitor,
                 healthMonitorCacheTimeout : healthMonitorCacheTimeout || 60,
                 integrationStore          : integrationStoreEnabled,
                 publicDownloads,

@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Çıkar",
     "APPLY CHANGES BUTTON TEXT": "Uygula",
     "CANCEL CHANGES BUTTON TEXT": "Vazgeç",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Bu bağlantı ile hiçbir sisteme erişilemez. Bu, bir sistemin bağlantısının %PRODUCT_NAME%bağlantısı kesildiğinde, bu sisteme erişim iptal edildiğinde veya yanlış hesapta oturum açtığınızda oluşabilir.",
     "PAGE NOT FOUND TEXT": "Sayfa bulunamadı",
     "GO TO MAIN PAGE TEXT": "Ana sayfaya git",

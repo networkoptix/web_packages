@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "ทิ้ง",
     "APPLY CHANGES BUTTON TEXT": "ยอมรับ",
     "CANCEL CHANGES BUTTON TEXT": "ยกเลิก",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "ลิงค์นี้ไม่สามารถเข้าถึงระบบได้ สิ่งนี้อาจเกิดขึ้นเมื่อระบบถูกตัดการเชื่อมต่อจาก %PRODUCT_NAME%การเข้าถึงระบบนี้ถูกเพิกถอนหรือหากคุณเข้าสู่บัญชีที่ไม่ถูกต้อง",
     "PAGE NOT FOUND TEXT": "ไม่พบหน้านี้",
     "GO TO MAIN PAGE TEXT": "ไปที่หน้าหลัก",

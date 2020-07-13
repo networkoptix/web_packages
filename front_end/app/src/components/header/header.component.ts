@@ -15,7 +15,6 @@ import { NxSystemsService }          from '../../services/systems.service';
 import { LocalStorageService }       from 'ngx-store';
 import { Subscription, timer }       from 'rxjs';
 import { NxHeaderService }           from '../../services/nx-header.service';
-import { NxSystem, NxSystemService } from '../../services/system.service';
 import { NxLanguageProviderService } from '../../services/nx-language-provider';
 import { AutoUnsubscribe }           from 'ngx-auto-unsubscribe';
 import { LanguageI18NStaticTypes }   from '../../../language_i18n_static_types';
@@ -32,7 +31,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
     user: any = {};
     canSeeInfo: boolean;
-    system: NxSystem;
     systems: any;
     systemId: any;
     active: any = {};
@@ -60,7 +58,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         private appState: NxAppStateService,
         private route: ActivatedRoute,
         private systemsService: NxSystemsService,
-        private systemService: NxSystemService,
         private dialogs: NxDialogsService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
@@ -109,15 +106,7 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         });
     }
 
-    private stopActiveSubscription() {
-        if (this.system) {
-            this.system.stopPoll();
-            this.system = undefined;
-        }
-    }
-
-    ngOnDestroy() {
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
@@ -185,7 +174,6 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
 
                     if (account) {
                         this.dropdownsVisible = true;
-                        // this.systemsService.getSystem(account.email);
 
                         this.loginState = true;
                         this.renderer.removeClass(document.body, 'anonymous');
@@ -280,22 +268,11 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
                 if (account) {
                     this.user = account;
                     if (this.activeSystem) {
-                        if (!this.system || this.system.id !== this.systemId) {
-                            this.stopActiveSubscription();
-                            this.system = this.systemService.createSystem(this.user.email, this.activeSystem.id);
-
-                            this.system.getInfoAndPermissions(false).catch(_ => {
-                            }).then(system => {
-                                this.systems.find(sys => {
-                                    if (sys.id === this.activeSystem.id) {
-                                        sys.moduleInfo = system.moduleInfo;
-                                    }
-                                });
-                                this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || system && system.info.capabilities && system.info.capabilities.vms_metrics) && this.system.canViewInfo();
-                            });
-                        }
+                        const vmsMetrics = this.activeSystem.capabilities.vms_metrics;
+                        const userCanSeeInfo = this.systemsService.canViewInfo(this.activeSystem.accessRole);
+                        this.canSeeInfo = (this.CONFIG.cloudCapabilities.healthMonitoring || vmsMetrics) && userCanSeeInfo;
                     } else {
-                        this.stopActiveSubscription();
+                        this.canSeeInfo = false;
                     }
                 }
             });

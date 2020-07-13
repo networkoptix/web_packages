@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Rozłącz",
             "message": "Nie będziesz już mógł zalogować się do tego systemu.",
-            "title": "Odłączyć system?"
+            "title": "Odłączyć system od Twojego konta?"
         },
         "titles": {
             "error": "Błąd",

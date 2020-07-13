@@ -117,7 +117,6 @@
     "If selected system already has cloud storage, it will be merged with this one.": "หากระบบที่เลือกมีพื้นที่เก็บข้อมูลบนคลาวด์อยู่แล้วระบบจะรวมเข้ากับที่เก็บข้อมูลนี้",
     "Image": "ภาพ:",
     "In Review": "ในการตรวจสอบ",
-    "In use": "กำลังใช้งาน",
     "In-Client Upgrade:": "การปรับรุ่นในไคลเอ็นต์:",
     "Includes information about the System, such as camera modules, firmware versions, number of servers, etc. Does not include any personal information and is completely anonymous.": "รวมถึงข้อมูลเกี่ยวกับระบบเช่นโมดูลกล้องรุ่นเฟิร์มแวร์จำนวนเซิร์ฟเวอร์เป็นต้นไม่รวมถึงข้อมูลส่วนบุคคลใด ๆ และไม่ระบุชื่อโดยสมบูรณ์",
     "Information": "ข้อมูล",

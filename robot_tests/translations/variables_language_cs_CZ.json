@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Zrušit",
     "APPLY CHANGES BUTTON TEXT": "Použít",
     "CANCEL CHANGES BUTTON TEXT": "Zrušit",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Tento odkaz nemá přístup k žádnému systému. K tomu může dojít, pokud byl systém odpojen od %PRODUCT_NAME%, přístup k tomuto systému byl zneplatněn, nebo pokud jste přihlášeni k nesprávnému účtu.",
     "PAGE NOT FOUND TEXT": "Stránka nenalezna",
     "GO TO MAIN PAGE TEXT": "Přejít na hlavní stránku",

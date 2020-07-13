@@ -204,7 +204,10 @@ export class NxCloudStorageComponent implements OnInit {
     };
 
     private updateEnabledAndUsageStats() {
-        if (!this.systemId) return;
+        if (!this.systemId || !this.system$.value.cloudStorageCapable) {
+            this.cloudStorageSystemEnabled = false;
+            return;
+        }
         this.cloudApiService.getCloudStorageUsage(this.systemId)
             .then(({ resultCode = false, cloudCapacity, ...usageStats }) => {
                 usageStats.spaceUsed = parseInt(usageStats.spaceUsed);

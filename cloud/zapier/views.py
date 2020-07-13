@@ -1,7 +1,6 @@
 import base64
 import django
 import json
-import urllib
 import uuid
 
 from rest_framework import status
@@ -232,7 +231,7 @@ def zapier_send_generic_event(request):
     make_or_increment_rule('Generic Event', email, system_id, caption,
                            password=password, description=description, source=source)
 
-    url = "api/createEvent?{}".format(urllib.urlencode(query_params).replace('+', "%20"))
+    url = "api/createEvent?{}".format(urlencode(query_params).replace('+', "%20"))
     return cloud_gateway.get(system_id, url, email, password)
 
 

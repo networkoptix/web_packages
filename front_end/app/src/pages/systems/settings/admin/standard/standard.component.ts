@@ -124,8 +124,8 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges {
         this.applyService.hardReset();
         const sw = this.settingsWatchers;
         Object.keys(sw).forEach(setting => {
-            if (setting in settings) {
-                let curr = settings[setting];
+            let curr = settings[setting];
+            if (curr) {
                 /**
                  * sets initial values for system & security settings
                  * sessionLimitMinutes is the only one that's a number & not a boolean,

@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "בטל",
     "APPLY CHANGES BUTTON TEXT": "החל",
     "CANCEL CHANGES BUTTON TEXT": "ביטול",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "לא ניתן לגשת לשום מערכת. זה יכול לקרות כאשר מערכת מנותקת מ- %PRODUCT_NAME%, הגישה למערכת זו בוטלה או אם אתה מחובר לחשבון השגוי.",
     "PAGE NOT FOUND TEXT": "דף לא נמצא",
     "GO TO MAIN PAGE TEXT": "עבור לדף הראשי",

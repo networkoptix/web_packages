@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "נתק",
             "message": "לא תוכל להתחבר למערכת זו יותר.",
-            "title": "נתק מערכת?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "שגיאה",

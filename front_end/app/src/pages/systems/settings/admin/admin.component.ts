@@ -186,21 +186,21 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     disconnect() {
+        const handleDisconnect = () => this.dialogs.disconnect(this.system.id)
+            .then((result) => {
+                if (result) {
+                    this.updateAndGoToSystems();
+                }
+            });
         if (this.system.isMine) {
+            if (!this.system.cloudStorageCapable) {
+                return handleDisconnect();
+            }
             this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
                 const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
                 this.dialogs.confirm(message, title, ok);
-            }).catch(() => {
-                // User is the owner. Deleting system means unbinding it and disconnecting all accounts
-                // dialogs.confirm(this.LANG.system.confirmDisconnect, this.LANG.system.confirmDisconnectTitle, this.LANG.system.confirmDisconnectAction, 'danger').
-                this.dialogs.disconnect(this.system.id)
-                    .then((result) => {
-                        if (result) {
-                            this.updateAndGoToSystems();
-                        }
-                    });
-            });
+            }).catch(handleDisconnect);
         }
     }
 

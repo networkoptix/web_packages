@@ -9,8 +9,7 @@
         [ngClass]="{'extended': showAnalytics}">
 
             <div class="table-wrapper">
-                <nx-pre-loader *ngIf="timesElementSet < 2"></nx-pre-loader>
-                <table class="table table-hover nx-table" *ngIf="timesElementSet >= 2">
+                <table class="table table-hover nx-table">
                     <thead>
                         <tr>
                             <th *ngFor="let header of showHeaders"

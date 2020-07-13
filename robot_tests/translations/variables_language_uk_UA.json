@@ -104,6 +104,7 @@
     "DISCARD CHANGES BUTTON TEXT": "Відхилити",
     "APPLY CHANGES BUTTON TEXT": "Застосувати",
     "CANCEL CHANGES BUTTON TEXT": "Скасувати",
+    "APPLY CHANGES QUESTION TEXT": "Apply changes before leaving this page?",
     "THIS LINK IS BROKEN TEXT": "Немає доступу до системи за цим посиланням. Це може статися, коли система відключена від %PRODUCT_NAME%, доступ до цієї системи відкликано, або якщо ви увійшли в неправильний обліковий запис.",
     "PAGE NOT FOUND TEXT": "Сторінку не знайдено",
     "GO TO MAIN PAGE TEXT": "Перейти на головну сторінку",

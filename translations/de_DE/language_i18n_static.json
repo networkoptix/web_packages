@@ -305,7 +305,7 @@
         "removeSystem": {
             "action": "Trennen",
             "message": "Sie können sich nicht mehr bei diesem System anmelden.",
-            "title": "System trennen?"
+            "title": "System von Ihrem Konto trennen?"
         },
         "titles": {
             "error": "Fehler",
