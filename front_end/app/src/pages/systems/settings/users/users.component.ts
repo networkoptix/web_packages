@@ -197,7 +197,7 @@ export class NxSystemUsersComponent implements OnInit, OnDestroy {
                         autohide  : true,
                         delay     : this.CONFIG.alertTimeout
                     };
-                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'login'), options);
+                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', this.LANG.common.login), options);
                 });
         }
     }

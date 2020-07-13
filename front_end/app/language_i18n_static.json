@@ -127,6 +127,7 @@
             "unauthorized": "Authentication required"
         },
         "chromeCastWarning": "Chromecast is resource intensive and may cause issues on your server.",
+        "login": "login",
         "recordingSettingsWarning": "Please update missing recording settings.",
         "recordingModes": {
             "always": "Record always",
@@ -144,6 +145,8 @@
         "general": "General",
         "inaccessibleFeatureMessage": "System is offline and hence, information is not accessible.",
         "searchCamPlaceholder": "Search",
+        "server": "server",
+        "system": "system",
         "systemHasNoCameras": "No Cameras",
         "systemHasNoCamerasMessage": "There are no accessible cameras for you in the system. <br><br>Connect a few cameras to the server’s local network to make them discoverable, or ask the system administrator to change your access level.",
         "systemNewVersion": "Update your system",

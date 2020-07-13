@@ -214,7 +214,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         autohide  : true,
                         delay     : this.CONFIG.alertTimeout
                     };
-                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', 'system'), options);
+                    this.toastService.show(this.LANG.toastMessage.nameFail.replace('{type}', this.LANG.common.system), options);
                 });
         }
     }
