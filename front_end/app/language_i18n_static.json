@@ -159,6 +159,12 @@
         "systemServerErrorMessage": "An error occurred, please try again later. If the problem continues, please contact your support team.",
         "systemUnreachable": "SYSTEM IS UNREACHABLE",
         "unknown": "Unknown",
+        "vendor": "Vendor",
+        "model": "Model",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "clear search",
             "collapse all servers": "collapse all servers",
@@ -196,6 +202,14 @@
             "available": "Cloud storage location is available for all servers in this system. You can manage it using the desktop {vmsName} client.",
             "camera": "camera",
             "cameras": "cameras",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Cloud storage successfully removed from system",
                 "errorPrefix": "Error removing cloud storage"
@@ -259,7 +273,7 @@
             "serverVersionNew": "This server has newer software version than the current system. Update both systems to the same build to merge them.",
             "systemOffline": "System {targetSystem} is offline and cannot be merged with the current one",
             "systemOfflineUrl": "{targetSystem} is inaccessible",
-            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the latest build.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "systemVersionOld": "System {targetSystem} has an older software version that is incompatible with the current system. Update {targetSystem} to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the current one.",
             "systemVersionNew": "System {targetSystem} has a newer software version that is incompatible with the current system. Update the current system to the <a href=\"/download\" target=\"_blank\" translate>latest build</a> to merge it with the {targetSystem} system.",
             "urlEmpty": "Enter server address",

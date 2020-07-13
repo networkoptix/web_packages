@@ -52,6 +52,7 @@ import { NxAdditionalSystemsTileComponent } from './dropdowns/drop-menu/addition
 import { NxTabsComponent } from './header/tabs/tabs.component';
 import { NxNavDropdownComponent } from './header/nav-dropdown/nav-dropdown.component';
 import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component';
+import { NxInfoBlockComponent } from './info-block/info-block.component';
 
 @NgModule({
     imports: [
@@ -105,6 +106,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxApplyComponent,
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
+        NxInfoBlockComponent,
         ToastsContainer,
         NxSystemTileComponent,
         NxNavigiationTileComponent,
@@ -191,6 +193,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
+        NxInfoBlockComponent,
         NxRibbonService,
         NxOverlayModalComponent
     ],
@@ -236,6 +239,7 @@ import { NxOverlayModalComponent } from './overlay-modal/overlay-modal.component
         NxPagePlaceholderComponent,
         NxSectionPlaceholderComponent,
         ToastsContainer,
+        NxInfoBlockComponent,
         NxSystemTileComponent,
         NxNavigiationTileComponent,
         NxAdditionalSystemsTileComponent,

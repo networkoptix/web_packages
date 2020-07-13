@@ -1,6 +1,6 @@
-<nx-pre-loader *ngIf="!systemLoaded"></nx-pre-loader>
+<nx-pre-loader *ngIf="!system || !systemLoaded"></nx-pre-loader>
 
-<div *ngIf="systemLoaded" class="row d-flex align-items-start">
+<div *ngIf="system && systemLoaded" class="row d-flex align-items-start">
     <div class="col-12 system-settings">
 
         <nx-block header-style="extended" type="mb-3">
@@ -84,7 +84,7 @@
                 </span>
             </header>
 
-            <nx-section *ngIf="system.permissions.isAdmin">
+            <nx-section *ngIf="system.isAdmin">
                 <div class="row m-0">
                     <div class="col-xl-7 pl-0">
                         <div class="float-left mr-2" *ngIf="settings.showMerge">
@@ -121,7 +121,7 @@
         </nx-block>
 
         <nx-system-standard-admin-component
-                *ngIf="system && system.permissions.isAdmin"
+                *ngIf="system.isAdmin"
                 [system]="system"
                 [settings]="settingsForSystem">
         </nx-system-standard-admin-component>

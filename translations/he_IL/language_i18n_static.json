@@ -157,6 +157,12 @@
         "systemUnreachable": "אי אפשר להגיע למערכת",
         "inaccessibleFeatureMessage": "המערכת אינה מקוונת ולכן השרתים אינם נגישים.",
         "unknown": "לא ידוע",
+        "vendor": "ספק",
+        "model": "מודל",
+        "ip": "כתובת IP",
+        "server": "שרת",
+        "os": "מערכת הפעלה",
+        "version": "גירסה",
         "voiceCommands": {
             "clear search": "נקה את החיפוש",
             "collapse all servers": "כווץ את כל השרתים",
@@ -194,6 +200,14 @@
             "available": "מיקום אחסון בענן זמין לכל השרתים במערכת זו. אתה יכול לנהל אותו באמצעות תוכנת {{vmsName}}.",
             "camera": "מצלמה",
             "cameras": "מצלמות",
+            "usageLabels": {
+                "currentRecordings": "הקלטות נוכחיות",
+                "whenFullyUsed": "כאשר נעשה שימוש מלא",
+                "amountUsed": "כמות בשימוש",
+                "archiveFrom": "ארכיון מ-",
+                "recordingBitrate": "קצב סיביות של הקלטות",
+                "delayFromLive": "זמן עיכוב (DELAY)"
+            },
             "remove": {
                 "success": "אחסון בענן הוסר בהצלחה מהמערכת",
                 "errorPrefix": "שגיאה בהסרת אחסון בענן"
@@ -256,9 +270,8 @@
             "serverNotYours": "מערכת זו מחוברת ל- %CLOUD_NAME%, אך משוייכים לבעלים אחרים. ניתן למזג מערכות ענן רק אם חשבון הבעלים זהה.",
             "systemOffline": "מערכת {{targetSystem}} במצב לא מקוון ולא ניתן למזגה עם הנוכחית",
             "systemOfflineUrl": "{{targetSystem}} אינו נגיש.",
-            "systemsIncompatible": "לשרת זה יש גרסת תוכנה לא תואמת. עדכן את שתי המערכות לאותה גרסה כדי למזג אותן.",
-            "systemVersionOld": "למערכת {{targetSystem}} יש גרסת תוכנה ישנה יותר שאינה תואמת למערכת הנוכחית. עדכן {{targetSystem}} ל <a href=\"/download\" target=\"_blank\" translate>לגרסא האחרונה</a> על מנת למזג אותו עם הנוכחי.",
-            "systemVersionNew": "למערכת {{targetSystem}} יש גרסת תוכנה חדשה יותר שאינה תואמת למערכת הנוכחית. עדכן את המערכת הנוכחית <a href=\"/download\" target=\"_blank\" translate>לגרסא המתאימה</a> כדי למזג אותו עם {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "למערכות יש גרסאות תוכנה שונות. אנא עדכן את שניהם ל <a href=\"/download\" target=\"_blank\" translate>גרסא האחרונה</a>.",
             "urlEmpty": "הזן כתובת שרת",
             "urlNotValid": "הזן כתובת URL חוקית",
             "unknownError": "אירעה שגיאה לא ידועה. רענן את הדף ונסה שוב. אם נמשכת הבעיה, אנא צור קשר עם <a href=\"%SUPPORT_LINK%\" target=\"_blank\">התמיכה</a>.",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "נתק",
             "message": "לא תוכל להתחבר למערכת זו יותר.",
-            "title": "נתק מערכת?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "שגיאה",

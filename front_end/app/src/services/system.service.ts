@@ -492,7 +492,7 @@ class ServerManager {
             }: any = addParamsRaw.filter(({ name }) => [
                 'rotation',
                 'overrideAr',
-                'mediaCapbilities',
+                'mediaCapabilities',
                 'isAudioSupported',
                 'supportedMotion',
                 'motionStream',
@@ -503,8 +503,10 @@ class ServerManager {
             }, {});
             const parentName = this.servers.find(server => server.id === parentId).name;
             const isAudioSupported = !!audioSupported;
-            const primary = mediaCapabilities?.streamCapabilities?.find(({ key }) => key === 'primary');
-            const maxFps = primary?.value?.maxFps || 30;
+            const streamCapabilities = mediaCapabilities && JSON.parse(mediaCapabilities).streamCapabilities;
+            const primary = streamCapabilities && streamCapabilities.find(({ key }) => key === 'primary');
+            const _maxFps = primary?.value?.maxFps;
+            const maxFps = _maxFps || 30;
             const previewRotate = overrideAr === 1 ? rotation : rotation === 180 ? 180 : 0;
             const previewUrl = this.mediaserver.previewUrl(id, null, overrideAr * 120, 120, previewRotate);
             const status = this.parseCameraStatus(camera, { dayOfWeek, secondsToday });
@@ -513,7 +515,7 @@ class ServerManager {
             const recordingSettings: IRecordingSettings = {
                 recording : camera.scheduleEnabled && !camera.scheduleTasks.every(({ fps }) => !fps),
                 quality   : this.parseRecordingQuality(camera.scheduleTasks),
-                fps       : this.parseFps(camera.scheduleTasks),
+                fps       : this.parseFps(camera.scheduleTasks, maxFps),
                 motionEnabled,
                 modes     : [
                     { name: 'always', id: 'RT_Always', value: this.parseRecordingMode(camera, 'RT_Always'), enabled: true },
@@ -562,11 +564,11 @@ class ServerManager {
         return this.mediaserver.updateRecordingSettings(updateParams).toPromise();
     }
 
-    private parseFps(schedule: ITask[]): number | 'various' {
-        const schedulesWithFps = schedule.filter(({ fps }) => fps !== 0).map(({ fps }) => fps);
+    private parseFps(schedule: ITask[], max: number): number | 'various' {
+        const schedulesWithFps = schedule.filter(({ fps, bitrateKbps }) => fps !== 0 && bitrateKbps).map(({ fps }) => fps);
         const uniqueFps = new Set(schedulesWithFps);
         const currentFps = Array.from(uniqueFps);
-        return schedule.length === 0 ? 30 : currentFps.length === 1 ? currentFps[0] : 'various';
+        return schedulesWithFps.length === 0 ? max : currentFps.length === 1 ? currentFps[0] : 'various';
     }
 
     private parseRecordingQuality(schedule: ITask[]) {
@@ -1029,7 +1031,14 @@ export class NxSystem extends System implements OnDestroy {
                 usersPromise = this.userManager.getUsersDataFromTheSystem().then(() => {
                     this.isAvailable = true;
                 }).catch(() => {
-                    return this.getUsersCachedInCloud();
+                    if (this.isAdmin) {
+                        return this.getUsersCachedInCloud().then((users) => {
+                            this.userManager.processUsers(users);
+                            return Promise.resolve();
+                        });
+                    } else {
+                        return Promise.resolve();
+                    }
                 });
             } else if (this.isAdmin) { // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then((users) => {
@@ -1413,7 +1422,7 @@ export class NxSystemService {
         this.systemsCache = {};
     }
 
-    createSystem(currentUserEmail: string, systemId: string, serverId?: string) {
+    createSystem(currentUserEmail: string, systemId: string, serverId?: string, skipPoll?: boolean) {
         let system: NxSystem;
         const id = systemId || serverId;
         if (id in this.systemsCache) {
@@ -1428,7 +1437,9 @@ export class NxSystemService {
             this.systemsCache[id] = system;
         }
         system.lostConnection = false;
-        system.startPoll();
+        if (!skipPoll) {
+            system.startPoll();
+        }
         return system;
     }
 

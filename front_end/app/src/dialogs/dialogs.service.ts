@@ -125,7 +125,13 @@ export class NxDialogsService {
         if (document.activeElement instanceof HTMLElement) {
             document.activeElement.blur();
         }
-        return this.createModal(ApplyModalContent, {}, { applyFunc, discardFunc, form });
+
+        const options: any = {
+            windowClass : 'modal-holder',
+            backdrop    : 'static'
+        };
+
+        return this.createModal(ApplyModalContent, options, { applyFunc, discardFunc, form });
     }
 
     confirm(

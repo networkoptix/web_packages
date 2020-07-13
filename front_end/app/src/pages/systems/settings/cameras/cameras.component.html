@@ -35,7 +35,7 @@
         <div class="col-12 camera-settings-info">
             <nx-block header-style="extended">
                 <header>
-                    <div class="header-top-bar" [ngClass]="{'mb-3': cameraName}">
+                    <div class="header-top-bar mb-3">
                         <div class="header-title" [ngClass]="{'w-100': editMode}">
                             <h2 NxEditable
                             #editTitle
@@ -44,7 +44,6 @@
                             (focus)="handleFocus()"
                             [hasError]="!cameraName"
                             id="editable-title"></h2>
-                            <span *ngIf="!cameraName" class="input-error" translate>Name cannot be empty</span>
                         </div>
                         <div class="edit-button" [ngClass]="{invisible: editMode}" (click)="editTitle.focus()">
                             <img [src]="CONFIG.icons.dirNonStandard + 'edit.png'" width="20" height="20"/>
@@ -65,31 +64,12 @@
                     <div [style.width.px]="previewWidth">
                         <nx-health-image [isPrimary]="true"
                             aspect="override"
-                            [preloader]="true" 
-                            [state]="selectedCamera.status" 
+                            [preloader]="true"
+                            [state]="selectedCamera.status"
                             [url]="preview + '&reload=' + (reload$ | async)"
                             [lightBackground]="true"></nx-health-image>
                     </div>
-                    <div class="details">
-                        <div class="details-section">
-                            <div class="details-section-keys">
-                                <p translate>Vendor</p>
-                                <p translate>Model</p>
-                            </div>
-                            <div class="details-section-values">
-                                <p>{{ selectedCamera.vendor }}</p>
-                                <p>{{ selectedCamera.model}}</p>
-                            </div>
-                            <div class="details-section-keys">
-                                <p translate>IP Address</p>
-                                <p translate>Server</p>
-                            </div>
-                            <div class="details-section-values">
-                                <p>{{ selectedCamera.url }}</p>
-                                <p>{{ selectedCamera.parentName }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <nx-info-block [sectionsOrColumns]="cameraDetailColumns" [infoBlockSize]="'compact'"></nx-info-block>
                 </header>
                 <nx-section>
                         <h4 class="mb-3" translate>Image</h4>
@@ -129,11 +109,11 @@
                 <header>
                     <div class="d-flex align-items-center">
                         <div>
-                            <nx-switch 
-                                [value]="recording" 
-                                [label]="'Recording' | translate" 
-                                componentId="recording" 
-                                [disabled]="availableLicenses === 0"  
+                            <nx-switch
+                                [value]="recording"
+                                [label]="'Recording' | translate"
+                                componentId="recording"
+                                [disabled]="availableLicenses === 0"
                                 (click)="handleRecordingToggle()"></nx-switch>
                             <div *ngIf="!recording" class="recording-hint" [ngClass]="{'input-error': !availableLicenses, 'shake-hint': shakeHint}">{{
                                 availableLicenses > 0 ?
@@ -199,12 +179,12 @@
                         <nx-three-dot [items]="[{name: 'Disable Motion Detection' | translate, action: disableMotion, id: 'disable-motion'}]" id="motion-three-dot-menu"></nx-three-dot>
                     </div>
                 </header>
-                <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)">
+                <div class="m-3 preview-wrapper" [style.height.px]="height" (resize)="handleResize($event)" (click)="lockGrid(true)">
                     <div class="position-relative mx-auto" [style.width.px]="width" [style.height.px]="height">
-                        <nx-health-image [isPrimary]="true" 
-                            [motionPreview]="true" 
-                            [preloader]="true" 
-                            [state]="selectedCamera.status" 
+                        <nx-health-image [isPrimary]="true"
+                            [motionPreview]="true"
+                            [preloader]="true"
+                            [state]="selectedCamera.status"
                             [url]="preview + '&reload=' + (reload$ | async)"
                             (loaded)="toggleMotionGrid()"
                             [lightBackground]="true"></nx-health-image>

@@ -78,6 +78,7 @@ def generate_languages_files(languages, template_filename):
 
     for lang in languages:
         ajs = merge_files(base_lang, lang, "language.json")
+        ajs["language"] = lang
         i18n = merge_files(base_i18n, lang, "language_i18n.json")
         i18n_static = merge_files(base_i18n_static, lang, "language_i18n_static.json")
         i18n = merge_two_json(i18n, i18n_static)

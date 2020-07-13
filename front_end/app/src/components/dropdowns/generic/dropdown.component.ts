@@ -70,6 +70,13 @@ export class NxGenericDropdown extends BaseDropdown {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.items && changes.items.currentValue) {
+            this.items.forEach((item) => {
+                if (item.help && !item.name.includes(item.help)) {
+                    item.name += `<span class="additional-help">${item.help}</span>`;
+                }
+            });
+        }
         // detect changes in list of items and changes in selected to support clear option
         if (changes.selected && changes.selected.currentValue) {
             if (changes.selected.currentValue.help &&

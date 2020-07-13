@@ -64,8 +64,8 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
     user: any = {};
     canSeeInfo: boolean;
     system: NxSystem;
-    systems;
-    systemId;
+    systems: any;
+    systemId: any;
     active: any = {};
     singleSystem: any = {};
     inline;

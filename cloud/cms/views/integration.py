@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from util.helpers import get_language_object_from_request
 from api.helpers.exceptions import api_success, handle_exceptions
 from cms.controllers.filldata import global_contexts_to_dict, process_global_contexts
 from cms.models import Context, DataStructure, Asset, AssetCustomizationReview, AssetType,\
@@ -37,7 +38,7 @@ class IntegrationsCache(object):
 INTEGRATION_CACHE = IntegrationsCache()
 
 
-def make_integrations_json(integrations, contexts=None, show_pending=False, show_drafts=False, user=None):
+def make_integrations_json(integrations, language, contexts=None, show_pending=False, show_drafts=False, user=None):
     global INTEGRATION_CACHE
     user_assets = user.assets if user and user.is_authenticated else []
     integrations_json = []
@@ -59,7 +60,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
 
         for integration in integrations:
             current_version = integration.version_id()
-            customization_id_state_key = f"{settings.CUSTOMIZATION}-{integration.id}-{state}"
+            customization_id_state_key = f"{settings.CUSTOMIZATION}-{language.code}-{integration.id}-{state}"
 
             if show_pending:
                 pending_version = AssetCustomizationReview.objects.filter(version__id__gt=current_version,
@@ -114,7 +115,7 @@ def make_integrations_json(integrations, contexts=None, show_pending=False, show
                     continue
 
                 process_global_contexts(cloud_portal, integration_dict, current_version, False,
-                                        global_contexts, global_contexts_dict)
+                                        global_contexts, global_contexts_dict, language=language)
 
                 if show_drafts or show_pending:
                     integration_dict['pending'] = show_pending
@@ -192,7 +193,10 @@ def get_integration(request, asset_id=None):
         return api_success(f"You do not have permission to view this integration.",
                            status_code=status.HTTP_403_FORBIDDEN)
 
-    return api_success(make_integrations_json([integration], show_pending=review, show_drafts=draft, user=request.user))
+    return api_success(make_integrations_json(
+        [integration], language=get_language_object_from_request(request), show_pending=review, show_drafts=draft,
+        user=request.user
+    ))
 
 
 @api_view(("GET", ))
@@ -202,6 +206,7 @@ def get_integrations(request):
     Returns a list of integrations available to the current user.
     """
     is_enabled = check_integration_store_enabled()
+    language = get_language_object_from_request(request)
     integrations = Asset.objects.filter(asset_type__type=INTEGRATION,
                                         customizations__name__in=[settings.CUSTOMIZATION])
 
@@ -256,13 +261,13 @@ def get_integrations(request):
             review_integrations = own_integrations
 
         if own_integrations:
-            integration_list.extend(make_integrations_json(own_integrations, user=request.user, show_drafts=True))
+            integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user, show_drafts=True))
         if review_integrations:
-            integration_list.extend(make_integrations_json(review_integrations, user=request.user, show_pending=True))
+            integration_list.extend(make_integrations_json(review_integrations, language=language, user=request.user, show_pending=True))
 
     if is_enabled or is_portal_manager or has_beta_access:
-        integration_list.extend(make_integrations_json(integrations, user=request.user))
+        integration_list.extend(make_integrations_json(integrations, language=language, user=request.user))
     else:
-        integration_list.extend(make_integrations_json(own_integrations, user=request.user))
+        integration_list.extend(make_integrations_json(own_integrations, language=language, user=request.user))
 
     return api_success({'data': integration_list})

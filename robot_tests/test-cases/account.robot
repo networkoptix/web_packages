@@ -395,7 +395,7 @@ Password is required to delete account
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Element Text Should Be    ${DELETE ACCOUNT PASSWORD ERROR}    ${PASSWORD IS REQUIRED TEXT}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
-    Validate Log In
+    Validate Log In    ${random email}
 
 Correct password is required to delete account
     [tags]    C69860    threaded    delete_account
@@ -411,7 +411,7 @@ Correct password is required to delete account
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element Contains    ${DELETE ACCOUNT PASSWORD ERROR}    ${WRONG PASSWORD}
     Wait Until Element Has Style    ${DELETE ACCOUNT PASSWORD ERROR}    color    ${ERROR COLOR WITH OPACITY}
-    Validate Log In
+    Validate Log In    ${random email}
 
 User can delete their own account
     [tags]    C69861    threaded    delete_account

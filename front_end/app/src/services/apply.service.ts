@@ -3,7 +3,9 @@ import {
     ViewContainerRef, ComponentRef
 }                                               from '@angular/core';
 import { BehaviorSubject, merge, Subscription } from 'rxjs';
-import { distinctUntilChanged, filter, skip }   from 'rxjs/operators';
+import {
+    distinctUntilChanged, filter, skip, map
+}                                               from 'rxjs/operators';
 import { NxDialogsService }                     from '../dialogs/dialogs.service';
 import { NxApplyComponent }                     from '../components/apply/apply.component';
 import { NgForm }                               from '@angular/forms';
@@ -287,11 +289,17 @@ export class NxApplyService {
         this.watchersSubscription = merge(...watchers.map(watcher => {
             return watcher.valueSubject.pipe(
                 distinctUntilChanged(),
-                filter((watcher) => watcher !== undefined));
+                filter((watcher) => watcher !== undefined),
+                map(() => watcher)
+            );
         })).pipe(
             skip(this.watchers.length)
-        ).subscribe(() => {
-            this.touched();
+        ).subscribe(changedWatcher => {
+            if (changedWatcher.changed) {
+                this.touched();
+            } else {
+                this.locked = watchers.some((watcher) => watcher.changed);
+            }
         });
     }
 

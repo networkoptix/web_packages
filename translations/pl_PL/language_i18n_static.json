@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM JEST NIEDOSTĘPNY",
         "inaccessibleFeatureMessage": "System jest offline i dlatego informacje nie są dostępne.",
         "unknown": "Nieznany",
+        "vendor": "Producent",
+        "model": "Model",
+        "ip": "Adres IP",
+        "server": "Serwer",
+        "os": "OS",
+        "version": "Wersja",
         "voiceCommands": {
             "clear search": "wyczyść wyszukiwanie",
             "collapse all servers": "zwiń wszystkie serwery",
@@ -194,6 +200,14 @@
             "available": "Magazyn w chmurze jest dostępny dla wszystkich serwerów w tym systemie. Możesz nim zarządzać za pomocą desktopowego klienta {{vmsName}}.",
             "camera": "kamera",
             "cameras": "kamery",
+            "usageLabels": {
+                "currentRecordings": "Aktualne nagrania",
+                "whenFullyUsed": "Przy pełnym użyciu",
+                "amountUsed": "Wykorzystana ilość",
+                "archiveFrom": "Archiwum z",
+                "recordingBitrate": "Bitrate nagrywania",
+                "delayFromLive": "Opóźnienie obrazu na żywo"
+            },
             "remove": {
                 "success": "Magazyn danych w chmurze został pomyślnie usunięty z systemu",
                 "errorPrefix": "Błąd usuwania magazynu w chmurze"
@@ -256,9 +270,8 @@
             "serverNotYours": "Ten system jest podłączony do %CLOUD_NAME%, ale ma innego właściciela. Systemy w chmurze można łączyć tylko wtedy, gdy mają to samo konto właściciela.",
             "systemOffline": "System {{targetSystem}} jest w trybie offline i nie można go złączyć z bieżącym systemem",
             "systemOfflineUrl": "{{targetSystem}} jest niedostępny.",
-            "systemsIncompatible": "Ten serwer ma niezgodną wersję oprogramowania. Zaktualizuj oba systemy do tej samej wersji, aby je złączyć.",
-            "systemVersionOld": "System {{targetSystem}} ma starszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj system {{targetSystem}} do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z bieżącym systemem.",
-            "systemVersionNew": "System {{targetSystem}} ma nowszą wersję oprogramowania, która jest niezgodna z bieżącym systemem. Zaktualizuj bieżący system do <a href=\"/download\" target=\"_blank\" translate>najnowszej kompilacji</a>, aby złączyć go z systemem {{targetSystem}}.",
+            "systemsIncompatible": "Ten serwer ma niezgodną wersję oprogramowania. Proszę zaktualizować oba systemy do <a href=\"/download\" target=\"_blank\" translate>najnowszej wersji</a>.",
+            "systemVersionsNotMatch": "Systemy mają różne wersje oprogramowania. Proszę zaktualizować oba systemy do <a href=\"/download\" target=\"_blank\" translate>najnowszej wersji</a>.",
             "urlEmpty": "Wprowadź adres serwera",
             "urlNotValid": "Wprowadź prawidłowy URL",
             "unknownError": "Nieznany błąd. Można odświeżyć stronę i spróbować ponownie. Jeśli problem będzie się powtarzał - proszę skontaktować się z <a href=\"%SUPPORT_LINK%\" target=\"_blank\">działem wsparcia technicznego</a>.",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "Rozłącz",
             "message": "Nie będziesz już mógł zalogować się do tego systemu.",
-            "title": "Odłączyć system?"
+            "title": "Odłączyć system od Twojego konta?"
         },
         "titles": {
             "error": "Błąd",

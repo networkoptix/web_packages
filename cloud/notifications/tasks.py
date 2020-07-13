@@ -131,6 +131,9 @@ def send_push_notification(notification_id, request_data, device_tokens=None, co
             )
         else:
             log_push_result(notification_object, f'{type(exception)}: {exception}', logging.ERROR, stack_trace=True)
+    else:
+        notification_object.send_date = timezone.now()
+        notification_object.save()
 
 
 # For testing we dont want to send emails to everyone so we need to set

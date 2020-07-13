@@ -303,7 +303,7 @@ Submit Feedback/Request Form
     Click Button    ${IPVD FEEDBACK SEND BUTTON}
 
 Validate Message Sent
-    Page should Not contain Element    ${IPVD FEEDBACK}
+    Wait Until Page Does not Contain    ${IPVD FEEDBACK}
     Check For Alert    ${IPVD FEEDBACK MESSAGE SENT}
     # TODO: Check email and verify submitted data received
 

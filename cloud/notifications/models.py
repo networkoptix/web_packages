@@ -256,6 +256,10 @@ class PushDevice(GCMDevice):
         except GCMError as gcm_error:
             return gcm_error.args[0]
 
+    @staticmethod
+    def delete_for_account(account):
+        PushDevice.objects.filter(user=account).delete()
+
     def __str__(self):
         return self.name or 'Unnamed Device'
 
@@ -276,6 +280,9 @@ class PushNotification(models.Model):
     result_data = models.TextField(null=True, blank=True)
     customization = models.ForeignKey(Customization, blank=True, null=True, on_delete=models.SET_NULL)
     count = models.IntegerField(default=0)
+
+    created_date = models.DateTimeField(auto_now_add=True)
+    send_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.title or 'Untitled Notification'

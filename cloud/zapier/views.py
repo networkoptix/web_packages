@@ -1,6 +1,5 @@
 import base64
 import json
-import urllib
 import uuid
 import logging
 
@@ -234,7 +233,7 @@ def zapier_send_generic_event(request):
     make_or_increment_rule('Generic Event', email, system_id, caption,
                            password=password, description=description, source=source)
 
-    url = f"api/createEvent?{urllib.urlencode(query_params).replace('+', '%20')}"
+    url = f"api/createEvent?{urlencode(query_params).replace('+', '%20')}"
     return cloud_gateway.get(system_id, url, email, password)
 
 

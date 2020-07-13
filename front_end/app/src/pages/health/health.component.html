@@ -3,7 +3,7 @@
         <nx-page-placeholder *ngIf="canShowOffline()"
                              [condition]="system && !system.isOnline"
                              type="OFFLINE"
-                             [preloader]="!healthService.ready && !system"
+                             [preloader]="!healthService.ready"
                              class="page-placeholder">
         </nx-page-placeholder>
 

@@ -73,7 +73,7 @@ export class NxClientButtonComponent implements OnInit, OnDestroy {
                     this.LANG.dialogs.buttons.cancel?.()
                 )
                 .then((result) => {
-                    if (result) {
+                    if (result === true) {
                         this.router
                             .navigate(['/download'])
                             .catch(error => {

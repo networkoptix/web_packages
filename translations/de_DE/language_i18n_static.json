@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTEM IST NICHT ERREICHBAR",
         "inaccessibleFeatureMessage": "Das System ist offline und daher sind Informationen nicht zugänglich.",
         "unknown": "Unbekannt",
+        "vendor": "Hersteller",
+        "model": "Modell",
+        "ip": "IP-Adresse",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "suche zurücksetzen",
             "collapse all servers": "alle server zusammenklappen",
@@ -194,6 +200,14 @@
             "available": "Der Cloudspeicherort ist für alle Server in diesem System verfügbar. Sie können es mit dem {{vmsName}}-Client verwalten.",
             "camera": "Kamera",
             "cameras": "Kameras",
+            "usageLabels": {
+                "currentRecordings": "Aktuelle Aufnahmen",
+                "whenFullyUsed": "Bei vollständiger Verwendung",
+                "amountUsed": "Verwendete Menge",
+                "archiveFrom": "Archiv von",
+                "recordingBitrate": "Aufnahme Bitrate",
+                "delayFromLive": "Live-Verzögerung"
+            },
             "remove": {
                 "success": "Cloudspeicher erfolgreich vom System entfernt",
                 "errorPrefix": "Fehler beim Entfernen des Cloudspeichers"
@@ -256,9 +270,8 @@
             "serverNotYours": "Dieses System ist mit %CLOUD_NAME% verbunden, hat jedoch einen anderen Besitzer. Cloudsysteme können nur zusammengeführt werden, wenn das Besitzerkonto identisch ist.",
             "systemOffline": "System {{targetSystem}} ist offline und kann nicht mit dem aktuellen zusammengeführt werden",
             "systemOfflineUrl": "{{targetSystem}} ist nicht erreichbar.",
-            "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Aktualisieren Sie beide Systeme auf denselben Build, um sie zusammenzuführen.",
-            "systemVersionOld": "{{targetSystem}} hat eine ältere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das System {{targetSystem}} auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit dem aktuellen System zusammenzuführen.",
-            "systemVersionNew": "{{targetSystem}} hat eine neuere Softwareversion, die mit dem aktuellen System nicht kompatibel ist. Aktualisieren Sie das aktuelle System auf die <a href=\"/download\" target=\"_blank\" translate>neueste Buildversion</a> um es mit diesem System {{targetSystem}} zusammenzuführen.",
+            "systemsIncompatible": "Dieser Server hat eine inkompatible Softwareversion. Bitte aktualisieren Sie beide Systeme auf die <a href=\"/download\" target=\"_blank\" translate>neueste Version</a>.",
+            "systemVersionsNotMatch": "Die Systeme haben nicht übereinstimmende Softwareversionen. Bitte aktualisieren Sie beide Systeme auf den <a href=\"/download\" target=\"_blank\" translate>neuesten Build</a>.",
             "urlEmpty": "Serveradresse eingeben",
             "urlNotValid": "Geben Sie eine gültige URL an",
             "unknownError": "Ein unbekannter Fehler ist aufgetreten. Aktualisieren Sie die Seite und versuchen Sie es erneut. Wenn das Problem weiterhin besteht, wenden Sie sich bitte an <a href=\"%SUPPORT_LINK%\" target=\"_blank\">Support</a>.",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "Trennen",
             "message": "Sie können sich nicht mehr bei diesem System anmelden.",
-            "title": "System trennen?"
+            "title": "System von Ihrem Konto trennen?"
         },
         "titles": {
             "error": "Fehler",

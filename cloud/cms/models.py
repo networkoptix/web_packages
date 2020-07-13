@@ -420,11 +420,13 @@ class Asset(models.Model):
         self.preview_status = new_status
         self.save()
 
-    def read_global_value(self, record_name):
+    def read_global_value(self, record_name, language=None):
         global_contexts = self.asset_type.context_set.filter(is_global=True)
         data_structure = DataStructure.objects.filter(name=record_name, context__in=global_contexts).last()
 
-        return data_structure.find_actual_value(asset=self, version_id=self.version_id()) if data_structure else None
+        return data_structure.find_actual_value(
+            asset=self, language=language, version_id=self.version_id()
+        ) if data_structure else None
 
     def replace_global_values(self, content: str, global_contexts_dict=None):
         if not global_contexts_dict:

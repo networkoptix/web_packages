@@ -18,6 +18,7 @@ img {
 
 .light-camera-preview {
     @extend .hm-camera-preview;
+    font-family: $font-family-regular;
     color: $light10;
     padding: 16px;
 }
@@ -51,7 +52,6 @@ img {
     justify-content: center;
     height: 120px !important;
     background: $light2;
-    border: 1px solid $light4;
 }
 
 .wide {
@@ -81,4 +81,8 @@ img {
         width: 100%;
         height: auto;
     }
+}
+
+.image-unavailable-border {
+    border: 1px solid $light4;
 }

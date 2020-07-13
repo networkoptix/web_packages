@@ -923,8 +923,8 @@ Cloud Administrator Can Delete Local User(positive)
         Run Keyword If   '${deleted user}' in '${user}[name]'   Fail    "${user}[name]" was found on server
     END
     
-Cloud administrator can change local user's login, name and email (positive)
-    [Tags]    C76526    local_user
+Cloud administrator can change local user's login permissions, name and email (positive)
+    [Tags]    C76526    C76525    local_user
     @{new locals} =    Create List
     @{local users} =    Local User Start   ${EMAIL ADMIN}
     Log    Step 1

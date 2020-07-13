@@ -13,7 +13,6 @@ IPVD Page loads without Login
 
 IPVD Page loads while Logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
-    Validate Log In
     Go To IPVD Page
 
 IPVD landing page actions

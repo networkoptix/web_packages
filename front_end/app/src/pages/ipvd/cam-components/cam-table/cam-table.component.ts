@@ -36,17 +36,18 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     @Output() public onRowClick: EventEmitter<any> = new EventEmitter<any>();
     @Output() public onFeedbackClick: EventEmitter<any> = new EventEmitter<any>()
 
+    public selectedHeader;
+    public showHeaders;
+    public selectedCamera;
+    public sortOrderASC: boolean;
+    public results;
+    public debug: boolean;
+
     private _elements: any[];
     private cameraHeaders;
     private paramsShown;
     private beta: boolean;
 
-    selectedHeader;
-    showHeaders;
-    selectedCamera;
-    sortOrderASC: boolean;
-    results;
-    debug: boolean;
     offset: number;
     currentPage: number;
     pageSize: number;
@@ -69,8 +70,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
     offsetHeight: number;
     scrollHeight: number;
     tableScrollFixed: boolean;
-    elementWidth;
-    revert;
+    elementWidth: any;
+    revert: any;
     timesElementSet = 0;
 
     uriSubscription: SubscriptionLike;
@@ -245,7 +246,6 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
             this.csvCameraData = this.getCsvData();
 
             this.setPage(this.currentPage, true);
-            ++this.timesElementSet;
         }
 
         if (changes.activeCamera) {
@@ -332,14 +332,14 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
                 if (elm.isAptzSupported) {
                     return 0;
                 }
+                if (elm.isPtzSupported === null) {
+                    return 3;
+                }
                 if (elm.isPtzSupported) {
                     return 1;
                 }
                 if (!elm.isPtzSupported) {
                     return 2;
-                }
-                if (elm.isPtzSupported === null) {
-                    return 3;
                 }
             }, this.sortOrderASC);
         } else if (param === 'isAudioSupported') {
@@ -409,11 +409,8 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         this.clientHeight = this.camerasTable.nativeElement.clientHeight;
         this.searchHeight = this.scrollMechanicsService.searchViewHeight;
 
-        if (this.clientHeight + this.searchHeight < this.windowSize.height && this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET) {
-            this.tableScrollFixed = true;
-        } else {
-            this.tableScrollFixed = false;
-        }
+        this.tableScrollFixed = this.clientHeight + this.searchHeight < this.windowSize.height &&
+            this.windowScroll >= this.scrollHeight - NxScrollMechanicsService.SCROLL_OFFSET;
     }
 
     setClickedRow(element) {
@@ -439,7 +436,7 @@ export class CamTableComponent implements OnChanges, OnDestroy, OnInit, AfterVie
         const endIndex = startIndex + this.pageSize;
         this.pagedItems = this._elements.slice(startIndex, endIndex);
 
-        if (this.params && this.params.page != pageParam) { // this.params.page is string - no strict comparison
+        if (this.params && parseInt(this.params.page) !== pageParam) {
             const queryParams: Params = {};
             queryParams.page = (this.currentPage === 1) ? undefined : this.currentPage;
 

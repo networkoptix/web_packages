@@ -9,7 +9,6 @@
     .header-top-bar {
         display: flex;
         align-items: center;
-        margin-bottom: 16px;
         .header-title {
             min-width: 0;
             h2 {
@@ -91,24 +90,6 @@
                     text-decoration: none;
                     color: inherit;
                 }
-            }
-        }
-    }
-
-    .header-table {
-        font-size: typography.$font-size-base;
-        padding-left: 0;
-        .header-table-cell {
-            display: flex;
-            height: 20px;
-            align-items: flex-end;
-            .cell-title {
-                @include typography.regular13;
-            }
-            .cell-ellipsis {
-                margin-bottom: 2px;
-                border-bottom: 1px dotted $light6;
-                flex-grow: 1;
             }
         }
     }

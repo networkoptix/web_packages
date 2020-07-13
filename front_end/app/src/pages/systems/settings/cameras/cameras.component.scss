@@ -146,6 +146,7 @@
       border-radius: 2px;
       font-size: 12px;
       width: 32px !important;
+      padding: 0 !important;
       border: 1px solid transparent !important;
       &:hover, &:active, &.active {
         border: 1px solid transparent !important;
@@ -344,6 +345,10 @@
 
 .shake-hint {
     animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+#reset-selection {
+    font-size: 14px;
 }
 
 @keyframes shake {

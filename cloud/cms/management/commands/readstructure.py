@@ -63,7 +63,7 @@ def find_or_add_context_by_file(file_path, asset_type, has_language):
             context.deprecated=False
 
         context.save()
-        return context
+    return context
 
 
 def find_or_add_context_template(context, language_code, skin):

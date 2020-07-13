@@ -289,10 +289,14 @@ def save_unrevisioned_records(asset, context, language, data_structures,
     # Start save_unrevisioned_records
     can_edit_advanced = user.is_superuser or user.has_perm('cms.edit_advanced')
     upload_errors = []
+    # Only process non-translatable data structures if language is default.
+    process_nontranslatable = get_cloud_portal_asset(settings.CUSTOMIZATION).default_language == language
     for data_structure in data_structures:
         data_structure_name = data_structure.name
         ds_language = language
         if not data_structure.translatable:
+            if not process_nontranslatable:
+                continue
             ds_language = None
 
         new_record_value = ""

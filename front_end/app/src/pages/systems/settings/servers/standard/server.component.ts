@@ -16,6 +16,7 @@ import { NxSystem }                  from '../../../../../services/system.servic
 import { NxUriService, ChildRoutes } from '../../../../../services/uri.service';
 import { NxUtilsService }            from '../../../../../services/utils.service';
 import { NxToastService }            from '../../../../../dialogs/toast.service';
+import { InfoBlockSection, InfoBlockLine }            from '../../../../../components/info-block/info-block.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -56,6 +57,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
     canSeeInfo: boolean;
     fullInfoPath: string;
     parsedServerId: string;
+    serverDetails: InfoBlockSection;
 
     private setupDefaults() {
         this.checking = false;
@@ -100,6 +102,7 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
             this.saveSettings,
             () => this.applyService.reset(),
             [this.ipPortWatcher]);
+        this.applyService.setVisible(true);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -141,9 +144,15 @@ export class NxSystemStandardServerComponent implements OnInit, OnChanges, OnDes
         this.resetDisabled = !this.system.permissions.editAdmins;
         this.portChangeDisabled = !this.system.permissions.editAdmins;
 
+        this.serverDetails = new InfoBlockSection([
+            new InfoBlockLine(this.LANG.common.ip, this.selectedServer.ip || '-'),
+            new InfoBlockLine(this.LANG.common.os, this.selectedServer.osName || '-'),
+            new InfoBlockLine(this.LANG.common.version, this.selectedServer.version || '-')
+        ]);
+
         if (!this.applyService.locked) {
             this.applyService.hardReset();
-            this.ipPortWatcher.value = port;
+            this.ipPortWatcher.value = +port;
             this.applyService.reset();
             this.applyService.setVisible(true);
         }

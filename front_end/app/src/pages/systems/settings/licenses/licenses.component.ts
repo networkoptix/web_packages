@@ -7,7 +7,7 @@ import { NxLanguageProviderService }     from '../../../../services/nx-language-
 import { SubscriptionLike }              from 'rxjs';
 import { LanguageI18NStaticTypes }       from '../../../../../language_i18n_static_types';
 import { NxSettingsService }             from '../settings.service';
-import { NxSystem }                      from '../../../../services/system.service';
+import { NxSystem, NxSystemServer }      from '../../../../services/system.service';
 import { NxMenuService }                 from '../../../../menu/menu.service';
 import { delay, filter, map, retryWhen } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ export class NxSystemLicensesComponent implements OnInit {
     licensesSubscription: SubscriptionLike;
 
     licenses: any;
-    licenseSummaries: { type: string, count: number, countAvail: number, inUse: number, required: number }[];
+    licenseSummaries: { type: string, count: number, countAvail: number, required: number }[];
     classMap: any = {};
 
     // Constructor and class initialization methods
@@ -113,7 +113,7 @@ export class NxSystemLicensesComponent implements OnInit {
             expired       : false,
             status        : '',
             expiration    : '',
-            deactivations : '&ndash;'
+            deactivations : '-'
         };
 
         item.licenseBlock
@@ -125,14 +125,19 @@ export class NxSystemLicensesComponent implements OnInit {
 
         item.info.expired = (new Date(item.info.expiration).getTime() < new Date().getTime());
         item.info.status = item.info.expired ? this.LANG.license.info.expired : this.LANG.license.info.ok;
-
-        // Set license type
+        // Set license type - it may seem easy optimization but it's a messed up logic so keeping it verbose makes it simple
         if (item.info.serial === 'TRIAL' || item.info.name === 'TRIAL' || item.key.indexOf('0000-0000-0000') === 0) {
             item.info.type = this.LANG.license.info.trial;
-        } else if (!item.info.expiration || (item.info.ordertype && item.info.ordertype === 'saas')) {
-            item.info.type = this.classMap[item.info.class];
         } else {
-            item.info.type = this.LANG.license.info.time;
+            if (item.info.ordertype && item.info.ordertype === 'saas') {
+                item.info.type = this.classMap[item.info.class];
+            } else {
+                if (item.info.expiration) {
+                    item.info.type = this.LANG.license.info.time;
+                } else {
+                    item.info.type = this.classMap[item.info.class];
+                }
+            }
         }
 
         // Set license usage /Pending VMS-18155/
@@ -153,14 +158,12 @@ export class NxSystemLicensesComponent implements OnInit {
         if (license) {
             license.count += parseInt(item.info.count) || 0;
             license.countAvail += avail;
-            license.inUse += parseInt(item.info.inuse) || 0;
             license.required += item.info.required;
         } else {
             this.licenseSummaries.push({
                 type       : item.info.type,
                 count      : parseInt(item.info.count) || 0,
                 countAvail : avail,
-                inUse      : parseInt(item.info.inuse) || 0,
                 required   : item.info.required
             });
         }
@@ -196,11 +199,16 @@ export class NxSystemLicensesComponent implements OnInit {
                                                     const boundServer = data.reply.find((server: { hardwareIds: string[], serverId: string }) => {
                                                         return server.hardwareIds.find((id: string) => id === item.info.hwid);
                                                     });
-                                                    const server = this.system.servers.find((server) => server.id === boundServer.serverId);
+
+                                                    const server: NxSystemServer | any = (boundServer) ? this.system.servers.find((server) => server.id === boundServer.serverId) : {};
                                                     if (Object.keys(server).length) {
                                                         item.info.serverName = server.name;
                                                         item.info.serverStatus = server.status;
                                                         item.info.status = server.status === this.LANG.license.info.online ? item.info.status : this.LANG.license.info.error;
+                                                    } else {
+                                                        item.info.serverName = 'Server not found';
+                                                        item.info.serverStatus = server.status;
+                                                        item.info.status = this.LANG.license.info.error;
                                                     }
 
                                                     this.addLicenseSummary(item);

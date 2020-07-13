@@ -12,6 +12,7 @@
                             [ngModel]="selectedUser.isEnabled"
                             (ngModelChange)="updateEnabled($event);"
                             componentId="user-active-status"
+                            [showWarning]="true"
                     ></nx-switch>
                 </div>
                 <div *ngIf="selectedUser.isCloud || !selectedUser.canBeEdited; else editableTitle">

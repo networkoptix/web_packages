@@ -157,6 +157,12 @@
         "systemUnreachable": "СИСТЕМА НЕДОСТУПНА",
         "inaccessibleFeatureMessage": "Система находится в автономном режиме и, следовательно, информация не доступна.",
         "unknown": "Неизвестный",
+        "vendor": "Vendor",
+        "model": "Модель",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "очистить поиск",
             "collapse all servers": "свернуть все серверы",
@@ -194,6 +200,14 @@
             "available": "Местоположение облачного хранилища доступно для всех серверов в этой системе. Вы можете управлять им, используя клиент {{vmsName}}.",
             "camera": "камера",
             "cameras": "камеры",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Облачное хранилище успешно удалено из системы",
                 "errorPrefix": "Ошибка удаления облачного хранилища"
@@ -256,9 +270,8 @@
             "serverNotYours": "Эта система подключена к %CLOUD_NAME%, но имеет другого владельца. Облачные системы могут быть объединены, только если учетные записи владельцев совпадает.",
             "systemOffline": "Система {{targetSystem}} не находится в сети и не может быть объединена с текущей",
             "systemOfflineUrl": "{{targetSystem}} недоступна.",
-            "systemsIncompatible": "Этот сервер имеет несовместимую версию программного обеспечения. Обновите обе системы до одной сборки, чтобы объединить их.",
-            "systemVersionOld": "Система {{targetSystem}} имеет более старую версию программного обеспечения, несовместимую с текущей. Обновите {{targetSystem}} до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с текущей.",
-            "systemVersionNew": "Система {{targetSystem}} имеет более новую версию программного обеспечения, несовместимую с текущей. Обновите текущую Систему до <a href=\"/download\" target=\"_blank\" translate>последней сборки</a> чтобы объединить ее с Системой {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Адрес сервера",
             "urlNotValid": "Введите правильный URL",
             "unknownError": "Неизвестная ошибка. Обновите страницу и повторите попытку. Если проблема не устранена, обратитесь в <a href=\"%SUPPORT_LINK%\" target=\"_blank\">службу поддержки</a>.",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "Отключить",
             "message": "Вы больше не сможете войти в эту систему.",
-            "title": "Отключить систему?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Ошибка",

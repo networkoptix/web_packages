@@ -157,6 +157,12 @@
         "systemUnreachable": "SYSTÉM JE NEDOSTUPNÝ",
         "inaccessibleFeatureMessage": "Systém je offline a informace proto nejsou dostupné.",
         "unknown": "Neznámý",
+        "vendor": "Vendor",
+        "model": "Model",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "smazat hledání",
             "collapse all servers": "sbalit všechny servery",
@@ -194,6 +200,14 @@
             "available": "Umístění cloudového úložiště je dostupné pro všechny servery v tomto systému. Můžete jej spravovat pomocí klienta na ploše {{vmsName}}.",
             "camera": "kamera",
             "cameras": "kamery",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "Cloudové úložiště bylo úspěšně odebráno ze systému",
                 "errorPrefix": "Chyba při odstraňování cloudového úložiště"
@@ -256,9 +270,8 @@
             "serverNotYours": "Tento systém je připojen k %CLOUD_NAME%, ale má jiného vlastníka. Cloudové systémy lze sloučit, pouze pokud je účet vlastníka stejný.",
             "systemOffline": "Systém {{targetSystem}} je offline a nelze jej sloučit se stávajícím systémem",
             "systemOfflineUrl": "{{targetSystem}} je nepřístupný.",
-            "systemsIncompatible": "Tento server má nekompatibilní verzi softwaru. Pro jejich sloučení aktualizujte oba systémy na stejnou verzi.",
-            "systemVersionOld": "{{targetSystem}} má starší verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte {{targetSystem}} na <a href=\"/download\" target=\"_blank\" translate>nejnovější verzi</a> a spojte ji s aktuální.",
-            "systemVersionNew": "{{targetSystem}} má novější verzi softwaru, která není kompatibilní s aktuálním systémem. Aktualizujte systém na <a href=\"/download\" target=\"_blank\" translate>nejnovější verzi</a> a sloučte jej s {{targetSystem}}.",
+            "systemsIncompatible": "This server has an incompatible software version. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "Zadejte adresu serveru",
             "urlNotValid": "Zadejte platnou URL",
             "unknownError": "Došlo k neznámé chybě. Aktualizujte stránku a zkuste to znovu. Pokud problém přetrvává, kontaktujte <a href=\"%SUPPORT_LINK%\" target=\"_blank\">podporu</a>.",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "Odpojit",
             "message": "K tomuto systému se již nebudete moci přihlásit.",
-            "title": "Odpojit systém?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "Chyba",

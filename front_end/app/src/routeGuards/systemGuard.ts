@@ -56,7 +56,7 @@ export class SystemGuard implements CanActivate {
 
                         return checkPermissions();
                     } else {
-                        this.system = this.systemService.createSystem(account.email, systemId);
+                        this.system = this.systemService.createSystem(account.email, systemId, undefined, true);
                         return this.system.getInfoAndPermissions()
                             .then(checkPermissions)
                             .catch(() => this.router.navigate([`/systems/${systemId}`]));

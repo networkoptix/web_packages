@@ -157,6 +157,12 @@
         "systemUnreachable": "系統無法連接",
         "inaccessibleFeatureMessage": "系統處於離線狀態，無法讀取資訊。",
         "unknown": "未知",
+        "vendor": "Vendor",
+        "model": "型號",
+        "ip": "IP Address",
+        "server": "Server",
+        "os": "OS",
+        "version": "Version",
         "voiceCommands": {
             "clear search": "清除搜尋",
             "collapse all servers": "隱藏所有伺服器",
@@ -194,6 +200,14 @@
             "available": "此系統中的所有伺服器皆可使用雲端儲存位置。您可用桌面 {{vmsName}} 客戶端對其進行管理。",
             "camera": "攝影機",
             "cameras": "攝影機",
+            "usageLabels": {
+                "currentRecordings": "Current recordings",
+                "whenFullyUsed": "When fully used",
+                "amountUsed": "Amount used",
+                "archiveFrom": "Archive from",
+                "recordingBitrate": "Recording Bitrate",
+                "delayFromLive": "Delay from live"
+            },
             "remove": {
                 "success": "雲端儲存已成功從系統中刪除",
                 "errorPrefix": "刪除雲端儲存時發生錯誤"
@@ -256,9 +270,8 @@
             "serverNotYours": "該系統連接到 %CLOUD_NAME%，但分屬不同所有者。唯有當所有者相同時，才能合併雲端系統。",
             "systemOffline": "系統 {{targetSystem}} 處於離線狀態, 無法與當前系統合併。",
             "systemOfflineUrl": "無法連接{{targetSystem}}",
-            "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統更新為同一版本再行合併。",
-            "systemVersionOld": "{{targetSystem}} 的軟體版本較舊，與當前系統不相容。請將 {{targetSystem}} 更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>, 與其當前版本合併。",
-            "systemVersionNew": "{{targetSystem}} 的軟體版本較新，與當前系統不相容。請更新目前系統<a href=\"/download\" target=\"_blank\" translate>為最新版本</a>，再與 {{targetSystem}} 合併。",
+            "systemsIncompatible": "該伺服器軟體版本不相容。請將兩個系統都更新為 <a href=\"/download\" target=\"_blank\" translate>最新版本</a>。",
+            "systemVersionsNotMatch": "The systems have mismatching software versions. Please update both systems to the <a href=\"/download\" target=\"_blank\" translate>latest build</a>.",
             "urlEmpty": "請輸入伺服器位址",
             "urlNotValid": "請輸入有效的 URL",
             "unknownError": "不明錯誤。請刷新頁面並重試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -292,7 +305,7 @@
         "removeSystem": {
             "action": "斷線",
             "message": "您將無法再登入此系統。",
-            "title": "是否中斷系統?"
+            "title": "Disconnect System from your Account?"
         },
         "titles": {
             "error": "錯誤",
@@ -425,7 +438,7 @@
         "oldPasswordMistmatch": "目前密碼不正確.",
         "oldSafariNotSupported": "不支持10歲以上的Safari版本",
         "passwordMismatch": "密碼不正確",
-        "systemUnavailable": "{{failedSystem}} is currently unreachable. Try again in a few minutes or contact <a href=\"%SUPPORT_LINK%\" target=\"_blank\">support</a>.",
+        "systemUnavailable": "{{failedSystem}} 目前無法連上。請稍後再試一次, 或聯繫<a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
         "thisSystem": "系統",
         "unknownError": "發生未知錯誤",
         "unknownMergeError": "不明錯誤。您可以嘗試刷新頁面並重複嘗試。如果問題仍然存在 - 請聯繫 <a href=\"%SUPPORT_LINK%\" target=\"_blank\">支援</a>。",
@@ -433,9 +446,9 @@
         "wrongCode": "帳號已經啟用或確認碼不正確",
         "wrongCodeRestore": "確認代碼已使用或不正確",
         "wrongParameters": "表單上的一些參數不正確",
-        "licenseFail": "Failed to activate license. Please try again or contact support.",
+        "licenseFail": "無法啟用授權。請重試或聯繫支援人員。",
         "licenseTimeout": "連接超時，啟用授權失敗。請確認伺服器在線並重試。",
-        "licenseServerError": "Failed to activate license. License server did not respond. Please try again or contact support.",
+        "licenseServerError": "無法啟用授權。授權伺服器未回應。請重試或聯繫支援人員。",
         "networkConnection": "無法連接至{{cloudName}}，請檢查網絡連線。"
     },
     "integration": {

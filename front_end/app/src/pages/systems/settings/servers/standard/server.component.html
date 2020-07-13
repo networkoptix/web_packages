@@ -61,22 +61,8 @@
                         </button>
                     </div>
                 </div>
-                <div class="header-table col-7">
-                    <div class="header-table-cell">
-                        <span class="mr-2 cell-title" translate>IP</span>
-                        <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.ip || '-' }}</span>
-                    </div>
-                    <div class="header-table-cell">
-                        <span class="mr-2 cell-title" translate>OS</span>
-                        <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.osName || '-' }}</span>
-                    </div>
-                    <div class="header-table-cell">
-                        <span class="mr-2 cell-title" translate>Version</span>
-                        <span class="cell-ellipsis"></span>
-                        <span class="col-9">{{ selectedServer.version || '-' }}</span>
-                    </div>
+                <div class="col-4">
+                    <nx-info-block [sectionsOrColumns]="[serverDetails] "></nx-info-block>
                 </div>
             </header>
             <nx-section>

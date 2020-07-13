@@ -91,21 +91,27 @@ export interface Common {
     recordingSettingsWarning:   any;
     recordingModes:             RecordingModes;
     resolution:                 Resolution;
-    general:                    any;
-    inaccessibleFeatureMessage: any;
-    searchCamPlaceholder:       any;
-    systemHasNoCameras:         any;
-    systemHasNoCamerasMessage:  any;
-    systemNewVersion:           any;
-    systemNewVersionMessage:    any;
-    systemNoAlerts:             any;
-    systemNoAlertsMessage:      any;
-    systemOffline:              any;
-    systemOfflineMessage:       any;
-    systemServerError:          any;
-    systemServerErrorMessage:   any;
-    systemUnreachable:          any;
-    unknown:                    any;
+    general:                    string;
+    searchCamPlaceholder:       string;
+    systemHasNoCameras:         string;
+    systemHasNoCamerasMessage:  string;
+    systemNewVersion:           string;
+    systemNewVersionMessage:    string;
+    systemNoAlerts:             string;
+    systemNoAlertsMessage:      string;
+    systemOffline:              string;
+    systemOfflineMessage:       string;
+    systemServerError:          string;
+    systemServerErrorMessage:   string;
+    systemUnreachable:          string;
+    inaccessibleFeatureMessage: string;
+    unknown:                    string;
+    vendor:                     string;
+    model:                      string;
+    ip:                         string;
+    server:                     string;
+    os:                         string;
+    version:                    string;
     voiceCommands:              VoiceCommands;
     viewingOutdatedReport:      any;
 }
@@ -211,6 +217,7 @@ export interface CloudStorage {
     available:             any;
     camera:                any;
     cameras:               any;
+    usageLabels:           UsageLabels;
     remove:                EnableCloudStorage;
     activationError:       NoSettings;
     systemDisconnectError: NoSettings;
@@ -238,6 +245,15 @@ export interface MoveCloudStorageStatus {
 
 export interface NoOtherSystemsError {
     message: any;
+}
+
+export interface UsageLabels {
+    currentRecordings: string;
+    whenFullyUsed:     string;
+    amountUsed:        string;
+    archiveFrom:       string;
+    recordingBitrate:  string;
+    delayFromLive:     string;
 }
 
 export interface DialogsMerge {
@@ -968,6 +984,12 @@ const typeMap: any = {
         { json: "systemServerErrorMessage", js: "systemServerErrorMessage", typ: "any" },
         { json: "systemUnreachable", js: "systemUnreachable", typ: "any" },
         { json: "unknown", js: "unknown", typ: "any" },
+        { json: "vendor", js: "vendor", typ: "any" },
+        { json: "model", js: "model", typ: "any" },
+        { json: "ip", js: "ip", typ: "any" },
+        { json: "server", js: "server", typ: "any" },
+        { json: "os", js: "os", typ: "any" },
+        { json: "version", js: "version", typ: "any" },
         { json: "voiceCommands", js: "voiceCommands", typ: r("VoiceCommands") },
         { json: "viewingOutdatedReport", js: "viewingOutdatedReport", typ: "any" },
     ], false),
@@ -1062,6 +1084,7 @@ const typeMap: any = {
         { json: "available", js: "available", typ: "any" },
         { json: "camera", js: "camera", typ: "any" },
         { json: "cameras", js: "cameras", typ: "any" },
+        { json: "usageLabels", js: "usageLabels", typ: r("UsageLabels") },
         { json: "remove", js: "remove", typ: r("EnableCloudStorage") },
         { json: "activationError", js: "activationError", typ: r("NoSettings") },
         { json: "systemDisconnectError", js: "systemDisconnectError", typ: r("NoSettings") },
@@ -1085,6 +1108,14 @@ const typeMap: any = {
     ], false),
     "NoOtherSystemsError": o([
         { json: "message", js: "message", typ: "any" },
+    ], false),
+    "UsageLabels": o([
+        { json: "currentRecordings", js: "currentRecordings", typ: "" },
+        { json: "whenFullyUsed", js: "whenFullyUsed", typ: "" },
+        { json: "amountUsed", js: "amountUsed", typ: "" },
+        { json: "archiveFrom", js: "archiveFrom", typ: "" },
+        { json: "recordingBitrate", js: "recordingBitrate", typ: "" },
+        { json: "delayFromLive", js: "delayFromLive", typ: "" },
     ], false),
     "DialogsMerge": o([
         { json: "adminPasswordTitle", js: "adminPasswordTitle", typ: "any" },

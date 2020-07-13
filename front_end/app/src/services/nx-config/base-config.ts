@@ -52,6 +52,7 @@ export interface BaseConfig {
     footerItems: FooterItem[];
     googleTagManagerId: string;
     trialLicenseKey: string;
+    licenseDeactivations: number,
     pushConfig: string;
     testedOperatingSystems: string;
     trafficRelayHost: string;

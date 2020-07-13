@@ -13,7 +13,7 @@ import { NxDialogsService }          from '../../../../dialogs/dialogs.service';
 import { NxSettingsService }         from '../settings.service';
 import { NxMenuService }             from '../../../../menu';
 import { Subscription }              from 'rxjs';
-import { filter, auditTime }         from 'rxjs/operators';
+import { auditTime }         from 'rxjs/operators';
 import { UntilDestroy }              from '@ngneat/until-destroy';
 import { NxPageService }             from '../../../../services/page.service';
 import { NxSystemsService }          from '../../../../services/systems.service';
@@ -130,11 +130,12 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
 
         this.settingsServiceSubscription = this.settingsService
             .systemSubject
-            .pipe(filter((system) => {
-                this.systemLoaded = system !== undefined;
-                return this.systemLoaded;
-            }))
             .subscribe((system) => {
+                if (!system) {
+                    this.system = undefined;
+                    this.systemLoaded = false;
+                    return;
+                }
                 this.system = system;
                 this.systemName = this.system.info.name || this.system.info.systemName;
                 this.pageService.pageTitle = this.system.info.systemName;
@@ -144,11 +145,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                 this.systemSubscription = system.infoSubject
                     .pipe(auditTime(this.CONFIG.system.auditTime))
                     .subscribe(system => {
-                        if (!this.system.isAvailable && system && system.isAvailable) {
+                        if (!system) return;
+                        if (this.system && !this.system.isAvailable && system && system.isAvailable) {
                             this.system = system;
-                        }
-                        if (!this.system.isAvailable) {
-                            return;
                         }
 
                         this.settingsService.footerSubject.next(true);
@@ -160,6 +159,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
                         this.settingsSubscription = this.system.updateOrGetSystemSettings()
                             .subscribe((res: any) => {
                                 this.settingsForSystem = res.reply.settings;
+                                this.systemLoaded = true;
+                            }, (err) => {
+                                this.settingsForSystem = false;
+                                console.error(err);
+                                this.systemLoaded = true;
                             });
                     });
                 this.deletingSystem = this.processService.createProcess(
@@ -176,12 +180,14 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     syncMergeAlerts() {
-        if (this.system.mergeInfo) {
+        if (this.system?.mergeInfo) {
             this.currentMergeInfo = this.system.mergeInfo;
-        } else if (this.currentMergeInfo && this.system.mergeInfo === undefined) {
+        } else if (this.currentMergeInfo && this.system?.mergeInfo === undefined) {
             this.currentMergeInfo = undefined;
             if (!this.CONFIG.isLocal) {
-                this.systemsService.forceUpdateSystems().toPromise().catch(console.error);
+                this.systemsService.forceUpdateSystems().toPromise().catch(console.error).finally(() => {
+                    this.systemLoaded = true;
+                });
             } else {
                 this.ribbonService.hide();
             }
@@ -194,7 +200,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 if (this.systemsService.finishedMerged) {
                     this.systemsService.finishedMerged = false;
-                    this.system.getInfo(true, false);
+                    this.system.getInfo(true, false).finally(() => {
+                        this.systemLoaded = true;
+                    });
+                } else {
+                    this.systemLoaded = true;
                 }
             });
     }
@@ -239,7 +249,17 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy {
     }
 
     disconnectFromCloud() {
+        const handleDisconnect = () => this.dialogs.disconnect(this.system)
+            .then((result) => {
+                if (result) {
+                    this.updateAndGoToSystems();
+                }
+            });
+
         if (this.system.isMine) {
+            if (!this.system.cloudStorageCapable) {
+                return handleDisconnect();
+            }
             this.cloudApiService.getCloudStorageUsage(this.system.id).then(() => {
                 // Display systemDisconnectError when attempting to disconnect system with cloud storage enabled
                 const { dialogs: { cloudStorage:{ systemDisconnectError: { title, message } }, buttons: { ok } } } = this.LANG;
