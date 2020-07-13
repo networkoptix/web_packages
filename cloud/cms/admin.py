@@ -487,6 +487,10 @@ class AssetAdmin(CMSAdmin):
 
     @staticmethod
     def change_page(request, context_id=None, asset_id=None):
+        order_options = {'name': 'Tag/File name', 'label': 'Label'}
+        order = request.GET.get('order', None)
+        if order not in order_options.keys():
+            order = None
         context = {'errors': []}
         if request.method == "POST" and 'asset_id' in request.POST:
             context['preview_link'], context['errors'] = page_editor(request)
@@ -514,8 +518,9 @@ class AssetAdmin(CMSAdmin):
         context['site_header'] = admin.site.site_header
         context['site_title'] = admin.site.site_title
         context['site_url'] = admin.site.site_url
+        context['order_options'] = order_options
 
-        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id})
+        form = CustomContextForm(initial={'language': context['language_code'], 'context': context_id}, order=order)
         form.add_fields(asset, target_context, Language.objects.get(code=context['language_code']), request.user)
         form.cleaned_data = {}
         for field_error in context['errors']:
